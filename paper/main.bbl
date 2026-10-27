@@ -1,0 +1,150 @@
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }
+% \MRhref is called by the amsart/book/proc definition of \MR.
+\providecommand{\MRhref}[2]{%
+  \href{http://www.ams.org/mathscinet-getitem?mr=#1}{#2}
+}
+\providecommand{\href}[2]{#2}
+\begin{thebibliography}{10}
+
+\bibitem{AlonFuredi93}
+Noga Alon and Zolt{\'a}n F{\"u}redi, \emph{Covering the cube by affine
+  hyperplanes}, European J. Combin. \textbf{14} (1993), no.~2, 79--83.
+
+\bibitem{Bjorklund14}
+Andreas Bj{\"o}rklund, \emph{Determinant sums for undirected {H}amiltonicity},
+  SIAM J. Comput. \textbf{43} (2014), no.~1, 280--299, Preliminary version in
+  FOCS 2010.
+
+\bibitem{BjorklundHusfeldt13}
+Andreas Bj{\"o}rklund and Thore Husfeldt, \emph{The parity of directed
+  {H}amiltonian cycles}, Proc. 54th IEEE Symposium on Foundations of Computer
+  Science (FOCS), 2013, pp.~727--735.
+
+\bibitem{BHKK08Tutte}
+Andreas Bj{\"o}rklund, Thore Husfeldt, Petteri Kaski, and Mikko Koivisto,
+  \emph{Computing the {T}utte polynomial in vertex-exponential time}, Proc.
+  49th IEEE Symposium on Foundations of Computer Science (FOCS), 2008,
+  pp.~677--686.
+
+\bibitem{BHKK12}
+\bysame, \emph{The traveling salesman problem in bounded degree graphs}, ACM
+  Trans. Algorithms \textbf{8} (2012), no.~2, Art.~18.
+
+\bibitem{BjorklundWilliams19}
+Andreas Bj{\"o}rklund and Ryan Williams, \emph{Computing permanents and
+  counting {H}amiltonian cycles by listing dissimilar vectors}, Proc. 46th
+  International Colloquium on Automata, Languages, and Programming (ICALP),
+  LIPIcs, vol. 132, 2019, pp.~25:1--25:14.
+
+\bibitem{BCKN15}
+Hans~L. Bodlaender, Marek Cygan, Stefan Kratsch, and Jesper Nederlof,
+  \emph{Deterministic single exponential time algorithms for connectivity
+  problems parameterized by treewidth}, Inform. and Comput. \textbf{243}
+  (2015), 86--111.
+
+\bibitem{Bourbaki89}
+Nicolas Bourbaki, \emph{Algebra {I}. {C}hapters 1--3}, Elements of Mathematics,
+  Springer, 1989.
+
+\bibitem{BrandDellRoth19}
+Cornelius Brand, Holger Dell, and Marc Roth, \emph{Fine-grained dichotomies for
+  the {T}utte plane and {B}oolean \#{CSP}}, Algorithmica \textbf{81} (2019),
+  541--556, Preliminary version in IPEC 2016; arXiv:1606.06581.
+
+\bibitem{CIKP08}
+Chris Calabro, Russell Impagliazzo, Valentine Kabanets, and Ramamohan Paturi,
+  \emph{The complexity of {U}nique $k$-{SAT}: an isolation lemma for
+  $k$-{CNF}s}, J. Comput. System Sci. \textbf{74} (2008), no.~3, 386--393,
+  Preliminary version in CCC 2003.
+
+\bibitem{CJSSS04}
+Sergio Caracciolo, Jesper~Lykke Jacobsen, Hubert Saleur, Alan~D. Sokal, and
+  Andrea Sportiello, \emph{Fermionic field theory for trees and forests}, Phys.
+  Rev. Lett. \textbf{93} (2004), 080601.
+
+\bibitem{Anthropic26}
+{Claude (Anthropic)}, \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, Preprint,
+  October 26, 2026. Lean formalisation in the repository
+  \texttt{anthropics/formal-math}, folder \texttt{eth}, 2026.
+
+\bibitem{Curticapean18}
+Radu Curticapean, \emph{Block interpolation: a framework for tight
+  exponential-time counting complexity}, Inform. and Comput. \textbf{261}
+  (2018), 265--280, Preliminary version in ICALP 2015.
+
+\bibitem{CLN18}
+Radu Curticapean, Nathan Lindzey, and Jesper Nederlof, \emph{A tight lower
+  bound for counting {H}amiltonian cycles via matrix rank}, Proc. 29th ACM-SIAM
+  Symposium on Discrete Algorithms (SODA), 2018, pp.~1080--1099.
+
+\bibitem{CyganEtAl15}
+Marek Cygan, Fedor~V. Fomin, {\L}ukasz Kowalik, Daniel Lokshtanov, D{\'a}niel
+  Marx, Marcin Pilipczuk, Micha{\l} Pilipczuk, and Saket Saurabh,
+  \emph{Parameterized algorithms}, Springer, 2015.
+
+\bibitem{CutAndCount11}
+Marek Cygan, Jesper Nederlof, Marcin Pilipczuk, Micha{\l} Pilipczuk, Johan
+  M.~M. van Rooij, and Jakub~Onufry Wojtaszczyk, \emph{Solving connectivity
+  problems parameterized by treewidth in single exponential time}, Proc. 52nd
+  IEEE Symposium on Foundations of Computer Science (FOCS), 2011, pp.~150--159.
+
+\bibitem{Lean4}
+Leonardo de~Moura and Sebastian Ullrich, \emph{The {L}ean 4 theorem prover and
+  programming language}, Automated Deduction -- CADE 28, Lecture Notes in
+  Comput. Sci., vol. 12699, Springer, 2021, pp.~625--635.
+
+\bibitem{DHMTW14}
+Holger Dell, Thore Husfeldt, D{\'a}niel Marx, Nina Taslaman, and Martin
+  Wahl{\'e}n, \emph{Exponential time complexity of the permanent and the
+  {T}utte polynomial}, ACM Trans. Algorithms \textbf{10} (2014), no.~4,
+  Art.~21.
+
+\bibitem{DKMW13}
+Holger Dell, Valentine Kabanets, Dieter van Melkebeek, and Osamu Watanabe,
+  \emph{Is {V}aliant--{V}azirani's isolation probability improvable?}, Comput.
+  Complexity \textbf{22} (2013), no.~2, 345--383.
+
+\bibitem{Eppstein07}
+David Eppstein, \emph{The traveling salesman problem for cubic graphs}, J.
+  Graph Algorithms Appl. \textbf{11} (2007), no.~1, 61--81.
+
+\bibitem{ImpagliazzoPaturi01}
+Russell Impagliazzo and Ramamohan Paturi, \emph{On the complexity of
+  $k$-{SAT}}, J. Comput. System Sci. \textbf{62} (2001), no.~2, 367--375.
+
+\bibitem{IPZ01}
+Russell Impagliazzo, Ramamohan Paturi, and Francis Zane, \emph{Which problems
+  have strongly exponential complexity?}, J. Comput. System Sci. \textbf{63}
+  (2001), no.~4, 512--530.
+
+\bibitem{ImpagliazzoWigderson97}
+Russell Impagliazzo and Avi Wigderson, \emph{{P} = {BPP} if {E} requires
+  exponential circuits: derandomizing the {XOR} lemma}, Proc. 29th ACM
+  Symposium on Theory of Computing (STOC), 1997, pp.~220--229.
+
+\bibitem{LMS11}
+Daniel Lokshtanov, D{\'a}niel Marx, and Saket Saurabh, \emph{Lower bounds based
+  on the {E}xponential {T}ime {H}ypothesis}, Bull. Eur. Assoc. Theor. Comput.
+  Sci. EATCS \textbf{105} (2011), 41--72.
+
+\bibitem{OpenAI26}
+{OpenAI}, \emph{The {E}xponential {T}ime {H}ypothesis is false}, Preprint,
+  October 2026. Lean formalisation in the repository \texttt{openai/math},
+  2026.
+
+\bibitem{RazSpieker95}
+Ran Raz and Boris Spieker, \emph{On the ``log rank''-conjecture in
+  communication complexity}, Combinatorica \textbf{15} (1995), no.~4, 567--588.
+
+\bibitem{Mathlib20}
+{The mathlib Community}, \emph{The {L}ean mathematical library}, Proc. 9th ACM
+  SIGPLAN International Conference on Certified Programs and Proofs (CPP),
+  2020, pp.~367--381.
+
+\bibitem{XiaoNagamochi16}
+Mingyu Xiao and Hiroshi Nagamochi, \emph{An exact algorithm for {TSP} in
+  degree-3 graphs via circuit procedure and amortization on connectivity
+  structure}, Algorithmica \textbf{74} (2016), no.~2, 713--741.
+
+\end{thebibliography}

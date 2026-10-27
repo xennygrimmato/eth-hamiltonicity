@@ -1,0 +1,1532 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=OliveGreen,urlcolor=MidnightBlue]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+\setlist{leftmargin=*,itemsep=2pt,topsep=4pt}
+\emergencystretch=2.5em
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.12}
+
+% ---------------------------------------------------------------- theorems
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{importedlemma}[theorem]{Imported Lemma}
+\newtheorem{importedtheorem}[theorem]{Imported Theorem}
+\newtheorem*{hypA}{Hypothesis $(\mathrm{H}_{\mathrm{A}})$}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{importedlemma}{Imported Lemma}{Imported Lemmas}
+\crefname{importedtheorem}{Imported Theorem}{Imported Theorems}
+\crefname{fact}{Fact}{Facts}
+\crefname{conjecture}{Conjecture}{Conjectures}
+\crefname{step}{Step}{Steps}
+\numberwithin{equation}{section}
+
+% ---------------------------------------------------------------- macros
+\newcommand{\HC}{\#\mathrm{HC}}
+\newcommand{\HP}{\#\mathrm{HP}}
+\newcommand{\bpsi}{\bar\psi}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\topc}[2]{[#1]\bigl(#2\bigr)}
+\newcommand{\lab}[1]{\mathsf{#1}}
+\newcommand{\Eint}{E_{\mathrm{int}}}
+\newcommand{\mx}{m_{\times}}
+\newcommand{\enc}{\operatorname{enc}}
+\newcommand{\block}{\operatorname{block}}
+\newcommand{\poly}{\operatorname{poly}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\cc}{\operatorname{cc}}
+\newcommand{\Ind}[1]{[\,#1\,]}
+\DeclareUrlCommand\lean{\urlstyle{tt}}
+\newcommand{\A}[1][]{\textup{[A\if\relax\detokenize{#1}\relax\else, #1\fi]}}
+
+\begin{document}
+
+\title[Counting Hamiltonian cycles in sparse graphs]{Counting Hamiltonian cycles in sparse graphs\\ in subexponential time,\\ assuming the new $\#$SAT algorithms}
+
+\author{Vaibhav Tulsyan}
+
+\date{October 2026}
+
+\subjclass[2020]{68Q25, 68W40, 05C45, 05C30, 15A75}
+\keywords{Hamiltonian cycle, exact counting, Exponential Time Hypothesis, Grassmann algebra, matrix-tree theorem, Cut\&Count, tensor networks}
+
+\begin{abstract}
+In October 2026 two manuscripts claimed refutations of the Exponential Time Hypothesis by
+deterministic algorithms for $\#k$-SAT, each with a Lean formalisation of its top-level
+statement. Neither result applies directly to connectivity problems such as Hamiltonicity,
+because no linear-size CNF encoding of ``this edge set is a single cycle'' is known. We show
+that, assuming three internal results of one of these manuscripts (a network-to-clique
+reduction, an algorithm for cliques of all levels, and the existence of its ``pieces''), the
+number of Hamiltonian cycles of a graph with $n$ vertices and at most $Dn$ edges can be
+computed exactly and deterministically in time $O(2^{\delta n})$ for every $\delta>0$, and in
+time $2^{O(\max(m,n)/\sqrt{\log n})}$ for a graph with $m$ edges. Deterministic decision, search
+and Hamiltonian-path counting follow. The proof expresses $n\cdot\HC(G)$ as a sum over
+$2$-factors of a fermionic (Berezin) matrix-tree integral, and splits the integral over a
+partition of the vertices. Each crossing edge then costs $\log_2 5$ bits, and the fermionic
+reordering sign factors into blob-local signs and an interleaving sign that costs $O(g^3)$
+parity-copy bits for $g$ blobs. The result is a network, in the sense of the manuscript, whose
+value is $n\cdot\HC(G)$. We also record weaker results that rest only on the
+machine-checked top-level theorems: the parity of $\HC(G)$ for every graph in time
+$2^{O((m+n)/\sqrt{\log(m+n)})}$ (machine-checked in Lean, with the hypotheses discharged by the labs' own Lean proofs),
+and one-sided randomized decision. We describe what is proved, what is checked numerically,
+what is formalised, and what is assumed.
+\end{abstract}
+
+\maketitle
+
+\setcounter{tocdepth}{1}
+{\small\tableofcontents}
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+% =====================================================================
+
+\subsection{Background}
+The Exponential Time Hypothesis (ETH) of Impagliazzo and Paturi~\cite{ImpagliazzoPaturi01}
+asserts that there is $\delta>0$ such that $3$-SAT on $n$ variables cannot be solved in time
+$O(2^{\delta n})$. Together with the sparsification lemma~\cite{IPZ01} it underlies a large body
+of conditional lower bounds~\cite{LMS11,CyganEtAl15}. Among them is the statement that, unless ETH
+fails, Hamiltonian Cycle has no $2^{o(n+m)}$-time algorithm on graphs with $n$ vertices and $m$
+edges~\cite[Ch.~14]{CyganEtAl15}, \cite[Thm.~3.3]{LMS11}.
+
+In October 2026 two manuscripts appeared, by OpenAI~\cite{OpenAI26} and by
+Anthropic~\cite{Anthropic26}, each claiming a deterministic algorithm that counts the satisfying
+assignments of a $k$-CNF in subexponential time, and hence a refutation of ETH. Both are
+accompanied by Lean~4 formalisations of their top-level statements. We stress that these are
+\emph{claimed} results that are, at the time of writing, still under review by the community.
+We write \A{} for the Anthropic manuscript~\cite{Anthropic26}. Its Main Theorem gives one
+deterministic algorithm that counts the models of a $k$-CNF with $m$ clauses on $n$ variables in
+time
+\[
+  2^{O(\min\{km/\sqrt{\log m},\;k^2 n\log\log n/\sqrt{\log n}\})}
+\]
+with an absolute constant in the $O$. The bound of~\cite{OpenAI26} that is machine-checked is
+$2^{O_k(\rho(n))}$ with $\rho(N) = N(\log\log N)^2/\sqrt{\log N}$.
+
+A refutation of ETH does not by itself yield fast algorithms for connectivity problems. ETH
+lower bounds for Hamiltonicity come from linear-size reductions \emph{from} $3$-SAT \emph{to}
+Hamiltonian Cycle; an algorithm needs the reverse direction, an encoding of Hamiltonicity as a
+counting problem on $O(n)$ Boolean variables with short clauses. Connectivity is a global
+property and no such encoding is known. Accordingly, the consequences listed by both labs
+(Independent Set, Vertex Cover, Dominating Set, colouring, circuit lower bounds) are all
+\emph{local} problems.
+
+\subsection{Results}
+Throughout, $G=(V,E)$ is a finite simple undirected graph with $n=|V|$ and $m=|E|$, and
+$\HC(G)$ is the number of Hamiltonian cycles of $G$, each counted once as a subgraph (so
+$\HC(K_4)=3$); $\HC(G)=0$ if $n\le 2$. Running times are counted as in \A: operations on words
+long enough to hold an address, plus table queries. All logarithms are to base~$2$.
+
+Our main results are conditional on three results of \A, which we recall precisely in
+\cref{sec:imported}.
+
+\begin{hypA}
+The following statements of \A{} hold as stated there: Lemma~8, case~(i) (the reduction from
+general networks to cliques, \cref{imp:lemma8}); Theorem~A(a),(b) (one algorithm for the
+$(K_\ell,\lambda)$-cliques of all levels $\ell$, \cref{imp:thmA}); and Theorem~B (pieces with
+parameters $(1/\sqrt2,c)$, \cref{imp:thmB}).
+\end{hypA}
+
+For \cref{thm:main-delta} it suffices to have the pieces of \A[Lemma~2] (parameter $11/12$) in
+place of Theorem~B, or alternatively the main-text pair \A[Lemma~1, Proposition~3]
+(\cref{rem:alt-route}). Nothing else of \A{} is used; in particular we do not use its CNF Main
+Theorem, which does not suffice for our purposes (the fermionic sign below is not local at the
+level of vertices).
+
+\begin{theorem}[Exact counting, fixed density]\label{thm:main-delta}
+Assume $(\mathrm{H}_{\mathrm{A}})$. For every real $\delta>0$ and every $D\ge1$ there is a
+deterministic algorithm that, given a graph $G$ with $n$ vertices and at most $Dn$ edges,
+outputs $\HC(G)$ within $O(2^{\delta n})$ operations.
+\end{theorem}
+
+\begin{theorem}[Exact counting, explicit rate]\label{thm:main-rate}
+Assume $(\mathrm{H}_{\mathrm{A}})$. There are an absolute constant $C^{*}$ and one deterministic
+algorithm that, given any graph $G$ with $n\ge2$ vertices and $m$ edges, outputs $\HC(G)$
+within $2^{C^{*}\max(m,n)/\sqrt{\log n}}$ operations. In particular it runs in time
+$2^{O(Dn/\sqrt{\log n})}$ on graphs with $m\le Dn$, where the $O$-constant is absolute and $D$
+may depend on $n$.
+\end{theorem}
+
+\begin{corollary}[Decision, search and paths]\label{cor:decision-search}
+Assume $(\mathrm{H}_{\mathrm{A}})$. Within the time bounds of
+\cref{thm:main-delta,thm:main-rate}, multiplied by $m+1$, one can deterministically decide
+whether $G$ is Hamiltonian, output a Hamiltonian cycle if one exists, and count, decide and find
+Hamiltonian paths (for paths, apply the bounds with $m+n$ edges and $n+1$ vertices).
+\end{corollary}
+
+The next two results are weaker but depend only on the top-level theorems of the labs, which
+are themselves machine-checked; the first is machine-checked end to end on top of them.
+
+\begin{theorem}[Parity; machine-checked]\label{thm:parity}
+There is one deterministic algorithm that, for every graph $G$ with $n\ge2$ vertices and $m$
+edges, computes $\HC(G)\bmod 2$ within $2^{O((m+n)/\sqrt{\log(m+n)})}$ steps, assuming the Main
+Theorem of \A. Assuming instead the Lean theorem of~\cite{OpenAI26}, it does so in time
+$2^{O(\rho(5m+3n))}$ and polynomial space. Both statements are proved in Lean, and the
+hypotheses are discharged by the labs' own Lean proofs, rebuilt from source; the resulting
+theorems depend only on the standard axioms \lean{propext}, \lean{Classical.choice},
+\lean{Quot.sound}. The analogous statement holds for directed Hamiltonian cycles in digraphs of
+bounded in- and out-degree.
+\end{theorem}
+
+\begin{theorem}[Randomized decision]\label{thm:randomized}
+\leavevmode
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item \textup{(Machine-checked, assuming the Lean theorem of~\cite{OpenAI26}.)} For every
+$\Delta$ and every $\delta>0$ there is a randomized algorithm with one-sided error that decides
+Hamiltonicity of graphs of maximum degree $\Delta$ in time $2^{\delta n}$. The same holds for
+digraphs of bounded in- and out-degree.
+\item \textup{(Written proof, assuming the Main Theorem of \A.)} For every $D$ there is a
+randomized algorithm with one-sided error that decides Hamiltonicity of graphs with at most $Dn$
+edges in time $2^{O_D(n(\log\log n)^2/\sqrt{\log n})}$.
+\end{enumerate}
+\end{theorem}
+
+\Cref{thm:parity} and \cref{thm:randomized}(a) are from an earlier stage of this work and are
+superseded, as statements, by \cref{thm:main-delta,cor:decision-search}; we include them because
+they rest on far less. In (a), Lean checks soundness, the success fraction and the machine; only
+the outer loop of independent trials is not modelled.
+
+\Cref{sec:extensions} records further consequences of the same template, for example directed
+Hamiltonian cycles, TSP with polynomial weights, Steiner trees, feedback vertex sets and the
+Tutte polynomial on the line $y=1$. These are sketched and checked numerically on small
+instances; they are \emph{not} fully proved here.
+
+\subsection{Prior work}
+No subexponential algorithm for Hamiltonicity on general sparse graphs was known, consistent with
+ETH. Planar, bounded-genus and minor-free graphs admit $2^{O(\sqrt n)}$ algorithms via treewidth.
+\Cref{tab:sota} lists the best previous bounds in the settings relevant here; all are of the form
+$c^n$ with $c>1$.
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Previous bounds and the bounds of this paper (all of the latter conditional; see the
+text). Here $\rho(N)=N(\log\log N)^2/\sqrt{\log N}$.}\label{tab:sota}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{4.2cm}>{\raggedright\arraybackslash}p{5.6cm}>{\raggedright\arraybackslash}p{5.0cm}@{}}
+\toprule
+Setting & Previously best known & This paper \\
+\midrule
+undirected, general, decision & $O^{*}(1.657^n)$ randomized~\cite{Bjorklund14}; $O^{*}(2^n)$ deterministic & no gain on dense graphs \\
+bounded degree $\Delta$, decision/TSP & $(2-\varepsilon_\Delta)^n$~\cite{BHKK12} & deterministic $2^{\delta n}$, exact count \\
+maximum degree $3$ & $O(2^{n/3})$~\cite{Eppstein07}; $O^{*}(1.2312^n)$~\cite{XiaoNagamochi16} & deterministic $2^{\delta n}$, exact count \\
+counting, pathwidth $\mathrm{pw}$ & $6^{\mathrm{pw}}n^{O(1)}$~\cite{BCKN15}, tight under SETH~\cite{CLN18} & $2^{O(m/\sqrt{\log n})}$ \\
+counting, directed, average degree $d$ & $2^{n-\Omega(n/d)}$~\cite{BjorklundWilliams19} & see \cref{sec:extensions} (sketch) \\
+parity, directed, general & $O^{*}(1.619^n)$~\cite{BjorklundHusfeldt13} & $2^{O(\rho(n))}$ for bounded degree (Lean) \\
+parity, undirected, all graphs & -- & $2^{O((m+n)/\sqrt{\log(m+n)})}$ (Lean) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two lines of earlier work are closely related to our technique. Cut\&Count~\cite{CutAndCount11}
+reduces connectivity to counting modulo~$2$: a $2$-factor $X$ is paired with the $2^{\cc(X)-1}$
+cuts that no edge of $X$ crosses, so non-Hamiltonian $2$-factors cancel in pairs. This is the
+route to \cref{thm:parity,thm:randomized}. Björklund's determinant sums~\cite{Bjorklund14} pair
+cycle covers with determinants to enforce connectivity; the identity of \cref{lem:2factor-trees}
+below is of the same folklore kind. The fermionic, or Grassmann, form of the matrix-tree theorem
+is due to Caracciolo, Jacobsen, Saleur, Sokal and Sportiello~\cite{CJSSS04}. Rank bounds for the
+matchings-connectivity matrix~\cite{RazSpieker95,CLN18} show that, across one cut, connectivity
+costs only $O(b)$ bits over $\Q$ rather than $b\log b$; our construction can be read as making
+this compose over many cuts simultaneously.
+
+On the hardness side, Dell, Husfeldt, Marx, Taslaman and Wahl\'en~\cite{DHMTW14} and
+Curticapean~\cite{Curticapean18} proved $\#$ETH lower bounds for the permanent, perfect matchings
+and the Tutte polynomial on sparse graphs, and Brand, Dell and Roth~\cite{BrandDellRoth19}
+completed the $\#$ETH dichotomy for the Tutte plane by treating the line $y=1$. Most of these
+bounds concern local problems and are already contradicted by the labs' theorems through local
+encodings; the line $y=1$ (counting forests) is not local, and we return to it in
+\cref{sec:extensions}.
+
+\subsection{Overview of the technique}
+\Cref{sec:trees} starts from the identity
+\begin{equation}\label{eq:intro-identity}
+  n\cdot\HC(G) = \sum_{X\text{ a $2$-factor of } G} \kappa(V,X),
+\end{equation}
+where $\kappa(V,X)$ is the number of spanning trees of $(V,X)$: a $2$-factor has $n$ spanning
+trees if it is a Hamiltonian cycle and none otherwise. The number of spanning trees is the top
+coefficient of a product of even elements $1+q_e$ of a Grassmann algebra, one for each edge
+(\cref{lem:fermionic-mt}). This replaces the colouring filters of Cut\&Count, which provably
+need about $\log n$ bits per vertex to be exact (\cref{prop:colouring-barrier}).
+
+We partition $V$ into $g$ blobs. Each internal edge is handled inside its blob. Each crossing
+edge is either unused or used with one of five monomials of $1+q_e$; merging two monomials that
+live in the same blob gives five labels, i.e.\ $\log_2 5$ bits per crossing edge
+(\cref{tab:labels}). Moving the pieces of the crossing edges into blob order produces a sign. We
+show that this sign factors as a product of blob-local signs and an interleaving sign
+$(-1)^{\sum_{a<c<b<d}\pi_{ab}\pi_{cd}}$, where $\pi_{ab}$ is the parity of the odd labels on the
+bundle of edges between blobs $a$ and $b$ (\cref{prop:sign-rule,prop:sign-factor}). The
+interleaving sign is paid for by $O(g^3)$ parity-copy bits (\cref{lem:copies}). The outcome is a
+network in the sense of \A{} with arbitrary integer node tables and about $2\log_2 5\cdot m+g^3$
+shared bits, whose value is $n\cdot\HC(G)$ (\cref{thm:network-value}). \A's network theorem then
+evaluates it (\cref{sec:algorithm}). One trap is that \A's cost depends on the largest number of
+bits at one node, so a vertex of degree $\Theta(n)$ must be removed first; we branch on its two
+cycle edges (\cref{lem:degree-reduction}).
+
+\subsection{Status of the results}
+The proofs of \cref{sec:grassmann,sec:trees,sec:blobs,sec:network,sec:algorithm,sec:corollaries}
+are complete, conditional on $(\mathrm{H}_{\mathrm{A}})$. They were checked numerically in exact
+integer arithmetic, and an independent referee re-derived the construction with fresh code and
+found it sound, conditional on \A. Parts of the proof are formalised in Lean; the formalisation
+is in progress. \Cref{sec:verification} gives the details. The bounds are purely asymptotic: as
+for the SAT algorithms themselves, the crossover with brute force is astronomically large.
+
+\subsection{Organisation}
+\Cref{sec:imported} recalls the results of \A{} that we use. \Cref{sec:grassmann} collects facts
+about Grassmann algebras. \Cref{sec:trees} proves the fermionic matrix-tree identity for
+Hamiltonian cycles. \Cref{sec:blobs} splits it over blobs and proves the sign rule.
+\Cref{sec:network} builds the network and bounds its parameters. \Cref{sec:algorithm} proves
+\cref{thm:main-delta,thm:main-rate}, and \cref{sec:corollaries} proves
+\cref{cor:decision-search}. \Cref{sec:parity} treats the results that rest only on the top-level
+theorems. \Cref{sec:extensions} sketches extensions, \cref{sec:verification} describes the
+verification status, and \cref{sec:open} lists open problems.
+
+% =====================================================================
+\section{The network theorem of \texorpdfstring{\A}{[A]}}\label{sec:imported}
+% =====================================================================
+
+We recall the definitions and results of \A{} that we use, in the notation of \A{} except where
+a letter clashes with ours. Conventions of \A: $\log=\log_2$, $[x=u]\in\{0,1\}$ and
+$[K]=\{1,\dots,K\}$.
+
+\begin{definition}[{\A[Definition~1]}]\label{def:factor}
+A function $F\colon X\times X'\to\Z$ \emph{factors through $c$ bits} if there are
+$f\colon X\times\{0,1\}^c\to\Z$ and $f'\colon X'\times\{0,1\}^c\to\Z$ with
+$F(z,z')=\sum_{\theta\in\{0,1\}^c} f(z,\theta)f'(z',\theta)$. In particular, for any
+$h\colon X\to\{0,1\}^c$ and $h'\colon X'\to\{0,1\}^c$ the function
+$[h(z)=h'(z')]=\sum_\theta [h(z)=\theta][h'(z')=\theta]$ factors through $c$ bits.
+\end{definition}
+
+\begin{definition}[{\A[Definition~2]}]\label{def:network}
+Let $P,B,\tau\ge1$ be integers. A \emph{network on $J$ with parameters $P,B,\tau$} consists of a
+finite set $J$ of nodes; for each node $a$ a finite set $S_a$ of settings and a function
+$W_a\colon S_a\to\Z$; and for each unordered pair $\{a,b\}$ of distinct nodes a function
+$\Psi_{a,b}\colon S_a\times S_b\to\Z$ (with $\Psi_{b,a}(z_b,z_a)=\Psi_{a,b}(z_a,z_b)$), an integer
+$c_{a,b}=c_{b,a}\ge0$ and a factorisation $(f_{a,b},f_{b,a})$ of $\Psi_{a,b}$ through $c_{a,b}$
+bits. The settings of $a$ are encoded as bit strings of one fixed length $P_a\le P$, and
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $\sum_{b\ne a} c_{a,b}\le P$ for every $a\in J$;
+\item all values of all $W_a$, $\Psi_{a,b}$, $f_{a,b}$ are below $2^B$ in absolute value;
+\item an algorithm receives $P$, $B$ and the numbers $P_a$, $c_{a,b}$ as input, and can decide
+membership in $S_a$ and compute any value of $W_a$, $\Psi_{a,b}$, $f_{a,b}$ with at most $\tau$
+operations.
+\end{enumerate}
+The \emph{value} of the network is
+$Z=\sum_{z\in\prod_a S_a}\prod_{a\in J}W_a(z_a)\prod_{\{a,b\}}\Psi_{a,b}(z_a,z_b)$, and its
+\emph{total} is $U=\sum_{(a,b)\colon a\ne b}c_{a,b}$, which counts every shared bit from both
+ends. By (i), $U\le |J|P$.
+\end{definition}
+
+\begin{definition}[{\A[Definition~3]}]
+Let $K\ge2$ and $\lambda,B\ge1$. In the \emph{$(K,\lambda)$-clique} with tables
+$W_1,\dots,W_K$, a setting of node $w$ is a tuple $(z_w(w'))_{w'\ne w}$ of $\lambda$-bit strings,
+$c_{w,w'}=\lambda$ and $\Psi_{w,w'}=[z_w(w')=z_{w'}(w)]$. The tables $W_w$, with $|W_w|<2^B$, are
+queried at unit cost.
+\end{definition}
+
+\begin{importedlemma}[{\A[Lemma~8, case~(i)]}]\label{imp:lemma8}
+Let $K\ge2$, $g=3K^8$ and $\zeta=1/(2K)$. Take a network on $[g]$ with parameters $P,B,\tau$ and
+total $U$, and put
+\[
+  L=\Bigl\lceil\frac{U+gP/K}{K^2}\Bigr\rceil,\qquad B'=\lceil 2gP/K\rceil+g^2B .
+\]
+If an algorithm outputs the value of every $(K,L)$-clique with $|W_w|<2^{B'}$ within $T$
+operations, then the value of the network is computed within
+\begin{equation}\label{eq:lemma8}
+  \bigl(K^g+T\cdot 2^{2gP/K}\cdot\tau\bigr)\cdot\bigl(g(P+B)\bigr)^{C_1}
+\end{equation}
+operations, by one procedure, for an absolute constant $C_1$.
+\end{importedlemma}
+
+The bound~\eqref{eq:lemma8} is weaker than the printed form of \A[Lemma~8] by at most a
+polynomial factor, which is irrelevant below; it is the form proved in the Lean development
+of \A{} as \lean{ExplicitCost.groupingExplicit}.
+
+\begin{importedtheorem}[{\A[Theorem~A]}]\label{imp:thmA}
+Suppose there are pieces with parameters $(\rho,c)$ in the sense of \A[Definition~7], and let
+$\alpha'=\log(1/\rho)$. Fix an integer $x_0\ge18$ with $2^{x_0}\ge c+5$ and define
+\[
+  K_0=2^{x_0},\quad \zeta_\ell=2^{-\ell-5},\quad g_\ell=2^{3\ell+x_0}K_\ell,\quad K_{\ell+1}=g_\ell^2,\quad
+  e_0=\tfrac12,\quad e_{\ell+1}=(\rho+3\zeta_\ell)e_\ell+3/K_\ell .
+\]
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item $\log K_\ell=(3x_0+6)2^\ell-6\ell-2x_0-6$, so $K_\ell<K_{\ell+1}\le K_\ell^{10}$; and
+$\frac12\rho^\ell\le e_\ell\le 0.85\,\rho^\ell$, where $\rho^\ell\le((3x_0+6)/\log K_\ell)^{\alpha'}$.
+\item One deterministic algorithm, given $\ell\ge0$, $\lambda,B\ge1$ and query access to tables
+with $|W_w|<2^B$, outputs the value of the $(K_\ell,\lambda)$-clique within
+\begin{equation}\label{eq:thmA}
+  2^{e_\ell K_\ell^2\lambda}\cdot\bigl(K_\ell(\lambda+B)\bigr)^{C_0K_\ell^2}
+\end{equation}
+operations, with $C_0$ depending only on $c$.
+\end{enumerate}
+\end{importedtheorem}
+
+\begin{importedtheorem}[{\A[Theorem~B and Lemma~2]}]\label{imp:thmB}
+There are pieces with parameters $(1/\sqrt2,c)$ for an absolute constant $c$. Moreover,
+\A[Lemma~2] gives pieces with parameters $(11/12,c)$ for every integer $c\ge 8$ large enough.
+\end{importedtheorem}
+
+\begin{remark}[Alternative route for \cref{thm:main-delta}]\label{rem:alt-route}
+\A[Lemma~1] states: if $(K,e)$ is achievable and $g=3K^8$, every network on $[g]$ is evaluated
+within $C_1 2^{e(U+gP/K)+2gP/K}(P+B)^{C_1}\tau$ operations, with $C_1=C_1(K,e)$; and
+\A[Proposition~3] gives, for every $\eta>0$, infinitely many $K$ with $(K,\eta)$ achievable. This
+pair can replace $(\mathrm{H}_{\mathrm{A}})$ in the proof of \cref{thm:main-delta}.
+\end{remark}
+
+\begin{remark}
+\A's Lean development proves \cref{imp:lemma8} and \cref{imp:thmA}(b) as
+\lean{ExplicitCost.groupingExplicit} and \lean{ExplicitCost.recursionSolves}, and \cref{imp:thmB}
+as \lean{PiecesCounted.halfPieces}. There they are instantiated only for the networks that come
+from CNFs, and Lean's machine model differs from the printed one (operations are polynomial-time
+steps or queries, memory is bounded, and $K,g,P,B$ are given in unary). Applying these results to
+the network of \cref{sec:network} is done here on paper only; see \cref{sec:verification}.
+\end{remark}
+
+% =====================================================================
+\section{Grassmann algebra}\label{sec:grassmann}
+% =====================================================================
+
+Let $\Gamma$ be a finite set of \emph{generators} with a total order $\prec$. The exterior algebra
+$\Lambda(\Gamma)$ over $\Z$ is the free $\Z$-module with basis $\{e_S : S\subseteq\Gamma\}$ and
+product
+\[
+  e_S\cdot e_T=0\ \text{ if } S\cap T\ne\emptyset,\qquad
+  e_S\cdot e_T=(-1)^{\#\{(s,t)\in S\times T\,:\,t\prec s\}}\,e_{S\cup T}\ \text{ otherwise}.
+\]
+This is the exterior algebra of $\Z^\Gamma$~\cite[Ch.~III, \S7]{Bourbaki89}; it is associative
+with unit $e_\emptyset=1$. Writing $\gamma$ for $e_{\{\gamma\}}$ we have $\gamma\gamma'=-\gamma'\gamma$
+and $\gamma^2=0$, and $e_S$ is the product of the elements of $S$ in increasing $\prec$-order. A
+product of generators therefore does not depend on $\prec$, and all statements below, being about
+sums and products of generators, are independent of $\prec$; changing $\prec$ only re-signs the
+basis.
+
+\emph{Parity.} $\Lambda=\Lambda^0\oplus\Lambda^1$, where $\Lambda^p$ is spanned by the $e_S$ with
+$|S|\equiv p\pmod 2$. Elements of $\Lambda^0\cup\Lambda^1$ are \emph{homogeneous} (so $0$ is
+homogeneous of both parities), and $\Lambda^0$ is a subring.
+
+\begin{fact}[Graded commutativity]\label{fact:graded}
+For $x\in\Lambda^p$ and $y\in\Lambda^q$ we have $xy=(-1)^{pq}yx$. In particular $\Lambda^0$ is
+central.
+\end{fact}
+
+\begin{proof}
+For disjoint $S,T$, every pair in $S\times T$ is counted in exactly one of $\#\{t\prec s\}$ and
+$\#\{s\prec t\}$, so $e_Se_T=(-1)^{|S||T|}e_Te_S$. Extend bilinearly.
+\end{proof}
+
+\begin{lemma}[Koszul sign rule]\label{lem:koszul}
+Let $y_1,\dots,y_M$ be homogeneous of parities $p_1,\dots,p_M$ and let $\sigma$ be a permutation
+of $[M]$. Then
+\[
+  y_{\sigma(1)}y_{\sigma(2)}\cdots y_{\sigma(M)}=(-1)^{N(\sigma)}\,y_1y_2\cdots y_M,\qquad
+  N(\sigma)=\sum_{\substack{s<t\\ \sigma^{-1}(s)>\sigma^{-1}(t)}}p_sp_t,
+\]
+the sum running over the pairs whose relative order $\sigma$ reverses.
+\end{lemma}
+
+\begin{proof}
+Induction on the number of reversed pairs. If $\sigma\ne\mathrm{id}$, some adjacent positions
+$j,j+1$ have $\sigma(j)>\sigma(j+1)$. Exchanging these two factors multiplies the product by
+$(-1)^{p_{\sigma(j)}p_{\sigma(j+1)}}$ by \cref{fact:graded}; it removes exactly the pair
+$\{\sigma(j),\sigma(j+1)\}$ from the set of reversed pairs and changes no other relative order.
+\end{proof}
+
+\emph{Subalgebras and top coefficients.} For $\Gamma'\subseteq\Gamma$, $\Lambda(\Gamma')\subseteq
+\Lambda(\Gamma)$ is the span of the $e_S$ with $S\subseteq\Gamma'$. Let $|\Gamma'|$ be even and
+$\omega=\pm e_{\Gamma'}$. For $x\in\Lambda(\Gamma')$ we write $\topc{\omega}{x}$ for the coefficient
+$c$ such that $x-c\,\omega$ lies in the span of the $e_S$ with $S\subsetneq\Gamma'$. (This is the
+Berezin integral of $x$, normalised by $\omega$.)
+
+\begin{lemma}[Block factorisation of the top coefficient]\label{lem:block}
+Let $\Gamma=\Gamma_1\sqcup\dots\sqcup\Gamma_g$ with every $|\Gamma_a|$ even (blocks may be empty).
+Let $\omega_a=\pm e_{\Gamma_a}$, $\Omega=\omega_1\omega_2\cdots\omega_g$ and
+$x_a\in\Lambda(\Gamma_a)$. Then
+\[
+  \topc{\Omega}{x_1x_2\cdots x_g}=\prod_{a=1}^{g}\topc{\omega_a}{x_a}.
+\]
+\end{lemma}
+
+\begin{proof}
+Since $\Omega=\pm e_\Gamma$, $\topc{\Omega}{\cdot}$ is defined. Write
+$x_a=\topc{\omega_a}{x_a}\,\omega_a+r_a$, where $r_a$ is a combination of $e_S$ with
+$S\subsetneq\Gamma_a$. Expanding the product, the term with no $r_a$ is
+$\prod_a\topc{\omega_a}{x_a}\cdot\Omega$. Every other term is a combination of products
+$e_{S_1}\cdots e_{S_g}$ with $S_b\subseteq\Gamma_b$ for all $b$ and $S_a\subsetneq\Gamma_a$ for
+some $a$; such a product is $0$ or $\pm e_{\bigcup S_b}$ with $\bigcup S_b\ne\Gamma$, and does not
+contribute to $\topc{\Omega}{\cdot}$.
+\end{proof}
+
+% =====================================================================
+\section{Spanning trees and Hamiltonian cycles}\label{sec:trees}
+% =====================================================================
+
+Fix $G=(V,E)$ with $n\ge3$ and a root $r\in V$. A \emph{$2$-factor} is a set $X\subseteq E$ such
+that every vertex has degree exactly $2$ in $(V,X)$. We write $\kappa(V,X)$ for the number of
+spanning trees of the graph $(V,X)$.
+
+\begin{lemma}\label{lem:2factor-trees}
+$n\cdot\HC(G)=\sum_{X}\kappa(V,X)$, the sum over all $2$-factors $X$ of $G$.
+\end{lemma}
+
+\begin{proof}
+A $2$-factor $X$ makes $(V,X)$ a disjoint union of cycles covering $V$. If $(V,X)$ is connected
+it is a single $n$-cycle, i.e.\ a Hamiltonian cycle, whose spanning trees are obtained by deleting
+one of its $n$ edges; so $\kappa(V,X)=n$. If $(V,X)$ is disconnected, $\kappa(V,X)=0$. Conversely,
+the edge set of a Hamiltonian cycle is a connected $2$-factor, and distinct Hamiltonian cycles
+have distinct edge sets.
+\end{proof}
+
+\emph{Generators.} Let $\Gamma=\{\bpsi_v,\psi_v : v\in V\setminus\{r\}\}$, in any order. We put
+$\bpsi_r=\psi_r:=0$ (the zero element), $\omega_v:=\bpsi_v\psi_v\in\Lambda^0$, and for $S\subseteq
+V$ and $e=\{i,j\}\in E$,
+\[
+  \Omega_S:=\prod_{v\in S\setminus\{r\}}\omega_v,\qquad
+  q_e:=(\bpsi_i-\bpsi_j)(\psi_i-\psi_j)\in\Lambda^0 .
+\]
+The order of the factors of $\Omega_S$ is irrelevant since they are even and central, and
+$\Omega_S=\pm e_{\Gamma_S}$, where $\Gamma_S$ is the set of generators of the vertices of $S$. The
+element $q_e$ does not depend on the orientation of $e$, since both factors change sign.
+
+\begin{lemma}[Berezin form of Cauchy--Binet]\label{lem:berezin-cb}
+Let $N=n-1$ and $b_1,\dots,b_N\in\Z^{V\setminus\{r\}}$. Put $\bar\theta(b)=\sum_u b(u)\bpsi_u$ and
+$\theta(b)=\sum_u b(u)\psi_u$. Then
+\[
+  \topc{\Omega_V}{\bar\theta(b_1)\theta(b_1)\,\bar\theta(b_2)\theta(b_2)\cdots\bar\theta(b_N)\theta(b_N)}=\det(\mathbf B)^2,
+\]
+where $\mathbf B$ is the $N\times N$ matrix with columns $b_k$, its rows indexed by
+$V\setminus\{r\}$ in any fixed order; $\det(\mathbf B)^2$ does not depend on that order.
+\end{lemma}
+
+\begin{proof}
+Enumerate $V\setminus\{r\}$ as $u_1,\dots,u_N$.
+\begin{enumerate}[label=(\arabic*)]
+\item By \cref{lem:koszul}, moving each $\bar\theta(b_k)$ to the left past
+$\theta(b_1),\dots,\theta(b_{k-1})$ gives
+$\prod_k\bar\theta(b_k)\theta(b_k)=(-1)^{N(N-1)/2}\,\bar\theta(b_1)\cdots\bar\theta(b_N)\cdot
+\theta(b_1)\cdots\theta(b_N)$.
+\item Expanding multilinearly,
+$\bar\theta(b_1)\cdots\bar\theta(b_N)=\sum_{\varphi\colon[N]\to[N]}\prod_k b_k(u_{\varphi(k)})\;
+\bpsi_{u_{\varphi(1)}}\cdots\bpsi_{u_{\varphi(N)}}$. Only bijections $\varphi$ survive, because
+$\bpsi_u^2=0$, and for those $\bpsi_{u_{\varphi(1)}}\cdots\bpsi_{u_{\varphi(N)}}=\operatorname{sgn}
+(\varphi)\,\bpsi_{u_1}\cdots\bpsi_{u_N}$ by \cref{lem:koszul}. Hence
+\[
+  \bar\theta(b_1)\cdots\bar\theta(b_N)=\det(\mathbf B)\,\bpsi_{u_1}\cdots\bpsi_{u_N},
+  \qquad
+  \theta(b_1)\cdots\theta(b_N)=\det(\mathbf B)\,\psi_{u_1}\cdots\psi_{u_N}.
+\]
+\item Step (1) applied to the standard vectors gives
+\[
+  \bpsi_{u_1}\cdots\bpsi_{u_N}\,\psi_{u_1}\cdots\psi_{u_N}=(-1)^{N(N-1)/2}\,\omega_{u_1}\cdots
+  \omega_{u_N}=(-1)^{N(N-1)/2}\,\Omega_V .
+\]
+\end{enumerate}
+The two signs cancel and the product equals $\det(\mathbf B)^2\,\Omega_V$.
+\end{proof}
+
+\begin{lemma}[Fermionic matrix-tree theorem~\cite{CJSSS04}]\label{lem:fermionic-mt}
+For every $X\subseteq E$,
+\[
+  \topc{\Omega_V}{\prod_{e\in X}(1+q_e)}=\kappa(V,X).
+\]
+\end{lemma}
+
+\begin{proof}
+The factors are even and commute, so $\prod_{e\in X}(1+q_e)=\sum_{F\subseteq X}\prod_{e\in F}q_e$.
+The term of $F$ lies in the span of the $e_S$ with $|S|=2|F|$, while $\Omega_V=\pm e_\Gamma$ with
+$|\Gamma|=2N$; so only $|F|=N$ contributes. For $e=\{i,j\}$ we have
+$q_e=\bar\theta(b_e)\theta(b_e)$ with $b_e=\mathbf 1_i-\mathbf 1_j$ restricted to
+$V\setminus\{r\}$ (that is, $b_e=\mathbf 1_i$ if $j=r$). By \cref{lem:berezin-cb}, $F$ contributes
+$\det(\mathbf B_F)^2$, where $\mathbf B_F$ is the reduced incidence matrix of $F$.
+\begin{itemize}
+\item If $F$ (with $|F|=n-1$) is not a spanning tree, then $(V,F)$ is disconnected, since a
+connected graph on $n$ vertices with $n-1$ edges is a tree. Let $C$ be a component with $r\notin
+C$. The rows $u\in C$ of $\mathbf B_F$ sum to $0$: the column of an edge inside $C$ has entries
+$+1$ and $-1$ there, and the other columns vanish on $C$. So $\det\mathbf B_F=0$.
+\item If $F$ is a spanning tree, then $\det\mathbf B_F=\pm1$, by induction on $n$. For $n=1$ the
+matrix is empty. For $n\ge2$ pick a leaf $v\ne r$ (a tree has at least two leaves). Row $v$ has
+one nonzero entry, $\pm1$, in the column of its edge $f$, and expanding along it gives
+$\det\mathbf B_F=\pm\det\mathbf B_{F-f}$, the reduced incidence matrix of the spanning tree
+$F-f$ of $V-v$.
+\end{itemize}
+Hence the coefficient is the number of spanning trees $F\subseteq X$, i.e.\ $\kappa(V,X)$.
+\end{proof}
+
+By Cauchy--Binet, \cref{lem:fermionic-mt} is equivalent to Kirchhoff's theorem
+$\kappa(V,X)=\det L_X^{(r)}$; we do not need this form, but it is checked numerically
+(\cref{sec:verification}).
+
+\begin{corollary}\label{cor:hc-berezin}
+\[
+  n\cdot\HC(G)=\sum_{x\in\{0,1\}^E}\ \prod_{v\in V}\Ind{\deg_x(v)=2}\cdot
+  \topc{\Omega_V}{\prod_{e\colon x_e=1}(1+q_e)} .
+\]
+\end{corollary}
+
+\begin{proof}
+Combine \cref{lem:2factor-trees,lem:fermionic-mt}.
+\end{proof}
+
+% =====================================================================
+\section{Blobs, pieces and the sign rule}\label{sec:blobs}
+% =====================================================================
+
+\subsection{Conventions}
+The following conventions are fixed once and for all.
+\begin{itemize}
+\item \emph{Partition.} $\phi\colon V\to[g]$ is an arbitrary map, and the \emph{blobs} are
+$V_a=\phi^{-1}(a)$. Blobs may be empty, and $r$ may lie in any blob. The blob indices
+$1<2<\dots<g$ form the ``line'' on which chords interleave.
+\item \emph{Edges.} An edge is \emph{internal} to $a$ if both ends lie in $V_a$; the set of these
+is $\Eint(a)$. The other edges are \emph{crossing}; let $\mx$ be their number.
+\item \emph{Crossing order.} The crossing edges are listed in an arbitrary but fixed total order
+$e_1,\dots,e_{\mx}$; we write $k<l$ if $e_k$ comes before $e_l$.
+\item \emph{Ends.} A crossing edge $e_k$ has a \emph{low end} $s_k$ and a \emph{high end} $t_k$,
+with $a_k:=\phi(s_k)<b_k:=\phi(t_k)$. Its \emph{chord} is $\{a_k,b_k\}$.
+\item \emph{Incidences.} $\partial(a):=\{k : a\in\{a_k,b_k\}\}$ is the set of crossing edges at
+$a$. For $a<b$ let $E(a,b):=\{k : (a_k,b_k)=(a,b)\}$ (the \emph{bundle} of $\{a,b\}$) and
+$m_{ab}:=|E(a,b)|$, and set $m_{ba}:=m_{ab}$.
+\item \emph{Algebras.} $\Gamma_a$ is the set of generators of $V_a\setminus\{r\}$,
+$\Lambda_a:=\Lambda(\Gamma_a)$ and $\omega_a:=\Omega_{V_a}$. Then $\Omega_V=\omega_1\cdots\omega_g$,
+and \cref{lem:block} applies to $\Gamma=\bigsqcup_a\Gamma_a$.
+\end{itemize}
+
+\subsection{Labels and pieces}
+The label set is $\cL=\{\lab N,\lab 0,\lab 1,\lab 2,\lab 3\}$, and the \emph{parity} of a label is
+$\pi(\ell):=\Ind{\ell\in\{\lab 2,\lab 3\}}$. For the crossing edge $e_k$ with ends $s=s_k$ and
+$t=t_k$, the pieces $\alpha_\ell(k)\in\Lambda_{a_k}$ and $\beta_\ell(k)\in\Lambda_{b_k}$ are given
+in \cref{tab:labels}.
+
+\begin{table}[ht]
+\centering
+\caption{Labels of a crossing edge $e_k$ with low end $s$ and high end $t$, and their pieces.}
+\label{tab:labels}
+\begin{tabular}{@{}cccccl@{}}
+\toprule
+label $\ell$ & $\alpha_\ell(k)\in\Lambda_{a_k}$ & $\beta_\ell(k)\in\Lambda_{b_k}$ & $\alpha_\ell(k)\beta_\ell(k)$ & parity $\pi(\ell)$ & meaning \\
+\midrule
+$\lab N$ & $1$ & $1$ & $1$ & $0$ & $e_k\notin X$\\
+$\lab 0$ & $1$ & $1+\bpsi_t\psi_t$ & $1+\bpsi_t\psi_t$ & $0$ & $e_k\in X$, terms $1$ and $\bpsi_t\psi_t$\\
+$\lab 1$ & $\bpsi_s\psi_s$ & $1$ & $\bpsi_s\psi_s$ & $0$ & $e_k\in X$, term $\bpsi_s\psi_s$\\
+$\lab 2$ & $\bpsi_s$ & $-\psi_t$ & $-\bpsi_s\psi_t$ & $1$ & $e_k\in X$, term $-\bpsi_s\psi_t$\\
+$\lab 3$ & $\psi_s$ & $\bpsi_t$ & $\psi_s\bpsi_t$ & $1$ & $e_k\in X$, term $-\bpsi_t\psi_s$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}[Why five labels]\label{rem:five-labels}
+For a used edge, $1+q_e=1+\bpsi_s\psi_s-\bpsi_s\psi_t-\bpsi_t\psi_s+\bpsi_t\psi_t$ has five
+monomials; together with ``unused'' this gives six states. The two monomials $1$ and
+$\bpsi_t\psi_t$ both live entirely in the high blob, and label $\lab 0$ merges them into the
+single high piece $1+\bpsi_t\psi_t$. This gives five labels, i.e.\ $\log_25$ bits per crossing
+edge. (A description as ``unused, or one of four bilinear terms'' would miss the term $1$; the
+merge above is what makes five labels correct. Other merges work equally well and change only
+constants.)
+\end{remark}
+
+\begin{lemma}\label{lem:pieces}
+\leavevmode
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item $\alpha_\ell(k)$ and $\beta_\ell(k)$ are homogeneous of parity $\pi(\ell)$. This includes
+the cases $s=r$ or $t=r$, in which some pieces are $0$ or reduce to $1$.
+\item $\alpha_{\lab N}(k)\beta_{\lab N}(k)=1$ and
+$\sum_{\ell\in\{\lab0,\lab1,\lab2,\lab3\}}\alpha_\ell(k)\beta_\ell(k)=1+q_{e_k}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) Read off \cref{tab:labels}. (b) By bilinearity
+$q_e=\bpsi_s\psi_s-\bpsi_s\psi_t-\bpsi_t\psi_s+\bpsi_t\psi_t$ for any elements, zero included, and
+$-\bpsi_t\psi_s=\psi_s\bpsi_t$. The four products in the table are $1+\bpsi_t\psi_t$,
+$\bpsi_s\psi_s$, $-\bpsi_s\psi_t$ and $\psi_s\bpsi_t$, which sum to $1+q_e$.
+\end{proof}
+
+For a labelling $\eta\in\cL^{\mx}$ write $p_k:=\pi(\eta_k)$. Define the \emph{piece of $k$ at
+$a$} as $\gamma_{k,a}(\eta):=\alpha_{\eta_k}(k)$ if $a=a_k$ and $\beta_{\eta_k}(k)$ if $a=b_k$,
+and the ordered product of the pieces at $a$,
+\[
+  R_a(\eta):=\prod_{k\in\partial(a)}^{\to}\gamma_{k,a}(\eta)\in\Lambda_a
+  \qquad\text{(factors in increasing crossing order $k$).}
+\]
+Finally, let
+\[
+  r_{kl}:=\#\bigl\{(x,y)\in\{a_k,b_k\}\times\{a_l,b_l\} : y<x\bigr\},\qquad
+  \varepsilon(\eta):=(-1)^{\sum_{k<l}p_kp_l\,r_{kl}} .
+\]
+
+\begin{proposition}[Sign rule]\label{prop:sign-rule}
+For every partition, every crossing order and every $\eta\in\cL^{\mx}$,
+\[
+  \prod_{k=1}^{\mx}\alpha_{\eta_k}(k)\,\beta_{\eta_k}(k)=\varepsilon(\eta)\cdot R_1(\eta)R_2(\eta)\cdots R_g(\eta).
+\]
+\end{proposition}
+
+\begin{proof}
+The left side is the product of the sequence
+$Y=(\alpha(1),\beta(1),\alpha(2),\beta(2),\dots,\alpha(\mx),\beta(\mx))$. Give the piece
+$\alpha(k)$ the key $(a_k,k)$ and the piece $\beta(k)$ the key $(b_k,k)$. Sorting $Y$ by key,
+lexicographically, lists blob~$1$'s pieces in increasing $k$, then blob~$2$'s, and so on; so the
+sorted product is $R_1\cdots R_g$. By \cref{lem:pieces}(a) all pieces are homogeneous, and
+\cref{lem:koszul} counts the pairs of pieces whose relative order is reversed:
+\begin{itemize}
+\item \emph{Two pieces of the same $k$.} In $Y$, $\alpha(k)$ comes first, and its key is also
+smaller since $a_k<b_k$. Not reversed.
+\item \emph{A piece $x$ of $k$ and a piece $y$ of $l$, with $k<l$.} In $Y$, $x$ comes first. The
+keys are $(\mathrm{blob}(x),k)$ and $(\mathrm{blob}(y),l)$; since $k<l$, the pair is reversed iff
+$\mathrm{blob}(y)<\mathrm{blob}(x)$. The product of parities is $p_kp_l$, and the number of such
+pairs is $r_{kl}$.
+\end{itemize}
+So $R_1\cdots R_g=(-1)^{\sum_{k<l}p_kp_lr_{kl}}\prod_k\alpha(k)\beta(k)$; multiply both sides by
+$\varepsilon(\eta)=\pm1$.
+\end{proof}
+
+\subsection{Factorisation of the sign}
+
+\begin{lemma}\label{lem:disjoint-chords}
+If $\{a_k,b_k\}\cap\{a_l,b_l\}=\emptyset$, then $r_{kl}\equiv I(k,l)\pmod 2$, where
+\[
+  I(k,l):=\Ind{a_k<a_l<b_k<b_l\ \text{or}\ a_l<a_k<b_l<b_k}
+\]
+indicates that the chords interleave. In particular $r_{kl}\bmod 2$ is symmetric and independent
+of the crossing order.
+\end{lemma}
+
+\begin{proof}
+Put $Y=\{a_l,b_l\}$, whose elements differ from $a_k$ and $b_k$. Then
+$r_{kl}=\#\{y\in Y: y<a_k\}+\#\{y\in Y: y<b_k\}=2\#\{y\in Y: y<a_k\}+\#\{y\in Y: a_k<y<b_k\}$. The
+last number is odd iff exactly one endpoint of chord $l$ lies strictly between $a_k$ and $b_k$,
+that is, iff the chords interleave.
+\end{proof}
+
+Two crossing edges $k<l$ \emph{share a blob} if their chords meet. For such a pair put
+$s(k,l):=\min(\{a_k,b_k\}\cap\{a_l,b_l\})$; then $k,l\in\partial(s(k,l))$. Define the \emph{local
+signs} and the \emph{bundle parities}
+\[
+  \sigma_a(\eta):=(-1)^{\sum_{k<l\,:\ \text{chords meet},\ s(k,l)=a}p_kp_l\,r_{kl}},\qquad
+  \pi_{ab}(\eta):=\sum_{k\in E(a,b)}p_k\bmod 2\quad(a<b).
+\]
+Thus $\sigma_a$ is a function of $\eta|_{\partial(a)}$, and $\pi_{ab}$ of $\eta|_{E(a,b)}$.
+
+\begin{proposition}[Sign factorisation]\label{prop:sign-factor}
+\[
+  \varepsilon(\eta)=\prod_{a=1}^{g}\sigma_a(\eta)\cdot(-1)^{\sum_{a<c<b<d}\pi_{ab}(\eta)\,\pi_{cd}(\eta)} .
+\]
+\end{proposition}
+
+\begin{proof}
+Split $\sum_{k<l}p_kp_lr_{kl}$ into the pairs whose chords meet and the pairs whose chords are
+disjoint.
+\begin{itemize}
+\item \emph{Meeting chords.} Each such pair has exactly one $s(k,l)$, so these pairs give
+$\prod_a\sigma_a$.
+\item \emph{Disjoint chords.} By \cref{lem:disjoint-chords} these pairs give, modulo $2$,
+$\sum_{k<l\colon I(k,l)=1}p_kp_l$. Take an unordered pair $\{k,l\}$ with disjoint interleaving
+chords, let $\{a,b\}$ ($a<b$) be the chord with the smaller minimum and $\{c,d\}$ the other;
+interleaving means $a<c<b<d$. Conversely, every quadruple $a<c<b<d$ with $k\in E(a,b)$ and $l\in
+E(c,d)$ gives such a pair. This is a bijection, so the sum equals
+$\sum_{a<c<b<d}\bigl(\sum_{k\in E(a,b)}p_k\bigr)\bigl(\sum_{l\in E(c,d)}p_l\bigr)\equiv
+\sum_{a<c<b<d}\pi_{ab}\pi_{cd}\pmod2$.\qedhere
+\end{itemize}
+\end{proof}
+
+\emph{Parity copies.} Let $Q_a:=\{(c,d) : a<c<d\le g\}$, so $|Q_a|=\binom{g-a}{2}$. For
+$y\in\{0,1\}^{Q_a}$ put
+\[
+  \chi_a(\eta,y):=(-1)^{\sum_{(c,d)\in Q_a}y_{cd}\sum_{b\colon c<b<d}\pi_{ab}(\eta)},
+\]
+a function of $\eta|_{\partial(a)}$ and $y$.
+
+\begin{lemma}\label{lem:copies}
+If $y^{(a)}_{cd}=\pi_{cd}(\eta)$ for all $a$ and all $(c,d)\in Q_a$, then
+$\prod_a\chi_a(\eta,y^{(a)})=(-1)^{\sum_{a<c<b<d}\pi_{ab}\pi_{cd}}$.
+\end{lemma}
+
+\begin{proof}
+$\sum_a\sum_{a<c<d}\pi_{cd}\sum_{c<b<d}\pi_{ab}=\sum_{a<c<b<d}\pi_{ab}\pi_{cd}$.
+\end{proof}
+
+So every interleaving pair of chords $\{a,b\}$, $\{c,d\}$ with $a<c<b<d$ is charged to node $a$,
+which knows $\pi_{ab}$, and node $a$ receives a copy of $\pi_{cd}$ from node $c$, over the pair
+$\{a,c\}$.
+
+\subsection{Blob factorisation}
+For $v\in V_a$ let $\deg_\eta(v):=\#\{k\in\partial(a): v\in\{s_k,t_k\},\ \eta_k\ne\lab N\}$, and
+define the \emph{blob sums}
+\[
+  I_a(\eta):=\sum_{x\in\{0,1\}^{\Eint(a)}}\ \prod_{v\in V_a}\Ind{\deg_x(v)+\deg_\eta(v)=2}\cdot
+  \topc{\omega_a}{\cF_a(x)\,R_a(\eta)},
+\]
+where
+\[
+  \cF_a(x):=\prod_{e\in\Eint(a)\colon x_e=1}(1+q_e)\in\Lambda_a\cap\Lambda^0 .
+\]
+$I_a$ depends only on $\eta|_{\partial(a)}$. An empty blob has $I_a=1$, and so does a blob that
+consists of $r$ alone and has no edges.
+
+\begin{theorem}[Blob factorisation]\label{thm:blob}
+For every partition and every crossing order,
+\[
+  n\cdot\HC(G)=\sum_{\eta\in\cL^{\mx}}\varepsilon(\eta)\prod_{a=1}^{g}I_a(\eta)
+  =\sum_{\eta\in\cL^{\mx}}\prod_{a=1}^{g}\sigma_a(\eta)\,\chi_a\bigl(\eta,\pi(\eta)\bigr)\,I_a(\eta),
+\]
+where $\chi_a(\eta,\pi(\eta))$ means $\chi_a(\eta,y^{(a)})$ with $y^{(a)}_{cd}=\pi_{cd}(\eta)$.
+\end{theorem}
+
+\begin{proof}
+The second equality is \cref{prop:sign-factor} together with \cref{lem:copies}. For the first:
+\begin{enumerate}[label=(\arabic*)]
+\item Expanding $\prod_aI_a$ gives a sum over $x_{\mathrm{int}}\in\{0,1\}^{\bigcup_a\Eint(a)}$ of
+the degree indicators times $\prod_a\topc{\omega_a}{\cF_aR_a}$.
+\item By \cref{lem:block}, since $\cF_aR_a\in\Lambda_a$,
+$\prod_a\topc{\omega_a}{\cF_aR_a}=\topc{\Omega_V}{\prod_a\cF_aR_a}$.
+\item The $\cF_a$ are even and central, so $\prod_a(\cF_aR_a)=(\prod_a\cF_a)\cdot R_1\cdots R_g$.
+\item By \cref{prop:sign-rule}, $\varepsilon(\eta)R_1\cdots R_g=\prod_k\alpha_{\eta_k}(k)
+\beta_{\eta_k}(k)$.
+\item Fix $x_{\mathrm{int}}$ and the support $T:=\{k:\eta_k\ne\lab N\}$. The degree indicators say
+exactly that $x:=x_{\mathrm{int}}\cup\mathbf 1_T$ is a $2$-factor, and they do not depend on the
+labels on $T$.
+\item By distributivity and \cref{lem:pieces}(b),
+$\sum_{\eta\colon\supp\eta=T}\prod_k\alpha_{\eta_k}(k)\beta_{\eta_k}(k)=\prod_{k\in T}(1+q_{e_k})$.
+\item Hence $\sum_\eta\varepsilon\prod_aI_a=\sum_{x\in\{0,1\}^E}\Ind{x\text{ is a $2$-factor}}
+\,\topc{\Omega_V}{\prod_{x_e=1}(1+q_e)}=n\cdot\HC(G)$ by \cref{cor:hc-berezin}.\qedhere
+\end{enumerate}
+\end{proof}
+
+\begin{remark}\label{rem:sign-needed}
+The interleaving sign matters exactly when odd labels sit on interleaving chords. In practice
+this happens on disconnected $2$-factors whose non-root cycle winds through the blobs in
+interleaving order; there the odd terms are what cancel $\kappa$ to $0$. Dropping it gives wrong
+values on a positive fraction of test instances (\cref{tab:checks}, C12). Since every blob
+carries an even number of odd generators, $(\pi_{ab})$ is a cycle-space vector of $K_g$, which
+explains why the global sign is nontrivial only on a small fraction of random instances.
+\end{remark}
+
+% =====================================================================
+\section{The network}\label{sec:network}
+% =====================================================================
+
+Fix $G$, $r$, $\phi$ and a crossing order as in \cref{sec:blobs}. Let
+$\enc\colon\cL\to\{0,\dots,4\}$ be the encoding $\enc(\lab N)=0$ and $\enc(\lab j)=j+1$. For an
+integer $t\ge0$ let $w(t):=\min\{w\ge0 : 2^w\ge 5^t\}=\lceil t\log 5\rceil$, and put
+$w_{ab}:=w(m_{ab})$.
+
+\begin{definition}[{The network $\mathcal N(G,r,\phi,\text{order})$ on $[g]$}]\label{def:our-network}
+\leavevmode
+\begin{description}[leftmargin=0pt,font=\normalfont\itshape]
+\item[Settings.] A setting of node $a$ is a pair $z_a=(\eta^{(a)},y^{(a)})$ with
+$\eta^{(a)}\in\cL^{\partial(a)}$ and $y^{(a)}\in\{0,1\}^{Q_a}$. It is encoded as the
+concatenation of
+\begin{itemize}
+\item for each $b\in[g]\setminus\{a\}$, in increasing order, the \emph{block} $\block_b(z_a)$:
+the $w_{ab}$-bit binary representation (lowest bit first) of
+$\sum_{j=1}^{m_{ab}}\enc(\eta^{(a)}_{k_j})\,5^{j-1}$, where $k_1<\dots<k_{m_{ab}}$ enumerate
+$E(\min(a,b),\max(a,b))$ in crossing order;
+\item the bits $y^{(a)}_{cd}$ for $(c,d)\in Q_a$, in lexicographic order.
+\end{itemize}
+Thus $P_a:=\sum_{b\ne a}w_{ab}+|Q_a|$, and $S_a$ is the set of strings of length $P_a$ each of
+whose blocks is $<5^{m_{ab}}$. These are exactly the encodings, and the encoding is a bijection,
+so $|S_a|=5^{|\partial(a)|}2^{|Q_a|}$.
+\item[Node functions.] $W_a(z_a):=\sigma_a(\eta^{(a)})\cdot\chi_a(\eta^{(a)},y^{(a)})\cdot
+I_a(\eta^{(a)})$.
+\item[Edges.] For $a<b$,
+\[
+  \Psi_{a,b}(z_a,z_b):=\prod_{k\in E(a,b)}\Ind{\eta^{(a)}_k=\eta^{(b)}_k}\cdot
+  \prod_{d=b+1}^{g}\Ind{y^{(a)}_{bd}=\pi_{bd}(\eta^{(b)})},
+\]
+and $\Psi_{b,a}(z_b,z_a):=\Psi_{a,b}(z_a,z_b)$. The number of shared bits is
+$c_{a,b}=c_{b,a}:=w_{ab}+(g-b)$, and the factorisation is $f_{a,b}(z_a,\theta):=
+\Ind{h_{ab}(z_a)=\theta}$, $f_{b,a}(z_b,\theta):=\Ind{h_{ba}(z_b)=\theta}$, where
+\begin{align*}
+  h_{ab}(z_a)&:=\bigl(\block_b(z_a),\,y^{(a)}_{b,b+1},\dots,y^{(a)}_{b,g}\bigr)\in\{0,1\}^{c_{a,b}},\\
+  h_{ba}(z_b)&:=\bigl(\block_a(z_b),\,\pi_{b,b+1}(\eta^{(b)}),\dots,\pi_{b,g}(\eta^{(b)})\bigr)\in\{0,1\}^{c_{a,b}}.
+\end{align*}
+\end{description}
+\end{definition}
+
+In words: the $w_{ab}$ block bits on $\{a,b\}$ are the base-$5$ code of the labels of the crossing
+edges between $V_a$ and $V_b$; both ends hold a copy, and $\Psi$ tests that the copies agree. For
+$a<b$ the remaining $g-b$ bits on $\{a,b\}$ are copies, held by $a$, of the parities $\pi_{bd}$
+for $d>b$, which node $b$ computes from its own labels on $E(b,d)$.
+
+\begin{lemma}\label{lem:factorisation}
+$(f_{a,b},f_{b,a})$ factors $\Psi_{a,b}$ through $c_{a,b}$ bits.
+\end{lemma}
+
+\begin{proof}
+Both ends list $E(a,b)$ in the same order, and the base-$5$ encoding is injective, so
+$\block_b(z_a)=\block_a(z_b)$ iff $\eta^{(a)}$ and $\eta^{(b)}$ agree on $E(a,b)$. The remaining
+coordinates of $h_{ab}$ and $h_{ba}$ agree iff every copy is correct. Hence
+$\Psi_{a,b}=\Ind{h_{ab}(z_a)=h_{ba}(z_b)}$, and \cref{def:factor} applies.
+\end{proof}
+
+\begin{theorem}\label{thm:network-value}
+The value of $\mathcal N(G,r,\phi,\text{order})$ is $n\cdot\HC(G)$, for every $n\ge3$, every
+$\phi\colon V\to[g]$, every root $r$ and every crossing order.
+\end{theorem}
+
+\begin{proof}
+The functions $\Psi_{a,b}$ are $0/1$-valued, so a term $\prod_aW_a\prod_{a<b}\Psi_{a,b}$ is
+nonzero only if all $\Psi_{a,b}$ equal $1$. This means: (i) there is $\eta\in\cL^{\mx}$ with
+$\eta^{(a)}=\eta|_{\partial(a)}$ for every $a$, because each $k$ lies in exactly $\partial(a_k)$
+and $\partial(b_k)$, and $\Psi_{a_k,b_k}$ tests agreement on $k$; and (ii)
+$y^{(a)}_{cd}=\pi_{cd}(\eta)$ for all $a<c<d$, because $\Psi_{a,c}$ tests this and
+$\pi_{cd}(\eta^{(c)})=\pi_{cd}(\eta)$. Conversely, every $\eta\in\cL^{\mx}$ determines exactly one
+$z$ with (i) and (ii). So $Z=\sum_\eta\prod_a\sigma_a(\eta)\chi_a(\eta,\pi(\eta))I_a(\eta)=
+n\cdot\HC(G)$ by \cref{thm:blob}.
+\end{proof}
+
+\begin{proposition}[Parameters]\label{prop:parameters}
+Let $\mu_a:=\sum_{v\in V_a}\deg_G(v)$ and $\mu:=\max_a\mu_a$, and suppose that $G$ has minimum
+degree at least $2$. Then $\mathcal N(G,r,\phi,\text{order})$ is a network in the sense of
+\cref{def:network} with
+\[
+  P:=w(\mu)+g+g^2,\qquad B:=2\mu+1,\qquad \tau:=2^{1.5\mu}n^{C_2}\quad(C_2\text{ absolute}),
+\]
+\[
+  U=2\sum_{a<b}w_{ab}+2\binom g3\ \le\ 2\log5\cdot\mx+g^2+\frac{g^3}{3}\ \le\ 2\log5\cdot|E|+g^3,
+\]
+where $\tau$ is counted after a polynomial-time preparation. In particular $P\le\log5\cdot\mu+2g^2$
+and $gP\le\log5\cdot g\mu+2g^3$.
+\end{proposition}
+
+\begin{proof}
+\emph{Counting.} Each crossing edge at $a$ has exactly one end in $V_a$ and each internal edge
+two, so $2|\Eint(a)|+|\partial(a)|=\mu_a$. Also $w(t)\le t\log5+\Ind{t>0}$ and $w(t)\ge t\log5$,
+so $\sum_{b\ne a}w_{ab}\le|\partial(a)|\log5+(g-1)\le w(\mu)+g-1$.
+
+\emph{$P_a\le P$.} $P_a=\sum_bw_{ab}+\binom{g-a}2\le w(\mu)+g-1+g^2/2\le P$.
+
+\emph{Condition (i).} The copy bits on pairs at $a$ number
+$\sum_{b>a}(g-b)+\sum_{b<a}(g-a)=\binom{g-a}2+(a-1)(g-a)\le g^2$, so $\sum_{b\ne a}c_{a,b}\le
+w(\mu)+g-1+g^2\le P$.
+
+\emph{The total.} $U=2\sum_{a<b}c_{a,b}$. Use $\sum_{a<b}(g-b)=\sum_b(b-1)(g-b)=\binom g3$ (choose
+the middle element of a triple), and $\#\{a<b: m_{ab}>0\}\le g^2/2$. Finally $g^2+g^3/3\le g^3$ for
+$g\ge2$.
+
+\emph{Condition (ii).} $\Psi$ and $f$ take values in $\{0,1\}$, and $|\sigma_a\chi_a|=1$. In
+$I_a$, the product $\cF_a(x)R_a(\eta)$ has at most $|\Eint(a)|$ factors with at most five signed
+monomials each and $|\partial(a)|$ factors with at most two each, and there are at most
+$2^{|\Eint(a)|}$ choices of $x$. So
+\[
+  |W_a|\le 10^{|\Eint(a)|}\,2^{|\partial(a)|}\le 2^{\frac{\log10}{2}\cdot2|\Eint(a)|+|\partial(a)|}
+  \le 2^{1.67\mu_a}<2^B .
+\]
+
+\emph{Condition (iii).} The preparation stores the graph, $\phi$, the crossing order, the lists
+$E(a,b)$, the numbers $w_{ab}$ and the sets $Q_a$. Then membership in $S_a$, encoding and
+decoding, $h_{ab}$, $\Psi$ and $f$ take $\poly(n+g)$ operations (base-$5$ arithmetic on at most
+$P$-bit numbers, with $P\le\poly(n)$); $\sigma_a$ takes $O(|\partial(a)|^2)$ operations and
+$\chi_a$ takes $O(g^3)$. Finally, $I_a$ loops over at most $2^{|\Eint(a)|}\le2^{\mu/2}$ vectors
+$x$; for each it multiplies at most $\mu$ factors (with at most five monomials each) in
+$\Lambda_a$, represented densely by $2^{|\Gamma_a|}\le4^{|V_a|}\le2^\mu$ integers of at most
+$B=O(n)$ bits (here $|V_a|\le\mu_a/2$ because the minimum degree is at least $2$), and reads one
+coefficient. Altogether $\tau\le2^{\mu/2}\cdot2^\mu\cdot\poly(n)$.
+\end{proof}
+
+\begin{remark}\label{rem:largest-node}
+\Cref{def:network} bounds the \emph{largest} node, through $P$, and not only the total. With
+unbounded maximum degree one blob may have to carry $\Theta(n)$ crossing-edge bits, and then the
+factor $2^{2gP/K}$ of \eqref{eq:lemma8} is not small. \Cref{sec:algorithm} removes high-degree
+vertices first. Note also that the interleaving sign costs $O(g^3)$ bits in total and at most
+$g^2$ bits per node.
+\end{remark}
+
+% =====================================================================
+\section{The algorithm and its running time}\label{sec:algorithm}
+% =====================================================================
+
+\subsection{Preprocessing}
+
+\begin{lemma}[Degree reduction]\label{lem:degree-reduction}
+Let $\Theta\ge2$ and $H:=\{v:\deg(v)>\Theta\}$. For each choice $\nu=(\nu_v)_{v\in H}$ of a
+$2$-element subset $\nu_v$ of the edges at $v$, let $G_\nu$ be $G$ minus every edge $e$ at a vertex
+$v\in H$ with $e\notin\nu_v$. Then
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item $\HC(G)=\sum_\nu\HC(G_\nu)$;
+\item there are at most $\prod_{v\in H}\binom{\deg v}{2}\le n^{2|H|}$ choices, and $|H|<2m/\Theta$;
+\item every $G_\nu$ has vertex set $V$, at most $m$ edges, and maximum degree at most $\Theta$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Map a Hamiltonian cycle $C$ of $G$ to $\nu(C):=(E(C)\cap\delta(v))_{v\in H}$, where $\delta(v)$ is
+the set of edges at $v$. Then $C$ survives in $G_{\nu(C)}$, since every edge of $C$ at $v\in H$
+lies in $\nu_v(C)$. Conversely, let $C$ be a Hamiltonian cycle of $G_\nu$. For $v\in H$, the set
+$E(C)\cap\delta(v)$ has two elements and is contained in $\delta_{G_\nu}(v)\subseteq\nu_v$, so
+$\nu=\nu(C)$. Thus the pairs $(\nu,C)$ with $C$ a Hamiltonian cycle of $G_\nu$ correspond
+bijectively to the Hamiltonian cycles of $G$. The remaining claims hold because $\sum_v\deg
+v=2m$ and the vertices of $H$ keep degree at most $2$.
+\end{proof}
+
+\begin{lemma}[Degree-balanced partition]\label{lem:balanced}
+List $V$ as $v_1,\dots,v_n$ in any order, let $S_t:=\sum_{s<t}\deg(v_s)$, and put
+$\phi(v_t):=\min\bigl(g,\lfloor gS_t/(2m)\rfloor+1\bigr)$. Then every blob has $\mu_a\le 2m/g+\Delta$,
+where $\Delta$ is the maximum degree.
+\end{lemma}
+
+\begin{proof}
+$\phi$ is nondecreasing in $t$, so each blob is a segment $v_t,\dots,v_{t'}$. If $a<g$, then
+$(a-1)\cdot 2m/g\le S_t\le S_{t'}<a\cdot2m/g$, so $\mu_a=S_{t'}-S_t+\deg(v_{t'})<2m/g+\Delta$. If
+$a=g$, then $\mu_g=2m-S_t\le 2m/g$.
+\end{proof}
+
+\subsection{The algorithm}
+On input $G$ the algorithm does the following.
+\begin{enumerate}[label=\textbf{Step \arabic*.},ref=\arabic*,leftmargin=*,start=0]
+\item\label{st:0} If $n\le2$, or some vertex has degree less than $2$, output $0$.
+\item\label{st:1} Choose a level $\ell$ (see \cref{sec:proof-delta,sec:proof-rate}). Put $K:=K_\ell$
+and $g:=3K^8$.
+\item\label{st:2} Apply \cref{lem:degree-reduction} with $\Theta:=\max(2,\lceil n/g\rceil)$. For each
+branch $G_\nu$ do Steps~\ref{st:3}--\ref{st:4}; if $G_\nu$ has a vertex of degree less than $2$,
+its count is $0$ and it is skipped.
+\item\label{st:3} Take $\phi$ from \cref{lem:balanced}, any root $r$ and any crossing order, and
+build $\mathcal N(G_\nu,r,\phi,\text{order})$ implicitly: perform the preparation of
+\cref{prop:parameters}, computing $P$, $B$, $P_a$ and $c_{a,b}$ exactly.
+\item\label{st:4} Run the procedure of \cref{imp:lemma8} on this network, with the algorithm of
+\cref{imp:thmA}(b) at level $\ell$ as the clique algorithm; \cref{imp:lemma8} calls it on a
+$(K,L)$-clique with $B'$ in the role of $B$. Divide the result by $n$.
+\item\label{st:5} Output the sum over the branches.
+\end{enumerate}
+Correctness follows from \cref{lem:degree-reduction,thm:network-value,imp:lemma8,imp:thmA}.
+
+\subsection{Checking the imported hypotheses}
+\Cref{imp:lemma8} needs a network on $[g]$ with integer parameters $P,B,\tau\ge1$, total $U$, and
+$g=3K^8$; \cref{prop:parameters} supplies these. It then needs an algorithm for every
+$(K,L)$-clique with $|W|<2^{B'}$: \cref{imp:thmA}(b) at level $\ell$, with $\lambda=L$ and $B=B'$,
+gives $T=2^{e_\ell K^2L}(K(L+B'))^{C_0K^2}$, and its hypotheses $\lambda,B\ge1$ hold because
+$P\ge1$. \Cref{imp:thmA} needs pieces, supplied by \cref{imp:thmB}. Nothing in the clique
+algorithm depends on the graph, which reaches it only through the tables that
+\cref{imp:lemma8} builds from the $W_a$ and $f_{a,b}$. Balancing is done by \cref{imp:lemma8}
+itself: it searches the $K^g$ groupings for one with at most $2g/K$ nodes per group and all
+pairwise group totals at most $L$, which exists by the proof of \A[Lemma~1].
+
+\subsection{Bounds for one branch}
+Write $m:=|E(G)|$. Then $|E(G_\nu)|\le m$ and $G_\nu$ has minimum degree at least $2$. By
+\cref{lem:balanced}, $\Delta\le\Theta\le n/g+2$, so $\mu\le(2m+n)/g+2$. Using $\log5\le2.33$ and
+$g\ge3$, \cref{prop:parameters} gives
+\begin{equation}\label{eq:branch-bounds}
+\begin{gathered}
+  gP\le2.33(2m+n)+3g^3,\qquad U\le4.65\,m+g^3,\qquad B\le 2(2m+n)/g+5,\\
+  \log\tau\le1.5(2m+n)/g+3+C_2\log n,\qquad L\le gP+1,\qquad B'\le2gP+1+g^2B .
+\end{gathered}
+\end{equation}
+By \eqref{eq:lemma8} and \eqref{eq:thmA}, with $e:=e_\ell\le1$ and $K^2L\le U+gP/K+K^2$, the time of
+Steps~\ref{st:3}--\ref{st:4} for one branch is $2^X$ with
+\begin{multline}\label{eq:exponent}
+  X\le1+\max\Bigl\{g\log K,\ e\bigl(U+\tfrac{gP}{K}+K^2\bigr)+C_0K^2\log\bigl(K(L+B')\bigr)+\tfrac{2gP}{K}+\log\tau\Bigr\}\\
+  +C_1\log\bigl(g(P+B)\bigr)+O(\log n).
+\end{multline}
+There are at most $n^{2|H|}\le n^{4mg/n}$ branches, because $|H|<2m/\Theta\le2mg/n$.
+
+\subsection{Proof of \texorpdfstring{\cref{thm:main-delta}}{Theorem 1.1}}\label{sec:proof-delta}
+Let $D\ge1$, $\delta\in(0,1]$ and $m\le Dn$, so that $2m+n\le3Dn$. By \cref{imp:thmA}(a),
+$e_\ell\to0$ and $K_\ell\to\infty$, so there is $\ell$, depending only on $(\delta,D)$, with
+$e:=e_\ell\le\delta/(40D)$ and $K:=K_\ell\ge60D/\delta$. Fix it, and put $g=3K^8$, a constant. By
+\eqref{eq:branch-bounds}, the terms of \eqref{eq:exponent} satisfy
+\begin{align*}
+  e\,U&\le\tfrac{\delta}{40D}(4.65\,Dn+g^3)\le0.12\,\delta n+g^3,\\
+  (e+2)\,gP/K&\le3\bigl(2.33\cdot3Dn+3g^3\bigr)/K\le21Dn/K+9g^3\le0.35\,\delta n+9g^3,\\
+  \log\tau&\le4.5Dn/g+O(\log n)\le0.075\,\delta n+O(\log n),
+\end{align*}
+and the remaining terms are $O_{\delta,D}(\log n)$, since $g$ and $K$ are constants and $L$, $B'$,
+$P$, $B$ are $O_{\delta,D}(n)$. So each branch costs $2^{0.55\delta n+O_{\delta,D}(\log n)}$. There
+are at most $n^{4Dg}=n^{O_{\delta,D}(1)}$ branches, and the preparation is polynomial. The total
+is $2^{0.55\delta n+O_{\delta,D}(\log n)}=O(2^{\delta n})$.\qed
+
+The alternative route of \cref{rem:alt-route} gives the same bound: with $(K,e)$ achievable,
+$e\le\delta/(40D)$ and $K\ge60D/\delta$, the exponent of $C_12^{e(U+gP/K)+2gP/K}(P+B)^{C_1}\tau$
+is bounded by the same three lines.
+
+\subsection{Proof of \texorpdfstring{\cref{thm:main-rate}}{Theorem 1.2}}\label{sec:proof-rate}
+Use the pieces of \cref{imp:thmB} with $\rho=1/\sqrt2$, so $\alpha'=\frac12$, with $c$ and $x_0$
+absolute. For $n<n_0:=K_0^{30}$, an absolute constant, any exact method takes $O(1)$ time.
+Step~\ref{st:0} disposes of $n\le2$ and of minimum degree below $2$; otherwise $m\ge n$.
+
+For $n\ge n_0$, let $\ell$ be the largest index with $K_\ell^{30}\le n$; $K_\ell$ is computable from
+the formula in \cref{imp:thmA}(a). Then $K_{\ell+1}>n^{1/30}$, and $K_{\ell+1}\le K_\ell^{10}$ gives
+$n^{1/300}<K:=K_\ell\le n^{1/30}$. So $g=3K^8\in[3n^{8/300},3n^{8/30}]$, and by \cref{imp:thmA}(a)
+\[
+  e=e_\ell\le0.85\Bigl(\frac{3x_0+6}{\log K}\Bigr)^{1/2}\le\frac{0.85\,(300(3x_0+6))^{1/2}}{\sqrt{\log n}}=:\frac{c_e}{\sqrt{\log n}} .
+\]
+With $2m+n\le3m$, the terms of \eqref{eq:exponent} and the branching satisfy
+\begin{align*}
+  e\,U&\le c_e\,(4.65\,m+27n^{0.8})/\sqrt{\log n},\\
+  (e+2)\,gP/K&\le3\bigl(7m+81n^{0.8}\bigr)/n^{1/300}=O(m\,n^{-1/300}),\\
+  \log\tau&\le4.5\,m/g+O(\log n)=O(m\,n^{-8/300}),\\
+  eK^2+C_0K^2\log(K(L+B'))&=O(n^{1/15}\log n)\qquad(L,B'\le\poly(n),\text{ as }m\le n^2),\\
+  g\log K&=O(n^{8/30}\log n),\qquad C_1\log(g(P+B))=O(\log n),\\
+  \log(\#\text{branches})&\le4(m/n)\,g\log n=O(m\,n^{8/30-1}\log n).
+\end{align*}
+Every term except the first is $O(m/\sqrt{\log n})$ uniformly, because $m\ge n$ and $n^{0.8}$,
+$n^{1/15}\log n$ and $n^{8/30}\log n$ are all $o(n/\sqrt{\log n})$. Hence the total time is
+$2^{C^*m/\sqrt{\log n}}$ for an absolute $C^*$.\qed
+
+\begin{remark}\label{rem:rate}
+We record four comments on these bounds.
+\begin{enumerate}[label=(\alph*)]
+\item The requirement $g=3K^8\le n^{8/30}$ keeps the $g^3$ copy bits and the $n^{O(Dg)}$ branching
+at $o(n/\sqrt{\log n})$; it forces only $K\ge n^{1/300}$, which still gives $e_\ell=
+O(1/\sqrt{\log n})$.
+\item With the pieces of \A[Lemma~2] only ($\rho=11/12$), the same argument gives
+$2^{O(m/(\log n)^{0.125})}$.
+\item The leading term is $e_\ell U\approx e_\ell\cdot4.64\,|E|$; every other term is of lower
+order. Hence any improvement of $e_\ell$ in \cref{imp:thmA}, for example from better pieces,
+transfers verbatim.
+\item Like the bounds of \A, these are purely asymptotic. \Cref{thm:main-rate} beats $2^n$ only
+when $e_\ell\cdot4.64\,m<n$, which needs $\log n$ in the thousands even for $m=2n$.
+\end{enumerate}
+\end{remark}
+
+% =====================================================================
+\section{Decision, search and paths}\label{sec:corollaries}
+% =====================================================================
+
+\begin{proof}[Proof of \cref{cor:decision-search}]
+\emph{Decision.} $G$ is Hamiltonian iff $\HC(G)>0$; one call of \cref{thm:main-delta} or
+\cref{thm:main-rate} suffices.
+
+\emph{Search, by self-reduction.} Let $H:=G$. For each edge $e$ of $G$ in turn, if
+$\HC(H-e)>0$, set $H:=H-e$. The invariant is $\HC(H)>0$. Let $C$ be a Hamiltonian cycle of the
+final $H$. Every intermediate $H$ contains the final one, hence $C$. Suppose some edge $f$ of the
+final $H$ were not in $C$. When $f$ was examined, $H-f$ contained $C$, so $f$ would have been
+deleted. Hence the final $H$ equals $C$. There are $m+1$ calls, each on a graph with $n$ vertices
+and at most $m$ edges.
+
+\emph{Hamiltonian paths.} Let $G^+$ be $G$ plus a new vertex $w$ adjacent to all of $V$. For
+$n\ge2$, the Hamiltonian paths of $G$ correspond bijectively to the Hamiltonian cycles of $G^+$,
+so $\HP(G)=\HC(G^+)$. The graph $G^+$ has $n+1$ vertices and $m+n\le(D+1)(n+1)$ edges; the apex
+$w$ has degree $n$ and is handled by \cref{lem:degree-reduction}. Search works as above. For
+$s$--$t$ paths, join one new vertex to $s$ and $t$ only.
+\end{proof}
+
+% =====================================================================
+\section{Results that rest only on the top-level theorems}\label{sec:parity}
+% =====================================================================
+
+This section concerns \cref{thm:parity,thm:randomized}. Unlike \cref{thm:main-delta}, they use the
+labs' $\#$SAT theorems only as black boxes, through CNF encodings.
+
+\subsection{The Cut\&Count identity}
+Let $r\in V$. The CNF $\mathrm{cut}(G,r)$ has variables $x_e$ ($e\in E$) and $c_v$ ($v\in V$) and
+imposes: at each vertex $v$, exactly two of the $x_e$ with $e\ni v$ are true; for each edge
+$uw$, $x_{uw}\to(c_u\leftrightarrow c_w)$; and $c_r=\mathrm{false}$. Each local constraint becomes
+clauses by forbidding its violating local patterns.
+
+\begin{lemma}[Cut\&Count~\cite{CutAndCount11}]\label{lem:cutcount}
+The number of models of $\mathrm{cut}(G,r)$ is $\sum_X2^{\cc(X)-1}$, the sum over the $2$-factors
+$X$ of $G$, where $\cc(X)$ is the number of components of $(V,X)$. In particular it is congruent
+to $\HC(G)$ modulo $2$.
+\end{lemma}
+
+\begin{proof}
+A model is a pair $(X,c)$ where $X$ is a $2$-factor and $c\colon V\to\{0,1\}$ is constant on the
+components of $(V,X)$ with $c(r)=0$. There are $2^{\cc(X)-1}$ such $c$, which is odd iff $X$ is
+connected, i.e.\ a Hamiltonian cycle.
+\end{proof}
+
+For unbounded degree, the vertex constraint is replaced by a sequential counter (two bits per
+prefix of the incident edges), giving a $5$-CNF on $5m+3n$ variables with the same model count.
+The Lean development proves these identities (\lean{count_cutCNF},
+\lean{count_cutCNF_mod_two}, \lean{count_bigCNF}).
+
+\begin{proof}[Proof of \cref{thm:parity}]
+Feed the $5$-CNF to the respective $\#$SAT algorithm. With \A, the formula has $N=5m+3n$
+variables and at most $85m+11n+2$ clauses (after padding so that every variable occurs), and the
+Main Theorem gives a count within $2^{C\cdot5m'/\sqrt{\log m'}}$ steps, where $N\le m'\le
+85m+11n+2$ is the number of clauses. This is the Lean theorem
+\lean{hamParity_allGraphs_anthropic}, whose hypothesis \lean{MainResults.MainTheorem} is
+discharged by \A's Lean proof (\cref{sec:verification}). With~\cite{OpenAI26}, the Lean theorem
+\lean{hamParity_allGraphs} gives one machine with time $C(L+1)^d2^{A\rho(5m+3n)}$ and space
+polynomial in the encoding length $L$; its hypothesis \lean{exact_count_and_sat} is discharged
+by OpenAI's Lean proof. The directed version uses one selected out-arc and in-arc per vertex
+(\lean{dirHamParity_subexponential}). Building the CNF from $G$ takes polynomial time; that step
+is not formalised as a machine.
+\end{proof}
+
+\subsection{Why colourings do not give exact counts}
+Cut\&Count extracts $[X\text{ connected}]$ from a sum over consistent colourings with local
+weights. The following barrier shows that such filters cannot be exact with few colours; this is
+what motivates the Grassmann construction.
+
+\begin{proposition}\label{prop:colouring-barrier}
+Work over a field of characteristic $0$. Suppose that weights $z_0,\dots,z_{q-1}$ on $q$ colours,
+with the root coloured $0$ and every component $C\not\ni r$ of a $2$-factor contributing
+$h(C)=\sum_jz_j^{|C|}$, give a sum equal to $\HC(G)$ up to a nonzero factor, for every graph $G$
+on $n$ vertices. Then $q\ge n-4$.
+\end{proposition}
+
+\begin{proof}
+We have $z_0\ne0$, since otherwise Hamiltonian cycles contribute $0$; normalise $z_0=1$. The root's
+cycle has at least $3$ vertices, so a non-root cycle has length $k\in\{3,\dots,n-3\}$, and every
+such length occurs: in the disjoint union of $C_{n-k}\ni r$ and $C_k$, the only $2$-factor is
+disconnected. So the filter needs $\sum_{j=0}^{q-1}z_j^k=0$ for $k=3,\dots,n-3$. Drop the $z_j$
+equal to $0$, and group the rest into distinct nonzero values $\lambda_i$ with positive integer
+multiplicities. This gives an exponential polynomial with at most $q$ distinct nonzero bases and
+positive coefficients that vanishes at $n-5$ consecutive integers. If $n-5\ge q$, the
+Vandermonde matrix on those integers forces every coefficient to $0$, a contradiction because
+$\lambda=1$ has multiplicity at least $1$.
+\end{proof}
+
+Conversely $q=n-2$ colours with $z_j=\zeta^j$, $\zeta$ a primitive $(n-2)$-th root of unity,
+suffice. So exact counting by colourings needs about $\log n$ bits per vertex, and the exponent
+becomes worse than brute force; the positive multiplicities vanish only in small characteristic,
+which is how the modulo-$2$ filter escapes. The proposition does not cover vertex-dependent
+weights.
+
+\subsection{Randomized decision}
+
+\begin{proof}[Proof of \cref{thm:randomized}\textup{(a)}]
+Add to $\mathrm{cut}(G,r)$ an arbitrary CNF $\mathcal H$ on the edge variables. Then the model
+count is congruent modulo $2$ to $\#\{X\in\mathrm{HC}(G):\mathcal H(\mathbf 1_X)\}$
+(\lean{count_cutCNFWith_mod_two}); it is even if $G$ has no Hamiltonian cycle and odd if
+exactly one Hamiltonian cycle satisfies $\mathcal H$. Take $\mathcal H$ to be a random sparse hash
+in the sense of Calabro, Impagliazzo, Kabanets and Paturi~\cite{CIKP08}. Their isolation lemma is
+stated for solution sets of $k$-CNFs, but its proof uses only that the set is a set; the Lean
+development re-proves it for arbitrary finite $S\subseteq\{0,1\}^N$ as a counting statement
+(\lean{isolation_count}), together with the entropy estimate needed to make the isolating
+fraction at least $\exp(-\delta N)$ for every $\delta>0$ (\lean{isolation_fraction}). With
+$S=\mathrm{HC}(G)$ and $N=|E|\le\Delta n/2$ this gives soundness (\lean{decision_sound}), the
+success fraction (\lean{hamDecision_fraction}) and one machine for all hashes
+(\lean{hamDecision_subexponential}). Repeating $t\exp(\delta|E|)$ independent trials for each of
+polynomially many parameter choices gives error at most $e^{-t}$; this outer loop is the only
+part not modelled in Lean.
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:randomized}\textup{(b)}]
+Let $P_G(w)=\sum_{H\in\mathrm{HC}(G)}\prod_{e\in H}w_e$. It is multilinear with $0/1$
+coefficients, so as a function on $\F_p^E$ it is nonzero iff $G$ is Hamiltonian. By the
+Alon--Füredi theorem~\cite{AlonFuredi93}, a polynomial of degree $d$ that does not vanish on
+$A_1\times\dots\times A_N$ is nonzero on at least
+$\min\{\prod y_i : 1\le y_i\le|A_i|,\ \sum y_i\ge\sum|A_i|-d\}$ points; with $A_i=\F_p$ and $d=n$,
+a uniform $w$ gives $P_G(w)\ne0$ with probability at least $p^{-n/(p-1)-1}$. The value
+$P_G(w)\bmod p$ is the model count, modulo $p$, of a CNF with $p$ colours per vertex
+($\lceil\log p\rceil$ bits with a comparator), the root coloured $0$, bitwise constraints
+$x_e\to(c_u=c_v)$, the vertex constraint ``exactly two'', and weight bits $z_e$ with
+$x_e=0\Rightarrow z_e=0$ and $x_e=1\Rightarrow z_e<w_e$; its count is
+$\sum_Xp^{\cc(X)-1}\prod_{e\in X}w_e\equiv P_G(w)\pmod p$. It has $O(|E|\log p)$ clauses of width
+$O(\log p)$. \A's Main Theorem, which is uniform in $k$, gives time $2^{O(|E|\log^2p/\sqrt{\log
+|E|})}$ per test. Taking a prime $p\approx\sqrt{\log n}$ and $p^{n/(p-1)+1}\cdot t$ independent
+tests gives one-sided error $e^{-t}$ in total time $2^{O_D(n(\log\log n)^2/\sqrt{\log n})}$.
+\end{proof}
+
+The proof of (b) is written out but not machine-checked; the Alon--Füredi theorem is, as far as
+we know, not in Mathlib.
+
+% =====================================================================
+\section{Extensions (sketched)}\label{sec:extensions}
+% =====================================================================
+
+\emph{This section is not at the level of rigour of the rest of the paper.} The identities below
+were checked exactly by brute force on small instances, and the blob networks were evaluated on
+random partitions; the algorithmic consequences are sketched, and all of them are conditional on
+$(\mathrm{H}_{\mathrm{A}})$ applied to general networks, exactly as for \cref{thm:main-delta}.
+
+\subsection{The template}
+All problems below fit one template:
+\begin{equation}\label{eq:template}
+  Z=\sum_{s,\xi}\prod_vC_v\bigl(s_v,\xi|_{\delta(v)}\bigr)\cdot
+  \topc{\Omega}{\prod_vM_v(s_v)\prod_{e=uv}F_e(s_u,s_v,\xi_e)} ,
+\end{equation}
+where $s_v$ is a vertex state from a constant-size alphabet, $\xi_e$ an edge state ($\delta(v)$ is the set of edges at $v$), $C_v$ an
+arbitrary local integer table, $M_v$ an even element in the generators of $v$ (for example the
+mass term $1+w\bpsi_v\psi_v$, or $\bpsi_v\psi_v$, which deletes $v$), and $F_e$ an even element in
+the generators of the ends of $e$, possibly involving pairwise scalars such as $z^{w_e}$. A root
+has no generators. On a blob partition, each crossing edge is split by an exact rank
+factorisation of its crossing matrix for each parity, a label being a term of this
+factorisation; the edge costs $\log_2(\#\text{labels})$ bits. Because each $F_e$ is even, both
+pieces of a term have the same parity, and the sign rule of \cref{sec:blobs} applies unchanged,
+at a cost of $O(g^3)$ parity bits. Global counting constraints are handled by generating
+variables, folded into one integer by Kronecker substitution; this changes only $B$, which stays
+polynomial. Several connectivity predicates can be imposed at once by giving each its own
+independent Grassmann field; the top coefficient then factors over the fields (sharing one field
+would compute $\det(L_{X_1}+L_{X_2})$ instead).
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Problems fitting the template \eqref{eq:template}. All identities were checked exactly on
+small instances (brute force $=$ determinant identity $=$ blob network on random partitions with
+$2$--$4$ blobs). ``Labels'' is the number of labels per crossing edge.}\label{tab:extensions}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{9.6cm}c@{}}
+\toprule
+Problem & Identity (local constraints $\times$ one determinant) & Labels \\
+\midrule
+$\HC$ (this paper) & $n\HC=\sum_{\text{2-factors }X}\det L_X^{(r)}$ & $5$\\
+directed $\HC$ & $\#\mathrm{DHC}=\sum_{\text{cycle covers }X}\det(D_{\mathrm{out}}-A)_X^{(r)}$ & $3$\\
+TSP/ATSP, weights $\le\poly(n)$ & $n\sum_Hz^{w(H)}=\sum_Xz^{w(X)}\kappa(X)$ & $5$ / $3$\\
+Hamiltonian $s$--$t$ paths & $\sum_{X:\ \deg s=\deg t=1,\text{ else }2}\det L_X^{(s)}$ & $5$\\
+spanning trees with local degree constraints & $[z^{n-1}]\sum_Xz^{|X|}\prod_vc_v(\deg_Xv)\,\kappa(X)$ & $5$\\
+Steiner tree (count, min.\ weight) & $\sum_{S\supseteq T}\det L_w(G[S])^{(t_0)}$ & $5$\\
+induced forests, min.\ FVS (count) & $[\text{forest}]=2^{|E(S)|-|S|}[z^{|S|-|E(S)|}]\det(L_S+z\operatorname{diag}(2-\deg_S))$ & $5$\\
+all forests, $T_G(2,1)$ and $T_G(x,1)$ & the same identity with $S=V$ and free edges & $4$\\
+$k$-paths, $k$-cycles (all $k$) & coefficient extraction from $\det(L_X+wI)$ with markers & $5$\\
+connected VC / connected DS & decision and minimum only; counts are $\kappa$-weighted & $4$ / $5$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proposition}[Sketch]\label{prop:extensions}
+Assume $(\mathrm{H}_{\mathrm{A}})$, and let $\mathcal P$ be one of the problems of
+\cref{tab:extensions}, on graphs with $|E|\le Dn$ and either bounded maximum degree or the
+hub-handling of \cref{rem:hubs}. Then for every $\delta>0$ the quantity stated in the table
+(exact count, optimum, or $\kappa$-weighted count) can be computed deterministically in time
+$2^{\delta n}$.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+The identity in the table is an instance of \eqref{eq:template}; the blob network is built as in
+\cref{sec:network}, with $U\approx 2\log_2(\#\text{labels})\cdot|E|+O(g^3)$ and $P\approx U/g+g^2$,
+and the bookkeeping of \cref{sec:algorithm} applies verbatim. The identities have been checked
+numerically; the uniform statements of the bit bounds, and the hub-handling, have not been written
+out in full.
+\end{proof}
+
+\begin{remark}[Hubs]\label{rem:hubs}
+A vertex of degree $\Theta(n)$ breaks the per-node bound $P$. For degree-$2$ problems (cycles,
+paths, cycle covers) one can branch as in \cref{lem:degree-reduction}, or compress the hub's
+realisable labellings into $O(\log d)$ bits per pair. For tree and forest problems one can split
+the hub into a path of copies joined by \emph{forced} edges (factor $q_e$ instead of $1+q_e$),
+which preserves the counts of subtrees and induced forests. A root vertex costs nothing, because
+it has no generators. These devices were checked on small instances only.
+\end{remark}
+
+\subsection{The Tutte polynomial on the line \texorpdfstring{$y=1$}{y=1}}
+On the line $y=1$, the Tutte polynomial is $T_G(x,1)=\sum_{F}(x-1)^{r(E)-|F|}$, the sum over the
+forests $F\subseteq E$, where $r(E)=n-\cc(G)$; so counting forests by number of edges gives the
+whole polynomial $T_G(x,1)$. The key identity is exact and short.
+
+\begin{lemma}[Forest indicator]\label{lem:forest}
+Let $H$ be a graph on a vertex set $S$ with edge set $X$, and let $\deg_H$ denote degrees in $H$.
+Then
+\[
+  [z^{\,|S|-|X|}]\,\det\bigl(L_H+z\operatorname{diag}(2-\deg_H)\bigr)=
+  \begin{cases}2^{|S|-|X|}&\text{if $H$ is a forest},\\ 0&\text{otherwise.}\end{cases}
+\]
+\end{lemma}
+
+\begin{proof}
+By the matrix-forest theorem, $\det(L_H+\operatorname{diag}(d))=\sum_{F}\prod_{T}\bigl(\sum_{v\in
+T}d_v\bigr)$, the sum over the spanning forests $F$ of $H$ and the product over the trees $T$ of
+$F$. With $d_v=z(2-\deg_Hv)$, a forest with $j$ trees contributes a multiple of $z^j$. Every
+spanning forest has at least $\cc(H)\ge|S|-|X|$ trees, with equality throughout iff $H$ is itself a
+forest and $F=H$. If $H$ is not a forest, the coefficient of $z^{|S|-|X|}$ is therefore $0$. If $H$
+is a forest, the coefficient comes from $F=H$ alone and equals $\prod_T\sum_{v\in T}(2-\deg_Tv)=
+\prod_T\bigl(2|T|-2(|T|-1)\bigr)=2^{\cc(H)}=2^{|S|-|X|}$.
+\end{proof}
+
+In Grassmann form the mass $-z\deg_H(v)\bpsi_v\psi_v$ is spread over the edges, so all factors are
+local or pairwise and \eqref{eq:template} applies with four labels per crossing edge. Brand, Dell
+and Roth~\cite{BrandDellRoth19} showed that, under $\#$ETH, $T_G(x,1)$ for every $x\ne1$ has no
+$\exp(\varepsilon n)$-time algorithm on simple graphs with $O(n)$ edges; this was the last open
+line of the $\#$ETH dichotomy for the Tutte plane. \Cref{lem:forest} together with
+\cref{prop:extensions} would give, conditional on $(\mathrm{H}_{\mathrm{A}})$ and with the caveats
+of this section, a deterministic $2^{\delta n}$ algorithm for the whole polynomial $T_G(x,1)$ on
+such graphs. (The published implication of course remains true; it is vacuous once $\#$ETH fails.)
+The best previous algorithm computes the Tutte polynomial in vertex-exponential
+time~\cite{BHKK08Tutte}.
+
+\begin{remark}[Further problems]
+A more general version of the template allows a constant number of global predicates (connected,
+tree, path, single cycle, forest, minimum number of components, and directed analogues such as
+branchings and strong connectivity), each certified by a determinant that is positive exactly when
+the predicate holds. It covers, among others, connected feedback vertex set, connected odd cycle
+transversal, minimum cycle cover, $k$-leaf out-branchings, maximum full-degree spanning trees and
+graph-metric TSP. Exact counting is obtained when each certificate is constant on solutions; for
+connected vertex covers, connected dominating sets and connected subgraphs, only
+$\kappa$-weighted counts are obtained. All of this is exploratory and numerically checked on
+instances with at most seven vertices.
+\end{remark}
+
+% =====================================================================
+\section{Verification and formalisation status}\label{sec:verification}
+% =====================================================================
+
+We describe what has been checked, by what means, and what remains open. The aim is to make
+clear how much trust each statement deserves.
+
+\subsection{Machine-checked in Lean}
+\begin{itemize}
+\item \emph{Parity and randomized decision (\cref{thm:parity,thm:randomized}(a)).} The
+Cut\&Count identities, the counter encoding for unbounded degree, the restriction by edge CNFs,
+the Calabro--Impagliazzo--Kabanets--Paturi isolation lemma for arbitrary finite sets, its entropy
+estimate, and the machine theorems are proved in Lean~4~\cite{Lean4} with Mathlib~\cite{Mathlib20},
+taking the labs' top-level theorems as hypotheses.
+\item \emph{Discharging the hypotheses.} OpenAI's development was built from source at a pinned
+commit (Lean v4.34.1; 11{,}492 build jobs, no \lean{sorry}); \lean{#print axioms} reports only
+\lean{propext}, \lean{Classical.choice} and \lean{Quot.sound} for \lean{exact_count_and_sat}.
+The instantiated theorems (\lean{hamParity_allGraphs_unconditional},
+\lean{hamDecision_unconditional}, \lean{dirHamParity_unconditional},
+\lean{dirHamDecision_unconditional}, and others) are closed statements with the same three
+axioms, and a kernel replay with \lean{leanchecker} of the full import closure succeeds.
+Anthropic's development was likewise built from source (Lean v4.33.1; 9{,}768 jobs);
+\lean{MainResults.mainTheorem} depends only on the three standard axioms, and so does
+\lean{hamParity_allGraphs_anthropic} instantiated with it.
+\item \emph{Exact-count formalisation (in progress).} \Cref{lem:2factor-trees} is proved in Lean
+(\lean{n_mul_hamCycles_eq_sum}, in the axiom audit with the three standard axioms). The following
+modules type-check without \lean{sorry}, both against our Mathlib and inside \A's Lean
+environment, which is where the final theorem will be assembled:
+the Grassmann algebra of \cref{sec:grassmann}, including the Koszul rule, block factorisation of
+top coefficients, and the identity ``product of linear forms $=\det\cdot$ top monomial'';
+the determinant part of \cref{lem:fermionic-mt} (for $|F|=n-1$, $\det(\mathbf B_F)^2$ is the
+indicator that $F$ is a spanning tree);
+the combinatorics of the sign (\cref{lem:disjoint-chords}, \cref{prop:sign-factor},
+\cref{lem:copies});
+the preprocessing lemmas (\cref{lem:degree-reduction,lem:balanced});
+and a generic ``label-sharing'' network in \A's \lean{Net} format, whose value is proved to collapse
+to the sum over consistent global labellings, with \A's parameter conditions verified.
+Still being formalised are \cref{lem:berezin-cb} and the rest of \cref{lem:fermionic-mt},
+\cref{prop:sign-rule,thm:blob}, the instantiation of the network of \cref{sec:network}, the
+table-evaluation procedures in \A's cost model, and the final composition with \A's Lean
+statements.
+\end{itemize}
+Lean guarantees that the labs' proofs establish their formal statements; it does not guarantee
+that those statements formalise the printed theorems faithfully, which is a matter for expert
+review. \A{} itself notes that its Lean proof was compared with the printed one by AI models, not
+mechanically.
+
+\subsection{Numerical verification}
+All identities of \cref{sec:grassmann,sec:trees,sec:blobs,sec:network} were implemented literally
+and independently of the code used during discovery, in exact integer arithmetic: an exterior
+algebra over $\Z$ with a \emph{randomised} generator order; the pieces, $\varepsilon$,
+$\sigma_a$, $\pi_{ab}$ and $\chi_a$; the network of \cref{def:our-network} with fixed-length
+bit-string settings; and two evaluators that use $W$, $\Psi$ and $f$ only as black boxes, one by
+brute force over $\prod_aS_a$ and one by \A's grouping into $K=2$ or $3$ groups. Instances include
+random graphs with arbitrary maps $\phi$ (empty blobs allowed), planted blob graphs, planted
+Hamiltonian cycles, and instances with $g\in\{4,5\}$ whose planted Hamiltonian cycle, or whose
+planted \emph{disconnected} $2$-factor, visits the blobs in interleaving order. Every instance uses
+a random root, crossing order and generator order. \Cref{tab:checks} summarises one run (60
+instances, $n\le12$); runs with several other seeds also pass.
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Numerical checks (exact integers). Counts are for one run with 60 instances.}\label{tab:checks}
+\begin{tabular}{@{}clr@{}}
+\toprule
+& Identity checked & Checks\\
+\midrule
+C1 & $n\HC=\sum_X\kappa(V,X)$ and $\kappa\in\{0,n\}$ (\cref{lem:2factor-trees}) & $60$ / $135$\\
+C2 & $\kappa=\det L_X^{(r)}=\topc{\Omega_V}{\prod(1+q_e)}$ (\cref{lem:fermionic-mt}) & $135$\\
+C3 & \cref{lem:berezin-cb} on random integer matrices & $200$\\
+C4 & Koszul rule on random homogeneous sequences (\cref{lem:koszul}) & $300$\\
+C5 & block factorisation (\cref{lem:block}) & $180$\\
+C6 & \cref{lem:pieces}, both orientations and root ends & $5{,}216$\\
+C7 & \cref{prop:sign-rule} as an equality of algebra elements & $162{,}875$\\
+C8 & \cref{prop:sign-factor} and \cref{lem:copies} & $162{,}875$ each\\
+C9 & \cref{prop:sign-rule} with fresh generators (no cancellation); \cref{lem:disjoint-chords} & $400$ / $1{,}033$\\
+C10 & \cref{def:network} for the network: (i)--(iii), $U$, $|S_a|$, $|W_a|<2^B$, $\Psi=\sum_\theta ff'$ & $\approx594{,}000$\\
+C11 & \cref{thm:blob}; network value by brute force; network value via $K$-grouping & $60$ / $60$ / $103$\\
+C12 & ablations: no interleaving sign / no local signs / no sign: wrong on $20$ / $8$ / $18$ of $60$ & --\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A second script checks \cref{lem:degree-reduction} (on $109$ random graphs and several thresholds),
+\cref{lem:balanced} in the exact form $g\mu_a\le2m+g\Delta$ (on $400$ graphs, $g\le12$), the
+counting identities used in \cref{prop:parameters}, and the self-reduction of
+\cref{cor:decision-search}. These checks test the identities and the network algebra, sign
+included; they cannot test the asymptotic bookkeeping, which is checked by hand.
+
+\subsection{Independent referee}
+An independent referee (an AI agent working from the one-paragraph claim) derived the sign rule
+on its own and wrote its own code before reading the write-up. It checked about $500$ instances of
+``Berezin integral $=$ determinant'', about $790$ blob evaluations and $297$ evaluations of a
+literal \A-style network (with $g\le5$, random, very unequal and empty blobs, random roots, and in
+half of the tests random integer edge weights), with no failures; removing the global sign gave
+wrong answers on $8$ instances. Its verdict is that the construction and bookkeeping are sound,
+conditional on \A{} (Theorem~A(b), Lemma~8(i) and the existence of pieces), and that the
+unbounded-degree trap is handled correctly by \cref{lem:degree-reduction}. It raised one wording
+point, about the label alphabet, which \cref{rem:five-labels} addresses. The referee did not build
+or check the Lean files.
+
+\subsection{What is pending}
+\begin{itemize}
+\item Human expert review of this paper and, above all, of the labs' manuscripts.
+\item A complete Lean formalisation of \cref{sec:grassmann,sec:trees,sec:blobs,sec:network}, and
+of the composition of our network with \A's Lean statements of \cref{imp:lemma8,imp:thmA,imp:thmB},
+which in \A's development are instantiated only for CNF networks.
+\item A full write-up of the extensions of \cref{sec:extensions}.
+\end{itemize}
+
+\subsection{Dependence on \texorpdfstring{\A}{[A]}}
+If \A[Theorem~A(b)] or \A[Lemma~8] failed, \cref{thm:main-delta,thm:main-rate,cor:decision-search}
+would lose their proofs, while \cref{sec:grassmann,sec:trees,sec:blobs,sec:network} would be
+unaffected. The uniformity in \cref{thm:main-rate} uses the constant $c$ of \cref{imp:thmB}
+through $x_0$; if $c$ is not explicit, the statement asserts the existence of one algorithm, as in
+\A. The cost model is that of \A; our arithmetic on $O(n)$-bit integers costs $\poly(n)$
+operations and is absorbed in $\tau$ and in the polynomial factors.
+
+% =====================================================================
+\section{Open problems}\label{sec:open}
+% =====================================================================
+
+\subsection{Dense graphs} The network has $U\approx2\log_25\cdot|E|$ bits, so
+\cref{thm:main-rate} beats $2^n$ only when $m=o(n\sqrt{\log n})$. Nothing is claimed for dense
+graphs beyond the classical $O^*(2^n)$; is there a subexponential algorithm for $\HC$ on graphs
+of superlinear density, under the same hypotheses?
+
+\subsection{Connected subgraphs and \texorpdfstring{$T(1,2)$}{T(1,2)}} The determinant certificate is a weight, not a $0/1$
+test, for objects that are connected but not trees. Exact counts of connected spanning subgraphs
+($T_G(1,2)$), of connected vertex covers and of connected dominating sets, and the whole line
+$x=1$ of the Tutte plane, are not obtained. A $\kappa$-free connectivity indicator that is local
+in the sense of \eqref{eq:template} would settle these.
+
+\subsection{Derandomization from the top-level theorems} \Cref{thm:main-delta} gives deterministic
+decision, but it uses \A's internal lemmas. Can deterministic decision be obtained from the
+top-level $\#$SAT theorems alone, which are machine-checked? Any such algorithm must use the
+structure of the instance: if an algorithm accesses $S=\mathrm{HC}(G)\subseteq\{0,1\}^N$ only
+through adaptive queries $\sum_{x\in S}w_i(x)\bmod q_i$ with $q_i\le Q$ and arbitrary weights
+$w_i$, then a Davenport-constant argument shows that distinguishing $S=\emptyset$ from all nonempty
+$S$ requires $2^N\le\operatorname{lcm}(1,\dots,Q)(1+F\ln Q)$ for $F$ queries, so $F\ge2^{N-o(N)}$
+for $Q=2^{(\log N)^{1/2}}$. (This generalises the observation that parity queries alone need $2^N$
+queries; it is related to the isolation bounds of~\cite{DKMW13}.) On the other hand, a fixed list
+of $2^{o(n)}$ weight vectors works for all bounded-degree graphs on $n$ vertices, and hardness
+assumptions for $\mathrm E$ against $\#\mathrm P$-oracle circuits would give deterministic
+$2^{o(n)}$ decision via~\cite{ImpagliazzoWigderson97}. So the question is one of explicit hitting
+sets. These statements have written proofs but are not formalised.
+
+\subsection{The exponent} The leading term of the exponent is $e_\ell U$, and $e_\ell=\Theta(\rho^\ell)$
+is governed by the pieces of \A. Pieces with $\rho<1/\sqrt2$ would improve the exponent beyond
+$1/\sqrt{\log n}$, and $\rho\to\frac12$ would give $2^{O(m/\log m)}$. Can the $\sqrt{\log n}$ be
+improved, for $\HC$ specifically or in general?
+
+\subsection{Planar and minor-free graphs} A bound of $2^{\delta n}$ does not beat the known
+$2^{O(\sqrt n)}$ on planar graphs. Does the blob network compose with balanced separators to give
+$2^{o(\sqrt n)}$?
+
+\subsection{Practicality} As in \A, the bounds are astronomically far from practical. A less
+asymptotic analysis, or a different evaluation engine, would be needed for any concrete gain.
+
+\section*{Acknowledgements}
+This work was done with AI assistance (Claude Code, Anthropic): the construction, the proofs,
+the numerical verification scripts, the independent referee pass and the Lean developments were
+produced in sessions with Claude Code. The Lean components described in \cref{sec:verification}
+are machine-checked; everything else has been checked numerically and by an independent AI
+referee, but awaits human expert review. Responsibility for any errors rests with the author.
+
+\bibliographystyle{amsplain}
+\bibliography{refs}
+
+\end{document}

@@ -6,7 +6,7 @@ Follow-up work to the claimed refutations of the Exponential Time Hypothesis by 
 on 26 Oct 2026 and are still under expert review. All results are for sparse graphs (|E| = O(n)),
 asymptotic only, and conditional on those refutations.
 
-**Reviewer notes (PDF):** [`docs/exact-hc-for-reviewers.pdf`](docs/exact-hc-for-reviewers.pdf).
+**Paper (PDF):** [`docs/exact-hc-paper.pdf`](docs/exact-hc-paper.pdf), LaTeX source in `paper/`.
 
 | | Result | Status |
 |---|---|---|

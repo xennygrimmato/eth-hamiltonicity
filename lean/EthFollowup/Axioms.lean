@@ -1,3 +1,4 @@
+import EthFollowup.ExactHC.Main
 import EthFollowup.IndependentSet
 import EthFollowup.HamiltonianParity
 import EthFollowup.DirectedHamiltonianParity
@@ -52,3 +53,8 @@ import EthFollowup.ExactHC
 #print axioms EthFollowup.Hamiltonian.card_spanningTrees_of_twoFactor
 #print axioms EthFollowup.Hamiltonian.card_spanningTrees_of_connected
 #print axioms EthFollowup.Hamiltonian.n_mul_hamCycles_eq_sum
+
+-- Exact #HC, mathematical layer
+#print axioms EthFollowup.ExactHC.blob_factorisation
+#print axioms EthFollowup.ExactHC.exists_blob_factorisation
+#print axioms EthFollowup.ExactHC.fermionSum_eq

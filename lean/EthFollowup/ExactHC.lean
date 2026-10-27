@@ -14,6 +14,10 @@ and for `n = 0` the empty 2-factor is disconnected (`Fin 0` is empty) and has no
 -/
 import EthFollowup.HamiltonianParity
 
+-- `card_spanningTrees`: one tactic branch is dead on each of the two pinned Mathlib versions.
+set_option linter.unreachableTactic false
+set_option linter.unusedTactic false
+
 namespace EthFollowup.Hamiltonian
 
 open SimpleGraph Finset
@@ -157,14 +161,19 @@ theorem spanningTrees_eq_image_erase {X : Finset (Sym2 (Fin n))} (hX : TwoRegula
     have hpos : 0 < n := hcard ▸ Finset.card_pos.2 ⟨e, heX⟩
     refine ⟨?_, by omega⟩
     rw [graphOf_erase]
-    refine hc.preconnected.connected_deleteEdges_of_not_isBridge ?_
-    induction e using Sym2.ind with
-    | _ u v =>
-      have hadj : (graphOf X).Adj u v := by
-        rw [fromEdgeSet_adj]
-        exact ⟨heX, fun h => hl _ heX (by simp [h])⟩
-      rw [isBridge_iff]
-      exact fun h => h ((isCycles_graphOf hX hl).reachable_deleteEdges hadj)
+    have hnb : ¬ (graphOf X).IsBridge e := by
+      induction e using Sym2.ind with
+      | _ u v =>
+        have hadj : (graphOf X).Adj u v := by
+          rw [fromEdgeSet_adj]
+          exact ⟨heX, fun h => hl _ heX (by simp [h])⟩
+        rw [isBridge_iff]
+        exact fun h => h ((isCycles_graphOf hX hl).reachable_deleteEdges hadj)
+    -- The name and hypotheses of this Mathlib lemma differ between the two pinned Mathlib versions.
+    first
+      | exact hc.preconnected.connected_deleteEdges_of_not_isBridge hnb
+      | (induction e using Sym2.ind with
+          | _ u v => exact hc.connected_delete_edge_of_not_isBridge hnb)
 
 /-- Key lemma, connected case: a Hamiltonian cycle on `n` vertices has `n` spanning trees. -/
 theorem card_spanningTrees_of_connected {X : Finset (Sym2 (Fin n))} (hX : TwoRegular X)

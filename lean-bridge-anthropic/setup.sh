@@ -11,6 +11,6 @@ git -C "$tmp" sparse-checkout init --cone && git -C "$tmp" sparse-checkout set e
 git -C "$tmp" fetch --depth 1 origin "$REV" && git -C "$tmp" checkout -q FETCH_HEAD
 mkdir -p "$W" && cp -r "$tmp/eth/." "$W/" && rm -rf "$tmp"
 mkdir -p "$W/bridge/EthFollowup"
-for f in "$HERE"/bridge/EthFollowup/*.lean; do cp -L "$f" "$W/bridge/EthFollowup/"; done
+cp -rL "$HERE"/bridge/EthFollowup/. "$W/bridge/EthFollowup/"
 cat "$HERE/lakefile.bridge.toml" >> "$W/lakefile.toml"
 cd "$W" && lake exe cache get && lake build && lake build EthFollowupBridge

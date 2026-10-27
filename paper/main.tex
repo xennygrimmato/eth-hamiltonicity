@@ -289,8 +289,11 @@ cycle edges (\cref{lem:degree-reduction}).
 The proofs of \cref{sec:grassmann,sec:trees,sec:blobs,sec:network,sec:algorithm,sec:corollaries}
 are complete, conditional on $(\mathrm{H}_{\mathrm{A}})$. They were checked numerically in exact
 integer arithmetic, and an independent referee re-derived the construction with fresh code and
-found it sound, conditional on \A. Parts of the proof are formalised in Lean; the formalisation
-is in progress. \Cref{sec:verification} gives the details. The bounds are purely asymptotic: as
+found it sound, conditional on \A. The mathematical core is machine-checked in Lean. This
+covers the identity $\sum_\ell\prod_a\sigma_a\chi_aI_a=n\cdot\#\mathrm{HC}(G)$ behind
+\cref{thm:blob,thm:network-value} and the parameter bounds of \cref{prop:parameters}, with the
+network stated in \A's own Lean format. What remains to formalise is the cost analysis of the
+blob tables and the final composition with \A's machine-level theorems. \Cref{sec:verification} gives the details. The bounds are purely asymptotic: as
 for the SAT algorithms themselves, the crossover with brute force is astronomically large.
 
 \subsection{Organisation}
@@ -1383,23 +1386,29 @@ axioms, and a kernel replay with \lean{leanchecker} of the full import closure s
 Anthropic's development was likewise built from source (Lean v4.33.1; 9{,}768 jobs);
 \lean{MainResults.mainTheorem} depends only on the three standard axioms, and so does
 \lean{hamParity_allGraphs_anthropic} instantiated with it.
-\item \emph{Exact-count formalisation (in progress).} \Cref{lem:2factor-trees} is proved in Lean
-(\lean{n_mul_hamCycles_eq_sum}, in the axiom audit with the three standard axioms). The following
-modules type-check without \lean{sorry}, both against our Mathlib and inside \A's Lean
-environment, which is where the final theorem will be assembled:
-the Grassmann algebra of \cref{sec:grassmann}, including the Koszul rule, block factorisation of
-top coefficients, and the identity ``product of linear forms $=\det\cdot$ top monomial'';
-the determinant part of \cref{lem:fermionic-mt} (for $|F|=n-1$, $\det(\mathbf B_F)^2$ is the
-indicator that $F$ is a spanning tree);
-the combinatorics of the sign (\cref{lem:disjoint-chords}, \cref{prop:sign-factor},
-\cref{lem:copies});
-the preprocessing lemmas (\cref{lem:degree-reduction,lem:balanced});
-and a generic ``label-sharing'' network in \A's \lean{Net} format, whose value is proved to collapse
-to the sum over consistent global labellings, with \A's parameter conditions verified.
-Still being formalised are \cref{lem:berezin-cb} and the rest of \cref{lem:fermionic-mt},
-\cref{prop:sign-rule,thm:blob}, the instantiation of the network of \cref{sec:network}, the
-table-evaluation procedures in \A's cost model, and the final composition with \A's Lean
-statements.
+\item \emph{Exact-count formalisation.} The mathematical content of \cref{thm:blob} is
+machine-checked. The Lean theorem \lean{blob_factorisation} states that, for every graph $G$, root
+$r$, partition $\phi$ into blobs and crossing order,
+$\sum_{\ell}\prod_a \sigma_a(\ell)\,\chi_a(\ell,P(\ell))\,I_a(\ell)=n\cdot\#\mathrm{HC}(G)$.
+It rests only on \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}. Its proof
+formalises:
+\begin{itemize}
+\item \cref{lem:2factor-trees};
+\item the Grassmann algebra of \cref{sec:grassmann} (Koszul rule, block factorisation, linear
+forms);
+\item \cref{lem:berezin-cb} and \cref{lem:fermionic-mt}, including
+$\det(\mathbf B_F)^2=[F\text{ is a spanning tree}]$;
+\item \cref{prop:sign-rule};
+\item the sign combinatorics (\cref{lem:disjoint-chords}, \cref{prop:sign-factor}, \cref{lem:copies});
+\item the locality of the blob tables.
+\end{itemize}
+The network of \cref{sec:network} is also formalised in \A's own \lean{Net} format, inside \A's Lean
+environment. Its value is proved to equal $n\cdot\#\mathrm{HC}(G)$ (\cref{thm:network-value}), and
+its parameters satisfy \A's conditions (\cref{prop:parameters}, with $3$ bits per label instead of
+$\log_2 5$). \A's procedure interface for networks is instantiated generically. The preprocessing
+lemmas (\cref{lem:degree-reduction,lem:balanced}) are formalised. Still in progress: the
+polynomial-space streaming procedure for the blob tables in \A's cost model, and the final composition
+with \A's Lean theorems into a machine-level statement of \cref{thm:main-delta}.
 \end{itemize}
 Lean guarantees that the labs' proofs establish their formal statements; it does not guarantee
 that those statements formalise the printed theorems faithfully, which is a matter for expert

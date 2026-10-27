@@ -22,9 +22,9 @@ The files must compile both in `lean/` (Lean v4.34.1, Mathlib d13f23b) and in An
 | M3 | Chord/parity combinatorics: Lemma 4.3, Prop. 4.4 (ε = Πσ_a · interleaving), Lemma 4.5 (parity copies) | `ExactHC/SignRule.lean` | — | **done** (Lemma 4.3, Prop 4.4, Lemma 4.5; checked in both environments) |
 | M4 | Degree reduction (Lemma 6.1) and degree-balanced partition (Lemma 6.2) | `ExactHC/Preprocess.lean` | — | **done** (Lemma 6.1 identity + bounds, Lemma 6.2; checked in both environments) |
 | M4b | Shared interface: psibar/psi/omega/qEdge/genSet/OmegaSet/edgeProd/topV/fermionSum | `ExactHC/Fermion.lean` | M1 | **done** (coordinator) |
-| M5 | Lemma 3.2 (Berezin Cauchy–Binet) and Lemma 3.3 (fermionic matrix-tree), Corollary 3.4 | `ExactHC/MatrixTree.lean` | M1, M2 | wave 2 running — target `fermionSum G r = n·#HC` |
-| M6 | Lemma 4.1, Prop. 4.2 (sign rule), Theorem 4.6 (blob factorisation) | `ExactHC/Blobs.lean` | M1, M3 | wave 2 running — target blob sum = `fermionSum G r` |
-| M7 | Definition 5.1, Lemma 5.2, Theorem 5.3 (network value = n·#HC), Prop. 5.4 (parameters) | `ExactHC/Network.lean` | M6, C0 | wave 3 |
+| M5 | Lemma 3.2 (Berezin Cauchy–Binet) and Lemma 3.3 (fermionic matrix-tree), Corollary 3.4 | `ExactHC/MatrixTree.lean` | M1, M2 | **done**: `fermionSum_eq : fermionSum G r = n·#HC` (standard axioms; builds in both environments) |
+| M6 | Lemma 4.1, Prop. 4.2 (sign rule), Theorem 4.6 (blob factorisation) | `ExactHC/Blobs.lean` | M1, M3 | **done**: `sum_sigma_chi_I` and `sum_eps_prod_I` (blob sum = `fermionSum`), plus the locality lemmas |
+| M7 | Definition 5.1, Lemma 5.2, Theorem 5.3 (network value = n·#HC), Prop. 5.4 (parameters) | `bridge …/HCNetwork.lean` | M6, C1a | **done**: `hcNet_value` (network value = n·#HC), `hcNet_is` (Prop. 5.4 bounds), standard axioms |
 
 ## Layer C (computation, in Anthropic's workspace)
 
@@ -62,3 +62,27 @@ The files must compile both in `lean/` (Lean v4.34.1, Mathlib d13f23b) and in An
   * Deviation: labels are binary-coded, 3 bits per item instead of log₂5. This is a constant
     factor; Theorems 1 and 2 are unaffected.
 * **C1b (generic procedures) started.**
+* **M5 done:** `fermionSum_eq` (Lemma 3.2 and Lemma 3.3). M0 was made portable (it used a bridge lemma whose name differs between the two Mathlib versions).
+* **C1b done:** `LabelProcs.lean` (536 lines; saved at `research/lean-bridge-wip/`). `labelProcs_given`
+  gives `Given.IsGivenNetwork … (X.net C) P B τ (S + size c + 2g + 4P + 8)`, with standard axioms.
+  Still needed from the Hamiltonian side:
+  * a poly-time reader `lay` with `Describes`;
+  * a parity procedure `par` with `ParSpec`;
+  * a T-procedure with `IsPolyT`, τ = 2^{O(μ)}·poly and S = poly(n) (C1c).
+* **C2 started** in parameterised form: the TM-level Theorem 1 from an abstract "HC network package".
+* **MATH LAYER COMPLETE.** M6 is done (Lemma 4.1, Prop. 4.2, Theorem 4.6 and the locality lemmas).
+  `ExactHC/Main.lean` proves `blob_factorisation`: Σ_ℓ Π_a σ_a χ_a I_a = n·#HC(G) for every G, r, β and
+  crossing order. It uses only the three standard axioms, is in the default build and the axiom audit,
+  and also builds in Anthropic's environment. I renamed 5 duplicate lemma names in M5 (`mt_` prefix).
+* **Next:**
+  * M7: instantiate the C1a `LabelSystem` with the HC tables (value = n·#HC, bounds);
+  * C1c: a streaming T-procedure for σ·χ·I, plus `par`;
+  * C2: the assembly (running, parametric).
+* **M7 done:** `HCNetwork.lean` (562 lines). The Hamiltonian network in Anthropic's `Net` format:
+  * `hcNet_value : value = n·#HC(G)` (Theorem 5.3);
+  * `hcNet_is_labelCode : Is (3μ + g² + 1) (2μ + 1)` (Prop. 5.4);
+  * `hcNet_U ≤ 2(3m + g³)`.
+
+  Coordinator-checked, standard axioms. Remaining for Theorem 1: the C1c streaming table procedure
+  (running) and the C2 assembly (running).
+* **Layout:** the canonical bridge modules now live in `lean-bridge-anthropic/bridge/EthFollowup/ExactHC/`. They are symlinked into `/home/user/anth-build/bridge/…`, and the math modules are symlinked from `lean/`. New bridge modules (TableProc, Assembly) will move there once done.

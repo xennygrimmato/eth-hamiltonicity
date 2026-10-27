@@ -86,3 +86,18 @@ The files must compile both in `lean/` (Lean v4.34.1, Mathlib d13f23b) and in An
   Coordinator-checked, standard axioms. Remaining for Theorem 1: the C1c streaming table procedure
   (running) and the C2 assembly (running).
 * **Layout:** the canonical bridge modules now live in `lean-bridge-anthropic/bridge/EthFollowup/ExactHC/`. They are symlinked into `/home/user/anth-build/bridge/…`, and the math modules are symlinked from `lean/`. New bridge modules (TableProc, Assembly) will move there once done.
+* **C1c done:** `TableProc.lean` (1396 lines):
+  * `tableStream_eq` (streamed sum = σ·χ·I);
+  * `tableMachine_runs` (≤ 2·8^{μ_a} steps, state linear in the input);
+  * `tableProc_poly`;
+  * `parBit` with `P_eq_parBit`.
+
+  The coordinator fixed the build under the workspace's `autoImplicit = false` (re-enabled
+  `autoImplicit` in this one file).
+* **C2 done:** `Assembly.lean` (1273 lines). `theorem1_TM (hpkg : ∃ c₀, ∀ g ≥ 1, Nonempty (HCPackage g c₀))`
+  states: ∀ δ > 0, ∀ D, a TM2 machine outputs #HC(G) in binary within ⌊C·2^{δn}⌋ steps for every G
+  with |E| ≤ D·n. `theorem1_TM_of_label` is the same from `LabelPackage`s. Standard axioms.
+* **Remaining (C3, final glue):** construct `∃ c₀, ∀ g ≥ 1, LabelPackage g c₀` from M7 (`hcSystem`,
+  `hcNet_is`), C1b (`labelProcs_given`) and C1c (`tableProc`, `parBit`). This needs the poly-time
+  reader `prep` (partition by M4, root, crossing order, layout) with `Describes`/`TDesc`, the `par`
+  wrapper with `ParSpec`, and the size bounds.

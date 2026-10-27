@@ -292,8 +292,9 @@ integer arithmetic, and an independent referee re-derived the construction with 
 found it sound, conditional on \A. The mathematical core is machine-checked in Lean. This
 covers the identity $\sum_\ell\prod_a\sigma_a\chi_aI_a=n\cdot\#\mathrm{HC}(G)$ behind
 \cref{thm:blob,thm:network-value} and the parameter bounds of \cref{prop:parameters}, with the
-network stated in \A's own Lean format. What remains to formalise is the cost analysis of the
-blob tables and the final composition with \A's machine-level theorems. \Cref{sec:verification} gives the details. The bounds are purely asymptotic: as
+network stated in \A's own Lean format. The blob-table procedure and the machine-level
+statement of \cref{thm:main-delta} are also formalised, the latter from a hypothesis bundling the
+network and its procedures. What remains is the glue that constructs that bundle. \Cref{sec:verification} gives the details. The bounds are purely asymptotic: as
 for the SAT algorithms themselves, the crossover with brute force is astronomically large.
 
 \subsection{Organisation}
@@ -1406,9 +1407,14 @@ The network of \cref{sec:network} is also formalised in \A's own \lean{Net} form
 environment. Its value is proved to equal $n\cdot\#\mathrm{HC}(G)$ (\cref{thm:network-value}), and
 its parameters satisfy \A's conditions (\cref{prop:parameters}, with $3$ bits per label instead of
 $\log_2 5$). \A's procedure interface for networks is instantiated generically. The preprocessing
-lemmas (\cref{lem:degree-reduction,lem:balanced}) are formalised. Still in progress: the
-polynomial-space streaming procedure for the blob tables in \A's cost model, and the final composition
-with \A's Lean theorems into a machine-level statement of \cref{thm:main-delta}.
+lemmas (\cref{lem:degree-reduction,lem:balanced}) are formalised. The streaming procedure for the blob tables is also formalised in \A's cost model. It is proved to
+compute $\sigma_a\chi_aI_a$ within $2\cdot 8^{\mu_a}$ steps using states of linear size. On top of it,
+the composition with \A's Lean theorems gives \cref{thm:main-delta} at the level of Turing machines
+(\lean{theorem1_TM}): for every $\delta>0$ and $D$, one machine outputs $\#\mathrm{HC}(G)$ within
+$C\cdot 2^{\delta n}$ steps whenever $|E|\le Dn$. This is proved from a hypothesis that bundles the
+network, its procedures and their bounds. Still in progress is the final glue that constructs this
+bundle from the formalised network and procedures: a polynomial-time input reader, the layout, and
+the size bounds.
 \end{itemize}
 Lean guarantees that the labs' proofs establish their formal statements; it does not guarantee
 that those statements formalise the printed theorems faithfully, which is a matter for expert

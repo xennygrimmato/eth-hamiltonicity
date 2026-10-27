@@ -1,0 +1,6 @@
+# Bridge (not part of Anthropic's repo): our Hamiltonicity port, discharged by their proof.
+[[lean_lib]]
+name = "EthFollowupBridge"
+srcDir = "bridge"
+roots = ["EthFollowup.AnthropicUnconditional"]
+globs = ["EthFollowup.+"]

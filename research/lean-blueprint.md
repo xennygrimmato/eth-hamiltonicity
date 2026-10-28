@@ -108,3 +108,8 @@ The files must compile both in `lean/` (Lean v4.34.1, Mathlib d13f23b) and in An
   Here `code G` is n in unary followed by the adjacency matrix, and `Outputs` is Mathlib's
   `TM2OutputsInTime`. Axioms: propext, Classical.choice, Quot.sound. Coordinator-checked with
   `lake build` and `#print axioms`; a fresh `leanchecker --fresh EthFollowup.ExactHC.Package` replay of the full closure (Mathlib, Anthropic's development and ours) **passed (exit 0)**.
+* **Theorem 2 (conditional) done:** `Theorem2.lean` (1764 lines) proves `theorem2_TM : (∃ c₀, Nonempty (T2.UPackage c₀)) →`
+  one TM2 machine M and a constant C with Outputs M (code G) (bits #HC) ⌊C·2^{C(m+n)/√log₂(n+2)}⌋ for every G.
+  Standard axioms; coordinator-checked. It needs a package **uniform in g** (one Ctx, one reader taking
+  `(unary g, code G)`, one q). Remaining: `UPackage.lean`, constructing it from Package.lean's
+  components (running).

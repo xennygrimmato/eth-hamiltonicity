@@ -1,0 +1,17 @@
+Check 1: row cut (Model R), rank should equal C(n,k)
+row cut   n=3 k=1: rank =    3  exact                   C(n,k) = 3
+row cut   n=4 k=1: rank =    4  sampled (lower bound)   C(n,k) = 4
+row cut   n=4 k=2: rank =    6  sampled (lower bound)   C(n,k) = 6
+row cut   n=5 k=1: rank =    5  sampled (lower bound)   C(n,k) = 5
+row cut   n=5 k=2: rank =   10  sampled (lower bound)   C(n,k) = 10
+
+Check 2: vertex cut (Model V), rank should equal C(2k,k)
+vertex cut n=4 k=1: rank with the fixing of Lemma 3.4 =    2  sampled (lower bound)   C(2k,k) = 2
+vertex cut n=4 k=2: rank with the fixing of Lemma 3.4 =    6  exact                   C(2k,k) = 6
+vertex cut n=5 k=2: rank with the fixing of Lemma 3.4 =    6  sampled (lower bound)   C(2k,k) = 6
+vertex cut n=6 k=3: rank with the fixing of Lemma 3.4 =   20  sampled (lower bound)   C(2k,k) = 20
+
+Check 2b: maximum over all fixings of the shared blocks (small cases)
+vertex cut n=4 k=1: max rank over all 64 fixings of the shared blocks = 2  (upper bound C(2k,k) = 2)
+vertex cut n=4 k=2: max rank over all 256 fixings of the shared blocks = 6  (upper bound C(2k,k) = 6)
+DONE

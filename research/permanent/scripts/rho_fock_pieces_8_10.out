@@ -1,0 +1,119 @@
+h=8  N=p(h)=22  lam=log2 N=4.459  identity sum_s A_s = h![x=v][y=u]: True   (build 29.8s)
+  s=-16  rank_row=     1 [count       1, p(2h+s)=     1]  rank_col=   484 [count   43136, p(2h-s)=  8349]  bits=  8.92  count-bits=  8.92
+  s=-15  rank_row=     2 [count       2, p(2h+s)=     1]  rank_col=   484 [count   34963, p(2h-s)=  6842]  bits=  9.92  count-bits=  9.92
+  s=-14  rank_row=     4 [count       4, p(2h+s)=     2]  rank_col=   484 [count   28256, p(2h-s)=  5604]  bits= 10.92  count-bits= 10.92
+  s=-13  rank_row=     7 [count       7, p(2h+s)=     3]  rank_col=   484 [count   22753, p(2h-s)=  4565]  bits= 11.73  count-bits= 11.73
+  s=-12  rank_row=    12 [count      12, p(2h+s)=     5]  rank_col=   484 [count   18265, p(2h-s)=  3718]  bits= 12.50  count-bits= 12.50
+  s=-11  rank_row=    19 [count      19, p(2h+s)=     7]  rank_col=   484 [count   14603, p(2h-s)=  3010]  bits= 13.17  count-bits= 13.17
+  s=-10  rank_row=    30 [count      30, p(2h+s)=    11]  rank_col=   484 [count   11635, p(2h-s)=  2436]  bits= 13.83  count-bits= 13.83
+  s= -9  rank_row=    45 [count      45, p(2h+s)=    15]  rank_col=   484 [count    9229, p(2h-s)=  1958]  bits= 14.41  count-bits= 14.41
+  s= -8  rank_row=    66 [count      67, p(2h+s)=    22]  rank_col=   484 [count    7293, p(2h-s)=  1575]  bits= 14.96  count-bits= 14.98
+  s= -7  rank_row=    94 [count      97, p(2h+s)=    30]  rank_col=   484 [count    5733, p(2h-s)=  1255]  bits= 15.47  count-bits= 15.52
+  s= -6  rank_row=   134 [count     139, p(2h+s)=    42]  rank_col=   484 [count    4489, p(2h-s)=  1002]  bits= 15.98  count-bits= 16.04
+  s= -5  rank_row=   187 [count     195, p(2h+s)=    56]  rank_col=   484 [count    3494, p(2h-s)=   792]  bits= 16.47  count-bits= 16.53
+  s= -4  rank_row=   259 [count     272, p(2h+s)=    77]  rank_col=   484 [count    2707, p(2h-s)=   627]  bits= 16.94  count-bits= 17.01
+  s= -3  rank_row=   353 [count     373, p(2h+s)=   101]  rank_col=   484 [count    2083, p(2h-s)=   490]  bits= 17.38  count-bits= 17.46
+  s= -2  rank_row=   464 [count     508, p(2h+s)=   135]  rank_col=   484 [count    1595, p(2h-s)=   385]  bits= 17.78  count-bits= 17.84
+  s= -1  rank_row=   476 [count     684, p(2h+s)=   176]  rank_col=   484 [count    1211, p(2h-s)=   297]  bits= 17.81  count-bits= 17.84
+  s=  0  rank_row=   484 [count     915, p(2h+s)=   231]  rank_col=   484 [count     915, p(2h-s)=   231]  bits= 17.84  count-bits= 17.84
+  s=  1  rank_row=   484 [count    1211, p(2h+s)=   297]  rank_col=   484 [count     684, p(2h-s)=   176]  bits= 17.84  count-bits= 17.84
+  s=  2  rank_row=   484 [count    1595, p(2h+s)=   385]  rank_col=   465 [count     508, p(2h-s)=   135]  bits= 17.78  count-bits= 17.84
+  s=  3  rank_row=   484 [count    2083, p(2h+s)=   490]  rank_col=   372 [count     373, p(2h-s)=   101]  bits= 17.46  count-bits= 17.46
+  s=  4  rank_row=   484 [count    2707, p(2h+s)=   627]  rank_col=   272 [count     272, p(2h-s)=    77]  bits= 17.01  count-bits= 17.01
+  s=  5  rank_row=   484 [count    3494, p(2h+s)=   792]  rank_col=   195 [count     195, p(2h-s)=    56]  bits= 16.53  count-bits= 16.53
+  s=  6  rank_row=   484 [count    4489, p(2h+s)=  1002]  rank_col=   139 [count     139, p(2h-s)=    42]  bits= 16.04  count-bits= 16.04
+  s=  7  rank_row=   484 [count    5733, p(2h+s)=  1255]  rank_col=    97 [count      97, p(2h-s)=    30]  bits= 15.52  count-bits= 15.52
+  s=  8  rank_row=   484 [count    7293, p(2h+s)=  1575]  rank_col=    67 [count      67, p(2h-s)=    22]  bits= 14.98  count-bits= 14.98
+  s=  9  rank_row=   484 [count    9229, p(2h+s)=  1958]  rank_col=    45 [count      45, p(2h-s)=    15]  bits= 14.41  count-bits= 14.41
+  s= 10  rank_row=   484 [count   11635, p(2h+s)=  2436]  rank_col=    30 [count      30, p(2h-s)=    11]  bits= 13.83  count-bits= 13.83
+  s= 11  rank_row=   484 [count   14603, p(2h+s)=  3010]  rank_col=    19 [count      19, p(2h-s)=     7]  bits= 13.17  count-bits= 13.17
+  s= 12  rank_row=   484 [count   18265, p(2h+s)=  3718]  rank_col=    12 [count      12, p(2h-s)=     5]  bits= 12.50  count-bits= 12.50
+  s= 13  rank_row=   484 [count   22753, p(2h+s)=  4565]  rank_col=     7 [count       7, p(2h-s)=     3]  bits= 11.73  count-bits= 11.73
+  s= 14  rank_row=   484 [count   28256, p(2h+s)=  5604]  rank_col=     4 [count       4, p(2h-s)=     2]  bits= 10.92  count-bits= 10.92
+  s= 15  rank_row=   484 [count   34963, p(2h+s)=  6842]  rank_col=     2 [count       2, p(2h-s)=     1]  bits=  9.92  count-bits=  9.92
+  s= 16  rank_row=   484 [count   43136, p(2h+s)=  8349]  rank_col=     1 [count       1, p(2h-s)=     1]  bits=  8.92  count-bits=  8.92
+  number of nonzero pieces = 33; rank of the family = 32 -> linearly independent: False
+  rho_true(h) = 1.0000   rho_count(h) = 1.0000   law f(2h)/(2f(h)) = 0.8804   1/sqrt2 = 0.7071   4lam = 17.84
+h=9  N=p(h)=30  lam=log2 N=4.907  identity sum_s A_s = h![x=v][y=u]: True   (build 176.5s)
+  s=-18  rank_row=     1 [count       1, p(2h+s)=     1]  rank_col=   900 [count   97921, p(2h-s)= 17977]  bits=  9.81  count-bits=  9.81
+  s=-17  rank_row=     2 [count       2, p(2h+s)=     1]  rank_col=   900 [count   80241, p(2h-s)= 14883]  bits= 10.81  count-bits= 10.81
+  s=-16  rank_row=     4 [count       4, p(2h+s)=     2]  rank_col=   900 [count   65589, p(2h-s)= 12310]  bits= 11.81  count-bits= 11.81
+  s=-15  rank_row=     7 [count       7, p(2h+s)=     3]  rank_col=   900 [count   53455, p(2h-s)= 10143]  bits= 12.62  count-bits= 12.62
+  s=-14  rank_row=    12 [count      12, p(2h+s)=     5]  rank_col=   900 [count   43447, p(2h-s)=  8349]  bits= 13.40  count-bits= 13.40
+  s=-13  rank_row=    19 [count      19, p(2h+s)=     7]  rank_col=   900 [count   35199, p(2h-s)=  6842]  bits= 14.06  count-bits= 14.06
+  s=-12  rank_row=    30 [count      30, p(2h+s)=    11]  rank_col=   900 [count   28434, p(2h-s)=  5604]  bits= 14.72  count-bits= 14.72
+  s=-11  rank_row=    45 [count      45, p(2h+s)=    15]  rank_col=   900 [count   22886, p(2h-s)=  4565]  bits= 15.31  count-bits= 15.31
+  s=-10  rank_row=    67 [count      67, p(2h+s)=    22]  rank_col=   900 [count   18363, p(2h-s)=  3718]  bits= 15.88  count-bits= 15.88
+  s= -9  rank_row=    96 [count      97, p(2h+s)=    30]  rank_col=   900 [count   14675, p(2h-s)=  3010]  bits= 16.40  count-bits= 16.41
+  s= -8  rank_row=   136 [count     139, p(2h+s)=    42]  rank_col=   900 [count   11687, p(2h-s)=  2436]  bits= 16.90  count-bits= 16.93
+  s= -7  rank_row=   190 [count     195, p(2h+s)=    56]  rank_col=   900 [count    9266, p(2h-s)=  1958]  bits= 17.38  count-bits= 17.42
+  s= -6  rank_row=   264 [count     272, p(2h+s)=    77]  rank_col=   900 [count    7319, p(2h-s)=  1575]  bits= 17.86  count-bits= 17.90
+  s= -5  rank_row=   360 [count     373, p(2h+s)=   101]  rank_col=   900 [count    5751, p(2h-s)=  1255]  bits= 18.31  count-bits= 18.36
+  s= -4  rank_row=   488 [count     508, p(2h+s)=   135]  rank_col=   900 [count    4501, p(2h-s)=  1002]  bits= 18.74  count-bits= 18.80
+  s= -3  rank_row=   653 [count     684, p(2h+s)=   176]  rank_col=   900 [count    3502, p(2h-s)=   792]  bits= 19.16  count-bits= 19.23
+  s= -2  rank_row=   849 [count     915, p(2h+s)=   231]  rank_col=   900 [count    2712, p(2h-s)=   627]  bits= 19.54  count-bits= 19.63
+  s= -1  rank_row=   891 [count    1212, p(2h+s)=   297]  rank_col=   900 [count    2086, p(2h-s)=   490]  bits= 19.61  count-bits= 19.63
+  s=  0  rank_row=   900 [count    1597, p(2h+s)=   385]  rank_col=   900 [count    1597, p(2h-s)=   385]  bits= 19.63  count-bits= 19.63
+  s=  1  rank_row=   900 [count    2086, p(2h+s)=   490]  rank_col=   900 [count    1212, p(2h-s)=   297]  bits= 19.63  count-bits= 19.63
+  s=  2  rank_row=   900 [count    2712, p(2h+s)=   627]  rank_col=   853 [count     915, p(2h-s)=   231]  bits= 19.55  count-bits= 19.63
+  s=  3  rank_row=   900 [count    3502, p(2h+s)=   792]  rank_col=   683 [count     684, p(2h-s)=   176]  bits= 19.23  count-bits= 19.23
+  s=  4  rank_row=   900 [count    4501, p(2h+s)=  1002]  rank_col=   508 [count     508, p(2h-s)=   135]  bits= 18.80  count-bits= 18.80
+  s=  5  rank_row=   900 [count    5751, p(2h+s)=  1255]  rank_col=   373 [count     373, p(2h-s)=   101]  bits= 18.36  count-bits= 18.36
+  s=  6  rank_row=   900 [count    7319, p(2h+s)=  1575]  rank_col=   272 [count     272, p(2h-s)=    77]  bits= 17.90  count-bits= 17.90
+  s=  7  rank_row=   900 [count    9266, p(2h+s)=  1958]  rank_col=   195 [count     195, p(2h-s)=    56]  bits= 17.42  count-bits= 17.42
+  s=  8  rank_row=   900 [count   11687, p(2h+s)=  2436]  rank_col=   139 [count     139, p(2h-s)=    42]  bits= 16.93  count-bits= 16.93
+  s=  9  rank_row=   900 [count   14675, p(2h+s)=  3010]  rank_col=    97 [count      97, p(2h-s)=    30]  bits= 16.41  count-bits= 16.41
+  s= 10  rank_row=   900 [count   18363, p(2h+s)=  3718]  rank_col=    67 [count      67, p(2h-s)=    22]  bits= 15.88  count-bits= 15.88
+  s= 11  rank_row=   900 [count   22886, p(2h+s)=  4565]  rank_col=    45 [count      45, p(2h-s)=    15]  bits= 15.31  count-bits= 15.31
+  s= 12  rank_row=   900 [count   28434, p(2h+s)=  5604]  rank_col=    30 [count      30, p(2h-s)=    11]  bits= 14.72  count-bits= 14.72
+  s= 13  rank_row=   900 [count   35199, p(2h+s)=  6842]  rank_col=    19 [count      19, p(2h-s)=     7]  bits= 14.06  count-bits= 14.06
+  s= 14  rank_row=   900 [count   43447, p(2h+s)=  8349]  rank_col=    12 [count      12, p(2h-s)=     5]  bits= 13.40  count-bits= 13.40
+  s= 15  rank_row=   900 [count   53455, p(2h+s)= 10143]  rank_col=     7 [count       7, p(2h-s)=     3]  bits= 12.62  count-bits= 12.62
+  s= 16  rank_row=   900 [count   65589, p(2h+s)= 12310]  rank_col=     4 [count       4, p(2h-s)=     2]  bits= 11.81  count-bits= 11.81
+  s= 17  rank_row=   900 [count   80241, p(2h+s)= 14883]  rank_col=     2 [count       2, p(2h-s)=     1]  bits= 10.81  count-bits= 10.81
+  s= 18  rank_row=   900 [count   97921, p(2h+s)= 17977]  rank_col=     1 [count       1, p(2h-s)=     1]  bits=  9.81  count-bits=  9.81
+  number of nonzero pieces = 37; rank of the family = 36 -> linearly independent: False
+  rho_true(h) = 1.0000   rho_count(h) = 1.0000   law f(2h)/(2f(h)) = 0.8752   1/sqrt2 = 0.7071   4lam = 19.63
+h=10  N=p(h)=42  lam=log2 N=5.392  identity sum_s A_s = h![x=v][y=u]: True   (build 1128.6s)
+  s=-20  rank_row=     1 [count       1, p(2h+s)=     1]  rank_col=  1764 [count  213221, p(2h-s)= 37338]  bits= 10.78  count-bits= 10.78
+  s=-19  rank_row=     2 [count       2, p(2h+s)=     1]  rank_col=  1764 [count  176373, p(2h-s)= 31185]  bits= 11.78  count-bits= 11.78
+  s=-18  rank_row=     4 [count       4, p(2h+s)=     2]  rank_col=  1764 [count  145573, p(2h-s)= 26015]  bits= 12.78  count-bits= 12.78
+  s=-17  rank_row=     7 [count       7, p(2h+s)=     3]  rank_col=  1764 [count  119855, p(2h-s)= 21637]  bits= 13.59  count-bits= 13.59
+  s=-16  rank_row=    12 [count      12, p(2h+s)=     5]  rank_col=  1764 [count   98449, p(2h-s)= 17977]  bits= 14.37  count-bits= 14.37
+  s=-15  rank_row=    19 [count      19, p(2h+s)=     7]  rank_col=  1764 [count   80648, p(2h-s)= 14883]  bits= 15.03  count-bits= 15.03
+  s=-14  rank_row=    30 [count      30, p(2h+s)=    11]  rank_col=  1764 [count   65900, p(2h-s)= 12310]  bits= 15.69  count-bits= 15.69
+  s=-13  rank_row=    45 [count      45, p(2h+s)=    15]  rank_col=  1764 [count   53691, p(2h-s)= 10143]  bits= 16.28  count-bits= 16.28
+  s=-12  rank_row=    67 [count      67, p(2h+s)=    22]  rank_col=  1764 [count   43625, p(2h-s)=  8349]  bits= 16.85  count-bits= 16.85
+  s=-11  rank_row=    97 [count      97, p(2h+s)=    30]  rank_col=  1764 [count   35332, p(2h-s)=  6842]  bits= 17.38  count-bits= 17.38
+  s=-10  rank_row=   138 [count     139, p(2h+s)=    42]  rank_col=  1764 [count   28532, p(2h-s)=  5604]  bits= 17.89  count-bits= 17.90
+  s= -9  rank_row=   192 [count     195, p(2h+s)=    56]  rank_col=  1764 [count   22958, p(2h-s)=  4565]  bits= 18.37  count-bits= 18.39
+  s= -8  rank_row=   267 [count     272, p(2h+s)=    77]  rank_col=  1764 [count   18415, p(2h-s)=  3718]  bits= 18.85  count-bits= 18.87
+  s= -7  rank_row=   365 [count     373, p(2h+s)=   101]  rank_col=  1764 [count   14712, p(2h-s)=  3010]  bits= 19.30  count-bits= 19.33
+  s= -6  rank_row=   495 [count     508, p(2h+s)=   135]  rank_col=  1764 [count   11713, p(2h-s)=  2436]  bits= 19.74  count-bits= 19.77
+  s= -5  rank_row=   664 [count     684, p(2h+s)=   176]  rank_col=  1764 [count    9284, p(2h-s)=  1958]  bits= 20.16  count-bits= 20.20
+  s= -4  rank_row=   884 [count     915, p(2h+s)=   231]  rank_col=  1764 [count    7331, p(2h-s)=  1575]  bits= 20.57  count-bits= 20.62
+  s= -3  rank_row=  1166 [count    1212, p(2h+s)=   297]  rank_col=  1764 [count    5759, p(2h-s)=  1255]  bits= 20.97  count-bits= 21.03
+  s= -2  rank_row=  1513 [count    1597, p(2h+s)=   385]  rank_col=  1764 [count    4506, p(2h-s)=  1002]  bits= 21.35  count-bits= 21.43
+  s= -1  rank_row=  1709 [count    2087, p(2h+s)=   490]  rank_col=  1764 [count    3505, p(2h-s)=   792]  bits= 21.52  count-bits= 21.57
+  s=  0  rank_row=  1764 [count    2714, p(2h+s)=   627]  rank_col=  1764 [count    2714, p(2h-s)=   627]  bits= 21.57  count-bits= 21.57
+  s=  1  rank_row=  1764 [count    3505, p(2h+s)=   792]  rank_col=  1764 [count    2087, p(2h-s)=   490]  bits= 21.57  count-bits= 21.57
+  s=  2  rank_row=  1764 [count    4506, p(2h+s)=  1002]  rank_col=  1588 [count    1597, p(2h-s)=   385]  bits= 21.42  count-bits= 21.43
+  s=  3  rank_row=  1764 [count    5759, p(2h+s)=  1255]  rank_col=  1211 [count    1212, p(2h-s)=   297]  bits= 21.03  count-bits= 21.03
+  s=  4  rank_row=  1764 [count    7331, p(2h+s)=  1575]  rank_col=   915 [count     915, p(2h-s)=   231]  bits= 20.62  count-bits= 20.62
+  s=  5  rank_row=  1764 [count    9284, p(2h+s)=  1958]  rank_col=   684 [count     684, p(2h-s)=   176]  bits= 20.20  count-bits= 20.20
+  s=  6  rank_row=  1764 [count   11713, p(2h+s)=  2436]  rank_col=   508 [count     508, p(2h-s)=   135]  bits= 19.77  count-bits= 19.77
+  s=  7  rank_row=  1764 [count   14712, p(2h+s)=  3010]  rank_col=   373 [count     373, p(2h-s)=   101]  bits= 19.33  count-bits= 19.33
+  s=  8  rank_row=  1764 [count   18415, p(2h+s)=  3718]  rank_col=   272 [count     272, p(2h-s)=    77]  bits= 18.87  count-bits= 18.87
+  s=  9  rank_row=  1764 [count   22958, p(2h+s)=  4565]  rank_col=   195 [count     195, p(2h-s)=    56]  bits= 18.39  count-bits= 18.39
+  s= 10  rank_row=  1764 [count   28532, p(2h+s)=  5604]  rank_col=   139 [count     139, p(2h-s)=    42]  bits= 17.90  count-bits= 17.90
+  s= 11  rank_row=  1764 [count   35332, p(2h+s)=  6842]  rank_col=    97 [count      97, p(2h-s)=    30]  bits= 17.38  count-bits= 17.38
+  s= 12  rank_row=  1764 [count   43625, p(2h+s)=  8349]  rank_col=    67 [count      67, p(2h-s)=    22]  bits= 16.85  count-bits= 16.85
+  s= 13  rank_row=  1764 [count   53691, p(2h+s)= 10143]  rank_col=    45 [count      45, p(2h-s)=    15]  bits= 16.28  count-bits= 16.28
+  s= 14  rank_row=  1764 [count   65900, p(2h+s)= 12310]  rank_col=    30 [count      30, p(2h-s)=    11]  bits= 15.69  count-bits= 15.69
+  s= 15  rank_row=  1764 [count   80648, p(2h+s)= 14883]  rank_col=    19 [count      19, p(2h-s)=     7]  bits= 15.03  count-bits= 15.03
+  s= 16  rank_row=  1764 [count   98449, p(2h+s)= 17977]  rank_col=    12 [count      12, p(2h-s)=     5]  bits= 14.37  count-bits= 14.37
+  s= 17  rank_row=  1764 [count  119855, p(2h+s)= 21637]  rank_col=     7 [count       7, p(2h-s)=     3]  bits= 13.59  count-bits= 13.59
+  s= 18  rank_row=  1764 [count  145573, p(2h+s)= 26015]  rank_col=     4 [count       4, p(2h-s)=     2]  bits= 12.78  count-bits= 12.78
+  s= 19  rank_row=  1764 [count  176373, p(2h+s)= 31185]  rank_col=     2 [count       2, p(2h-s)=     1]  bits= 11.78  count-bits= 11.78
+  s= 20  rank_row=  1764 [count  213221, p(2h+s)= 37338]  rank_col=     1 [count       1, p(2h-s)=     1]  bits= 10.78  count-bits= 10.78
+done

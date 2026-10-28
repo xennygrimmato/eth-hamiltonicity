@@ -1,0 +1,45 @@
+h=2 (dim V_h=  2, dim End=   4)  w=1: dim o(V_w)|V_h =    0   Id in span: False
+h=2 (dim V_h=  2, dim End=   4)  w=2: dim o(V_w)|V_h =    1   Id in span: True
+h=2 (dim V_h=  2, dim End=   4)  w=3: dim o(V_w)|V_h =    2   Id in span: True
+h=2 (dim V_h=  2, dim End=   4)  w=4: dim o(V_w)|V_h =    3   Id in span: True
+h=2 (dim V_h=  2, dim End=   4)  w=5: dim o(V_w)|V_h =    3   Id in span: True
+h=2 (dim V_h=  2, dim End=   4)  w=6: dim o(V_w)|V_h =    4   Id in span: True
+h=2 (dim V_h=  2, dim End=   4)  w=7: dim o(V_w)|V_h =    4   Id in span: True
+h=2 (dim V_h=  2, dim End=   4)  w=8: dim o(V_w)|V_h =    4   Id in span: True
+
+h=3 (dim V_h=  3, dim End=   9)  w=1: dim o(V_w)|V_h =    0   Id in span: False
+h=3 (dim V_h=  3, dim End=   9)  w=2: dim o(V_w)|V_h =    1   Id in span: True
+h=3 (dim V_h=  3, dim End=   9)  w=3: dim o(V_w)|V_h =    2   Id in span: True
+h=3 (dim V_h=  3, dim End=   9)  w=4: dim o(V_w)|V_h =    4   Id in span: True
+h=3 (dim V_h=  3, dim End=   9)  w=5: dim o(V_w)|V_h =    5   Id in span: True
+h=3 (dim V_h=  3, dim End=   9)  w=6: dim o(V_w)|V_h =    7   Id in span: True
+h=3 (dim V_h=  3, dim End=   9)  w=7: dim o(V_w)|V_h =    8   Id in span: True
+h=3 (dim V_h=  3, dim End=   9)  w=8: dim o(V_w)|V_h =    9   Id in span: True
+
+h=4 (dim V_h=  5, dim End=  25)  w=1: dim o(V_w)|V_h =    0   Id in span: False
+h=4 (dim V_h=  5, dim End=  25)  w=2: dim o(V_w)|V_h =    1   Id in span: True
+h=4 (dim V_h=  5, dim End=  25)  w=3: dim o(V_w)|V_h =    2   Id in span: True
+h=4 (dim V_h=  5, dim End=  25)  w=4: dim o(V_w)|V_h =    4   Id in span: True
+h=4 (dim V_h=  5, dim End=  25)  w=5: dim o(V_w)|V_h =    6   Id in span: True
+h=4 (dim V_h=  5, dim End=  25)  w=6: dim o(V_w)|V_h =   10   Id in span: True
+h=4 (dim V_h=  5, dim End=  25)  w=7: dim o(V_w)|V_h =   13   Id in span: True
+h=4 (dim V_h=  5, dim End=  25)  w=8: dim o(V_w)|V_h =   18   Id in span: True
+
+h=5 (dim V_h=  7, dim End=  49)  w=1: dim o(V_w)|V_h =    0   Id in span: False
+h=5 (dim V_h=  7, dim End=  49)  w=2: dim o(V_w)|V_h =    1   Id in span: True
+h=5 (dim V_h=  7, dim End=  49)  w=3: dim o(V_w)|V_h =    2   Id in span: True
+h=5 (dim V_h=  7, dim End=  49)  w=4: dim o(V_w)|V_h =    4   Id in span: True
+h=5 (dim V_h=  7, dim End=  49)  w=5: dim o(V_w)|V_h =    6   Id in span: True
+h=5 (dim V_h=  7, dim End=  49)  w=6: dim o(V_w)|V_h =   10   Id in span: True
+h=5 (dim V_h=  7, dim End=  49)  w=7: dim o(V_w)|V_h =   14   Id in span: True
+h=5 (dim V_h=  7, dim End=  49)  w=8: dim o(V_w)|V_h =   21   Id in span: True
+
+h=6 (dim V_h= 11, dim End= 121)  w=1: dim o(V_w)|V_h =    0   Id in span: False
+h=6 (dim V_h= 11, dim End= 121)  w=2: dim o(V_w)|V_h =    1   Id in span: True
+h=6 (dim V_h= 11, dim End= 121)  w=3: dim o(V_w)|V_h =    2   Id in span: True
+h=6 (dim V_h= 11, dim End= 121)  w=4: dim o(V_w)|V_h =    4   Id in span: True
+h=6 (dim V_h= 11, dim End= 121)  w=5: dim o(V_w)|V_h =    6   Id in span: True
+h=6 (dim V_h= 11, dim End= 121)  w=6: dim o(V_w)|V_h =   10   Id in span: True
+h=6 (dim V_h= 11, dim End= 121)  w=7: dim o(V_w)|V_h =   14   Id in span: True
+h=6 (dim V_h= 11, dim End= 121)  w=8: dim o(V_w)|V_h =   21   Id in span: True
+

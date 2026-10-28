@@ -1,0 +1,20 @@
+lambda    h   p(h)>=2^lam  max_s(c_row+c_col)/(4lam)  [s*]   f(2h)/(2f(h))   (c_HR sqrt(2h)-log(2h))/(2 c_HR sqrt h)
+     8     17     True   1.0625   [   0]      0.8271       0.5404
+    16     44     True   0.9062   [ -26]      0.7839       0.5755
+    32    128     True   0.8281   [ -18]      0.7555       0.6116
+    64    417     True   0.7773   [-134]      0.7367       0.6429
+   128   1459     True   0.7500   [   0]      0.7248       0.6664
+
+1/sqrt2 = 0.7071.  The counted cost converges to 1/sqrt2 from above, like 1 - O(log lam / lam).
+
+Reference: the general law rho = f(2h)/(2 f(h)) for other graded spaces (no two-order structure known):
+ space                        h      log2 dim V_h     f(2h)/(2 f(h))   2^(beta-1) for the nominal beta
+ partitions into squares (beta=1/3)    1000        31.90        0.6763          0.6300
+ partitions into squares (beta=1/3)   10000        83.14        0.6537          0.6300
+ partitions into squares (beta=1/3)  100000       197.96        0.6425          0.6300
+ binary partitions (beta->0)          1000        30.88        0.6143          0.5000
+ binary partitions (beta->0)         10000        57.62        0.5860          0.5000
+ binary partitions (beta->0)        100000        93.98        0.5685          0.5000
+ all partitions (beta=1/2)            1000       104.25        0.7277          0.7071
+ all partitions (beta=1/2)            5000       246.59        0.7178          0.7071
+ all partitions (beta=1/2)           10000       353.98        0.7151          0.7071

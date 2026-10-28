@@ -1,0 +1,12 @@
+h=3: sum_s s*A_s == 0 : True
+h=3: sum_s s^2 A_s : nonzero=True, only y=u entries: True, coefficient g(x,v) independent of y: True, #(x,v) with g!=0: 3 (N^2=9, N=3)
+h=3: sum_s s^3 A_s : nonzero=True, only y=u entries: False, coefficient g(x,v) independent of y: False, #(x,v) with g!=0: 4 (N^2=9, N=3)
+h=4: sum_s s*A_s == 0 : True
+h=4: sum_s s^2 A_s : nonzero=True, only y=u entries: True, coefficient g(x,v) independent of y: True, #(x,v) with g!=0: 7 (N^2=25, N=5)
+h=4: sum_s s^3 A_s : nonzero=True, only y=u entries: False, coefficient g(x,v) independent of y: False, #(x,v) with g!=0: 14 (N^2=25, N=5)
+h=5: sum_s s*A_s == 0 : True
+h=5: sum_s s^2 A_s : nonzero=True, only y=u entries: True, coefficient g(x,v) independent of y: True, #(x,v) with g!=0: 14 (N^2=49, N=7)
+h=5: sum_s s^3 A_s : nonzero=True, only y=u entries: False, coefficient g(x,v) independent of y: False, #(x,v) with g!=0: 28 (N^2=49, N=7)
+h=6: sum_s s*A_s == 0 : True
+h=6: sum_s s^2 A_s : nonzero=True, only y=u entries: True, coefficient g(x,v) independent of y: True, #(x,v) with g!=0: 28 (N^2=121, N=11)
+h=6: sum_s s^3 A_s : nonzero=True, only y=u entries: False, coefficient g(x,v) independent of y: False, #(x,v) with g!=0: 62 (N^2=121, N=11)

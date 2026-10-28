@@ -294,8 +294,8 @@ covers the identity $\sum_\ell\prod_a\sigma_a\chi_aI_a=n\cdot\#\mathrm{HC}(G)$ b
 \cref{thm:blob,thm:network-value} and the parameter bounds of \cref{prop:parameters}, with the
 network stated in \A's own Lean format. The blob-table procedure is formalised as well, and
 \cref{thm:main-delta} is formally verified in Lean end to end, as a statement about Turing machines
-built on \A's Lean development. The sharper rate of \cref{thm:main-rate} is proved here but not
-yet formalised. \Cref{sec:verification} gives the details. The bounds are purely asymptotic: as
+built on \A's Lean development. \Cref{thm:main-rate} is formally verified as well, as a single-machine statement with an explicit
+rate. \Cref{sec:verification} gives the details. The bounds are purely asymptotic: as
 for the SAT algorithms themselves, the crossover with brute force is astronomically large.
 
 \subsection{Organisation}
@@ -1417,8 +1417,9 @@ formalised network and procedures (a polynomial-time input reader, the layout, a
 so \cref{thm:main-delta} is formally verified in Lean end to end (\lean{theorem1}). On input the
 adjacency matrix of $G$, a Turing machine with finite alphabets outputs $\#\mathrm{HC}(G)$ in binary
 within $\lfloor C\cdot 2^{\delta n}\rfloor$ steps whenever $|E|\le Dn$. The theorem rests only on
-the three standard axioms and on \A's Lean development. The sharper single-algorithm bound of
-\cref{thm:main-rate} is proved in this paper; its formalisation is in progress.
+the three standard axioms and on \A's Lean development. The sharper single-algorithm bound of \cref{thm:main-rate} is formalised as well (\lean{theorem2}):
+one machine, with the same axioms, outputs $\#\mathrm{HC}(G)$ within
+$\lfloor C\cdot 2^{C(m+n)/\sqrt{\log_2(n+2)}}\rfloor$ steps for every graph $G$ with $m$ edges.
 \end{itemize}
 Lean guarantees that the labs' proofs establish their formal statements; it does not guarantee
 that those statements formalise the printed theorems faithfully, which is a matter for expert

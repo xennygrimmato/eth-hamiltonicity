@@ -113,3 +113,4 @@ The files must compile both in `lean/` (Lean v4.34.1, Mathlib d13f23b) and in An
   Standard axioms; coordinator-checked. It needs a package **uniform in g** (one Ctx, one reader taking
   `(unary g, code G)`, one q). Remaining: `UPackage.lean`, constructing it from Package.lean's
   components (running).
+* **THEOREM 2 IS UNCONDITIONAL.** `UPackage.lean` (639 lines) builds the uniform-in-g package (q absolute, g read in unary); `theorem2 := theorem2_TM_of_label exists_ulabelPackage`. Coordinator-checked: lake build, standard axioms.

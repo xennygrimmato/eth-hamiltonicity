@@ -114,3 +114,9 @@ The files must compile both in `lean/` (Lean v4.34.1, Mathlib d13f23b) and in An
   `(unary g, code G)`, one q). Remaining: `UPackage.lean`, constructing it from Package.lean's
   components (running).
 * **THEOREM 2 IS UNCONDITIONAL.** `UPackage.lean` (639 lines) builds the uniform-in-g package (q absolute, g read in unary); `theorem2 := theorem2_TM_of_label exists_ulabelPackage`. Coordinator-checked: lake build, standard axioms.
+* **Weighted (TSP) math + network layer done:** `lean/EthFollowup/ExactHC/Weighted.lean` and
+  `bridge/…/WeightedNetwork.lean`. `blob_factorisation_w : Σ_ℓ Π_a σ_a χ_a I^w_a = n·Σ_H z^{wt H}` (z : ℤ,
+  Kronecker), `kronecker_decode` (digit extraction gives n·#tours of each weight),
+  `hcNetW_kron` (network value and `Is (3μ+g²+1) (bWμ+2μ+1)`). Standard axioms, both environments.
+  Remaining for a TM-level TSP theorem: weighted streaming table procedure, package with weights in
+  the input, and the digit post-processing.

@@ -1,3 +1,4 @@
+import EthFollowup.ExactHC.Weighted
 import EthFollowup.ExactHC.Main
 import EthFollowup.IndependentSet
 import EthFollowup.HamiltonianParity
@@ -58,3 +59,7 @@ import EthFollowup.ExactHC
 #print axioms EthFollowup.ExactHC.blob_factorisation
 #print axioms EthFollowup.ExactHC.exists_blob_factorisation
 #print axioms EthFollowup.ExactHC.fermionSum_eq
+
+-- Weighted (TSP) layer
+#print axioms EthFollowup.ExactHC.blob_factorisation_w
+#print axioms EthFollowup.Hamiltonian.kronecker_decode

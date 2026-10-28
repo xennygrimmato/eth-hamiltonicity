@@ -101,3 +101,10 @@ The files must compile both in `lean/` (Lean v4.34.1, Mathlib d13f23b) and in An
   `hcNet_is`), C1b (`labelProcs_given`) and C1c (`tableProc`, `parBit`). This needs the poly-time
   reader `prep` (partition by M4, root, crossing order, layout) with `Describes`/`TDesc`, the `par`
   wrapper with `ParSpec`, and the size bounds.
+* **C3 DONE: THEOREM 1 IS UNCONDITIONAL IN LEAN.** `Package.lean` (1037 lines) proves
+  `exists_labelPackage` (c₀ = 6) and
+  `theorem1 : ∀ δ > 0, ∀ D, ∃ M C, (finite alphabets) ∧ ∀ n G, |E| ≤ D·n →
+  GraphProblems.Outputs M (code G) (bits #hamCycles G) ⌊C·2^{δn}⌋`.
+  Here `code G` is n in unary followed by the adjacency matrix, and `Outputs` is Mathlib's
+  `TM2OutputsInTime`. Axioms: propext, Classical.choice, Quot.sound. Coordinator-checked with
+  `lake build` and `#print axioms`; a fresh `leanchecker` replay is running.

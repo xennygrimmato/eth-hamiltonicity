@@ -292,9 +292,10 @@ integer arithmetic, and an independent referee re-derived the construction with 
 found it sound, conditional on \A. The mathematical core is machine-checked in Lean. This
 covers the identity $\sum_\ell\prod_a\sigma_a\chi_aI_a=n\cdot\#\mathrm{HC}(G)$ behind
 \cref{thm:blob,thm:network-value} and the parameter bounds of \cref{prop:parameters}, with the
-network stated in \A's own Lean format. The blob-table procedure and the machine-level
-statement of \cref{thm:main-delta} are also formalised, the latter from a hypothesis bundling the
-network and its procedures. What remains is the glue that constructs that bundle. \Cref{sec:verification} gives the details. The bounds are purely asymptotic: as
+network stated in \A's own Lean format. The blob-table procedure is formalised as well, and
+\cref{thm:main-delta} is formally verified in Lean end to end, as a statement about Turing machines
+built on \A's Lean development. The sharper rate of \cref{thm:main-rate} is proved here but not
+yet formalised. \Cref{sec:verification} gives the details. The bounds are purely asymptotic: as
 for the SAT algorithms themselves, the crossover with brute force is astronomically large.
 
 \subsection{Organisation}
@@ -1411,10 +1412,13 @@ lemmas (\cref{lem:degree-reduction,lem:balanced}) are formalised. The streaming 
 compute $\sigma_a\chi_aI_a$ within $2\cdot 8^{\mu_a}$ steps using states of linear size. On top of it,
 the composition with \A's Lean theorems gives \cref{thm:main-delta} at the level of Turing machines
 (\lean{theorem1_TM}): for every $\delta>0$ and $D$, one machine outputs $\#\mathrm{HC}(G)$ within
-$C\cdot 2^{\delta n}$ steps whenever $|E|\le Dn$. This is proved from a hypothesis that bundles the
-network, its procedures and their bounds. Still in progress is the final glue that constructs this
-bundle from the formalised network and procedures: a polynomial-time input reader, the layout, and
-the size bounds.
+$C\cdot 2^{\delta n}$ steps whenever $|E|\le Dn$. The hypothesis bundling the network, its procedures and their bounds is then constructed from the
+formalised network and procedures (a polynomial-time input reader, the layout, and the size bounds),
+so \cref{thm:main-delta} is formally verified in Lean end to end (\lean{theorem1}). On input the
+adjacency matrix of $G$, a Turing machine with finite alphabets outputs $\#\mathrm{HC}(G)$ in binary
+within $\lfloor C\cdot 2^{\delta n}\rfloor$ steps whenever $|E|\le Dn$. The theorem rests only on
+the three standard axioms and on \A's Lean development. The sharper single-algorithm bound of
+\cref{thm:main-rate} is proved in this paper; its formalisation is in progress.
 \end{itemize}
 Lean guarantees that the labs' proofs establish their formal statements; it does not guarantee
 that those statements formalise the printed theorems faithfully, which is a matter for expert

@@ -78,22 +78,26 @@
 In October 2026 two manuscripts claimed refutations of the Exponential Time Hypothesis by
 deterministic algorithms for $\#k$-SAT, each with a Lean formalisation of its top-level
 statement. Neither result applies directly to connectivity problems such as Hamiltonicity,
-because no linear-size CNF encoding of ``this edge set is a single cycle'' is known. We show
-that, assuming three internal results of one of these manuscripts (a network-to-clique
-reduction, an algorithm for cliques of all levels, and the existence of its ``pieces''), the
-number of Hamiltonian cycles of a graph with $n$ vertices and at most $Dn$ edges can be
-computed exactly and deterministically in time $O(2^{\delta n})$ for every $\delta>0$, and in
-time $2^{O(\max(m,n)/\sqrt{\log n})}$ for a graph with $m$ edges. Deterministic decision, search
-and Hamiltonian-path counting follow. The proof expresses $n\cdot\HC(G)$ as a sum over
-$2$-factors of a fermionic (Berezin) matrix-tree integral, and splits the integral over a
-partition of the vertices. Each crossing edge then costs $\log_2 5$ bits, and the fermionic
-reordering sign factors into blob-local signs and an interleaving sign that costs $O(g^3)$
-parity-copy bits for $g$ blobs. The result is a network, in the sense of the manuscript, whose
-value is $n\cdot\HC(G)$. We also record weaker results that rest only on the
-machine-checked top-level theorems: the parity of $\HC(G)$ for every graph in time
-$2^{O((m+n)/\sqrt{\log(m+n)})}$ (machine-checked in Lean, with the hypotheses discharged by the labs' own Lean proofs),
-and one-sided randomized decision. We describe what is proved, what is checked numerically,
-what is formalised, and what is assumed.
+because no linear-size CNF encoding of ``this edge set is a single cycle'' is known. This
+paper derives a corollary of the Anthropic manuscript: assuming three of its internal results (a
+network-to-clique reduction, an algorithm for cliques of all levels, and the existence of its
+``pieces''), the number of Hamiltonian cycles of a graph with $n$ vertices and at most $Dn$
+edges can be computed exactly and deterministically in time $O(2^{\delta n})$ for every
+$\delta>0$, and in time $2^{O(\max(m,n)/\sqrt{\log n})}$ for a graph with $m$ edges.
+Deterministic decision, search and Hamiltonian-path counting follow. The result is not a
+standalone breakthrough; it stands or falls with the claimed refutation. The ingredients are
+known: the folklore matrix-tree identity on $2$-factors, the fermionic (Berezin) matrix-tree
+theorem of Caracciolo, Jacobsen, Saleur, Sokal and Sportiello, and the blob partitions of
+Cut\&Count. What is new is the observation that connectivity can be encoded with $O(1)$ bits
+per edge through a Grassmann determinant whose only non-local part is a sign, and that this
+sign costs only $O(g^3)$ bits for $g$ blobs, so the whole construction is a network in the sense
+of the manuscript, whose value is $n\cdot\HC(G)$. Both main theorems are formally verified in
+Lean, end to end, on top of the manuscript's own Lean development. We also record weaker results
+that rest only on the machine-checked top-level theorems: the parity of $\HC(G)$ for every
+graph in time $2^{O((m+n)/\sqrt{\log(m+n)})}$ (machine-checked in Lean, with the hypotheses
+discharged by the labs' own Lean proofs), and one-sided randomized decision. We describe what
+is proved, what is checked numerically, what is formalised, what is assumed, and what the
+limitations are.
 \end{abstract}
 
 \maketitle
@@ -141,8 +145,9 @@ $\HC(G)$ is the number of Hamiltonian cycles of $G$, each counted once as a subg
 $\HC(K_4)=3$); $\HC(G)=0$ if $n\le 2$. Running times are counted as in \A: operations on words
 long enough to hold an address, plus table queries. All logarithms are to base~$2$.
 
-Our main results are conditional on three results of \A, which we recall precisely in
-\cref{sec:imported}.
+Our main results are corollaries of \A: they are conditional on three results of \A, which we
+recall precisely in \cref{sec:imported}, and they inherit whatever doubt attaches to those
+results. If \A{} is wrong, the theorems below lose their proofs.
 
 \begin{hypA}
 The following statements of \A{} hold as stated there: Lemma~8, case~(i) (the reduction from
@@ -285,6 +290,25 @@ evaluates it (\cref{sec:algorithm}). One trap is that \A's cost depends on the l
 bits at one node, so a vertex of degree $\Theta(n)$ must be removed first; we branch on its two
 cycle edges (\cref{lem:degree-reduction}).
 
+\subsection{What is new here}
+Little of the above is new in isolation, and we want to be precise about the credits. The
+identity \eqref{eq:intro-identity}, matrix-tree on $2$-factors, is folklore. The fermionic
+matrix-tree theorem, which writes the number of spanning trees as a Berezin integral of
+$\prod_e(1+q_e)$, is due to Caracciolo, Jacobsen, Saleur, Sokal and Sportiello~\cite{CJSSS04}.
+Partitioning the vertices into blobs and paying for connectivity across the cuts is the pattern
+of Cut\&Count~\cite{CutAndCount11}. Björklund's determinant sums~\cite{Bjorklund14} (FOCS 2010,
+SIAM J.\ Comput.\ 2014) pair cycle covers with determinants to enforce connectivity, a closely
+related pattern, though there the determinant is evaluated over a field of characteristic~$2$
+and the aim is a randomized $O^*(1.657^n)$ bound. The engine that evaluates the final object is
+\A's network theorem; we add nothing to it. The one new step is the observation that
+connectivity can be encoded with $O(1)$ bits per edge ($\log_25$ per crossing edge) by a
+Grassmann determinant whose only non-local part is the fermionic reordering sign, and that this
+sign factors so that the non-local remainder costs $O(g^3)$ bits for $g$ blobs. That is exactly
+what is needed for the construction to fit the network model of \A, with its linear bit budget
+and arbitrary node tables; the Cut\&Count filters do not (\cref{prop:colouring-barrier}), and
+neither do the $b\log b$-bit dynamic-programming states over a cut. Everything else is
+bookkeeping.
+
 \subsection{Status of the results}
 The proofs of \cref{sec:grassmann,sec:trees,sec:blobs,sec:network,sec:algorithm,sec:corollaries}
 are complete, conditional on $(\mathrm{H}_{\mathrm{A}})$. They were checked numerically in exact
@@ -293,10 +317,53 @@ found it sound, conditional on \A. The mathematical core is machine-checked in L
 covers the identity $\sum_\ell\prod_a\sigma_a\chi_aI_a=n\cdot\#\mathrm{HC}(G)$ behind
 \cref{thm:blob,thm:network-value} and the parameter bounds of \cref{prop:parameters}, with the
 network stated in \A's own Lean format. The blob-table procedure is formalised as well, and
-\cref{thm:main-delta} is formally verified in Lean end to end, as a statement about Turing machines
-built on \A's Lean development. \Cref{thm:main-rate} is formally verified as well, as a single-machine statement with an explicit
-rate. \Cref{sec:verification} gives the details. The bounds are purely asymptotic: as
-for the SAT algorithms themselves, the crossover with brute force is astronomically large.
+\cref{thm:main-delta,thm:main-rate} are both formally verified in Lean end to end, as statements
+about Turing machines built on \A's Lean development, with only the standard axioms
+(\lean{theorem1}, \lean{theorem2}); a fresh kernel replay with \lean{leanchecker} has passed
+for \lean{theorem1} and is running for \lean{theorem2} at the time of writing. The weighted
+(TSP) identity and network are formalised as well; the Turing-machine-level TSP theorem is in
+progress. \Cref{sec:verification} gives the details. The bounds are purely asymptotic: as for
+the SAT algorithms themselves, the crossover with brute force is astronomically large.
+
+\subsection{Limitations}\label{sec:limitations}
+The following should be read together with \cref{sec:verification}.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item \emph{Everything is conditional.} The main theorems rest on the claimed ETH refutation
+of \A, through $(\mathrm{H}_{\mathrm{A}})$, and on \A's Lean formalisation faithfully capturing
+its printed theorems. Expert review of both is pending. Lean guarantees that \A's proofs
+establish \A's formal statements, not that those statements say what the printed ones say.
+\item \emph{The Lean proofs here were written and reviewed by AI.} They were produced by AI
+agents and reviewed by an AI coordinator. No human has yet checked that the formal statements
+say what the printed theorems say. A human reader who wants to do so needs to read about five
+definitions: \lean{hamCycles} (the set of Hamiltonian cycles being counted, and that it counts
+each cycle once as a subgraph); \lean{GraphProblems.code} (the input encoding of a graph, and that
+it is the adjacency matrix); \lean{Outputs} (what it means for the machine to output
+$\#\mathrm{HC}(G)$ in binary); the statements of \lean{theorem1} and \lean{theorem2} themselves,
+in particular that the step bound is $\lfloor C\cdot2^{\delta n}\rfloor$ resp.\
+$\lfloor C\cdot2^{C(m+n)/\sqrt{\log_2(n+2)}}\rfloor$ with $C$ independent of $G$; and \A's
+\lean{Net} format together with the hypothesis bundle through which our network is handed to
+\A's theorems, to confirm that nothing beyond \cref{imp:lemma8,imp:thmA,imp:thmB} is assumed.
+\item \emph{Sparse graphs only.} The network has about $2\log_25$ bits per edge, so the bounds
+beat $2^n$ only when $m=o(n\sqrt{\log n})$. Dense graphs, general TSP, and the
+Held--Karp $O^*(2^n)$ bound are untouched: with $\Theta(n^2)$ edges the bit count is
+$\Theta(n^2)$, and \A's exponent $U/\sqrt{\log U}$ is then worse than $n$.
+\item \emph{``Previous algorithms were exponential'' refers to general sparse graphs.} Planar,
+bounded-genus, minor-free and bounded-treewidth graphs already had subexponential or
+single-exponential-in-treewidth algorithms, and on planar graphs the $2^{O(\sqrt n)}$ bound is
+better than ours. The gain is on sparse graphs with no such structure, for example bounded-degree
+expanders.
+\item \emph{Asymptotic only.} The crossover with brute force is astronomically large; nothing
+here is of practical use.
+\item \emph{The extensions are sketched.} \Cref{sec:extensions} is checked numerically on
+small instances and is not proved at the level of the rest of the paper.
+\item \emph{One citation is from memory.} The $6^{\mathrm{pw}}n^{O(1)}$ counting bound
+attributed to~\cite{BCKN15} in \cref{tab:sota} was written from memory and must be verified
+against the source before this paper is relied on for it; the same caution applies to the exact
+constants quoted in that table.
+\item \emph{No systematic novelty search has been done.} The credits in the previous subsection
+are to the works we know; a Grassmann-determinant encoding of connectivity in a bit-bounded model
+may well exist elsewhere, and we have not searched the literature systematically.
+\end{enumerate}
 
 \subsection{Organisation}
 \Cref{sec:imported} recalls the results of \A{} that we use. \Cref{sec:grassmann} collects facts
@@ -1420,6 +1487,14 @@ within $\lfloor C\cdot 2^{\delta n}\rfloor$ steps whenever $|E|\le Dn$. The theo
 the three standard axioms and on \A's Lean development. The sharper single-algorithm bound of \cref{thm:main-rate} is formalised as well (\lean{theorem2}):
 one machine, with the same axioms, outputs $\#\mathrm{HC}(G)$ within
 $\lfloor C\cdot 2^{C(m+n)/\sqrt{\log_2(n+2)}}\rfloor$ steps for every graph $G$ with $m$ edges.
+A fresh kernel replay with \lean{leanchecker} of the full import closure has passed for
+\lean{theorem1}; the replay for \lean{theorem2} is running at the time of writing.
+\item \emph{Weighted layer.} The weighted identity behind the TSP extension of
+\cref{sec:extensions} and the corresponding network are formalised as well
+(\lean{blob_factorisation_w}, \lean{kronecker_decode}, \lean{hcNetW_kron}: the weighted blob
+factorisation, the decoding of the Kronecker-substituted integer, and the weighted network in
+\A's \lean{Net} format); the Turing-machine-level TSP theorem is in progress and is not claimed
+here.
 \end{itemize}
 Lean guarantees that the labs' proofs establish their formal statements; it does not guarantee
 that those statements formalise the printed theorems faithfully, which is a matter for expert
@@ -1484,10 +1559,14 @@ or check the Lean files.
 \subsection{What is pending}
 \begin{itemize}
 \item Human expert review of this paper and, above all, of the labs' manuscripts.
-\item A complete Lean formalisation of \cref{sec:grassmann,sec:trees,sec:blobs,sec:network}, and
-of the composition of our network with \A's Lean statements of \cref{imp:lemma8,imp:thmA,imp:thmB},
-which in \A's development are instantiated only for CNF networks.
-\item A full write-up of the extensions of \cref{sec:extensions}.
+\item A human check that the formal statements of \lean{theorem1} and \lean{theorem2} say what
+\cref{thm:main-delta,thm:main-rate} say (the definitions to read are listed in
+\cref{sec:limitations}(b)); the proofs were written by AI agents and reviewed by an AI
+coordinator.
+\item The \lean{leanchecker} replay for \lean{theorem2}.
+\item The Turing-machine-level TSP theorem, and a full write-up of the extensions of
+\cref{sec:extensions}.
+\item Verification of the citations written from memory (\cref{sec:limitations}(g)).
 \end{itemize}
 
 \subsection{Dependence on \texorpdfstring{\A}{[A]}}

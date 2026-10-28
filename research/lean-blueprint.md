@@ -107,4 +107,4 @@ The files must compile both in `lean/` (Lean v4.34.1, Mathlib d13f23b) and in An
   GraphProblems.Outputs M (code G) (bits #hamCycles G) ⌊C·2^{δn}⌋`.
   Here `code G` is n in unary followed by the adjacency matrix, and `Outputs` is Mathlib's
   `TM2OutputsInTime`. Axioms: propext, Classical.choice, Quot.sound. Coordinator-checked with
-  `lake build` and `#print axioms`; a fresh `leanchecker` replay is running.
+  `lake build` and `#print axioms`; a fresh `leanchecker --fresh EthFollowup.ExactHC.Package` replay of the full closure (Mathlib, Anthropic's development and ours) **passed (exit 0)**.

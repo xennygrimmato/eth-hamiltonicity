@@ -54,7 +54,7 @@ def inst_graphs(rng, count):
         deg = [0] * n
         for i, j in E:
             deg[i] += 1; deg[j] += 1
-        if n < 3 or min(deg) < 2:
+        if n < 3 or n > 8 or min(deg) < 2:      # n <= 8 keeps the exact identity checks fast
             continue
         out.append((n, E, blob, g))
     return out

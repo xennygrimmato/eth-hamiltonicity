@@ -113,7 +113,9 @@ def main(seed=1, count=24):
                 tot += prod
             check(tot == target, f"T4 n={n} g={g}: {tot} vs {target}")
         net = LabelNetwork(inst, ("N", 0, 1, 2, 3))
-        if inst.m <= 7:
+        # the literal evaluators enumerate every setting of every node: |S_a| = 5^{|delta(a)|} 2^{|Q_a|}
+        small = max(5 ** len(inst.delta[a]) * 2 ** len(net.Q[a]) for a in range(g)) <= 40000
+        if inst.m <= 7 and small:
             Z = eval_network_brute(net)
             check(Z == target, f"T5 brute n={n} g={g} m_x={inst.m}: {Z} vs {target}")
             for K in (2, 3):
@@ -136,7 +138,7 @@ def main(seed=1, count=24):
         from math import comb
         check(U == 2 * sum(net.w[(a, bb)] for a in range(g) for bb in range(a + 1, g)) + 2 * comb(g, 3), "T6 U")
         B = 2 * mu + 1 + b * Wmax * mu
-        if inst.m <= 7:
+        if inst.m <= 7 and small:
             mb = net.max_table_bits()
             check(mb <= B, f"T6 |W_a| bits {mb} > B={B}")
         print(f"  [{idx}] n={n} m={m} g={g} crossing={inst.m} W={Wmax} opt={plowest(TP)} "

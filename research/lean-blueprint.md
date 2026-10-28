@@ -120,3 +120,4 @@ The files must compile both in `lean/` (Lean v4.34.1, Mathlib d13f23b) and in An
   `hcNetW_kron` (network value and `Is (3μ+g²+1) (bWμ+2μ+1)`). Standard axioms, both environments.
   Remaining for a TM-level TSP theorem: weighted streaming table procedure, package with weights in
   the input, and the digit post-processing.
+* Fresh `leanchecker --fresh EthFollowup.ExactHC.UPackage` (closure of theorem2) **passed (exit 0)**.

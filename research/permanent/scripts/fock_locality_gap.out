@@ -1,0 +1,9 @@
+N (all k)                                  Hankel ranks at orders 1,2,3,5,10,20,40: [2, 2, 2, 2, 2, 2, 2]   minimal recurrence order: 2
+squares                                    Hankel ranks at orders 1,2,3,5,10,20,40: [2, 3, 4, 6, 11, 21, 41]   minimal recurrence order: None
+cubes                                      Hankel ranks at orders 1,2,3,5,10,20,40: [2, 3, 4, 6, 11, 21, 41]   minimal recurrence order: None
+powers of 2                                Hankel ranks at orders 1,2,3,5,10,20,40: [2, 3, 4, 6, 11, 21, 41]   minimal recurrence order: None
+|k| = +-1 mod 3 (periodic, dense)          Hankel ranks at orders 1,2,3,5,10,20,40: [2, 3, 4, 6, 6, 6, 6]   minimal recurrence order: 10
+k = 1 mod 3 only (S u -S not periodic)     Hankel ranks at orders 1,2,3,5,10,20,40: [2, 3, 4, 6, 11, 21, 41]   minimal recurrence order: None
+Dense sets (N, arithmetic progressions) admit a polynomial annihilator P(z,w) (ordinary or twisted locality);
+squares, cubes, powers of 2 admit none of order <= 40 (and none at all, by the gap argument).
+PASS

@@ -1,0 +1,94 @@
+/home/user/eth-hamiltonicity/research/permanent/scripts/fock_wick_pieces.py:10: SyntaxWarning: invalid escape sequence '\ '
+  order written (nabla_{nu \ rho} lowers by h-|rho|) and through V_{2h-|rho|} with the factors exchanged
+
+S=N h=4 N=p_S(h)=5 lam=2.322  Wick identity (*): PASS  T_h = h!*crossing: PASS  (build 0.0s)
+  interval sums  sum_{w=a..b} T_w :  row rank (x,y)|(u,v), col rank (x,u)|(y,v), bits = log2 r + log2 o   [certified: col(T_w) <= p_S(w) D_S(w); row(B_vA_x) <= D_S(2h)]
+    [ 0, 0]  r=   25  o=    1  bits=  4.64  T_0
+    [ 0, 1]  r=   25  o=    2  bits=  5.64  
+    [ 0, 2]  r=   25  o=    6  bits=  7.23  
+    [ 0, 3]  r=   25  o=   13  bits=  8.34  
+    [ 0, 4]  r=   14  o=   25  bits=  8.45  B_v A_x (all w)
+    [ 1, 1]  r=    9  o=    1  bits=  3.17  T_1
+    [ 1, 4]  r=   25  o=   25  bits=  9.29  
+    [ 2, 2]  r=    6  o=    4  bits=  4.58  T_2
+    [ 2, 4]  r=   25  o=   25  bits=  9.29  
+    [ 3, 3]  r=    9  o=    9  bits=  6.34  T_3
+    [ 3, 4]  r=   25  o=   25  bits=  9.29  
+    [ 4, 4]  r=   25  o=   25  bits=  9.29  T_4
+  fine family {B_vA_x, T_w (w<h)}: max bits   8.45 -> rho_true = 0.9099
+  coarse family {B_vA_x, sum_(w<h) T_w}: max bits   8.45 -> rho_true = 0.9099
+  best interval family (w0=0): max bits   8.45 -> rho_true = 0.9099      law f(2h)/(2f(h)) = 0.9603   1/sqrt2 = 0.7071
+
+S=N h=5 N=p_S(h)=7 lam=2.807  Wick identity (*): PASS  T_h = h!*crossing: PASS  (build 0.0s)
+  interval sums  sum_{w=a..b} T_w :  row rank (x,y)|(u,v), col rank (x,u)|(y,v), bits = log2 r + log2 o   [certified: col(T_w) <= p_S(w) D_S(w); row(B_vA_x) <= D_S(2h)]
+    [ 0, 0]  r=   49  o=    1  bits=  5.61  T_0
+    [ 0, 1]  r=   49  o=    2  bits=  6.61  
+    [ 0, 2]  r=   42  o=    6  bits=  7.98  
+    [ 0, 3]  r=   49  o=   14  bits=  9.42  
+    [ 0, 4]  r=   49  o=   33  bits= 10.66  
+    [ 0, 5]  r=   25  o=   49  bits= 10.26  B_v A_x (all w)
+    [ 1, 1]  r=   25  o=    1  bits=  4.64  T_1
+    [ 1, 5]  r=   49  o=   49  bits= 11.23  
+    [ 2, 2]  r=   24  o=    4  bits=  6.58  T_2
+    [ 2, 5]  r=   49  o=   49  bits= 11.23  
+    [ 3, 3]  r=   24  o=    9  bits=  7.75  T_3
+    [ 3, 5]  r=   42  o=   49  bits= 11.01  
+    [ 4, 4]  r=   25  o=   25  bits=  9.29  T_4
+    [ 4, 5]  r=   49  o=   49  bits= 11.23  
+    [ 5, 5]  r=   49  o=   49  bits= 11.23  T_5
+  fine family {B_vA_x, T_w (w<h)}: max bits  10.26 -> rho_true = 0.9135
+  coarse family {B_vA_x, sum_(w<h) T_w}: max bits  10.66 -> rho_true = 0.9492
+  best interval family (w0=0): max bits  10.26 -> rho_true = 0.9135      law f(2h)/(2f(h)) = 0.9604   1/sqrt2 = 0.7071
+
+S=N h=6 N=p_S(h)=11 lam=3.459  Wick identity (*): PASS  T_h = h!*crossing: PASS  (build 0.0s)
+  interval sums  sum_{w=a..b} T_w :  row rank (x,y)|(u,v), col rank (x,u)|(y,v), bits = log2 r + log2 o   [certified: col(T_w) <= p_S(w) D_S(w); row(B_vA_x) <= D_S(2h)]
+    [ 0, 0]  r=  121  o=    1  bits=  6.92  T_0
+    [ 0, 1]  r=  121  o=    2  bits=  7.92  
+    [ 0, 2]  r=  112  o=    6  bits=  9.39  
+    [ 0, 3]  r=  112  o=   15  bits= 10.71  
+    [ 0, 4]  r=  121  o=   38  bits= 12.17  
+    [ 0, 5]  r=  121  o=   73  bits= 13.11  
+    [ 0, 6]  r=   53  o=  121  bits= 12.65  B_v A_x (all w)
+    [ 1, 1]  r=   49  o=    1  bits=  5.61  T_1
+    [ 1, 6]  r=  121  o=  121  bits= 13.84  
+    [ 2, 2]  r=   64  o=    4  bits=  8.00  T_2
+    [ 2, 6]  r=  121  o=  121  bits= 13.84  
+    [ 3, 3]  r=   21  o=    9  bits=  7.56  T_3
+    [ 3, 6]  r=  112  o=  121  bits= 13.73  
+    [ 4, 4]  r=   64  o=   25  bits= 10.64  T_4
+    [ 4, 6]  r=  112  o=  121  bits= 13.73  
+    [ 5, 5]  r=   49  o=   49  bits= 11.23  T_5
+    [ 5, 6]  r=  121  o=  121  bits= 13.84  
+    [ 6, 6]  r=  121  o=  121  bits= 13.84  T_6
+  fine family {B_vA_x, T_w (w<h)}: max bits  12.65 -> rho_true = 0.9139
+  coarse family {B_vA_x, sum_(w<h) T_w}: max bits  13.11 -> rho_true = 0.9473
+  best interval family (w0=0): max bits  12.65 -> rho_true = 0.9139      law f(2h)/(2f(h)) = 0.9058   1/sqrt2 = 0.7071
+
+S=N h=7 N=p_S(h)=15 lam=3.907  Wick identity (*): PASS  T_h = h!*crossing: PASS  (build 0.0s)
+  interval sums  sum_{w=a..b} T_w :  row rank (x,y)|(u,v), col rank (x,u)|(y,v), bits = log2 r + log2 o   [certified: col(T_w) <= p_S(w) D_S(w); row(B_vA_x) <= D_S(2h)]
+    [ 0, 0]  r=  225  o=    1  bits=  7.81  T_0
+    [ 0, 1]  r=  225  o=    2  bits=  8.81  
+    [ 0, 2]  r=  212  o=    6  bits= 10.31  
+    [ 0, 3]  r=  172  o=   15  bits= 11.33  
+    [ 0, 4]  r=  212  o=   39  bits= 13.01  
+    [ 0, 5]  r=  225  o=   82  bits= 14.17  
+    [ 0, 6]  r=  225  o=  165  bits= 15.18  
+    [ 0, 7]  r=   89  o=  225  bits= 14.29  B_v A_x (all w)
+    [ 1, 1]  r=  121  o=    1  bits=  6.92  T_1
+    [ 1, 7]  r=  225  o=  225  bits= 15.63  
+    [ 2, 2]  r=  118  o=    4  bits=  8.88  T_2
+    [ 2, 7]  r=  225  o=  225  bits= 15.63  
+    [ 3, 3]  r=  119  o=    9  bits= 10.06  T_3
+    [ 3, 7]  r=  212  o=  225  bits= 15.54  
+    [ 4, 4]  r=  119  o=   25  bits= 11.54  T_4
+    [ 4, 7]  r=  172  o=  225  bits= 15.24  
+    [ 5, 5]  r=  118  o=   49  bits= 12.50  T_5
+    [ 5, 7]  r=  212  o=  225  bits= 15.54  
+    [ 6, 6]  r=  121  o=  121  bits= 13.84  T_6
+    [ 6, 7]  r=  225  o=  225  bits= 15.63  
+    [ 7, 7]  r=  225  o=  225  bits= 15.63  T_7
+  fine family {B_vA_x, T_w (w<h)}: max bits  14.29 -> rho_true = 0.9144
+  coarse family {B_vA_x, sum_(w<h) T_w}: max bits  15.18 -> rho_true = 0.9714
+  best interval family (w0=0): max bits  14.29 -> rho_true = 0.9144      law f(2h)/(2f(h)) = 0.9057   1/sqrt2 = 0.7071
+
+IDENTITIES PASS

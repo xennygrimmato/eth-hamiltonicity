@@ -1,0 +1,328 @@
+/home/user/eth-hamiltonicity/research/permanent/scripts/fock_wick_pieces.py:10: SyntaxWarning: invalid escape sequence '\ '
+  order written (nabla_{nu \ rho} lowers by h-|rho|) and through V_{2h-|rho|} with the factors exchanged
+
+S=cubes h=27 N=p_S(h)=5 lam=2.322  Wick identity (*): PASS  T_h = h!*crossing: PASS  (build 0.0s)
+  interval sums  sum_{w=a..b} T_w :  row rank (x,y)|(u,v), col rank (x,u)|(y,v), bits = log2 r + log2 o   [certified: col(T_w) <= p_S(w) D_S(w); row(B_vA_x) <= D_S(2h)]
+    [ 0, 0]  r=   25  o=    1  bits=  4.64  T_0
+    [ 0, 1]  r=   25  o=    2  bits=  5.64  
+    [ 0, 2]  r=   25  o=    3  bits=  6.23  
+    [ 0, 3]  r=   25  o=    4  bits=  6.64  
+    [ 0, 4]  r=   25  o=    5  bits=  6.97  
+    [ 0, 5]  r=   25  o=    5  bits=  6.97  
+    [ 0, 6]  r=   25  o=    5  bits=  6.97  
+    [ 0, 7]  r=   25  o=    5  bits=  6.97  
+    [ 0, 8]  r=   25  o=    7  bits=  7.45  
+    [ 0, 9]  r=   25  o=    9  bits=  7.81  
+    [ 0,10]  r=   25  o=   11  bits=  8.10  
+    [ 0,11]  r=   25  o=   11  bits=  8.10  
+    [ 0,12]  r=   25  o=   11  bits=  8.10  
+    [ 0,13]  r=   22  o=   11  bits=  7.92  
+    [ 0,14]  r=   25  o=   11  bits=  8.10  
+    [ 0,15]  r=   25  o=   11  bits=  8.10  
+    [ 0,16]  r=   25  o=   13  bits=  8.34  
+    [ 0,17]  r=   25  o=   15  bits=  8.55  
+    [ 0,18]  r=   25  o=   15  bits=  8.55  
+    [ 0,19]  r=   25  o=   15  bits=  8.55  
+    [ 0,20]  r=   25  o=   15  bits=  8.55  
+    [ 0,21]  r=   25  o=   15  bits=  8.55  
+    [ 0,22]  r=   25  o=   15  bits=  8.55  
+    [ 0,23]  r=   25  o=   15  bits=  8.55  
+    [ 0,24]  r=   25  o=   17  bits=  8.73  
+    [ 0,25]  r=   25  o=   17  bits=  8.73  
+    [ 0,26]  r=   25  o=   17  bits=  8.73  
+    [ 0,27]  r=   12  o=   25  bits=  8.23  B_v A_x (all w)
+    [ 1, 1]  r=   16  o=    1  bits=  4.00  T_1
+    [ 1,27]  r=   25  o=   25  bits=  9.29  
+    [ 2, 2]  r=   16  o=    1  bits=  4.00  T_2
+    [ 2,27]  r=   25  o=   25  bits=  9.29  
+    [ 3, 3]  r=   16  o=    1  bits=  4.00  T_3
+    [ 3,27]  r=   25  o=   25  bits=  9.29  
+    [ 4, 4]  r=    9  o=    1  bits=  3.17  T_4
+    [ 4,27]  r=   25  o=   25  bits=  9.29  
+    [ 5, 5]  r=    9  o=    1  bits=  3.17  T_5
+    [ 5,27]  r=   25  o=   25  bits=  9.29  
+    [ 6, 6]  r=    9  o=    1  bits=  3.17  T_6
+    [ 6,27]  r=   25  o=   25  bits=  9.29  
+    [ 7, 7]  r=    9  o=    1  bits=  3.17  T_7
+    [ 7,27]  r=   25  o=   25  bits=  9.29  
+    [ 8, 8]  r=   16  o=    4  bits=  6.00  T_8
+    [ 8,27]  r=   25  o=   25  bits=  9.29  
+    [ 9, 9]  r=   16  o=    4  bits=  6.00  T_9
+    [ 9,27]  r=   25  o=   25  bits=  9.29  
+    [10,10]  r=   16  o=    4  bits=  6.00  T_10
+    [10,27]  r=   25  o=   25  bits=  9.29  
+    [11,11]  r=   16  o=    4  bits=  6.00  T_11
+    [11,27]  r=   25  o=   25  bits=  9.29  
+    [12,12]  r=    8  o=    4  bits=  5.00  T_12
+    [12,27]  r=   25  o=   25  bits=  9.29  
+    [13,13]  r=    8  o=    4  bits=  5.00  T_13
+    [13,27]  r=   25  o=   25  bits=  9.29  
+    [14,14]  r=    8  o=    4  bits=  5.00  T_14
+    [14,27]  r=   22  o=   25  bits=  9.10  
+    [15,15]  r=    8  o=    4  bits=  5.00  T_15
+    [15,27]  r=   25  o=   25  bits=  9.29  
+    [16,16]  r=   16  o=    9  bits=  7.17  T_16
+    [16,27]  r=   25  o=   25  bits=  9.29  
+    [17,17]  r=   16  o=    9  bits=  7.17  T_17
+    [17,27]  r=   25  o=   25  bits=  9.29  
+    [18,18]  r=   16  o=    9  bits=  7.17  T_18
+    [18,27]  r=   25  o=   25  bits=  9.29  
+    [19,19]  r=   16  o=    9  bits=  7.17  T_19
+    [19,27]  r=   25  o=   25  bits=  9.29  
+    [20,20]  r=    9  o=    9  bits=  6.34  T_20
+    [20,27]  r=   25  o=   25  bits=  9.29  
+    [21,21]  r=    9  o=    9  bits=  6.34  T_21
+    [21,27]  r=   25  o=   25  bits=  9.29  
+    [22,22]  r=    9  o=    9  bits=  6.34  T_22
+    [22,27]  r=   25  o=   25  bits=  9.29  
+    [23,23]  r=    9  o=    9  bits=  6.34  T_23
+    [23,27]  r=   25  o=   25  bits=  9.29  
+    [24,24]  r=   16  o=   16  bits=  8.00  T_24
+    [24,27]  r=   25  o=   25  bits=  9.29  
+    [25,25]  r=   16  o=   16  bits=  8.00  T_25
+    [25,27]  r=   25  o=   25  bits=  9.29  
+    [26,26]  r=   16  o=   16  bits=  8.00  T_26
+    [26,27]  r=   25  o=   25  bits=  9.29  
+    [27,27]  r=   25  o=   25  bits=  9.29  T_27
+  fine family {B_vA_x, T_w (w<h)}: max bits   8.23 -> rho_true = 0.8860
+  coarse family {B_vA_x, sum_(w<h) T_w}: max bits   8.73 -> rho_true = 0.9401
+  best interval family (w0=0): max bits   8.23 -> rho_true = 0.8860      law f(2h)/(2f(h)) = 0.7720   1/sqrt2 = 0.7071
+
+S=cubes h=35 N=p_S(h)=7 lam=2.807  Wick identity (*): PASS  T_h = h!*crossing: PASS  (build 0.0s)
+  interval sums  sum_{w=a..b} T_w :  row rank (x,y)|(u,v), col rank (x,u)|(y,v), bits = log2 r + log2 o   [certified: col(T_w) <= p_S(w) D_S(w); row(B_vA_x) <= D_S(2h)]
+    [ 0, 0]  r=   49  o=    1  bits=  5.61  T_0
+    [ 0, 1]  r=   49  o=    2  bits=  6.61  
+    [ 0, 2]  r=   49  o=    3  bits=  7.20  
+    [ 0, 3]  r=   49  o=    4  bits=  7.61  
+    [ 0, 4]  r=   49  o=    5  bits=  7.94  
+    [ 0, 5]  r=   49  o=    6  bits=  8.20  
+    [ 0, 6]  r=   49  o=    7  bits=  8.42  
+    [ 0, 7]  r=   49  o=    7  bits=  8.42  
+    [ 0, 8]  r=   40  o=    9  bits=  8.49  
+    [ 0, 9]  r=   40  o=   11  bits=  8.78  
+    [ 0,10]  r=   40  o=   13  bits=  9.02  
+    [ 0,11]  r=   40  o=   15  bits=  9.23  
+    [ 0,12]  r=   40  o=   17  bits=  9.41  
+    [ 0,13]  r=   40  o=   17  bits=  9.41  
+    [ 0,14]  r=   40  o=   17  bits=  9.41  
+    [ 0,15]  r=   40  o=   17  bits=  9.41  
+    [ 0,16]  r=   40  o=   19  bits=  9.57  
+    [ 0,17]  r=   34  o=   21  bits=  9.48  
+    [ 0,18]  r=   40  o=   23  bits=  9.85  
+    [ 0,19]  r=   40  o=   23  bits=  9.85  
+    [ 0,20]  r=   40  o=   23  bits=  9.85  
+    [ 0,21]  r=   40  o=   23  bits=  9.85  
+    [ 0,22]  r=   40  o=   23  bits=  9.85  
+    [ 0,23]  r=   40  o=   23  bits=  9.85  
+    [ 0,24]  r=   40  o=   25  bits=  9.97  
+    [ 0,25]  r=   40  o=   27  bits= 10.08  
+    [ 0,26]  r=   40  o=   27  bits= 10.08  
+    [ 0,27]  r=   49  o=   35  bits= 10.74  
+    [ 0,28]  r=   49  o=   43  bits= 11.04  
+    [ 0,29]  r=   49  o=   43  bits= 11.04  
+    [ 0,30]  r=   49  o=   43  bits= 11.04  
+    [ 0,31]  r=   49  o=   43  bits= 11.04  
+    [ 0,32]  r=   49  o=   47  bits= 11.17  
+    [ 0,33]  r=   49  o=   47  bits= 11.17  
+    [ 0,34]  r=   49  o=   47  bits= 11.17  
+    [ 0,35]  r=   18  o=   49  bits=  9.78  B_v A_x (all w)
+    [ 1, 1]  r=   36  o=    1  bits=  5.17  T_1
+    [ 1,35]  r=   49  o=   49  bits= 11.23  
+    [ 2, 2]  r=   36  o=    1  bits=  5.17  T_2
+    [ 2,35]  r=   49  o=   49  bits= 11.23  
+    [ 3, 3]  r=   36  o=    1  bits=  5.17  T_3
+    [ 3,35]  r=   49  o=   49  bits= 11.23  
+    [ 4, 4]  r=   25  o=    1  bits=  4.64  T_4
+    [ 4,35]  r=   49  o=   49  bits= 11.23  
+    [ 5, 5]  r=   25  o=    1  bits=  4.64  T_5
+    [ 5,35]  r=   49  o=   49  bits= 11.23  
+    [ 6, 6]  r=   25  o=    1  bits=  4.64  T_6
+    [ 6,35]  r=   49  o=   49  bits= 11.23  
+    [ 7, 7]  r=   25  o=    1  bits=  4.64  T_7
+    [ 7,35]  r=   49  o=   49  bits= 11.23  
+    [ 8, 8]  r=   49  o=    4  bits=  7.61  T_8
+    [ 8,35]  r=   49  o=   49  bits= 11.23  
+    [ 9, 9]  r=   25  o=    4  bits=  6.64  T_9
+    [ 9,35]  r=   40  o=   49  bits= 10.94  
+    [10,10]  r=   25  o=    4  bits=  6.64  T_10
+    [10,35]  r=   40  o=   49  bits= 10.94  
+    [11,11]  r=   25  o=    4  bits=  6.64  T_11
+    [11,35]  r=   40  o=   49  bits= 10.94  
+    [12,12]  r=   16  o=    4  bits=  6.00  T_12
+    [12,35]  r=   40  o=   49  bits= 10.94  
+    [13,13]  r=   16  o=    4  bits=  6.00  T_13
+    [13,35]  r=   40  o=   49  bits= 10.94  
+    [14,14]  r=   16  o=    4  bits=  6.00  T_14
+    [14,35]  r=   40  o=   49  bits= 10.94  
+    [15,15]  r=   16  o=    4  bits=  6.00  T_15
+    [15,35]  r=   40  o=   49  bits= 10.94  
+    [16,16]  r=   24  o=    9  bits=  7.75  T_16
+    [16,35]  r=   40  o=   49  bits= 10.94  
+    [17,17]  r=   24  o=    9  bits=  7.75  T_17
+    [17,35]  r=   40  o=   49  bits= 10.94  
+    [18,18]  r=   24  o=    9  bits=  7.75  T_18
+    [18,35]  r=   34  o=   49  bits= 10.70  
+    [19,19]  r=   24  o=    9  bits=  7.75  T_19
+    [19,35]  r=   40  o=   49  bits= 10.94  
+    [20,20]  r=   16  o=    9  bits=  7.17  T_20
+    [20,35]  r=   40  o=   49  bits= 10.94  
+    [21,21]  r=   16  o=    9  bits=  7.17  T_21
+    [21,35]  r=   40  o=   49  bits= 10.94  
+    [22,22]  r=   16  o=    9  bits=  7.17  T_22
+    [22,35]  r=   40  o=   49  bits= 10.94  
+    [23,23]  r=   16  o=    9  bits=  7.17  T_23
+    [23,35]  r=   40  o=   49  bits= 10.94  
+    [24,24]  r=   25  o=   16  bits=  8.64  T_24
+    [24,35]  r=   40  o=   49  bits= 10.94  
+    [25,25]  r=   25  o=   16  bits=  8.64  T_25
+    [25,35]  r=   40  o=   49  bits= 10.94  
+    [26,26]  r=   25  o=   16  bits=  8.64  T_26
+    [26,35]  r=   40  o=   49  bits= 10.94  
+    [27,27]  r=   49  o=   25  bits= 10.26  T_27
+    [27,35]  r=   40  o=   49  bits= 10.94  
+    [28,28]  r=   25  o=   25  bits=  9.29  T_28
+    [28,35]  r=   49  o=   49  bits= 11.23  
+    [29,29]  r=   25  o=   25  bits=  9.29  T_29
+    [29,35]  r=   49  o=   49  bits= 11.23  
+    [30,30]  r=   25  o=   25  bits=  9.29  T_30
+    [30,35]  r=   49  o=   49  bits= 11.23  
+    [31,31]  r=   25  o=   25  bits=  9.29  T_31
+    [31,35]  r=   49  o=   49  bits= 11.23  
+    [32,32]  r=   36  o=   36  bits= 10.34  T_32
+    [32,35]  r=   49  o=   49  bits= 11.23  
+    [33,33]  r=   36  o=   36  bits= 10.34  T_33
+    [33,35]  r=   49  o=   49  bits= 11.23  
+    [34,34]  r=   36  o=   36  bits= 10.34  T_34
+    [34,35]  r=   49  o=   49  bits= 11.23  
+    [35,35]  r=   49  o=   49  bits= 11.23  T_35
+  fine family {B_vA_x, T_w (w<h)}: max bits  10.34 -> rho_true = 0.9208
+  coarse family {B_vA_x, sum_(w<h) T_w}: max bits  11.17 -> rho_true = 0.9946
+  best interval family (w0=0): max bits  10.34 -> rho_true = 0.9208      law f(2h)/(2f(h)) = 0.7566   1/sqrt2 = 0.7071
+
+S=cubes h=40 N=p_S(h)=8 lam=3.000  Wick identity (*): PASS  T_h = h!*crossing: PASS  (build 0.0s)
+  interval sums  sum_{w=a..b} T_w :  row rank (x,y)|(u,v), col rank (x,u)|(y,v), bits = log2 r + log2 o   [certified: col(T_w) <= p_S(w) D_S(w); row(B_vA_x) <= D_S(2h)]
+    [ 0, 0]  r=   64  o=    1  bits=  6.00  T_0
+    [ 0, 1]  r=   64  o=    2  bits=  7.00  
+    [ 0, 2]  r=   64  o=    3  bits=  7.58  
+    [ 0, 3]  r=   64  o=    4  bits=  8.00  
+    [ 0, 4]  r=   64  o=    5  bits=  8.32  
+    [ 0, 5]  r=   64  o=    6  bits=  8.58  
+    [ 0, 6]  r=   64  o=    7  bits=  8.81  
+    [ 0, 7]  r=   64  o=    8  bits=  9.00  
+    [ 0, 8]  r=   64  o=   10  bits=  9.32  
+    [ 0, 9]  r=   64  o=   12  bits=  9.58  
+    [ 0,10]  r=   64  o=   14  bits=  9.81  
+    [ 0,11]  r=   64  o=   16  bits= 10.00  
+    [ 0,12]  r=   64  o=   18  bits= 10.17  
+    [ 0,13]  r=   53  o=   20  bits= 10.05  
+    [ 0,14]  r=   53  o=   20  bits= 10.05  
+    [ 0,15]  r=   53  o=   20  bits= 10.05  
+    [ 0,16]  r=   53  o=   22  bits= 10.19  
+    [ 0,17]  r=   53  o=   24  bits= 10.31  
+    [ 0,18]  r=   53  o=   26  bits= 10.43  
+    [ 0,19]  r=   53  o=   28  bits= 10.54  
+    [ 0,20]  r=   53  o=   28  bits= 10.54  
+    [ 0,21]  r=   53  o=   28  bits= 10.54  
+    [ 0,22]  r=   53  o=   28  bits= 10.54  
+    [ 0,23]  r=   53  o=   28  bits= 10.54  
+    [ 0,24]  r=   53  o=   30  bits= 10.63  
+    [ 0,25]  r=   53  o=   32  bits= 10.73  
+    [ 0,26]  r=   53  o=   34  bits= 10.82  
+    [ 0,27]  r=   64  o=   42  bits= 11.39  
+    [ 0,28]  r=   64  o=   50  bits= 11.64  
+    [ 0,29]  r=   64  o=   50  bits= 11.64  
+    [ 0,30]  r=   64  o=   50  bits= 11.64  
+    [ 0,31]  r=   64  o=   50  bits= 11.64  
+    [ 0,32]  r=   64  o=   54  bits= 11.75  
+    [ 0,33]  r=   64  o=   58  bits= 11.86  
+    [ 0,34]  r=   64  o=   58  bits= 11.86  
+    [ 0,35]  r=   64  o=   60  bits= 11.91  
+    [ 0,36]  r=   64  o=   60  bits= 11.91  
+    [ 0,37]  r=   64  o=   60  bits= 11.91  
+    [ 0,38]  r=   64  o=   60  bits= 11.91  
+    [ 0,39]  r=   64  o=   60  bits= 11.91  
+    [ 0,40]  r=   21  o=   64  bits= 10.39  B_v A_x (all w)
+    [ 1, 1]  r=   49  o=    1  bits=  5.61  T_1
+    [ 1,40]  r=   64  o=   64  bits= 12.00  
+    [ 2, 2]  r=   49  o=    1  bits=  5.61  T_2
+    [ 2,40]  r=   64  o=   64  bits= 12.00  
+    [ 3, 3]  r=   49  o=    1  bits=  5.61  T_3
+    [ 3,40]  r=   64  o=   64  bits= 12.00  
+    [ 4, 4]  r=   49  o=    1  bits=  5.61  T_4
+    [ 4,40]  r=   64  o=   64  bits= 12.00  
+    [ 5, 5]  r=   49  o=    1  bits=  5.61  T_5
+    [ 5,40]  r=   64  o=   64  bits= 12.00  
+    [ 6, 6]  r=   36  o=    1  bits=  5.17  T_6
+    [ 6,40]  r=   64  o=   64  bits= 12.00  
+    [ 7, 7]  r=   36  o=    1  bits=  5.17  T_7
+    [ 7,40]  r=   64  o=   64  bits= 12.00  
+    [ 8, 8]  r=   64  o=    4  bits=  8.00  T_8
+    [ 8,40]  r=   64  o=   64  bits= 12.00  
+    [ 9, 9]  r=   49  o=    4  bits=  7.61  T_9
+    [ 9,40]  r=   64  o=   64  bits= 12.00  
+    [10,10]  r=   49  o=    4  bits=  7.61  T_10
+    [10,40]  r=   64  o=   64  bits= 12.00  
+    [11,11]  r=   49  o=    4  bits=  7.61  T_11
+    [11,40]  r=   64  o=   64  bits= 12.00  
+    [12,12]  r=   49  o=    4  bits=  7.61  T_12
+    [12,40]  r=   64  o=   64  bits= 12.00  
+    [13,13]  r=   49  o=    4  bits=  7.61  T_13
+    [13,40]  r=   64  o=   64  bits= 12.00  
+    [14,14]  r=   25  o=    4  bits=  6.64  T_14
+    [14,40]  r=   53  o=   64  bits= 11.73  
+    [15,15]  r=   25  o=    4  bits=  6.64  T_15
+    [15,40]  r=   53  o=   64  bits= 11.73  
+    [16,16]  r=   36  o=    9  bits=  8.34  T_16
+    [16,40]  r=   53  o=   64  bits= 11.73  
+    [17,17]  r=   24  o=    9  bits=  7.75  T_17
+    [17,40]  r=   53  o=   64  bits= 11.73  
+    [18,18]  r=   24  o=    9  bits=  7.75  T_18
+    [18,40]  r=   53  o=   64  bits= 11.73  
+    [19,19]  r=   24  o=    9  bits=  7.75  T_19
+    [19,40]  r=   53  o=   64  bits= 11.73  
+    [20,20]  r=   15  o=    9  bits=  7.08  T_20
+    [20,40]  r=   53  o=   64  bits= 11.73  
+    [21,21]  r=   24  o=    9  bits=  7.75  T_21
+    [21,40]  r=   53  o=   64  bits= 11.73  
+    [22,22]  r=   24  o=    9  bits=  7.75  T_22
+    [22,40]  r=   53  o=   64  bits= 11.73  
+    [23,23]  r=   24  o=    9  bits=  7.75  T_23
+    [23,40]  r=   53  o=   64  bits= 11.73  
+    [24,24]  r=   36  o=   16  bits=  9.17  T_24
+    [24,40]  r=   53  o=   64  bits= 11.73  
+    [25,25]  r=   25  o=   16  bits=  8.64  T_25
+    [25,40]  r=   53  o=   64  bits= 11.73  
+    [26,26]  r=   25  o=   16  bits=  8.64  T_26
+    [26,40]  r=   53  o=   64  bits= 11.73  
+    [27,27]  r=   49  o=   25  bits= 10.26  T_27
+    [27,40]  r=   53  o=   64  bits= 11.73  
+    [28,28]  r=   49  o=   25  bits= 10.26  T_28
+    [28,40]  r=   64  o=   64  bits= 12.00  
+    [29,29]  r=   49  o=   25  bits= 10.26  T_29
+    [29,40]  r=   64  o=   64  bits= 12.00  
+    [30,30]  r=   49  o=   25  bits= 10.26  T_30
+    [30,40]  r=   64  o=   64  bits= 12.00  
+    [31,31]  r=   49  o=   25  bits= 10.26  T_31
+    [31,40]  r=   64  o=   64  bits= 12.00  
+    [32,32]  r=   64  o=   36  bits= 11.17  T_32
+    [32,40]  r=   64  o=   64  bits= 12.00  
+    [33,33]  r=   36  o=   36  bits= 10.34  T_33
+    [33,40]  r=   64  o=   64  bits= 12.00  
+    [34,34]  r=   36  o=   36  bits= 10.34  T_34
+    [34,40]  r=   64  o=   64  bits= 12.00  
+    [35,35]  r=   49  o=   49  bits= 11.23  T_35
+    [35,40]  r=   64  o=   64  bits= 12.00  
+    [36,36]  r=   49  o=   49  bits= 11.23  T_36
+    [36,40]  r=   64  o=   64  bits= 12.00  
+    [37,37]  r=   49  o=   49  bits= 11.23  T_37
+    [37,40]  r=   64  o=   64  bits= 12.00  
+    [38,38]  r=   49  o=   49  bits= 11.23  T_38
+    [38,40]  r=   64  o=   64  bits= 12.00  
+    [39,39]  r=   49  o=   49  bits= 11.23  T_39
+    [39,40]  r=   64  o=   64  bits= 12.00  
+    [40,40]  r=   64  o=   64  bits= 12.00  T_40
+  fine family {B_vA_x, T_w (w<h)}: max bits  11.23 -> rho_true = 0.9358
+  coarse family {B_vA_x, sum_(w<h) T_w}: max bits  11.91 -> rho_true = 0.9922
+  best interval family (w0=0): max bits  11.08 -> rho_true = 0.9231      law f(2h)/(2f(h)) = 0.7740   1/sqrt2 = 0.7071
+
+IDENTITIES PASS

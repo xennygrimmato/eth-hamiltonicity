@@ -85,7 +85,7 @@ network-to-clique reduction, an algorithm for cliques of all levels, and the exi
 edges can be computed exactly and deterministically in time $O(2^{\delta n})$ for every
 $\delta>0$, and in time $2^{O(\max(m,n)/\sqrt{\log n})}$ for a graph with $m$ edges. A
 rank-encoded variant of the construction gives $2^{O(n\log\bar d/\sqrt{\log n})}$ for average
-degree $\bar d$; this bound has a written proof only and is not machine-checked.
+degree $\bar d$; this bound is machine-checked as well.
 Deterministic decision, search and Hamiltonian-path counting follow. The result is not a
 standalone breakthrough; it stands or falls with the claimed refutation. The ingredients are
 known: the folklore matrix-tree identity on $2$-factors, the fermionic (Berezin) matrix-tree
@@ -181,7 +181,7 @@ may depend on $n$.
 When the density grows with $n$, a variant of the network gives a much better dependence on the
 degree. Write $\bar d:=2m/n$ for the average degree and $\Delta$ for the maximum degree.
 
-\begin{theorem}[Exact counting, maximum/average degree; written proof, not machine-checked]\label{thm:main-degree}
+\begin{theorem}[Exact counting, maximum/average degree; machine-checked]\label{thm:main-degree}
 Assume $(\mathrm{H}_{\mathrm{A}})$. There are an absolute constant $C^{\sharp}$ and one
 deterministic algorithm that, given any graph $G$ with $n\ge2$ vertices, average degree $\bar d$
 and maximum degree $\Delta$, outputs $\HC(G)$ within
@@ -192,9 +192,11 @@ operations. In particular it runs in time $2^{o(n)}$ whenever $\log\bar d=o(\sqr
 example for $\bar d=(\log n)^{O(1)}$ or $\bar d=2^{(\log n)^{0.49}}$.
 \end{theorem}
 
-\Cref{thm:main-degree} has a written proof only (\cref{sec:degree}); unlike
-\cref{thm:main-delta,thm:main-rate} it is \emph{not} machine-checked, and the Lean theorems
-\lean{theorem1} and \lean{theorem2} do not cover it. For bounded $\bar d$ it gives the same order
+\Cref{thm:main-degree} is machine-checked: the Lean theorem \lean{theorem3} gives one Turing
+machine that outputs $\HC(G)$ in binary within
+$\lfloor C\cdot2^{C\,n\log_2(2m/n+2)/\sqrt{\log_2(n+2)}}\rfloor$ steps for every graph $G$ with $n$
+vertices and $m$ edges, and \lean{theorem3\_maxdeg} gives the same with $\log_2(\Delta+2)$; both
+use the standard axioms only (\cref{sec:verification}). For bounded $\bar d$ it gives the same order
 $2^{O(n/\sqrt{\log n})}$ as \cref{thm:main-rate}; it is stronger when $\bar d\to\infty$, because a
 pair of blobs then shares only the \emph{set} of used crossing edges between them,
 rank-encoded, and the labels of those edges, so the total number of shared bits is about
@@ -299,7 +301,7 @@ undirected, general, decision & $O^{*}(1.657^n)$ randomized~\cite{Bjorklund14}; 
 bounded degree $\Delta$, decision/TSP & $(2-\varepsilon_\Delta)^n$~\cite{BHKK12} & deterministic $2^{\delta n}$, exact count \\
 maximum degree $3$ & $O(2^{n/3})$~\cite{Eppstein07}; $O^{*}(1.2312^n)$~\cite{XiaoNagamochi16} & deterministic $2^{\delta n}$, exact count \\
 counting, pathwidth $\mathrm{pw}$ & $6^{\mathrm{pw}}n^{O(1)}$~\cite{BCKN15}, tight under SETH~\cite{CLN18} & $2^{O(m/\sqrt{\log n})}$ \\
-counting, average degree $\bar d$ & $2^{n-\Omega(n/\bar d)}$ deterministic~\cite{BjorklundWilliams19} (stated for digraphs; covers graphs) & $2^{O(n\log\bar d/\sqrt{\log n})}$ (\cref{thm:main-degree}; written proof only) \\
+counting, average degree $\bar d$ & $2^{n-\Omega(n/\bar d)}$ deterministic~\cite{BjorklundWilliams19} (stated for digraphs; covers graphs) & $2^{O(n\log\bar d/\sqrt{\log n})}$ (\cref{thm:main-degree}; machine-checked) \\
 counting, directed, average degree $d$ & $2^{n-\Omega(n/d)}$~\cite{BjorklundWilliams19} & see \cref{sec:extensions} (sketch) \\
 parity, directed, general & $O^{*}(1.619^n)$~\cite{BjorklundHusfeldt13} & $2^{O(\rho(n))}$ for bounded degree (Lean) \\
 parity, undirected, all graphs & -- & $2^{O((m+n)/\sqrt{\log(m+n)})}$ (Lean) \\
@@ -415,9 +417,6 @@ network of \cref{sec:degree} has about $2\log(2e\bar d)$ bits per vertex, so
 graphs are still not covered: at $\bar d\approx\Delta\approx n$ the bound of
 \cref{thm:main-degree} is $2^{\Theta(n\log n/\sqrt{\log n})}$, which exceeds $2^n$. General TSP
 and the Held--Karp $O^*(2^n)$ bound are untouched.
-\item \emph{\Cref{thm:main-degree} is not machine-checked.} Its proof is written out in
-\cref{sec:degree} and reuses the machine-checked identity of \cref{thm:blob}, but the rank-encoded
-network, its parameters and the degree-pruned table procedure are not formalised.
 \item \emph{``Previous algorithms were exponential'' refers to general sparse graphs.} Planar,
 bounded-genus, minor-free and bounded-treewidth graphs already had subexponential or
 single-exponential-in-treewidth algorithms, and on planar graphs the $2^{O(\sqrt n)}$ bound is
@@ -1247,8 +1246,10 @@ when $e_\ell\cdot4.64\,m<n$, which needs $\log n$ in the thousands even for $m=2
 \section{Counting with logarithmic cost in the degree}\label{sec:degree}
 % =====================================================================
 
-This section proves \cref{thm:main-degree}. \emph{It is a written proof only and is not
-machine-checked.} It reuses \cref{thm:blob} verbatim and changes only the network of
+This section proves \cref{thm:main-degree}. The proof is formalised in Lean (\lean{theorem3},
+\lean{theorem3\_maxdeg}; files \lean{Unrank}, \lean{PairCode}, \lean{VertexBalanced},
+\lean{RankNetwork}, \lean{RankProcs}, \lean{DegTableProc}, \lean{RankWordProcs}, \lean{Theorem3},
+\lean{DPackage}). It reuses \cref{thm:blob} verbatim and changes only the network of
 \cref{sec:network}: the pair $\{a,b\}$ no longer shares one base-$5$ digit for \emph{every}
 crossing edge of $E(a,b)$, but only the set of crossing edges of $E(a,b)$ that carry a label other
 than $\lab N$, rank-encoded among the subsets of the right size, together with the labels of those
@@ -1426,7 +1427,7 @@ $e_\ell\cdot2\log_25\cdot m\approx2.32\,e_\ell\bar dn$ in \cref{thm:main-rate}; 
 smaller one for $\bar d\ge4$. Better pieces in \A{} transfer verbatim.
 \item The self-reductions of \cref{cor:decision-search} delete edges, which does not increase
 $\bar d$; for paths, the added vertex raises $\bar d$ by at most $2$. So decision, search and paths
-follow within the bound of \cref{thm:main-degree} times $m+1$, with the same written-proof status.
+follow within the bound of \cref{thm:main-degree} times $n^2+1$; this extension is not machine-checked and is not claimed.
 \item With a \emph{fixed} level, as in \cref{sec:proof-delta}, the same computation gives
 $O(2^{\delta n})$ on graphs of maximum degree at most $\Delta_0$ as soon as
 $e\le\delta/(8\log(2e\Delta_0))$ and $K\ge24\log(2e\Delta_0)/\delta$, which is weaker than the
@@ -1764,6 +1765,11 @@ one machine, with the same axioms, outputs $\#\mathrm{HC}(G)$ within
 $\lfloor C\cdot 2^{C(m+n)/\sqrt{\log_2(n+2)}}\rfloor$ steps for every graph $G$ with $m$ edges.
 A fresh kernel replay with \lean{leanchecker} of the full import closure has passed for
 both \lean{theorem1} and \lean{theorem2}.
+\item \emph{Degree bound, corollaries, directed graphs.} \Cref{thm:main-degree} is \lean{theorem3}
+and \lean{theorem3\_maxdeg}; \cref{cor:decision-search} is \lean{decision\_TM}, \lean{search\_TM},
+\lean{hamPaths\_count\_TM} and the related machines; directed Hamiltonian cycles and ATSP are
+\lean{theoremDHC}, \lean{theoremDHC\_rate}, \lean{theoremATSP}; \cref{prop:colouring-barrier} is
+\lean{colouring\_barrier\_graph}. All use the standard axioms only.
 \item \emph{Weighted layer (TSP).} \Cref{thm:tsp} is formally verified end to end
 (\lean{theoremTSP}, \lean{theoremTSP\_decode}): for every $\delta>0$ and $D$ there are a Turing
 machine $M$ and a constant $C$ such that, on the input word \lean{tspCode G W w} (the graph, $W$
@@ -1858,7 +1864,6 @@ or check the Lean files.
 \cref{sec:limitations}(b)); the proofs were written by AI agents and reviewed by an AI
 coordinator.
 \item A full write-up of the extensions of \cref{sec:extensions} other than TSP.
-\item A Lean formalisation of \cref{thm:main-degree} (\cref{sec:open}).
 \item Verification of the citations written from memory (\cref{sec:limitations}(g)).
 \end{itemize}
 
@@ -1882,17 +1887,6 @@ bits is the information content of a Hamiltonian cycle, so for any network of th
 shares the cycle across the blobs the leading term $e_\ell U$ is $\Omega(e_\ell n\log n)$, which is
 above $n$ unless $e_\ell=o(1/\log n)$. Is
 there a subexponential algorithm for $\HC$ on dense graphs, under the same hypotheses?
-
-\subsection{Formalising \texorpdfstring{\cref{thm:main-degree}}{Theorem 1.3}} The Lean
-development proves \cref{thm:main-delta,thm:main-rate}, not \cref{thm:main-degree}. The
-mathematical layer (\cref{thm:blob}) and the imported side do not change. What is missing is a
-per-pair code in place of the fixed-width label code (colex rank and unrank, with their
-polynomial-time procedures), the sum over profiles and the vanishing of inadmissible ones
-(\cref{thm:rank-value}), the bounds of \cref{prop:rank-parameters} (Vandermonde and
-$\log\binom NM\le M\log(eN/M)$, both available in \A's development), a degree-pruned table procedure
-with step bound $\Delta^{2n_a}20^{n_a}\poly(n)$ (the existing one is bounded by $2\cdot8^{\mu_a}$,
-which does not suffice for vertex-balanced blobs), the vertex-balanced partition, and the exponent
-arithmetic of \cref{thm:main-degree}. No degree reduction and no $2^n$ fallback are needed.
 
 \subsection{Connected subgraphs and \texorpdfstring{$T(1,2)$}{T(1,2)}} The determinant certificate is a weight, not a $0/1$
 test, for objects that are connected but not trees. Exact counts of connected spanning subgraphs

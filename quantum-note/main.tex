@@ -147,18 +147,23 @@ The Boolean tensor-contraction theorem in the appendix of \Oa{} holds as stated 
 (\cref{imp:tensor}).
 \end{hypO}
 
-\begin{theorem}[Exact amplitudes]\label{thm:main}
+\begin{theorem}[Exact amplitudes; machine-checked]\label{thm:main}
 Assume $(\mathrm{H}_{\mathrm{A}})$. There are an absolute constant $c$ and one deterministic
-algorithm that, given a circuit $C$ over $\cG$ on $n$ qubits with $G\ge2$ two-qubit gates and
-$G_1$ single-qubit gates such that $\log(G_1+2)\le G^{0.9}$, and given $x,y\in\{0,1\}^n$, outputs
+Turing machine that, given a circuit $C$ over $\cG$ on $n$ qubits with $G$ two-qubit gates, and
+$x,y\in\{0,1\}^n$, encoded as a word of length $L$ with $\log_2(L+2)\le(G+2)^{0.9}$, outputs
 integers $a_0,a_1,a_2,a_3$ with
 \[
   \amp{y}{C}{x}=\frac{a_0+a_1\omega+a_2\omega^2+a_3\omega^3}{\sqrt2^{\,k(C)}}
 \]
-within $2^{cG/\sqrt{\log G}}\poly(n+G_1)$ operations.
+within $\lfloor c\cdot2^{c(G+2)/\sqrt{\log_2(G+2)}}\rfloor$ steps. Without the condition on $L$,
+the same holds within $\lfloor c\cdot2^{cG/\sqrt{\log_2(G+2)}}(L+2)^{c(G+2)^{1/15}}\rfloor$ steps,
+and for every $\delta>0$ there is a machine running within $\lfloor c_\delta\,2^{\delta G}(L+2)^{c_\delta}\rfloor$ steps.
 \end{theorem}
+\noindent The condition on $L$ holds, for example, whenever $n(G+G_1)\le 2^{G^{0.9}}$; on paper,
+the proof below also gives $2^{cG/\sqrt{\log G}}\poly(n+G_1)$ under the weaker condition
+$\log(G_1+2)\le G^{0.9}$, but that variant is not machine-checked and not claimed.
 
-\begin{theorem}[Polynomial space]\label{thm:openai}
+\begin{theorem}[Polynomial space; written proof, not machine-checked]\label{thm:openai}
 Assume $(\mathrm{H}_{\mathrm{O}})$. Put $s:=\max\{4G,\,k(C),\,4\}$. The output of
 \cref{thm:main} can be computed in $\poly(n+G+G_1)\,2^{O(s/\sqrt{\log s})}$ bit operations and
 $\poly(n+G+G_1)$ bits of space. In particular, if $k(C)=O(G)$ (for example, if the number of
@@ -166,7 +171,7 @@ $H$ and $\mathrm{CH}$ gates is $O(G)$), the time is $2^{O(G/\sqrt{\log G})}\poly
 space is polynomial.
 \end{theorem}
 
-\begin{corollary}[Marginals and exact sampling]\label{cor:marginals}
+\begin{corollary}[Marginals and exact sampling; written proof, not machine-checked]\label{cor:marginals}
 Assume $(\mathrm{H}_{\mathrm{A}})$, and let $C,x$ be as in \cref{thm:main}. For every
 $S\subseteq[n]$ and $y_S\in\{0,1\}^S$, the marginal probability
 $p(y_S)=\sum_{y_{[n]\setminus S}}|\amp{y}{C}{x}|^2$ can be computed exactly, as
@@ -360,10 +365,10 @@ contraction can be computed deterministically in $(s+\cL)^{O(1)}2^{O(s/\sqrt{\lo
 operations and $(s+\cL)^{O(1)}$ bits of space, with constants depending only on $C,A,b$.
 \end{importedtheorem}
 
-None of these statements is machine-checked in the form used here: \A's Lean development proves
-\cref{imp:lemma8} (in a form weaker by a polynomial factor), \cref{imp:thmA}(b) and
-\cref{imp:thmB} only for networks coming from CNFs~\cite{Tulsyan26}, and the appendix of \Oa{}
-is not formalised. Applying them below is done on paper.
+\A's Lean development proves \cref{imp:lemma8} (in a form weaker by a polynomial factor),
+\cref{imp:thmA}(b) and \cref{imp:thmB} for arbitrary networks in its own format, and our Lean proof
+of \cref{thm:main} applies them directly to the circuit network (\cref{sec:formalisation}). The
+appendix of \Oa{} is not formalised, so \cref{thm:openai} is proved on paper only.
 
 % =====================================================================
 \section{Proof of \texorpdfstring{\cref{thm:main}}{Theorem 1.1}}\label{sec:proof}
@@ -876,10 +881,17 @@ $24$, $39$. Both PASS, with all ablations caught; the agreement is equality of i
 on some instance; (C4) a non-zero total of the assignments with more than $\lfloor n/3\rfloor$
 ``violated'' monomials on some instance. Seeds $1$ ($120$ instances) and $3$ ($400$) PASS.
 
-\subsection{Formalisation}
-A Lean formalisation of \cref{thm:main} on top of Anthropic's development is in progress. Nothing
-in this note is machine-checked at present. The Lean developments of the two labs cover their
-top-level theorems; \cref{cor:density} uses only those, but its proof here is on paper.
+\subsection{Formalisation}\label{sec:formalisation}
+\Cref{thm:main} is formally verified in Lean~4 on top of \A's development: \texttt{amplitude\_TM\_rate'}
+(the stated bound under the condition on $L$), \texttt{amplitude\_TM\_rate} (all circuits) and
+\texttt{amplitude\_TM} (every $\delta>0$), in the public repository~\cite{Tulsyan26} (directories
+\texttt{lean/EthFollowup/Quantum} and \texttt{lean-bridge-anthropic/bridge/EthFollowup/Quantum}).
+The semantics a reader must check are short: the gate matrices over $\mathbb{C}$, the circuit matrix as
+the ordered product, and the amplitude $\amp{y}{C}{x}$ (\texttt{Circuit.lean}, \S1), and the input
+and output encodings (\S7). The theorems depend only on the axioms \texttt{propext},
+\texttt{Classical.choice} and \texttt{Quot.sound}; a fresh \texttt{leanchecker} replay of their
+closure is pending at the time of writing. \Cref{thm:openai}, \cref{cor:marginals} and \cref{cor:density} are proved on paper
+only and are not claimed as machine-checked.
 
 \section*{Acknowledgements}
 This work was done with AI assistance (Claude Code, Anthropic): the observation, the proofs, the

@@ -1,0 +1,3 @@
+(a) trace(M1M2M3) == clique value: PASS
+(b) sum_r Z1(r)Z2(r)Z3(r) == clique value: PASS
+    terms: R^(g^2) = 8^4 = 4096 ; each term = three (2,1)-cliques; brute force 2^15 = 32768 labellings

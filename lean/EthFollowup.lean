@@ -17,3 +17,4 @@ import EthFollowup.ExactHC
 import EthFollowup.Axioms
 import EthFollowup.ExactHC.Main
 import EthFollowup.ExactHC.Weighted
+import EthFollowup.AxiomsExtended

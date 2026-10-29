@@ -1,0 +1,11 @@
+q = 2: rank of M[pi,rho] = q^{c(rho pi)} on S_b
+  b = 1: rank =    1   #perms with longest decreasing subsequence <= q = 1  Catalan(b) = 1
+  b = 2: rank =    2   #perms with longest decreasing subsequence <= q = 2  Catalan(b) = 2
+  b = 3: rank =    5   #perms with longest decreasing subsequence <= q = 5  Catalan(b) = 5
+  b = 4: rank =   14   #perms with longest decreasing subsequence <= q = 14  Catalan(b) = 14
+  b = 5: rank =   42   #perms with longest decreasing subsequence <= q = 42  Catalan(b) = 42
+q = 3: rank of M[pi,rho] = q^{c(rho pi)} on S_b
+  b = 1: rank =    1   #perms with longest decreasing subsequence <= q = 1
+  b = 2: rank =    2   #perms with longest decreasing subsequence <= q = 2
+  b = 3: rank =    6   #perms with longest decreasing subsequence <= q = 6
+  b = 4: rank =   23   #perms with longest decreasing subsequence <= q = 23

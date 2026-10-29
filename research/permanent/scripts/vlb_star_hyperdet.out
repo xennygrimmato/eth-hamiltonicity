@@ -1,0 +1,19 @@
+n = 3
+  s = 3-cycle    : per(diag x + s) = 1 + x123
+      one-leg flattening ranks = [2, 2, 2]  (all 2 => every M_i(s_i) invertible)
+      Cayley hyperdeterminant of the 2x2x2 tensor on legs 1,2,3 = 1
+  s = path 1-2-3 : per(diag x + s) = x3 + x1 + x123
+      one-leg flattening ranks = [2, 2, 2]  (all 2 => every M_i(s_i) invertible)
+      Cayley hyperdeterminant of the 2x2x2 tensor on legs 1,2,3 = 0
+  Det != 0 (GHZ orbit) vs Det = 0 (W orbit): different GL_2^3-orbits => no star with 1-bit legs.
+
+n = 4
+  s = 3-cycle    : per(diag x + s) = x4 + x1234
+      one-leg flattening ranks = [2, 2, 2, 1]  (all 2 => every M_i(s_i) invertible)
+      Cayley hyperdeterminant of the 2x2x2 tensor on legs 1,2,3 = 1
+  s = path 1-2-3 : per(diag x + s) = x34 + x14 + x1234
+      one-leg flattening ranks = [2, 2, 2, 1]  (all 2 => every M_i(s_i) invertible)
+      Cayley hyperdeterminant of the 2x2x2 tensor on legs 1,2,3 = 0
+  Det != 0 (GHZ orbit) vs Det = 0 (W orbit): different GL_2^3-orbits => no star with 1-bit legs.
+
+Single-cut check for the star: each leaf cut hides only x_i; rank <= 2 = 2^{c}, so all cut tests pass.

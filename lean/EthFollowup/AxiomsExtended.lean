@@ -11,6 +11,8 @@ import EthFollowup.Barriers.SpreadLemma
 import EthFollowup.Barriers.Derand
 import EthFollowup.Barriers.AlgebraRank
 import EthFollowup.Barriers.PermModP
+import EthFollowup.Quantum.Circuit
+import EthFollowup.Quantum.Paths
 
 /-!
 # Axiom audit for the modules added on 29 Oct 2026
@@ -40,3 +42,6 @@ theorems built on Anthropic's development (`theorem3`, `theoremDHC`, `theoremATS
 #print axioms EthFollowup.Barriers.Derand.tp_le_log
 #print axioms EthFollowup.Barriers.AlgebraRank.algebra_rank_half
 #print axioms EthFollowup.Barriers.PermModP.permanent_eq_zero_of_low_rank
+
+-- Quantum circuits, mathematical layer
+#print axioms EthFollowup.Quantum.amplitude_eq

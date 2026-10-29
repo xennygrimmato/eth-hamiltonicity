@@ -7,6 +7,8 @@ import EthFollowup.ExactHC.Paths
 import EthFollowup.ExactHC.DirectedTheorems
 import EthFollowup.ExactHC.DirectedNetwork
 import EthFollowup.AnthropicUnconditional
+import EthFollowup.Quantum.QTheorem
+import EthFollowup.Quantum.QRate
 
 /-!
 # Axiom audit of every Turing-machine theorem built on Anthropic's development
@@ -43,3 +45,7 @@ open EthFollowup.ExactHC
 #print axioms DCrossing.dNetW_value
 -- Parity (earlier result)
 #print axioms EthFollowup.Anthropic.hamParity_allGraphs_unconditional
+-- Quantum circuit amplitudes
+#print axioms EthFollowup.Quantum.amplitude_TM
+#print axioms EthFollowup.Quantum.amplitude_TM_rate
+#print axioms EthFollowup.Quantum.amplitude_TM_rate'

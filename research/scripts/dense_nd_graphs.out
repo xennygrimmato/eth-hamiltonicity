@@ -1,0 +1,16 @@
+n=6 r=2 |S|=4: #HC=8 profile=8 rank-form/2=8  #PM=6 profile=6  PASS
+n=7 r=2 |S|=5: #HC=48 profile=48 rank-form/2=48  #PM=0 profile=0  PASS
+n=8 r=2 |S|=6: #HC=168 profile=168 rank-form/2=168  #PM=32 profile=32  PASS
+n=7 r=3 |S|=5: #HC=0 profile=0 rank-form/2=0  #PM=0 profile=0  PASS
+n=8 r=3 |S|=6: #HC=268 profile=268 rank-form/2=268  #PM=38 profile=38  PASS
+n=9 r=3 |S|=6: #HC=24 profile=24 rank-form/2=None  #PM=0 profile=0  PASS
+n=8 r=3 |S|=8: #HC=12 profile=12 rank-form/2=12  #PM=10 profile=10  PASS
+n=9 r=2 |S|=7: #HC=2010 profile=2010 rank-form/2=None  #PM=0 profile=0  PASS
+n=6 r=3 |S|=6: #HC=0 profile=0 rank-form/2=0  #PM=2 profile=2  PASS
+n=8 r=2 |S|=9: #HC=64 profile=64 rank-form/2=64  #PM=21 profile=21  PASS
+n=8 r=4 |S|=6: #HC=268 profile=268 rank-form/2=268  #PM=38 profile=38  PASS
+n=9 r=4 |S|=7: #HC=508 profile=508 rank-form/2=None  #PM=0 profile=0  PASS
+n=7 r=4 |S|=6: #HC=24 profile=24 rank-form/2=24  #PM=0 profile=0  PASS
+n=8 r=3 |S|=10: #HC=52 profile=52 rank-form/2=52  #PM=19 profile=19  PASS
+n=9 r=3 |S|=9: #HC=0 profile=0 rank-form/2=None  #PM=0 profile=0  PASS
+ALL PASS

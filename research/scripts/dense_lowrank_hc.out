@@ -1,0 +1,14 @@
+n=4 r=1 m=4: brute=0 I1=0 I2=0 I3=0 (R,T)-pairs=1  PASS
+n=5 r=1 m=6: brute=0 I1=0 I2=0 I3=0 (R,T)-pairs=1  PASS
+n=5 r=2 m=5: brute=956 I1=956 I2=956 I3=956 (R,T)-pairs=3  PASS
+n=6 r=2 m=6: brute=0 I1=0 I2=0 I3=0 (R,T)-pairs=3  PASS
+n=6 r=3 m=5: brute=80828 I1=80828 I2=80828 I3=80828 (R,T)-pairs=9  PASS
+n=7 r=2 m=7: brute=-393824 I1=-393824 I2=-393824 I3=-393824 (R,T)-pairs=3  PASS
+n=7 r=3 m=6: brute=-1560800 I1=-1560800 I2=-1560800 I3=-1560800 (R,T)-pairs=9  PASS
+n=6 r=3 m=8: brute=10780 I1=10780 I2=10780 I3=10780 (R,T)-pairs=9  PASS
+n=7 r=1 m=9: brute=11446 I1=11446 I2=11446 I3=11446 (R,T)-pairs=1  PASS
+n=5 r=3 m=7: brute=-110 I1=-110 I2=-110 I3=-110 (R,T)-pairs=9  PASS
+E2 check K_6 - D, |D|=5: #HC=4 I3/2=4.0  PASS
+E2 check K_7 - D, |D|=6: #HC=27 I3/2=27.0  PASS
+E2 check K_8 - D, |D|=6: #HC=268 I3/2=268.0  PASS
+ALL PASS

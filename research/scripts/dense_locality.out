@@ -1,0 +1,7 @@
+seed=1 n=5 r=2 m=6 |T|=1: Q=1930179520 [eps^n]Qloc=1930179520 lower coeffs zero=True  labels/arc=2 states/arc=11 states/edge=21  PASS
+seed=2 n=6 r=2 m=6 |T|=1: Q=-2027520 [eps^n]Qloc=-2027520 lower coeffs zero=True  labels/arc=2 states/arc=11 states/edge=21  PASS
+seed=3 n=5 r=3 m=6 |T|=2: Q=-196880 [eps^n]Qloc=-196880 lower coeffs zero=True  labels/arc=3 states/arc=16 states/edge=31  PASS
+seed=4 n=6 r=3 m=7 |T|=2: Q=764320612 [eps^n]Qloc=764320612 lower coeffs zero=True  labels/arc=3 states/arc=16 states/edge=31  PASS
+seed=5 n=6 r=1 m=8 |T|=0: Q=0 [eps^n]Qloc=0 lower coeffs zero=True  labels/arc=1 states/arc=6 states/edge=11  PASS
+seed=6 n=6 r=3 m=5 |T|=2: Q=628886754/625 [eps^n]Qloc=628886754/625 lower coeffs zero=True  labels/arc=3 states/arc=16 states/edge=31  PASS
+ALL PASS

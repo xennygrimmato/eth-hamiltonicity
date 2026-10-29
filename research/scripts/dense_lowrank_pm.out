@@ -1,0 +1,9 @@
+n=6 r=1 m=4: haf brute=-50 (H1)=-50 (H3)=-50 matchings=8 points=(n+1)^r=7  PASS
+n=6 r=2 m=5: haf brute=-1750 (H1)=-1750 (H3)=-1750 matchings=12 points=(n+1)^r=49  PASS
+n=8 r=2 m=6: haf brute=-444 (H1)=-444 (H3)=-444 matchings=16 points=(n+1)^r=81  PASS
+n=8 r=3 m=7: haf brute=-182523 (H1)=-182523 (H3)=-182523 matchings=32 points=(n+1)^r=729  PASS
+n=10 r=2 m=8: haf brute=-1200 (H1)=-1200 (H3)=-1200 matchings=41 points=(n+1)^r=121  PASS
+n=10 r=3 m=9: haf brute=1072416 (H1)=1072416 (H3)=1072416 matchings=55 points=(n+1)^r=1331  PASS
+n=9 r=2 m=7: haf brute=0 (H1)=0 (H3)=0 matchings=26 points=(n+1)^r=100  PASS
+n=8 r=1 m=10: haf brute=-2772 (H1)=-2772 (H3)=-2772 matchings=40 points=(n+1)^r=9  PASS
+ALL PASS

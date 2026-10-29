@@ -1,0 +1,6 @@
+seed=3 n=4 r=2 m=4: brute=56 pipeline=56 evaluations=1135  PASS
+seed=4 n=5 r=2 m=5: brute=36 pipeline=36 evaluations=2388  PASS
+seed=5 n=5 r=2 m=6: brute=760 pipeline=760 evaluations=2388  PASS
+seed=8 n=4 r=1 m=5: brute=-8 pipeline=-8 evaluations=5  PASS
+seed=9 n=6 r=1 m=7: brute=0 pipeline=0 evaluations=7  PASS
+ALL PASS

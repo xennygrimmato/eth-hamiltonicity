@@ -1,0 +1,5 @@
+Q=2 R=1 D=16: potential LB=5  exact max-triangular LB=6  commutative opt=6  ALS rank<comm found: None
+Q=2 R=2 D=16: potential LB=1  exact max-triangular LB=1  commutative opt=1  ALS rank<comm found: None
+Q=3 R=1 D=64: potential LB=22  exact max-triangular LB=28  commutative opt=28  ALS rank<comm found: None
+Q=3 R=2 D=64: potential LB=7  exact max-triangular LB=8  commutative opt=10  ALS rank<comm found: 8
+Q=3 R=3 D=64: potential LB=1  exact max-triangular LB=1  commutative opt=1  ALS rank<comm found: None

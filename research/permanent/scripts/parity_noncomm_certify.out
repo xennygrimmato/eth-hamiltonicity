@@ -1,0 +1,9 @@
+float: forced residual 2.5839784606945353e-15
+singular values 7..10: [5.88945003e+00 5.24584178e+00 1.41417380e-15 1.29716139e-15]
+||[M,Pi_s]|| : [31.28902943245027, 39.23793599454365, 23.604831466518263]
+mp iteration 0 forced residual 1.4303e-15
+mp iteration 1 forced residual 9.4944e-16
+mp iteration 2 forced residual 7.9753e-16
+mp iteration 3 forced residual 7.7049e-16
+mp iteration 4 forced residual 7.4842e-16
+mp iteration 5 forced residual 7.2872e-16

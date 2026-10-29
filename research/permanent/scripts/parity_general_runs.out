@@ -1,0 +1,3 @@
+Q=6 J=[0, 1, 2, 3, 4, 6] eps=0.00439 c=18 R_template=6 R_general=5
+Q=6 J=[0, 1, 2, 3, 5, 6] eps=0.03296 c=135 R_template=6 R_general=4
+Q=6 J=[0, 1, 2, 3, 4] eps=0.00464 c=19 R_template=5 R_general=5

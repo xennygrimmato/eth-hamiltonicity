@@ -1,0 +1,3 @@
+Q=4 J=[0, 1, 2, 4] R=3: runs=[[0, 1, 2], [4]], max residual over all rows/points = 4.86e-16
+Q=4 J=[0, 1, 3, 4] R=2: runs=[[0, 1], [3, 4]], max residual over all rows/points = 3.14e-15
+Q=5 J=[0, 1, 2, 4, 5] R=3: runs=[[0, 1, 2], [4, 5]], max residual over all rows/points = 5.93e-15

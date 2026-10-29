@@ -1,0 +1,48 @@
+-- p=0.5 eps=0.1:   Q  R_LB(template, all M0)  R_win  R_gap(general, conj.)
+      16        5        7        6
+      64        8       14        9
+     256       15       27        9
+    1024       30       53       10
+    4096       59      106        9
+-- p=0.5 eps=0.01:   Q  R_LB(template, all M0)  R_win  R_gap(general, conj.)
+      16        8       11       11
+      64       14       21       19
+     256       27       42       34
+    1024       54       83       57
+    4096      106      165       86
+-- p=0.5 eps=0.001:   Q  R_LB(template, all M0)  R_win  R_gap(general, conj.)
+      16       10       13       13
+      64       18       27       25
+     256       36       53       48
+    1024       71      106       89
+    4096      141      211      162
+-- p=0.5 eps=1e-05:   Q  R_LB(template, all M0)  R_win  R_gap(general, conj.)
+      16       12       17       17
+      64       25       35       35
+     256       49       71       68
+    1024       97      142      131
+    4096      194      283      253
+-- p=0.25 eps=0.1:   Q  R_LB(template, all M0)  R_win  R_gap(general, conj.)
+      16        5        6        6
+      64        8       12        8
+     256       15       23        9
+    1024       30       46        9
+    4096       59       92        9
+-- p=0.25 eps=0.01:   Q  R_LB(template, all M0)  R_win  R_gap(general, conj.)
+      16        8        9        9
+      64       14       18       17
+     256       27       36       30
+    1024       54       72       51
+    4096      106      143       80
+-- p=0.25 eps=0.001:   Q  R_LB(template, all M0)  R_win  R_gap(general, conj.)
+      16       10       11       11
+      64       18       23       22
+     256       36       46       42
+    1024       71       92       78
+    4096      141      183      143
+-- p=0.25 eps=1e-05:   Q  R_LB(template, all M0)  R_win  R_gap(general, conj.)
+      16       12       13       13
+      64       25       30       30
+     256       49       61       59
+    1024       97      123      115
+    4096      194      245      221

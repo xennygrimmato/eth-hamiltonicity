@@ -126,3 +126,10 @@ The files must compile both in `lean/` (Lean v4.34.1, Mathlib d13f23b) and in An
   Outputs M (tspCode G W w) (bits (n·Σ_H 2^{bK n · wt w H})) ⌊C·2^{δn}·(W+2)^C⌋` and
   `theoremTSP_decode` (digit j = n·tourCount j; lowest non-zero digit = optimum; digit/n = #optimal).
   Coordinator-checked: `lake build`, standard axioms. Fresh `leanchecker --fresh EthFollowup.ExactHC.TSP` **passed (exit 0)**.
+* **LEAN FOR EVERY CLAIM (29 Oct 2026).** New, all coordinator-verified (build, `#print axioms`, fresh `leanchecker`):
+  * Thm 1.3: `theorem3`, `theorem3_maxdeg` (Unrank, PairCode, VertexBalanced, RankNetwork, RankProcs, DegTableProc, RankWordProcs, Theorem3, DPackage; ~6.5k lines).
+  * Cor 1.4: `decision_TM`, `search_TM`, `hamPaths_*_TM` and `_rate` versions (SelfReduction, HamPath, SearchMachine, Corollaries, Paths).
+  * Directed HC / ATSP: math layer (DirectedMatrixTree, DirectedBlobs, DirectedWeighted, DirectedNetwork) and `theoremDHC`, `theoremDHC_rate`, `theoremATSP`, `theoremATSP_decode` via vertex splitting (VertexSplit, DirectedTheorems).
+  * Barriers: 39 lemmas incl. `colouring_barrier_graph` (paper Prop.), row-cut rank, Model-R bound, triangular rank, spread lemma, derandomization bound, algebra rank, per mod p.
+  * `AuditAll.lean` (bridge) and `AxiomsExtended.lean` (repo): all standard; `leanchecker --fresh` passed for both.
+  * Not formalised and therefore not claimed: forest-indicator lemma, s–t paths, ATSP explicit rate, graphic TSP and the other extension rows, Theorem S (sat-width), randomized (b) (superseded).

@@ -1521,7 +1521,7 @@ of tours of weight $j$, the lowest non-zero digit is the optimum, its value over
 of optimal tours) are part of the formal theorem. The ingredients are the weighted blob
 factorisation \lean{blob_factorisation_w}, the decoding lemma \lean{kronecker_decode}, the
 weighted network \lean{hcNetW_kron} in \A's \lean{Net} format, and a weighted table procedure.
-Standard axioms only; the \lean{leanchecker} replay of its closure has not been run yet.
+Standard axioms only; a fresh \lean{leanchecker} replay of its closure has passed.
 \end{itemize}
 Lean guarantees that the labs' proofs establish their formal statements; it does not guarantee
 that those statements formalise the printed theorems faithfully, which is a matter for expert
@@ -1590,7 +1590,6 @@ or check the Lean files.
 \cref{thm:main-delta,thm:main-rate} say (the definitions to read are listed in
 \cref{sec:limitations}(b)); the proofs were written by AI agents and reviewed by an AI
 coordinator.
-\item The \lean{leanchecker} replay for \lean{theoremTSP}.
 \item A full write-up of the extensions of \cref{sec:extensions} other than TSP.
 \item Verification of the citations written from memory (\cref{sec:limitations}(g)).
 \end{itemize}

@@ -125,4 +125,4 @@ The files must compile both in `lean/` (Lean v4.34.1, Mathlib d13f23b) and in An
   `theoremTSP : ∀ δ > 0, ∀ D, ∃ M C, finite alphabets ∧ ∀ n G W w, |E| ≤ D·n → (∀ e, w e ≤ W) →
   Outputs M (tspCode G W w) (bits (n·Σ_H 2^{bK n · wt w H})) ⌊C·2^{δn}·(W+2)^C⌋` and
   `theoremTSP_decode` (digit j = n·tourCount j; lowest non-zero digit = optimum; digit/n = #optimal).
-  Coordinator-checked: `lake build`, standard axioms. `leanchecker` replay not yet run.
+  Coordinator-checked: `lake build`, standard axioms. Fresh `leanchecker --fresh EthFollowup.ExactHC.TSP` **passed (exit 0)**.

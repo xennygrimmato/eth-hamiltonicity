@@ -1,0 +1,893 @@
+\documentclass[10pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{url}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=OliveGreen,urlcolor=MidnightBlue]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+\setlist{leftmargin=*,itemsep=2pt,topsep=4pt}
+\emergencystretch=2.5em
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+
+% ---------------------------------------------------------------- theorems
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{importedlemma}[theorem]{Imported Lemma}
+\newtheorem{importedtheorem}[theorem]{Imported Theorem}
+\newtheorem*{hypA}{Hypothesis $(\mathrm{H}_{\mathrm{A}})$}
+\newtheorem*{hypO}{Hypothesis $(\mathrm{H}_{\mathrm{O}})$}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{importedlemma}{Imported Lemma}{Imported Lemmas}
+\crefname{importedtheorem}{Imported Theorem}{Imported Theorems}
+\crefname{conjecture}{Conjecture}{Conjectures}
+\numberwithin{equation}{section}
+
+% ---------------------------------------------------------------- macros
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Zw}{\Z[\omega]}
+\newcommand{\poly}{\operatorname{poly}}
+\newcommand{\Kron}{\operatorname{Kron}}
+\newcommand{\gap}{\operatorname{gap}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\Ind}[1]{[\,#1\,]}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\bra}[1]{\langle#1|}
+\newcommand{\amp}[3]{\langle #1|#2|#3\rangle}
+\newcommand{\A}[1][]{\textup{[A\if\relax\detokenize{#1}\relax\else, #1\fi]}}
+\newcommand{\Oa}[1][]{\textup{[O\if\relax\detokenize{#1}\relax\else, #1\fi]}}
+
+\begin{document}
+
+\title[Exact quantum circuit amplitudes after the ETH refutations]{Exact amplitudes of sparse quantum circuits\\ in subexponential time,\\ assuming the new $\#$SAT algorithms}
+
+\author{Vaibhav Tulsyan}
+
+\date{October 2026}
+
+\subjclass[2020]{68Q12, 68Q25, 81P68}
+\keywords{Quantum circuit simulation, strong simulation, Exponential Time Hypothesis, fine-grained complexity, quantum supremacy, tensor networks, Clifford+T}
+
+\begin{abstract}
+In October 2026 OpenAI and Anthropic claimed deterministic subexponential-time algorithms for
+$\#k$-SAT, refuting the Exponential Time Hypothesis. We record a corollary for quantum circuits.
+Assuming three internal results of the Anthropic manuscript, the amplitude $\amp{y}{C}{x}$ of a
+Clifford+T circuit with $G$ two-qubit gates in arbitrary connectivity and $G_1$ single-qubit gates
+can be computed exactly, as an element of $\Z[\omega]/\sqrt2^{\,k}$ with $\omega=e^{i\pi/4}$, in
+deterministic time $2^{O(G/\sqrt{\log G})}\poly(n+G_1)$; the same holds for exact marginals and
+hence exact sampling, and for depth $d$ the bound is $2^{O(dn/\sqrt{\log n})}$. Through OpenAI's
+tensor-contraction theorem the bounds hold in polynomial space when the number of Hadamard-type
+gates is $O(G)$. The proof is a sum over paths with one bit per wire segment, read as an
+Anthropic-type network, with a Kronecker substitution for $\Z[\omega]$ and a Galois bound on the
+coefficients. Conversely, constant-depth circuits with $O(n)$ gates encode $\#3$-SAT with $O(n)$
+clauses, so the rate matches that of the refutations. We check the fine-grained
+quantum-supremacy conjectures of Morimae--Tamaki, Dalzell--Harrow--Koh--La Placa,
+Huang--Newman--Szegedy, Aaronson--Chen and Buhrman--Patro--Speelman against their sources and
+record which are refuted, which lose their premise, and which survive; a counting form of the
+Calabro--Impagliazzo--Paturi width reduction refutes the gap conjecture of Morimae and Tamaki's
+depth-scaling paper. Dense statements (cubic phases, permanents, random circuits) survive, and we
+explain why. Nothing here concerns
+approximate sampling, the constants are galactic, and everything is conditional on the claimed
+refutations, which are under review.
+\end{abstract}
+
+\maketitle
+
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+% =====================================================================
+
+\subsection{Background}
+The Exponential Time Hypothesis (ETH) of Impagliazzo and Paturi~\cite{ImpagliazzoPaturi01}
+asserts that there is $\delta>0$ such that $3$-SAT on $n$ variables cannot be solved in time
+$O(2^{\delta n})$; by the sparsification lemma~\cite{IPZ01} it is equivalent to the same statement
+for the number $m$ of clauses.
+In October 2026 two manuscripts appeared, by OpenAI~\cite{OpenAI26} and by
+Anthropic~\cite{Anthropic26}, each claiming a deterministic algorithm that counts the satisfying
+assignments of a $k$-CNF in subexponential time, and hence a refutation of ETH. Both come with
+Lean~4 formalisations of their top-level statements. These are \emph{claimed} results, still
+under review by the community. We write \A{} and \Oa{} for the two manuscripts. The Main Theorem
+of \A{} counts the models of a $k$-CNF with $m$ clauses on $n$ variables deterministically in time
+$2^{O(\min\{km/\sqrt{\log m},\;k^2n\log\log n/\sqrt{\log n}\})}$; the main theorem of \Oa{} does
+so in $(n+m)^{O_k(1)}2^{O_k(n\log\log n/\sqrt{\log n})}$ bit operations and polynomial space, and
+in $2^{O_{k,D}(n/\sqrt{\log n})}$ when $m\le Dn$.
+
+A part of the case for ``quantum computational supremacy'' rests on fine-grained hypotheses of
+exactly this kind. Morimae and Tamaki~\cite{MT19a,MT19b,MT20}, Huang, Newman and
+Szegedy~\cite{HNS18,HNS19} and Dalzell, Harrow, Koh and La Placa~\cite{DHKL20} derive lower
+bounds on the classical simulation of quantum circuits from ETH, SETH and relatives, usually by
+writing $\#\mathrm{SAT}$ or the gap $\gap(f)=\sum_x(-1)^{f(x)}$ of a Boolean function as a circuit
+amplitude. The question we ask is the converse: what do the new algorithms give for the classical
+simulation of quantum circuits, and which of these lower bounds survive?
+
+\subsection{Results}
+A circuit $C$ acts on $n$ qubits and is a sequence of gates from the set
+\[
+  \cG=\{H,T,T^\dagger,S,S^\dagger,X,Z\}\cup\{\mathrm{CNOT},\mathrm{CZ},\mathrm{CS},\mathrm{SWAP},\mathrm{CH}\}.
+\]
+It has $G$ two-qubit gates, in arbitrary connectivity, and $G_1$ single-qubit gates. Put
+$\omega=e^{i\pi/4}$, so that $\Zw=\Z[x]/(x^4+1)$, $i=\omega^2$ and $\sqrt2=\omega-\omega^3\in\Zw$.
+Every gate $U\in\cG$ is stored as a pair $(N_U,\kappa_U)$ with $N_U$ a matrix over $\Zw$ and
+$U=N_U/\sqrt2^{\,\kappa_U}$, where $\kappa_U=1$ for $H$ and $\mathrm{CH}$ and $\kappa_U=0$
+otherwise (for $\mathrm{CH}$, $N=\mathrm{diag}(\sqrt2,\sqrt2)\oplus\left(\begin{smallmatrix}1&1\\1&-1\end{smallmatrix}\right)$). Put
+$k(C):=\sum_U\kappa_U$, the number of $H$ and $\mathrm{CH}$ gates. Running times are counted as in
+\A: operations on words long enough to hold an address, plus table queries; all logarithms are to
+base~$2$. The input has length $\poly(n+G+G_1)$.
+
+\begin{hypA}
+The following statements of \A{} hold as stated there: Lemma~8, case~(i) (the reduction from
+general networks to cliques, \cref{imp:lemma8}); Theorem~A(a),(b) (one algorithm for the
+$(K_\ell,\lambda)$-cliques of all levels $\ell$, \cref{imp:thmA}); and Theorem~B (pieces with
+parameters $(1/\sqrt2,c)$, \cref{imp:thmB}).
+\end{hypA}
+
+\begin{hypO}
+The Boolean tensor-contraction theorem in the appendix of \Oa{} holds as stated there
+(\cref{imp:tensor}).
+\end{hypO}
+
+\begin{theorem}[Exact amplitudes]\label{thm:main}
+Assume $(\mathrm{H}_{\mathrm{A}})$. There are an absolute constant $c$ and one deterministic
+algorithm that, given a circuit $C$ over $\cG$ on $n$ qubits with $G\ge2$ two-qubit gates and
+$G_1$ single-qubit gates such that $\log(G_1+2)\le G^{0.9}$, and given $x,y\in\{0,1\}^n$, outputs
+integers $a_0,a_1,a_2,a_3$ with
+\[
+  \amp{y}{C}{x}=\frac{a_0+a_1\omega+a_2\omega^2+a_3\omega^3}{\sqrt2^{\,k(C)}}
+\]
+within $2^{cG/\sqrt{\log G}}\poly(n+G_1)$ operations.
+\end{theorem}
+
+\begin{theorem}[Polynomial space]\label{thm:openai}
+Assume $(\mathrm{H}_{\mathrm{O}})$. Put $s:=\max\{4G,\,k(C),\,4\}$. The output of
+\cref{thm:main} can be computed in $\poly(n+G+G_1)\,2^{O(s/\sqrt{\log s})}$ bit operations and
+$\poly(n+G+G_1)$ bits of space. In particular, if $k(C)=O(G)$ (for example, if the number of
+$H$ and $\mathrm{CH}$ gates is $O(G)$), the time is $2^{O(G/\sqrt{\log G})}\poly(n+G_1)$ and the
+space is polynomial.
+\end{theorem}
+
+\begin{corollary}[Marginals and exact sampling]\label{cor:marginals}
+Assume $(\mathrm{H}_{\mathrm{A}})$, and let $C,x$ be as in \cref{thm:main}. For every
+$S\subseteq[n]$ and $y_S\in\{0,1\}^S$, the marginal probability
+$p(y_S)=\sum_{y_{[n]\setminus S}}|\amp{y}{C}{x}|^2$ can be computed exactly, as
+$(r_0+r_1\sqrt2)/2^{k(C)}$ with $r_0,r_1\in\Z$, within $2^{c'G/\sqrt{\log G}}\poly(n+G_1)$
+operations, for an absolute constant $c'$. Consequently there is a Las Vegas algorithm that
+outputs $y\in\{0,1\}^n$ with probability exactly $|\amp{y}{C}{x}|^2$ in expected time
+$n\cdot2^{c'G/\sqrt{\log G}}\poly(n+G_1)$. Under $(\mathrm{H}_{\mathrm{O}})$ the same holds in
+polynomial space when $k(C)=O(G)$.
+\end{corollary}
+
+\begin{corollary}[Constant and slowly growing depth]\label{cor:depth}
+Assume $(\mathrm{H}_{\mathrm{A}})$. Amplitudes, marginals and exact samples of depth-$d$ circuits
+over $\cG$ on $n\ge4$ qubits can be computed within $2^{O(dn/\sqrt{\log n})}$ operations; the
+exponent is $o(n)$ whenever $d=o(\sqrt{\log n})$.
+\end{corollary}
+
+\begin{proposition}[The rate is that of $\#3$-SAT]\label{prop:tight}
+There is a polynomial-time map from $3$-CNFs $\varphi$ with $n$ variables and $m$ clauses to
+circuits $C_\varphi$ over $\cG$ of depth $O(1)$ with $O(n+m)$ qubits and $O(n+m)$ gates, and to
+an integer $n'$, such that $\amp{0}{C_\varphi}{0}=\#\varphi/2^{n'}$. Hence an algorithm for exact
+amplitudes of $G$-gate circuits in time $T(G)$ counts the models of $3$-CNFs with $m\ge n$
+clauses in time $T(O(m))\poly(m)$.
+\end{proposition}
+
+So, assuming the refutations, the exact amplitude problem for circuits with $O(n)$ gates is
+exactly as hard as $\#3$-SAT with $O(n)$ clauses, up to constants in the exponent: a bound
+$2^{o(G/\sqrt{\log G})}$ in \cref{thm:main} would improve the rate of \A{} for $m=O(n)$. Before
+2026 the same reduction showed, under the counting version $\#$ETH~\cite{DHMTW14}, that
+$2^{\Omega(n)}$ time was needed. \Cref{tab:sota} compares \cref{thm:main} with the classical
+methods for exact strong simulation.
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Exact strong simulation of a circuit with $n$ qubits, $G$ two-qubit gates and depth
+$d$, arbitrary connectivity. The last two rows are conditional.}\label{tab:sota}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{2.0cm}>{\raggedright\arraybackslash}p{3.6cm}@{}}
+\toprule
+Method & Time & Space & Source\\
+\midrule
+state vector & $2^n\poly$ & $2^n$ & folklore\\
+Feynman path sum & $2^{O(G)}$ & $\poly$ & folklore\\
+recursive (Savitch-type) & $O(n(2d)^{n+1})$ & $O(n\log d)$ & \cite[Thm.~4.1]{AC17}\\
+tensor contraction & $2^{O(\mathrm{tw})}$, $\mathrm{tw}=\Theta(n)$ possible at $d=O(1)$ & $2^{O(\mathrm{tw})}$ & \cite{MarkovShi08}\\
+geometrically local, dim.\ $\ge2$ & subexponential in $G$ & -- & \cite{WahlStrelchuk}\\
+\cref{thm:main} & $2^{O(G/\sqrt{\log G})}\le2^{O(dn/\sqrt{\log n})}$ & as time & under $(\mathrm{H}_{\mathrm{A}})$\\
+\cref{thm:openai} & same, if $k(C)=O(G)$ & $\poly$ & under $(\mathrm{H}_{\mathrm{O}})$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For depth $d=O(1)$ in arbitrary connectivity we know of no previous $2^{o(n)}$ exact method:
+the interaction graph of such a circuit can be a bounded-degree expander, whose treewidth is
+$\Theta(n)$. Against the polynomial-space bound $(2d)^{O(n)}=2^{O(n\log d)}$ of Aaronson and
+Chen~\cite{AC17}, \cref{thm:openai} gives $2^{O(dn/\sqrt{\log n})}$ in the worst case $G=\Theta(dn)$,
+which is asymptotically smaller only when $d/\log d=O(\sqrt{\log n})$.
+
+\subsection{Contrast with BosonSampling}
+BosonSampling amplitudes are permanents of $n\times n$ submatrices of Haar-random
+unitaries~\cite{AaronsonArkhipov13}, and Ryser's $2^n\poly(n)$ formula~\cite{Ryser63} is still
+the best exact method. Nothing above applies to them. A qubit circuit is a sum over \emph{binary}
+variables, one per wire segment, coupled by bounded-arity local tables, so it has $O(G)$ shared
+bits. A dense permanent is a sum over \emph{permutations}; written as an interferometer it has
+$\Theta(m^2)$ beam splitters on modes carrying up to $n$ photons, and any local encoding seems to
+need about $\log n$ bits per row. Informal notes in the project repository, not claimed here, show that
+``row-local'' networks for the permanent in the model of \A{} (rows grouped into clusters of at
+most $s$) have total at least $n\log(n/s)$, too much for the engine to beat $2^n$; only sparse
+matrices go through. The conjecture per-int-NSETH of~\cite{DHKL20} is therefore
+untouched (\cref{sec:table}).
+
+\subsection{What this does not do}
+\begin{itemize}
+\item \emph{Approximate sampling; many gates.} Random-circuit sampling rests on the non-collapse
+of the polynomial hierarchy and on average-case conjectures about approximate amplitudes (QUATH,
+HOG~\cite{AC17}) for circuits with $G\ge n^2$ gates; none of this is touched. For
+$G\ge n\sqrt{\log n}$ the bound is no better than $2^n$.
+\item \emph{Practical simulation.} The constants are galactic. Using \A[Theorem~A(a)] with the
+smallest admissible $x_0=18$, the leading term of the exponent is $e_\ell U$ with $U\approx4G$
+when most wire segments cross the partition, and
+$15/\sqrt{\log G}\le e_\ell\le114/\sqrt{\log G}$ at the level chosen in \cref{sec:time}. For
+depth $d$, so $G\approx dn/2$, the leading term alone is below $n$ only if $\log n$ exceeds
+roughly $900\,d^2$ (with the lower estimate) to $5.2\cdot10^4\,d^2$ (with the upper one), and
+lower-order terms only make this worse. \Oa{} gives no explicit constants. Experiments with
+$50$ to $1000$ qubits are not affected.
+\end{itemize}
+
+\subsection{What is new here, and what is not}
+Neither manuscript mentions quantum circuits: in the source of \Oa{} the words ``quantum'',
+``qubit'' and ``amplitude'' do not occur, and \A{} mentions tensor networks, including Markov and
+Shi's paper on simulating quantum computation by tensor contraction~\cite{MarkovShi08}, only in
+its related work. Nor did we find the corollary in the press or discussion threads we searched.
+Mathematically, however, \cref{thm:openai} is an immediate corollary of
+the appendix theorem of \Oa, which contracts Boolean tensor networks with one-bit wires: anyone
+who reads that theorem next to Markov and Shi will see it. What we add is the care needed to make
+it a theorem: the coefficient ring ($\Zw$ is not a subring of $\Z$, nor of the truncated $2$-adic
+ring of \Oa), the precision needed, which comes from a Galois-conjugate bound
+(\cref{lem:galois}), the resulting restriction $k(C)=O(G)$ in the route through \Oa{} and its
+absence in the route through \A, marginals and exact sampling, the converse reduction, the
+check of the fine-grained supremacy literature against the primary sources
+(\cref{sec:table}), including a counting form of the width reduction of Calabro, Impagliazzo and
+Paturi (\cref{lem:width}), and the analysis of cubic phases (\cref{sec:cubic}). We claim the
+careful statement and proof, not the idea.
+
+% =====================================================================
+\section{The imported results}\label{sec:imported}
+% =====================================================================
+
+We recall the definitions and results of \A{} that we use, in its notation except where a letter
+clashes with ours, as in~\cite{Tulsyan26}. Conventions of \A: $\log=\log_2$ and
+$[x=u]\in\{0,1\}$.
+
+\begin{definition}[{\A[Definition~1]}]\label{def:factor}
+A function $F\colon X\times X'\to\Z$ \emph{factors through $c$ bits} if there are
+$f\colon X\times\{0,1\}^c\to\Z$ and $f'\colon X'\times\{0,1\}^c\to\Z$ with
+$F(z,z')=\sum_{\theta\in\{0,1\}^c} f(z,\theta)f'(z',\theta)$. In particular, for any
+$h\colon X\to\{0,1\}^c$ and $h'\colon X'\to\{0,1\}^c$ the function
+$[h(z)=h'(z')]=\sum_\theta [h(z)=\theta][h'(z')=\theta]$ factors through $c$ bits.
+\end{definition}
+
+\begin{definition}[{\A[Definition~2]}]\label{def:network}
+Let $P,B,\tau\ge1$ be integers. A \emph{network on $J$ with parameters $P,B,\tau$} consists of a
+finite set $J$ of nodes; for each node $a$ a finite set $S_a$ of settings and a function
+$W_a\colon S_a\to\Z$; and for each unordered pair $\{a,b\}$ of distinct nodes a function
+$\Psi_{a,b}\colon S_a\times S_b\to\Z$ (with $\Psi_{b,a}(z_b,z_a)=\Psi_{a,b}(z_a,z_b)$), an integer
+$c_{a,b}=c_{b,a}\ge0$ and a factorisation $(f_{a,b},f_{b,a})$ of $\Psi_{a,b}$ through $c_{a,b}$
+bits. The settings of $a$ are encoded as bit strings of one fixed length $P_a\le P$, and
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $\sum_{b\ne a} c_{a,b}\le P$ for every $a\in J$;
+\item all values of all $W_a$, $\Psi_{a,b}$, $f_{a,b}$ are below $2^B$ in absolute value;
+\item an algorithm receives $P$, $B$ and the numbers $P_a$, $c_{a,b}$ as input, and can decide
+membership in $S_a$ and compute any value of $W_a$, $\Psi_{a,b}$, $f_{a,b}$ with at most $\tau$
+operations.
+\end{enumerate}
+The \emph{value} of the network is
+$Z=\sum_{z\in\prod_a S_a}\prod_{a\in J}W_a(z_a)\prod_{\{a,b\}}\Psi_{a,b}(z_a,z_b)$, and its
+\emph{total} is $U=\sum_{(a,b)\colon a\ne b}c_{a,b}$.
+\end{definition}
+
+In the \emph{$(K,\lambda)$-clique} of \A[Definition~3] each of $K$ nodes holds a $\lambda$-bit
+string for each other node, $c_{w,w'}=\lambda$, $\Psi_{w,w'}=[z_w(w')=z_{w'}(w)]$, and the tables
+$|W_w|<2^B$ are queried at unit cost.
+
+
+\begin{importedlemma}[{\A[Lemma~8, case~(i)]}]\label{imp:lemma8}
+Let $K\ge2$, $g=3K^8$ and $\zeta=1/(2K)$. Take a network on $[g]$ with parameters $P,B,\tau$ and
+total $U$, and put $L=\lceil(U+gP/K)/K^2\rceil$ and $B'=\lceil 2gP/K\rceil+g^2B$.
+If an algorithm outputs the value of every $(K,L)$-clique with $|W_w|<2^{B'}$ within $T$
+operations, then the value of the network is computed within
+\begin{equation}\label{eq:lemma8}
+  \bigl(K^g+T\cdot 2^{2gP/K}\cdot\tau\bigr)\cdot\bigl(g(P+B)\bigr)^{C_1}
+\end{equation}
+operations, by one procedure, for an absolute constant $C_1$.
+\end{importedlemma}
+
+\begin{importedtheorem}[{\A[Theorem~A]}]\label{imp:thmA}
+Suppose there are pieces with parameters $(\rho,c)$ in the sense of \A[Definition~7], and let
+$\alpha'=\log(1/\rho)$. Fix an integer $x_0\ge18$ with $2^{x_0}\ge c+5$ and define
+$K_0=2^{x_0}$, $\zeta_\ell=2^{-\ell-5}$, $g_\ell=2^{3\ell+x_0}K_\ell$, $K_{\ell+1}=g_\ell^2$,
+$e_0=\tfrac12$ and $e_{\ell+1}=(\rho+3\zeta_\ell)e_\ell+3/K_\ell$.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item $\log K_\ell=(3x_0+6)2^\ell-6\ell-2x_0-6$, so $K_\ell<K_{\ell+1}\le K_\ell^{10}$; and
+$\frac12\rho^\ell\le e_\ell\le 0.85\,\rho^\ell$, where $\rho^\ell\le((3x_0+6)/\log K_\ell)^{\alpha'}$.
+\item One deterministic algorithm, given $\ell\ge0$, $\lambda,B\ge1$ and query access to tables
+with $|W_w|<2^B$, outputs the value of the $(K_\ell,\lambda)$-clique within
+\begin{equation}\label{eq:thmA}
+  2^{e_\ell K_\ell^2\lambda}\cdot\bigl(K_\ell(\lambda+B)\bigr)^{C_0K_\ell^2}
+\end{equation}
+operations, with $C_0$ depending only on $c$.
+\end{enumerate}
+\end{importedtheorem}
+
+\begin{importedtheorem}[{\A[Theorem~B]}]\label{imp:thmB}
+There are pieces with parameters $(1/\sqrt2,c)$ for an absolute constant $c$.
+\end{importedtheorem}
+
+\begin{importedtheorem}[{\Oa[Appendix, Boolean tensor contraction], up to notation}]\label{imp:tensor}
+A Boolean tensor network is a bipartite multigraph in which each edge carries a single bit; each
+vertex $v$ has an ordered list $\delta(v)$ of incident edges and a tensor $T_v$ assigning a ring
+element to each Boolean assignment to those edges; its contraction is
+$Z=\sum_{x\in\{0,1\}^{E}}\prod_vT_v(x|_{\delta(v)})$, an isolated vertex contributing its scalar
+entry. Fix positive constants $C,A,b$. Let $s\ge2$ be an integer, and let $\cL$ be the total
+length of the graph and tensor descriptions of a bipartite tensor network with at most $Cs$
+edges and maximum degree at most $\lceil s^{9/10}\rceil$. Suppose that the number of vertices is
+bounded by a fixed polynomial in $s$, and that the entries belong to
+\[
+  \cB_{P_0,\ell}=(\Z/2^{P_0}\Z)[V]/(V^\ell),\qquad 1\le P_0,\ell\le Cs.
+\]
+Suppose, uniformly for every vertex and Boolean choice of its ports, that its entry can be
+computed from the description in time $(s+\cL)^b2^{As^{9/10}}$ and space $(s+\cL)^b$. Then the
+contraction can be computed deterministically in $(s+\cL)^{O(1)}2^{O(s/\sqrt{\log s})}$ bit
+operations and $(s+\cL)^{O(1)}$ bits of space, with constants depending only on $C,A,b$.
+\end{importedtheorem}
+
+None of these statements is machine-checked in the form used here: \A's Lean development proves
+\cref{imp:lemma8} (in a form weaker by a polynomial factor), \cref{imp:thmA}(b) and
+\cref{imp:thmB} only for networks coming from CNFs~\cite{Tulsyan26}, and the appendix of \Oa{}
+is not formalised. Applying them below is done on paper.
+
+% =====================================================================
+\section{Proof of \texorpdfstring{\cref{thm:main}}{Theorem 1.1}}\label{sec:proof}
+% =====================================================================
+
+\subsection{The sum over paths on wire segments}\label{sec:paths}
+For a qubit $q$ let $\gamma_{q,1},\dots,\gamma_{q,r_q}$ be the two-qubit gates acting on $q$, in
+circuit order; $q$ is \emph{touched} if $r_q\ge1$. Every single-qubit gate on a touched line is
+multiplied into the next two-qubit gate on that line, and the single-qubit gates after
+$\gamma_{q,r_q}$ are multiplied into $\gamma_{q,r_q}$ from the left. This is legitimate because a
+single-qubit gate on line $q$ commutes with every gate that does not act on $q$. The result is a
+list of $G$ \emph{merged} gates $\hat\Gamma_i=\hat N_i/\sqrt2^{\,\hat\kappa_i}$ with
+$\hat N_i\in M_4(\Zw)$, where $\hat\kappa_i$ is the sum of the $\kappa$ of the gates merged into
+it. An untouched line contributes the scalar $\amp{y_q}{R_q}{x_q}=u_q/\sqrt2^{\,\kappa_q}$, where
+$R_q$ is the product of its gates. The merging costs $\poly(n+G+G_1)$ operations, since all
+coefficients have $O(k(C)+G+G_1)$ bits.
+
+A \emph{segment} is a piece of line $q$ between $\gamma_{q,j}$ and $\gamma_{q,j+1}$; it carries
+one bit $\sigma_e$. The input leg of $\gamma_{q,1}$ is fixed to $x_q$ and the output leg of
+$\gamma_{q,r_q}$ to $y_q$. With $n_t$ touched lines there are $s_0=\sum_q(r_q-1)=2G-n_t\le2G$
+segments. For a merged gate $i$ write $\sigma_{\mathrm{in}}(i),\sigma_{\mathrm{out}}(i)\in\{0,1\}^2$
+for the values on its input and output legs (a segment bit or a fixed $x_q$, $y_q$).
+
+\begin{lemma}[Sum over paths]\label{lem:paths}
+Put $k_t:=\sum_i\hat\kappa_i$ and $A:=\sum_{\sigma\in\{0,1\}^{s_0}}\prod_{i=1}^G\hat N_i[\sigma_{\mathrm{out}}(i),\sigma_{\mathrm{in}}(i)]\in\Zw$. Then
+\[
+ \amp{y}{C}{x}=\Bigl(\prod_{q\text{ untouched}}u_q\Bigr)\cdot\frac{A}{\sqrt2^{\,k(C)}},\qquad
+ k(C)=k_t+\sum_{q\text{ untouched}}\kappa_q,
+\]
+and $A=\sqrt2^{\,k_t}\amp{y_t}{C_t}{x_t}$, where $C_t$ is the circuit $C$ restricted to the
+touched lines.
+\end{lemma}
+
+\begin{proof}
+Insert $\sum_{b\in\{0,1\}}\ket b\bra b$ on every segment and expand the matrix product.
+\end{proof}
+
+\subsection{Coefficients: a Galois bound and a Kronecker map}
+For $\alpha=\sum_ja_j\omega^j\in\Zw$ write $\|\alpha\|_\infty=\max_j|a_j|$ and
+$\|\alpha\|_1=\sum_j|a_j|$. Multiplication by $\omega^j$ permutes the coefficients up to sign, so
+$\|\alpha\beta\|_1\le\|\alpha\|_1\|\beta\|_1$.
+
+\begin{lemma}[Galois bound]\label{lem:galois}
+Let $M$ be a product of gates from $\cG$ (on any number of qubits), let $\kappa$ be the sum of
+their $\kappa_U$, and let $N$ be the product of their numerators, so $M=N/\sqrt2^{\,\kappa}$. Then
+every entry $\alpha$ of $N$ satisfies $\|\alpha\|_\infty\le2^{\kappa/2}$.
+\end{lemma}
+
+\begin{proof}
+The Galois group of $\Q(\omega)/\Q$ consists of $\sigma_t\colon\omega\mapsto\omega^t$, $t\in\{1,3,5,7\}$;
+it is abelian and contains complex conjugation $\sigma_7$. Hence, for a unitary $U$ with entries
+in $\Q(\omega)$, $\sigma_t(U)\sigma_t(U)^*=\sigma_t(UU^*)=I$, so $\sigma_t(U)$ is unitary. Applying
+$\sigma_t$ entrywise to all factors, and using $\sigma_t(\sqrt2)=\pm\sqrt2$, we get
+$\sigma_t(N)=(\pm\sqrt2)^{\kappa}\sigma_t(M)$ with $\sigma_t(M)$ unitary, so
+$|\sigma_t(\alpha)|\le2^{\kappa/2}$. Finally $\sum_{t}\omega^{rt}=4[r\equiv0]$ for
+$r\in\{-3,\dots,3\}$, which gives $a_j=\frac14\sum_t\sigma_t(\alpha)\,\omega^{-jt}$ and
+$|a_j|\le2^{\kappa/2}$.
+\end{proof}
+
+By \cref{lem:paths} and \cref{lem:galois} (applied to $C_t$), $\|A\|_\infty\le2^{k_t/2}$, and every
+entry of every $\hat N_i$ has $\|\cdot\|_\infty\le2^{\hat\kappa_i/2}$, hence $\|\cdot\|_1\le4\cdot2^{\hat\kappa_i/2}$.
+
+\begin{lemma}[Kronecker map]\label{lem:kron}
+Let $b\ge2$ and $M_b:=2^{4b}+1$. The substitution $x\mapsto2^b$ defines a ring homomorphism
+$\kappa_b\colon\Zw=\Z[x]/(x^4+1)\to\Z/M_b\Z$, because $2^{4b}\equiv-1\pmod{M_b}$. It is injective
+on $\{\alpha:\|\alpha\|_\infty\le2^{b-1}-1\}$, and $\alpha$ is recovered from $\kappa_b(\alpha)$ by
+taking the representative in $(-M_b/2,M_b/2]$ and reading its balanced base-$2^b$ digits.
+\end{lemma}
+
+\begin{proof}
+For $\alpha$ in the box, $|\sum_ja_j2^{bj}|\le(2^{b-1}-1)(1+2^b+2^{2b}+2^{3b})<2^{4b-1}<M_b/2$, and
+balanced digits are unique.
+\end{proof}
+
+Put $\Kron_b(\alpha):=\sum_ja_j2^{bj}\in\Z$, an integer representative of $\kappa_b(\alpha)$, and
+fix $b:=\lceil k_t/2\rceil+2$, so that $\|A\|_\infty\le2^{b-1}-1$.
+
+No ring embedding is available ($x^4=-1$ has no solution modulo $4$, nor modulo $V$); a
+homomorphism injective on a box containing the answer suffices.
+
+\subsection{The network}\label{sec:network}
+Fix $g\ge1$ and a partition of the merged gates into groups $V_1,\dots,V_g$ with
+$|V_a|\le\lceil G/g\rceil$ (some groups may be empty). A segment is \emph{internal} to $a$ if both
+its end gates lie in $V_a$, and \emph{crossing} otherwise. Let $\mathrm{int}_a$ be the number of
+segments internal to $a$ and $P_a$ the number of crossing segments with an end in $V_a$.
+
+\begin{definition}\label{def:qnet}
+The network $\mathcal N(C,x,y,(V_a),b)$ on $[g]$ has settings $S_a=\{0,1\}^{P_a}$, the bits of the
+crossing segments at $a$;
+\[
+ W_a(z_a):=\Kron_b\Bigl(\sum_{\text{internal bits of }a}\ \prod_{i\in V_a}\hat N_i[\sigma_{\mathrm{out}}(i),\sigma_{\mathrm{in}}(i)]\Bigr),
+\]
+the sum taken in $\Zw$ over the $2^{\mathrm{int}_a}$ values of the internal segment bits, with the
+crossing bits read from $z_a$; and
+$\Psi_{a,b}(z_a,z_b)=\prod_{e}[z_a(e)=z_b(e)]$ over the segments $e$ crossing between $a$ and $b$,
+which factors through $c_{a,b}:=\#\{e\text{ crossing between }a\text{ and }b\}$ bits by
+\cref{def:factor}, with $f_{a,b}\in\{0,1\}$.
+\end{definition}
+
+\begin{proposition}[Parameters and value]\label{prop:params}
+Let $P:=4\lceil G/g\rceil+1$, $B:=3b+2+4\lceil G/g\rceil+\lceil k_t/2\rceil$ and
+$\tau:=2^{2\lceil G/g\rceil}\poly(G,k(C))$. Then $\mathcal N=\mathcal N(C,x,y,(V_a),b)$ is a
+network on $[g]$ with parameters $P,B,\tau$ in the sense of \cref{def:network}, its total is
+$U\le 4G$, and its value $Z$ satisfies $Z\equiv\kappa_b(A)\pmod{M_b}$. Hence $A$ is obtained from
+$Z$ by \cref{lem:kron}.
+\end{proposition}
+
+\begin{proof}
+\emph{Condition (i).} $\sum_{b\ne a}c_{a,b}=P_a$, and every merged gate has four legs, so
+$P_a\le4|V_a|\le P$. This is where bounded gate arity enters; nothing about connectivity is used.
+\emph{The total.} $U=\sum_aP_a=2\cdot\#\{\text{crossing segments}\}\le2s_0\le4G$.
+\emph{Condition (ii).} The values of $\Psi$ and $f$ are $0$ or $1$. For $W_a$, the inner sum
+$\alpha_a$ has $\|\alpha_a\|_\infty\le\|\alpha_a\|_1\le2^{\mathrm{int}_a}\prod_{i\in V_a}4\cdot2^{\hat\kappa_i/2}$,
+and $\mathrm{int}_a\le2|V_a|$, so $\log\|\alpha_a\|_\infty\le4\lceil G/g\rceil+k_t/2$; and
+$|\Kron_b(\alpha)|<\|\alpha\|_\infty2^{3b+1}$. So $|W_a|<2^B$.
+\emph{Condition (iii).} Membership in $S_a$ is trivial, $\Psi$ and $f$ compare bits, and $W_a(z_a)$
+is a sum of $2^{\mathrm{int}_a}\le2^{2\lceil G/g\rceil}$ products of $|V_a|$ elements of $\Zw$ with
+$O(k(C)+G)$-bit coefficients, read from the precomputed merged gates.
+\emph{Value.} $\Kron_b(\alpha)\equiv\kappa_b(\alpha)\pmod{M_b}$ and $\kappa_b$ is a ring
+homomorphism, so
+$Z\equiv\kappa_b\bigl(\sum_z\prod_a\alpha_a(z_a)\prod_{\{a,b\}}\Psi_{a,b}\bigr)$. The factors
+$\Psi$ restrict the sum to settings that agree on every crossing segment, and the inner sums run
+over the internal segments, so the argument of $\kappa_b$ is $A$.
+\end{proof}
+
+\subsection{Running time}\label{sec:time}
+The algorithm merges the gates, computes $k_t$, $b$ and the untouched scalars, chooses a level
+$\ell$ (below), puts $K:=K_\ell$ and $g:=3K^8$, takes any partition into groups of size at most
+$\lceil G/g\rceil$, computes $P,B,P_a,c_{a,b}$, and runs the procedure of \cref{imp:lemma8} on
+$\mathcal N$ with the algorithm of \cref{imp:thmA}(b) at level $\ell$ as the clique algorithm.
+It reduces the value $Z$ modulo $M_b$, decodes $A$ by \cref{lem:kron}, and multiplies by the
+untouched scalars.
+
+\emph{Hypotheses.} \Cref{imp:lemma8} needs a network on $[g]$ with integer parameters
+$P,B,\tau\ge1$ and $g=3K^8$; \cref{prop:params} supplies it. It then needs an algorithm for every
+$(K,L)$-clique with $|W|<2^{B'}$: \cref{imp:thmA}(b) at level $\ell$, with $\lambda=L\ge1$ and
+$B=B'\ge1$, gives $T=2^{e_\ell K^2L}(K(L+B'))^{C_0K^2}$. \Cref{imp:thmA} needs pieces, which
+\cref{imp:thmB} supplies with $\rho=1/\sqrt2$, $\alpha'=\frac12$, and $c$, $x_0$ absolute. The
+circuit reaches the clique algorithm only through the tables that \cref{imp:lemma8} builds from
+the $W_a$ and $f_{a,b}$, and \cref{imp:lemma8} itself searches the $K^g$ groupings of the $g$ nodes
+for one with small pairwise totals, so no balancing beyond the partition is needed.
+
+\emph{The exponent.} By \eqref{eq:lemma8} and \eqref{eq:thmA}, with $e:=e_\ell\le1$ and
+$K^2L\le U+gP/K+K^2$, the cost is $2^X$ with
+\begin{equation}\label{eq:exponent}
+  X\le1+\max\Bigl\{g\log K,\ e\bigl(U+\tfrac{gP}{K}+K^2\bigr)+C_0K^2\log\bigl(K(L+B')\bigr)+\tfrac{2gP}{K}+\log\tau\Bigr\}
+  +C_1\log\bigl(g(P+B)\bigr).
+\end{equation}
+For $G<G_0:=K_0^{30}$, an absolute constant, the algorithm instead sums over the $\le2G$ segment
+bits directly, in $O(1)\cdot\poly(n+G_1)$ operations. For $G\ge G_0$ let $\ell$ be the largest
+index with $K_\ell^{30}\le G$. Then $K_{\ell+1}>G^{1/30}$, and $K_{\ell+1}\le K_\ell^{10}$ gives
+$G^{1/300}<K\le G^{1/30}$, so $g=3K^8\le3G^{8/30}$ and, by \cref{imp:thmA}(a),
+\[
+  e\le0.85\Bigl(\frac{3x_0+6}{\log K}\Bigr)^{1/2}\le\frac{0.85\,(300(3x_0+6))^{1/2}}{\sqrt{\log G}}=:\frac{c_e}{\sqrt{\log G}}.
+\]
+Also $gP\le g(4G/g+5)=4G+5g$, $L\le U+gP+1=O(G)$ and
+$B'\le2gP+1+g^2B=O(G^{1.6}(1+k(C)))$. Since $k(C)\le G+G_1$ and $\log(G_1+2)\le G^{0.9}$, we have
+$\log(k(C)+2)=O(G^{0.9})$. The terms of \eqref{eq:exponent} are bounded as follows:
+\begin{align*}
+  e\,U&\le4c_e\,G/\sqrt{\log G},\\
+  (e+2)\,gP/K&\le3(4G+5g)/G^{1/300}=O(G^{1-1/300}),\\
+  eK^2+C_0K^2\log(K(L+B'))&=O\bigl(G^{1/15}(\log G+\log(k(C)+2))\bigr)=O(G^{0.97}),\\
+  \log\tau&\le2G/g+O(\log G+\log(k(C)+2))=O(G^{1-8/300}+G^{0.9}),\\
+  g\log K&=O(G^{8/30}\log G),\\
+  C_1\log(g(P+B))&=O(\log G+\log(k(C)+2))=O(G^{0.9}).
+\end{align*}
+Every term except the first is $o(G/\sqrt{\log G})$, uniformly in the circuit. The value $Z$ has
+$O(U+gB)$ bits, so reducing and decoding it, and the preparation, cost $\poly(n+G+G_1)$. Hence the
+total is $2^{cG/\sqrt{\log G}}\poly(n+G_1)$ for an absolute $c$ (any $c>4c_e$ works for large
+$G$). This proves \cref{thm:main}.\qed
+
+\begin{remark}[The single-qubit gate count]\label{rem:G1}
+$G_1$ enters polynomially (input, merging) and through $k(C)\le G+G_1$, which sets the table bit
+length $B=O(G/g+k(C))$; $B$ reaches the exponent only via $C_0K^2\log(K(L+B'))$, hence the
+hypothesis $\log(G_1+2)\le G^{0.9}$. If it fails, the direct sum over $2G$ segment bits is
+quasi-polynomial in the input length. The route through \A{} is exact whatever $k(C)$ is.
+\end{remark}
+
+
+% =====================================================================
+\section{The route through \texorpdfstring{\Oa}{[O]}: proof of \texorpdfstring{\cref{thm:openai}}{Theorem 1.2}}\label{sec:openai}
+% =====================================================================
+
+We check the hypotheses of \cref{imp:tensor} one by one, with $s=\max\{4G,k(C),4\}$ and $C=4$.
+
+\begin{itemize}
+\item \emph{Bipartite, one-bit edges, at most $Cs$ edges.} The merged gates form one side. Every
+segment is subdivided by a binary equality tensor, as \Oa{} does in its own CNF encoding; the
+equality vertices form the other side. There are $2s_0\le4G\le s$ edges. Fixed legs ($x_q$,
+$y_q$) are absorbed into the gate tensor, and a gate all of whose legs are fixed is an isolated
+vertex.
+\item \emph{Maximum degree at most $\lceil s^{9/10}\rceil$.} The degree is at most $4$, and
+$\lceil s^{9/10}\rceil\ge4$ for $s\ge4$.
+\item \emph{Number of vertices polynomial in $s$.} It is $G+s_0\le3G$.
+\item \emph{Entries in $\cB_{P_0,\ell}$ with $1\le P_0,\ell\le Cs$.} Map $x\mapsto V$. The entries
+of $\hat N_i$ become integer polynomials of degree at most $3$, reduced modulo $2^{P_0}$, and the
+equality tensors have entries $0,1$. Over $\Z$ the contraction is $Q(V):=\sum_\sigma\prod_i\hat N_i(V)$, of
+degree at most $3G$, so with $\ell:=3G+1\le s$ nothing is truncated and the contraction in
+$\cB_{P_0,\ell}$ is $Q(V)\bmod 2^{P_0}$. Reducing $Q$ modulo $V^4+1$ over $\Z/2^{P_0}$ gives $A$
+modulo $2^{P_0}$ coefficientwise, because $Q\bmod(x^4+1)=A$ in $\Zw$. By \cref{lem:galois},
+$|a_j|\le2^{k_t/2}<2^{P_0-1}$ for $P_0:=\lceil k(C)/2\rceil+3$, so the balanced residues are the
+$a_j$. Here $P_0\le s/2+4\le2s$. \emph{This is the only place where $k(C)$ enters, and it is why
+$s\ge k(C)$}: \Oa{} works modulo a power of $2$ with precision at most $Cs$.
+\item \emph{Entries computable in time $(s+\cL)^b2^{As^{9/10}}$ and space $(s+\cL)^b$.} Each entry is
+a lookup in a merged gate, precomputed in polynomial time and space; $\cL=\poly(G+k(C))$.
+\end{itemize}
+The conclusion of \cref{imp:tensor} gives $(s+\cL)^{O(1)}2^{O(s/\sqrt{\log s})}$ bit operations and
+$(s+\cL)^{O(1)}$ space; merging and the untouched scalars cost polynomial time and space.\qed
+
+When $k(C)\gg G$ we see no way around the precision cap inside \Oa's ring: the numerator of a
+two-qubit Clifford+T unitary can need arbitrarily many bits.
+
+% =====================================================================
+\section{Corollaries and the converse}\label{sec:corollaries}
+% =====================================================================
+
+\subsection{Marginals: the doubled network}
+\begin{proof}[Proof of \cref{cor:marginals}, marginals]
+Untouched lines contribute $|u_q|^2/2^{\kappa_q}$ for $q\in S$ and $1$ for $q\notin S$. On the
+touched lines take two copies of the merged gates, the second with every entry conjugated
+($\overline{a_0+a_1\omega+a_2\omega^2+a_3\omega^3}=a_0-a_3\omega-a_2\omega^2-a_1\omega^3$). Both
+copies get input $x$. For $q\in S$ the output legs of both copies are fixed to $y_q$; for a touched
+$q\notin S$ the two output legs are joined into one new \emph{trace} segment. The resulting sum over
+paths has $2G$ merged gates and at most $2s_0+n_t\le4G$ segments, and its value is
+$R=\sum_{y_{\bar S}}A(y)\overline{A(y)}=2^{k_t}p_t(y_S)$, where $p_t$ is the marginal of $C_t$.
+$R$ is real, so $R=r_0+r_1\sqrt2$ with $r_0,r_1\in\Z$. For every $t$,
+$\sigma_t(R)=2^{k_t}\sum_{y_{\bar S}}|\amp{y}{\sigma_t(C_t)}{x}|^2\in[0,2^{k_t}]$ (the proof of
+\cref{lem:galois}), so $\|R\|_\infty\le2^{k_t}$ and $b:=k_t+2$ suffices in \cref{lem:kron}.
+\Cref{sec:network,sec:time} now apply verbatim with $2G$ merged gates, $U\le8G$,
+$P=4\lceil2G/g\rceil+1$ and $k_t$ replaced by $2k_t$; the exponent changes by a constant factor.
+Under $(\mathrm{H}_{\mathrm{O}})$ take $s=\max\{8G,2k(C),4\}$, $\ell=6G+1$ and $P_0=k(C)+3$.
+\end{proof}
+
+\begin{proof}[Proof of \cref{cor:marginals}, sampling]
+Draw $u\in[0,1)$ uniformly, revealing its binary digits only when needed, and output the
+$y\in\{0,1\}^n$ whose interval in the lexicographic partition of $[0,1)$ into intervals of
+lengths $|\amp{y}{C}{x}|^2$ contains $u$; then $\Pr[y]=|\amp{y}{C}{x}|^2$ exactly. The digits
+$y_1,y_2,\dots$ are found one at a time: if the interval of the prefix $y_{<j}$ is
+$[L,L+p(y_{<j}))$, then $y_j=0$ iff $u<L+p(y_{<j}0)$. This takes $n$ marginal computations,
+with endpoints in $\Z[\sqrt2]/2^{k(C)}$, compared exactly with dyadic rationals (compare squares of
+integers). A comparison is undecided after $t$ digits with probability at most $2^{-t}$, so
+$\log n+O(1)$ digits are needed in expectation.
+\end{proof}
+
+\begin{proof}[Proof of \cref{cor:depth}]
+$G\le dn/2$ and $G_1\le dn$. If $G\ge2$ and $\log(G_1+2)\le G^{0.9}$, use \cref{thm:main,cor:marginals}
+and $G/\sqrt{\log G}\le dn/\sqrt{\log n}$ ($n\ge4$). Otherwise $G\le(\log(dn+2))^{1.12}$ and the
+direct sum over at most $4G$ segment bits suffices.
+\end{proof}
+
+\subsection{The converse reduction}\label{sec:converse}
+\begin{proof}[Proof of \cref{prop:tight}]
+Make every variable occur at most three times, parsimoniously (Tovey's copying~\cite{Tovey84}): replace the $d\ge2$ occurrences of a
+variable $v$ by fresh copies $v_1,\dots,v_d$ and add the $2$-clauses
+$(\bar v_1\vee v_2),\dots,(\bar v_{d-1}\vee v_d),(\bar v_d\vee v_1)$, which force all copies to be
+equal. The result $\varphi'$ has $n'=O(n+m)$ variables, $m'=O(n+m)$ clauses of width at most $3$,
+each variable in at most three clauses, and $\#\varphi'=\#\varphi$.
+
+Use one qubit per variable, one qubit $y_j$ per clause and one ancilla per clause, and put
+$D:=\prod_jD_j$ with $D_j\ket{x,y}=(-1)^{y_j\cdot[\text{clause }j\text{ is violated by }x]}\ket{x,y}$.
+Since $[\text{clause } j\text{ violated}]$ is the AND of the negated literals, $D_j$ is a
+multi-controlled $Z$ on $y_j$ and at most three literal qubits, conjugated by $X$ on negative
+literals. A controlled-controlled-controlled-$Z$ is exact over $\cG$ with one ancilla returned to
+$\ket0$: compute the AND of two controls into the ancilla with a Toffoli gate, apply $\mathrm{CCZ}$,
+and uncompute; Toffoli and $\mathrm{CCZ}$ have exact Clifford+T circuits with seven $T$ gates and
+$O(1)$ $\mathrm{CNOT}$ and $H$ gates~\cite{NielsenChuang}. Every gadget touches $O(1)$ qubits and every variable
+qubit lies in at most three gadgets, so the gadgets can be coloured greedily into $O(1)$ layers of
+disjoint gadgets. Let $C_\varphi=H^{\otimes(n'+m')}DH^{\otimes(n'+m')}$, the Hadamards acting on
+variable and clause qubits only. Then
+\[
+ \amp{0}{C_\varphi}{0}=2^{-(n'+m')}\sum_{x,y}\prod_j(-1)^{y_j[\text{clause }j\text{ violated}]}
+ =2^{-(n'+m')}\sum_x\prod_j2[\text{clause }j\text{ satisfied}]=\frac{\#\varphi}{2^{n'}}.
+\]
+$C_\varphi$ has depth $O(1)$ and $O(n+m)$ gates. Reading off $\#\varphi$ needs only the amplitude.
+\end{proof}
+
+This construction is not scripted; the IQP analogue
+$\amp{0}{H^{\otimes n}D_fH^{\otimes n}}{0}=\gap(f)/2^n$ for degree-$3$ $f$, with $\mathrm{CCZ}$
+compiled into Clifford+T, is checked by \texttt{qc\_check.py} (\cref{sec:verification}).
+
+% =====================================================================
+\section{Fine-grained supremacy statements after the refutations}\label{sec:table}
+% =====================================================================
+
+Throughout this section ``refuted'' means \emph{refuted assuming the claimed refutations of ETH}.
+Rows 1, 2, 5, 12 and 13 of \cref{tab:conj} need only the main theorem of either \A{} or \Oa,
+which is what the labs have formalised in Lean.
+
+\subsection{Two facts about SETH-type statements}
+ETH fails if and only if $s_k=0$ for every $k\ge3$, where $s_k$ is the infimum of the exponents
+$\delta$ with $k$-SAT in time $2^{\delta n}$~\cite{IPZ01}; then $s_\infty=\lim_ks_k=0$, so the
+Strong Exponential Time Hypothesis $s_\infty=1$~\cite{ImpagliazzoPaturi01} fails too. Several
+statements below are phrased for CNFs of unbounded width with at most $cn$ clauses. For the
+decision version, Calabro, Impagliazzo and Paturi~\cite{CIP06} relate them to $k$-SAT through
+Schuler's width reduction~\cite{Schuler05}. We need the counting version, which follows from the
+same reduction because its two branches are disjoint.
+
+\begin{lemma}[Counting width reduction]\label{lem:width}
+Let $k\ge1$ and $s>0$, and suppose a deterministic algorithm counts the models of $k$-CNFs with $n'$
+variables and $m'$ clauses in time $2^{sn'}\poly(n',m')$. Then the models of an arbitrary CNF with $n$
+variables and $m$ clauses can be counted deterministically in time
+$2^{sn}\exp\bigl(2^{-sk}(m+n/k)\bigr)\poly(n,m)$.
+\end{lemma}
+
+\begin{proof}
+Write $\#_X F$ for the number of models of $F$ over the variable set $X$. If $F$ has a clause
+$C=\{l_1,\dots,l_{k'}\}$ with $k'>k$, put $C'=\{l_1,\dots,l_k\}$, let $F_1=(F\setminus\{C\})\cup\{C'\}$, and
+let $F_0$ be $F$ with $l_1,\dots,l_k$ set to false (satisfied clauses deleted, false literals
+removed). Since $C'\subseteq C$, the models of $F_1$ are exactly the models of $F$ that satisfy $C'$;
+the models of $F$ that violate $C'$ are the extensions of the models of $F_0$ by
+$l_1=\dots=l_k=\text{false}$. These two sets are disjoint, so
+$\#_XF=\#_XF_1+\#_{X\setminus\mathrm{var}(C')}F_0$. Recurse until no clause is longer than $k$ (a
+leaf whose formula contains the empty clause counts $0$), and count each leaf with the given
+algorithm. Along a root-to-leaf path every left branch removes a clause longer than $k$ and right
+branches create none, so there are at most $m$ left branches, and a leaf reached by $r$ right
+branches has $n-kr$ variables, so $r\le n/k$. The number of leaves reached by exactly $r$ right
+branches is at most $\binom{m+r}{r}$~\cite[proof of Lemma~5]{CIP06}. Hence the time is at most
+$\poly(n,m)\sum_{r\le n/k}\binom{m+r}{r}2^{s(n-kr)}\le\poly(n,m)\,2^{sn}\sum_{r}\binom{m+\lfloor n/k\rfloor}{r}2^{-skr}
+\le\poly(n,m)\,2^{sn}(1+2^{-sk})^{m+n/k}$.
+\end{proof}
+
+\begin{corollary}\label{cor:density}
+Assume the main theorem of \A{} or of \Oa. For all $c,\varepsilon>0$ there is a deterministic
+algorithm that counts the models of CNFs (of any width) with $n$ variables and at most $cn$ clauses
+in time $O(2^{\varepsilon n})$. Hence $\gap(f)=2^n-2\#f$ is computed in the same time.
+\end{corollary}
+
+\begin{proof}
+Put $s=\varepsilon/3$ and choose $k$ with $2^{-sk}(c+1)\log e\le\varepsilon/3$. For this fixed
+$k$, the main theorems count the models of $k$-CNFs in time $2^{o(n')}\poly(n',m')\le2^{sn'}\poly(n',m')$
+for $n'$ large; \cref{lem:width} gives $2^{2\varepsilon n/3}\poly(n)$.
+\end{proof}
+
+\Cref{cor:density} does not give CNF-SAT with $m=n^{O(1)}$ clauses of unbounded width in time
+$2^{(1-\delta)n}\poly(m)$: the term $2^{-sk}m$ then forces $k=\Omega(\log n)$, where neither main
+theorem is subexponential. That form of SETH is not known to follow, and some statements below
+rest on it.
+
+\subsection{The table}
+\Cref{tab:conj} lists the statements we found, with the wording checked against the primary
+sources (arXiv versions cited). ``Witness family'' means the circuits built in the proof.
+\emph{Refuted} means the statement itself is false under the refutations; \emph{premise refuted}
+means a theorem whose hypothesis is now false, while its conclusion is not contradicted by
+anything here; \emph{survives} means we know no consequence of the refutations that touches it.
+
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.35cm}>{\raggedright\arraybackslash}p{7.3cm}>{\raggedright\arraybackslash}p{1.45cm}>{\raggedright\arraybackslash}p{6.6cm}@{}}
+\caption{Fine-grained quantum-supremacy statements, assuming the refutations.}\label{tab:conj}\\
+\toprule
+& Statement (source) & Status & Reason\\
+\midrule
+\endfirsthead
+\toprule
+& Statement (source) & Status & Reason\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+1 & \cite{MT19a} Conj.~1: ETH as $2^{\Omega(m)}$ for $3$-CNF decision, $m$ clauses & refuted & \A: $\#3$-SAT in $2^{O(m/\sqrt{\log m})}$.\\
+2 & \cite{MT19a} Conj.~2 (``SETH''): deterministic CNF-SAT, $\le cn$ clauses, any width, needs $2^{(1-a)n}$ & refuted & \Cref{cor:density}.\\
+3 & \cite{MT19a} Conj.~3 (NSETH, polynomial-size circuits) & survives & General circuits.\\
+4 & \cite{MT19a} Conj.~4--6: nondeterministic $\gap\ne0$ for poly-size, log-depth, reversible circuits needs $2^{(1-a)n}$ & survive & $\poly(n)$-size instances; \cref{thm:main} gives nothing below $2^n$.\\
+5 & \cite{MT19a} Conj.~7: nondeterministic $\gap(f)\ne0$, $3$-CNF with $m$ clauses, needs $2^{\Omega(m)}$ & refuted & $\gap(f)=2^n-2\#f$ in deterministic $2^{O(m/\sqrt{\log m})}$.\\
+6 & \cite{MT19a} Thm.~6, \cite{HNS19} Thm.~1: ETH $\Rightarrow$ no $2^{o(t)}$ strong simulation of Clifford+T with $t$ $T$ gates (additive error $2^{-(3t+14)/7}$, resp.\ deciding $\amp0C0\ne0$) & premise refuted & Witness circuits have $O(t)$ gates and are solved exactly in $2^{O(t/\sqrt{\log t})}$; with $\poly(n)$ Cliffords the conclusion is open.\\
+7 & \cite{MT19a} Thms.~7, 8: Conj.~7 $\Rightarrow$ no $2^{o(t)}$ multiplicative-error sampling of Clifford+T, resp.\ $t$-qubit PBC & premise refuted & Witness circuits ($O(t)$ gates) sampled exactly in $2^{O(t/\sqrt{\log t})}$; conclusions open.\\
+8 & \cite{MT19a} Thm.~10: Conj.~2 $\Rightarrow$ exact probabilities with $h$ Hadamards not in $2^{(1-a)h}$ & premise refuted & Witness circuits have $\Theta(ch^2)$ gates; conclusion open.\\
+9 & \cite{MT19a} Thm.~12: ETH $\Rightarrow$ efficient stabilizer rank of $t$-Toffoli resources is $2^{\Omega(t)}$ & premise refuted & Conclusion open.\\
+10 & \cite{HNS18} Thm.~3: CNF-SAT needs $2^{n-o(n)}\poly(m)$ $\Rightarrow$ strong simulation of $\poly(n)$-size circuits to precision $2^{-n}/2$ needs $2^{n-o(n)}$ & survives & Premise is the CNF-SAT form with $\poly(m)$ clauses, not known to follow; unconditional monotone bound unaffected.\\
+11 & \cite{HNS19} Thm.~2: an $O(2^{2.2451\cdot10^{-8}N})$ simulator ($N$ $T$ gates) gives $3$-SAT in $O(1.3^n)$ & moot & The refutations give the consequent outright.\\
+12 & \cite{MT19b} Conj.~1 (``SETH'', $\le cn$ clauses, deterministic decision) & refuted & \Cref{cor:density}; Thm.~1 loses its premise.\\
+13 & \cite{MT19b} Conj.~2: nondeterministic $\gap(f)\ne0$, CNF with $\le cn$ clauses, needs $2^{(1-a)n}$ & refuted & \Cref{cor:density} (counting form). Thm.~2 loses its premise; its witness circuits have $\ge nm$ qubits.\\
+14 & \cite{MT19b} Conj.~3--4 (OV), 5--6 ($3$-SUM) & survive & OV is implied by SETH, not equivalent; $3$-SUM unrelated.\\
+15 & \cite{DHKL20} poly3-NSETH$(a)$ & survives & Worst case has $\Theta(n^3)$ monomials (\cref{sec:cubic}).\\
+16 & \cite{DHKL20} per-int-NSETH$(b)$ & survives & Dense permanents.\\
+17 & \cite{DHKL20} poly3-ave-SBSETH$(a')$ & survives & Average case, dense, additive error.\\
+18 & \cite{DHKL20} Thm.~2: ETH $\Rightarrow$ deterministic poly3-NONBALANCED needs $2^{an}$ & premise refuted & Reduction instances have $O(n)$ monomials; worst case open.\\
+19 & \cite{MT20} Conj.~1: random cubic, multiplicative error, $\mathrm{NTIME}[n^2]$ oracle, $2^{an}$ & survives & Dense, average case, approximate.\\
+20 & \cite{MT20} Conj.~2: random quadratic plus worst-case log-depth circuit & survives & General log-depth circuits.\\
+21 & \cite{MT20} Conj.~3: random quadratic plus worst-case $3$-CNF with $m$ clauses, $2^{am}$ & survives (not shown safe) & $\Theta(n^2+m)$ gates; nothing for $m=O(n)$.\\
+22 & \cite{AC17} QUATH (poly time, random circuits with $\ge n^2$ gates) and HOG & unaffected & Average case, approximate.\\
+23 & \cite{BPS19} basic QSETH: no quantum $O(2^{n(1-\delta)/2}m^{O(1)})$ CNF-SAT & survives & CNF-SAT form; the $k$-CNF variant of their footnote~8 is refuted.\\
+24 & $2^{\Omega(t)}$ $T$-count hardness with unboundedly many Cliffords; $\chi(\ket{T}^{\otimes t})=2^{\Omega(t)}$~\cite{BSS16} & open & ETH support gone; best known $2^{0.3963t}\poly$~\cite{QPG21}; compressed circuits have $\Theta(t^2)$ gates.\\
+\end{longtable}
+}
+
+\emph{Row 13} was left open in our working notes: there we checked only the decision form of the
+width--density duality. \Cref{lem:width} settles it.
+
+\subsection{Sampling versus exact amplitudes}
+By \cref{cor:marginals}, any hardness claim for sampling, with multiplicative or additive error,
+stated as $2^{\Omega(n)}$ for a family with $G=o(n\sqrt{\log n})$ gates is refuted, since exact
+samples are approximate ones. Nothing is said about families with $G\ge n\sqrt{\log n}$, which
+include every random-circuit sampling proposal at depth $d\gg\sqrt{\log n}$, nor about
+polynomial or unconditional separations for shallow circuits.
+
+The estimates of~\cite{DHKL20} ($208$ IQP qubits and $500$ gates, assuming poly3-NSETH$(1/2)$ and a
+cost linear in the number of gates) extrapolate from the dense worst case to a sparse family, which
+is asymptotically $2^{O(n/\sqrt{\log n})}$ under the refutations; at $n=208$ this has no force.
+
+% =====================================================================
+\section{Cubic phases}\label{sec:cubic}
+% =====================================================================
+
+Let $f=\sum_{t\in T}m_t$ over $\mathbb F_2$, with $m_t$ monomials of degree at most $3$ in $n$
+variables and $|T|=m$, and $\gap(f)=\sum_x(-1)^{f(x)}$. This is the object of poly3-NSETH
+in~\cite{DHKL20}, and $\amp{0}{H^{\otimes n}D_fH^{\otimes n}}{0}=\gap(f)/2^n$ for the diagonal
+circuit $D_f$ built from $Z$, $\mathrm{CZ}$ and $\mathrm{CCZ}$. Compiling $\mathrm{CCZ}$ into
+Clifford+T gives $G=\Theta(m)$, so \cref{thm:main} computes $\gap(f)$ in $2^{O(m/\sqrt{\log m})}$,
+which is $2^{o(n)}$ only for $m=o(n\sqrt{\log n})$. For CNFs, \A{} has a second bound that does
+not depend on $m$. Does one hold for cubic phases? As far as we can see, no.
+
+\subsection{Why the clause-count-free mechanism does not transfer}
+As we read \A[Appendix~D], the $m$-free bound writes $\Ind{\text{no clause is violated at }\xi}$
+by inclusion--exclusion over the set $V(\xi)$ of violated clauses, truncates it at a number of
+marks of order $n/\log\Delta$, and handles the assignments with more violated clauses separately,
+using that they contribute \emph{zero} to $\#\mathrm{SAT}$. For phases there is no such set:
+$(-1)^{f(x)}=\prod_t(1-2m_t(x))=\sum_{\Pi\subseteq V(x)}(-2)^{|\Pi|}=(-1)^{|V(x)|}$, where $V(x)$ is
+the set of monomials equal to $1$ at $x$, so every assignment contributes $\pm1$, and the
+assignments with many ``violated'' monomials carry a non-zero total in general. This is checked
+on random instances (check C4 in \cref{sec:verification}). What does transfer is a weaker,
+$2$-adic truncation.
+
+\begin{proposition}[$2$-adic truncation; proved]\label{prop:2adic}
+For $S\subseteq T$ let $V(S)$ be the set of variables occurring in the monomials of $S$.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item $\gap(f)=\sum_{S\subseteq T}(-2)^{|S|}\,2^{n-|V(S)|}$.
+\item Every term with $|S|\ge|V(S)|+2$, in particular every term with $|S|\ge n+2$, is divisible by
+$2^{n+2}$. Since $|\gap(f)|\le2^n$, $\gap(f)$ is the representative in $(-2^{n+1},2^{n+1}]$ of
+$\sum_{|S|\le n+1}(-2)^{|S|}2^{n-|V(S)|}$ modulo $2^{n+2}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) Expand $\prod_t(1-2m_t(x))$ and use $\sum_x\prod_{t\in S}m_t(x)=2^{n-|V(S)|}$. (b) The $2$-adic
+valuation of the term of $S$ is $|S|+n-|V(S)|$.
+\end{proof}
+
+The truncation at $n+1$ marks is sharp up to a constant factor: truncating at $\lfloor n/2\rfloor$
+marks gives wrong answers on some instances (check C3). So the budget is $\Theta(n)$ marks, where
+\A{} pays about $n/\log\Delta$.
+
+\emph{Sketch (not proved here).} Feeding (b) into the incidence encoding that \Oa{} uses for sparse
+$\mathbb F_2$-polynomial systems (each monomial a test vertex of weight $1-2\prod_{v\in t}z_{t,v}$,
+precision $2^{n+2}$, $\ell=1$, incidence degree bound $3(n+1)$, and branching on the variables in
+more than $(3m/n)\sqrt{\log n}$ monomials) should give $O(n\log(em/n)+\sqrt n\log n)$ wires, hence,
+under $(\mathrm{H}_{\mathrm{O}})$, $\gap(f)$ in time $2^{O(n\log(em/n)/\sqrt{\log n})}\poly(m)$:
+modulo $2^{n+2}$ only sets of at most $n+1$ marked monomials matter, at about $\log(em/n)$ bits
+each. We have not checked this application line by line against the
+degree and entry hypotheses of \Oa{} (the maximum degree should be $n^{3/4}2^{o(\sqrt{\log n})}\le s^{9/10}$
+and the entries are products of $1$ and $-2$, so we expect no obstacle). If correct, it is $2^{o(n)}$ if and
+only if $m\le n2^{o(\sqrt{\log n})}$, more than \cref{thm:main} gives, and it is worse than brute
+force for dense $f$ ($m=\Theta(n^3)$ gives $2^{O(n\sqrt{\log n})}$). Making cubic phases
+$m$-independent would decide dense poly3-NONBALANCED in $2^{o(n)}$ and refute poly3-NSETH$(a)$
+for every $a$; we record it as a target, not a result.
+
+% =====================================================================
+\section{Limitations}\label{sec:limitations}
+% =====================================================================
+
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item \emph{Everything algorithmic is conditional} on $(\mathrm{H}_{\mathrm{A}})$,
+$(\mathrm{H}_{\mathrm{O}})$, or (for \cref{cor:density}) the main theorem of either manuscript.
+Expert review of the manuscripts is pending; if the hypotheses fail, the results lose their proofs,
+and we offer no independent route. The imported statements are used in sharp forms that are not
+machine-checked in the generality needed here; our proofs are on paper, written with AI
+assistance, and not yet checked by a human.
+\item \emph{Exact, gate-count-limited, galactic.} The results concern exact simulation of
+circuits with $G=o(n\sqrt{\log n})$ gates; approximate and average-case hardness (random-circuit
+sampling, cross-entropy benchmarking, QUATH) and polynomial-depth families are untouched, and the
+crossover with the state vector is astronomically large (\cref{sec:intro}).
+\item \emph{Denominators in the route through \Oa.} Its $2$-adic precision cap forces $k(C)=O(s)$.
+\item \emph{Sketches.} The bound after \cref{prop:2adic} is a sketch; the circuit of
+\cref{prop:tight} is not scripted; the reading of \A[Appendix~D] is ours.
+\item \emph{Literature.} Every row of \cref{tab:conj} was checked against the arXiv text of its
+source; publication venues are given only where we could confirm them. We have not searched
+systematically for prior statements of \cref{thm:main}; given how direct it is, it may well have
+been noticed independently.
+\item \emph{Scale of the numerical checks.} They cover $n\le6$ and $G\le20$ and test the reductions
+(encodings, decodings, parameters, ring emulation), not the engines, which are replaced by brute
+force and variable elimination.
+\end{enumerate}
+
+% =====================================================================
+\section{Verification}\label{sec:verification}
+% =====================================================================
+
+\subsection{Numerical checks}
+The scripts (\texttt{research/scripts/qc\_*.py} in the project repository) use exact integer and
+$\Zw$ arithmetic only and print PASS or FAIL; \texttt{qc\_lib.py} implements the objects of
+\cref{sec:proof,sec:openai,sec:corollaries}.
+
+\texttt{qc\_check.py [seed] [count]} draws random circuits ($n\in[2,6]$, $G\in[1,20]$,
+$G_1\in[0,25]$, random gates, $x$, $y$, and balanced or contiguous partitions into $g\le4$ groups)
+and checks: (Q1) \cref{lem:paths} against the state vector; (Q2) the integer network by brute
+force over the crossing bits, by the literal sum of \cref{def:network} on small cases and by
+variable elimination, decoded by \cref{lem:kron}; (Q3) decoding of the unreduced Kronecker
+polynomial; (Q4) condition~(i), $U\le4G$ and $|W_a|<2^B$; (Q5) the contraction in
+$\cB_{P_0,\ell}$ with $P_0=\lceil k/2\rceil+3$, $\ell=3G+1$, reduced modulo $V^4+1$ and lifted;
+(Q6) \cref{lem:galois}, with $|\sigma_t(A)|^2\le2^k$ checked exactly in $\Z[\sqrt2]$; (Q7) marginals
+via the doubled network, in $\Z[\sqrt2]$ and equal to $1$ for $S=\emptyset$. It also checks $20$
+IQP instances ($\gap(f)/2^n$ with $\mathrm{CCZ}$ compiled into Clifford+T) and four ablations that
+must be caught: $b$ one bit too small, $\ell=4$, $P_0$ one bit short, and no conjugation in the
+doubled network. Seed~$1$ ($150$ circuits): $529$ networks by brute force, $418$ also by the literal
+sum, $65$ truncated-ring brute forces, $91$ marginals, at most $23$ crossing segments, $48$
+partitions with a node of more than $14$ boundary bits skipped. Seed~$2$: $544$, $432$, $62$, $86$,
+$24$, $39$. Both PASS, with all ablations caught; the agreement is equality of integers.
+
+\texttt{qc\_cubic\_gap.py} checks, for random $f$ with $n\le7$, $m\le14$: (C1)--(C2)
+\cref{prop:2adic}; (C3) the valuation bound, and failure of truncation at $\lfloor n/2\rfloor$ marks
+on some instance; (C4) a non-zero total of the assignments with more than $\lfloor n/3\rfloor$
+``violated'' monomials on some instance. Seeds $1$ ($120$ instances) and $3$ ($400$) PASS.
+
+\subsection{Formalisation}
+A Lean formalisation of \cref{thm:main} on top of Anthropic's development is in progress. Nothing
+in this note is machine-checked at present. The Lean developments of the two labs cover their
+top-level theorems; \cref{cor:density} uses only those, but its proof here is on paper.
+
+\section*{Acknowledgements}
+This work was done with AI assistance (Claude Code, Anthropic): the observation, the proofs, the
+literature checks and the numerical verification scripts were produced in sessions with Claude
+Code. Everything here has been checked numerically or against the primary sources as described,
+but awaits human expert review. Responsibility for any errors rests with the author.
+
+\bibliographystyle{amsplain}
+\bibliography{refs}
+
+\end{document}

@@ -1,3 +1,5 @@
+> **Corrections (29 Oct 2026).** The refereed write-up is `quantum-note/main.tex` (PDF in `docs/quantum-note.pdf`). Where this note and the write-up differ, the write-up is right; in particular: HNS 1804.10368 *survives* (its SETH is the poly(m)-clause CNF form); the T-count result is HNS 1902.04764; basic QSETH survives (only its k-CNF footnote variant falls); the Aaronson–Chen comparison holds only for d/log d = O(√log n); MT19b Conj. 2 (gap version) is now *refuted* (Lemma 6.1 of the write-up); MT19a Thm 6 carries a precision condition; the crossover is log₂ n ≳ 900d² … 5.2·10⁴d². Everything here is informal and **not claimed**; Lean formalisation of Theorem Q1 is in progress.
+
 # Exact quantum circuit amplitudes in 2^{O(G/√log G)}: a corollary of the 2026 ETH refutations
 
 29 Oct 2026. Tags: **[Paper-A]** Anthropic's manuscript, **[Paper-O]** OpenAI's preprint (LaTeX in the

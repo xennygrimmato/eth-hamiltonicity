@@ -1,0 +1,4 @@
+P1 identity verified on 400 random instances; S(V) != 0 for nonempty V in 128 of them
+P2 witness: V = {E}, Lambda_1 = {E}: S(V) = 1 - 0 = 1 != 0 = [V empty]
+P3 correct expansion (65) verified
+PASS

@@ -1,0 +1,11 @@
+N1 done
+N2 done (truncation at M'-1 fails in 61/300 random cases, as it may)
+N3  p : min over i of v_p(c_i) - (ceil(i/(p-1)) - 1) [should be 0]; bits per mark log2(p)/(p-1)
+    p=2: min slack 0, attained 120 times for i<121; bits/mark 1.000; marks for n=1000 bits ~ 1001
+    p=3: min slack 0, attained 100 times for i<121; bits/mark 0.792; marks for n=1000 bits ~ 1264
+    p=5: min slack 0, attained 90 times for i<121; bits/mark 0.580; marks for n=1000 bits ~ 1725
+    p=7: min slack 0, attained 96 times for i<121; bits/mark 0.468; marks for n=1000 bits ~ 2140
+N4 done: best uniform 2-adic slack over all 2^13 check functions = 0, attained by parity only (1)
+    [q = 0 mod 4]: v_2(c_i), i=1..24: [0, 0, 0, 1, 1, 4, 2, 3, 3, 8, 4, 5, 5, 12, 6, 7, 7, 16, 8, 9, 9, 20, 10, 11]
+    [q = 0 mod 8]: v_2(c_i), i=1..24: [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 4, 3, 2, 2, 3, 3, 3, 3, 8, 5, 4, 4, 5]
+PASS

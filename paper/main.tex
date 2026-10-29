@@ -202,12 +202,19 @@ $2n\log(2e\bar d)$ instead of $2\log_25\cdot m\approx2.32\,\bar dn$. It does not
 graphs: for $\bar d=\Theta(n)$ the bound is $2^{O(n\sqrt{\log n})}$, above $2^n$
 (\cref{sec:limitations}).
 
-\begin{corollary}[Decision, search and paths; written proof, Lean formalisation in progress]\label{cor:decision-search}
-Assume $(\mathrm{H}_{\mathrm{A}})$. Within the time bounds of
-\cref{thm:main-delta,thm:main-rate}, multiplied by $m+1$, one can deterministically decide
-whether $G$ is Hamiltonian, output a Hamiltonian cycle if one exists, and count, decide and find
-Hamiltonian paths (for paths, apply the bounds with $m+n$ edges and $n+1$ vertices).
+\begin{corollary}[Decision, search and paths; machine-checked]\label{cor:decision-search}
+Assume $(\mathrm{H}_{\mathrm{A}})$. Within time bounds of the same form as
+\cref{thm:main-delta,thm:main-rate} (with a larger constant $C$), one can deterministically decide
+whether $G$ is Hamiltonian, output a Hamiltonian cycle if one exists, and, for $n\ge2$, count,
+decide and find Hamiltonian paths. The search machine makes $n^2+1$ calls to the counting
+machine, deleting candidate edges in a fixed order; Hamiltonian paths of $G$ correspond
+bijectively to Hamiltonian cycles of $G$ plus an apex vertex.
 \end{corollary}
+In Lean these are \lean{decision\_TM}, \lean{search\_TM} (fixed density) and
+\lean{decision\_TM\_rate}, \lean{search\_TM\_rate} (rate form), and for paths
+\lean{hamPaths\_count\_TM}, \lean{hamPaths\_decision\_TM}, \lean{hamPaths\_search\_TM} and their
+\lean{\_rate} versions, with the bijection \lean{card\_hamPaths\_eq}; all use the standard axioms
+only.
 
 The weighted version is the sparse travelling-salesman problem; it is machine-checked as well.
 
@@ -1441,14 +1448,17 @@ $\Delta$ is unbounded. We do not use this.
 $\HC(H-e)>0$, set $H:=H-e$. The invariant is $\HC(H)>0$. Let $C$ be a Hamiltonian cycle of the
 final $H$. Every intermediate $H$ contains the final one, hence $C$. Suppose some edge $f$ of the
 final $H$ were not in $C$. When $f$ was examined, $H-f$ contained $C$, so $f$ would have been
-deleted. Hence the final $H$ equals $C$. There are $m+1$ calls, each on a graph with $n$ vertices
-and at most $m$ edges.
+deleted. Hence the final $H$ equals $C$. The machine runs over all $n^2$ vertex pairs (deleting a
+non-edge changes nothing), so there are $n^2+1$ calls, each on a graph with $n$ vertices and at most
+$m$ edges; the polynomial factor is absorbed into the constant.
 
 \emph{Hamiltonian paths.} Let $G^+$ be $G$ plus a new vertex $w$ adjacent to all of $V$. For
 $n\ge2$, the Hamiltonian paths of $G$ correspond bijectively to the Hamiltonian cycles of $G^+$,
 so $\HP(G)=\HC(G^+)$. The graph $G^+$ has $n+1$ vertices and $m+n\le(D+1)(n+1)$ edges; the apex
-$w$ has degree $n$ and is handled by \cref{lem:degree-reduction}. Search works as above. For
-$s$--$t$ paths, join one new vertex to $s$ and $t$ only.
+$w$ has degree $n$, which \cref{thm:main-rate} handles directly; for the fixed-density form the
+Lean proof applies \cref{thm:main-delta} to $G^+$ with $D+1$ in place of $D$. Search works as
+above. (For $s$--$t$ paths one would join a new vertex to $s$ and $t$ only; that variant is not
+machine-checked and not claimed.)
 \end{proof}
 
 % =====================================================================

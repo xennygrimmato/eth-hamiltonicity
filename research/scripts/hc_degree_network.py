@@ -20,16 +20,35 @@ crossing edges in X, and every W_a vanishes).
 
 Checks (exact integers; PASS/FAIL):
   D1  rank/unrank of k-subsets is a bijection onto [0, C(e,k))
-  D2  settings: fixed length P_a, decode(encode) = id, invalid ranks rejected, P_a <= P, (i) sum_b c_ab <= P
-  D3  Psi_ab = sum_theta f_ab f_ba (exhaustive over theta when c_ab <= 10), c symmetric, |W_a| < 2^B,
-      |I_a| <= Delta^{2 nu_a} 20^{nu_a} and <= 2^{|E_int(a)|} 20^{nu_a}
+  D2  Lemma 2.3: the enumerated settings are distinct strings of length P_a and there are exactly
+      prod_b C(e_ab,mu_ab) 4^mu_ab 2^|Q_a| of them; decode(encode) = id; on random strings,
+      decode succeeds iff every rank field is valid and then encode(decode(z)) = z (surjectivity);
+      P_a <= P; (i) sum_b c_ab <= P
+  D3  Psi_ab (semantic: labels agree, copies correct) = sum_theta f_ab f_ba (exhaustive over theta
+      when c_ab <= 10); |W_a| < 2^B with B = ceil(min(2 nu lambda, 2.7 mu)) + 1 (tighter than the
+      write-up's ceil(Lambda) + 1); |I_a| <= Delta^{2 nu_a} 20^{nu_a} and <= 2^{|E_int(a)|} 20^{nu_a}
   D4  per node: sum_b ceil(log C(e_ab,mu_ab)) <= ceil(log C(|delta(a)|, M_a)) + #{b: C >= 2};
       sum_b c'_ab <= 2 nu_a log2(2e Delta) + g - 1 and <= 3.45 mu_a + g - 1
   D5  U(mu) = sum_{a != b} c_ab <= 2 ceil(log C(m_x, M)) + 2 C(g,2) + 4M + 2 C(g,3)
              <= 2 n log2(2e dbar) + g^3 <= 2 n log2(2e Delta) + g^3     (dbar = 2m/n)
   D6  #admissible profiles <= (2 nu + 1)^{C(g,2)}
-  D7  sum over admissible profiles of the network value (brute force over prod_a S_a, W/Psi as black
-      boxes) = n #HC(G); every inadmissible profile has value 0
+  D7  sum over admissible profiles of the network value = n #HC(G); every inadmissible profile has
+      value 0.  The evaluator is brute force over prod_a S_a and uses only W_a and the shared bit
+      strings pi_ab(z_a), pi_ba(z_b) (Psi = [pi_ab = pi_ba], i.e. what the engine sees through f),
+      so D7 exercises the rank code end to end.
+  D8  Prop. 3.2(iii): I_a recomputed by the degree-pruned enumeration (per vertex a subset of size
+      2 - deg_l(v) of its internal edges, consistency check) and monomial-by-monomial expansion
+      (one signed monomial per factor, sign by inversion count) equals I_a of proof_lib; the number
+      of x-tuples tried is <= prod_v (1 + d_v + C(d_v,2)) <= Delta^{2 nu_a} and the number of
+      monomial products is <= 5^{|x|} 2^{M_a} <= 20^{nu_a}  (on a sample of local labellings)
+  REG fixed regression instances (g = 4, n = 7..9, from the referee's interleaving generator) on
+      which the network WITHOUT the interleaving sign chi_a is wrong; all checks D2-D8 run on them.
+  MUT built-in mutation self-test: the rank-encoded network with chi_a removed ("nointerleave",
+      i.e. no interleaving sign and no use of the parity copies) is evaluated on the REG instances
+      and must give a value != n #HC on at least one (in fact on all) of them; otherwise FAIL.
+      MUT2: the variant whose shared block carries only the rank field (labels not shared) must
+      also fail on at least one of them (D7 tests the rank code through the shared strings).
+Not checked (true by construction, so a check would be vacuous): Psi_ab = Psi_ba and c_ab = c_ba.
 The U table compares max_mu U(mu) with the old U = 2 sum w_ab + 2 C(g,3).
 """
 import itertools
@@ -41,7 +60,7 @@ from math import comb
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from proof_lib import (Instance, HCNetwork, LABELS, hc_count, random_graph, planted_graph,
-                       to_bits, from_bits)
+                       to_bits, from_bits, mono_mul, pieces, eval_network_brute)
 
 seed = int(sys.argv[1]) if len(sys.argv) > 1 else 2026
 NINST = int(sys.argv[2]) if len(sys.argv) > 2 else 24
@@ -97,10 +116,10 @@ def d1():
 class DegNetwork(HCNetwork):
     """The network N_mu of hc-degree-theorem.md Definition 2.1 (settings as fixed-length bit tuples)."""
 
-    def __init__(self, inst, mu):
+    def __init__(self, inst, mu, sign_mode="full"):
         self.inst = inst
         self.g = g = inst.g
-        self.sign_mode = "full"
+        self.sign_mode = sign_mode          # "full", or the ablation "nointerleave" (chi_a dropped)
         self.e, self.mu, self.cp, self.w1 = {}, {}, {}, {}
         for a in range(g):
             for b in range(g):
@@ -123,6 +142,30 @@ class DegNetwork(HCNetwork):
         self.Plen = {a: sum(w for (p, w) in self.layout[a].values()) for a in range(g)}
         self.c = {(a, b): self.cp[(a, b)] + (g - 1 - max(a, b)) for (a, b) in self.cp}
         self._Wcache = {}
+        self._pcache = {}
+
+    def sproj(self, a, b, z):
+        """pi_ab(z_a), cached: the c_ab bits node a puts on the pair {a,b}."""
+        key = (a, b, z)
+        if key not in self._pcache:
+            self._pcache[key] = self.proj(a, b, z)
+        return self._pcache[key]
+
+    def n_settings(self, a):
+        """|S_a| according to Lemma 2.3."""
+        t = 2 ** len(self.Q[a])
+        for b in range(self.g):
+            if b != a:
+                t *= comb(self.e[(a, b)], self.mu[(a, b)]) * 4 ** self.mu[(a, b)]
+        return t
+
+    def rank_fields_valid(self, a, z):
+        for b in range(self.g):
+            if b != a:
+                p, w = self.layout[a][b]
+                if from_bits(z[p:p + self.w1[(a, b)]]) >= comb(self.e[(a, b)], self.mu[(a, b)]):
+                    return False
+        return True
 
     def row(self, a):
         return tuple(self.mu[(a, b)] for b in range(self.g) if b != a)
@@ -207,8 +250,10 @@ def profiles(inst):
 
 
 def eval_brute(net, tables):
-    """Z = sum_{z in prod S_a} prod_a W_a(z_a) prod_{a<b} Psi_ab, node by node, W and Psi as black
-    boxes; settings with W_a = 0 contribute nothing and are dropped first."""
+    """Z = sum_{z in prod S_a} prod_a W_a(z_a) prod_{a<b} Psi_ab, node by node, with
+    Psi_ab := [pi_ab(z_a) = pi_ba(z_b)] computed from the shared bit strings only (the factorised
+    form the engine sees through f_ab, f_ba); settings with W_a = 0 contribute nothing and are
+    dropped first."""
     g = net.g
     S = [[(z, w) for z, w in tables[a].items() if w != 0] for a in range(g)]
     total = 0
@@ -221,9 +266,9 @@ def eval_brute(net, tables):
         for z, w in S[a]:
             p = prod * w
             for b in range(a):
-                if not p:
+                if net.sproj(b, a, chosen[b]) != net.sproj(a, b, z):
+                    p = 0
                     break
-                p *= net.Psi(b, a, chosen[b], z)
             if p:
                 chosen.append(z)
                 rec(a + 1, chosen, p)
@@ -240,8 +285,88 @@ def degrees(n, E):
     return deg
 
 
-def run_instance(name, n, E, blob, r, g):
-    inst = Instance(n, E, blob, r, g=g, rng=rng, gen_rng=rng)
+def I_degree_pruned(inst, a, lab_at):
+    """Prop. 3.2(iii): I_a(l) by the degree-pruned enumeration of x and monomial-by-monomial
+    expansion.  Returns (value, #x-tuples tried, #complete monomial products, max |x|)."""
+    Gn = inst.Gn
+    dl = {v: 0 for v in inst.V[a]}
+    for k in inst.delta[a]:
+        if lab_at[k] != "N":
+            s_, t_ = inst.cross[k]
+            dl[s_ if inst.ak[k] == a else t_] += 1
+    if any(d > 2 for d in dl.values()):
+        return 0, 0, 0, 0
+    ints = inst.internal[a]
+    at = {v: [i for i, (u, w) in enumerate(ints) if v in (u, w)] for v in inst.V[a]}
+    Vs = list(inst.V[a])
+    per_v = [list(itertools.combinations(at[v], 2 - dl[v])) for v in Vs]
+    # crossing factors (the pieces, in crossing order) as lists of signed monomials
+    gam = []
+    for k in inst.delta[a]:
+        s_, t_ = inst.cross[k]
+        al, be = pieces(Gn, s_, t_, lab_at[k])
+        piece = al if inst.ak[k] == a else be
+        gam.append(list(piece.items()))
+    Om = Gn.omega(inst.V[a])
+    (om_mask, om_sign), = Om.items()
+    total, n_x, n_prod, max_x = 0, 0, 0, 0
+    for choice in itertools.product(*per_v):
+        n_x += 1
+        cnt = {}
+        for sub in choice:
+            for i in sub:
+                cnt[i] = cnt.get(i, 0) + 1
+        if any(c != 2 for c in cnt.values()):        # an edge chosen at one end only
+            continue
+        x = sorted(cnt)
+        max_x = max(max_x, len(x))
+        factors = [list(Gn.one_plus_q(*ints[i]).items()) for i in x] + gam
+        # choose one monomial per factor; multiply left to right (sign = inversion count)
+        def rec(j, mask, coef):
+            nonlocal total, n_prod
+            if j == len(factors):
+                n_prod += 1
+                if mask == om_mask:
+                    total += coef * om_sign
+                return
+            for m2, c2 in factors[j]:
+                mm, sg = mono_mul(mask, m2)
+                if mm is None:             # a zero product is not extended (exact)
+                    continue
+                rec(j + 1, mm, coef * sg * c2)
+        rec(0, 0, 1)
+    return total, n_x, n_prod, max_x
+
+
+class DegNetworkRankOnly(DegNetwork):
+    """mutant for MUT2: the shared block keeps the rank field and zeroes the 2-bit labels."""
+
+    def proj(self, a, b, z):
+        out = list(super().proj(a, b, z))
+        w1, w = self.w1[(a, b)], self.cp[(a, b)]
+        return tuple(out[:w1] + [0] * (w - w1) + out[w:])
+
+
+def network_sum(inst, sign_mode, cls=DegNetwork):
+    """sum over admissible profiles of the value of N_mu (W and the shared strings only)."""
+    tables = {}
+    tot = 0
+    for mu in profiles(inst):
+        net = cls(inst, mu, sign_mode)
+        if not net.admissible():
+            continue
+        tabs = []
+        for a in range(inst.g):
+            key = (a, net.row(a))
+            if key not in tables:
+                tables[key] = {z: w for z in net.settings(a) for w in [net.W(a, z)] if w}
+            tabs.append(tables[key])
+        tot += eval_brute(net, tabs)
+    return tot
+
+
+def run_instance(name, n, E, blob, r, g, inst_rng=None, gen_rng=None):
+    inst = Instance(n, E, blob, r, g=g, rng=inst_rng or rng, gen_rng=gen_rng or rng)
     deg = degrees(n, E)
     m = len(E)
     Delta = max(deg)
@@ -260,22 +385,20 @@ def run_instance(name, n, E, blob, r, g):
     total_adm = total_all = 0
     n_adm = n_all = 0
     U_max = 0
+    d8_done = {a: set() for a in range(g)}
     for mu in profiles(inst):
         net = DegNetwork(inst, mu)
         n_all += 1
         adm = net.admissible()
-        # tables, cached by (node, profile row)
+        # tables, cached by (node, profile row); Lemma 2.3 count and injectivity
         tabs = []
         for a in range(g):
             key = (a, net.row(a))
             if key not in tables:
-                tab = {}
-                for z in net.settings(a):
-                    check("D2", z is not None and len(z) == net.Plen[a], (name, a))
-                    w = net.W(a, z)
-                    if w:
-                        tab[z] = w
-                tables[key] = tab
+                zs = list(net.settings(a))
+                check("D2", all(len(z) == net.Plen[a] for z in zs) and len(set(zs)) == len(zs)
+                      == net.n_settings(a), (name, a, "count/injectivity"))
+                tables[key] = {z: w for z in zs for w in [net.W(a, z)] if w}
             tabs.append(tables[key])
         Z = eval_brute(net, tabs)
         total_all += Z
@@ -301,7 +424,7 @@ def run_instance(name, n, E, blob, r, g):
             cpa = sum(net.cp[(a, b)] for b in range(g) if b != a)
             check("D4", cpa <= 2 * len(inst.V[a]) * lam + g - 1 + 1e-9, (name, a, cpa))
             check("D4", cpa <= 3.45 * mu_a[a] + g - 1 + 1e-9, (name, a, cpa))
-            # settings: roundtrip, invalid ranks rejected, |W| < 2^B, |I| bounds
+            # settings: roundtrip and invalid ranks rejected (on encodings) ...
             zs = list(net.settings(a))
             sample = zs if len(zs) <= 300 else rng.sample(zs, 300)
             for z in sample:
@@ -315,22 +438,54 @@ def run_instance(name, n, E, blob, r, g):
                         p, w = net.layout[a][b]
                         bad = list(z); bad[p:p + w1] = to_bits(comb(e_, mu_), w1)
                         check("D2", net.decode(a, tuple(bad)) is None, (name, a, b, "invalid rank"))
+            # ... and surjectivity on random strings (valid rank fields forced with prob. 0.8)
+            for _ in range(40):
+                z = [rng.randrange(2) for _ in range(net.Plen[a])]
+                for b in range(g):
+                    if b != a and rng.random() < 0.8:
+                        p, w = net.layout[a][b]
+                        C = comb(net.e[(a, b)], net.mu[(a, b)])
+                        z[p:p + net.w1[(a, b)]] = to_bits(rng.randrange(C), net.w1[(a, b)])
+                z = tuple(z)
+                dec = net.decode(a, z)
+                if net.rank_fields_valid(a, z):
+                    ok = dec is not None and net.encode(a, *dec) == z
+                else:
+                    ok = dec is None
+                check("D2", ok, (name, a, "surjectivity"))
             for z, w in tabs[a].items():
                 check("D3", abs(w) < 2 ** Bparam, (name, a, w, Bparam))
                 nua = len(inst.V[a])
                 I = inst.I(a, net.decode(a, z)[0])
                 check("D3", abs(I) <= Delta ** (2 * nua) * 20 ** nua, (name, a, I))
                 check("D3", abs(I) <= 2 ** len(inst.internal[a]) * 20 ** nua, (name, a, I))
-        # D3: Psi = sum_theta f f'  and symmetry
+            # D8: degree-pruned enumeration of Prop. 3.2(iii), on <= 6 local labellings per profile
+            cand = [net.decode(a, z)[0] for z in list(tabs[a])[:4]] + \
+                   [net.decode(a, z)[0] for z in rng.sample(zs, min(2, len(zs)))]
+            nua = len(inst.V[a])
+            for lab_at in cand:
+                keyl = tuple(sorted((k, str(v)) for k, v in lab_at.items()))
+                if keyl in d8_done[a]:
+                    continue
+                d8_done[a].add(keyl)
+                val, n_x, n_prod, max_x = I_degree_pruned(inst, a, lab_at)
+                check("D8", val == inst.I(a, lab_at), (name, a, "pruned I_a value", val))
+                bound_x = 1
+                for v in inst.V[a]:
+                    bound_x *= 1 + deg[v] + comb(deg[v], 2)
+                check("D8", n_x <= bound_x <= Delta ** (2 * nua), (name, a, n_x, bound_x))
+                Ma_ = sum(1 for k in inst.delta[a] if lab_at[k] != "N")
+                check("D8", n_prod <= max(1, n_x) * 5 ** max_x * 2 ** Ma_, (name, a, n_prod))
+                check("D8", 5 ** max_x * 2 ** Ma_ <= 20 ** nua or Ma_ > 2 * nua,
+                      (name, a, max_x, Ma_))
+        # D3: Psi (semantic) = sum_theta f f'
         for a in range(g):
             for b in range(a + 1, g):
-                check("D3", net.c[(a, b)] == net.c[(b, a)], (name, a, b))
                 za_s = list(tabs[a]) or list(itertools.islice(net.settings(a), 4))
                 zb_s = list(tabs[b]) or list(itertools.islice(net.settings(b), 4))
                 pairs = [(x, y) for x in za_s[:6] for y in zb_s[:6]]
                 for za, zb in pairs:
                     psi = net.Psi(a, b, za, zb)
-                    check("D3", psi == net.Psi(b, a, zb, za), (name, a, b, "symmetry"))
                     cab = net.c[(a, b)]
                     if cab <= 10:
                         thetas = itertools.product((0, 1), repeat=cab)
@@ -361,7 +516,56 @@ def run_instance(name, n, E, blob, r, g):
     print(f"{name:<10} n={n} m={m:2d} Δ={Delta} d̄={dbar:4.2f} g={g} ν={nu} m_×={mx:2d} #HC={hc:3d} "
           f"profiles={n_all:4d} adm={n_adm:4d} | U_new={U_max:3d} U_old={U_old:3d} "
           f"bound_exact={bound_exact:3d} 2n·log(2eΔ)+g³={bound_D:6.1f} P={Pparam} B={Bparam}"
-          f" {'ok' if total_adm == n * hc else 'MISMATCH'}")
+          f" {'ok' if total_adm == n * hc else 'MISMATCH'}", flush=True)
+    return inst
+
+
+# ------------------------------------------------------------------ regression set (interleaving)
+# Found with the generator of the referee's inter.py (random seed 5; g = 4, n = 7..9, blobs of
+# equal size, a random Hamiltonian cycle plus crossing edges with probability 0.2, <= 9 crossing
+# edges, <= 6 crossing edges per blob).  With crossing order Random(1) and generator order
+# Random(2), the [HC] network WITHOUT the interleaving sign is wrong on each of them; values of
+# that ablated network in the last field.
+REGRESSION = [
+    dict(n=9, E=[(0, 2), (0, 3), (0, 8), (1, 3), (1, 7), (2, 4), (2, 6), (4, 6), (5, 7), (5, 8), (6, 8)],
+         blob=[1, 2, 1, 2, 3, 0, 0, 0, 3], r=6, hc=1, old_nointerleave=21),
+    dict(n=7, E=[(0, 1), (0, 3), (0, 4), (0, 6), (1, 2), (1, 5), (2, 4), (3, 5), (3, 6), (5, 6)],
+         blob=[1, 3, 2, 1, 0, 2, 0], r=6, hc=2, old_nointerleave=26),
+    dict(n=7, E=[(0, 1), (0, 2), (0, 4), (1, 3), (1, 5), (2, 5), (2, 6), (3, 5), (4, 6)],
+         blob=[0, 2, 1, 1, 2, 0, 3], r=1, hc=1, old_nointerleave=19),
+    dict(n=8, E=[(0, 1), (0, 2), (0, 5), (1, 7), (2, 3), (2, 6), (2, 7), (3, 6), (4, 5), (4, 6), (4, 7)],
+         blob=[0, 1, 3, 1, 2, 0, 2, 3], r=2, hc=1, old_nointerleave=20),
+]
+
+
+def run_regression():
+    """REG: full checks on the fixed instances; MUT: the no-interleaving-sign network must fail."""
+    print("\nregression set (interleaving-sensitive instances, fixed crossing/generator order):")
+    n_wrong = n_wrong2 = 0
+    for i, R in enumerate(REGRESSION):
+        g = 4
+        check("REG", hc_count(R["n"], R["E"]) == R["hc"], (i, "hc"))
+        inst = run_instance(f"reg{i}", R["n"], R["E"], R["blob"], R["r"], g,
+                            inst_rng=random.Random(1), gen_rng=random.Random(2))
+        # the instance really is interleaving-sensitive for the old [HC] network
+        v_old = eval_network_brute(HCNetwork(inst, "nointerleave"))
+        check("REG", v_old == R["old_nointerleave"] and v_old != R["n"] * R["hc"], (i, "old ablation", v_old))
+        # MUT: the rank-encoded network with chi_a dropped
+        v_new = network_sum(inst, "nointerleave")
+        wrong = v_new != R["n"] * R["hc"]
+        n_wrong += wrong
+        v_rank = network_sum(inst, "full", DegNetworkRankOnly)
+        n_wrong2 += v_rank != R["n"] * R["hc"]
+        print(f"  MUT reg{i}: no-interleaving-sign network value {v_new} vs n·#HC = {R['n'] * R['hc']}"
+              f" -> {'fails (as it must)' if wrong else 'agrees'};  MUT2 (labels not shared): {v_rank}",
+              flush=True)
+    check("MUT", n_wrong >= 1, ("the no-interleaving-sign variant passes on every regression instance",))
+    print(f"  mutation self-test: the no-interleaving-sign variant fails on {n_wrong}/{len(REGRESSION)}"
+          f" regression instances -> {'OK, D7 has teeth' if n_wrong else 'FAIL'}")
+    check("MUT", n_wrong2 >= 1, ("the rank-only (labels not shared) variant passes everywhere",))
+    print(f"  mutation self-test 2: sharing only the rank field (not the labels) fails on "
+          f"{n_wrong2}/{len(REGRESSION)} -> {'OK' if n_wrong2 else 'FAIL'}")
+    return n_wrong
 
 
 # ------------------------------------------------------------------ instances
@@ -423,6 +627,7 @@ def main():
           f"U_old = 2 sum w_ab + 2C(g,3) (exact-hc-theorem.md §5)")
     for i in range(NINST):
         run_instance(*make_instance(i))
+    run_regression()
     # the asymptotic comparison, for the record
     print("\nasymptotic U bounds (bits): new 2n·log2(2eΔ)   vs   old 2·log2(5)·m = log2(5)·n·Δ (Δ-regular)")
     for n, D in [(10 ** 3, 3), (10 ** 3, 10), (10 ** 3, 100), (10 ** 6, 10), (10 ** 6, 1000)]:

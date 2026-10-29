@@ -83,7 +83,9 @@ paper derives a corollary of the Anthropic manuscript: assuming three of its int
 network-to-clique reduction, an algorithm for cliques of all levels, and the existence of its
 ``pieces''), the number of Hamiltonian cycles of a graph with $n$ vertices and at most $Dn$
 edges can be computed exactly and deterministically in time $O(2^{\delta n})$ for every
-$\delta>0$, and in time $2^{O(\max(m,n)/\sqrt{\log n})}$ for a graph with $m$ edges.
+$\delta>0$, and in time $2^{O(\max(m,n)/\sqrt{\log n})}$ for a graph with $m$ edges. A
+rank-encoded variant of the construction gives $2^{O(n\log\bar d/\sqrt{\log n})}$ for average
+degree $\bar d$; this bound has a written proof only and is not machine-checked.
 Deterministic decision, search and Hamiltonian-path counting follow. The result is not a
 standalone breakthrough; it stands or falls with the claimed refutation. The ingredients are
 known: the folklore matrix-tree identity on $2$-factors, the fermionic (Berezin) matrix-tree
@@ -91,8 +93,8 @@ theorem of Caracciolo, Jacobsen, Saleur, Sokal and Sportiello, and the blob part
 Cut\&Count. What is new is the observation that connectivity can be encoded with $O(1)$ bits
 per edge through a Grassmann determinant whose only non-local part is a sign, and that this
 sign costs only $O(g^3)$ bits for $g$ blobs, so the whole construction is a network in the sense
-of the manuscript, whose value is $n\cdot\HC(G)$. Both main theorems are formally verified in
-Lean, end to end, on top of the manuscript's own Lean development. We also record weaker results
+of the manuscript, whose value is $n\cdot\HC(G)$. The first two main theorems (fixed density and
+explicit rate) are formally verified in Lean, end to end, on top of the manuscript's own Lean development. We also record weaker results
 that rest only on the machine-checked top-level theorems: the parity of $\HC(G)$ for every
 graph in time $2^{O((m+n)/\sqrt{\log(m+n)})}$ (machine-checked in Lean, with the hypotheses
 discharged by the labs' own Lean proofs), and one-sided randomized decision. We describe what
@@ -176,6 +178,30 @@ $2^{O(Dn/\sqrt{\log n})}$ on graphs with $m\le Dn$, where the $O$-constant is ab
 may depend on $n$.
 \end{theorem}
 
+When the density grows with $n$, a variant of the network gives a much better dependence on the
+degree. Write $\bar d:=2m/n$ for the average degree and $\Delta$ for the maximum degree.
+
+\begin{theorem}[Exact counting, maximum/average degree; written proof, not machine-checked]\label{thm:main-degree}
+Assume $(\mathrm{H}_{\mathrm{A}})$. There are an absolute constant $C^{\sharp}$ and one
+deterministic algorithm that, given any graph $G$ with $n\ge2$ vertices, average degree $\bar d$
+and maximum degree $\Delta$, outputs $\HC(G)$ within
+\[
+  2^{C^{\sharp}n\log(2e\max(\bar d,2))/\sqrt{\log n}}\ \le\ 2^{C^{\sharp}n\log(2e\max(\Delta,2))/\sqrt{\log n}}
+\]
+operations. In particular it runs in time $2^{o(n)}$ whenever $\log\bar d=o(\sqrt{\log n})$, for
+example for $\bar d=(\log n)^{O(1)}$ or $\bar d=2^{(\log n)^{0.49}}$.
+\end{theorem}
+
+\Cref{thm:main-degree} has a written proof only (\cref{sec:degree}); unlike
+\cref{thm:main-delta,thm:main-rate} it is \emph{not} machine-checked, and the Lean theorems
+\lean{theorem1} and \lean{theorem2} do not cover it. For bounded $\bar d$ it gives the same order
+$2^{O(n/\sqrt{\log n})}$ as \cref{thm:main-rate}; it is stronger when $\bar d\to\infty$, because a
+pair of blobs then shares only the \emph{set} of used crossing edges between them,
+rank-encoded, and the labels of those edges, so the total number of shared bits is about
+$2n\log(2e\bar d)$ instead of $2\log_25\cdot m\approx2.32\,\bar dn$. It does not reach dense
+graphs: for $\bar d=\Theta(n)$ the bound is $2^{O(n\sqrt{\log n})}$, above $2^n$
+(\cref{sec:limitations}).
+
 \begin{corollary}[Decision, search and paths]\label{cor:decision-search}
 Assume $(\mathrm{H}_{\mathrm{A}})$. Within the time bounds of
 \cref{thm:main-delta,thm:main-rate}, multiplied by $m+1$, one can deterministically decide
@@ -246,7 +272,12 @@ instances; they are \emph{not} fully proved here.
 No subexponential algorithm for Hamiltonicity on general sparse graphs was known, consistent with
 ETH. Planar, bounded-genus and minor-free graphs admit $2^{O(\sqrt n)}$ algorithms via treewidth.
 \Cref{tab:sota} lists the best previous bounds in the settings relevant here; all are of the form
-$c^n$ with $c>1$.
+$c^n$ with $c>1$. The degree-dependent ones are $(2-\varepsilon)^n$ with $\varepsilon\to0$ as the
+degree grows; Björklund's $O^*(1.657^n)$ Monte Carlo decision bound~\cite{Bjorklund14} does not
+depend on the degree. The bound of~\cite{BHKK12} is for TSP (hence decision), by a trimmed
+Bellman--Held--Karp dynamic programme; it is not stated for counting. For small fixed degree,
+unconditional counting is much faster than $(2-\varepsilon)^n$, for example through pathwidth on
+cubic graphs~\cite{BCKN15}.
 
 \begin{table}[ht]
 \centering
@@ -261,6 +292,7 @@ undirected, general, decision & $O^{*}(1.657^n)$ randomized~\cite{Bjorklund14}; 
 bounded degree $\Delta$, decision/TSP & $(2-\varepsilon_\Delta)^n$~\cite{BHKK12} & deterministic $2^{\delta n}$, exact count \\
 maximum degree $3$ & $O(2^{n/3})$~\cite{Eppstein07}; $O^{*}(1.2312^n)$~\cite{XiaoNagamochi16} & deterministic $2^{\delta n}$, exact count \\
 counting, pathwidth $\mathrm{pw}$ & $6^{\mathrm{pw}}n^{O(1)}$~\cite{BCKN15}, tight under SETH~\cite{CLN18} & $2^{O(m/\sqrt{\log n})}$ \\
+counting, average degree $\bar d$ & $2^{n-\Omega(n/\bar d)}$ deterministic~\cite{BjorklundWilliams19} (stated for digraphs; covers graphs) & $2^{O(n\log\bar d/\sqrt{\log n})}$ (\cref{thm:main-degree}; written proof only) \\
 counting, directed, average degree $d$ & $2^{n-\Omega(n/d)}$~\cite{BjorklundWilliams19} & see \cref{sec:extensions} (sketch) \\
 parity, directed, general & $O^{*}(1.619^n)$~\cite{BjorklundHusfeldt13} & $2^{O(\rho(n))}$ for bounded degree (Lean) \\
 parity, undirected, all graphs & -- & $2^{O((m+n)/\sqrt{\log(m+n)})}$ (Lean) \\
@@ -310,7 +342,9 @@ network in the sense of \A{} with arbitrary integer node tables and about $2\log
 shared bits, whose value is $n\cdot\HC(G)$ (\cref{thm:network-value}). \A's network theorem then
 evaluates it (\cref{sec:algorithm}). One trap is that \A's cost depends on the largest number of
 bits at one node, so a vertex of degree $\Theta(n)$ must be removed first; we branch on its two
-cycle edges (\cref{lem:degree-reduction}).
+cycle edges (\cref{lem:degree-reduction}). \Cref{sec:degree} replaces the per-edge digits by a
+rank code of the set of used crossing edges between two blobs, which costs only logarithmically in
+the degree and needs no branching (\cref{thm:main-degree}).
 
 \subsection{What is new here}
 Little of the above is new in isolation, and we want to be precise about the credits. The
@@ -344,7 +378,9 @@ about Turing machines built on \A's Lean development, with only the standard axi
 (\lean{theorem1}, \lean{theorem2}); a fresh kernel replay with \lean{leanchecker} has passed
 for both \lean{theorem1} and \lean{theorem2}. The sparse TSP theorem (\cref{thm:tsp}) is formally
 verified at the same level (\lean{theoremTSP}, \lean{theoremTSP\_decode}).
-\Cref{sec:verification} gives the details. The bounds are purely asymptotic: as for
+\Cref{thm:main-degree} is the exception: its proof (\cref{sec:degree}) is written out and was
+checked numerically and by an independent AI referee, who found it sound, but it is not
+formalised. \Cref{sec:verification} gives the details. The bounds are purely asymptotic: as for
 the SAT algorithms themselves, the crossover with brute force is astronomically large.
 
 \subsection{Limitations}\label{sec:limitations}
@@ -365,10 +401,16 @@ in particular that the step bound is $\lfloor C\cdot2^{\delta n}\rfloor$ resp.\
 $\lfloor C\cdot2^{C(m+n)/\sqrt{\log_2(n+2)}}\rfloor$ with $C$ independent of $G$; and \A's
 \lean{Net} format together with the hypothesis bundle through which our network is handed to
 \A's theorems, to confirm that nothing beyond \cref{imp:lemma8,imp:thmA,imp:thmB} is assumed.
-\item \emph{Sparse graphs only.} The network has about $2\log_25$ bits per edge, so the bounds
-beat $2^n$ only when $m=o(n\sqrt{\log n})$. Dense graphs, general TSP, and the
-Held--Karp $O^*(2^n)$ bound are untouched: with $\Theta(n^2)$ edges the bit count is
-$\Theta(n^2)$, and \A's exponent $U/\sqrt{\log U}$ is then worse than $n$.
+\item \emph{Sparse graphs only.} The network of \cref{sec:network} has about $2\log_25$ bits per
+edge, so \cref{thm:main-rate} beats $2^n$ only when $m=o(n\sqrt{\log n})$. The rank-encoded
+network of \cref{sec:degree} has about $2\log(2e\bar d)$ bits per vertex, so
+\cref{thm:main-degree} extends this, roughly, to average degree $\bar d=2^{o(\sqrt{\log n})}$. Dense
+graphs are still not covered: at $\bar d\approx\Delta\approx n$ the bound of
+\cref{thm:main-degree} is $2^{\Theta(n\log n/\sqrt{\log n})}$, which exceeds $2^n$. General TSP
+and the Held--Karp $O^*(2^n)$ bound are untouched.
+\item \emph{\Cref{thm:main-degree} is not machine-checked.} Its proof is written out in
+\cref{sec:degree} and reuses the machine-checked identity of \cref{thm:blob}, but the rank-encoded
+network, its parameters and the degree-pruned table procedure are not formalised.
 \item \emph{``Previous algorithms were exponential'' refers to general sparse graphs.} Planar,
 bounded-genus, minor-free and bounded-treewidth graphs already had subexponential or
 single-exponential-in-treewidth algorithms, and on planar graphs the $2^{O(\sqrt n)}$ bound is
@@ -392,7 +434,8 @@ may well exist elsewhere, and we have not searched the literature systematically
 about Grassmann algebras. \Cref{sec:trees} proves the fermionic matrix-tree identity for
 Hamiltonian cycles. \Cref{sec:blobs} splits it over blobs and proves the sign rule.
 \Cref{sec:network} builds the network and bounds its parameters. \Cref{sec:algorithm} proves
-\cref{thm:main-delta,thm:main-rate}, and \cref{sec:corollaries} proves
+\cref{thm:main-delta,thm:main-rate}, \cref{sec:degree} proves \cref{thm:main-degree} with a
+rank-encoded variant of the network, and \cref{sec:corollaries} proves
 \cref{cor:decision-search}. \Cref{sec:parity} treats the results that rest only on the top-level
 theorems. \Cref{sec:extensions} sketches extensions, \cref{sec:verification} describes the
 verification status, and \cref{sec:open} lists open problems.
@@ -1043,7 +1086,7 @@ coefficient. Altogether $\tau\le2^{\mu/2}\cdot2^\mu\cdot\poly(n)$.
 \Cref{def:network} bounds the \emph{largest} node, through $P$, and not only the total. With
 unbounded maximum degree one blob may have to carry $\Theta(n)$ crossing-edge bits, and then the
 factor $2^{2gP/K}$ of \eqref{eq:lemma8} is not small. \Cref{sec:algorithm} removes high-degree
-vertices first. Note also that the interleaving sign costs $O(g^3)$ bits in total and at most
+vertices first; the rank-encoded network of \cref{sec:degree} avoids the problem instead. Note also that the interleaving sign costs $O(g^3)$ bits in total and at most
 $g^2$ bits per node.
 \end{remark}
 
@@ -1190,6 +1233,199 @@ order. Hence any improvement of $e_\ell$ in \cref{imp:thmA}, for example from be
 transfers verbatim.
 \item Like the bounds of \A, these are purely asymptotic. \Cref{thm:main-rate} beats $2^n$ only
 when $e_\ell\cdot4.64\,m<n$, which needs $\log n$ in the thousands even for $m=2n$.
+\end{enumerate}
+\end{remark}
+
+% =====================================================================
+\section{Counting with logarithmic cost in the degree}\label{sec:degree}
+% =====================================================================
+
+This section proves \cref{thm:main-degree}. \emph{It is a written proof only and is not
+machine-checked.} It reuses \cref{thm:blob} verbatim and changes only the network of
+\cref{sec:network}: the pair $\{a,b\}$ no longer shares one base-$5$ digit for \emph{every}
+crossing edge of $E(a,b)$, but only the set of crossing edges of $E(a,b)$ that carry a label other
+than $\lab N$, rank-encoded among the subsets of the right size, together with the labels of those
+edges. A $2$-factor uses exactly two of the $\deg(v)$ edges at each vertex $v$, so this costs about
+$2\log\deg(v)$ bits per vertex rather than $\log_25$ bits per edge. The rank-encoding device is
+that of \A[Appendix~D, Step~3]; we prove what we need from scratch. Fix $G$ with $n\ge3$ and
+minimum degree at least $2$ (so $m\ge n$ and $\bar d\ge2$), a root $r$, a partition $\phi$ and a
+crossing order, with the conventions of \cref{sec:blobs}. Put $n_a:=|V_a|$, $\bar n:=\max_an_a$,
+$\lambda_\Delta:=\log(2e\Delta)$ and $\lambda_{\bar d}:=\log(2e\bar d)$; both are at least
+$\log(4e)>3.4$.
+
+\subsection{Profiles and the rank-encoded network}
+A \emph{profile} is an integer vector $\xi=(\xi_{ab})_{a<b}$ with $0\le\xi_{ab}\le m_{ab}$; put
+$\xi_{ba}:=\xi_{ab}$, $\xi_a:=\sum_{b\ne a}\xi_{ab}$ and $|\xi|:=\sum_{a<b}\xi_{ab}$. The profile of
+a labelling $\eta\in\cL^{\mx}$ is $\xi(\eta)_{ab}:=\#\{k\in E(a,b):\eta_k\ne\lab N\}$. A profile is
+\emph{admissible} if $\xi_a\le2n_a$ for every $a$. For $0\le s\le t$, the colex rank
+$\{u_1<\dots<u_s\}\mapsto\sum_{i=1}^s\binom{u_i}{i}$ is a bijection from the $s$-subsets of
+$\{0,\dots,t-1\}$ onto $\{0,\dots,\binom ts-1\}$, inverted greedily with at most $t$ binomial
+comparisons; write $\mathrm{cw}(t,s):=\lceil\log\binom ts\rceil$.
+
+\begin{definition}[{The network $\mathcal N_\xi$ on $[g]$}]\label{def:rank-network}
+Fix a profile $\xi$. A setting of node $a$ is a pair $z_a=(\eta^{(a)},y^{(a)})$ with
+$\eta^{(a)}\in\cL^{\partial(a)}$ such that $\#\{k\in E(a,b):\eta^{(a)}_k\ne\lab N\}=\xi_{ab}$ for every
+$b\ne a$, and $y^{(a)}\in\{0,1\}^{Q_a}$. It is encoded as the concatenation of
+\begin{itemize}
+\item for each $b\ne a$, in increasing order, the block $\block_b(z_a)$ of width
+$c'_{ab}:=\mathrm{cw}(m_{ab},\xi_{ab})+2\xi_{ab}$: if $k_1<\dots<k_{m_{ab}}$ enumerate the bundle of
+$\{a,b\}$ in crossing order and $T_{ab}:=\{i:\eta^{(a)}_{k_i}\ne\lab N\}$, the block is the colex
+rank of $T_{ab}$ in $\mathrm{cw}(m_{ab},\xi_{ab})$ bits, followed by the $2$-bit codes of the labels
+$\eta^{(a)}_{k_i}\in\{\lab0,\lab1,\lab2,\lab3\}$, $i\in T_{ab}$ increasing;
+\item the bits $y^{(a)}_{cd}$, $(c,d)\in Q_a$, in lexicographic order.
+\end{itemize}
+$S_a$ is the set of strings of length $P_a:=\sum_{b\ne a}c'_{ab}+|Q_a|$ whose rank field in every
+block is $<\binom{m_{ab}}{\xi_{ab}}$. The functions $W_a=\sigma_a\chi_aI_a$ and $\Psi_{a,b}$ are those
+of \cref{def:our-network}, and $c_{a,b}:=c'_{ab}+(g-\max(a,b))$, with $h_{ab},h_{ba}$ and $f_{a,b},
+f_{b,a}$ as there, built from the new blocks.
+\end{definition}
+
+\begin{lemma}\label{lem:rank-encoding}
+The encoding is a bijection from the settings of $a$ onto $S_a$, and $\block_b(z_a)=\block_a(z_b)$
+if and only if $\eta^{(a)}$ and $\eta^{(b)}$ agree on the bundle of $\{a,b\}$. Hence
+$\Psi_{a,b}=\Ind{h_{ab}(z_a)=h_{ba}(z_b)}$, and $(f_{a,b},f_{b,a})$ factors $\Psi_{a,b}$ through
+$c_{a,b}$ bits.
+\end{lemma}
+
+\begin{proof}
+Both ends list the bundle in the same order and use the same $\xi_{ab}$. The block determines
+$T_{ab}$ and the labels on it, hence the restriction of $\eta^{(a)}$ to the bundle (the other labels
+are $\lab N$); conversely a restriction with exactly $\xi_{ab}$ labels other than $\lab N$ gives exactly
+one block, and every rank below $\binom{m_{ab}}{\xi_{ab}}$ is the rank of exactly one subset. The
+rest is the proof of \cref{lem:factorisation}.
+\end{proof}
+
+\begin{theorem}\label{thm:rank-value}
+$\sum_{\xi\text{ admissible}}\operatorname{value}(\mathcal N_\xi)=n\cdot\HC(G)$, and
+$\operatorname{value}(\mathcal N_\xi)=0$ for every profile that is not admissible.
+\end{theorem}
+
+\begin{proof}
+As in the proof of \cref{thm:network-value}, a nonzero term of $\operatorname{value}(\mathcal N_\xi)$
+comes from a global $\eta\in\cL^{\mx}$ with correct copies, and by \cref{def:rank-network} that
+$\eta$ has $\xi(\eta)=\xi$; conversely each such $\eta$ gives exactly one $z$. So
+$\operatorname{value}(\mathcal N_\xi)=\sum_{\eta:\xi(\eta)=\xi}\prod_a\sigma_a\chi_a(\eta,\pi(\eta))I_a$.
+The profiles partition $\cL^{\mx}$, so the sum over all profiles is $n\cdot\HC(G)$ by
+\cref{thm:blob}. If $\xi_a>2n_a$, then every $\eta$ with $\xi(\eta)=\xi$ has
+$\sum_{v\in V_a}\deg_\eta(v)=\xi_a>2n_a$, since each crossing edge at $a$ has exactly one end in
+$V_a$; so some $v\in V_a$ has $\deg_\eta(v)\ge3$, every indicator in $I_a(\eta)$ vanishes, and the
+value is $0$.
+\end{proof}
+
+\begin{proposition}[Parameters]\label{prop:rank-parameters}
+Let $\xi$ be admissible. Then $\mathcal N_\xi$ is a network in the sense of \cref{def:network} with
+\[
+  P:=\lceil2\bar n\lambda_\Delta\rceil+g+g^2,\qquad B:=\lceil2\bar n\lambda_\Delta\rceil+1,\qquad
+  \tau:=2^{2\bar n\lambda_\Delta}n^{C_2}\quad(C_2\text{ absolute}),
+\]
+$\tau$ counted after a polynomial-time preparation, and
+\[
+  U=2\sum_{a<b}c'_{ab}+2\binom g3\ \le\ 2n\log(2e\bar d)+g^3 .
+\]
+$P$ and $B$ do not depend on $\xi$.
+\end{proposition}
+
+\begin{proof}
+We use $\binom NM\le(eN/M)^M$, Vandermonde's inequality
+$\prod_i\binom{N_i}{M_i}\le\binom{\sum N_i}{\sum M_i}$, $\sum_i\lceil x_i\rceil\le\sum_ix_i+\#\{i:x_i>0\}$,
+and the fact that $F_N(M):=M\log(eN/M)+2M$ is nondecreasing on $[0,N]$ (its derivative is
+$\log(N/M)+2$).
+
+\emph{Per node.} Let $N_a:=|\partial(a)|\le\Delta n_a$. Admissibility gives $\xi_a\le\min(2n_a,N_a)$,
+so $\sum_{b\ne a}c'_{ab}\le\log\binom{N_a}{\xi_a}+2\xi_a+g-1\le F_{N_a}(\xi_a)+g-1$. If $2n_a\le N_a$,
+then $F_{N_a}(\xi_a)\le F_{N_a}(2n_a)\le2n_a\log(e\Delta/2)+4n_a=2n_a\lambda_\Delta$; otherwise
+$F_{N_a}(\xi_a)\le(\log e+2)N_a<2n_a\log(4e)\le2n_a\lambda_\Delta$. With the copy bits counted as in
+\cref{prop:parameters}, $P_a\le P$ and $\sum_{b\ne a}c_{a,b}\le2n_a\lambda_\Delta+g-1+g^2\le P$.
+
+\emph{Total.} $U=2\sum_{a<b}c'_{ab}+2\binom g3$ as in \cref{prop:parameters}, and
+$\sum_{a<b}c'_{ab}\le\log\binom{\mx}{|\xi|}+2|\xi|+\binom g2$. Admissibility gives
+$2|\xi|=\sum_a\xi_a\le2n$, and $|\xi|\le\mx\le m$. If $n\le\mx$, monotonicity gives
+$\log\binom{\mx}{|\xi|}+2|\xi|\le F_{\mx}(n)\le n\log(em/n)+2n$; if $\mx<n$, it is at most
+$(\log e+2)\mx<n\log(4e)\le n\log(4em/n)$, as $m\ge n$. Since $n\log(4em/n)=n\log(2e\bar d)$, we get
+$U\le2n\log(2e\bar d)+g^2+2\binom g3\le2n\log(2e\bar d)+g^3$.
+
+\emph{Condition (ii).} $\Psi$ and $f$ are $0/1$-valued and $|\sigma_a\chi_a|=1$. In $I_a(\eta)$ only
+those $x$ contribute with $\deg_x(v)=2-\deg_\eta(v)$ for all $v\in V_a$. The map
+$x\mapsto(x\cap\delta(v))_{v\in V_a}$ is injective, so there are at most
+$\prod_{v\in V_a}\bigl(1+\deg v+\binom{\deg v}2\bigr)\le\Delta^{2n_a}$ of them (as $1+d+\binom d2\le d^2$
+for $d\ge2$). For each, $|x|\le n_a$, and the top coefficient is at most the $\ell^1$-norm of
+$\cF_a(x)R_a(\eta)$, which is at most $5^{|x|}2^{\xi_a}\le20^{n_a}$: the $\ell^1$-norm is
+submultiplicative (structure constants $0,\pm1$), $1+q_e$ has norm at most $5$, and a piece has norm
+at most $2$. Hence $\log|W_a|\le2n_a(\log\Delta+2.17)<B$.
+
+\emph{Condition (iii).} The preparation stores the graph, $\phi$, the order, the bundles, the
+binomials $\binom{m_{ab}}{\xi_{ab}}$ and the layout. Membership, encoding, decoding (one unranking per
+block), $h_{ab}$, $\Psi$ and $f$ take $\poly(n)$ operations, $\sigma_a$ and $\chi_a$ as in
+\cref{prop:parameters}. For $I_a$ the procedure enumerates the tuples $(x_v)_{v\in V_a}$, $x_v$ a
+subset of size $2-\deg_\eta(v)$ of the internal edges at $v$, keeps the consistent ones (each chosen
+edge chosen at both ends), and for each computes the top coefficient by choosing one signed
+monomial from each factor, multiplying (sign by inversion count) and accumulating when the product
+is $\pm\omega_a$. This takes at most $\Delta^{2n_a}\cdot20^{n_a}\cdot\poly(n)\le
+2^{2n_a\lambda_\Delta}n^{C_2}$ operations, with a state of $\poly(n)$ bits.
+\end{proof}
+
+There are at most $\prod_{a<b}(\min(m_{ab},2\bar n)+1)\le(2\bar n+1)^{\binom g2}$ admissible profiles,
+enumerated and tested in polynomial time each.
+
+\subsection{The algorithm and the proof of \texorpdfstring{\cref{thm:main-degree}}{Theorem 1.3}}
+\begin{enumerate}[label=\textbf{Step \arabic*.},leftmargin=*,start=0]
+\item If $n\le2$, or some vertex has degree less than $2$, output $0$.
+\item Choose the level $\ell$, $K:=K_\ell$ and $g:=3K^8$ as in \cref{sec:proof-rate}.
+\item List $V$ as $v_1,\dots,v_n$ and put $\phi(v_t):=\lceil tg/n\rceil$, so that $n_a\le\lceil n/g\rceil$
+(each blob is the set of integers in a half-open interval of length $n/g$). Take any root and any
+crossing order, and do the preparation of \cref{prop:rank-parameters}.
+\item For each admissible profile $\xi$, run the procedure of \cref{imp:lemma8} on $\mathcal N_\xi$
+with the algorithm of \cref{imp:thmA}(b) at level $\ell$ as the clique algorithm.
+\item Output the sum of the results divided by $n$.
+\end{enumerate}
+There is no degree reduction and no degree-balanced partition. Correctness follows from
+\cref{thm:rank-value,imp:lemma8,imp:thmA}; the imported hypotheses are checked as in
+\cref{sec:algorithm}, with \cref{prop:rank-parameters} in place of \cref{prop:parameters}, and
+\cref{imp:lemma8} is applied to each $\mathcal N_\xi$ separately (only $U$ depends on $\xi$).
+
+\begin{proof}[Proof of \cref{thm:main-degree}]
+For $n<n_0$ use any exact method. For $n\ge n_0$, as in \cref{sec:proof-rate},
+$n^{1/300}<K\le n^{1/30}$, $g\in[3n^{8/300},3n^{8/30}]$ and $e:=e_\ell\le c_e/\sqrt{\log n}$. By Step~2,
+$\bar n\le n/g+1$, and $\lambda_\Delta\le\log(2en)\le2\log n$ because $\Delta<n$. By
+\cref{prop:rank-parameters},
+\[
+  U\le2n\lambda_{\bar d}+g^3,\qquad gP\le2(n+g)\lambda_\Delta+3g^3,\qquad
+  \log\tau\le2\bar n\lambda_\Delta+C_2\log n,
+\]
+and $L\le U+gP+1$, $B'\le2gP+1+g^2B$ are $\poly(n)$. The time for one profile is $2^X$ with $X$
+bounded by \eqref{eq:exponent}, whose terms satisfy
+\begin{align*}
+  e\,U&\le c_e\,(2n\lambda_{\bar d}+27n^{0.8})/\sqrt{\log n},\\
+  (e+2)\,gP/K&\le3\bigl(4(n+g)\log n+3g^3\bigr)/n^{1/300}=O(n^{1-1/300}\log n),\\
+  \log\tau&\le4(n/g+1)\log n+C_2\log n=O(n^{1-8/300}\log n),\\
+  eK^2+C_0K^2\log(K(L+B'))&=O(n^{1/15}\log n),\qquad g\log K=O(n^{8/30}\log n),
+\end{align*}
+and $C_1\log(g(P+B))=O(\log n)$. The number of admissible profiles is at most
+$(2n/g+3)^{g^2/2}=2^{O(n^{16/30}\log n)}$. Every term except the first is $o(n/\sqrt{\log n})$ for
+every $\Delta\le n$, and $\lambda_{\bar d}>3.4$, so the total time is
+$2^{C^\sharp n\lambda_{\bar d}/\sqrt{\log n}}$ for an absolute $C^\sharp$. Finally $\bar d\le\Delta$.
+\end{proof}
+
+\begin{remark}\label{rem:degree}
+\leavevmode
+\begin{enumerate}[label=(\alph*)]
+\item The degree enters in two ways. The total $U$ depends only on $\bar d$, for every partition.
+The per-node parameters depend on $\Delta$, but only logarithmically, so a blob of $\lceil n/g\rceil$
+vertices of degree $n-1$ still has only $O((n/g)\log n)$ bits, and the term $2gP/K$ of
+\eqref{eq:lemma8}, which forced the degree reduction of \cref{sec:algorithm}
+(\cref{rem:largest-node}), is $o(n/\sqrt{\log n})$ for every $\Delta$.
+\item The leading term is $e_\ell U\approx2e_\ell n\log(2e\bar d)$, against
+$e_\ell\cdot2\log_25\cdot m\approx2.32\,e_\ell\bar dn$ in \cref{thm:main-rate}; the new term is the
+smaller one for $\bar d\ge4$. Better pieces in \A{} transfer verbatim.
+\item The self-reductions of \cref{cor:decision-search} delete edges, which does not increase
+$\bar d$; for paths, the added vertex raises $\bar d$ by at most $2$. So decision, search and paths
+follow within the bound of \cref{thm:main-degree} times $m+1$, with the same written-proof status.
+\item With a \emph{fixed} level, as in \cref{sec:proof-delta}, the same computation gives
+$O(2^{\delta n})$ on graphs of maximum degree at most $\Delta_0$ as soon as
+$e\le\delta/(8\log(2e\Delta_0))$ and $K\ge24\log(2e\Delta_0)/\delta$, which is weaker than the
+requirement $e\le\delta/(40D)$ of \cref{thm:main-delta} when $D$ is large. The average-degree form
+does not follow this way, because $gP/K\approx2n\lambda_\Delta/K$ is not $O(\delta n)$ when
+$\Delta$ is unbounded. We do not use this.
 \end{enumerate}
 \end{remark}
 
@@ -1571,6 +1807,20 @@ counting identities used in \cref{prop:parameters}, and the self-reduction of
 \cref{cor:decision-search}. These checks test the identities and the network algebra, sign
 included; they cannot test the asymptotic bookkeeping, which is checked by hand.
 
+A third script checks the rank-encoded network of \cref{sec:degree} on top of the same library:
+the colex rank, \cref{lem:rank-encoding} (exact count, injectivity, round trip, surjectivity on
+random strings), the factorisation of $\Psi$, the bounds of \cref{prop:rank-parameters} per node and
+in total, the profile count, \cref{thm:rank-value} (sum over admissible profiles equals
+$n\cdot\HC(G)$ by brute force, evaluated through the shared bit strings only; inadmissible
+profiles give $0$), and the degree-pruned computation of $I_a$ with its iteration counts. Besides
+seeded random instances ($n\le9$, $g\le4$, including hubs of degree $n-1$), it runs four fixed
+instances with $g=4$ and $n\in\{7,8,9\}$ on which the network without the interleaving sign is
+wrong, and a built-in mutation test: with $\chi_a$ removed, or with the labels not shared, the
+rank-encoded network must give a wrong value on at least one of them (it does on all four). Runs
+with three seeds pass. An independent AI referee re-derived the construction and its parameter
+bounds and found it sound; it also found that the first version of the script did not exercise the
+interleaving sign, which led to the fixed instances and the mutation test.
+
 \subsection{Independent referee}
 An independent referee (an AI agent working from the one-paragraph claim) derived the sign rule
 on its own and wrote its own code before reading the write-up. It checked about $500$ instances of
@@ -1591,12 +1841,13 @@ or check the Lean files.
 \cref{sec:limitations}(b)); the proofs were written by AI agents and reviewed by an AI
 coordinator.
 \item A full write-up of the extensions of \cref{sec:extensions} other than TSP.
+\item A Lean formalisation of \cref{thm:main-degree} (\cref{sec:open}).
 \item Verification of the citations written from memory (\cref{sec:limitations}(g)).
 \end{itemize}
 
 \subsection{Dependence on \texorpdfstring{\A}{[A]}}
-If \A[Theorem~A(b)] or \A[Lemma~8] failed, \cref{thm:main-delta,thm:main-rate,cor:decision-search}
-would lose their proofs, while \cref{sec:grassmann,sec:trees,sec:blobs,sec:network} would be
+If \A[Theorem~A(b)] or \A[Lemma~8] failed,
+\cref{thm:main-delta,thm:main-rate,thm:main-degree,cor:decision-search} would lose their proofs, while \cref{sec:grassmann,sec:trees,sec:blobs,sec:network} would be
 unaffected. The uniformity in \cref{thm:main-rate} uses the constant $c$ of \cref{imp:thmB}
 through $x_0$; if $c$ is not explicit, the statement asserts the existence of one algorithm, as in
 \A. The cost model is that of \A; our arithmetic on $O(n)$-bit integers costs $\poly(n)$
@@ -1606,10 +1857,25 @@ operations and is absorbed in $\tau$ and in the polynomial factors.
 \section{Open problems}\label{sec:open}
 % =====================================================================
 
-\subsection{Dense graphs} The network has $U\approx2\log_25\cdot|E|$ bits, so
-\cref{thm:main-rate} beats $2^n$ only when $m=o(n\sqrt{\log n})$. Nothing is claimed for dense
-graphs beyond the classical $O^*(2^n)$; is there a subexponential algorithm for $\HC$ on graphs
-of superlinear density, under the same hypotheses?
+\subsection{Dense graphs} The network of \cref{sec:network} has $U\approx2\log_25\cdot|E|$ bits,
+and the rank-encoded network of \cref{sec:degree} has $U\approx2n\log(2e\bar d)$ bits, so
+\cref{thm:main-degree} beats $2^n$ only for $\bar d=2^{o(\sqrt{\log n})}$, roughly. Nothing is
+claimed for dense graphs beyond the classical $O^*(2^n)$. For $\bar d=\Theta(n)$, about $2n\log n$
+bits is the information content of a Hamiltonian cycle, so for any network of this kind that
+shares the cycle across the blobs the leading term $e_\ell U$ is $\Omega(e_\ell n\log n)$, which is
+above $n$ unless $e_\ell=o(1/\log n)$. Is
+there a subexponential algorithm for $\HC$ on dense graphs, under the same hypotheses?
+
+\subsection{Formalising \texorpdfstring{\cref{thm:main-degree}}{Theorem 1.3}} The Lean
+development proves \cref{thm:main-delta,thm:main-rate}, not \cref{thm:main-degree}. The
+mathematical layer (\cref{thm:blob}) and the imported side do not change. What is missing is a
+per-pair code in place of the fixed-width label code (colex rank and unrank, with their
+polynomial-time procedures), the sum over profiles and the vanishing of inadmissible ones
+(\cref{thm:rank-value}), the bounds of \cref{prop:rank-parameters} (Vandermonde and
+$\log\binom NM\le M\log(eN/M)$, both available in \A's development), a degree-pruned table procedure
+with step bound $\Delta^{2n_a}20^{n_a}\poly(n)$ (the existing one is bounded by $2\cdot8^{\mu_a}$,
+which does not suffice for vertex-balanced blobs), the vertex-balanced partition, and the exponent
+arithmetic of \cref{thm:main-degree}. No degree reduction and no $2^n$ fallback are needed.
 
 \subsection{Connected subgraphs and \texorpdfstring{$T(1,2)$}{T(1,2)}} The determinant certificate is a weight, not a $0/1$
 test, for objects that are connected but not trees. Exact counts of connected spanning subgraphs
@@ -1633,7 +1899,8 @@ sets. These statements have written proofs but are not formalised.
 
 \subsection{The exponent} The leading term of the exponent is $e_\ell U$, and $e_\ell=\Theta(\rho^\ell)$
 is governed by the pieces of \A. Pieces with $\rho<1/\sqrt2$ would improve the exponent beyond
-$1/\sqrt{\log n}$, and $\rho\to\frac12$ would give $2^{O(m/\log m)}$. Can the $\sqrt{\log n}$ be
+$1/\sqrt{\log n}$, and $\rho\to\frac12$ would give $2^{O(m/\log m)}$, and
+$2^{O(n\log\bar d/\log n)}$ in \cref{thm:main-degree}. Can the $\sqrt{\log n}$ be
 improved, for $\HC$ specifically or in general?
 
 \subsection{Planar and minor-free graphs} A bound of $2^{\delta n}$ does not beat the known

@@ -1,3 +1,5 @@
+> **Status of these notes.** Statements in `research/` are informal research notes and are **not claimed** unless tagged **[Lean]** (machine-checked). See the claim policy in the top-level README.
+
 # Research tracks (27 Oct 2026, after Anthropic's paper)
 
 Coordinator notes. Each track has its own file; this file records cross-cutting facts and leads.

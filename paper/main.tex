@@ -202,7 +202,7 @@ $2n\log(2e\bar d)$ instead of $2\log_25\cdot m\approx2.32\,\bar dn$. It does not
 graphs: for $\bar d=\Theta(n)$ the bound is $2^{O(n\sqrt{\log n})}$, above $2^n$
 (\cref{sec:limitations}).
 
-\begin{corollary}[Decision, search and paths]\label{cor:decision-search}
+\begin{corollary}[Decision, search and paths; written proof, Lean formalisation in progress]\label{cor:decision-search}
 Assume $(\mathrm{H}_{\mathrm{A}})$. Within the time bounds of
 \cref{thm:main-delta,thm:main-rate}, multiplied by $m+1$, one can deterministically decide
 whether $G$ is Hamiltonian, output a Hamiltonian cycle if one exists, and count, decide and find
@@ -252,10 +252,10 @@ bounded in- and out-degree.
 $\Delta$ and every $\delta>0$ there is a randomized algorithm with one-sided error that decides
 Hamiltonicity of graphs of maximum degree $\Delta$ in time $2^{\delta n}$. The same holds for
 digraphs of bounded in- and out-degree.
-\item \textup{(Written proof, assuming the Main Theorem of \A.)} For every $D$ there is a
-randomized algorithm with one-sided error that decides Hamiltonicity of graphs with at most $Dn$
-edges in time $2^{O_D(n(\log\log n)^2/\sqrt{\log n})}$.
 \end{enumerate}
+An earlier version also stated a part (b), a randomized $2^{O_D(n(\log\log n)^2/\sqrt{\log n})}$
+decision procedure for graphs with $|E|\le Dn$. It is superseded by \cref{thm:main-rate}
+(deterministic, and faster) and is no longer claimed; see \cref{rem:randomized-b}.
 \end{theorem}
 
 \Cref{thm:parity} and \cref{thm:randomized}(a) are from an earlier stage of this work and are
@@ -1500,7 +1500,7 @@ Cut\&Count extracts $[X\text{ connected}]$ from a sum over consistent colourings
 weights. The following barrier shows that such filters cannot be exact with few colours; this is
 what motivates the Grassmann construction.
 
-\begin{proposition}\label{prop:colouring-barrier}
+\begin{proposition}[written proof, Lean formalisation in progress]\label{prop:colouring-barrier}
 Work over a field of characteristic $0$. Suppose that weights $z_0,\dots,z_{q-1}$ on $q$ colours,
 with the root coloured $0$ and every component $C\not\ni r$ of a $2$-factor contributing
 $h(C)=\sum_jz_j^{|C|}$, give a sum equal to $\HC(G)$ up to a nonzero factor, for every graph $G$
@@ -1544,7 +1544,7 @@ polynomially many parameter choices gives error at most $e^{-t}$; this outer loo
 part not modelled in Lean.
 \end{proof}
 
-\begin{proof}[Proof of \cref{thm:randomized}\textup{(b)}]
+\begin{remark}[The superseded part (b); not claimed]\label{rem:randomized-b}
 Let $P_G(w)=\sum_{H\in\mathrm{HC}(G)}\prod_{e\in H}w_e$. It is multilinear with $0/1$
 coefficients, so as a function on $\F_p^E$ it is nonzero iff $G$ is Hamiltonian. By the
 Alon--Füredi theorem~\cite{AlonFuredi93}, a polynomial of degree $d$ that does not vanish on
@@ -1559,10 +1559,9 @@ $\sum_Xp^{\cc(X)-1}\prod_{e\in X}w_e\equiv P_G(w)\pmod p$. It has $O(|E|\log p)$
 $O(\log p)$. \A's Main Theorem, which is uniform in $k$, gives time $2^{O(|E|\log^2p/\sqrt{\log
 |E|})}$ per test. Taking a prime $p\approx\sqrt{\log n}$ and $p^{n/(p-1)+1}\cdot t$ independent
 tests gives one-sided error $e^{-t}$ in total time $2^{O_D(n(\log\log n)^2/\sqrt{\log n})}$.
-\end{proof}
-
-The proof of (b) is written out but not machine-checked; the Alon--Füredi theorem is, as far as
-we know, not in Mathlib.
+This argument is not machine-checked (the Alon--Füredi theorem is, as far as we know, not in
+Mathlib) and is recorded only for the history of the project.
+\end{remark}
 
 % =====================================================================
 \section{Extensions (sketched)}\label{sec:extensions}

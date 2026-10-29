@@ -1,0 +1,7 @@
+n= 6 m= 8  #PM brute=    2  product formula=    2  PASS
+n=10 m=14  #PM brute=    6  product formula=    6  PASS
+n=10 m=45  #PM brute=  945  product formula=  945  PASS
+n=10 m=37  #PM brute=  346  product formula=  346  PASS
+n= 4 m= 2  #PM brute=    0  product formula=    0  PASS
+n= 4 m= 5  #PM brute=    2  product formula=    2  PASS
+ALL PASS

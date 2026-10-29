@@ -1,0 +1,46 @@
+config n=4 r=2 Q=4 R=2 density=0.6 seed=1 {'n': 4, 'r': 2, 'Q': 4, 'R': 2, 'I': [0, 1], 'D': 256, 'nexc': 67, 'h': 1, 'cross': 23, 'H1': '-1', 'M': 13, 'per': 3, 'degH': 8, 'J': 3}
+   eigen I-M0 = sum kappa psi psi^T         PASS
+   H(0) = per(A)                            PASS
+   deg H <= 2n(R-1)                         PASS
+   separation H(t) at t=1..Q                PASS
+   Taylor jets via restricted sums          PASS
+   Hermite recovery H(0) = per(A)           PASS
+   nontrivial: cross-group coefficients > 0 PASS
+   control: J-1 jets underdetermined        PASS
+config n=5 r=2 Q=4 R=2 density=0.5 seed=2 {'n': 5, 'r': 2, 'Q': 4, 'R': 2, 'I': [0, 1], 'D': 256, 'nexc': 67, 'h': 4, 'cross': 42, 'H1': '1', 'M': 18, 'per': 1, 'degH': 10, 'J': 3}
+   eigen I-M0 = sum kappa psi psi^T         PASS
+   H(0) = per(A)                            PASS
+   deg H <= 2n(R-1)                         PASS
+   separation H(t) at t=1..Q                PASS
+   Taylor jets via restricted sums          PASS
+   Hermite recovery H(0) = per(A)           PASS
+   nontrivial: cross-group coefficients > 0 PASS
+   control: J-1 jets underdetermined        PASS
+config n=5 r=2 Q=4 R=2 density=1.0 seed=3 {'n': 5, 'r': 2, 'Q': 4, 'R': 2, 'I': [0, 1], 'D': 256, 'nexc': 67, 'h': 3, 'cross': 60, 'H1': '-426', 'M': 30, 'per': 120, 'degH': 10, 'J': 3}
+   eigen I-M0 = sum kappa psi psi^T         PASS
+   H(0) = per(A)                            PASS
+   deg H <= 2n(R-1)                         PASS
+   separation H(t) at t=1..Q                PASS
+   Taylor jets via restricted sums          PASS
+   Hermite recovery H(0) = per(A)           PASS
+   nontrivial: cross-group coefficients > 0 PASS
+   control: J-1 jets underdetermined        PASS
+config n=5 r=3 Q=3 R=2 density=0.7 seed=7 {'n': 5, 'r': 3, 'Q': 3, 'R': 2, 'I': [0, 1], 'D': 729, 'nexc': 189, 'h': 1, 'cross': 53, 'H1': '435/16', 'M': 26, 'per': 46, 'degH': 10, 'J': 4}
+   eigen I-M0 = sum kappa psi psi^T         PASS
+   H(0) = per(A)                            PASS
+   deg H <= 2n(R-1)                         PASS
+   separation H(t) at t=1..Q                PASS
+   Taylor jets via restricted sums          PASS
+   Hermite recovery H(0) = per(A)           PASS
+   nontrivial: cross-group coefficients > 0 PASS
+   control: J-1 jets underdetermined        PASS
+config n=5 r=2 Q=5 R=3 density=0.6 seed=5 {'n': 5, 'r': 2, 'Q': 5, 'R': 3, 'I': [0, 1, 2], 'D': 1024, 'nexc': 106, 'h': 2, 'cross': 30, 'H1': '283/50625', 'M': 19, 'per': 5, 'degH': 20, 'J': 5}
+   eigen I-M0 = sum kappa psi psi^T         PASS
+   H(0) = per(A)                            PASS
+   deg H <= 2n(R-1)                         PASS
+   separation H(t) at t=1..Q                PASS
+   Taylor jets via restricted sums          PASS
+   Hermite recovery H(0) = per(A)           PASS
+   nontrivial: cross-group coefficients > 0 PASS
+   control: J-1 jets underdetermined        PASS
+ALL PASS

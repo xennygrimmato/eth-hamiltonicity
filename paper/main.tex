@@ -1510,7 +1510,7 @@ Cut\&Count extracts $[X\text{ connected}]$ from a sum over consistent colourings
 weights. The following barrier shows that such filters cannot be exact with few colours; this is
 what motivates the Grassmann construction.
 
-\begin{proposition}[written proof, Lean formalisation in progress]\label{prop:colouring-barrier}
+\begin{proposition}[machine-checked: \lean{colouring\_barrier\_graph}]\label{prop:colouring-barrier}
 Work over a field of characteristic $0$. Suppose that weights $z_0,\dots,z_{q-1}$ on $q$ colours,
 with the root coloured $0$ and every component $C\not\ni r$ of a $2$-factor contributing
 $h(C)=\sum_jz_j^{|C|}$, give a sum equal to $\HC(G)$ up to a nonzero factor, for every graph $G$

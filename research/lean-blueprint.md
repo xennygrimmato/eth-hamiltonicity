@@ -121,3 +121,8 @@ The files must compile both in `lean/` (Lean v4.34.1, Mathlib d13f23b) and in An
   Remaining for a TM-level TSP theorem: weighted streaming table procedure, package with weights in
   the input, and the digit post-processing.
 * Fresh `leanchecker --fresh EthFollowup.ExactHC.UPackage` (closure of theorem2) **passed (exit 0)**.
+* **TSP AT TM LEVEL DONE.** `WeightedPackage.lean` (743 lines) and `TSP.lean` (689 lines):
+  `theoremTSP : ∀ δ > 0, ∀ D, ∃ M C, finite alphabets ∧ ∀ n G W w, |E| ≤ D·n → (∀ e, w e ≤ W) →
+  Outputs M (tspCode G W w) (bits (n·Σ_H 2^{bK n · wt w H})) ⌊C·2^{δn}·(W+2)^C⌋` and
+  `theoremTSP_decode` (digit j = n·tourCount j; lowest non-zero digit = optimum; digit/n = #optimal).
+  Coordinator-checked: `lake build`, standard axioms. `leanchecker` replay not yet run.

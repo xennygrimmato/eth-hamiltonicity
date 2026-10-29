@@ -183,6 +183,28 @@ whether $G$ is Hamiltonian, output a Hamiltonian cycle if one exists, and count,
 Hamiltonian paths (for paths, apply the bounds with $m+n$ edges and $n+1$ vertices).
 \end{corollary}
 
+The weighted version is the sparse travelling-salesman problem; it is machine-checked as well.
+
+\begin{theorem}[Sparse TSP; machine-checked]\label{thm:tsp}
+Assume $(\mathrm{H}_{\mathrm{A}})$. For every real $\delta>0$ and every $D\ge1$ there are a
+deterministic algorithm and a constant $C$ such that, given a graph $G$ with $n$ vertices and at
+most $Dn$ edges and integer edge weights $w\colon E\to\{0,\dots,W\}$, the algorithm outputs within
+$C\cdot 2^{\delta n}(W+2)^C$ steps the integer $n\sum_{H}2^{b\,w(H)}$, $b=n^2+n$, the sum running
+over the Hamiltonian cycles $H$ of $G$. Its base-$2^{b}$ digit $j$ is $n$ times the number of
+tours of weight exactly $j$; the minimum tour weight is the position of the lowest non-zero
+digit, and the number of optimal tours is that digit divided by $n$. In particular the sparse TSP
+is solved exactly, with its optimum counted, in time $2^{\delta n}\poly(W)$ for every
+$\delta>0$: subexponential for all weights $W=2^{o(n)}$.
+\end{theorem}
+
+In Lean this is \lean{theoremTSP} and \lean{theoremTSP\_decode}, built on \A's development with
+the standard axioms only (\cref{sec:verification}). What it does \emph{not} give is as
+important: the running time grows with the number of edges, so dense and metric instances
+(complete graphs, Euclidean TSP) are untouched, and Held--Karp's $2^n$ remains the record there;
+and weights $W=2^{\Theta(n)}$ remain open (\cref{sec:limitations}). The identity behind the
+theorem is the Kronecker substitution $z=2^{b}$ in $n\sum_Hz^{w(H)}=\sum_Xz^{w(X)}\kappa(X)$,
+the weighted form of \cref{thm:blob}.
+
 The next two results are weaker but depend only on the top-level theorems of the labs, which
 are themselves machine-checked; the first is machine-checked end to end on top of them.
 
@@ -320,9 +342,9 @@ network stated in \A's own Lean format. The blob-table procedure is formalised a
 \cref{thm:main-delta,thm:main-rate} are both formally verified in Lean end to end, as statements
 about Turing machines built on \A's Lean development, with only the standard axioms
 (\lean{theorem1}, \lean{theorem2}); a fresh kernel replay with \lean{leanchecker} has passed
-for \lean{theorem1} and is running for \lean{theorem2} at the time of writing. The weighted
-(TSP) identity and network are formalised as well; the Turing-machine-level TSP theorem is in
-progress. \Cref{sec:verification} gives the details. The bounds are purely asymptotic: as for
+for both \lean{theorem1} and \lean{theorem2}. The sparse TSP theorem (\cref{thm:tsp}) is formally
+verified at the same level (\lean{theoremTSP}, \lean{theoremTSP\_decode}).
+\Cref{sec:verification} gives the details. The bounds are purely asymptotic: as for
 the SAT algorithms themselves, the crossover with brute force is astronomically large.
 
 \subsection{Limitations}\label{sec:limitations}
@@ -1488,13 +1510,18 @@ the three standard axioms and on \A's Lean development. The sharper single-algor
 one machine, with the same axioms, outputs $\#\mathrm{HC}(G)$ within
 $\lfloor C\cdot 2^{C(m+n)/\sqrt{\log_2(n+2)}}\rfloor$ steps for every graph $G$ with $m$ edges.
 A fresh kernel replay with \lean{leanchecker} of the full import closure has passed for
-\lean{theorem1}; the replay for \lean{theorem2} is running at the time of writing.
-\item \emph{Weighted layer.} The weighted identity behind the TSP extension of
-\cref{sec:extensions} and the corresponding network are formalised as well
-(\lean{blob_factorisation_w}, \lean{kronecker_decode}, \lean{hcNetW_kron}: the weighted blob
-factorisation, the decoding of the Kronecker-substituted integer, and the weighted network in
-\A's \lean{Net} format); the Turing-machine-level TSP theorem is in progress and is not claimed
-here.
+both \lean{theorem1} and \lean{theorem2}.
+\item \emph{Weighted layer (TSP).} \Cref{thm:tsp} is formally verified end to end
+(\lean{theoremTSP}, \lean{theoremTSP\_decode}): for every $\delta>0$ and $D$ there are a Turing
+machine $M$ and a constant $C$ such that, on the input word \lean{tspCode G W w} (the graph, $W$
+in unary and the $n^2$ weights in binary), $M$ outputs the binary expansion of
+$n\sum_H2^{b\,w(H)}$ within $\lfloor C\cdot2^{\delta n}(W+2)^C\rfloor$ steps whenever $|E|\le Dn$
+and all weights are at most $W$; the decoding statements (digit $j$ equals $n$ times the number
+of tours of weight $j$, the lowest non-zero digit is the optimum, its value over $n$ is the number
+of optimal tours) are part of the formal theorem. The ingredients are the weighted blob
+factorisation \lean{blob_factorisation_w}, the decoding lemma \lean{kronecker_decode}, the
+weighted network \lean{hcNetW_kron} in \A's \lean{Net} format, and a weighted table procedure.
+Standard axioms only; the \lean{leanchecker} replay of its closure has not been run yet.
 \end{itemize}
 Lean guarantees that the labs' proofs establish their formal statements; it does not guarantee
 that those statements formalise the printed theorems faithfully, which is a matter for expert
@@ -1563,9 +1590,8 @@ or check the Lean files.
 \cref{thm:main-delta,thm:main-rate} say (the definitions to read are listed in
 \cref{sec:limitations}(b)); the proofs were written by AI agents and reviewed by an AI
 coordinator.
-\item The \lean{leanchecker} replay for \lean{theorem2}.
-\item The Turing-machine-level TSP theorem, and a full write-up of the extensions of
-\cref{sec:extensions}.
+\item The \lean{leanchecker} replay for \lean{theoremTSP}.
+\item A full write-up of the extensions of \cref{sec:extensions} other than TSP.
 \item Verification of the citations written from memory (\cref{sec:limitations}(g)).
 \end{itemize}
 

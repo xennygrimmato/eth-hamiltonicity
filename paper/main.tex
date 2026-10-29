@@ -1626,7 +1626,15 @@ connected VC / connected DS & decision and minimum only; counts are $\kappa$-wei
 \end{tabular}
 \end{table}
 
-\begin{proposition}[Sketch]\label{prop:extensions}
+\noindent\emph{Machine-checked rows.} For directed Hamiltonian cycles and for ATSP the statement below
+is proved in Lean, without the degree hypothesis and also in rate form for $\#\mathrm{DHC}$, by
+splitting every vertex into an in-, a middle and an out-copy and applying
+\cref{thm:main-delta,thm:main-rate,thm:tsp} to the resulting undirected graph (\lean{theoremDHC},
+\lean{theoremDHC\_rate}, \lean{theoremATSP}, \lean{theoremATSP\_decode}; standard axioms only). The
+directed identity of the table is formalised as well (\lean{card\_dirHamCycles\_eq\_sum},
+\lean{dblob\_factorisation\_w}). For all other rows the proposition is a sketch and is not claimed.
+
+\begin{proposition}[Sketch; not claimed except for the machine-checked rows]\label{prop:extensions}
 Assume $(\mathrm{H}_{\mathrm{A}})$, and let $\mathcal P$ be one of the problems of
 \cref{tab:extensions}, on graphs with $|E|\le Dn$ and either bounded maximum degree or the
 hub-handling of \cref{rem:hubs}. Then for every $\delta>0$ the quantity stated in the table

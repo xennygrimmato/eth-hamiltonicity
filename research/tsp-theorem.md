@@ -1,3 +1,5 @@
+> **Lean status (29 Oct 2026).** TSP-1 (`theoremTSP`, `theoremTSP_decode`) and TSP-2 in its fixed-density form (`theoremATSP`, `theoremATSP_decode`; directed math layer in `Directed*.lean`) are machine-checked. TSP-1′ (explicit rate), TSP-3 (graphic TSP), Cor 0.2's search/decision for a given weight, and §5 (large weights) are informal and **not claimed**.
+
 # TSP, ATSP and graphic TSP on sparse graphs in time 2^{δn}
 
 28 Oct 2026. This note extends the exact-#HC theorem of `exact-hc-theorem.md` (cited as [E]) to

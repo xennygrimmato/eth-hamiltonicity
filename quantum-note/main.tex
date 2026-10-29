@@ -889,8 +889,9 @@ on some instance; (C4) a non-zero total of the assignments with more than $\lflo
 The semantics a reader must check are short: the gate matrices over $\mathbb{C}$, the circuit matrix as
 the ordered product, and the amplitude $\amp{y}{C}{x}$ (\texttt{Circuit.lean}, \S1), and the input
 and output encodings (\S7). The theorems depend only on the axioms \texttt{propext},
-\texttt{Classical.choice} and \texttt{Quot.sound}; a fresh \texttt{leanchecker} replay of their
-closure is pending at the time of writing. \Cref{thm:openai}, \cref{cor:marginals} and \cref{cor:density} are proved on paper
+\texttt{Classical.choice} and \texttt{Quot.sound}, and fresh \texttt{leanchecker} replays of their
+closures (\texttt{EthFollowup.Quantum.QRate}, which contains \texttt{QTheorem}, and
+\texttt{EthFollowup.Quantum.Paths}) passed. \Cref{thm:openai}, \cref{cor:marginals} and \cref{cor:density} are proved on paper
 only and are not claimed as machine-checked.
 
 \section*{Acknowledgements}

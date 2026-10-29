@@ -1,0 +1,27 @@
+(i) values of per on 0/1 matrices
+  n=2: 3 distinct values; [0,2^(n-1)] covered: True; max 2
+  n=3: 6 distinct values; [0,2^(n-1)] covered: True; max 6
+  n=4: 16 distinct values; [0,2^(n-1)] covered: True; max 24
+  n=5 (60000 samples): 51 distinct values; [0,16] covered: True
+
+(ii)-(iv) budget; lgn! = bits of per; P = largest prime needed for plain CRT; P' = largest prime needed in BHL regime
+     n   lg n!   #primes   P     P/(n ln n)  | P'(BHL)  P'/n  BHL saving n/(P' lg P') | 2-adic k   lg(n^k)/n
+     64      297      50     229   0.860     |    None  nan        nan             |     297       27.8
+    256     1685     199    1217   0.857     |    None  nan        nan             |    1685       52.7
+   1024     8770     805    6197   0.873     |    None  nan        nan             |    8771       85.7
+   4096    43251    3268   30211   0.887     |    None  nan        nan             |   43252      126.7
+  16384   205748   13261  142963   0.899     |    None  nan        nan             |  205749      175.8
+  P' = None: even ALL primes p < n used in the vanishing regime k_p = ceil(n/p)-1 do not reach lg n!:
+     n=    64: lg n! =       297, sum_(p<n) (ceil(n/p)-1) lg p =       242, deficit = 0.85 n bits
+     n=   256: lg n! =      1685, sum_(p<n) (ceil(n/p)-1) lg p =      1438, deficit = 0.96 n bits
+     n=  1024: lg n! =      8770, sum_(p<n) (ceil(n/p)-1) lg p =      7732, deficit = 1.01 n bits
+     n=  4096: lg n! =     43251, sum_(p<n) (ceil(n/p)-1) lg p =     38945, deficit = 1.05 n bits
+     n= 16384: lg n! =    205748, sum_(p<n) (ceil(n/p)-1) lg p =    188194, deficit = 1.07 n bits
+
+(v) entropy-respecting p-adic schemes: bits allowed per modulus b(n) = n*sqrt(lg n)/(lglg n)^2 (the Lean N-bound break-even);
+    minimum number of coprime moduli = lg n!/b(n); smallest P with pi(P) >= that; k_p for p=P
+  n=2^10: lg n!/n =   8.56, b/n =  0.29, moduli >=  30, primes up to  113, k_P = 0.04 n  (k_P*P/n = 4.7, BHL needs < 1)
+  n=2^16: lg n!/n =  14.56, b/n =  0.25, moduli >=  59, primes up to  277, k_P = 0.03 n  (k_P*P/n = 8.5, BHL needs < 1)
+  n=2^20: lg n!/n =  18.56, b/n =  0.24, moduli >=  78, primes up to  397, k_P = 0.03 n  (k_P*P/n = 11.0, BHL needs < 1)
+  n=2^30: lg n!/n =  28.56, b/n =  0.23, moduli >= 126, primes up to  701, k_P = 0.02 n  (k_P*P/n = 16.9, BHL needs < 1)
+  n=2^40: lg n!/n =  38.56, b/n =  0.22, moduli >= 173, primes up to 1031, k_P = 0.02 n  (k_P*P/n = 23.0, BHL needs < 1)

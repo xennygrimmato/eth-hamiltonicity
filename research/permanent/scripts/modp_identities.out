@@ -1,0 +1,35 @@
+PASS (a) shifted Ryser n=2
+PASS (a) shifted Ryser n=3
+PASS (a) shifted Ryser n=4
+PASS (a) shifted Ryser n=5
+PASS (a) shifted Ryser n=6
+PASS (a) shifted Ryser n=7
+
+(b) per = sum over S with Z_w(S) < k  (mod p^k); surviving fraction vs 2^n
+PASS (b) n=8 p=3 k=1 kp/n=0.38: surviving fraction 0.027 (binomial prediction 0.039)
+PASS (b) n=8 p=3 k=2 kp/n=0.75: surviving fraction 0.199 (binomial prediction 0.195)
+PASS (b) n=8 p=5 k=1 kp/n=0.62: surviving fraction 0.150 (binomial prediction 0.168)
+PASS (b) n=8 p=3 k=3 kp/n=1.12: surviving fraction 0.470 (binomial prediction 0.468)
+PASS (b) n=8 p=2 k=3 kp/n=0.75: surviving fraction 0.145 (binomial prediction 0.145)
+PASS (b) n=8 p=2 k=5 kp/n=1.25: surviving fraction 0.637 (binomial prediction 0.637)
+PASS (b) n=7 p=7 k=1 kp/n=1.00: surviving fraction 0.369 (binomial prediction 0.340)
+PASS (b) n=8 p=3 k=4 kp/n=1.50: surviving fraction 0.752 (binomial prediction 0.741)
+PASS (c) a row repeated m times => m! | per   (n<=7, all m)
+
+PASS (d) n=6 p=3 r=2: formula (2.3); r(p-1)<n => per=0 mod p: pred True, all zero True
+PASS (d) n=6 p=3 r=3: formula (2.3); r(p-1)<n => per=0 mod p: pred False, all zero True
+PASS (d) n=7 p=3 r=3: formula (2.3); r(p-1)<n => per=0 mod p: pred True, all zero True
+PASS (d) n=7 p=3 r=4: formula (2.3); r(p-1)<n => per=0 mod p: pred False, all zero False
+PASS (d) n=6 p=5 r=1: formula (2.3); r(p-1)<n => per=0 mod p: pred True, all zero True
+PASS (d) n=6 p=5 r=2: formula (2.3); r(p-1)<n => per=0 mod p: pred False, all zero False
+PASS (d) n=8 p=3 r=3: formula (2.3); r(p-1)<n => per=0 mod p: pred True, all zero True
+PASS (d) n=8 p=3 r=4: formula (2.3); r(p-1)<n => per=0 mod p: pred False, all zero True
+PASS (d) n=8 p=5 r=2: formula (2.3); r(p-1)<n => per=0 mod p: pred False, all zero True
+PASS (d) n=8 p=2 r=7: formula (2.3); r(p-1)<n => per=0 mod p: pred True, all zero True
+
+PASS (e) n=5 p=3: X = per mod p (True); 2-local F_q form = X (True); N = n + n*ceil(lg p) = 15
+PASS (e) n=6 p=3: X = per mod p (True); 2-local F_q form = X (True); N = n + n*ceil(lg p) = 18
+PASS (e) n=5 p=5: X = per mod p (True); 2-local F_q form = X (True); N = n + n*ceil(lg p) = 20
+PASS (e) n=4 p=7: X = per mod p (True); 2-local F_q form = X (True); N = n + n*ceil(lg p) = 16
+
+ALL PASS

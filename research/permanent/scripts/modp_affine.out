@@ -1,0 +1,16 @@
+PASS (a) n=2: 2^n | G (True), X = -1, X = per mod 2 (True)
+PASS (a) n=3: 2^n | G (True), X = 0, X = per mod 2 (True)
+PASS (a) n=4: 2^n | G (True), X = 0, X = per mod 2 (True)
+PASS (a) n=5: 2^n | G (True), X = -1, X = per mod 2 (True)
+PASS (a) n=6: 2^n | G (True), X = 0, X = per mod 2 (True)
+PASS (a) n=7: 2^n | G (True), X = 0, X = per mod 2 (True)
+PASS (b) n=3 p=3: sum_c N_c zeta^c rational (True), = p^n * X (True), X = per mod p (True); Boolean vars N' = n(1+2*ceil(lg p)) = 15
+PASS (b) n=4 p=3: sum_c N_c zeta^c rational (True), = p^n * X (True), X = per mod p (True); Boolean vars N' = n(1+2*ceil(lg p)) = 20
+PASS (b) n=3 p=5: sum_c N_c zeta^c rational (True), = p^n * X (True), X = per mod p (True); Boolean vars N' = n(1+2*ceil(lg p)) = 21
+PASS (b) n=5 p=3: sum_c N_c zeta^c rational (True), = p^n * X (True), X = per mod p (True); Boolean vars N' = n(1+2*ceil(lg p)) = 25
+(c) p=2: |hhat(t)|, t=0..p-1 = [0.5, 0.5]  -> affine (constant modulus)
+(c) p=3: |hhat(t)|, t=0..p-1 = [1.0, 0.5774, 0.5774]  -> NOT affine
+(c) p=5: |hhat(t)|, t=0..p-1 = [2.0, 0.8507, 0.5257, 0.5257, 0.8507]  -> NOT affine
+(c) p=7: |hhat(t)|, t=0..p-1 = [3.0, 1.1524, 0.6395, 0.5129, 0.5129, 0.6395, 1.1524]  -> NOT affine
+
+ALL PASS

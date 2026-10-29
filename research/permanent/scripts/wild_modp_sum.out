@@ -1,0 +1,12 @@
+(1) n=3 p=5: per mod p = 1, F_p-sum = 1 PASS
+(1) n=4 p=7: per mod p = 0, F_p-sum = 0 PASS
+(1) n=5 p=7: per mod p = 0, F_p-sum = 0 PASS
+(2) n=4 q=2: #f with loads == 1 mod q = 6, per = 6 PASS
+(2) n=5 q=3: #f with loads == 1 mod q = 5, per = 5 PASS
+(2) n=6 q=2: #f with loads == 1 mod q = 8, per = 8 PASS
+(2) n=6 q=5: #f with loads == 1 mod q = 50, per = 50 PASS
+(3) n=8: lg n! = 15.3, sum of lg p over primes p <= 2 n lg n = 59.1, #primes = 15
+(3) n=16: lg n! = 44.3, sum of lg p over primes p <= 2 n lg n = 161.5, #primes = 31
+(3) n=64: lg n! = 296.0, sum of lg p over primes p <= 2 n lg n = 1056.7, #primes = 135
+(3) n=256: lg n! = 1684.0, sum of lg p over primes p <= 2 n lg n = 5810.3, #primes = 564
+ALL PASS

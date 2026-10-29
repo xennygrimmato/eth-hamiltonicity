@@ -1,0 +1,12 @@
+n=3 r=1 m=2: per=0  (1) True  (2) True  (3) True  -> PASS
+n=4 r=1 m=3: per=-48  (1) True  (2) True  (3) True  -> PASS
+n=4 r=2 m=4: per=-276  (1) True  (2) True  (3) True  -> PASS
+n=5 r=1 m=5: per=-144  (1) True  (2) True  (3) True  -> PASS
+n=5 r=2 m=5: per=-12884  (1) True  (2) True  (3) True  -> PASS
+n=6 r=2 m=6: per=512768  (1) True  (2) True  (3) True  -> PASS
+n=6 r=3 m=5: per=-13344  (1) True  (2) True  (3) True  -> PASS
+n=7 r=2 m=7: per=142624  (1) True  (2) True  (3) True  -> PASS
+n=7 r=1 m=9: per=0  (1) True  (2) True  (3) True  -> PASS
+ALL PASS
+accounting: per(C+D) = sum over (n+1)^{2r} evaluation points of a vertex-weighted matching sum on the
+            sparse graph supp(D) (m edges); each evaluation is a local network with U = 2 m_cross bits.

@@ -1,0 +1,17 @@
+rook: n=3 m=2 per(J-B)=2 formula=2 PASS
+rook: n=4 m=3 per(J-B)=10 formula=10 PASS
+rook: n=5 m=4 per(J-B)=46 formula=46 PASS
+rook: n=5 m=6 per(J-B)=24 formula=24 PASS
+rook: n=6 m=5 per(J-B)=276 formula=276 PASS
+rook: n=6 m=8 per(J-B)=166 formula=166 PASS
+rook: n=7 m=6 per(J-B)=2066 formula=2066 PASS
+#HC(K_n - D): n=4 m=2 truth=0 incl-excl=0 det-formula=0 PASS
+#HC(K_n - D): n=4 m=4 truth=0 incl-excl=0 det-formula=0 PASS
+#HC(K_n - D): n=5 m=3 truth=0 incl-excl=0 det-formula=0 PASS
+#HC(K_n - D): n=5 m=5 truth=0 incl-excl=0 det-formula=0 PASS
+#HC(K_n - D): n=6 m=4 truth=2 incl-excl=2 det-formula=2 PASS
+#HC(K_n - D): n=6 m=7 truth=1 incl-excl=1 det-formula=1 PASS
+#HC(K_n - D): n=7 m=5 truth=34 incl-excl=34 det-formula=34 PASS
+#HC(K_n - D): n=7 m=8 truth=10 incl-excl=10 det-formula=10 PASS
+#HC(K_n - D): n=8 m=6 truth=298 incl-excl=298 det-formula=298 PASS
+ALL PASS

@@ -1,0 +1,8 @@
+n=4: per=0 glynn=0 PASS | nonzero Walsh coeffs 0/16 by level [0, 0, 0, 0, 0] (levels with |S| = n mod 2 have 8 slots) | rank of half-split matrix 0 (max 4)
+n=5: per=0 glynn=0 PASS | nonzero Walsh coeffs 8/32 by level [0, 4, 0, 4, 0, 0] (levels with |S| = n mod 2 have 16 slots) | rank of half-split matrix 2 (max 4)
+n=6: per=0 glynn=0 PASS | nonzero Walsh coeffs 16/64 by level [1, 0, 10, 0, 5, 0, 0] (levels with |S| = n mod 2 have 32 slots) | rank of half-split matrix 2 (max 8)
+n=7: per=9 glynn=9 PASS | nonzero Walsh coeffs 64/128 by level [0, 7, 0, 35, 0, 21, 0, 1] (levels with |S| = n mod 2 have 64 slots) | rank of half-split matrix 4 (max 8)
+n=8: per=59 glynn=59 PASS | nonzero Walsh coeffs 128/256 by level [1, 0, 28, 0, 70, 0, 28, 0, 1] (levels with |S| = n mod 2 have 128 slots) | rank of half-split matrix 10 (max 16)
+algebra barrier: n=4, matrix [L+L'=1] has size 6 and rank 6 = C(n,n/2) = 6
+algebra barrier: n=6, matrix [L+L'=1] has size 20 and rank 20 = C(n,n/2) = 20
+ALL PASS

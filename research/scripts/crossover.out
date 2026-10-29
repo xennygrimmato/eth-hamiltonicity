@@ -1,0 +1,337 @@
+
+====================================================================================================
+0. Schedules (Levels.Gen): L_l = log2 K_l, e_l, e'_l = fractionHalf(l)
+====================================================================================================
+  l       log2 K_l        e_l       e'_l  e_l/rho^l   zeta_l
+  0             18        0.5        1.0        0.5   0.0313
+  1             72     0.4004        0.7     0.5663   0.0156
+  2            186     0.3019        0.5     0.6038  0.00781
+  3            420     0.2206       0.35     0.6239  0.00391
+  4            894     0.1586       0.25     0.6342  0.00195
+  5           1848      0.113      0.175     0.6395 0.000977
+  6           3762    0.08026      0.125     0.6421 0.000488
+  7           7596    0.05687     0.0875     0.6434 0.000244
+  8          15270    0.04026     0.0625     0.6441 0.000122
+  9          30624    0.02848    0.04375     0.6444   6.1e-5
+ 10          61338    0.02014    0.03125     0.6446  3.05e-5
+ 11         122772    0.01425    0.02187     0.6447  1.53e-5
+ 12         245646    0.01007    0.01563     0.6447  7.63e-6
+ 13         491400   0.007124    0.01094     0.6448  3.81e-6
+limit e_l/rho^l = 0.644772 (= 0.5 * prod(1+3 zeta_j/rho)); +3/K_l contributes < 2^-17 at l=0 and is negligible after
+
+====================================================================================================
+1. Anthropic 3-SAT decision machine (rates/PaddedDescent): explicit floor, TM degree q
+====================================================================================================
+sOf n = floor(3(floor(log2 floor(log2 n)) - 911)/19);  exhaustive while s < s0K 3 = 128;  pad 2^{2^131 (n/2^s + 1)}
+  q =     1 : rate q*2^(131-s) < 1 needs s >= 132  <=>  floor(log2 log2 n) >= 1747  i.e. n >= 2^(2^1747)
+  q =     2 : rate q*2^(131-s) < 1 needs s >= 133  <=>  floor(log2 log2 n) >= 1754  i.e. n >= 2^(2^1754)
+  q =    10 : rate q*2^(131-s) < 1 needs s >= 136  <=>  floor(log2 log2 n) >= 1773  i.e. n >= 2^(2^1773)
+  q =  1000 : rate q*2^(131-s) < 1 needs s >= 142  <=>  floor(log2 log2 n) >= 1811  i.e. n >= 2^(2^1811)
+  (exhaustive search for all n < 2^(2^1722); ThreeSatRateStatement.lean says 2^(2^518), a weaker, true bound)
+
+====================================================================================================
+2. Anthropic #3-SAT, m-route (Theorem 1 in m), k = 3, m = alpha*n
+====================================================================================================
+rate = needTop/n, needTop = max(search 3K^8 size K, P(2g/K+1), (K-1)lam, solver); T <= q(|x|+2^needTop+1)^q
+
+2a. table: tier A (CountedRoute, e' = fractionHalf, level root9), alpha = 4.26, C0 = 0, at n = 2^(2^j)
+   j       log2 n    l         rate     solver/n  dominant
+   4         16.0    0     1.94e+40    2.337e+34  search
+   6         64.0    0    6.891e+25    8.301e+19  search
+   8        256.0    0        25.56        25.56  solver
+  10       1024.0    1        17.89        17.89  solver
+  12       4096.0    3        8.946        8.946  solver
+  14      16384.0    4         6.39         6.39  solver
+  16      65536.0    6        3.195        3.195  solver
+  18     262144.0    8        1.597        1.597  solver
+  20   1.04858e+6   10       0.7987       0.7987  solver
+  22    4.1943e+6   12       0.3994       0.3994  solver
+  24   1.67772e+7   14       0.1997       0.1997  solver
+  26   6.71089e+7   16      0.09984      0.09984  solver
+  28   2.68435e+8   18      0.04992      0.04992  solver
+  30   1.07374e+9   20      0.02496      0.02496  solver
+
+2b. crossover t* = log2 n*  (q = TM degree; q = 1, C0 = 0 is the explicit-part lower bound)
+variant                                                     alpha    q   l*  t* = log2 n*
+A  CountedRoute, root9, e'=fractionHalf, C0=0                 1.0    1    6  33858.0 (log2 t = 15.05)
+A  CountedRoute, root9, e'=fractionHalf, C0=1                 1.0    1    6  33858.0 (log2 t = 15.05)
+A  CountedRoute, root9, e'=fractionHalf, C0=10                1.0    1    6  33858.0 (log2 t = 15.05)
+B  same lemmas, num = e_l, level free                         1.0    1    4  7163.39 (log2 t = 12.81)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                      1.0    1    4  6459.24 (log2 t = 12.66)  [zeta=2^-(l+5)]
+C2 + FMM base e0=5/18 [H]                                     1.0    1    2  1449.09 (log2 t = 10.5)  [zeta=2^-(l+6)]
+C3 + e0=omega/9=0.2635 [H]                                    1.0    1    2  1352.99 (log2 t = 10.4)  [zeta=2^-(l+5)]
+C4 + e0=5/18, x0=10 [H]                                       1.0    1    2  1160.77 (log2 t = 10.18)  [zeta=2^-(l+6)]
+C5 C2 + no K^g grouping search [H]                            1.0    1    2  1265.17 (log2 t = 10.31)  [zeta=2^-(l+6)]
+A  CountedRoute, root9, e'=fractionHalf, C0=0                 1.0    2    8  137430.0 (log2 t = 17.07)
+B  same lemmas, num = e_l, level free                         1.0    2    6  30110.5 (log2 t = 14.88)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                      1.0    2    6  27198.3 (log2 t = 14.73)  [zeta=2^-(l+5)]
+C2 + FMM base e0=5/18 [H]                                     1.0    2    4  6972.35 (log2 t = 12.77)  [zeta=2^-(l+6)]
+C3 + e0=omega/9=0.2635 [H]                                    1.0    2    4  6972.35 (log2 t = 12.77)  [zeta=2^-(l+6)]
+C4 + e0=5/18, x0=10 [H]                                       1.0    2    4  5772.08 (log2 t = 12.49)  [zeta=2^-(l+6)]
+C5 C2 + no K^g grouping search [H]                            1.0    2    4  6096.17 (log2 t = 12.57)  [zeta=2^-(l+6)]
+A  CountedRoute, root9, e'=fractionHalf, C0=0                 1.0    3    9  275616.0 (log2 t = 18.07)
+B  same lemmas, num = e_l, level free                         1.0    3    8  122177.0 (log2 t = 16.9)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                      1.0    3    7  59248.1 (log2 t = 15.85)  [zeta=2^-(l+6)]
+C2 + FMM base e0=5/18 [H]                                     1.0    3    5  15406.1 (log2 t = 13.91)  [zeta=2^-(l+7)]
+C3 + e0=omega/9=0.2635 [H]                                    1.0    3    5  14414.0 (log2 t = 13.82)  [zeta=2^-(l+6)]
+C4 + e0=5/18, x0=10 [H]                                       1.0    3    5  13037.8 (log2 t = 13.67)  [zeta=2^-(l+7)]
+C5 C2 + no K^g grouping search [H]                            1.0    3    5  13474.8 (log2 t = 13.72)  [zeta=2^-(l+7)]
+A  CountedRoute, root9, e'=fractionHalf, C0=0                 1.0    5   10  552042.0 (log2 t = 19.07)
+B  same lemmas, num = e_l, level free                         1.0    5    9  245011.0 (log2 t = 17.9)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                      1.0    5    8  135426.0 (log2 t = 17.05)  [zeta=2^-(l+8)]
+C2 + FMM base e0=5/18 [H]                                     1.0    5    7  54928.7 (log2 t = 15.75)  [zeta=2^-(l+5)]
+C3 + e0=omega/9=0.2635 [H]                                    1.0    5    6  43904.3 (log2 t = 15.42)  [zeta=2^-14]
+C4 + e0=5/18, x0=10 [H]                                       1.0    5    7  45472.4 (log2 t = 15.47)  [zeta=2^-(l+5)]
+C5 C2 + no K^g grouping search [H]                            1.0    5    7  48055.5 (log2 t = 15.55)  [zeta=2^-(l+5)]
+A  CountedRoute, root9, e'=fractionHalf, C0=0                 1.0   10   12  2.21081e+6 (log2 t = 21.08)
+B  same lemmas, num = e_l, level free                         1.0   10   11  982198.0 (log2 t = 19.91)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                      1.0   10   10  543909.0 (log2 t = 19.05)  [zeta=2^-(l+8)]
+C2 + FMM base e0=5/18 [H]                                     1.0   10    9  221492.0 (log2 t = 17.76)  [zeta=2^-(l+5)]
+C3 + e0=omega/9=0.2635 [H]                                    1.0   10    8  177507.0 (log2 t = 17.44)  [zeta=2^-14]
+C4 + e0=5/18, x0=10 [H]                                       1.0   10    9  183619.0 (log2 t = 17.49)  [zeta=2^-(l+5)]
+C5 C2 + no K^g grouping search [H]                            1.0   10    9  193797.0 (log2 t = 17.56)  [zeta=2^-(l+5)]
+A  CountedRoute, root9, e'=fractionHalf, C0=0                 3.0    1    9  275614.0 (log2 t = 18.07)
+A  CountedRoute, root9, e'=fractionHalf, C0=1                 3.0    1    9  275614.0 (log2 t = 18.07)
+A  CountedRoute, root9, e'=fractionHalf, C0=10                3.0    1    9  275614.0 (log2 t = 18.07)
+B  same lemmas, num = e_l, level free                         3.0    1    8  122176.0 (log2 t = 16.9)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                      3.0    1    7  59246.5 (log2 t = 15.85)  [zeta=2^-(l+6)]
+C2 + FMM base e0=5/18 [H]                                     3.0    1    5  15404.5 (log2 t = 13.91)  [zeta=2^-(l+7)]
+C3 + e0=omega/9=0.2635 [H]                                    3.0    1    5  14412.4 (log2 t = 13.82)  [zeta=2^-(l+6)]
+C4 + e0=5/18, x0=10 [H]                                       3.0    1    5  13036.3 (log2 t = 13.67)  [zeta=2^-(l+7)]
+C5 C2 + no K^g grouping search [H]                            3.0    1    5  13473.2 (log2 t = 13.72)  [zeta=2^-(l+7)]
+A  CountedRoute, root9, e'=fractionHalf, C0=0                 3.0    2   11  1.10495e+6 (log2 t = 20.08)
+B  same lemmas, num = e_l, level free                         3.0    2   10  490722.0 (log2 t = 18.9)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                      3.0    2    9  238865.0 (log2 t = 17.87)  [zeta=2^-(l+6)]
+C2 + FMM base e0=5/18 [H]                                     3.0    2    7  63311.6 (log2 t = 15.95)  [zeta=2^-(l+7)]
+C3 + e0=omega/9=0.2635 [H]                                    3.0    2    7  59247.4 (log2 t = 15.85)  [zeta=2^-(l+6)]
+C4 + e0=5/18, x0=10 [H]                                       3.0    2    7  53839.3 (log2 t = 15.72)  [zeta=2^-(l+7)]
+C5 C2 + no K^g grouping search [H]                            3.0    2    7  55390.2 (log2 t = 15.76)  [zeta=2^-(l+7)]
+A  CountedRoute, root9, e'=fractionHalf, C0=0                 3.0    3   12  2.21081e+6 (log2 t = 21.08)
+B  same lemmas, num = e_l, level free                         3.0    3   11  982196.0 (log2 t = 19.91)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                      3.0    3   10  478435.0 (log2 t = 18.87)  [zeta=2^-(l+6)]
+C2 + FMM base e0=5/18 [H]                                     3.0    3    8  135425.0 (log2 t = 17.05)  [zeta=2^-(l+8)]
+C3 + e0=omega/9=0.2635 [H]                                    3.0    3    8  127265.0 (log2 t = 16.96)  [zeta=2^-(l+7)]
+C4 + e0=5/18, x0=10 [H]                                       3.0    3    8  116481.0 (log2 t = 16.83)  [zeta=2^-(l+8)]
+C5 C2 + no K^g grouping search [H]                            3.0    3    8  118489.0 (log2 t = 16.85)  [zeta=2^-(l+8)]
+A  CountedRoute, root9, e'=fractionHalf, C0=0                 3.0    5   13  4.4226e+6 (log2 t = 22.08)
+B  same lemmas, num = e_l, level free                         3.0    5   12  1.96519e+6 (log2 t = 20.91)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                      3.0    5   11  1.42469e+6 (log2 t = 20.44)  [zeta=2^-14]
+C2 + FMM base e0=5/18 [H]                                     3.0    5   10  478436.0 (log2 t = 18.87)  [zeta=2^-(l+6)]
+C3 + e0=omega/9=0.2635 [H]                                    3.0    5   10  443652.0 (log2 t = 18.76)  [zeta=2^-(l+5)]
+C4 + e0=5/18, x0=10 [H]                                       3.0    5   10  401124.0 (log2 t = 18.61)  [zeta=2^-(l+6)]
+C5 C2 + no K^g grouping search [H]                            3.0    5   10  418622.0 (log2 t = 18.68)  [zeta=2^-(l+6)]
+A  CountedRoute, root9, e'=fractionHalf, C0=0                 3.0   10   15  1.76935e+7 (log2 t = 24.08)
+B  same lemmas, num = e_l, level free                         3.0   10   14  7.86334e+6 (log2 t = 22.91)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                      3.0   10   13  5.70089e+6 (log2 t = 22.44)  [zeta=2^-14]
+C2 + FMM base e0=5/18 [H]                                     3.0   10   12  1.91604e+6 (log2 t = 20.87)  [zeta=2^-(l+6)]
+C3 + e0=omega/9=0.2635 [H]                                    3.0   10   12  1.77681e+6 (log2 t = 20.76)  [zeta=2^-(l+5)]
+C4 + e0=5/18, x0=10 [H]                                       3.0   10   12  1.60679e+6 (log2 t = 20.62)  [zeta=2^-(l+6)]
+C5 C2 + no K^g grouping search [H]                            3.0   10   12  1.67652e+6 (log2 t = 20.68)  [zeta=2^-(l+6)]
+A  CountedRoute, root9, e'=fractionHalf, C0=0                4.26    1   10  552040.0 (log2 t = 19.07)
+A  CountedRoute, root9, e'=fractionHalf, C0=1                4.26    1   10  552040.0 (log2 t = 19.07)
+A  CountedRoute, root9, e'=fractionHalf, C0=10               4.26    1   10  552040.0 (log2 t = 19.07)
+B  same lemmas, num = e_l, level free                        4.26    1    9  245009.0 (log2 t = 17.9)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                     4.26    1    8  119103.0 (log2 t = 16.86)  [zeta=2^-(l+6)]
+C2 + FMM base e0=5/18 [H]                                    4.26    1    6  31357.5 (log2 t = 14.94)  [zeta=2^-(l+7)]
+C3 + e0=omega/9=0.2635 [H]                                   4.26    1    6  29341.4 (log2 t = 14.84)  [zeta=2^-(l+6)]
+C4 + e0=5/18, x0=10 [H]                                      4.26    1    6  26621.3 (log2 t = 14.7)  [zeta=2^-(l+7)]
+C5 C2 + no K^g grouping search [H]                           4.26    1    6  27431.2 (log2 t = 14.74)  [zeta=2^-(l+7)]
+A  CountedRoute, root9, e'=fractionHalf, C0=0                4.26    2   12  2.21081e+6 (log2 t = 21.08)
+B  same lemmas, num = e_l, level free                        4.26    2   11  982196.0 (log2 t = 19.91)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                     4.26    2   10  478435.0 (log2 t = 18.87)  [zeta=2^-(l+6)]
+C2 + FMM base e0=5/18 [H]                                    4.26    2    8  127265.0 (log2 t = 16.96)  [zeta=2^-(l+7)]
+C3 + e0=omega/9=0.2635 [H]                                   4.26    2    8  119104.0 (log2 t = 16.86)  [zeta=2^-(l+6)]
+C4 + e0=5/18, x0=10 [H]                                      4.26    2    8  108320.0 (log2 t = 16.72)  [zeta=2^-(l+7)]
+C5 C2 + no K^g grouping search [H]                           4.26    2    8  111348.0 (log2 t = 16.76)  [zeta=2^-(l+7)]
+A  CountedRoute, root9, e'=fractionHalf, C0=0                4.26    3   13  4.4226e+6 (log2 t = 22.08)
+B  same lemmas, num = e_l, level free                        4.26    3   12  1.96519e+6 (log2 t = 20.91)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                     4.26    3   11  957620.0 (log2 t = 19.87)  [zeta=2^-(l+6)]
+C2 + FMM base e0=5/18 [H]                                    4.26    3    9  271570.0 (log2 t = 18.05)  [zeta=2^-(l+8)]
+C3 + e0=omega/9=0.2635 [H]                                   4.26    3    9  255218.0 (log2 t = 17.96)  [zeta=2^-(l+7)]
+C4 + e0=5/18, x0=10 [H]                                      4.26    3    9  233682.0 (log2 t = 17.83)  [zeta=2^-(l+8)]
+C5 C2 + no K^g grouping search [H]                           4.26    3    9  237615.0 (log2 t = 17.86)  [zeta=2^-(l+8)]
+A  CountedRoute, root9, e'=fractionHalf, C0=0                4.26    5   14  8.84622e+6 (log2 t = 23.08)
+B  same lemmas, num = e_l, level free                        4.26    5   13  3.93122e+6 (log2 t = 21.91)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                     4.26    5   13  3.55442e+6 (log2 t = 21.76)  [zeta=2^-(l+5)]
+C2 + FMM base e0=5/18 [H]                                    4.26    5   11  957621.0 (log2 t = 19.87)  [zeta=2^-(l+6)]
+C3 + e0=omega/9=0.2635 [H]                                   4.26    5   11  888021.0 (log2 t = 19.76)  [zeta=2^-(l+5)]
+C4 + e0=5/18, x0=10 [H]                                      4.26    5   11  802997.0 (log2 t = 19.62)  [zeta=2^-(l+6)]
+C5 C2 + no K^g grouping search [H]                           4.26    5   11  837908.0 (log2 t = 19.68)  [zeta=2^-(l+6)]
+A  CountedRoute, root9, e'=fractionHalf, C0=0                4.26   10   16  3.53882e+7 (log2 t = 25.08)
+B  same lemmas, num = e_l, level free                        4.26   10   15  1.57276e+7 (log2 t = 23.91)
+C1 schedule re-tuned (zeta, g/K), e0=1/2                     4.26   10   15  1.42203e+7 (log2 t = 23.76)  [zeta=2^-(l+5)]
+C2 + FMM base e0=5/18 [H]                                    4.26   10   13  3.83292e+6 (log2 t = 21.87)  [zeta=2^-(l+6)]
+C3 + e0=omega/9=0.2635 [H]                                   4.26   10   13  3.55442e+6 (log2 t = 21.76)  [zeta=2^-(l+5)]
+C4 + e0=5/18, x0=10 [H]                                      4.26   10   13  3.21442e+6 (log2 t = 21.62)  [zeta=2^-(l+6)]
+C5 C2 + no K^g grouping search [H]                           4.26   10   13  3.35379e+6 (log2 t = 21.68)  [zeta=2^-(l+6)]
+
+2c. terms / n at tier-A n* (alpha=4.26, q=1, l=10): search=2.072e-18459, P(2g/K+1)=1.3512e-18463, (K-1)lam=6.756e-18464, solver=0.79875
+    C0 would have to exceed 2^429342.0 to move n* (C0 enters only as C0 K^2 size(...)/n)
+
+====================================================================================================
+3. Anthropic #3-SAT, n-route (Theorem D(b): any m), k = 3
+====================================================================================================
+expo = needOutputs (Delta = min(occBound, n+1)) + needWalk;  level root17 (K_l^17 <= n)
+   j       log2 n    l         rate     solver/n       walk/n        U/n
+   4         16.0    0    6.214e+84    1.366e+83        1.003 1.36594e+83
+   7        128.0    0    4.159e+51    2.631e+49          1.0 2.6307e+49
+  10       1024.0    0     1.136e+4       8048.0          1.0     2370.0
+  13       8192.0    3        947.4        947.1         0.35     2706.0
+  16      65536.0    6        369.9        369.8        0.125     2958.0
+  19     524288.0    9        144.2        144.1      0.04375     3294.0
+  22    4.1943e+6   12        55.42        55.41      0.01563     3546.0
+  25   3.35544e+7   15        21.24        21.23     0.005469     3882.0
+  28   2.68435e+8   18        8.076        8.074     0.001953     4134.0
+  31   2.14748e+9   21        3.056        3.056    0.0006836     4470.0
+  34  1.71799e+10   24        1.153        1.153    0.0002441     4722.0
+  37  1.37439e+11   27       0.4251        0.425     8.545e-5     4974.0
+  40  1.09951e+12   30       0.1621        0.162     3.052e-5     5310.0
+
+crossover t* = log2 n*:
+  A  CountedRoute (e'=fractionHalf=eps), root17, q=1    l*=25  t* = 3.42255e+10 (log2 t = 34.99)
+  B  num = eps in [e_l, 2e_l] free (best num/e=1), level free, q=1    l*=24  t* = 1.61061e+10 (log2 t = 33.91)
+  C1 schedule re-tuned (zeta, g/K), e0=1/2, eps decoupled, q=1    l*=22  t* = 3.92587e+9 (log2 t = 31.87)  [zeta=2^-(l+6), eps/e=128]
+  C2 + FMM base e0=5/18 [H], eps decoupled, q=1    l*=20  t* = 1.04857e+9 (log2 t = 29.97)  [zeta=2^-(l+7), eps/e=256]
+  A  CountedRoute (e'=fractionHalf=eps), root17, q=2    l*=27  t* = 1.36902e+11 (log2 t = 36.99)
+  B  num = eps in [e_l, 2e_l] free (best num/e=1), level free, q=2    l*=26  t* = 6.44245e+10 (log2 t = 35.91)
+  C1 schedule re-tuned (zeta, g/K), e0=1/2, eps decoupled, q=2    l*=24  t* = 1.67772e+10 (log2 t = 33.97)  [zeta=2^-(l+7), eps/e=128]
+  C2 + FMM base e0=5/18 [H], eps decoupled, q=2    l*=23  t* = 7.28131e+9 (log2 t = 32.76)  [zeta=2^-(l+5), eps/e=32]
+  A  CountedRoute (e'=fractionHalf=eps), root17, q=5    l*=30  t* = 1.09522e+12 (log2 t = 39.99)
+  B  num = eps in [e_l, 2e_l] free (best num/e=1), level free, q=5    l*=29  t* = 5.15396e+11 (log2 t = 38.91)
+  C1 schedule re-tuned (zeta, g/K), e0=1/2, eps decoupled, q=5    l*=27  t* = 1.25628e+11 (log2 t = 36.87)  [zeta=2^-(l+6), eps/e=128]
+  C2 + FMM base e0=5/18 [H], eps decoupled, q=5    l*=25  t* = 3.35544e+10 (log2 t = 34.97)  [zeta=2^-(l+7), eps/e=256]
+  A  CountedRoute (e'=fractionHalf=eps), root17, q=10   l*=32  t* = 4.38087e+12 (log2 t = 41.99)
+  B  num = eps in [e_l, 2e_l] free (best num/e=1), level free, q=10   l*=31  t* = 2.06159e+12 (log2 t = 40.91)
+  C1 schedule re-tuned (zeta, g/K), e0=1/2, eps decoupled, q=10   l*=29  t* = 5.36871e+11 (log2 t = 38.97)  [zeta=2^-(l+7), eps/e=64]
+  C2 + FMM base e0=5/18 [H], eps decoupled, q=10   l*=28  t* = 2.33002e+11 (log2 t = 37.76)  [zeta=2^-(l+5), eps/e=32]
+  terms / n at tier-A n* (q=1, l=25, Delta=2.8049e+13, U/n=4806.0): search=2.8086e-5454480351, P(2g/K+1)=1.637e-606053349, (K-1)lam=2.0488e-606053370, solver=0.82134, profiles+checks=2.6263e-606053362, walk(eps n)=0.0001709
+  (the n-route also has an existential threshold n_1 >= n_0 below which it searches exhaustively; t* is a lower bound for it)
+
+====================================================================================================
+4. #HC (our theorem, conditional on Anthropic Thm A(b) + Lemma 8): vs n^2 2^n
+====================================================================================================
+X = 1 + max{g log K, e(U + gP/K + K^2) + C0 K^2 log(K(L+B')) + 2gP/K + log tau} + C1 log(g(P+B)) + C2 log n + log#branches/profiles
+net    Delta tier                                           l*  t* = log2 n*
+hc     3     A  K^30<=n, Lean schedule, C0=C1=C2=0           5  55440.0 (log2 t = 15.76)
+hc     3     A  K^30<=n, Lean schedule, C0=C1=C2=10          5  55440.0 (log2 t = 15.76)
+hc     3     B  level free                                   5  44355.9 (log2 t = 15.44)
+hc     3     C1 schedule re-tuned (zeta, g/K), e0=1/2        4  20887.9 (log2 t = 14.35)  [zeta=2^-(l+6)]
+hc     3     C2 + FMM base e0=5/18 [H]                       2  4905.11 (log2 t = 12.26)  [zeta=2^-(l+8)]
+hc     3     C3 + e0=omega/9=0.2635 [H]                      2  4614.75 (log2 t = 12.17)  [zeta=2^-(l+7)]
+hc     3     C4 + e0=5/18, x0=10 [H]                         2  4329.69 (log2 t = 12.08)  [zeta=2^-(l+9)]
+hc     4     A  K^30<=n, Lean schedule, C0=C1=C2=0           6  112860.0 (log2 t = 16.78)
+hc     4     A  K^30<=n, Lean schedule, C0=C1=C2=10          6  112860.0 (log2 t = 16.78)
+hc     4     B  level free                                   6  90291.1 (log2 t = 16.46)
+hc     4     C1 schedule re-tuned (zeta, g/K), e0=1/2        5  43205.3 (log2 t = 15.4)  [zeta=2^-(l+6)]
+hc     4     C2 + FMM base e0=5/18 [H]                       3  10470.4 (log2 t = 13.35)  [zeta=2^-(l+7)]
+hc     4     C3 + e0=omega/9=0.2635 [H]                      3  9798.57 (log2 t = 13.26)  [zeta=2^-(l+6)]
+hc     4     C4 + e0=5/18, x0=10 [H]                         3  8695.24 (log2 t = 13.09)  [zeta=2^-(l+7)]
+hc     8     A  K^30<=n, Lean schedule, C0=C1=C2=0           8  458100.0 (log2 t = 18.81)
+hc     8     A  K^30<=n, Lean schedule, C0=C1=C2=10          8  458100.0 (log2 t = 18.81)
+hc     8     B  level free                                   8  366482.0 (log2 t = 18.48)
+hc     8     C1 schedule re-tuned (zeta, g/K), e0=1/2        7  177700.0 (log2 t = 17.44)  [zeta=2^-(l+6)]
+hc     8     C2 + FMM base e0=5/18 [H]                       5  46181.7 (log2 t = 15.5)  [zeta=2^-(l+7)]
+hc     8     C3 + e0=omega/9=0.2635 [H]                      5  43206.4 (log2 t = 15.4)  [zeta=2^-(l+6)]
+hc     8     C4 + e0=5/18, x0=10 [H]                         5  39078.8 (log2 t = 15.25)  [zeta=2^-(l+7)]
+deg    3     A  K^30<=n, Lean schedule, C0=C1=C2=0           5  55440.0 (log2 t = 15.76)
+deg    3     A  K^30<=n, Lean schedule, C0=C1=C2=10          5  55440.0 (log2 t = 15.76)
+deg    3     B  level free                                   5  44357.1 (log2 t = 15.44)
+deg    3     C1 schedule re-tuned (zeta, g/K), e0=1/2        5  40037.1 (log2 t = 15.29)  [zeta=2^-(l+5)]
+deg    3     C2 + FMM base e0=5/18 [H]                       3  9080.01 (log2 t = 13.15)  [zeta=2^-(l+5)]
+deg    3     C3 + e0=omega/9=0.2635 [H]                      3  9077.63 (log2 t = 13.15)  [zeta=2^-(l+5)]
+deg    3     C4 + e0=5/18, x0=10 [H]                         3  8020.89 (log2 t = 12.97)  [zeta=2^-(l+6)]
+deg    4     A  K^30<=n, Lean schedule, C0=C1=C2=0           6  112860.0 (log2 t = 16.78)
+deg    4     A  K^30<=n, Lean schedule, C0=C1=C2=10          6  112860.0 (log2 t = 16.78)
+deg    4     B  level free                                   6  90290.9 (log2 t = 16.46)
+deg    4     C1 schedule re-tuned (zeta, g/K), e0=1/2        5  43204.6 (log2 t = 15.4)  [zeta=2^-(l+6)]
+deg    4     C2 + FMM base e0=5/18 [H]                       3  9799.04 (log2 t = 13.26)  [zeta=2^-(l+6)]
+deg    4     C3 + e0=omega/9=0.2635 [H]                      3  9797.27 (log2 t = 13.26)  [zeta=2^-(l+6)]
+deg    4     C4 + e0=5/18, x0=10 [H]                         3  8024.38 (log2 t = 12.97)  [zeta=2^-(l+6)]
+deg    8     A  K^30<=n, Lean schedule, C0=C1=C2=0           6  112860.0 (log2 t = 16.78)
+deg    8     A  K^30<=n, Lean schedule, C0=C1=C2=10          6  112860.0 (log2 t = 16.78)
+deg    8     B  level free                                   6  90292.1 (log2 t = 16.46)
+deg    8     C1 schedule re-tuned (zeta, g/K), e0=1/2        5  49160.5 (log2 t = 15.59)  [zeta=2^-(l+8)]
+deg    8     C2 + FMM base e0=5/18 [H]                       4  19349.9 (log2 t = 14.24)  [zeta=2^-(l+5)]
+deg    8     C3 + e0=omega/9=0.2635 [H]                      4  19348.7 (log2 t = 14.24)  [zeta=2^-(l+5)]
+deg    8     C4 + e0=5/18, x0=10 [H]                         4  15846.4 (log2 t = 13.95)  [zeta=2^-(l+5)]
+terms / n at tier-A n* (hc, Delta=3, l=5): gL(search)=1.1704e-12235, eU=0.78846, e gP/K + 2gP/K=9.7925e-556, log tau=7.4744e-4451, C0 K^2 log=0.0, branches/profiles=2.1066e-12233
+    break-even (n* moves only above): C0 > 2^51725.6, C1 > 2^55421.7, C2 > 2^55421.0
+
+====================================================================================================
+5. OpenAI #3-SAT, Engine I (prop:interpolation-bound), n = 2^lam
+====================================================================================================
+rate = leaves 1/s + branches 1/t + Taylor log2 C_q/n + measurements + group 2/r + polylog terms
+
+5a. tier A (paper parameters, lem:incidence-parameters; checks of the proof of thm:overview-sparse-polynomials)
+   j       lam=log2 n       rate  status / terms
+   4               16      brute  s<2: exhaustive search
+   6               64      brute  s<2: exhaustive search
+   8              256      brute  s<2: exhaustive search
+  10             1024      brute  s<2: exhaustive search
+  12             4096      brute  s<2: exhaustive search
+  14            16384      brute  s<2: exhaustive search
+  16            65536      brute  s<2: exhaustive search
+  18           262144      brute  s<2: exhaustive search
+  20          1048576      brute  r<2 or Q<=R: exhaustive search
+  22          4194304      brute  r<2 or Q<=R: exhaustive search
+  24         16777216      brute  r<2 or Q<=R: exhaustive search
+  26         67108864      brute  r<2 or Q<=R: exhaustive search
+  28        268435456      brute  r<2 or Q<=R: exhaustive search
+  30       1073741824      brute  r<2 or Q<=R: exhaustive search
+  32       4294967296      brute  6R>Q: exhaustive search
+  34      17179869184      brute  6R>Q: exhaustive search
+  36      68719476736      brute  6R>Q: exhaustive search
+  38     274877906944      1.593  beta=7 r=363 Q=56512727 R=5242880 q/n=2.23 | leaves=0.00275 polylog=4.78e-82746495024 branches=1.91e-6 Taylor=1.58 measurements=1.93e-5 group=0.00551 2Qr,=1.18e-82746495134
+  40    1099511627776       1.59  beta=7 r=655 Q=214748364 R=10485760 q/n=1.17 | leaves=0.00153 polylog=4.66e-330985980425 branches=9.54e-7 Taylor=1.58 measurements=1.12e-5 group=0.00305 2Qr,=4.72e-330985980541
+  42    4398046511104      1.548  beta=6 r=1188 Q=818089008 R=18874368 q/n=0.554 | leaves=0.000842 polylog=2.34e-1323943922045 branches=4.77e-7 Taylor=1.55 measurements=6.4e-6 group=0.00168 2Qr,=9.69e-1323943922167
+  44   17592186044416       1.16  beta=6 r=2166 Q=3123612578 R=37748736 q/n=0.29 | leaves=0.000462 polylog=8.19e-5295775688543 branches=2.38e-7 Taylor=1.16 measurements=3.63e-6 group=0.000923 2Qr,=1.38e-5295775688669
+  46   70368744177664     0.7662  beta=6 r=3964 Q=11951213345 R=75497472 q/n=0.152 | leaves=0.000252 polylog=6.83e-21183102754549 branches=1.19e-7 Taylor=0.765 measurements=2.05e-6 group=0.000505 2Qr,=4.69e-21183102754681
+  48  281474976710656     0.4785  beta=6 r=7281 Q=45812984490 R=150994944 q/n=0.0791 | leaves=0.000137 polylog=1.84e-84732411018589 branches=5.96e-8 Taylor=0.478 measurements=1.15e-6 group=0.000275 2Qr,=5.11e-84732411018727
+  50 1125899906842624     0.2892  beta=6 r=13421 Q=175921860444 R=301989888 q/n=0.0412 | leaves=7.45e-5 polylog=5.41e-338929644074768 branches=2.98e-8 Taylor=0.289 measurements=6.39e-7 group=0.000149 2Qr,=6.06e-338929644074911
+
+  A  crossover: lam* = log2 n* ~ 3.0166e+13 (log2 lam* = 44.778); at lam*: rate=0.99954, {'beta': 6, 'r': 2712, 'Q': 5237161230, 'R': 49431267, 'q/n': mpf('0.226525469791580199259971990589260510507521648326263195834434903')}
+     terms: leaves 1/s=0.0003687, polylog (Tanner, calls)=6.473e-9080885506005, branches 1/t=1.821e-7, Taylor log2 C_q=0.9984, measurements=2.92e-6, group 2/r=0.0007375, 2Qr, interp.=4.407e-9080885506133
+     a hidden polynomial factor (n+m)^c moves n* only if c > 2^3.0166e+13
+     (all checks of the proof first pass at lam ~ 8.07472e+10; there the rate is 1.599)
+
+5b/5c. tiers B and C: optimise (s, t, r, Q, R; tau minimal) under lem:layout; C adds m_test <= n + n/log2(4/3) + 2
+  tier B, m_test/n = 6.0000:  lam -> best rate
+    j=16 lam=         65536 rate=1.5850 {'ssp': 65536, 't': 8589934592, 'r': 61756, 'Q': 1026, 'R': 626}
+    j=18 lam=        262144 rate=1.5850 {'ssp': 262144, 't': 137438953472, 'r': 255203, 'Q': 3645, 'R': 1255}
+    j=20 lam=       1048576 rate=1.5850 {'ssp': 1048576, 't': 2199023255552, 'r': 987099, 'Q': 13161, 'R': 2497}
+    j=22 lam=       4194304 rate=1.5850 {'ssp': 4194304, 't': 35184372088832, 'r': 4086645, 'Q': 47740, 'R': 4914}
+    j=24 lam=      16777216 rate=1.5083 {'ssp': 128, 't': 512, 'r': 18, 'Q': 1005835, 'R': 17150}
+    j=26 lam=      67108864 rate=1.0699 {'ssp': 128, 't': 512, 'r': 18, 'Q': 4023374, 'R': 34948}
+    j=28 lam=     268435456 rate=0.7097 {'ssp': 128, 't': 512, 'r': 29, 'Q': 13814137, 'R': 66152}
+    j=30 lam=    1073741824 rate=0.4524 {'ssp': 256, 't': 1024, 'r': 49, 'Q': 47809310, 'R': 126924}
+    j=32 lam=    4294967296 rate=0.2807 {'ssp': 512, 't': 2048, 'r': 86, 'Q': 167086451, 'R': 244286}
+    j=34 lam=   17179869184 rate=0.1705 {'ssp': 1024, 't': 4096, 'r': 153, 'Q': 591806216, 'R': 472590}
+    j=36 lam=   68719476736 rate=0.1018 {'ssp': 1024, 't': 4096, 'r': 280, 'Q': 2113331408, 'R': 908750}
+    j=38 lam=  274877906944 rate=0.0599 {'ssp': 2048, 't': 8192, 'r': 512, 'Q': 7635497408, 'R': 1771700}
+    j=40 lam= 1099511627776 rate=0.0349 {'ssp': 4096, 't': 16384, 'r': 946, 'Q': 27805618997, 'R': 3463792}
+  B crossover: lam* ~ 8.53289e+7 (log2 lam* = 26.347); float rate 0.99992, mpmath-verified rate 0.999828 ok=True
+     params {'ssp': 128, 't': 512, 'r': 20, 'Q': 4935801, 'R': 38861}; terms: leaves 1/s=0.007813, polylog (Tanner, calls)=2.571e-25686468, branches 1/t=0.001953, Taylor log2 C_q=0.8882, measurements=0.001815, group 2/r=0.1, 2Qr, interp.=3.535e-25686556
+  tier C, m_test/n = 3.4094:  lam -> best rate
+    j=16 lam=         65536 rate=1.5850 {'ssp': 65536, 't': 8589934592, 'r': 61756, 'Q': 1026, 'R': 626}
+    j=18 lam=        262144 rate=1.5850 {'ssp': 262144, 't': 137438953472, 'r': 255203, 'Q': 3645, 'R': 1255}
+    j=20 lam=       1048576 rate=1.5850 {'ssp': 1048576, 't': 2199023255552, 'r': 987099, 'Q': 13161, 'R': 2497}
+    j=22 lam=       4194304 rate=1.5850 {'ssp': 4194304, 't': 35184372088832, 'r': 4086645, 'Q': 47740, 'R': 4914}
+    j=24 lam=      16777216 rate=1.2503 {'ssp': 128, 't': 512, 'r': 16, 'Q': 1048564, 'R': 17493}
+    j=26 lam=      67108864 rate=0.8480 {'ssp': 128, 't': 512, 'r': 23, 'Q': 3708840, 'R': 33617}
+    j=28 lam=     268435456 rate=0.5489 {'ssp': 256, 't': 1024, 'r': 39, 'Q': 12697012, 'R': 64232}
+    j=30 lam=    1073741824 rate=0.3445 {'ssp': 256, 't': 1024, 'r': 68, 'Q': 44096434, 'R': 122114}
+    j=32 lam=    4294967296 rate=0.2109 {'ssp': 512, 't': 2048, 'r': 120, 'Q': 155459501, 'R': 236038}
+    j=34 lam=   17179869184 rate=0.1268 {'ssp': 1024, 't': 4096, 'r': 216, 'Q': 553840044, 'R': 457952}
+    j=36 lam=   68719476736 rate=0.0751 {'ssp': 2048, 't': 8192, 'r': 395, 'Q': 1991705196, 'R': 891441}
+    j=38 lam=  274877906944 rate=0.0439 {'ssp': 4096, 't': 16384, 'r': 728, 'Q': 7227698880, 'R': 1740989}
+    j=40 lam= 1099511627776 rate=0.0254 {'ssp': 4096, 't': 16384, 'r': 1356, 'Q': 26417507907, 'R': 3381478}
+  C crossover: lam* ~ 3.81921e+7 (log2 lam* = 25.187); float rate 0.99996, mpmath-verified rate 0.999845 ok=True
+     params {'ssp': 128, 't': 512, 'r': 20, 'Q': 2209196, 'R': 25723}; terms: leaves 1/s=0.007813, polylog (Tanner, calls)=2.41e-11496889, branches 1/t=0.001953, Taylor log2 C_q=0.8882, measurements=0.001843, group 2/r=0.1, 2Qr, interp.=3.948e-11496975
+
+====================================================================================================
+6. OpenAI Engine II (thm:tensor-contraction): explicit parameter threshold only
+====================================================================================================
+u_d = floor(eps*lam/2^d), eps = 2^-17, depth d < (log2 C + log2 lam / 2)/3; bound lam^(4/5) <= u_d at the deepest
+active call needs eps*lam^(5/6)/C^(1/3) >= lam^(4/5)  <=>  lam >= 2^510 * C^10 (C = wire density constant, >= 1).
+At d = 0 alone: lam >= eps^-5 = 2^85.  So Engine II as written applies only for log2(wires) >= 2^85 (d=0) / 2^510 (all depths).
+Its rate also has the explicit leaf term H/n = wires/(n*floor(sqrt(lam))) >= 1/sqrt(lam); all other constants are O_C(.).

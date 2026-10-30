@@ -1,0 +1,7 @@
+  N1 n=4 m=3 g=3 q=2 crossing=3 U=6 Z=-2 ok
+  N1 n=4 m=3 g=3 q=3 crossing=2 U=8 Z=0 ok
+  N1 n=6 m=8 g=2 q=2 crossing=6 U=12 Z=3875544 ok
+  N1 n=5 m=4 g=3 q=2 crossing=3 U=6 Z=4802 ok
+  N1 n=5 m=4 g=3 q=3 crossing=4 U=16 Z=12288 ok
+  N5 4d all forests T_G(2,1) (by #edges): 2-deg mass trick: OK  (5, 9, '#forests=198', [(2, 6, 4), (3, 6, 4)], True); (5, 10, '#forests=291', [(2, 6, 4)], True)
+tutte_network: 166 checks, 0 failures -> PASS

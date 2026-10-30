@@ -1,0 +1,8 @@
+b=1 Bell=1 rank_p(acyclic)=1 rank_p(u^c acyclic)=1 Catalan=1
+b=2 Bell=2 rank_p(acyclic)=2 rank_p(u^c acyclic)=2 Catalan=2
+b=3 Bell=5 rank_p(acyclic)=5 rank_p(u^c acyclic)=5 Catalan=5
+b=4 Bell=15 rank_p(acyclic)=14 rank_p(u^c acyclic)=14 Catalan=14
+b=5 Bell=52 rank_p(acyclic)=42 rank_p(u^c acyclic)=42 Catalan=42
+b=6 Bell=203 rank_p(acyclic)=132 rank_p(u^c acyclic)=132 Catalan=132
+b=7 Bell=877 rank_p(acyclic)=429 rank_p(u^c acyclic)=429 Catalan=429
+tutte_catalan: 7 checks, 0 failures -> PASS

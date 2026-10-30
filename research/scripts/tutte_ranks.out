@@ -1,0 +1,32 @@
+R1 rank of M_q = [q^{|PvQ|}]
+  b=1 Bell=1 q=0:0 q=1:1 q=2:1 q=3:1 q=4:1 q=5:1 q=-1:1 q=-2:1 q=1/2:1 q=7/3:1 q=-5/2:1
+  b=2 Bell=2 q=0:0 q=1:1 q=2:2 q=3:2 q=4:2 q=5:2 q=-1:2 q=-2:2 q=1/2:2 q=7/3:2 q=-5/2:2
+  b=3 Bell=5 q=0:0 q=1:1 q=2:4 q=3:5 q=4:5 q=5:5 q=-1:5 q=-2:5 q=1/2:5 q=7/3:5 q=-5/2:5
+  b=4 Bell=15 q=0:0 q=1:1 q=2:8 q=3:14 q=4:15 q=5:15 q=-1:15 q=-2:15 q=1/2:15 q=7/3:15 q=-5/2:15
+  b=5 Bell=52 q=0:0 q=1:1 q=2:16 q=3:41 q=4:51 q=5:52 q=-1:52 q=-2:52 q=1/2:52 q=7/3:52 q=-5/2:52
+  b=6 Bell=203 q=2:32 q=3:122 q=-1:203 q=1/2:203
+R2 connectivity [PvQ = 1]: rank over Q and F_p
+  b=1 rank_Q=1 rank_F2=1 rank_F3=1 rank_F5=1
+  b=2 rank_Q=2 rank_F2=2 rank_F3=2 rank_F5=2
+  b=3 rank_Q=5 rank_F2=4 rank_F3=5 rank_F5=5
+  b=4 rank_Q=15 rank_F2=8 rank_F3=14 rank_F5=15
+  b=5 rank_Q=52 rank_F2=16 rank_F3=41 rank_F5=52
+  b=6 rank_Q=203 rank_F2=32 rank_F3=122 rank_F5=202
+R3 whole-plane kernel K_{u,v}; y=1 acyclicity matrix ranks
+  b=1 Bell=1 rank[acyclic]=1 rank[u^c acyclic, u=5/3]=1 rank[tree]=1 2^b=2 C(2b,b)=2
+  b=2 Bell=2 rank[acyclic]=2 rank[u^c acyclic, u=5/3]=2 rank[tree]=2 2^b=4 C(2b,b)=6
+  b=3 Bell=5 rank[acyclic]=5 rank[u^c acyclic, u=5/3]=5 rank[tree]=5 2^b=8 C(2b,b)=20
+  b=4 Bell=15 rank[acyclic]=14 rank[u^c acyclic, u=5/3]=14 rank[tree]=14 2^b=16 C(2b,b)=70
+  b=5 Bell=52 rank[acyclic]=42 rank[u^c acyclic, u=5/3]=42 rank[tree]=42 2^b=32 C(2b,b)=252
+  b=6 Bell=203 rank[acyclic]=132 rank[u^c acyclic, u=5/3]=132 rank[tree]=132 2^b=64 C(2b,b)=924
+R4 cut matrices on max-degree-3 test graphs (exact subset expansion)
+  b=1 Bell=1  (2,2):T1/Z1 (3,1/2):T1/Z1 (-2,3):T1/Z1 (1/2,3):T1/Z1 (2,0):T1/Z1 (-1,0):T1/Z1 (0,-2):T1/Z1 (1,2):T1 (1,-1):T1 (1,1):T1 (2,1):T1 (5/2,1):T1 (3,3):T1/Z1 (0,1/2):T1/Z1 (0,3):T1/Z1 (-1/2,-1/2):T1/Z1
+  b=2 Bell=2  (2,2):T1/Z1 (3,1/2):T2/Z2 (-2,3):T2/Z2 (1/2,3):T2/Z2 (2,0):T2/Z2 (-1,0):T2/Z2 (0,-2):T2/Z2 (1,2):T2 (1,-1):T2 (1,1):T2 (2,1):T2 (5/2,1):T2 (3,3):T2/Z2 (0,1/2):T2/Z2 (0,3):T2/Z2 (-1/2,-1/2):T2/Z2
+  b=3 Bell=5  (2,2):T1/Z1 (3,1/2):T5/Z5 (-2,3):T5/Z5 (1/2,3):T5/Z5 (2,0):T5/Z5 (-1,0):T5/Z4 (0,-2):T5/Z5 (1,2):T5 (1,-1):T5 (1,1):T5 (2,1):T5 (5/2,1):T5 (3,3):T5/Z5 (0,1/2):T5/Z5 (0,3):T5/Z5 (-1/2,-1/2):T5/Z5
+  b=4 Bell=15  (2,2):T1/Z1 (3,1/2):T15/Z15 (-2,3):T15/Z15 (1/2,3):T15/Z15 (2,0):T15/Z15 (-1,0):T15/Z8 (0,-2):T15/Z14 (1,2):T15 (1,-1):T15 (1,1):T15 (2,1):T14 (5/2,1):T15 (3,3):T15/Z15 (0,1/2):T15/Z15 (0,3):T15/Z15 (-1/2,-1/2):T15/Z15
+R5 perfect-matching connectivity [M u M' Hamiltonian] rank over Q
+  k=1 (b=2k=2 boundary vertices) #matchings=1 rank=1  2^(k-1)=1 Bell(2k)=2
+  k=2 (b=2k=4 boundary vertices) #matchings=3 rank=3  2^(k-1)=2 Bell(2k)=15
+  k=3 (b=2k=6 boundary vertices) #matchings=15 rank=15  2^(k-1)=4 Bell(2k)=203
+  k=4 (b=2k=8 boundary vertices) #matchings=105 rank=105  2^(k-1)=8 Bell(2k)=4140
+tutte_ranks: 176 checks, 0 failures -> PASS

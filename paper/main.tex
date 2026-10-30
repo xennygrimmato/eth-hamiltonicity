@@ -96,7 +96,8 @@ per edge through a Grassmann determinant whose only non-local part is a sign, an
 sign costs only $O(g^3)$ bits for $g$ blobs, so the whole construction is a network in the sense
 of the manuscript, whose value is $n\cdot\HC(G)$. Every theorem we claim is formally verified in Lean, end to end, on top of the manuscript's own
 Lean development: the three counting theorems, the decision, search and path corollaries, sparse
-TSP, directed Hamiltonian cycles and ATSP, using only the standard axioms, with fresh kernel replays. We also record weaker results
+TSP, directed Hamiltonian cycles and ATSP, using only the standard axioms, with fresh kernel replays.
+The Lean sources are at \url{https://github.com/xennygrimmato/eth-hamiltonicity}. We also record weaker results
 that rest only on the machine-checked top-level theorems: the parity of $\HC(G)$ for every
 graph in time $2^{O((m+n)/\sqrt{\log(m+n)})}$ (machine-checked in Lean, with the hypotheses
 discharged by the labs' own Lean proofs), and one-sided randomized decision. We describe what
@@ -396,7 +397,7 @@ covers the identity $\sum_\ell\prod_a\sigma_a\chi_aI_a=n\cdot\#\mathrm{HC}(G)$ b
 \cref{thm:blob,thm:network-value} and the parameter bounds of \cref{prop:parameters}, with the
 network stated in \A's own Lean format. The blob-table procedure is formalised as well, and
 \cref{thm:main-delta,thm:main-rate} are both formally verified in Lean end to end, as statements
-about Turing machines built on \A's Lean development, with only the standard axioms
+about Turing machines built on \A's Lean development~\cite{TulsyanRepo26}, with only the standard axioms
 (\lean{theorem1}, \lean{theorem2}); a fresh kernel replay with \lean{leanchecker} has passed
 for both \lean{theorem1} and \lean{theorem2}. The sparse TSP theorem (\cref{thm:tsp}) is formally
 verified at the same level (\lean{theoremTSP}, \lean{theoremTSP\_decode}).
@@ -1726,7 +1727,11 @@ instances with at most seven vertices.
 % =====================================================================
 
 We describe what has been checked, by what means, and what remains open. The aim is to make
-clear how much trust each statement deserves.
+clear how much trust each statement deserves. All Lean sources, the axiom-audit files
+(\texttt{lean/EthFollowup/Axioms.lean}, \texttt{lean/EthFollowup/AxiomsExtended.lean} and
+\texttt{lean-bridge-anthropic/bridge/EthFollowup/ExactHC/AuditAll.lean}), build instructions and the
+numerical check scripts are in the public repository~\cite{TulsyanRepo26},
+\url{https://github.com/xennygrimmato/eth-hamiltonicity}, at tag \texttt{hexagon-v1}.
 
 \subsection{Machine-checked in Lean}
 \begin{itemize}

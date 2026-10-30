@@ -191,6 +191,12 @@ Ran Raz and Boris Spieker, \emph{On the ``log rank''-conjecture in
   SIGPLAN International Conference on Certified Programs and Proofs (CPP), ACM,
   2020, pp.~367--381.
 
+\bibitem{TulsyanRepo26}
+Vaibhav Tulsyan, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research
+  notes}, Public repository
+  \url{https://github.com/xennygrimmato/eth-hamiltonicity}, tag
+  \texttt{hexagon-v1}, 2026.
+
 \bibitem{XiaoNagamochi16}
 Mingyu Xiao and Hiroshi Nagamochi, \emph{An exact algorithm for {TSP} in
   degree-3 graphs via circuit procedure and amortization on connectivity

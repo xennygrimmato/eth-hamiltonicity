@@ -143,8 +143,13 @@ Craig~A. Tovey, \emph{A simplified {NP}-complete satisfiability problem},
 \bibitem{Tulsyan26}
 Vaibhav Tulsyan, \emph{Counting {H}amiltonian cycles in sparse graphs in
   subexponential time, assuming the new $\#${SAT} algorithms}, Manuscript,
-  October 2026; companion paper, source and Lean development in the same
-  project repository, 2026.
+  October 2026; source and Lean development at
+  \url{https://github.com/xennygrimmato/eth-hamiltonicity}, 2026.
+
+\bibitem{TulsyanRepo26}
+\bysame, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes},
+  Public repository \url{https://github.com/xennygrimmato/eth-hamiltonicity},
+  tag \texttt{hexagon-v1}, 2026.
 
 \bibitem{WahlStrelchuk}
 Thorsten~B. Wahl and Sergii Strelchuk, \emph{Simulating quantum circuits using

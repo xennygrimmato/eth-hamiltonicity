@@ -85,16 +85,18 @@ network-to-clique reduction, an algorithm for cliques of all levels, and the exi
 edges can be computed exactly and deterministically in time $O(2^{\delta n})$ for every
 $\delta>0$, and in time $2^{O(\max(m,n)/\sqrt{\log n})}$ for a graph with $m$ edges. A
 rank-encoded variant of the construction gives $2^{O(n\log\bar d/\sqrt{\log n})}$ for average
-degree $\bar d$; this bound is machine-checked as well.
-Deterministic decision, search and Hamiltonian-path counting follow. The result is not a
+degree $\bar d$. Deterministic decision, search and Hamiltonian-path counting follow, and so do
+exact sparse TSP with polynomially bounded weights, exact counting of directed Hamiltonian cycles,
+and ATSP. The result is not a
 standalone breakthrough; it stands or falls with the claimed refutation. The ingredients are
 known: the folklore matrix-tree identity on $2$-factors, the fermionic (Berezin) matrix-tree
 theorem of Caracciolo, Jacobsen, Saleur, Sokal and Sportiello, and the blob partitions of
 Cut\&Count. What is new is the observation that connectivity can be encoded with $O(1)$ bits
 per edge through a Grassmann determinant whose only non-local part is a sign, and that this
 sign costs only $O(g^3)$ bits for $g$ blobs, so the whole construction is a network in the sense
-of the manuscript, whose value is $n\cdot\HC(G)$. The first two main theorems (fixed density and
-explicit rate) are formally verified in Lean, end to end, on top of the manuscript's own Lean development. We also record weaker results
+of the manuscript, whose value is $n\cdot\HC(G)$. Every theorem we claim is formally verified in Lean, end to end, on top of the manuscript's own
+Lean development: the three counting theorems, the decision, search and path corollaries, sparse
+TSP, directed Hamiltonian cycles and ATSP, using only the standard axioms, with fresh kernel replays. We also record weaker results
 that rest only on the machine-checked top-level theorems: the parity of $\HC(G)$ for every
 graph in time $2^{O((m+n)/\sqrt{\log(m+n)})}$ (machine-checked in Lean, with the hypotheses
 discharged by the labs' own Lean proofs), and one-sided randomized decision. We describe what
@@ -117,7 +119,8 @@ asserts that there is $\delta>0$ such that $3$-SAT on $n$ variables cannot be so
 $O(2^{\delta n})$. Together with the sparsification lemma~\cite{IPZ01} it underlies a large body
 of conditional lower bounds~\cite{LMS11,CyganEtAl15}. Among them is the statement that, unless ETH
 fails, Hamiltonian Cycle has no $2^{o(n+m)}$-time algorithm on graphs with $n$ vertices and $m$
-edges~\cite[Ch.~14]{CyganEtAl15}, \cite[Thm.~3.3]{LMS11}.
+edges~\cite[Ch.~14]{CyganEtAl15} (see also \cite[Thm.~3.3]{LMS11}, stated there as the
+absence of a $2^{o(n)}$-time algorithm for Hamiltonian Path).
 
 In October 2026 two manuscripts appeared, by OpenAI~\cite{OpenAI26} and by
 Anthropic~\cite{Anthropic26}, each claiming a deterministic algorithm that counts the satisfying
@@ -235,7 +238,11 @@ $\delta>0$: subexponential for all weights $W=2^{o(n)}$.
 In Lean this is \lean{theoremTSP} and \lean{theoremTSP\_decode}, built on \A's development with
 the standard axioms only (\cref{sec:verification}). What it does \emph{not} give is as
 important: the running time grows with the number of edges, so dense and metric instances
-(complete graphs, Euclidean TSP) are untouched, and Held--Karp's $2^n$ remains the record there;
+(complete graphs, Euclidean TSP) are untouched, and the $O^*(2^n)$ dynamic programme of
+Bellman and of Held and Karp~\cite{Bellman62,HeldKarp62} remains essentially the record there
+(improved only to $2^{n-\Omega(\sqrt{n/\log(nW)})}\poly(W)$ for integer weights up to
+$W$~\cite{Bjorklund16}, and, for bipartite instances, to $O(1.9999^n)$ assuming quadratic-time
+matrix multiplication~\cite{Nederlof20});
 and weights $W=2^{\Theta(n)}$ remain open (\cref{sec:limitations}). The identity behind the
 theorem is the Kronecker substitution $z=2^{b}$ in $n\sum_Hz^{w(H)}=\sum_Xz^{w(X)}\kappa(X)$,
 the weighted form of \cref{thm:blob}.
@@ -284,9 +291,12 @@ ETH. Planar, bounded-genus and minor-free graphs admit $2^{O(\sqrt n)}$ algorith
 $c^n$ with $c>1$. The degree-dependent ones are $(2-\varepsilon)^n$ with $\varepsilon\to0$ as the
 degree grows; Björklund's $O^*(1.657^n)$ Monte Carlo decision bound~\cite{Bjorklund14} does not
 depend on the degree. The bound of~\cite{BHKK12} is for TSP (hence decision), by a trimmed
-Bellman--Held--Karp dynamic programme; it is not stated for counting. For small fixed degree,
-unconditional counting is much faster than $(2-\varepsilon)^n$, for example through pathwidth on
-cubic graphs~\cite{BCKN15}.
+Bellman--Held--Karp dynamic programme~\cite{Bellman62,HeldKarp62}; it is not stated for
+counting. For small fixed degree, unconditional counting is much faster than
+$(2-\varepsilon)^n$: for example, Hamiltonian cycles of graphs of maximum degree~$3$ can be
+counted in $O(2^{3n/8})$ time~\cite{Eppstein07}, or in $6^{n/6+o(n)}$ time through the pathwidth
+bound $\mathrm{pw}\le n/6+o(n)$ for cubic graphs~\cite{FominHoie06} and the $6^{\mathrm{pw}}$
+algorithm of~\cite{BCKN15}.
 
 \begin{table}[ht]
 \centering
@@ -297,10 +307,10 @@ text). Here $\rho(N)=N(\log\log N)^2/\sqrt{\log N}$.}\label{tab:sota}
 \toprule
 Setting & Previously best known & This paper \\
 \midrule
-undirected, general, decision & $O^{*}(1.657^n)$ randomized~\cite{Bjorklund14}; $O^{*}(2^n)$ deterministic & no gain on dense graphs \\
+undirected, general, decision & $O^{*}(1.657^n)$ randomized~\cite{Bjorklund14}; deterministic $O^{*}(2^n)$~\cite{Bellman62,HeldKarp62,KGK77,Karp82,Bax93}, $2^{n-\Omega(\sqrt{n/\log n})}$~\cite{Bjorklund16} (both also count) & no gain on dense graphs \\
 bounded degree $\Delta$, decision/TSP & $(2-\varepsilon_\Delta)^n$~\cite{BHKK12} & deterministic $2^{\delta n}$, exact count \\
-maximum degree $3$ & $O(2^{n/3})$~\cite{Eppstein07}; $O^{*}(1.2312^n)$~\cite{XiaoNagamochi16} & deterministic $2^{\delta n}$, exact count \\
-counting, pathwidth $\mathrm{pw}$ & $6^{\mathrm{pw}}n^{O(1)}$~\cite{BCKN15}, tight under SETH~\cite{CLN18} & $2^{O(m/\sqrt{\log n})}$ \\
+maximum degree $3$ & decision/TSP $O(2^{n/3})$~\cite{Eppstein07}, $O^{*}(1.2312^n)$~\cite{XiaoNagamochi16}; counting $O(2^{3n/8})$~\cite{Eppstein07} & deterministic $2^{\delta n}$, exact count \\
+counting, pathwidth $\mathrm{pw}$ & $6^{\mathrm{pw}}n^{O(1)}$~\cite[Table~1]{BCKN15}, tight under SETH~\cite[Thm.~1.1]{CLN18} & $2^{O(m/\sqrt{\log n})}$ \\
 counting, average degree $\bar d$ & $2^{n-\Omega(n/\bar d)}$ deterministic~\cite{BjorklundWilliams19} (stated for digraphs; covers graphs) & $2^{O(n\log\bar d/\sqrt{\log n})}$ (\cref{thm:main-degree}; machine-checked) \\
 counting, directed, average degree $d$ & $2^{n-\Omega(n/d)}$~\cite{BjorklundWilliams19} & see \cref{sec:extensions} (sketch) \\
 parity, directed, general & $O^{*}(1.619^n)$~\cite{BjorklundHusfeldt13} & $2^{O(\rho(n))}$ for bounded degree (Lean) \\
@@ -315,8 +325,10 @@ cuts that no edge of $X$ crosses, so non-Hamiltonian $2$-factors cancel in pairs
 route to \cref{thm:parity,thm:randomized}. Björklund's determinant sums~\cite{Bjorklund14} pair
 cycle covers with determinants to enforce connectivity; the identity of \cref{lem:2factor-trees}
 below is of the same folklore kind. The fermionic, or Grassmann, form of the matrix-tree theorem
-is due to Caracciolo, Jacobsen, Saleur, Sokal and Sportiello~\cite{CJSSS04}. Rank bounds for the
-matchings-connectivity matrix~\cite{RazSpieker95,CLN18} show that, across one cut, connectivity
+that we use is a special case of the generalisation of Kirchhoff's theorem to non-Gaussian
+Grassmann integrals by Caracciolo, Jacobsen, Saleur, Sokal and Sportiello~\cite{CJSSS04}. Rank
+bounds for the matchings-connectivity matrix (over $\mathbb F_2$~\cite{CKN18}, and over $\Q$~\cite{CLN18},
+building on Raz and Spieker's bound for its bipartite variant~\cite{RazSpieker95}) show that, across one cut, connectivity
 costs only $O(b)$ bits over $\Q$ rather than $b\log b$; our construction can be read as making
 this compose over many cuts simultaneously.
 
@@ -359,7 +371,8 @@ the degree and needs no branching (\cref{thm:main-degree}).
 Little of the above is new in isolation, and we want to be precise about the credits. The
 identity \eqref{eq:intro-identity}, matrix-tree on $2$-factors, is folklore. The fermionic
 matrix-tree theorem, which writes the number of spanning trees as a Berezin integral of
-$\prod_e(1+q_e)$, is due to Caracciolo, Jacobsen, Saleur, Sokal and Sportiello~\cite{CJSSS04}.
+$\prod_e(1+q_e)$, is a special case of the generalised matrix-tree theorem of Caracciolo,
+Jacobsen, Saleur, Sokal and Sportiello~\cite{CJSSS04}.
 Partitioning the vertices into blobs and paying for connectivity across the cuts is the pattern
 of Cut\&Count~\cite{CutAndCount11}. Björklund's determinant sums~\cite{Bjorklund14} (FOCS 2010,
 SIAM J.\ Comput.\ 2014) pair cycle covers with determinants to enforce connectivity, a closely
@@ -426,10 +439,10 @@ expanders.
 here is of practical use.
 \item \emph{The extensions are sketched.} \Cref{sec:extensions} is checked numerically on
 small instances and is not proved at the level of the rest of the paper.
-\item \emph{One citation is from memory.} The $6^{\mathrm{pw}}n^{O(1)}$ counting bound
-attributed to~\cite{BCKN15} in \cref{tab:sota} was written from memory and must be verified
-against the source before this paper is relied on for it; the same caution applies to the exact
-constants quoted in that table.
+\item \emph{Citations.} All citations were checked against the primary sources on 30 Oct 2026.
+In particular, the $6^{\mathrm{pw}}n^{O(1)}$ counting bound in \cref{tab:sota} is
+$\tilde O(6^{\mathrm{pw}}\mathrm{pw}^{O(1)}n^2)$ in \cite[Table~1]{BCKN15}, and its SETH-tightness
+is \cite[Thm.~1.1]{CLN18}; the other constants in that table are as stated in the cited works.
 \item \emph{No systematic novelty search has been done.} The credits in the previous subsection
 are to the works we know; a Grassmann-determinant encoding of connectivity in a bit-bounded model
 may well exist elsewhere, and we have not searched the literature systematically.
@@ -1543,7 +1556,7 @@ Add to $\mathrm{cut}(G,r)$ an arbitrary CNF $\mathcal H$ on the edge variables. 
 count is congruent modulo $2$ to $\#\{X\in\mathrm{HC}(G):\mathcal H(\mathbf 1_X)\}$
 (\lean{count_cutCNFWith_mod_two}); it is even if $G$ has no Hamiltonian cycle and odd if
 exactly one Hamiltonian cycle satisfies $\mathcal H$. Take $\mathcal H$ to be a random sparse hash
-in the sense of Calabro, Impagliazzo, Kabanets and Paturi~\cite{CIKP08}. Their isolation lemma is
+in the sense of Calabro, Impagliazzo, Kabanets and Paturi~\cite{CIKP08}. Their isolation lemma~\cite[Lemma~3]{CIKP08} is
 stated for solution sets of $k$-CNFs, but its proof uses only that the set is a set; the Lean
 development re-proves it for arbitrary finite $S\subseteq\{0,1\}^N$ as a counting statement
 (\lean{isolation_count}), together with the entropy estimate needed to make the isolating
@@ -1686,8 +1699,9 @@ is a forest, the coefficient comes from $F=H$ alone and equals $\prod_T\sum_{v\i
 
 In Grassmann form the mass $-z\deg_H(v)\bpsi_v\psi_v$ is spread over the edges, so all factors are
 local or pairwise and \eqref{eq:template} applies with four labels per crossing edge. Brand, Dell
-and Roth~\cite{BrandDellRoth19} showed that, under $\#$ETH, $T_G(x,1)$ for every $x\ne1$ has no
-$\exp(\varepsilon n)$-time algorithm on simple graphs with $O(n)$ edges; this was the last open
+and Roth~\cite{BrandDellRoth19} showed that, under $\#$ETH, for every real $x\ne1$ there is
+$\varepsilon>0$ such that $T_G(x,1)$ has no $\exp(\varepsilon n)$-time algorithm on simple graphs
+with $O(n)$ edges; this was the last open
 line of the $\#$ETH dichotomy for the Tutte plane. \Cref{lem:forest} together with
 \cref{prop:extensions} would give, conditional on $(\mathrm{H}_{\mathrm{A}})$ and with the caveats
 of this section, a deterministic $2^{\delta n}$ algorithm for the whole polynomial $T_G(x,1)$ on
@@ -1864,7 +1878,6 @@ or check the Lean files.
 \cref{sec:limitations}(b)); the proofs were written by AI agents and reviewed by an AI
 coordinator.
 \item A full write-up of the extensions of \cref{sec:extensions} other than TSP.
-\item Verification of the citations written from memory (\cref{sec:limitations}(g)).
 \end{itemize}
 
 \subsection{Dependence on \texorpdfstring{\A}{[A]}}
@@ -1882,7 +1895,8 @@ operations and is absorbed in $\tau$ and in the polynomial factors.
 \subsection{Dense graphs} The network of \cref{sec:network} has $U\approx2\log_25\cdot|E|$ bits,
 and the rank-encoded network of \cref{sec:degree} has $U\approx2n\log(2e\bar d)$ bits, so
 \cref{thm:main-degree} beats $2^n$ only for $\bar d=2^{o(\sqrt{\log n})}$, roughly. Nothing is
-claimed for dense graphs beyond the classical $O^*(2^n)$. For $\bar d=\Theta(n)$, about $2n\log n$
+claimed for dense graphs beyond the classical $O^*(2^n)$~\cite{Karp82,Bax93} and its
+$2^{n-\Omega(\sqrt{n/\log n})}$ refinement~\cite{Bjorklund16}. For $\bar d=\Theta(n)$, about $2n\log n$
 bits is the information content of a Hamiltonian cycle, so for any network of this kind that
 shares the cycle across the blobs the leading term $e_\ell U$ is $\Omega(e_\ell n\log n)$, which is
 above $n$ unless $e_\ell=o(1/\log n)$. Is
@@ -1905,7 +1919,8 @@ for $Q=2^{(\log N)^{1/2}}$. (This generalises the observation that parity querie
 queries; it is related to the isolation bounds of~\cite{DKMW13}.) On the other hand, a fixed list
 of $2^{o(n)}$ weight vectors works for all bounded-degree graphs on $n$ vertices, and hardness
 assumptions for $\mathrm E$ against $\#\mathrm P$-oracle circuits would give deterministic
-$2^{o(n)}$ decision via~\cite{ImpagliazzoWigderson97}. So the question is one of explicit hitting
+$2^{o(n)}$ decision via~\cite{ImpagliazzoWigderson97}, in the relativised form
+of~\cite{KvM02}. So the question is one of explicit hitting
 sets. These statements have written proofs but are not formalised.
 
 \subsection{The exponent} The leading term of the exponent is $e_\ell U$, and $e_\ell=\Theta(\rho^\ell)$

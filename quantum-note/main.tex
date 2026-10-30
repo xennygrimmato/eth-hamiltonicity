@@ -73,9 +73,11 @@ In October 2026 OpenAI and Anthropic claimed deterministic subexponential-time a
 $\#k$-SAT, refuting the Exponential Time Hypothesis. We record a corollary for quantum circuits.
 Assuming three internal results of the Anthropic manuscript, the amplitude $\amp{y}{C}{x}$ of a
 Clifford+T circuit with $G$ two-qubit gates in arbitrary connectivity and $G_1$ single-qubit gates
-can be computed exactly, as an element of $\Z[\omega]/\sqrt2^{\,k}$ with $\omega=e^{i\pi/4}$, in
-deterministic time $2^{O(G/\sqrt{\log G})}\poly(n+G_1)$; the same holds for exact marginals and
-hence exact sampling, and for depth $d$ the bound is $2^{O(dn/\sqrt{\log n})}$. Through OpenAI's
+can be computed exactly, as an element of $\Z[\omega]/\sqrt2^{\,k}$ with $\omega=e^{i\pi/4}$, by
+one deterministic Turing machine in time $2^{O(G/\sqrt{\log G})}$ whenever the input length $L$
+satisfies $\log L\le G^{0.9}$; this theorem is formally verified in Lean on top of the Anthropic
+manuscript's own Lean development. On paper, the same method gives exact marginals and hence
+exact sampling, and depth-$d$ circuits in $2^{O(dn/\sqrt{\log n})}$. Through OpenAI's
 tensor-contraction theorem the bounds hold in polynomial space when the number of Hadamard-type
 gates is $O(G)$. The proof is a sum over paths with one bit per wire segment, read as an
 Anthropic-type network, with a Kronecker substitution for $\Z[\omega]$ and a Galois bound on the
@@ -232,7 +234,8 @@ which is asymptotically smaller only when $d/\log d=O(\sqrt{\log n})$.
 \subsection{Contrast with BosonSampling}
 BosonSampling amplitudes are permanents of $n\times n$ submatrices of Haar-random
 unitaries~\cite{AaronsonArkhipov13}, and Ryser's $2^n\poly(n)$ formula~\cite{Ryser63} is still
-the best exact method. Nothing above applies to them. A qubit circuit is a sum over \emph{binary}
+essentially the best exact method (for matrices of $\poly(n)$-bit integers it has been improved
+only to $2^{n-\Omega(\sqrt{n/\log n})}$~\cite{Bjorklund16}). Nothing above applies to them. A qubit circuit is a sum over \emph{binary}
 variables, one per wire segment, coupled by bounded-arity local tables, so it has $O(G)$ shared
 bits. A dense permanent is a sum over \emph{permutations}; written as an interferometer it has
 $\Theta(m^2)$ beam splitters on modes carrying up to $n$ photons, and any local encoding seems to
@@ -645,7 +648,7 @@ variable and clause qubits only. Then
 $C_\varphi$ has depth $O(1)$ and $O(n+m)$ gates. Reading off $\#\varphi$ needs only the amplitude.
 \end{proof}
 
-This construction is not scripted; the IQP analogue
+This construction is not scripted; the analogue for IQP circuits~\cite{BJS11}
 $\amp{0}{H^{\otimes n}D_fH^{\otimes n}}{0}=\gap(f)/2^n$ for degree-$3$ $f$, with $\mathrm{CCZ}$
 compiled into Clifford+T, is checked by \texttt{qc\_check.py} (\cref{sec:verification}).
 
@@ -750,7 +753,7 @@ anything here; \emph{survives} means we know no consequence of the refutations t
 21 & \cite{MT20} Conj.~3: random quadratic plus worst-case $3$-CNF with $m$ clauses, $2^{am}$ & survives (not shown safe) & $\Theta(n^2+m)$ gates; nothing for $m=O(n)$.\\
 22 & \cite{AC17} QUATH (poly time, random circuits with $\ge n^2$ gates) and HOG & unaffected & Average case, approximate.\\
 23 & \cite{BPS19} basic QSETH: no quantum $O(2^{n(1-\delta)/2}m^{O(1)})$ CNF-SAT & survives & CNF-SAT form; the $k$-CNF variant of their footnote~8 is refuted.\\
-24 & $2^{\Omega(t)}$ $T$-count hardness with unboundedly many Cliffords; $\chi(\ket{T}^{\otimes t})=2^{\Omega(t)}$~\cite{BSS16} & open & ETH support gone; best known $2^{0.3963t}\poly$~\cite{QPG21}; compressed circuits have $\Theta(t^2)$ gates.\\
+24 & $2^{\Omega(t)}$ $T$-count hardness with unboundedly many Cliffords; $\chi(\ket{T}^{\otimes t})=2^{\Omega(t)}$~\cite{BSS16} & open & ETH support gone; best known exact stabilizer-rank simulation $2^{0.3963t}\poly$~\cite{QPG21}, after~\cite{BSS16,BravyiGosset16}; compressed circuits have $\Theta(t^2)$ gates.\\
 \end{longtable}
 }
 
@@ -762,7 +765,8 @@ By \cref{cor:marginals}, any hardness claim for sampling, with multiplicative or
 stated as $2^{\Omega(n)}$ for a family with $G=o(n\sqrt{\log n})$ gates is refuted, since exact
 samples are approximate ones. Nothing is said about families with $G\ge n\sqrt{\log n}$, which
 include every random-circuit sampling proposal at depth $d\gg\sqrt{\log n}$, nor about
-polynomial or unconditional separations for shallow circuits.
+polynomial-time hardness or unconditional separations for shallow
+circuits~\cite{TD04,BGK18}.
 
 The estimates of~\cite{DHKL20} ($208$ IQP qubits and $500$ gates, assuming poly3-NSETH$(1/2)$ and a
 cost linear in the number of gates) extrapolate from the dense worst case to a sparse family, which
@@ -843,7 +847,8 @@ crossover with the state vector is astronomically large (\cref{sec:intro}).
 \item \emph{Sketches.} The bound after \cref{prop:2adic} is a sketch; the circuit of
 \cref{prop:tight} is not scripted; the reading of \A[Appendix~D] is ours.
 \item \emph{Literature.} Every row of \cref{tab:conj} was checked against the arXiv text of its
-source; publication venues are given only where we could confirm them. We have not searched
+source, and all citations were checked against the primary sources on 30 Oct 2026; theorem and
+conjecture numbers refer to the arXiv versions named in the bibliography. We have not searched
 systematically for prior statements of \cref{thm:main}; given how direct it is, it may well have
 been noticed independently.
 \item \emph{Scale of the numerical checks.} They cover $n\le6$ and $G\le20$ and test the reductions

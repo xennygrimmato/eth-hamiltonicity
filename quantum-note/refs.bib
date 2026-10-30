@@ -1,20 +1,21 @@
 % Bibliography for "Exact amplitudes of sparse quantum circuits in subexponential time,
-% assuming the new #SAT algorithms". Entries are kept minimal where full data could not be
-% confirmed; arXiv identifiers were checked against arxiv.org (October 2026).
+% assuming the new #SAT algorithms". All entries were checked against the primary sources
+% (publisher pages, DOIs, arXiv) on 30 Oct 2026; see research/citation-audit.md. Theorem and
+% conjecture numbers in the text refer to the arXiv versions named here.
 
 @misc{Anthropic26,
   author       = {{Claude (Anthropic)}},
   title        = {A $2^{o(n)}$ time algorithm for {3-SAT}},
-  howpublished = {Preprint, October 26, 2026. Lean formalisation in the repository
-                  \texttt{anthropics/formal-math}, folder \texttt{eth}},
+  howpublished = {Preprint dated October 26, 2026. Paper and Lean formalisation in the
+                  repository \url{https://github.com/anthropics/formal-math}, folder \texttt{eth}},
   year         = {2026}
 }
 
 @misc{OpenAI26,
   author       = {{OpenAI}},
   title        = {The {E}xponential {T}ime {H}ypothesis is false},
-  howpublished = {Preprint, October 2026. Lean formalisation in the repository
-                  \texttt{openai/math}},
+  howpublished = {Preprint dated 17 October 2026, revised 25 October 2026. Paper and Lean
+                  formalisation in the repository \url{https://github.com/openai/math}},
   year         = {2026}
 }
 
@@ -22,7 +23,8 @@
   author       = {Tulsyan, Vaibhav},
   title        = {Counting {H}amiltonian cycles in sparse graphs in subexponential time, assuming
                   the new $\#${SAT} algorithms},
-  howpublished = {Manuscript},
+  howpublished = {Manuscript, October 2026; companion paper, source and Lean development in
+                  the same project repository},
   year         = {2026}
 }
 
@@ -50,6 +52,7 @@
   author    = {Calabro, Chris and Impagliazzo, Russell and Paturi, Ramamohan},
   title     = {A duality between clause width and clause density for {SAT}},
   booktitle = {Proc. 21st Annual IEEE Conference on Computational Complexity (CCC)},
+  pages     = {252--260},
   year      = {2006}
 }
 
@@ -86,7 +89,8 @@
 @misc{MT19a,
   author       = {Morimae, Tomoyuki and Tamaki, Suguru},
   title        = {Fine-grained quantum computational supremacy},
-  howpublished = {arXiv:1901.01637 (v4, 2019)},
+  howpublished = {arXiv:1901.01637 (v4, 2019); published in Quantum Inf. Comput.
+                  \textbf{19} (2019), no.~13\&14, 1089--1115},
   year         = {2019}
 }
 
@@ -94,7 +98,9 @@
   author       = {Morimae, Tomoyuki and Tamaki, Suguru},
   title        = {Depth-scaling fine-grained quantum supremacy based on {SETH} and qubit-scaling
                   fine-grained quantum supremacy based on {O}rthogonal {V}ectors and {3-SUM}},
-  howpublished = {arXiv:1902.08382 (v1, 2019)},
+  howpublished = {arXiv:1902.08382 (v1, 2019). Version~2 (November 2019), with R.~Hayakawa as
+                  additional author, is retitled ``Fine-grained quantum supremacy based on
+                  {O}rthogonal {V}ectors, {3-SUM} and {A}ll-{P}airs {S}hortest {P}aths''},
   year         = {2019}
 }
 
@@ -121,7 +127,8 @@
 @misc{HNS18,
   author       = {Huang, Cupjin and Newman, Michael and Szegedy, Mario},
   title        = {Explicit lower bounds on strong quantum simulation},
-  howpublished = {arXiv:1804.10368},
+  howpublished = {arXiv:1804.10368 (v2); published in IEEE Trans. Inform. Theory \textbf{66}
+                  (2020), no.~9, 5585--5600},
   year         = {2018}
 }
 
@@ -129,21 +136,27 @@
   author       = {Huang, Cupjin and Newman, Michael and Szegedy, Mario},
   title        = {Explicit lower bounds on strong simulation of quantum circuits in terms of
                   {$T$}-gate count},
-  howpublished = {arXiv:1902.04764},
+  howpublished = {arXiv:1902.04764 (v2)},
   year         = {2019}
 }
 
-@misc{AC17,
-  author       = {Aaronson, Scott and Chen, Lijie},
-  title        = {Complexity-theoretic foundations of quantum supremacy experiments},
-  howpublished = {Proc.\ 32nd Computational Complexity Conference (CCC), 2017; arXiv:1612.05903},
-  year         = {2017}
+@inproceedings{AC17,
+  author    = {Aaronson, Scott and Chen, Lijie},
+  title     = {Complexity-theoretic foundations of quantum supremacy experiments},
+  booktitle = {Proc. 32nd Computational Complexity Conference (CCC)},
+  series    = {LIPIcs},
+  volume    = {79},
+  pages     = {22:1--22:67},
+  year      = {2017},
+  note      = {Theorem numbers as in arXiv:1612.05903v2}
 }
 
 @misc{BPS19,
   author       = {Buhrman, Harry and Patro, Subhasree and Speelman, Florian},
   title        = {The quantum strong exponential-time hypothesis},
-  howpublished = {arXiv:1911.05686},
+  howpublished = {arXiv:1911.05686 (v2). Published as ``A framework of quantum strong
+                  exponential-time hypotheses'', Proc.\ 38th STACS, LIPIcs \textbf{187} (2021),
+                  19:1--19:19},
   year         = {2019}
 }
 
@@ -157,12 +170,16 @@
   year    = {2008}
 }
 
-@misc{WahlStrelchuk,
-  author       = {Wahl, Thorsten B. and Strelchuk, Sergii},
-  title        = {Simulating quantum circuits using efficient tensor network contraction
-                  algorithms with subexponential upper bound},
-  howpublished = {arXiv:2208.01498},
-  year         = {2022}
+@article{WahlStrelchuk,
+  author  = {Wahl, Thorsten B. and Strelchuk, Sergii},
+  title   = {Simulating quantum circuits using efficient tensor network contraction
+             algorithms with subexponential upper bound},
+  journal = {Phys. Rev. Lett.},
+  volume  = {131},
+  number  = {18},
+  pages   = {180601},
+  year    = {2023},
+  note    = {arXiv:2208.01498}
 }
 
 @article{AaronsonArkhipov13,
@@ -188,6 +205,7 @@
   title   = {Improved classical simulation of quantum circuits dominated by {C}lifford gates},
   journal = {Phys. Rev. Lett.},
   volume  = {116},
+  number  = {25},
   pages   = {250501},
   year    = {2016}
 }
@@ -197,6 +215,7 @@
   title   = {Trading classical and quantum computational resources},
   journal = {Phys. Rev. X},
   volume  = {6},
+  number  = {2},
   pages   = {021043},
   year    = {2016}
 }
@@ -216,4 +235,48 @@
   title     = {Quantum Computation and Quantum Information},
   publisher = {Cambridge University Press},
   year      = {2000}
+}
+
+% ---- added in the citation audit of 30 Oct 2026 ----
+
+@inproceedings{Bjorklund16,
+  author    = {Bj{\"o}rklund, Andreas},
+  title     = {Below all subsets for some permutational counting problems},
+  booktitle = {Proc. 15th Scandinavian Symposium and Workshops on Algorithm Theory (SWAT)},
+  series    = {LIPIcs},
+  volume    = {53},
+  pages     = {17:1--17:11},
+  year      = {2016}
+}
+
+@article{BJS11,
+  author  = {Bremner, Michael J. and Jozsa, Richard and Shepherd, Dan J.},
+  title   = {Classical simulation of commuting quantum computations implies collapse of the
+             polynomial hierarchy},
+  journal = {Proc. R. Soc. A},
+  volume  = {467},
+  number  = {2126},
+  pages   = {459--472},
+  year    = {2011}
+}
+
+@article{TD04,
+  author  = {Terhal, Barbara M. and DiVincenzo, David P.},
+  title   = {Adaptive quantum computation, constant depth quantum circuits and {A}rthur--{M}erlin
+             games},
+  journal = {Quantum Inf. Comput.},
+  volume  = {4},
+  number  = {2},
+  pages   = {134--145},
+  year    = {2004}
+}
+
+@article{BGK18,
+  author  = {Bravyi, Sergey and Gosset, David and K{\"o}nig, Robert},
+  title   = {Quantum advantage with shallow circuits},
+  journal = {Science},
+  volume  = {362},
+  number  = {6412},
+  pages   = {308--311},
+  year    = {2018}
 }

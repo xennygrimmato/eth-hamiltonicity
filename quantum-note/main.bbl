@@ -13,26 +13,50 @@ Scott Aaronson and Alex Arkhipov, \emph{The computational complexity of linear
 
 \bibitem{AC17}
 Scott Aaronson and Lijie Chen, \emph{Complexity-theoretic foundations of
-  quantum supremacy experiments}, Proc.\ 32nd Computational Complexity
-  Conference (CCC), 2017; arXiv:1612.05903, 2017.
+  quantum supremacy experiments}, Proc. 32nd Computational Complexity
+  Conference (CCC), LIPIcs, vol.~79, 2017, Theorem numbers as in
+  arXiv:1612.05903v2, pp.~22:1--22:67.
+
+\bibitem{Bjorklund16}
+Andreas Bj{\"o}rklund, \emph{Below all subsets for some permutational counting
+  problems}, Proc. 15th Scandinavian Symposium and Workshops on Algorithm
+  Theory (SWAT), LIPIcs, vol.~53, 2016, pp.~17:1--17:11.
+
+\bibitem{BravyiGosset16}
+Sergey Bravyi and David Gosset, \emph{Improved classical simulation of quantum
+  circuits dominated by {C}lifford gates}, Phys. Rev. Lett. \textbf{116}
+  (2016), no.~25, 250501.
+
+\bibitem{BGK18}
+Sergey Bravyi, David Gosset, and Robert K{\"o}nig, \emph{Quantum advantage with
+  shallow circuits}, Science \textbf{362} (2018), no.~6412, 308--311.
 
 \bibitem{BSS16}
 Sergey Bravyi, Graeme Smith, and John~A. Smolin, \emph{Trading classical and
-  quantum computational resources}, Phys. Rev. X \textbf{6} (2016), 021043.
+  quantum computational resources}, Phys. Rev. X \textbf{6} (2016), no.~2,
+  021043.
+
+\bibitem{BJS11}
+Michael~J. Bremner, Richard Jozsa, and Dan~J. Shepherd, \emph{Classical
+  simulation of commuting quantum computations implies collapse of the
+  polynomial hierarchy}, Proc. R. Soc. A \textbf{467} (2011), no.~2126,
+  459--472.
 
 \bibitem{BPS19}
 Harry Buhrman, Subhasree Patro, and Florian Speelman, \emph{The quantum strong
-  exponential-time hypothesis}, arXiv:1911.05686, 2019.
+  exponential-time hypothesis}, arXiv:1911.05686 (v2). Published as ``A
+  framework of quantum strong exponential-time hypotheses'', Proc.\ 38th STACS,
+  LIPIcs \textbf{187} (2021), 19:1--19:19, 2019.
 
 \bibitem{CIP06}
 Chris Calabro, Russell Impagliazzo, and Ramamohan Paturi, \emph{A duality
   between clause width and clause density for {SAT}}, Proc. 21st Annual IEEE
-  Conference on Computational Complexity (CCC), 2006.
+  Conference on Computational Complexity (CCC), 2006, pp.~252--260.
 
 \bibitem{Anthropic26}
-{Claude (Anthropic)}, \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, Preprint,
-  October 26, 2026. Lean formalisation in the repository
-  \texttt{anthropics/formal-math}, folder \texttt{eth}, 2026.
+{Claude (Anthropic)}, \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, Preprint
+  dated October 26, 2026. Paper and Lean formalisation in the repository
+  \url{https://github.com/anthropics/formal-math}, folder \texttt{eth}, 2026.
 
 \bibitem{DHKL20}
 Alexander~M. Dalzell, Aram~W. Harrow, Dax~Enshan Koh, and Rolando~L. La~Placa,
@@ -47,11 +71,12 @@ Holger Dell, Thore Husfeldt, D{\'a}niel Marx, Nina Taslaman, and Martin
 
 \bibitem{HNS18}
 Cupjin Huang, Michael Newman, and Mario Szegedy, \emph{Explicit lower bounds on
-  strong quantum simulation}, arXiv:1804.10368, 2018.
+  strong quantum simulation}, arXiv:1804.10368 (v2); published in IEEE Trans.
+  Inform. Theory \textbf{66} (2020), no.~9, 5585--5600, 2018.
 
 \bibitem{HNS19}
 \bysame, \emph{Explicit lower bounds on strong simulation of quantum circuits
-  in terms of {$T$}-gate count}, arXiv:1902.04764, 2019.
+  in terms of {$T$}-gate count}, arXiv:1902.04764 (v2), 2019.
 
 \bibitem{ImpagliazzoPaturi01}
 Russell Impagliazzo and Ramamohan Paturi, \emph{On the complexity of
@@ -70,12 +95,15 @@ Igor~L. Markov and Yaoyun Shi, \emph{Simulating quantum computation by
 \bibitem{MT19b}
 Tomoyuki Morimae and Suguru Tamaki, \emph{Depth-scaling fine-grained quantum
   supremacy based on {SETH} and qubit-scaling fine-grained quantum supremacy
-  based on {O}rthogonal {V}ectors and {3-SUM}}, arXiv:1902.08382 (v1, 2019),
-  2019.
+  based on {O}rthogonal {V}ectors and {3-SUM}}, arXiv:1902.08382 (v1, 2019).
+  Version~2 (November 2019), with R.~Hayakawa as additional author, is retitled
+  ``Fine-grained quantum supremacy based on {O}rthogonal {V}ectors, {3-SUM} and
+  {A}ll-{P}airs {S}hortest {P}aths'', 2019.
 
 \bibitem{MT19a}
 \bysame, \emph{Fine-grained quantum computational supremacy}, arXiv:1901.01637
-  (v4, 2019), 2019.
+  (v4, 2019); published in Quantum Inf. Comput. \textbf{19} (2019), no.~13\&14,
+  1089--1115, 2019.
 
 \bibitem{MT20}
 \bysame, \emph{Additive-error fine-grained quantum supremacy}, Quantum
@@ -86,9 +114,9 @@ Michael~A. Nielsen and Isaac~L. Chuang, \emph{Quantum computation and quantum
   information}, Cambridge University Press, 2000.
 
 \bibitem{OpenAI26}
-{OpenAI}, \emph{The {E}xponential {T}ime {H}ypothesis is false}, Preprint,
-  October 2026. Lean formalisation in the repository \texttt{openai/math},
-  2026.
+{OpenAI}, \emph{The {E}xponential {T}ime {H}ypothesis is false}, Preprint dated
+  17 October 2026, revised 25 October 2026. Paper and Lean formalisation in the
+  repository \url{https://github.com/openai/math}, 2026.
 
 \bibitem{QPG21}
 Hammam Qassim, Hakop Pashayan, and David Gosset, \emph{Improved upper bounds on
@@ -103,6 +131,11 @@ Herbert~J. Ryser, \emph{Combinatorial mathematics}, Carus Mathematical
 Rainer Schuler, \emph{An algorithm for the satisfiability problem of formulas
   in conjunctive normal form}, J. Algorithms \textbf{54} (2005), no.~1, 40--44.
 
+\bibitem{TD04}
+Barbara~M. Terhal and David~P. DiVincenzo, \emph{Adaptive quantum computation,
+  constant depth quantum circuits and {A}rthur--{M}erlin games}, Quantum Inf.
+  Comput. \textbf{4} (2004), no.~2, 134--145.
+
 \bibitem{Tovey84}
 Craig~A. Tovey, \emph{A simplified {NP}-complete satisfiability problem},
   Discrete Appl. Math. \textbf{8} (1984), no.~1, 85--89.
@@ -110,11 +143,13 @@ Craig~A. Tovey, \emph{A simplified {NP}-complete satisfiability problem},
 \bibitem{Tulsyan26}
 Vaibhav Tulsyan, \emph{Counting {H}amiltonian cycles in sparse graphs in
   subexponential time, assuming the new $\#${SAT} algorithms}, Manuscript,
-  2026.
+  October 2026; companion paper, source and Lean development in the same
+  project repository, 2026.
 
 \bibitem{WahlStrelchuk}
 Thorsten~B. Wahl and Sergii Strelchuk, \emph{Simulating quantum circuits using
   efficient tensor network contraction algorithms with subexponential upper
-  bound}, arXiv:2208.01498, 2022.
+  bound}, Phys. Rev. Lett. \textbf{131} (2023), no.~18, 180601,
+  arXiv:2208.01498.
 
 \end{thebibliography}

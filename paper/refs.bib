@@ -1,19 +1,20 @@
 % Bibliography for "Counting Hamiltonian cycles in sparse graphs in subexponential time".
-% Entries are kept minimal where full data could not be confirmed.
+% All entries were checked against the primary sources (publisher pages, DOIs, arXiv,
+% DBLP/Crossref) on 30 Oct 2026; see research/citation-audit.md.
 
 @misc{Anthropic26,
   author       = {{Claude (Anthropic)}},
   title        = {A $2^{o(n)}$ time algorithm for {3-SAT}},
-  howpublished = {Preprint, October 26, 2026. Lean formalisation in the repository
-                  \texttt{anthropics/formal-math}, folder \texttt{eth}},
+  howpublished = {Preprint dated October 26, 2026. Paper and Lean formalisation in the
+                  repository \url{https://github.com/anthropics/formal-math}, folder \texttt{eth}},
   year         = {2026}
 }
 
 @misc{OpenAI26,
   author       = {{OpenAI}},
   title        = {The {E}xponential {T}ime {H}ypothesis is false},
-  howpublished = {Preprint, October 2026. Lean formalisation in the repository
-                  \texttt{openai/math}},
+  howpublished = {Preprint dated 17 October 2026, revised 25 October 2026. Paper and Lean
+                  formalisation in the repository \url{https://github.com/openai/math}},
   year         = {2026}
 }
 
@@ -73,7 +74,8 @@
   volume  = {8},
   number  = {2},
   pages   = {Art.~18},
-  year    = {2012}
+  year    = {2012},
+  note    = {Preliminary version in ICALP 2008}
 }
 
 @inproceedings{BHKK08Tutte,
@@ -128,7 +130,8 @@
   title     = {Solving connectivity problems parameterized by treewidth in single exponential time},
   booktitle = {Proc. 52nd IEEE Symposium on Foundations of Computer Science (FOCS)},
   pages     = {150--159},
-  year      = {2011}
+  year      = {2011},
+  note      = {Journal version in ACM Trans. Algorithms 18 (2022), no.~2}
 }
 
 @article{BCKN15,
@@ -137,7 +140,8 @@
   journal = {Inform. and Comput.},
   volume  = {243},
   pages   = {86--111},
-  year    = {2015}
+  year    = {2015},
+  note    = {Preliminary version in ICALP 2013}
 }
 
 @inproceedings{CLN18,
@@ -145,7 +149,8 @@
   title     = {A tight lower bound for counting {H}amiltonian cycles via matrix rank},
   booktitle = {Proc. 29th ACM-SIAM Symposium on Discrete Algorithms (SODA)},
   pages     = {1080--1099},
-  year      = {2018}
+  year      = {2018},
+  note      = {arXiv:1709.02311}
 }
 
 @article{Curticapean18,
@@ -173,6 +178,7 @@
   title   = {Fine-grained dichotomies for the {T}utte plane and {B}oolean \#{CSP}},
   journal = {Algorithmica},
   volume  = {81},
+  number  = {2},
   pages   = {541--556},
   year    = {2019},
   note    = {Preliminary version in IPEC 2016; arXiv:1606.06581}
@@ -193,6 +199,7 @@
   title   = {Fermionic field theory for trees and forests},
   journal = {Phys. Rev. Lett.},
   volume  = {93},
+  number  = {8},
   pages   = {080601},
   year    = {2004}
 }
@@ -280,5 +287,105 @@
   title     = {The {L}ean mathematical library},
   booktitle = {Proc. 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP)},
   pages     = {367--381},
+  publisher = {ACM},
   year      = {2020}
+}
+
+% ---- added in the citation audit of 30 Oct 2026 ----
+
+@article{Bellman62,
+  author  = {Bellman, Richard},
+  title   = {Dynamic programming treatment of the travelling salesman problem},
+  journal = {J. ACM},
+  volume  = {9},
+  number  = {1},
+  pages   = {61--63},
+  year    = {1962}
+}
+
+@article{HeldKarp62,
+  author  = {Held, Michael and Karp, Richard M.},
+  title   = {A dynamic programming approach to sequencing problems},
+  journal = {J. Soc. Indust. Appl. Math.},
+  volume  = {10},
+  number  = {1},
+  pages   = {196--210},
+  year    = {1962}
+}
+
+@inproceedings{KGK77,
+  author    = {Kohn, Samuel and Gottlieb, Allan and Kohn, Meryle},
+  title     = {A generating function approach to the traveling salesman problem},
+  booktitle = {Proc. 1977 ACM Annual Conference},
+  pages     = {294--300},
+  year      = {1977}
+}
+
+@article{Karp82,
+  author  = {Karp, Richard M.},
+  title   = {Dynamic programming meets the principle of inclusion and exclusion},
+  journal = {Oper. Res. Lett.},
+  volume  = {1},
+  number  = {2},
+  pages   = {49--51},
+  year    = {1982}
+}
+
+@article{Bax93,
+  author  = {Bax, Eric T.},
+  title   = {Inclusion and exclusion algorithm for the {H}amiltonian path problem},
+  journal = {Inform. Process. Lett.},
+  volume  = {47},
+  number  = {4},
+  pages   = {203--207},
+  year    = {1993}
+}
+
+@inproceedings{Bjorklund16,
+  author    = {Bj{\"o}rklund, Andreas},
+  title     = {Below all subsets for some permutational counting problems},
+  booktitle = {Proc. 15th Scandinavian Symposium and Workshops on Algorithm Theory (SWAT)},
+  series    = {LIPIcs},
+  volume    = {53},
+  pages     = {17:1--17:11},
+  year      = {2016}
+}
+
+@article{CKN18,
+  author  = {Cygan, Marek and Kratsch, Stefan and Nederlof, Jesper},
+  title   = {Fast {H}amiltonicity checking via bases of perfect matchings},
+  journal = {J. ACM},
+  volume  = {65},
+  number  = {3},
+  pages   = {Art.~12},
+  year    = {2018},
+  note    = {Preliminary version in STOC 2013}
+}
+
+@inproceedings{Nederlof20,
+  author    = {Nederlof, Jesper},
+  title     = {Bipartite {TSP} in ${O}(1.9999^n)$ time, assuming quadratic time matrix multiplication},
+  booktitle = {Proc. 52nd ACM Symposium on Theory of Computing (STOC)},
+  pages     = {40--53},
+  year      = {2020}
+}
+
+@article{FominHoie06,
+  author  = {Fomin, Fedor V. and H{\o}ie, Kjartan},
+  title   = {Pathwidth of cubic graphs and exact algorithms},
+  journal = {Inform. Process. Lett.},
+  volume  = {97},
+  number  = {5},
+  pages   = {191--196},
+  year    = {2006}
+}
+
+@article{KvM02,
+  author  = {Klivans, Adam R. and van Melkebeek, Dieter},
+  title   = {Graph nonisomorphism has subexponential size proofs unless the polynomial-time hierarchy collapses},
+  journal = {SIAM J. Comput.},
+  volume  = {31},
+  number  = {5},
+  pages   = {1501--1526},
+  year    = {2002}
 }

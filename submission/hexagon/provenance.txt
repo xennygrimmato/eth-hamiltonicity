@@ -1,0 +1,13 @@
+DRAFT — edit so every sentence is true for you before using it.
+
+This work was produced by Vaibhav Tulsyan in sessions with Claude Code (Anthropic). The mathematical
+arguments, the Lean 4 formalisation and the text were drafted by Claude under my direction; I chose
+the problems, directed the research, and reviewed the results at the level of [describe what you have
+personally read and understood, e.g. "the statements of the main theorems and the overall structure
+of the argument"]. All theorems claimed in the paper are machine-checked in Lean 4 on top of the
+Anthropic manuscript's own Lean development: the axiom audit shows only propext, Classical.choice and
+Quot.sound, and fresh leanchecker replays of the full dependency closure passed. The Lean sources are
+public at https://github.com/xennygrimmato/eth-hamiltonicity. Independent AI referee passes, exact
+numerical checks and a citation audit were carried out; the definitions a reader must check to trust
+the formal statements are listed in the paper. No human expert has yet reviewed the work. All results
+are conditional on the claimed refutations of the Exponential Time Hypothesis, which are under review.

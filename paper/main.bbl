@@ -194,8 +194,10 @@ Ran Raz and Boris Spieker, \emph{On the ``log rank''-conjecture in
 \bibitem{TulsyanRepo26}
 Vaibhav Tulsyan, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research
   notes}, Public repository
-  \url{https://github.com/xennygrimmato/eth-hamiltonicity}, tag
-  \texttt{hexagon-v1}, 2026.
+  \url{https://github.com/xennygrimmato/eth-hamiltonicity}, Lean sources as of
+  commit
+  \url{https://github.com/xennygrimmato/eth-hamiltonicity/tree/ca17a3762bb21ddbe5942eeac9f29fa58123bb42},
+  2026.
 
 \bibitem{XiaoNagamochi16}
 Mingyu Xiao and Hiroshi Nagamochi, \emph{An exact algorithm for {TSP} in

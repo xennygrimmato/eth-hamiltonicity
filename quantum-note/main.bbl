@@ -149,7 +149,9 @@ Vaibhav Tulsyan, \emph{Counting {H}amiltonian cycles in sparse graphs in
 \bibitem{TulsyanRepo26}
 \bysame, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes},
   Public repository \url{https://github.com/xennygrimmato/eth-hamiltonicity},
-  tag \texttt{hexagon-v1}, 2026.
+  Lean sources as of commit
+  \url{https://github.com/xennygrimmato/eth-hamiltonicity/tree/ca17a3762bb21ddbe5942eeac9f29fa58123bb42},
+  2026.
 
 \bibitem{WahlStrelchuk}
 Thorsten~B. Wahl and Sergii Strelchuk, \emph{Simulating quantum circuits using

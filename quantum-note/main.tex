@@ -889,7 +889,7 @@ on some instance; (C4) a non-zero total of the assignments with more than $\lflo
 \subsection{Formalisation}\label{sec:formalisation}
 \Cref{thm:main} is formally verified in Lean~4 on top of \A's development: \texttt{amplitude\_TM\_rate'}
 (the stated bound under the condition on $L$), \texttt{amplitude\_TM\_rate} (all circuits) and
-\texttt{amplitude\_TM} (every $\delta>0$), in the public repository~\cite{TulsyanRepo26} (\url{https://github.com/xennygrimmato/eth-hamiltonicity}, tag \texttt{hexagon-v1}; directories
+\texttt{amplitude\_TM} (every $\delta>0$), in the public repository~\cite{TulsyanRepo26} (\url{https://github.com/xennygrimmato/eth-hamiltonicity}, Lean sources as of commit \texttt{ca17a37}; directories
 \texttt{lean/EthFollowup/Quantum} and \texttt{lean-bridge-anthropic/bridge/EthFollowup/Quantum}).
 The semantics a reader must check are short: the gate matrices over $\mathbb{C}$, the circuit matrix as
 the ordered product, and the amplitude $\amp{y}{C}{x}$ (\texttt{Circuit.lean}, \S1), and the input

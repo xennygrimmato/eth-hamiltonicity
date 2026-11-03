@@ -1,0 +1,9 @@
+stats: {'graphs': 160, 'labellings': 9087, 'nonzero_cross': 358, 'rand_x': 4800, 'naive_wrong': 358}
+check i         : PASS (0 failures)
+check ii        : PASS (0 failures)
+check iii       : PASS (0 failures)
+check iv        : PASS (0 failures)
+check v_zero    : PASS (0 failures)
+check v_differs : PASS (0 failures)
+check vi        : PASS (0 failures)
+ALL PASS

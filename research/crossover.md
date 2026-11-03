@@ -1,3 +1,5 @@
+> **Corrections (3 Nov 2026).** Checked against a fresh run of `scripts/crossover.py` while writing `crossover-note/` (the note follows the script output): FMM base case ×3.8 (not ×4); x₀ = 10 gives ×1.18; degree-network U at Δ = 4 is 8.885n; negligible terms are bounded in the output as 10^{−18459}, 10^{−555}, 10^{−6·10⁸} (the 2^{…} bounds quoted below are true but weaker); the script prints break-even constants only for #HC and for C₀ on the m-route, so the blanket "2^{5·10⁴}" statement is stated in the note only for those; the "R is 32× larger than needed" figure (one-off check: 31.75) is not printed by the script.
+
 # Crossover: where the ETH-refutation algorithms first beat brute force
 
 *29 Oct 2026. Script: `research/scripts/crossover.py` (mpmath, 60 digits, log domain; K_ℓ = 2^{L_ℓ} is never
@@ -39,7 +41,7 @@ derivative) term log₂C_q. The other two costs of the paper's eq. (three-costs)
 **The most effective lever** is different for each paper:
 * *OpenAI*: replace the Hoeffding window R = (β+3)√λ by the least window that the exact binomial tail allows. This is
   tier B, and it shrinks log₂n\* by 3.5·10⁵×.
-* *Anthropic*: pinning q matters most (×4 per doubling). Among constants, an FMM base case e₀ = 5/18 gives ×4, using
+* *Anthropic*: pinning q matters most (×4 per doubling). Among constants, an FMM base case e₀ = 5/18 gives ×3.8, using
   e_ℓ instead of fractionHalf plus a free level gives ×2.25, and re-tuning ζ_ℓ, g_ℓ/K_ℓ gives ×2. From A to C2 the gain
   is ×17.6.
 * *#HC*: the same schedule levers. The degree network helps from Δ ≥ 4 in U, and lowers n\* by 4× at Δ = 8.
@@ -230,7 +232,7 @@ is large. The existential n₁ of the n-route can only increase these numbers.
 4. **Re-tuning ζ_ℓ and g_ℓ/K_ℓ** (tier C1). ζ_ℓ = 2^{−(ℓ+6)} with the least g/K that case (ii) allows. It gives ×2
    (245 009 → 119 103). Lean's ζ_ℓ = 2^{−(ℓ+5)} is close to optimal in shape, but g = 2^{3ℓ+x₀}K is larger than case (ii) needs.
 5. **Level rule**: K⁹ ≤ m (root9) → 3K⁸ log K ≤ n. This is part of the ×2.25 in item 3.
-6. Smaller x₀ (= 10, [H]) gives ×1.15. Dropping the K^g grouping search [H] gives ×1.14. Both are minor: g = 3K⁸ ≤ m is needed anyway.
+6. Smaller x₀ (= 10, [H]) gives ×1.18. Dropping the K^g grouping search [H] gives ×1.14. Both are minor: g = 3K⁸ ≤ m is needed anyway.
 7. +3/K_ℓ: negligible. C₀, C₁, C₂: irrelevant (break-even C₀ > 2^{429342}).
 
 ## 4. #HC (ours; conditional on Anthropic Theorem A(b) and Lemma 8), vs Held–Karp n²2^n
@@ -255,7 +257,7 @@ Tier A: level rule K_ℓ³⁰ ≤ n, Lean schedule, e_ℓ (Theorem A(b) as print
 branches (n^{4m/Θ}) and profiles ((2ν+1)^{C(g,2)}) are below 2^{−12000}·n. In tier B the binding lower-order term is
 the g³ = 27K²⁴ copy-bit term in U and gP, so n\* ≈ K_ℓ²⁴ (t\* ≈ 24 log₂K_ℓ). Break-even constants at the tier-A n\*
 (Δ = 3): C₀ > 2^{51726}, C₁ > 2^{55422}, C₂ > 2^{55421}. Within these ranges the constants do not move n\*.
-The degree network has the smaller U from Δ ≥ 4 (8.88n against 9.30n at Δ = 4). It lowers n\* in tier A only at Δ = 8,
+The degree network has the smaller U from Δ ≥ 4 (8.885n against 9.30n at Δ = 4). It lowers n\* in tier A only at Δ = 8,
 where it is 4× smaller, because the level is discrete. At Δ = 3 the old network is better (6.98n against 8.06n). With no TM degree q and no padding, #HC has the smallest crossover of all the algorithms here: about
 n ≈ 2^{55 000} as written, and n ≈ 2^{4 900} with FMM base and re-tuned schedule.
 

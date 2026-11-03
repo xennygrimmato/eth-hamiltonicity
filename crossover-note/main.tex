@@ -1,0 +1,632 @@
+\documentclass[10pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=OliveGreen,urlcolor=MidnightBlue]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+\setlist{leftmargin=*,itemsep=2pt,topsep=4pt}
+\emergencystretch=2.5em
+\raggedbottom
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\theoremstyle{remark}
+\newtheorem{remark}[definition]{Remark}
+\numberwithin{equation}{section}
+
+\newcommand{\A}[1][]{\textup{[A\if\relax\detokenize{#1}\relax\else, #1\fi]}}
+\newcommand{\Oa}[1][]{\textup{[O\if\relax\detokenize{#1}\relax\else, #1\fi]}}
+\newcommand{\HC}{\#\mathrm{HC}}
+\newcommand{\tst}{t^{*}}
+\newcommand{\nst}{n^{*}}
+\newcommand{\Hh}{\textup{[H]}}
+\DeclareUrlCommand\lf{\urlstyle{tt}}
+\newcommand{\sz}{\operatorname{size}}
+
+\begin{document}
+
+\title[When do the new \#SAT algorithms beat brute force?]{When do the new \#SAT algorithms beat brute force?\\
+Crossover points of the proven bounds\\ behind the ETH refutations}
+
+\author{Vaibhav Tulsyan}
+
+\date{November 2026}
+
+\subjclass[2020]{68Q25, 68W40, 68Q17}
+\keywords{Exponential Time Hypothesis, model counting, fine-grained complexity, explicit constants, galactic algorithms}
+
+\begin{abstract}
+In October 2026 OpenAI and Anthropic claimed deterministic algorithms that count the satisfying
+assignments of a $k$-CNF in time $2^{O(n\log\log n/\sqrt{\log n})}$ or similar, refuting the
+Exponential Time Hypothesis. Neither manuscript computes from which $n$ on its \emph{proven} bound is
+smaller than brute force. We compute this crossover $\nst$ for the bounds as they are proved,
+keeping every explicit term and constant and treating existential constants as parameters, and
+report $\tst=\log_2\nst$. For Anthropic's official Lean main theorem on $3$-CNFs with $m=4.26n$
+clauses, $\tst=552\,040$ if the unknown polynomial degree $q$ of its Turing-machine time bound is
+$1$, and $\tst$ grows roughly like $q^2$; re-optimising the free parameters of the same lemmas gives
+$245\,009$. For OpenAI's interpolation algorithm, $\tst\approx3.02\cdot10^{13}$ as written and
+$\approx8.53\cdot10^{7}$ with re-optimised parameters, mostly by using an exact binomial tail in
+place of a Hoeffding window. Our exact algorithm for counting Hamiltonian cycles,
+which rests on Anthropic's manuscript, beats Held--Karp on cubic graphs from $\tst=55\,440$.
+Anthropic's $3$-SAT decision machine searches exhaustively for every $n<2^{2^{1722}}$. In every
+Anthropic-based case $\nst$ is a staircase, fixed by the first recursion level at which a single
+clique exponent falls below $n$. These numbers are computations about proven upper bounds, not
+theorems and not running times; they are conditional on the claimed refutations, which are under
+review, and nothing practical follows.
+\end{abstract}
+
+\maketitle
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+% =====================================================================
+
+The Exponential Time Hypothesis (ETH) of Impagliazzo and Paturi~\cite{ImpagliazzoPaturi01}
+asserts that $3$-SAT on $n$ variables needs time $2^{\delta n}$ for some $\delta>0$. In October
+2026 two manuscripts, by OpenAI~\cite{OpenAI26} and by Anthropic~\cite{Anthropic26}, each claimed a
+deterministic algorithm that counts the models of a $k$-CNF in subexponential time, with Lean~4
+formalisations of the top-level statements. We write \A{} and \Oa{} for them. The Main Theorem of
+\A{} gives time $2^{O(\min\{km/\sqrt{\log m},\;k^2n\log\log n/\sqrt{\log n}\})}$; \Oa{} gives
+$(n+m)^{O_k(1)}2^{O_k(n\log\log n/\sqrt{\log n})}$ bit operations, and $2^{O_{k,D}(n/\sqrt{\log
+n})}$ when $m\le Dn$. These are \emph{claimed} results, under review. In a companion
+paper~\cite{Tulsyan26} we derived from \A{} an exact deterministic algorithm counting the
+Hamiltonian cycles ($\HC$) of a graph with $n$ vertices and $m=O(n)$ edges in time
+$2^{O(n/\sqrt{\log n})}$; the Lean development and the scripts used here are in the
+repository~\cite{TulsyanRepo26}.
+
+An $O(\cdot)$ in an exponent says nothing about when the algorithm first wins. The question is
+not idle: the sources fix almost all of their constants (the Lean development of \A{} fixes every
+schedule parameter), so the bound they prove is a concrete function of $n$, up to a few
+existential constants. Neither manuscript computes where its concrete bound crosses brute force (the
+Lean development of \A{} records only that its decision machine searches exhaustively below
+$2^{2^{518}}$, see \cref{sec:corrections}), and we are not aware of such a computation; we do it here.
+
+\begin{definition}\label{def:cross}
+Let $T_{\mathrm{alg}}(n)$ be a proven upper bound on the number of steps of an algorithm on inputs
+with $n$ variables (or vertices), with every explicit term and polynomial factor kept and the free
+parameters chosen as the tier says (\cref{sec:tiers}), and let $T_{\mathrm{bf}}(n)$ be the
+brute-force bound: $2^n$ for $\#3$-SAT and $n^22^n$ (Bellman, Held--Karp~\cite{Bellman62,HeldKarp62})
+for $\HC$. The \emph{crossover} $\nst$ is the least $n$ with $T_{\mathrm{alg}}(n)<T_{\mathrm{bf}}(n)$.
+Since $\nst$ has between $10^3$ and $10^{14}$ binary digits (and $2^{1747}$ for one machine), we report $\tst=\log_2\nst$.
+\end{definition}
+
+We write $\rho_{\mathrm{alg}}(n)=\log_2T_{\mathrm{alg}}(n)/n$ for the \emph{rate}; for $\#3$-SAT
+the crossover is where the rate first drops below $1$. \Cref{tab:headline} is the summary.
+
+\begin{table}[ht]
+\centering\footnotesize
+\caption{Crossover $\tst=\log_2\nst$ of the proven bounds. A: as written; B: same lemmas, free
+parameters re-optimised; C: constant changes justified outside the formal proofs; \Hh: heuristic.
+Rows 1--3 use $q=1$ for the unknown degree of the Turing-machine time bound (the explicit-part
+lower bound, \cref{sec:explicit}); for other $q$ see \cref{tab:q}. In rows 7--8 the values in
+parentheses use the degree network of~\cite{TulsyanRepo26}.}\label{tab:headline}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+& algorithm (brute force) & A & B & C \\
+\midrule
+1 & \A, official Lean thm., $\#3$-SAT, $m=4.26n$ ($2^n$) & $552\,040$ & $245\,009$ & $119\,103$; $31\,358$ \Hh\\
+2 & \A, $n$-route, $\#3$-SAT, any $m$ ($2^n$) & $3.42\cdot10^{10}$ & $1.61\cdot10^{10}$ & $3.93\cdot10^{9}$; $1.05\cdot10^{9}$ \Hh\\
+3 & \A, $3$-SAT decision machine ($2^n$) & $2^{1747}$ & --- & ---\\
+4 & \Oa, Engine I, $\#3$-SAT, any $m$ ($2^n$) & $3.02\cdot10^{13}$ & $8.53\cdot10^{7}$ & $3.82\cdot10^{7}$\\
+5 & \Oa, Engine II ($2^n$) & \multicolumn{3}{l}{only a lower bound: $\log_2(\text{wires})\ge2^{85}$ ($2^{510}$ at full depth)}\\
+6 & $\HC$, cubic graphs ($n^22^n$) & $55\,440$ & $44\,356$ & $20\,888$; $4\,905$ \Hh\\
+7 & $\HC$, $\Delta=4$ ($n^22^n$) & $112\,860$ & $90\,291$ & $43\,205$; $10\,470$ ($9\,799$) \Hh\\
+8 & $\HC$, $\Delta=8$ ($n^22^n$) & $458\,100$ ($112\,860$) & $366\,482$ ($90\,292$) & $177\,700$ ($49\,161$);\\
+&&&& $46\,182$ ($19\,350$) \Hh\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+So, for example, the official Lean theorem of \A{} first certifies a win over $2^n$ on $3$-CNFs at
+the satisfiability threshold density at about $n=2^{552\,040}$, and only if $q=1$; with $q=2$ it is
+$2^{2.21\cdot10^6}$ and with $q=10$ it is $2^{3.54\cdot10^7}$. OpenAI's Engine I as written needs
+$n\approx2^{3.02\cdot10^{13}}$. Our $\HC$ algorithm, which has no Turing-machine degree because it
+counts word operations, has the smallest crossover of all.
+
+\subsection*{What the numbers are}
+Each $\tst$ is the output of an exact computation (\cref{sec:repro}) applied to formulas that we
+transcribed from the sources (file and lemma references below). The transcription is ours, the
+computations are not formally verified, and none of the numbers is a theorem, in Lean or on paper.
+Where a number depends on a constant that the sources only assert to exist, we say so and report its
+sensitivity. A crossover of a proven bound says where the \emph{guarantee} first beats brute force;
+the algorithms might do better, and the guarantees might be improvable, which is what tiers B and
+C measure.
+
+% =====================================================================
+\section{Method}\label{sec:method}
+% =====================================================================
+
+\subsection{Exact evaluation in the log domain}\label{sec:logdomain}
+All quantities are represented by their base-$2$ logarithms, evaluated with
+mpmath~\cite{mpmath} at $60$ significant digits. The level sizes $K_\ell=2^{L_\ell}$ have
+$L_\ell$ up to about $10^{9}$ and are never built as integers; the exponents $L_\ell$, the level
+rules and the Lean functions \lf{Nat.size}, \lf{Nat.clog}, floors and ceilings are evaluated
+exactly on these representations. We put $n=2^t$ with real $t$, and $m=\alpha n$ for the
+$m$-route. Within one band of $t$ on which the recursion level is fixed the rate decreases in $t$,
+and the crossover is found by bisection in $t$ to relative precision $10^{-6}$; tier~B and~C
+crossovers are minimised over all levels. Terms reported as ``below $10^{-x}\cdot n$'' are
+printed by the script in decimal notation.
+
+\subsection{The schedule of \texorpdfstring{\A}{[A]}}\label{sec:schedule}
+The algorithm of \A{} is a recursion over levels $\ell$. Its Lean development fixes the schedule
+(\lf{Levels.Gen}, \lf{statements/LevelsStatement.lean}; all Lean paths are relative to the
+\lf{proof/} directory of \A):
+\begin{equation}\label{eq:schedule}
+K_0=2^{x_0},\quad g_\ell=2^{3\ell+x_0}K_\ell,\quad K_{\ell+1}=g_\ell^2,\quad \zeta_\ell=2^{-\ell-5},\quad
+e_0=\tfrac12,\quad e_{\ell+1}=(\rho+3\zeta_\ell)\,e_\ell+\frac{3}{K_\ell},
+\end{equation}
+with $\rho=1/\sqrt2$. The official route uses $x_0=18$, the least value allowed
+(\lf{maintheorem/CountedRoute/Defs.lean}); then $\log_2K_\ell=60\cdot2^\ell-6\ell-42$, which the
+script asserts for $\ell<40$ together with condition~(ii) of the grouping lemma,
+$K_\ell\ln(2g_\ell K_\ell)\le2\zeta_\ell^2g_\ell$. The number $e_\ell$ is the clique exponent: the
+clique algorithm at level $\ell$ runs in $2^{e_\ell K^2\lambda}(K(\lambda+B))^{C_0K^2}$ steps
+(\lf{statements/CliqueLevelsStatement.lean}). The official main theorem, however, does not use
+$e_\ell$ but the rational number $e'_\ell$ returned by \lf{num}/\lf{den} in
+\lf{rates/GeneralPieces/Num/Between.lean} (lines~34--37): $e'_\ell=2^{-\ell/2}$ for even $\ell$
+and $1.4\cdot2^{-(\ell+1)/2}$ for odd $\ell$ (\cref{sec:corrections}).
+
+\begin{table}[ht]
+\centering\small
+\caption{The Lean schedule at $x_0=18$ (the last column is the ratio of the printed values).}\label{tab:schedule}
+\begin{tabular}{@{}rrllll@{}}
+\toprule
+$\ell$ & $\log_2K_\ell$ & $e_\ell$ & $e'_\ell$ & $e_\ell/\rho^\ell$ & $e'_\ell/e_\ell$\\
+\midrule
+0 & 18 & 0.5 & 1.0 & 0.5 & 2.0\\
+2 & 186 & 0.3019 & 0.5 & 0.6038 & 1.66\\
+4 & 894 & 0.1586 & 0.25 & 0.6342 & 1.58\\
+6 & 3\,762 & 0.08026 & 0.125 & 0.6421 & 1.56\\
+8 & 15\,270 & 0.04026 & 0.0625 & 0.6441 & 1.55\\
+9 & 30\,624 & 0.02848 & 0.04375 & 0.6444 & 1.54\\
+10 & 61\,338 & 0.02014 & 0.03125 & 0.6446 & 1.55\\
+12 & 245\,646 & 0.01007 & 0.01563 & 0.6447 & 1.55\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The ratio $e_\ell/\rho^\ell$ tends to $0.644772=\frac12\prod_j(1+3\zeta_j/\rho)$: the terms
+$3\zeta_\ell$ cost a factor $1.29$ over $\rho^\ell/2$, while the terms $3/K_\ell$ are below
+$2^{-17}$ at $\ell=0$ and doubly exponentially smaller afterwards. Two facts drive everything
+below: $e_\ell$ halves every two levels, and $\log_2K_\ell$ doubles with every level.
+
+\subsection{Tiers and labels}\label{sec:tiers}
+\emph{Tier~A} is the bound as written: the Lean definitions for \A, the paper's parameter choices
+for \Oa{} and for~\cite{Tulsyan26}. \emph{Tier~B} uses the same proven lemmas with their free
+parameters re-optimised for each $n$ (for \A: the level and the numerator $e_\ell$ in place of
+$e'_\ell$, both allowed by other Lean routes of \A; for \Oa: the parameters $s,t,r,Q,R,\tau$
+subject only to the numerical hypotheses of \lf{lem:layout}). \emph{Tier~C} changes constants in
+ways justified outside the formal proofs. C1 re-tunes $\zeta_\ell=2^{-(\ell+z)}$ and takes the least
+$g_\ell/K_\ell$ that condition~(ii) allows; this rests on the written proof of \A, not on Lean. For
+\Oa, tier C replaces the bound $m_{\mathrm{test}}\le6n$ by $m_{\mathrm{test}}\le n+n/\log_2(4/3)+2\approx3.41n$, which the proofs of \lf{lem:sparse-checks} and
+\lf{lem:greedy-hashes} give but the paper does not state. Items marked \Hh{} are heuristic: C2 and
+C3 assume a base case of the clique recursion with exponent $e_0=5/18$ ($=2.5/9$) or
+$e_0=\omega/9=0.2635$ with $\omega=2.371552$~\cite{VXXZ24}, as a fast-matrix-multiplication base
+case might give; C4 adds $x_0=10$ (which needs the pieces constant $c\le1017$); C5 drops the
+$K^g$ grouping search. None of the \Hh{} changes is proved, in the sources or here.
+
+\subsection{Explicit and existential constants}\label{sec:constants}
+\Cref{tab:constants} lists every constant that is existential in Lean or hidden in an $O(\cdot)$ of
+the sources, and how it is handled. No existential constant is ever given a value; each is a
+parameter, and we report either a table in it or the \emph{break-even} value it would have to
+exceed to move $\nst$.
+
+\begin{table}[ht]
+\centering\small
+\caption{Existential and hidden constants.}\label{tab:constants}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{5.6cm}>{\raggedright\arraybackslash}p{6.6cm}@{}}
+\toprule
+constant & where & effect on $\nst$\\
+\midrule
+$q$, degree of the TM time bound \A & \lf{Computes} (\lf{variables/PairsToBound/Defs.lean}, l.~192): steps $\le q(|x|+2^{\mathrm{expo}}+1)^q$; folded into the $C$ of the final forms & \textbf{the only one that matters}: crossover needs rate $<1/q$; $\tst$ grows about $4\times$ per doubling of $q$ (\cref{tab:q})\\
+$C_0$, clique factor \A & $\forall c\,\exists C_0$ in \lf{ExplicitCost.RecursionSolves}; enters \lf{needOf} as $C_0K^2\sz(\cdot)$ & none: tables for $C_0\in\{0,1,10\}$ coincide; at the tier-A $\nst$ of row~1 it matters only if $C_0>2^{429\,342}$\\
+$C_1$, grouping factor (Lemma~8 of \A) & $\exists C_1$ in \lf{GroupingExplicit}; absent from the Lean pad exponent & none for \A; for $\HC$ (cubic, tier A) only if $C_1>2^{55\,421.7}$; $C_0$ there only if $C_0>2^{51\,725.6}$\\
+$C_2$, the $O(\log n)$ in $\log\tau$ ($\HC$) & \cite{TulsyanRepo26}, \lf{research/exact-hc-theorem.md} (6.1)--(6.2) & none: only if $C_2>2^{55\,421.0}$\\
+$n_0\le n_1$, ``large $n$'' of the $n$-route \A & \lf{ThmVariablesAForEveryMachine}: $\exists n_0\,\forall n_1\ge n_0$ & cannot be bounded; can only increase $\nst$, so the $n$-route values are lower bounds\\
+$(n+m)^{O_k(1)}$ and other polynomial factors \Oa & throughout & none: a factor $(n+m)^c$ matters only if $c$ is of order $2^{\lambda^*}$, $\lambda^*\approx3.0\cdot10^{13}$\\
+Engine II constants $O_C(\cdot)$, $O_{C,A}(\cdot)$ \Oa & \lf{thm:tensor-contraction} & not boundable; only an explicit parameter threshold is reported\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Explicit-part lower bounds}\label{sec:explicit}
+Setting $C_0=C_1=C_2=0$ and $q=1$ and ignoring $n_0,n_1$ only decreases the bounds, so the
+resulting $\tst$ is a rigorous lower bound on the crossover of the proven bound; we also drop
+$\log_2q$ and the input length $|x|$ in $q(|x|+2^{\mathrm{expo}}+1)^q\ge2^{q\cdot\mathrm{expo}}$,
+which again errs downwards. For the padded Lean machines of \A, which write a pad of
+$2^{\mathrm{expo}}$ units and fall back to exhaustive search when $\mathrm{expo}>n$ (\lf{planM},
+\lf{plan}), it is also a lower bound on where the machine itself leaves exhaustive search. For
+\Oa{} Engine~I and for $\HC$ the remaining constants are so far from their break-even values that
+the lower bound \emph{is} the crossover of the proven bound; for the SAT routes of \A{} it is the
+value at $q=1$, and the true value is the $q$-dependent one of \cref{tab:q,tab:nroute}.
+
+% =====================================================================
+\section{Results}\label{sec:results}
+% =====================================================================
+
+\subsection{\texorpdfstring{\A}{[A]}, the official main theorem (\texorpdfstring{$m$}{m}-route)}\label{sec:mroute}
+\lf{Solution.lean} (line~44) defines \lf{MainResults.mainTheorem} as
+\lf{CountedRoute.mainTheoremHolds}. Its exponent in $m$ is \lf{needTop}
+(\lf{rates/ClauseBound/Alg/Top.lean}): with $K=K_\ell$ for the largest $\ell$ with $K_\ell^9\le m$
+(\lf{root9}), $g=3K^8$, $P=\max(1,2k\lceil m/g\rceil)$ and $\lambda=\lfloor(K^3+2kmK+gP)/K^3\rfloor$,
+\begin{equation}\label{eq:needTop}
+\mathrm{needTop}=\max\Bigl(3K^8\sz K,\;P\bigl(\tfrac{2g}{K}+1\bigr),\;(K-1)\lambda,\;
+\lceil e'_\ell K^2\lambda\rceil+C_0K^2\sz\bigl(K(\lambda+B+1)\bigr)+2\Bigr),
+\end{equation}
+the last term being \lf{needOf} of \lf{rates/CountedToPadded/Defs.lean} (line~148) with
+$B=2gP/K$. The machine runs in at most $q(|x|+2^{\mathrm{needTop}}+1)^q$ steps, and searches
+exhaustively when $\mathrm{needTop}>n$. \Cref{tab:mrate} shows the rate at $q=1$; \cref{tab:mcross}
+the crossovers; \cref{tab:q} the dependence on $q$.
+
+\begin{table}[ht]
+\centering\small
+\caption{Rate $\mathrm{needTop}/n$ of the official theorem, tier A, $m=4.26n$, $q=1$, $C_0=0$, at
+$n=2^{2^j}$. From $j=8$ on, the solver term \texttt{needOf} is the maximum in~\eqref{eq:needTop}.}\label{tab:mrate}
+\begin{tabular}{@{}rrrrrrrr@{}}
+\toprule
+$j$ & 8 & 12 & 16 & 18 & 20 & 24 & 30\\
+level $\ell$ & 0 & 3 & 6 & 8 & 10 & 14 & 20\\
+rate & 25.56 & 8.946 & 3.195 & 1.597 & 0.7987 & 0.1997 & 0.02496\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering\small
+\caption{Crossover $\tst$ of the $m$-route, $k=3$, $m=\alpha n$, $q=1$; $\ell^*$ is the level at the
+crossover for $\alpha=4.26$. C1 is justified by the written proof of \A, not by Lean.}\label{tab:mcross}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+tier & $\alpha=1$ & $\alpha=3$ & $\alpha=4.26$ & $\ell^*$\\
+\midrule
+A: \lf{CountedRoute}, \lf{root9}, $e'_\ell$ ($C_0\in\{0,1,10\}$) & $33\,858$ & $275\,614$ & $552\,040$ & 10\\
+B: same lemmas, $e_\ell$, level free & $7\,163$ & $122\,176$ & $245\,009$ & 9\\
+C1: $\zeta_\ell$ and $g_\ell/K_\ell$ re-tuned & $6\,459$ & $59\,247$ & $119\,103$ & 8\\
+C2: C1 $+$ $e_0=5/18$ \Hh & $1\,449$ & $15\,405$ & $31\,358$ & 6\\
+C3: C1 $+$ $e_0=\omega/9$ \Hh & $1\,353$ & $14\,412$ & $29\,341$ & 6\\
+C4: C2 $+$ $x_0=10$ \Hh & $1\,161$ & $13\,036$ & $26\,621$ & 6\\
+C5: C2 without the $K^g$ grouping search \Hh & $1\,265$ & $13\,473$ & $27\,431$ & 6\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering\small
+\caption{Sensitivity of $\tst$ to the Turing-machine degree $q$, $m$-route, $\alpha=4.26$.}\label{tab:q}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+tier & $q=1$ & $q=2$ & $q=3$ & $q=5$ & $q=10$\\
+\midrule
+A & $5.52\cdot10^5$ & $2.21\cdot10^6$ & $4.42\cdot10^6$ & $8.85\cdot10^6$ & $3.54\cdot10^7$\\
+B & $2.45\cdot10^5$ & $9.82\cdot10^5$ & $1.97\cdot10^6$ & $3.93\cdot10^6$ & $1.57\cdot10^7$\\
+C1 & $1.19\cdot10^5$ & $4.78\cdot10^5$ & $9.58\cdot10^5$ & $3.55\cdot10^6$ & $1.42\cdot10^7$\\
+C2 \Hh & $3.14\cdot10^4$ & $1.27\cdot10^5$ & $2.72\cdot10^5$ & $9.58\cdot10^5$ & $3.83\cdot10^6$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{Dominant term.} At every tier the cost at $\nst$ is the solver term
+$\lceil e'K^2\lambda\rceil\approx2e'_\ell km$, that is, the clique exponent times the network
+total $U\approx2km$. At the tier-A crossover ($\alpha=4.26$, $\ell=10$) it equals $0.79875\,n$,
+while the grouping search, $P(2g/K+1)$ and $(K-1)\lambda$ are each below $10^{-18459}\cdot n$. So
+the rate is $2e'_\ell k\alpha$ to that accuracy, and $\nst$ is fixed by two discrete facts: the first
+level with $q\cdot2e'_\ell k\alpha<1$ (here $e'_{10}=1/32$, giving $25.56/32=0.79875$), and the
+least $n$ at which that level may be used. In tier A this is the rule $K_\ell^9\le m$, so
+$\tst=9\log_2K_{10}-\log_2 4.26=552\,042-2.09$, the value in \cref{tab:mcross}; in tier B the
+binding constraint is the search term $3K^8\sz K\le n$, so $\tst\approx8\log_2K_9$. Since
+$\log_2K_\ell$ doubles per level and $e_\ell$ halves every two levels, $\nst$ is a staircase: a
+change of constant helps only once it crosses a level boundary, and then it halves $\tst$. Each
+doubling of $q$ costs two levels, hence the factor $4$ in \cref{tab:q} (the steps at $q=3$ and
+$q=5$ are the intermediate odd levels).
+
+\subsection{\texorpdfstring{\A}{[A]}, the \texorpdfstring{$n$}{n}-route (any number of clauses)}\label{sec:nroute}
+For formulas with arbitrarily many clauses, \A{} first sparsifies and then runs a network whose
+total is $U\le6k(n+L_\Delta)+28kn\lceil\log_2(96\Delta L_\Delta)\rceil+2(3K^8)^2$, with
+$L_\Delta=\lceil\log_2 2\Delta\rceil$ and $\Delta=\min(\text{\lf{occBound}},n+1)$
+(\lf{variables/VariableBound/Net/Defs.lean}, \lf{variables/RecursionToBound/Defs.lean}). Here
+\lf{occBound} $=2(\theta_0+\theta_1+\theta_2)+2=32\alpha^2+4\alpha+6$ with
+$\alpha=\lceil8\varepsilon^{-1}\lceil\log_2(128/\varepsilon)\rceil\rceil$
+(\lf{sparsification/SparsificationLemma/Cal/Defs.lean}) and the sparsification parameter
+$\varepsilon=e'_\ell$ (\lf{epsOf}). The exponent is the solver exponent for this network plus a walk
+term $\lceil\varepsilon n\rceil+2+\sz(\text{stack})$, at the level given by $K_\ell^{17}\le n$
+(\lf{root17}).
+
+\begin{table}[ht]
+\centering\small
+\caption{$n$-route: rate at $n=2^{2^j}$ (tier A, $q=1$), and crossovers $\tst$.}\label{tab:nroute}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+$j$ & 22 & 28 & 34 & 37 & 40\\
+level $\ell$ & 12 & 18 & 24 & 27 & 30\\
+rate & 55.42 & 8.076 & 1.153 & 0.4251 & 0.1621\\
+$U/n$ & 3\,546 & 4\,134 & 4\,722 & 4\,974 & 5\,310\\
+\midrule
+tier & $q=1$ & $q=2$ & $q=5$ & $q=10$ & \\
+\midrule
+A (\lf{root17}, $\varepsilon=e'_\ell$), $\ell^*=25$ at $q=1$ & $3.42\cdot10^{10}$ & $1.37\cdot10^{11}$ & $1.10\cdot10^{12}$ & $4.38\cdot10^{12}$\\
+B ($e_\ell$, level free) & $1.61\cdot10^{10}$ & $6.44\cdot10^{10}$ & $5.15\cdot10^{11}$ & $2.06\cdot10^{12}$\\
+C1 (re-tuned, $\varepsilon$ decoupled from $e$) & $3.93\cdot10^{9}$ & $1.68\cdot10^{10}$ & $1.26\cdot10^{11}$ & $5.37\cdot10^{11}$\\
+C2 (C1 $+$ $e_0=5/18$) \Hh & $1.05\cdot10^{9}$ & $7.28\cdot10^{9}$ & $3.36\cdot10^{10}$ & $2.33\cdot10^{11}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+At the tier-A crossover ($q=1$, $\ell=25$) the cap is $\Delta=2.8049\cdot10^{13}$ and $U/n=4806$;
+the solver term is $0.82134\,n$, the walk term $1.709\cdot10^{-4}\,n$, and every $K$-dependent
+term is below $10^{-6\cdot10^8}\cdot n$. The dominant term is again $e'_\ell U$, and
+$\tst=17\log_2K_{25}$. Lean ties the sparsification parameter to the clique exponent; decoupling
+them (tier C1, best at $\varepsilon\approx128e_\ell$) is worth about two levels, because the walk
+term $\varepsilon n$ is cheap while $U$ depends on $\varepsilon$ through $\log_2\Delta\approx
+2\log_2(1/\varepsilon)$. The existential threshold $n_1$ can only increase these values.
+
+\subsection{\texorpdfstring{\A}{[A]}, the \texorpdfstring{$3$}{3}-SAT decision machine}\label{sec:decision}
+The rate machine \lf{Sat3.inRateTM} (\lf{rates/PaddedDescent/}) chooses
+$s=\lfloor3(\lfloor\log_2\lfloor\log_2n\rfloor\rfloor-911)/19\rfloor$ (\lf{sOf},
+\lf{Params.lean} line~56) and searches exhaustively while $s<\text{\lf{s0K}}\,3=128$, i.e.\ for every
+$n<2^{2^{1722}}$. Beyond that it writes a pad of $2^{2^{131}(\lfloor n/2^s\rfloor+1)}$ units
+($\text{\lf{C0K}}\,3=8\cdot2^{128}=2^{131}$), and its time $q\cdot(\text{pad})^q$ is below $2^n$ only once
+$q\cdot2^{131-s}<1$:
+\begin{center}\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+$q$ & 1 & 2 & 10 & 1000\\
+needs $s\ge$ & 132 & 133 & 136 & 142\\
+$\nst$ & $2^{2^{1747}}$ & $2^{2^{1754}}$ & $2^{2^{1773}}$ & $2^{2^{1811}}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+This is a decision procedure, not a counter, and it is far worse than the counting routes because
+of its padding constant.
+
+\subsection{Our \texorpdfstring{$\HC$}{\#HC} algorithm}\label{sec:hc}
+The $\HC$ algorithm of~\cite{Tulsyan26} is conditional on \A{} (Theorem~A(b), Lemma~8 and the
+existence of its pieces). It counts word-RAM operations, so there is no Turing-machine degree and
+no padding. We use the explicit bounds recorded in the repository~\cite{TulsyanRepo26}
+(\lf{research/exact-hc-theorem.md}, (6.1)--(6.2)): $gP\le2.33(2m+n)+3g^3$, $U\le4.65m+g^3$,
+$B\le2(2m+n)/g+5$, $\log\tau\le1.5(2m+n)/g+3+C_2\log n$, at most $n^{4m/\Theta}$ branches with
+$\Theta=\max(2,\lceil n/g\rceil)$, and the level rule $K_\ell^{30}\le n$. The log of the bound is
+\begin{multline*}
+1+\max\bigl\{g\log K,\;e_\ell(U+gP/K+K^2)+C_0K^2\log(K(L+B'))+2gP/K+\log\tau\bigr\}\\
++C_1\log(g(P+B))+C_2\log n+\log\#\text{branches},
+\end{multline*}
+compared with $\log_2(n^22^n)$. The degree network (\lf{research/hc-degree-theorem.md}) has
+$U\le2n\log_2(2e\bar d)+g^3$ and no branching; for $\Delta$-regular graphs we take $\bar d=\Delta$.
+
+\begin{table}[ht]
+\centering\small
+\caption{$\HC$ versus $n^22^n$: crossover $\tst$, $m=\Delta n/2$. Tier A uses $K_\ell^{30}\le n$, the
+Lean schedule and $e_\ell$; $C_0=C_1=C_2\in\{0,10\}$ give identical values. The network
+of~\cite{Tulsyan26} has $U\approx4.65m$, the degree network $U\approx2n\log_2(2e\Delta)$.}\label{tab:hc}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+& \multicolumn{3}{c}{network of~\cite{Tulsyan26}} & \multicolumn{3}{c}{degree network}\\
+\cmidrule(lr){2-4}\cmidrule(l){5-7}
+tier & $\Delta=3$ & $\Delta=4$ & $\Delta=8$ & $\Delta=3$ & $\Delta=4$ & $\Delta=8$\\
+\midrule
+A & $55\,440$ & $112\,860$ & $458\,100$ & $55\,440$ & $112\,860$ & $112\,860$\\
+B & $44\,356$ & $90\,291$ & $366\,482$ & $44\,357$ & $90\,291$ & $90\,292$\\
+C1 & $20\,888$ & $43\,205$ & $177\,700$ & $40\,037$ & $43\,205$ & $49\,161$\\
+C2 \Hh & $4\,905$ & $10\,470$ & $46\,182$ & $9\,080$ & $9\,799$ & $19\,350$\\
+C3 \Hh & $4\,615$ & $9\,799$ & $43\,206$ & $9\,078$ & $9\,797$ & $19\,349$\\
+C4 \Hh & $4\,330$ & $8\,695$ & $39\,079$ & $8\,021$ & $8\,024$ & $15\,846$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{Dominant term.} At the tier-A crossover for $\Delta=3$ ($\ell=5$) the term $e_\ell U$ is
+$0.78846\,n$; $(e+2)gP/K$ is below $10^{-555}\cdot n$, $\log\tau$ below $10^{-4450}\cdot n$, the
+grouping search and the branches below $10^{-12232}\cdot n$. The values of tier A are exactly
+$30\log_2K_\ell$ ($30\cdot1848$, $30\cdot3762$, $30\cdot15\,270$). In tier B the binding lower-order
+term is the copy-bit term $g^3=27K^{24}$ in $U$ and $gP$, so $\tst\approx24\log_2K_\ell$. The degree
+network has the smaller $U$ from $\Delta\ge4$ ($8.885n$ against $9.30n$ at $\Delta=4$; at $\Delta=3$,
+$8.06n$ against $6.98n$), but because levels are discrete it lowers tier~A only at $\Delta=8$, by a
+factor $4.06$.
+
+\subsection{\texorpdfstring{\Oa}{[O]}, Engine I (the interpolation algorithm)}\label{sec:engineI}
+We call Engine I the interpolation algorithm of \lf{prop:interpolation-bound} of \Oa{} (line
+numbers refer to \lf{main_full_version.tex}), which counts in
+$(n+m)^{O_k(1)}2^{O_k(n(\log\log n)^2/\sqrt{\log n})}$ bit operations. Its proof sparsifies with
+$\sigma=1/s$, branches on variables occurring in more than $b_0=\lceil M/n\rceil t$ scopes, and runs
+the common counting routine (\lf{prop:general-count}, l.~2013), whose cost is a sum of three terms
+(\lf{eq:three-costs}, l.~2055). With $n=2^\lambda$ the rate is
+\[
+\underbrace{\tfrac1s}_{\text{leaves}}+\underbrace{\tfrac1t}_{\text{branches}}
++\underbrace{\tfrac{\log_2C_q}{n}}_{\text{Taylor}}+\underbrace{2\tau\log_2(2D+1)}_{\text{measurements}}
++\underbrace{\tfrac2r}_{\text{group}}+\frac{\mathrm{polylog}}{n},
+\qquad C_q=\sum_{s'\le q}2^{s'}\binom n{s'},\quad q=\Bigl\lfloor\frac{d_H}{Q}\Bigr\rfloor,
+\]
+with $d_H=kR(m_{\mathrm{test}}+2n)=24Rn$ for $k=3$, $m_{\mathrm{test}}\le6n$. We bound
+$\log_2C_q\le q+nH_2(q/n)+\log_2(q+1)$ for $q<2n/3$ and $C_q\le3^n$ otherwise. Tier A takes the
+parameters of \lf{lem:incidence-parameters} (l.~2747): $\lambda=\lceil\log_2n\rceil$,
+$\nu=\lceil\log_2\lambda\rceil$, $r=\lfloor\sqrt\lambda/\nu^2\rfloor$,
+$Q=\lfloor\lambda/(128\nu)\rfloor$, $R=(\beta+3)\lceil\sqrt\lambda\rceil$ with $\beta$ least with
+$b,w\le\lambda^\beta$, $\tau=1/(r\lambda)$, $D=r^{2Q}$, and the sparsification constants of
+\lf{app:sparsify}; if any numerical check of the proof fails ($r\ge2$, $Q>R$, $R\ge32$, $6R\le Q$,
+$2(b+w)D^2\le M'$, $2Qr^2\le n'$, the tail bound), the algorithm searches exhaustively.
+
+\begin{table}[ht]
+\centering\small
+\caption{Engine I, tier A. For $\lambda\le2^{36}$ a check fails ($s<2$ up to $2^{18}$; then $r<2$ or
+$Q\le R$; then $6R>Q$) and the algorithm searches exhaustively.}\label{tab:oaiA}
+\begin{tabular}{@{}rrrrrr@{}}
+\toprule
+$\log_2\lambda$ & 38 & 42 & 44 & 46 & 50\\
+$\beta$ & 7 & 6 & 6 & 6 & 6\\
+$r$ & 363 & 1\,188 & 2\,166 & 3\,964 & 13\,421\\
+$q/n$ & 2.23 & 0.554 & 0.290 & 0.152 & 0.0412\\
+rate & 1.593 & 1.548 & 1.16 & 0.7662 & 0.2892\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All checks first pass at $\lambda\approx8.07\cdot10^{10}$, where the rate is $1.599$. The rate first
+drops below $1$ at $\lambda^*=\tst\approx3.0166\cdot10^{13}$ ($\log_2\lambda^*=44.778$), with
+$\beta=6$, $r=2712$, $Q=5.24\cdot10^9$, $R=4.94\cdot10^7$, $q/n=0.2265$. The terms there are Taylor
+$0.9984$, group $7.4\cdot10^{-4}$, leaves $3.7\cdot10^{-4}$, measurements $2.9\cdot10^{-6}$ and
+branches $1.8\cdot10^{-7}$; the polylogarithmic terms (Tanner search, $3n(2m)^{P_h}$ calls) are
+below $10^{-9\cdot10^{12}}$. \emph{The dominant term is the Taylor (Hasse-derivative) term
+$\log_2C_q$}: the order $q=24Rn/Q$ is large because the window $R=(\beta+3)\lceil\sqrt\lambda\rceil$
+comes from a Hoeffding bound~\cite{Hoeffding63} with a union over $b\le\lambda^\beta$ incidences,
+which is far wider than the binomial tail requires.
+
+\emph{Tier B} keeps the lemmas and only the numerical hypotheses of \lf{lem:layout}, and optimises
+$s$, $t$, $r$, $R$, with $Q$ at its largest allowed value and $\tau=r\,b\Pr[W\notin I]$ the least
+allowed, $W\sim\mathrm{Bin}(Q,(r-1)/(2r))$. The tail is bounded by the Chernoff--Kullback--Leibler
+bound, which is a rigorous upper bound on the exact binomial tail. The search runs in floating
+point (coordinate descent with restarts), and each reported point is re-evaluated in mpmath by the
+same cost function as tier A.
+
+\begin{table}[ht]
+\centering\small
+\caption{Engine I, tier B: best rate found at $\lambda=2^j$, and its parameters.}\label{tab:oaiB}
+\begin{tabular}{@{}rrrrrr@{}}
+\toprule
+$j$ & 24 & 26 & 28 & 32 & 40\\
+rate & 1.5083 & 1.0699 & 0.7097 & 0.2807 & 0.0349\\
+$s$ & 128 & 128 & 128 & 512 & 4\,096\\
+$t$ & 512 & 512 & 512 & 2\,048 & 16\,384\\
+$r$ & 18 & 18 & 29 & 86 & 946\\
+$R$ & 17\,150 & 34\,948 & 66\,152 & 244\,286 & 3\,463\,792\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The tier-B crossover is $\lambda^*_B\approx8.53\cdot10^7$ ($\log_2\lambda^*=26.35$), at which the
+mpmath rate is $0.99983$ (Taylor $0.888$, group $0.100$, leaves $0.0078$, branches $0.0020$,
+measurements $0.0018$): \emph{the exact-tail window shrinks $\tst$ by a factor of about
+$3.5\cdot10^5$}. In tier B the binding trade-off is between the group term $2/r$ and the Taylor
+term, through $Q_{\max}\propto\lambda/\log r$. Tier C ($m_{\mathrm{test}}\approx3.41n$, so
+$d_H\approx16.2Rn$) gives $\lambda^*_C\approx3.82\cdot10^7$ ($\log_2\lambda^*=25.19$, rate $0.99985$).
+We did not use two further savings that the proofs do not give: halving the group term, and a lower
+precision than $\ell=n+1$.
+
+\subsection{\texorpdfstring{\Oa}{[O]}, Engine II (tensor contraction)}\label{sec:engineII}
+The sharper bounds of \Oa{} come from \lf{thm:tensor-contraction} (\lf{quantitative-reduction.tex},
+l.~26), all of whose rate constants are $O_C(\cdot)$. What is explicit is the parameter regime of
+\lf{quantitative-contraction.tex}: $\varepsilon=2^{-17}$, $u_d=\lfloor\varepsilon\lambda/2^d\rfloor$,
+and the requirement $\lambda^{4/5}\le u_d$ at every active call, where now $\lambda$ is
+$\log_2$ of the number of wires. Active calls reach depth $d<(\log_2C+\frac12\log_2\lambda)/3$,
+and there the requirement reads $\varepsilon\lambda^{5/6}/C^{1/3}\ge\lambda^{4/5}$, i.e.\
+$\lambda\ge2^{510}C^{10}$; at depth $0$ alone it needs $\lambda\ge\varepsilon^{-5}=2^{85}$. Reading the
+parameter bounds as hypotheses that the proof needs, Engine II as written says nothing below
+$\log_2(\text{wires})\approx2^{85}$, which is far beyond Engine I's crossover, and it gives no
+finite upper bound on $\nst$ at all. Engine I is therefore the operative crossover of \Oa.
+
+\subsection{Which levers matter}\label{sec:levers}
+For \Oa{} one lever dominates: the exact binomial window in place of Hoeffding (tier B), a factor
+$3.5\cdot10^5$ in $\tst$; the polynomial factors cannot matter. For \A{} the levers are, in order:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item \emph{the degree $q$}, existential and unbounded in Lean: about $\times4$ in $\tst$ per doubling;
+\item \emph{a fast base case} ($e_0=5/18$, \Hh): $e_\ell$ times $0.556$, about $1.7$ levels,
+$119\,103\to31\,358$ (factor $3.8$) in row~1;
+\item \emph{$e_\ell$ in place of $e'_\ell$ and a free level} (tier B, proven in other Lean routes):
+$552\,040\to245\,009$ (factor $2.25$);
+\item \emph{re-tuning $\zeta_\ell$ and $g_\ell/K_\ell$} (C1): $245\,009\to119\,103$ (factor $2.06$);
+Lean's $\zeta_\ell=2^{-(\ell+5)}$ has nearly the right shape, but $g_\ell=2^{3\ell+x_0}K_\ell$ is
+larger than condition~(ii) needs;
+\item minor: $x_0=10$ (\Hh, factor $1.18$) and dropping the grouping search (\Hh, factor $1.14$); $3/K_\ell$, $C_0$,
+$C_1$, $C_2$ are irrelevant.
+\end{enumerate}
+From A to C2 the gain in row~1 is a factor $17.6$. For $\HC$ the same schedule levers apply.
+
+% =====================================================================
+\section{Four facts about the sources}\label{sec:corrections}
+% =====================================================================
+A first reading of the statements suggests four things that the sources, read in full, do not
+say. We record what they do say, because each changes a number above.
+
+\begin{enumerate}[label=\textup{(\arabic*)}]
+\item \emph{The decision machine's floor is $2^{2^{1722}}$, not $2^{2^{518}}$.} The docstring of
+\lf{statements/ThreeSatRateStatement.lean} (line~64) says that the machine of the proof is
+exhaustive search for every $n<2^{2^{518}}$. This is true but weak: with \lf{sOf}, \lf{s0K} and
+\lf{C0K} of \lf{rates/PaddedDescent/Params.lean} (lines~56, 83, 87) the machine searches
+exhaustively for every $n<2^{2^{1722}}$, and its pad exceeds $2^n$ until $n\ge2^{2^{1747}}$, as
+\lf{rates/PaddedDescent/Main.lean} itself states (lines~52--59).
+\item \emph{The official theorem uses $e'_\ell\approx1.55\,e_\ell$, not $e_\ell$.} The official
+\lf{MainResults.mainTheorem} (\lf{Solution.lean}, line~44) is \lf{CountedRoute.mainTheoremHolds},
+whose solver \lf{solverOfMachine} pads to \lf{needOf}$=\lceil e'K^2\lambda\rceil+C_0K^2\sz(K(\lambda+B+1))+2$
+(\lf{rates/CountedToPadded/Defs.lean}, line~148) with $e'=e'_\ell$ from \lf{num}/\lf{den}
+(\lf{rates/GeneralPieces/Num/Between.lean}, lines~34--37). Since $e'_\ell\approx\rho^\ell$, it is
+about $1.55\,e_\ell$ from $\ell=6$ on (\cref{tab:schedule}). The interface \lf{NumberBetween}
+(\lf{statements/CliqueLevelsStatement.lean}) allows any number in $[e_\ell,2e_\ell]$; tier~B uses
+$e_\ell$, its lower end. Separately, the same file says that in Turing-machine steps the exponent
+$e_\ell K_\ell^2\lambda$ is claimed only up to a constant factor fixed with the machine (docstring,
+lines~25--33); in counted operations (\lf{SolvesInFactor}) it is exact. We count the former through
+$q$.
+\item \emph{OpenAI's occurrence bound is explicit.} \lf{lem:sparsify} of \Oa{} (l.~3543) states
+$B=O_k([\sigma^{-1}\log(2/\sigma)]^{k-1})$, but adds that $B$ is ``an explicitly computed integer'',
+and \lf{app:sparsify} (``The size of the tree'', l.~3808) computes it: $\Gamma=2(3^{k-1}-1)$, $M$
+the least power of $2$ with $M\ge\Gamma$ and $\Gamma\lceil\log_2(4CM)\rceil\le\sigma M$,
+$C=4\sum_{j\le k-2}(3M)^j$, $B=2\sum_{j<k}M^j$. We use these values; no hidden constant enters
+through $B$.
+\item \emph{Anthropic's occurrence bound is explicit.} The $n$-route caps the number of
+occurrences per variable by \lf{occBound} (\lf{variables/RecursionToBound/Defs.lean}, line~115),
+$2\sum_j\theta_j+2=32\alpha^2+4\alpha+6$ for $k=3$, with $\alpha$, $\beta_c$, $\theta_c$ defined in
+\lf{sparsification/SparsificationLemma/Cal/Defs.lean}. It is an explicit function of $\varepsilon$
+and involves no existential constant.
+\end{enumerate}
+
+% =====================================================================
+\section{Limitations}\label{sec:limitations}
+% =====================================================================
+
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item \emph{Everything is conditional.} The bounds evaluated here are those of the claimed
+refutations \A{} and \Oa, and, for $\HC$, of our paper~\cite{Tulsyan26}, which assumes three
+internal results of \A. Expert review of the manuscripts is pending. If their proofs fail, the
+numbers lose their meaning.
+\item \emph{Computations, not theorems.} The formulas were transcribed by us from Lean definitions
+and from the \TeX{} sources (for \Oa, only the \lf{.tex} files were read) and evaluated by a Python
+script. Neither the transcription nor the script is formally verified, and no number in this note
+is machine-checked. The Lean development of \Oa{} certifies no finite crossover at all.
+\item \emph{Existential constants.} The degree $q$ of \A's Turing-machine bound is unknown and
+unbounded in Lean; the values of rows~1--3 of \cref{tab:headline} are those at $q=1$, i.e.\ lower
+bounds. The thresholds $n_0\le n_1$ of the $n$-route can only increase its crossover. The
+constants $C_0,C_1,C_2$ and the polynomial degrees of \Oa{} are shown to be irrelevant only within
+the stated break-even ranges.
+\item \emph{Heuristic tiers.} The entries marked \Hh{} (fast base case, $x_0=10$, no grouping
+search) rest on changes that nobody has proved. Tier C1 rests on the written proof of \A{} and
+tier C of \Oa{} on our reading of two proofs; neither is in Lean.
+\item \emph{Engine II} of \Oa{} yields only a lower bound; its rate constants are $O_C(\cdot)$,
+and the threshold $2^{85}$ uses our reading of its parameter bounds as hypotheses of the proof.
+\item \emph{Proven bounds, not running times.} A crossover of a proven upper bound says nothing
+about the actual running time, which may be far smaller; tier B is only the best point found by a
+coordinate search, not a proven optimum. The $\HC$ cost model uses the explicit bounds of our
+research notes, which accompany but are not identical with the Lean statements of~\cite{Tulsyan26}.
+\item \emph{Nothing practical follows.} The smallest crossover in this note, $\tst\approx4\,330$
+for $\HC$ with all heuristic changes, is an input with more than $10^{1300}$ vertices.
+\end{enumerate}
+
+% =====================================================================
+\section{Reproducibility}\label{sec:repro}
+% =====================================================================
+The computation is \lf{research/scripts/crossover.py} in the repository~\cite{TulsyanRepo26},
+with its notes in \lf{research/crossover.md}. It is run as \texttt{python3 -I crossover.py}
+(isolated mode, so that no file of the working directory is imported) and writes
+\lf{crossover.out} beside itself; it needs only the Python standard library and
+mpmath~\cite{mpmath} at $60$ significant digits (\texttt{mp.mp.dps = 60}). On 3~November 2026, with
+Python~3.13.17 and mpmath~1.3.0, a fresh run took $29$~seconds of wall-clock time and reproduced
+the stored \lf{crossover.out} byte for byte. Every number in this note is either printed in that
+file or, where stated, a ratio or difference of printed values. The script also asserts the
+closed form of $\log_2K_\ell$ and condition~(ii) for the Lean schedule for $\ell<40$.
+
+\section*{Acknowledgements}
+This work was done with AI assistance (Claude Code, Anthropic): the transcription of the bounds,
+the script and the text were produced in sessions with Claude Code. The numbers have been checked
+against a fresh run of the script and the formulas against the sources as described, but the note
+awaits human expert review. Responsibility for any errors rests with the author.
+
+\bibliographystyle{amsplain}
+\bibliography{refs}
+
+\end{document}

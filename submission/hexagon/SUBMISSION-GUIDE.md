@@ -64,3 +64,16 @@ Source of the rules: hexagonmath.org/about and the public submission schema
   snapshots of `paper/` and `quantum-note/`; rebuild them if those change.
 - `abstract-hc.txt`, `abstract-quantum.txt` — abstracts for the form (TeX math kept, paper macros expanded).
 - `provenance.txt` — a DRAFT provenance statement; edit it so every sentence is true for you.
+
+## Paper 3 — Crossover note (upload `hexagon-crossover-note.zip`, main file `main.tex`)
+- **Title:** When do the new #SAT algorithms beat brute force? Crossover points of the proven bounds behind the ETH refutations
+- **Abstract:** paste `abstract-crossover.txt`.
+- **Primary subject:** cs.CC. **Cross-lists:** cs.DS.
+- **MSC2020:** 68Q25, 68W40, 68Q17.
+- **Tags:** Exponential Time Hypothesis; model counting; fine-grained complexity; explicit constants; galactic algorithms; crossover point.
+- **Tools / formalizations / arXiv:** as for the other papers (tools: Claude (Anthropic) via Claude Code; Python with mpmath). Nothing in this note is machine-checked: the crossover numbers are computations, not theorems.
+
+## Packaging lesson (from the HC upload)
+Hexagon rejected ZIPs containing `anc/` scripts and/or separate `.bib`/`.bbl` files with "file type not accepted",
+and accepted a ZIP with a single `main.tex` (bibliography inlined from the `.bbl`). All three packages here use that
+form; the papers cite the scripts in the repository instead.

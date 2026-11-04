@@ -1,0 +1,10 @@
+g=3: 9 rectangles, 12644 partitions with blocks <= 3; free rects total 2574, internal 0
+   V(all partitions, blocks<=3) = 4/9 = 0.4444 ; two-grouping value = 5/9
+   balanced (3 blocks of 3): 280 partitions, V = 4/9 = 0.4444
+PASS  g=3: no grouping family pushes the level below 1/3 of |R| (covering bound regime)
+g=4: 36 rectangles, 2627625 balanced partitions into 4 blocks of 4
+   per partition: avg free rects 1.424, avg internal 0.079 (bound 2|R|/g = 18.0 free)
+   random iota: min over partitions of agreements: mean 15.66, max 18 (of |R|=36, |R|/2=18)
+   local-search adversary: V >= 18/36 = 0.5000 (two groupings give 18/36 = 0.5)
+PASS  g=4: adversary keeps every balanced grouping at >= 0.4 |R|
+ALL PASS

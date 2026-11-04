@@ -1,0 +1,6 @@
+(a) H_3,4: 108 cycles x 3 random F: decomposition PASS
+(a) H_4,4: 760 cycles x 3 random F: decomposition PASS
+(a) H_4,5: 4984 cycles x 3 random F: decomposition PASS
+(b) 200 random lifts of the balanced 4x4 cycle into H_9: simple and balanced PASS
+(c) 50 planted cell-homogeneous F: F(lift of B) = 0 PASS
+ALL PASS

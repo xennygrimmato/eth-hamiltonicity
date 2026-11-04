@@ -1,0 +1,26 @@
+(A) bit-split lemma: exponent(lam1) - e K^2 lam >= 0 for all splits
+PASS  bit-split never lowers the exponent (min difference = 0)
+(B) decomposition convexity: E log m + e K^2 (lam - log m) >= e K^2 lam
+PASS  decomposition never lowers the exponent (min difference = 0)
+(C) schedule DP, rho = 1/sqrt2, x0 = 18: lgK, best e, e*(lgK)^alpha, lower bound (1/2)rho^L
+   lgK=   18  e=0.5000  e*lgK^a=2.121  LB=0.5000
+   lgK=   36  e=0.8536  e*lgK^a=5.121  LB=0.3536
+   lgK=   38  e=0.6036  e*lgK^a=3.721  LB=0.3536
+   lgK=   40  e=0.4786  e*lgK^a=3.027  LB=0.3536
+   lgK=   42  e=0.4161  e*lgK^a=2.696  LB=0.3536
+   lgK=   44  e=0.3848  e*lgK^a=2.553  LB=0.3536
+   lgK= 3994  e=0.0467  e*lgK^a=2.954  LB=0.0442
+   lgK= 3996  e=0.0467  e*lgK^a=2.954  LB=0.0442
+   lgK= 3998  e=0.0467  e*lgK^a=2.954  LB=0.0442
+   lgK= 4000  e=0.0467  e*lgK^a=2.953  LB=0.0442
+PASS  every schedule obeys e >= (1/2) rho^{floor(log2(lgK/lgK0))}
+   Anthropic fixed schedule:  ['(18, 0.5000)', '(72, 0.4004)', '(186, 0.3019)', '(420, 0.2206)', '(894, 0.1586)', '(1848, 0.1130)', '(3762, 0.0803)']
+   spread of e*(lgK)^alpha over optimal schedules (lgK>=200): factor 1.27
+PASS  optimal schedules change e only by a bounded factor (<= 4) at the same rate
+   t=0.00: fixed point e* = 0.0000 (formula t/(4(1-rho)) = 0.0000)
+   t=0.01: fixed point e* = 0.0085 (formula t/(4(1-rho)) = 0.0085)
+   t=0.10: fixed point e* = 0.0854 (formula t/(4(1-rho)) = 0.0854)
+   t=1.00: fixed point e* = 0.8536 (formula t/(4(1-rho)) = 0.8536)
+   t=2.00: fixed point e* = 1.7071 (formula t/(4(1-rho)) = 1.7071)
+PASS  fixed point matches t/(4(1-rho))
+ALL PASS

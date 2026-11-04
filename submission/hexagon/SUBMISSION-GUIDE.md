@@ -109,6 +109,10 @@ form; the papers cite the scripts in the repository instead.
 - **MSC2020:** 68Q17, 68Q25, 68Q15.
 - **Tags:** Exponential Time Hypothesis; SETH; fine-grained complexity; conditional lower bounds; parameterized complexity; survey.
 - Nothing in this note is claimed as machine-checked except where it cites our Lean theorems.
+- **Tools:** Claude (Anthropic), via Claude Code; TeX Live. **Formalizations / arXiv id:** leave empty.
+- Status: READY (revised 4 Nov 2026, 14 pp, house style, repository linked). Review fixes: priority credits to OpenAI
+  (CNF-SETH observation, counting corollaries, circuit bound) and Bhattacharjee (Vertex Cover, sparse Max-Cut); rows B16, B17
+  and B23 corrected; the two long tables are now lists (Hexagon's TeX rejects page-splitting tables).
 
 ## HC paper v2 candidate (4 Nov 2026)
 `hexagon-hc-paper-texonly.zip` (single `main.tex`, bibliography inlined) is now a **v2 candidate** for the
@@ -200,3 +204,8 @@ real quadratic fields are not covered. Square roots are the least root modulo an
 the least non-residue theorem has a primality hypothesis, with a weaker clause for composite inputs.
 
 **Exact steps:** as for Paper 6.
+
+
+## Submitted (record)
+- 2610.00672 HC paper (v1, earlier)
+- 4 Nov 2026: Eulerian circuits note (Paper 7); quantum note (Paper 2, fixed ZIP without the long table).

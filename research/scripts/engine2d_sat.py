@@ -36,10 +36,14 @@ def profiles(cfg, S):
     rec(0, S, [], frozenset())
     return res
 
-def solve(cfg, terms, tlim=60):
+TLIM = 60
+def solve(cfg, terms, tlim=None):
+    """True/False, or None on timeout (TLIM seconds per instance)."""
+    import threading
     E, tv = encode(cfg, terms)
-    with Solver(name='cadical153', bootstrap_with=E.cl) as s:
-        ok = s.solve()
+    with Solver(name='glucose4', bootstrap_with=E.cl) as s:
+        tm = threading.Timer(tlim or TLIM, s.interrupt); tm.start()
+        ok = s.solve_limited(expect_interrupt=True); tm.cancel()
         return ok, (evaluate(cfg, tv, s.get_model()) if ok else None)
 
 def check_solution(cfg, terms, Ts):
@@ -48,12 +52,15 @@ def check_solution(cfg, terms, Ts):
         if sum(T[e] for T in Ts) % 2 != cfg['target'](e): return False
     return True
 
-def minimise(name, rects, Smax, diag):
+def minimise(name, rects, Smax, diag, Smin=None):
     cfg = make_config(rects); Q = len(rects); t0 = time.time(); nprof = 0
-    for S in range(1, Smax + 1):
+    # S below the Theorem-1 bound is impossible (proved; Lean-proved for config C), so start there
+    for S in range(Smin or (2 ** Q if diag else 1), Smax + 1):
+        nto = 0
         for prof in profiles(cfg, S):
             nprof += 1
             ok, Ts = solve(cfg, prof)
+            if ok is None: nto += 1
             if ok:
                 good = check_solution(cfg, prof, Ts)
                 desc = ' + '.join(f"{G}{list(b.values())}" for G, b in prof)
@@ -62,6 +69,7 @@ def minimise(name, rects, Smax, diag):
                 print(f"{name:28s} Q={Q} min S={S:2d}  (Thm1 bound {lb})  profile: {desc}   "
                       f"[{nprof} profiles, {time.time()-t0:.1f}s] {'PASS' if consistent else 'FAIL'}")
                 return S
+        print(f"{name:28s}   S={S:2d}: no decomposition ({nto} of the profiles timed out at {TLIM}s)", flush=True)
     print(f"{name:28s} Q={Q} no decomposition with S<={Smax} [{nprof} profiles, {time.time()-t0:.1f}s]")
     return None
 

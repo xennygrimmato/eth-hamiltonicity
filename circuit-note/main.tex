@@ -211,7 +211,7 @@ the definitions a reader must check (\cref{sec:formal}).
 \item We explain where this route stops: at $n\log n$, below $\ENP$, with counting, almost everywhere,
 and for restricted classes (\cref{sec:limits}).
 \end{itemize}
-The idea is not new. JMV note that their proofs ``provide a close correspondence between the
+The underlying correspondence is known. JMV note that their proofs ``provide a close correspondence between the
 running time for satisfiability and the parameters of the circuit class''~\cite{JMV15}. Ben-Sasson
 and Viola's constant-level instance, as quoted there, is: $3$-SAT in time $c^n$ with $c<2^{1/10}$
 implies $\ENP\not\subseteq\SIZE(3n)$. What we add is the substitution of the rate
@@ -226,8 +226,8 @@ We separate four kinds of claim.
 \lean{enp_not_size_n_sqrt_log_shifted} and \lean{enp_not_hasCircuits_n_sqrt_log}; all with the
 axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound} only, and a fresh
 \lean{leanchecker} replay of the dependency closure passed. The Lean theorem has no hypothesis. The
-role of $(\mathrm{H}_{\mathrm{A}})$ is played by Anthropic's formalised rate engine
-\lean{Tied.TopM}, the language is Anthropic's \lean{CircuitLowerBound.L0}, and the proof follows
+role of $(\mathrm{H}_{\mathrm{A}})$ is played by Anthropic's formalised rate engine (the property
+\lean{Tied.TopM}, which Anthropic proves as \lean{GeneralPieces.thmRunningTime_c_m_tied}), the language is Anthropic's \lean{CircuitLowerBound.L0}, and the proof follows
 Anthropic's lazy diagonalisation, not the route of \cref{sec:proof}. Its constant is
 $\varepsilon=1/(4608(qG+1))$ (\cref{sec:formal}).
 \emph{Proved on paper only}: the proof of \cref{sec:proof}, including the condition

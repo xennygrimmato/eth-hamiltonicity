@@ -85,7 +85,11 @@ form; the papers cite the scripts in the repository instead.
 - **Primary subject:** cs.CC. **Cross-lists:** cs.LO.
 - **MSC2020:** 68Q17, 68Q15, 68Q25, 03B35 (all checked against Hexagon's catalogue).
 - **Tags:** circuit lower bounds; E^NP; Exponential Time Hypothesis; Williams' algorithmic method; Lean 4; formal verification.
-- **Tools:** as for the other papers (Claude via Claude Code; Lean 4 + Mathlib). Theorem 1 is machine-checked (fresh leanchecker replay passed); the OpenAI corollary is written proof only.
+- **Tools:** Claude (Anthropic), via Claude Code; Lean 4 with Mathlib; TeX Live.
+- **Formalizations / arXiv id:** leave empty.
+- Status: READY (revised 4 Nov 2026, 10 pp, house style, repository and commit 9e5dfc8 cited). What is machine-checked: the
+  first part of Theorem 1.1 as `enp_not_size_n_sqrt_log` (Anthropic's language L0, ε = 1/(4608(qG+1)), fresh leanchecker
+  replay passed); the second part (any ε with 36aCε < 1) and the OpenAI corollary are proved on paper only.
 
 ## Paper 5 — Survey note (upload `hexagon-survey-note.zip`, main file `main.tex`)
 - **Title:** as in survey-note/main.tex ("What survives the ETH refutations? …").

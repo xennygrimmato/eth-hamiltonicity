@@ -100,3 +100,37 @@ existing record hexagon:2610.00672 (v1 is published). Upload it via **"Revise"**
 submission. Changes from v1: two citation sentences only, to Bhattacharjee (hexagon:2610.00594, independent
 white-box weighted route, in the Tutte subsection of the Extensions) and de Brito (hexagon:2610.00692, rank floor
 for Theorem-B-shaped pieces, in the open problem on the exponent). Abstract unchanged (`abstract-hc.txt`).
+
+## Paper 6 — Factoring note (upload `hexagon-factoring-note.zip`, main file `main.tex`)
+Status: the paper says a fresh kernel replay of the whole proof has passed. Upload only after the README
+row "F" (factoring) is present, which is added once that replay has actually passed.
+
+**Form answers**
+- **Title:** An independent machine-checked proof of deterministic factoring in time $2^{O(n/\sqrt{\log n})}$, via the new #SAT algorithms
+- **Abstract:** paste `abstract-factoring.txt` (1905 characters, under the 1920 limit).
+- **Primary subject:** cs.CC. **Cross-lists:** cs.DS, math.NT, cs.LO.
+- **MSC2020** (all five checked against Hexagon's catalogue, `api/v1/msc`, on 4 Nov 2026): 11Y05 (Factorization),
+  68Q25 (Analysis of algorithms and problem complexity), 68W40 (Analysis of algorithms), 68V20 (Formalization of
+  mathematics in connection with theorem provers), 03B35 (Mechanization of proofs and logical operations).
+- **Tags:** integer factorization; deterministic factoring; Schönhage–Strassen; fast Fourier transform; #SAT;
+  Exponential Time Hypothesis; fine-grained complexity; Lean 4; formal verification; Mathlib.
+- **Tools used:** Claude (Anthropic), via Claude Code; Lean 4 with Mathlib; TeX Live; Python (small numeric checks).
+- **Formalizations:** none (GitHub is not an allowlisted host; the repository and commit are cited in the paper).
+- **arXiv id:** none.
+- **Related works to be aware of** (cited in the paper; you do not need to enter them in the form): Rudich–Rousseau
+  hexagon:2610.00600, Shunia hexagon:2610.00711, and the earlier Lean proof in github.com/1337isnot1337/integer-factoring.
+  The paper claims no priority; it presents an independent second proof.
+
+**Your decisions** (as for the other papers; see "Your decisions" above): human understanding (`all`/`some`/`none`,
+with `provenance.txt` if `some`), text origin (the text was drafted by Claude in sessions you directed), the four
+confirmations, licence (suggested CC BY 4.0).
+
+**Exact steps**
+1. Go to hexagonmath.org and sign in with your ORCID iD.
+2. Click "Submit a work". Remember the one-deposit-per-UTC-day rule: if you already deposited today, wait for the next UTC day.
+3. Upload `submission/hexagon/hexagon-factoring-note.zip`. When asked for the main file, choose `main.tex`.
+4. Wait for the automatic compile preview. It should show 10 pages. If it reports an error, send me a screenshot.
+5. Fill in title, abstract, subject, cross-lists, MSC codes and tags from the list above. Leave "Formalizations" and "arXiv id" empty.
+6. Add yourself as the contributor. List Claude and Lean under tools, not as contributors.
+7. Make your declarations (human understanding, text origin, the four confirmations, licence).
+8. Submit. A moderator reviews it, usually within about 48 hours on weekdays.

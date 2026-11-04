@@ -126,7 +126,7 @@ theorem of \Oa{} has the exponent $O_k(n\log\log n/\sqrt{\log n})$, with one fac
 $\log\log n$. It would give the bound of \cref{cor:openai} with $(\log\log n)^2$ replaced by
 $\log\log n$, in the same way.
 
-\begin{theorem}[Main theorem; written proof, not machine-checked]\label{thm:main}
+\begin{theorem}[Main theorem; machine-checked]\label{thm:main}
 Assume $(\mathrm{H}_{\mathrm{A}})$. There are $\varepsilon>0$ and $L_0\in\ENP$ such that for every
 $N$ there is an $n\ge N$ for which $L_0\cap\{0,1\}^n$ is computed by no circuit over $B_2$ with at
 most $\varepsilon\,n\sqrt{\log n}$ gates.
@@ -431,20 +431,29 @@ for every $\delta>0$) and lazy diagonalisation in place of \cref{imp:hier}. The 
 \lean{HasCircuits}~$L$~$s$ is already parametric in $s$, but the module hard-wires both the size
 $c_0(m+1)$ and the time $2^{\delta N}$.
 
-A Lean formalisation of the $n\sqrt{\log n}$ form on top of that module is in progress.
+\Cref{thm:main} is formally verified in Lean~4 on top of that module, in the public
+repository~\cite{TulsyanRepo26} (directory \texttt{lean-bridge-anthropic/bridge/EthFollowup/Circuits}, five
+files, 707 lines). The statement is
+\[
+\texttt{enp\_not\_size\_n\_sqrt\_log}:\quad
+\exists L\,\varepsilon,\ 0<\varepsilon \wedge \texttt{ENP.InENP}\,L \wedge
+\forall N\,\exists n,\ N\le n \wedge \neg\,\texttt{ENP.DecidedAt}\,L\,
+\lfloor \varepsilon\cdot n\cdot\sqrt{\log_2 n}\rfloor\, n ,
+\]
+together with the variants \lean{enp\_not\_hasCircuits\_n\_sqrt\_log} (the negation of the module's
+\lean{HasCircuits}) and \lean{enp\_not\_size\_n\_sqrt\_log\_shifted}. Here \lean{ENP.InENP},
+\lean{ENP.DecidedAt} and the circuit model are Anthropic's own definitions, and $L$ is their language
+\lean{CircuitLowerBound.L0}. The theorems depend only on the axioms \texttt{propext},
+\texttt{Classical.choice} and \texttt{Quot.sound}, and a fresh \texttt{leanchecker} replay of the full
+dependency closure passed. The three non-arithmetic points of the plan were resolved as follows: the rate
+solver is packaged as one padded polynomial-time function and turned into a Turing machine by
+Anthropic's own padded-host lemma, so no polynomial state bound is needed; the solver's count over the
+occurring variables is compared with zero directly; and the infinitely-often form is obtained by threading
+the threshold through the module's diagonalisation. The constant is
+$\varepsilon = 1/(4608(qG+1))$, where $q$ is the host's polynomial degree and $G$ the constant of the rate
+solver; it is existential because $q$ and $G$ are. \Cref{cor:openai} (the OpenAI form) is proved on paper
+only and is not claimed as machine-checked.
 
-\Cref{thm:main} and \cref{cor:openai} are therefore proved here on paper only. We do not claim that
-they are machine-checked. The changes needed are recorded in the project
-repository~\cite{TulsyanRepo26}. Three points are not purely arithmetic.
-\begin{itemize}
-\item The engine's states must be allowed to grow with the rate, not polynomially in the input:
-the rate machine runs on a pad of length $2^{e_M}$.
-\item The engine interface must be weakened to a decision specification, or its count fixed up
-over non-occurring variables.
-\item The target must be stated in the infinitely-often form of \cref{rem:form}(a).
-\end{itemize}
-
-% =====================================================================
 \section{Limitations}\label{sec:limitations}
 % =====================================================================
 

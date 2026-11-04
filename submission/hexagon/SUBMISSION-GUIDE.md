@@ -77,3 +77,11 @@ Source of the rules: hexagonmath.org/about and the public submission schema
 Hexagon rejected ZIPs containing `anc/` scripts and/or separate `.bib`/`.bbl` files with "file type not accepted",
 and accepted a ZIP with a single `main.tex` (bibliography inlined from the `.bbl`). All three packages here use that
 form; the papers cite the scripts in the repository instead.
+
+## Paper 4 — Circuit lower bound note (upload `hexagon-circuit-note.zip`, main file `main.tex`)
+- **Title:** Superlinear circuit lower bounds for E^NP, assuming the new #SAT algorithms
+- **Abstract:** paste `abstract-circuit.txt`.
+- **Primary subject:** cs.CC. **Cross-lists:** cs.LO.
+- **MSC2020:** 68Q17, 68Q15, 68Q25, 03B35 (all checked against Hexagon's catalogue).
+- **Tags:** circuit lower bounds; E^NP; Exponential Time Hypothesis; Williams' algorithmic method; Lean 4; formal verification.
+- **Tools:** as for the other papers (Claude via Claude Code; Lean 4 + Mathlib). Theorem 1 is machine-checked (fresh leanchecker replay passed); the OpenAI corollary is written proof only.

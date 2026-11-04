@@ -393,13 +393,19 @@ def main():
     P('%3s %14s %10s %10s %10s %8s' % ('l', 'log2 K_l', 'e_l', "e'_l", 'e_l/rho^l', 'zeta_l'))
     for l in range(0, 14):
         P('%3d %14d %10s %10s %10s %8s' % (l, LEAN.L[l], f(LEAN.e[l]), f(frac_half(l)), f(LEAN.e[l] / RHO ** l), f(LEAN.zeta[l], 3)))
-    P('limit e_l/rho^l = %s (= 0.5 * prod(1+3 zeta_j/rho)); +3/K_l contributes < 2^-17 at l=0 and is negligible after' % f(LEAN.e[30] / RHO ** 30, 6))
+    P('limit e_l/rho^l = %s (= 0.5 * prod(1+3 zeta_j/rho)); +3/K_l contributes < 2^-16 at l=0 (3/K_0 = 1.5*2^-17) and is negligible after' % f(LEAN.e[30] / RHO ** 30, 6))
 
     # ---------------- Anthropic decision machine (PaddedDescent) ----------------
     section('1. Anthropic 3-SAT decision machine (rates/PaddedDescent): explicit floor, TM degree q')
     P('sOf n = floor(3(floor(log2 floor(log2 n)) - 911)/19);  exhaustive while s < s0K 3 = 128;  pad 2^{2^131 (n/2^s + 1)}')
     for q in [1, 2, 10, 1000]:
-        smin = 132 + math.ceil(math.log2(q))     # q * 2^131 / 2^s < 1
+        # Time q*(pad)^q < 2^n needs rate q*2^(131-s) < 1, i.e. 2^(s-131) > q.  Since
+        # 2^floor(log2 q) <= q < 2^(floor(log2 q)+1), the least integer s is 132 + floor(log2 q).
+        # For q = 2^a a power of two this is 132 + a (2^(s-131) = 2^a = q is not > q), which equals
+        # 132 + ceil(log2 q); for other q, ceil would overshoot by one (q = 10: s >= 135, not 136).
+        # q.bit_length() - 1 is floor(log2 q) exactly, without floating point.
+        smin = 132 + (q.bit_length() - 1)
+        assert q * 2 ** 131 < 2 ** smin and not q * 2 ** 131 < 2 ** (smin - 1)
         x = 911 + math.ceil(19 * smin / 3)
         while 3 * (x - 911) // 19 < smin: x += 1
         P('  q = %5d : rate q*2^(131-s) < 1 needs s >= %d  <=>  floor(log2 log2 n) >= %d  i.e. n >= 2^(2^%d)' % (q, smin, x, x))

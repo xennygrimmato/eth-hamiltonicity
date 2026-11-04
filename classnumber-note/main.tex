@@ -1,0 +1,900 @@
+\documentclass[10pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{alltt}
+\usepackage{booktabs}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=OliveGreen,urlcolor=MidnightBlue]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+\setlist{leftmargin=*,itemsep=2pt,topsep=4pt}
+\emergencystretch=2.5em
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{importedtheorem}[theorem]{Imported Theorem}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\crefname{importedtheorem}{Imported Theorem}{Imported Theorems}
+\numberwithin{equation}{section}
+
+\newcommand{\A}{\textup{[A]}}
+\newcommand{\Oa}{\textup{[O]}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\hF}{h_{\mathrm{form}}}
+\newcommand{\val}{\mathrm{val}}
+\newcommand{\rate}{2^{O(n/\sqrt{\log n})}}
+% Lean names: typewriter, with line breaks allowed after '.' and '_'.
+\DeclareUrlCommand\lean{\urlstyle{tt}\def\UrlBreaks{\do\.\do\_}\def\UrlBigBreaks{}}
+% Repository names: typewriter, with line breaks allowed after '/' and '-'.
+\DeclareUrlCommand\repo{\urlstyle{tt}\def\UrlBreaks{\do\/\do\-}\def\UrlBigBreaks{}}
+
+\begin{document}
+
+\title[Class numbers, square roots and non-residues in $2^{O(n/\sqrt{\log n})}$]{Class numbers, square roots and quadratic non-residues\\ in time $2^{O(n/\sqrt{\log n})}$, assuming the new $\#$SAT algorithms}
+
+\author{Vaibhav Tulsyan}
+
+\date{November 2026}
+
+\subjclass[2020]{11Y16, 11Y40, 11A15, 68Q25, 03B35}
+\keywords{Class number, binary quadratic forms, quadratic non-residue, square roots modulo $m$, divisor summatory function, Gauss circle problem, exact counting, Exponential Time Hypothesis, Lean~4, formal verification}
+
+\begin{abstract}
+Basic problems of computational number theory have proven deterministic bounds that are fixed powers of
+the input. The class number $h(D)$ of an imaginary quadratic discriminant takes $|D|^{1/2+o(1)}$ steps
+unconditionally and $|D|^{1/5+o(1)}$ under the generalised Riemann hypothesis (GRH); the least quadratic
+non-residue modulo a prime $p$ takes $p^{1/(4\sqrt e)+o(1)}$ by Burgess's 1957 bound, polynomial only
+under GRH; exact divisor sums $\sum_{m\le x}\tau(m)$ take $x^{1/3+o(1)}$. However, none of these bounds is
+of the form $X^{o(1)}$, even conditionally. We present deterministic algorithms in time
+$2^{O(n/\sqrt{\log n})}$, where $n$ is the input bit length, for six such problems: the number of reduced
+forms of discriminant $-N$, for fundamental discriminants $h(-N)$; the least square root of $a$
+modulo any $m$; the least quadratic non-residue modulo a prime; and $\sum_{m\le x}\tau(m)$,
+$\sum_{m\le x}\sigma(m)$ and the Gauss circle count. Our approach writes each answer as a count of solutions
+of equations with one or two products and evaluates it with Anthropic's counting engine through one
+network library: products by a two-dimensional Sch\"onhage--Strassen network, sums by signed carry
+chains, inequalities by comparison chains, with $O(n)$ shared bits. We prove the seven resulting theorems
+in Lean~4 (for example \texttt{hForm\_TM\_rate}; axioms \texttt{propext}, \texttt{Classical.choice},
+\texttt{Quot.sound}): a finite-alphabet Mathlib Turing machine outputs the answer within
+$\lfloor C\cdot2^{Cn/\sqrt{\log_2(n+2)}}\rfloor$ steps on every input. Lean proves the count of Gauss's
+reduced forms; its equality with the ideal class number of $\mathbb{Q}(\sqrt{-N})$ is classical and not
+formalised. The constants are astronomical, the machines use exponential space, and every result rests
+on Anthropic's Lean development of its claimed refutation of the Exponential Time Hypothesis, which is
+under review.
+\end{abstract}
+
+\maketitle
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+% =====================================================================
+
+Computing the class number $h(D)$ of an imaginary quadratic discriminant $D=-N$ is one of the oldest
+problems of computational number theory. Gauss's reduction theory gives the simplest algorithm: $h(D)$ is
+the number of reduced forms $ax^2+bxy+cy^2$ of discriminant $D$, and every such form has $a\le\sqrt{N/3}$,
+so listing them takes $N^{1/2+o(1)}$ steps. To our knowledge this is still the best proven
+deterministic bound without hypotheses~\cite[\S5]{Len92}. Under GRH, Shanks's baby-step giant-step
+method, analysed by Lenstra~\cite{Len82} and Schoof~\cite[\S3]{Sch82}, takes $N^{1/5+o(1)}$, and the
+subexponential algorithm of Hafner and McCurley~\cite{HM89} is randomised and also rests on GRH~\cite[\S5]{Len92}.
+Two neighbouring problems have stood still for as long. The least quadratic non-residue modulo a prime
+$p$ is below $p^{1/(4\sqrt e)+\varepsilon}$ by Burgess~\cite{Bur57}, so trial search takes
+$p^{0.1517}$ steps, and this exponent has not been improved since 1957; only under GRH is the
+non-residue below $O(\log^2p)$ (Ankeny~\cite{Ank52}, Bach~\cite{Bac90}). Exact divisor sums
+$\sum_{m\le x}\tau(m)$ take $x^{1/3+o(1)}$ steps~\cite{Sla12,TCH12}.
+
+In October 2026 OpenAI~\cite{OpenAI26} and Anthropic~\cite{Anthropic26} (below \Oa{} and \A) each
+claimed a deterministic algorithm that counts the satisfying assignments of a $k$-CNF in subexponential
+time, refuting the Exponential Time Hypothesis; both claims come with Lean~4 developments and are under
+review. Rudich and Rousseau~\cite{RR26} used the engines to factor in $N^{o(1)}$, Shunia~\cite{Shu26}
+proved the rate $\rate$ on paper, and our factoring note~\cite{TulFac26} proved it in Lean on \A's engine.
+However, the bounds above are all fixed powers of the input, even under GRH for $h(D)$. We are unaware of
+any derivation of them from the new counting engines; our searches are described in \cref{sec:related}.
+
+\subsection{Counting problems with one or two products}
+We consider problems whose answer is, or is found from, the number of integer solutions of a fixed
+system of polynomial equations and inequalities in $O(1)$ unknowns of $O(n)$ bits, in which each
+equation has at most two products. The class number is such a count:
+$h(-N)$ counts the triples $(a,b,c)$ with $b^2+N=4ac$ and $|b|\le a\le c$, up to a tie-break.
+
+\begin{example}[Running example]\label{ex:23}
+Take $N=23$. The reduced forms of discriminant $-23$ are $(a,b,c)=(1,1,6)$, $(2,1,3)$ and $(2,-1,3)$,
+so $h(-23)=3$. Our machine asks two counts. Query~1 counts the triples of naturals with $b^2+23=4ac$ and
+$b\le a\le c$; they are $(1,1,6)$ and $(2,1,3)$. Query~2 counts the triples with $b^2+23=4ac$ and
+$0<b<a<c$; it is $(2,1,3)$ alone, which stands for the form $(2,-1,3)$. The answer is $2+1=3$.
+\end{example}
+
+\subsection{The naive encodings fail; the principle}
+At first one might reduce each count to $\#$SAT and apply the engines' headline theorems. However,
+Tseitin's transformation of a multiplication circuit has $\Omega(n\log n)$ clauses for every known
+circuit, and \A's clause bound then gives $2^{O(n\sqrt{\log n})}$, worse than the classical bounds. Our
+factoring note~\cite{TulFac26} showed how to avoid this for one equation $pq=N$: \A's network model
+charges $2^{e\cdot U}$ for $U$ bits shared between nodes, with $e=O(1/\sqrt{\log n})$, and a
+two-dimensional Sch\"onhage--Strassen transform multiplies with $O(n)$ shared bits. Writing a new
+network for each problem would cost thousands of Lean lines each. Instead, we rely on a different
+principle: \emph{a fixed system of equations with few products has a network assembled from three kinds of
+block (products, carry chains and comparison chains), each cutting $O(n)$ bits, so one library proved once
+serves every problem.} The per-problem work is a data value, the description, together with a
+counting identity in pure Mathlib.
+
+\subsection{What we prove}
+In this paper we build that library, which we call ArithNet, write six descriptions, and prove in Lean
+that one Turing machine per problem computes the answer. All six theorems have the same form.
+
+\begin{theorem}[\cref{sec:statement}; machine-checked]\label{thm:main}
+For each of the following functions $F$ there are a Turing machine $M$ in Mathlib's \lean{TM2} model,
+with finite alphabets on all stacks, and a constant $C\in\N$, such that on every input word $w$ of
+length $n$ (as specified) $M$ halts within $\lfloor C\cdot2^{Cn/\sqrt{\log_2(n+2)}}\rfloor$ steps with
+output \lean{encodeNat}~$F$:
+\begin{enumerate}[label=(\roman*)]
+\item \lean{hForm_TM_rate}: $w=$ \lean{encodeNat}~$N$, $F=\hF(-N)$, the number of reduced forms of
+discriminant $-N$ (\cref{def:hform});
+\item \lean{hFormPrim_TM_rate}: the same machine, for $-N$ a fundamental discriminant, outputs the number of
+primitive reduced forms, the form class number $h(-N)$;
+\item \lean{sqrtMod_TM_rate}: $w=$ \lean{encodePair}~$m$~$a$, $F$ the least $y<m$ with $y^2\equiv a\pmod m$,
+and $m$ if there is none;
+\item \lean{lqnr_TM_rate}: $w=$ \lean{encodeNat}~$p$ with $p$ prime, $F$ the least quadratic non-residue
+modulo $p$ ($p$ if there is none, i.e.\ $p=2$); on every other $p$ the machine halts within the
+same bound with some $y\le p$;
+\item \lean{divisorSum_TM_rate}, \lean{sigmaSum_TM_rate}, \lean{circle_TM_rate}: $w=$ \lean{encodeNat}~$x$,
+$F=\sum_{m\le x}\tau(m)$, $\sum_{m\le x}\sigma(m)$, and $\#\{(u,v)\in\Z^2:u^2+v^2\le x\}$.
+\end{enumerate}
+\end{theorem}
+
+\noindent Since $n=\log_2N+O(1)$, the bound in (i) is $N^{O(1/\sqrt{\log\log N})}=|D|^{o(1)}$, against
+$|D|^{1/2+o(1)}$ unconditionally and $|D|^{1/5+o(1)}$ under GRH. In (iv) it is $p^{o(1)}$, against
+$p^{0.152}$; in (v) it is $x^{o(1)}$, against $x^{1/3+o(1)}$. To our knowledge, no deterministic
+algorithm with a bound of the form $X^{o(1)}$ was known for (i), (iii) or (v), even under GRH.
+
+\subsection{Contributions}
+Our contributions are:
+\begin{itemize}
+\item We introduce ArithNet, a library that turns a \emph{description} (variables, products of a variable
+by a variable or a constant, linear equations with coefficient mass at most $32$, comparisons, bit
+patterns) into a parsimonious network, and prove in Lean that its value is the number of solutions,
+that its shared bits total $O(n)$ and that each of its $g$ nodes holds $O(n/g+n^{3/4})$ bits
+(\cref{sec:arithnet}).
+\item We present generic counted prefix-search and one/two-query machines that turn any polynomial-time
+description reader into a Turing machine running in $\rate$ steps (\cref{sec:machines}).
+\item We give the six descriptions and their counting identities, including the two-query split of
+reduced forms and an exact formula for non-residues with a prefix from a count of squares
+(\cref{sec:instances}).
+\item We prove the six theorems of \cref{thm:main} in Lean, and state precisely what the class-number
+theorem counts and what remains classical (\cref{sec:honesty,sec:statement,sec:formal}).
+\end{itemize}
+The ingredients (reduction theory, prefix search, the transform network) are classical or from our
+factoring note; what we add is the library, its proofs, and the descriptions.
+
+\subsection{Status of each claim}
+We separate four kinds of claim. \emph{Machine-checked in Lean}: the seven theorems of \cref{thm:main},
+with the axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound} only, and every lemma whose
+Lean name we give. \emph{Proved on paper only}: the equality of the form class number with the ideal class
+number of $\mathbb{Q}(\sqrt{-N})$ (classical; Dirichlet and Dedekind, see~\cite[Thm.~7.7]{Cox13}); the
+decomposition of $\hF$ for non-fundamental discriminants in \cref{rem:nonfund}; the discussion of real
+quadratic fields; and the comparisons with earlier bounds. \emph{Assumed}: nothing beyond the three axioms;
+\A's results enter as Lean theorems of its development, which the kernel checks with ours.
+\emph{Checked numerically}: the running examples and the decomposition of \cref{rem:nonfund} for $N<400$, by
+a short exact computation that is not part of the proof; some of the small values, such as the split
+$2+1$ of \cref{ex:23} and $\mathrm{lqnr}(7)=3$ of \cref{ex:qnr}, are also checked in Lean by \lean{decide}.
+
+\subsection*{Outline}
+\Cref{sec:engine} recalls \A's counting theorem. \Cref{sec:arithnet} builds ArithNet and
+\cref{sec:machines} the machines. \Cref{sec:instances} gives the descriptions, and \cref{sec:honesty}
+says what the class-number theorem counts. \Cref{sec:rate,sec:statement,sec:formal} cover the exponent,
+the statements and the Lean development, and \cref{sec:related,sec:limitations} related work and
+limitations.
+
+% =====================================================================
+\section{The engine counts accepted labellings}\label{sec:engine}
+% =====================================================================
+
+In this section we recall the one theorem of \A{} that we compose with, in the form used by our
+factoring note~\cite[\S2]{TulFac26}. We use \A's Lean development at commit \texttt{16a5ce4}
+(\texttt{anthropics/formal-math}, folder \texttt{eth}, Lean v4.33.1, Mathlib \texttt{0df444a}).
+
+A \emph{network on $[g]$ with parameters $P,B,\tau$} has, for every node $a$, settings of at most $P$
+bits and a weight $W_a$, and for every pair of nodes an interaction that factors through $c_{a,b}$
+shared bits, with $\sum_bc_{a,b}\le P$; its value is $Z=\sum_z\prod_aW_a(z_a)\prod_{\{a,b\}}\Psi_{a,b}$ and
+its total is $U=\sum_{a\ne b}c_{a,b}$. We use only \emph{label systems}: items (wires) placed on pairs of
+nodes, each carrying a $W$-bit label seen by both nodes, with $W_a$ a $0/1$ table. The value is then the
+number of labellings accepted by every table.
+
+\begin{importedtheorem}[\A, Lemma~8(i) and Theorem~A(b); see~{\cite[Imported Thm.~2.2]{TulFac26}}]\label{imp:engine}
+Let $K=K_\ell\ge2$ be a level of \A's schedule, $g=3K^8$, and $e_\ell\le(3x_0+6)/\sqrt{\log_2K}$ for an
+absolute $x_0$. A network on $[g]$ with parameters $P,B,\tau$ and total $U$ can be evaluated within
+$\bigl(K^g+2^{e_\ell K^2L}(K(L+B'))^{C_0K^2}2^{2gP/K}\tau\bigr)(g(P+B))^{C_1}$ operations, where
+$L=\lceil(U+gP/K)/K^2\rceil$, $B'=\lceil2gP/K\rceil+g^2B$ and $C_0,C_1$ are absolute.
+\end{importedtheorem}
+
+\noindent In Lean this is \lean{ExplicitCost.groupingExplicit} together with the clique machine
+of the counted recursion (\lean{CountedRoute.onTheCountedRecursion}); \A's host lemma \lean{CountKSat.exists_tmW} turns the
+step-by-step machine into a Mathlib Turing machine with polynomial overhead. So a network family with
+$U=O(n)$ and $gP=O(n)$ is evaluated in $\rate$ steps at the level $K^{40}\lesssim n$ of our factoring note.
+
+% =====================================================================
+\section{ArithNet: one network library for few-product systems}\label{sec:arithnet}
+% =====================================================================
+
+In this section we define descriptions and the count they denote, build the network of a description,
+and state its value and parameter theorems. The definitions are pure Mathlib (module \lean{ArithDesc});
+the network is in the bridge modules \lean{ArithParams} and \lean{ArithNet*}.
+
+\subsection{Descriptions}
+A description is plain data:
+\begin{alltt}\footnotesize
+inductive Operand | var (v : \(\mathbb{N}\)) | const (limbs : List \(\mathbb{N}\))
+structure ProdD where u : \(\mathbb{N}\); w : Operand            -- the product x_u * w
+inductive Src | prod (p : \(\mathbb{N}\)) | lin (v : \(\mathbb{N}\)) | const (limbs : List \(\mathbb{N}\))
+structure Term where coeff : \(\mathbb{N}\); src : Src
+structure ChainD where lhs : List Term; rhs : List Term
+structure CmpD where v : \(\mathbb{N}\); rhs : Operand; rel : CmpRel   -- lt | le | eq | ge | gt
+structure Desc where nV : \(\mathbb{N}\); pat : List (List (Option Bool));
+  prods : List ProdD; chains : List ChainD; cmps : List CmpD
+\end{alltt}
+Constants are lists of $b$-bit limbs, with value $\sum_il_i2^{bi}$. A chain asserts
+$\sum_{\mathrm{lhs}}\mathrm{coeff}\cdot\mathrm{value}=\sum_{\mathrm{rhs}}\mathrm{coeff}\cdot\mathrm{value}$,
+where the value of a term is that of a product, a variable or a constant. A pattern fixes some bits of a
+variable (\lean{none} is a free bit). \lean{Desc.Sat}~$b$~$D$~$x$ holds when every pattern matches, every
+comparison holds and every chain balances, and the count of $D$ at size $n$ is
+\[
+  \mathrm{count}_n(D)=\#\bigl\{x\in[0,2^{n_B})^{\mathrm{nV}}:\ \texttt{Desc.Sat}\ b\ D\ x\bigr\},
+\]
+with $b$ the limb width and $n_B=\ell b>n$ the box width of~\cite[\S4]{TulFac26}. A description is well formed
+(\lean{Desc.WFB}) when its indices are in range, its constants have at most $\ell$ limbs below $2^b$, its
+patterns have length at most $n_B$, each side of each chain has coefficient mass at most $32$, and no
+product occurs in two chains.
+
+\subsection{Wires, vertices and checks}
+Every wire carries a label of $W'=J+8$ bits, where $J=2^{\lfloor\nu/2\rfloor+7}$, $\nu=\lfloor\log_2(n+2)\rfloor$,
+is the transform modulus exponent of~\cite{TulFac26}.
+\begin{itemize}
+\item \emph{Variables.} Each variable has $\ell$ limb wires, one copy per chain in which it occurs linearly,
+and one copy per product side in which it is an operand.
+\item \emph{Products.} Each product $x_u\cdot w$ gets its own two-dimensional Sch\"onhage--Strassen pipeline
+over $\Z/(2^J+1)$: row and column transforms of both operands, pointwise products, inverse columns and
+inverse rows, ending in the $2\ell$ coefficients of the product (the stages of~\cite[\S4]{TulFac26}).
+A constant operand enters through limb wires whose values the cells fix.
+\item \emph{Chains: signed carries.} Chain $c$ has a carry vertex at each position $k$, which reads the
+coefficient digits $d^{\mathrm{L}}_k,d^{\mathrm{R}}_k$ of its two sides (sums of coefficient times product
+coefficient, limb or constant limb) and the carry wires, and checks the single equation
+\begin{equation}\label{eq:carry}
+  R_{k+1}\cdot2^b+d^{\mathrm{R}}_k+\mathrm{OFF}=d^{\mathrm{L}}_k+R_k+\mathrm{OFF}\cdot2^b,
+  \qquad R_0=R_K=\mathrm{OFF}=2^{J+6}.
+\end{equation}
+The offset makes the signed carry $R_k-\mathrm{OFF}$ a natural number. By \lean{carryChk_iff}, valid
+carries exist if and only if $\sum_kd^{\mathrm{L}}_k2^{bk}=\sum_kd^{\mathrm{R}}_k2^{bk}$, and then they are
+unique (\lean{carryChk_unique}) and lie in $(0,2^{J+7})$ (\lean{carryChk_range}). The mass bound $32$ keeps
+every digit below $\mathrm{OFF}\cdot(2^b-1)$ (\lean{side_le_OFF}).
+\item \emph{Comparisons: state chains.} A comparison $x_v\bowtie r$ has state wires $s_j\in\{0,1,2\}$
+(less, equal, greater) passed from limb $\ell-1$ down to limb $0$; the cell at limb $i$ updates the state
+lexicographically, and cell $0$ tests the relation (\lean{cmpChain_iff}, \lean{cmpChain_unique}).
+\item \emph{Cells.} There is one cell per limb position $i$; it checks the range and pattern of limb $i$ of
+every variable, that all copies agree, and the comparison transitions at $i$.
+\end{itemize}
+Every wire has exactly two ends. Index bookkeeping goes through a generic mixed-radix block layout
+(module \lean{Blocks}) instead of hand-written case splits.
+
+\subsection{Value and parameters}
+For a description with $\mathrm{nV}$ variables, $\mathrm{nP}$ products, $\mathrm{nC}$ chains and
+$\mathrm{nQ}$ comparisons let $c_A(D)=64(\mathrm{nV}+\mathrm{nP}+\mathrm{nQ}+1)(\mathrm{nC}+1)$ and
+$d(n)=2^{\lfloor3\nu/4\rfloor+11}=O(n^{3/4})$.
+
+\begin{theorem}[Parsimony; \lean{arithNet_card}, \lean{arithNet_value}]\label{thm:value}
+Let $g\ge2$ and let $D$ be well formed at size $n$. The labellings accepted by every check are in bijection
+with the solutions counted by $\mathrm{count}_n(D)$, so the value of the network is $\mathrm{count}_n(D)$.
+\end{theorem}
+
+\begin{proof}[Sketch]
+\emph{Forward} (\lean{aRun_all_iff}): a solution $x$ labels every wire with its canonical value
+$\mathrm{run}(x)$; the transform checks pass by construction, the pipelines compute the products
+(\lean{pipeline_eq_mul} of~\cite{TulFac26}), so the carry checks pass if and only if every chain balances,
+and the cells pass if and only if the patterns match and the comparisons hold. \emph{Backward}
+(\lean{aEq_run}): an accepted labelling equals $\mathrm{run}$ of the values read off the limb wires,
+stage by stage, with the carries and states forced by uniqueness.
+\end{proof}
+
+\begin{proposition}[\lean{arithSys_U_le}, \lean{arithSys_is}]\label{prop:params}
+For $g\ge2$ the network has total $U\le2^{11}c_A(D)(n+2)$, and it is a network with
+$P=2^{12}c_A(D)\bigl((n+2)/g+d(n)\bigr)$ and $B=1$.
+\end{proposition}
+
+\noindent The network is in \A's \lean{Net} format through our label systems~\cite{Tul26}, and its
+tables are answered by polynomial-time procedures (\lean{tabAF_polyT}, \lean{arithNet_isNet}); no table is
+written out. For the descriptions of \cref{sec:instances}, $c_A(D)\le1152$.
+
+% =====================================================================
+\section{Counted searches and queries}\label{sec:machines}
+% =====================================================================
+
+In this section we describe how counts become answers. The interface is a \emph{counting package}
+\lean{CntPackage}~$c_0$: for every input word $w$ and query word $\pi$ a network whose value is
+$Q(w,\pi)\in\N$, with $U\le c_0(|w|+2)$, $P\le c_0((|w|+2)/g+d(|w|))$, polynomial reader and procedures,
+and a number of rounds $R(w)\le|w|$. \lean{ArithSpec.pkg_exists} builds a package with
+$Q(w,\pi)=\mathrm{count}_{n(w)}(D(w,\pi))$ from any polynomial-time map $(w,\pi)\mapsto D(w,\pi)$ to
+well-formed descriptions with $c_A\le c_D$, with $c_0=2^{12}c_D$.
+
+\paragraph{Prefix search.} A \lean{SearchSpec} has a test for small inputs, an answer for them, a step
+and a finish, all polynomial-time. The machine \lean{GR.searchM} starts from the empty word, and for
+$R(w)$ rounds replaces $\pi$ by $\mathrm{step}(w,\pi,Q(w,\pi0))$; then it outputs $\mathrm{fin}(w,\pi)$.
+With the step ``append $0$ if the count is positive, else $1$'', the word found is the least element of
+the counted set (\lean{searchWith_eq_minOr}: if the oracle is positive on $\pi0$ exactly when some element of a
+set $S\subseteq[0,2^n)$ has prefix $\pi0$, the result has value $\min S$, or $2^n-1$ if $S=\emptyset$).
+
+\begin{theorem}[\lean{GR.searchM_TM}, \lean{GR.queryM_TM}]\label{thm:machines}
+For every counting package and every search specification (resp.\ query specification with two query words
+$q_1(w),q_2(w)$ and a finish $\mathrm{fin}(w,Q(w,q_1),Q(w,q_2))$) whose parts are polynomial-time and whose
+outputs have length $O(|w|)$, there are a finite-alphabet Turing machine and $C$ that output the specified
+answer on every $w$ within $\lfloor C\cdot2^{C|w|/\sqrt{\log_2(|w|+2)}}\rfloor$ steps.
+\end{theorem}
+
+\noindent Both are proved through one generic tail, \lean{GR.TM_of_runs}, on top of the round bound
+\lean{FR.round_bound} and the level selection of the factoring note.
+
+% =====================================================================
+\section{Six descriptions}\label{sec:instances}
+% =====================================================================
+
+In this section we give each description and the pure counting identity that connects its count to
+the answer. All identities are in pure Mathlib (modules \lean{ClassForms}, \lean{QRCount},
+\lean{Lattice}, \lean{ArithInstances}).
+
+\subsection{Reduced forms with two queries}
+We follow Cox's convention~\cite[\S2]{Cox13}: a positive definite form $(a,b,c)$ of discriminant
+$D=b^2-4ac<0$ is \emph{reduced} if $|b|\le a\le c$, and $b\ge0$ whenever $|b|=a$ or $a=c$.
+
+\begin{definition}[\lean{hForm}]\label{def:hform}
+For $D\in\Z$ and $N=|D|$, $\hF(D)$ is the number of $(b,a,c)\in[-N,N]\times[0,N]\times[0,N]$ with
+$b^2-4ac=D$, $|b|\le a\le c$, and $(|b|=a\vee a=c)\Rightarrow b\ge0$.
+\end{definition}
+
+\noindent For $D<0$ the box imposes nothing (\lean{mem_redForms_iff}): a reduced form has $c\le N$. The
+description of query~$j$ has variables $a,b,c$, products $b\cdot b$ and $a\cdot c$, the chain
+$1\cdot(b\cdot b)+1\cdot N=4\cdot(a\cdot c)$ with $N$ a constant, and the comparisons
+\[
+  \text{query 1: } b\le a,\ a\le c;\qquad \text{query 2: } b>0,\ b<a,\ a<c .
+\]
+Here $b$ ranges over naturals. Query~1 counts the reduced forms with $b\ge0$; in them the tie-break is
+automatic. A reduced form with $b<0$ has $|b|<a<c$, since equality would force $b\ge0$, so $b\mapsto-b$
+maps these forms bijectively onto the solutions of query~2.
+
+\begin{lemma}[\lean{hForm_split}, \lean{hDesc_count}]\label{lem:split}
+For $0<N<B$, $\hF(-N)=h_{Q1}(B,N)+h_{Q2}(B,N)$, where $h_{Qj}(B,N)$ is the number of solutions of query~$j$
+in $[0,B)^3$. The two descriptions count exactly these.
+\end{lemma}
+
+\noindent The machine (\lean{specE}) answers $1$ on $N=0$ (where $\hF(0)=1$ counts the degenerate triple
+$(0,0,0)$), and otherwise asks the two queries and adds. In \cref{ex:23} the counts are $2$ and $1$.
+
+\subsection{Square roots modulo any \texorpdfstring{$m$}{m}}
+The input is \lean{encodePair}~$m$~$a$, two little-endian words padded to a common length $n$. The reader
+takes $m$ and $a\bmod m$; inputs with $m<2$ are answered directly ($0$). The description has variables
+$y,k,x$, products $y\cdot y$ and $k\cdot m$, the chain $y\cdot y=x+k\cdot m$, the comparisons $y<m$, $x<m$,
+$x=a\bmod m$, and the pattern ``$y$ has the prefix $\pi0$''. Since $y<m$ and $x<m$ determine $k$ and $x$,
+the count is the number of roots $y<m$ of $a$ with that prefix (\lean{S3A_eq}). The search keeps $0$ when the
+count is positive; at the end, $y=\val(\pi)$ is output if it is a root and $m$ otherwise, which covers the
+case of no roots, where the search returns $2^n-1\ge m$. For $m=7$, $a=2$ (roots $3,4$; $n=3$) the counts of
+$0$, $00$, $010$ are $1,0,0$, and the result is $011=3$.
+
+\subsection{The least non-residue from counts of squares}
+For a prime $p$ we need, for each prefix, whether some non-residue $x<p$ has it. The same description
+with the pattern on $x$ instead of $y$, and no condition $x=a$, counts the pairs $(y,x)$ with
+$y^2\equiv x$ and $x$ in the prefix block. For an odd prime, $0$ has one square root and every nonzero
+square has two, so this count is $S(\pi)=2\,Q(\pi)+z_0(\pi)$, where $Q(\pi)$ counts the nonzero squares in the
+block and $z_0(\pi)=1$ if the block contains $0$ (\lean{S3B_eq_Qc}). The block has $r(\pi)$ elements below
+$p$, so the number of non-residues in it is
+\begin{equation}\label{eq:nr}
+  \mathrm{NR}(\pi)=r(\pi)-z_0(\pi)-\bigl(S(\pi)-z_0(\pi)\bigr)/2\qquad\text{(\lean{NR_eq})},
+\end{equation}
+which the step computes from the count in polynomial time; it keeps $0$ when $\mathrm{NR}(\pi0)>0$.
+
+\begin{example}[$p=7$]\label{ex:qnr}
+The squares modulo $7$ are $0,1,2,4$, so the least non-residue is $3=011_2$. The search runs as follows.
+\[
+\begin{array}{l|ccc}
+\text{query }\pi0 & 0 & 00 & 010\\\hline
+\text{block} & \{0,1,2,3\} & \{0,1\} & \{2\}\\
+S(\pi0) & 5 & 3 & 2\\
+r,\ z_0 & 4,\ 1 & 2,\ 1 & 1,\ 0\\
+\mathrm{NR}(\pi0) & 1 & 0 & 0\\
+\text{new }\pi & 0 & 01 & 011
+\end{array}
+\]
+\end{example}
+
+\noindent For $p\le2$ the machine answers $p$ ($0$ and $1$ are squares modulo $2$). For $p$ composite the
+formula may be wrong, but the finish outputs some $y\le p$ (\lean{specB_answer_le}). The pure
+characterisation is \lean{lqnr_spec}: for a prime $p>2$, $\mathrm{lqnr}(p)<p$, it is not a square in
+\lean{ZMod}~$p$, and every smaller residue is a square.
+
+\subsection{Divisor sums and the circle}\label{sec:lattice}
+These need one query each. The divisor sum is $\sum_{m\le x}\tau(m)=\#\{(a,b,s):ab+s=x,\ a,b>0\}$
+(\lean{divQ_eq}); $\sum_{m\le x}\sigma(m)=\#\{(a,b,c,s):ab+s=x,\ b>0,\ 1\le c\le a\}$ (\lean{sigQ_eq}); and the
+circle count is $4\,\#\{(a,b,s):a^2+b^2+s=x,\ a>0\}+1$, by rotating the four quadrants
+(\lean{circ_eq}). Each is one product (two for the circle) and one chain with the constant $x$.
+
+\begin{example}\label{ex:lattice}
+For $x=10$: $\sum_{m\le10}\tau(m)=27$, $\sum_{m\le10}\sigma(m)=87$, and the circle count is $4\cdot9+1=37$.
+\end{example}
+
+% =====================================================================
+\section{What the class-number theorem counts}\label{sec:honesty}
+% =====================================================================
+
+In this section we say exactly what Lean proves about class numbers and what is classical.
+
+\paragraph{Forms, not ideals.} Lean proves that the machine outputs $\hF(-N)$, the number of Gauss reduced
+forms of discriminant $-N$, and, for a fundamental discriminant, the number of \emph{primitive} reduced forms
+(\lean{hForm_eq_card_primitive}, from \lean{primitive_of_fund}: no prime divides all of $a,b,c$ when
+$b^2-4ac$ is fundamental). That number is the form class number $h(D)$, the order of Gauss's form class
+group. That $h(D)$ equals the ideal class number of the imaginary quadratic field $\mathbb{Q}(\sqrt D)$
+for fundamental $D$, and of the order of discriminant $D$ in general, is the classical correspondence of
+Dirichlet and Dedekind~\cite[Thm.~7.7]{Cox13}, \cite{Bue89}. It is not in Mathlib at the commit we use:
+Mathlib has \lean{NumberField.classNumber}, but no binary quadratic forms and no forms--ideals
+correspondence. So the link to \lean{NumberField.classNumber} is proved on paper only. We define
+fundamental discriminants locally (\lean{IsFundDisc}: $D\equiv1\pmod 4$ squarefree, or $D=4m$ with
+$m\equiv2,3\pmod4$ squarefree), since Mathlib at that commit has no such definition.
+
+\begin{remark}[Non-fundamental discriminants]\label{rem:nonfund}
+If $N\equiv1,2\pmod4$ there are no forms, and $\hF(-N)=0$. Otherwise $\hF(-N)$ also counts imprimitive forms:
+every form of discriminant $D$ is $f$ times a primitive form of discriminant $D/f^2$, and scaling preserves
+reduction, so
+\[
+  \hF(D)=\sum_{f^2\mid D,\ D/f^2\equiv0,1\ (4)}h(D/f^2),\qquad
+  h(D)=\sum_{f^2\mid D,\ D/f^2\equiv0,1\ (4)}\mu(f)\,\hF(D/f^2).
+\]
+For example $\hF(-12)=2$ counts $(1,0,3)$ and $(2,2,2)=2\cdot(1,1,1)$, while $h(-12)=1$. The inversion
+recovers $h(D)$ from at most $\tau(N)$ runs of the machine once the square divisors of $N$ are known, and
+these can be found by factoring $N$, also in time $\rate$~\cite{TulFac26}. This is on paper only (we checked
+the decomposition numerically for $N<400$); the Lean theorem for non-fundamental $D$ is about $\hF$.
+\end{remark}
+
+\paragraph{Real quadratic fields are not covered.} For $D>0$ the reduced indefinite forms fall into
+cycles under the reduction operator, and each class corresponds to a whole cycle, whose length is tied
+to the regulator. Counting reduced forms therefore gives neither $h$ nor $hR$: one must count cycles, or
+weight each form by its distance to its successor, which yields $hR$~\cite[\S4--5]{Sch82}. The
+indicator ``this form is the first of its cycle'' is a condition over the whole cycle, not a local check
+on $O(n)$ bits, and separating $h$ from the regulator $R$ is a baby-step giant-step computation, not a
+count. We know of no description with few products for $h(D)$, $D>0$.
+
+% =====================================================================
+\section{The exponent}\label{sec:rate}
+% =====================================================================
+
+In this section we check that the descriptions give the rate. Every description of \cref{sec:instances}
+has at most four variables, two products, one chain and three comparisons, so $c_A(D)\le1152=c_D$ for every
+input. By \cref{prop:params}, $U\le2^{11}\cdot1152\,(n+2)$ and $gP\le2^{12}\cdot1152\,((n+2)+g\,d(n))$. At
+the level $K$ with $K^{40}\le K_0^{40}(n+2)$ of~\cite[\S5]{TulFac26} we have $g\,d(n)=O(n)$, so $U,gP=O(n)$,
+and \cref{imp:engine} gives one count in $2^{O(n/\sqrt{\log n})}$ steps. The searches ask at most $n$
+counts and the class-number and lattice machines one or two; the overhead of the host lemma is
+polynomial. In Lean this is \lean{FR.round_bound} with $c_0=2^{12}\cdot1152$, inside
+\cref{thm:machines}. For (A) the network lives at $n=|w|/2$ while the bounds are stated in $|w|$; this
+uses that $d$ is monotone (\lean{dg_mono}).
+
+% =====================================================================
+\section{What a reader must trust}\label{sec:statement}
+% =====================================================================
+
+A reader who wants to trust \cref{thm:main} must check the following definitions and nothing else of
+ours. They are in the pure modules \lean{ClassForms}, \lean{QRCount} and \lean{Encode}; we render Unicode
+symbols as mathematics (\verb|x.1| and \verb|x.2| are the projections of a pair).
+\begin{alltt}\footnotesize
+def hForm (D : \(\mathbb{Z}\)) : \(\mathbb{N}\) :=
+  ((Finset.Icc (-(D.natAbs : \(\mathbb{Z}\))) D.natAbs \(\times\)\(\sp{s}\) Finset.Icc 0 (D.natAbs : \(\mathbb{Z}\)) \(\times\)\(\sp{s}\)
+      Finset.Icc 0 (D.natAbs : \(\mathbb{Z}\))).filter
+    fun t : \(\mathbb{Z}\) \(\times\) \(\mathbb{Z}\) \(\times\) \(\mathbb{Z}\) => t.1 * t.1 - 4 * t.2.1 * t.2.2 = D \(\wedge\) |t.1| \(\le\) t.2.1 \(\wedge\)
+      t.2.1 \(\le\) t.2.2 \(\wedge\)
+      ((|t.1| = t.2.1 \(\vee\) t.2.1 = t.2.2) \(\to\) 0 \(\le\) t.1)).card
+def redForms (D : \(\mathbb{Z}\)) : Finset (\(\mathbb{Z}\) \(\times\) \(\mathbb{Z}\) \(\times\) \(\mathbb{Z}\)) := -- the same finset as in hForm
+def IsFundDisc (D : \(\mathbb{Z}\)) : Prop :=
+  (D % 4 = 1 \(\wedge\) Squarefree D) \(\vee\)
+    (D % 4 = 0 \(\wedge\) (D / 4 % 4 = 2 \(\vee\) D / 4 % 4 = 3) \(\wedge\) Squarefree (D / 4))
+def primRedForms (D : \(\mathbb{Z}\)) : Finset (\(\mathbb{Z}\) \(\times\) \(\mathbb{Z}\) \(\times\) \(\mathbb{Z}\)) :=
+  (redForms D).filter fun t => Int.gcd t.2.1 (Int.gcd t.1 t.2.2) = 1
+def minRoot (m a : \(\mathbb{N}\)) : \(\mathbb{N}\) :=
+  Nat.find (\(\langle\)m, Or.inl rfl\(\rangle\) : \(\exists\) y, y = m \(\vee\) (y < m \(\wedge\) y * y % m = a % m))
+def lqnr (p : \(\mathbb{N}\)) : \(\mathbb{N}\) :=
+  Nat.find (\(\langle\)p, Or.inl rfl\(\rangle\) : \(\exists\) x, x = p \(\vee\) (x < p \(\wedge\) \(\forall\) y < p, y * y % p \(\ne\) x))
+def padR (n : \(\mathbb{N}\)) (l : List Bool) : List Bool := l ++ List.replicate (n - l.length) false
+def encodePair (m a : \(\mathbb{N}\)) : List Bool :=
+  padR (max (encodeNat m).length (encodeNat a).length) (encodeNat m) ++
+    padR (max (encodeNat m).length (encodeNat a).length) (encodeNat a)
+\end{alltt}
+A triple is \texttt{(b, a, c)}, so \texttt{t.1} is the middle coefficient. The final statements, verbatim
+from \lean{Final} up to line breaks, except that we abbreviate the common bound as $\mathrm{T}(x)$, for the input word $x$,
+and write \texttt{Outputs} for \lean{GraphProblems.Outputs}. In the source, $\mathrm{T}(x)$ is
+\begin{alltt}\footnotesize
+\(\lfloor\)(C : \(\mathbb{R}\)) * 2 ^ ((C : \(\mathbb{R}\)) * x.length /
+    Real.sqrt (Real.logb 2 (x.length + 2)))\(\rfloor\sb{+}\)
+\end{alltt}
+that is, $\lfloor C\cdot2^{C|x|/\sqrt{\log_2(|x|+2)}}\rfloor$. The statements are:
+\begin{alltt}\footnotesize
+theorem hForm_TM_rate :
+  \(\exists\) (M : Turing.TM2ComputableAux Bool Bool) (C : \(\mathbb{N}\)), (\(\forall\) i, Finite (M.tm.\(\Gamma\) i)) \(\wedge\)
+  \(\forall\) N : \(\mathbb{N}\), Outputs M (encodeNat N) (encodeNat (hForm (-(N : \(\mathbb{Z}\))))) \(\mathrm{T}\)(encodeNat N)
+theorem hFormPrim_TM_rate : \(\exists\) M C, (\(\forall\) i, Finite (M.tm.\(\Gamma\) i)) \(\wedge\)
+  \(\forall\) N : \(\mathbb{N}\), IsFundDisc (-(N : \(\mathbb{Z}\))) \(\to\) 0 < N \(\to\)
+    Outputs M (encodeNat N) (encodeNat (primRedForms (-(N : \(\mathbb{Z}\)))).card) \(\mathrm{T}\)(encodeNat N)
+theorem sqrtMod_TM_rate : \(\exists\) M C, (\(\forall\) i, Finite (M.tm.\(\Gamma\) i)) \(\wedge\)
+  \(\forall\) m a : \(\mathbb{N}\), Outputs M (encodePair m a) (encodeNat (minRoot m a)) \(\mathrm{T}\)(encodePair m a)
+theorem lqnr_TM_rate : \(\exists\) M C, (\(\forall\) i, Finite (M.tm.\(\Gamma\) i)) \(\wedge\)
+  (\(\forall\) p : \(\mathbb{N}\), p.Prime \(\to\)
+     Outputs M (encodeNat p) (encodeNat (lqnr p)) \(\mathrm{T}\)(encodeNat p)) \(\wedge\)
+  (\(\forall\) p : \(\mathbb{N}\), \(\exists\) y \(\le\) p, Outputs M (encodeNat p) (encodeNat y) \(\mathrm{T}\)(encodeNat p))
+theorem divisorSum_TM_rate : \(\exists\) M C, (\(\forall\) i, Finite (M.tm.\(\Gamma\) i)) \(\wedge\) \(\forall\) x : \(\mathbb{N}\),
+  Outputs M (encodeNat x) (encodeNat (\(\sum\) m \(\in\) Finset.Icc 1 x, (Nat.divisors m).card))
+    \(\mathrm{T}\)(encodeNat x)
+theorem sigmaSum_TM_rate : \(\exists\) M C, (\(\forall\) i, Finite (M.tm.\(\Gamma\) i)) \(\wedge\) \(\forall\) x : \(\mathbb{N}\),
+  Outputs M (encodeNat x) (encodeNat (\(\sum\) m \(\in\) Finset.Icc 1 x, \(\sum\) d \(\in\) Nat.divisors m, d))
+    \(\mathrm{T}\)(encodeNat x)
+theorem circle_TM_rate : \(\exists\) M C, (\(\forall\) i, Finite (M.tm.\(\Gamma\) i)) \(\wedge\) \(\forall\) x : \(\mathbb{N}\),
+  Outputs M (encodeNat x)
+    (encodeNat (((Finset.Icc (-(x : \(\mathbb{Z}\))) x \(\times\)\(\sp{s}\) Finset.Icc (-(x : \(\mathbb{Z}\))) x).filter
+      fun q : \(\mathbb{Z}\) \(\times\) \(\mathbb{Z}\) => q.1 ^ 2 + q.2 ^ 2 \(\le\) x).card)) \(\mathrm{T}\)(encodeNat x)
+\end{alltt}
+In the source, each statement spells out the bound and writes \texttt{Computability.encodeNat}; the
+types of \texttt{M} and \texttt{C} are as in the first. \texttt{Outputs} is the one-line definition of \A's
+statement file, which we also trust:
+\begin{alltt}\footnotesize
+def Outputs (M : TM2ComputableAux Bool Bool) (x y : List Bool) (T : \(\mathbb{N}\)) : Prop :=
+  Nonempty (TM2OutputsInTime M.tm (x.map M.inputAlphabet.invFun)
+    (some (y.map M.outputAlphabet.invFun)) T)
+\end{alltt}
+Behind these are Mathlib's \lean{TM2OutputsInTime}, \lean{Computability.encodeNat} (little-endian
+binary, the empty word for $0$), \lean{Nat.find}, \lean{Nat.divisors}, \lean{Finset.Icc},
+\lean{Squarefree}, \lean{Int.gcd}, \lean{Real.logb} and \lean{Real.sqrt}, from Mathlib \texttt{0df444a}.
+Integer division and remainder are Lean's (\lean{Int.emod} is non-negative), which in \lean{IsFundDisc}
+gives the usual definition for $D<0$. For a quick check of the definitions, Lean evaluates
+$\hF(-3)=\hF(-4)=\hF(-7)=\hF(-8)=1$, $\hF(-15)=\hF(-20)=2$ and $\mathrm{lqnr}(7,11,13,17,41)=3,2,2,3,3$ by
+\lean{decide}.
+
+% =====================================================================
+\section{The Lean development}\label{sec:formal}
+% =====================================================================
+
+In this section we list the modules and state the trusted base. The development is in the public
+repository~\cite{TulsyanRepo26}: directories \texttt{lean/EthFollowup/ModP} (pure Mathlib; the files
+compile with Lean v4.33.1 and v4.34.1) and \texttt{lean-bridge-anthropic/bridge/EthFollowup/ModP} (on top
+of \A's development). \Cref{tab:modules} lists the modules.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}p{0.36\textwidth}p{0.50\textwidth}r@{}}
+\toprule
+module & content & lines\\
+\midrule
+\lean{SignedCarry} & signed carry chains: existence iff sum, uniqueness, range & 417\\
+\lean{Compare} & comparison state chains & 213\\
+\lean{MinSearch} & prefix search finds the minimum & 164\\
+\lean{QRCount} & \lean{minRoot}, \lean{lqnr}, root and square counts, \eqref{eq:nr} & 509\\
+\lean{Encode} & \lean{encodePair} and its halves & 146\\
+\lean{ClassForms} & \lean{hForm}, the two-query split, primitivity & 277\\
+\lean{Lattice} & divisor sums and the circle as solution counts & 293\\
+\lean{ArithDesc} & descriptions and their count & 192\\
+\lean{ArithInstances} & the six descriptions and their counts & 427\\
+\midrule
+\lean{Blocks} & mixed-radix block layouts & 248\\
+\lean{ArithBounds}, \lean{ArithParams} & digit bounds; wires, vertices, checks, canonical run & 957\\
+\lean{ArithNetDefs}, \lean{ArithNetParsimony}, \lean{ArithNetCount}, \lean{ArithNet} & the label system, parsimony, $U$ and $P$ & 947\\
+\lean{ArithEnc}, \lean{ArithReaderPoly}, \lean{ArithProcs}, \lean{ArithPoly} & encodings, procedures, polynomial time & 1647\\
+\lean{CntPackage}, \lean{GRate} & counting packages; search and query machines & 878\\
+\lean{ArithPackage}, \lean{ArithPkgs} & packages from descriptions; the six packages & 589\\
+\lean{SpecSq}, \lean{SpecE}, \lean{SpecLattice} & the search and query specifications & 616\\
+\lean{Final} & the seven final theorems & 112\\
+\midrule
+total & & 8632\\
+\bottomrule
+\end{tabular}
+\caption{The modules, with line counts (\texttt{wc -l}). The first nine are pure Mathlib. The sanity module
+\texttt{GRateMinFac} (77 lines, re-deriving the factoring theorem through \texttt{GR.searchM\_TM}) is not
+imported by \texttt{Final}. The development reuses, unchanged, the factoring modules of~\cite{TulFac26}
+(\texttt{Params}, \texttt{FermatBridge}, \texttt{MulProcs}, \texttt{MulPackage}, \texttt{Level40}, \texttt{Rate},
+\texttt{Search}) and the bridge modules of~\cite{Tul26}.}\label{tab:modules}
+\end{table}
+
+\paragraph{Trusted base and axioms.} The theorems depend only on \lean{propext}, \lean{Classical.choice}
+and \lean{Quot.sound}.
+A fresh \lean{leanchecker} replay of the dependency closure of \lean{EthFollowup.ModP.Final}, the module
+holding the seven final theorems, has passed.
+What must be trusted is the Lean kernel, the Mathlib definitions named in \cref{sec:statement}, our
+definitions quoted there, and \A's definition of \texttt{Outputs}. \A's development, Mathlib's proofs and
+our other modules are checked by the kernel; they are part of the checked closure, not of the trusted base.
+
+\paragraph{One design point.} Everything polynomial-time must be polynomial on \emph{every} context, not
+only on those the reader produces. Our first context stored the number of variables and vertices in binary
+and looped over them, which is exponential on adversarial contexts; the context now stores them in unary
+(\lean{ArithProcs}).
+
+% =====================================================================
+\section{Related work}\label{sec:related}
+% =====================================================================
+
+We organise related work by idea: non-residues and square roots, class numbers, lattice-point counts,
+the counting engines applied to number theory, and formal proofs.
+
+\paragraph{Non-residues and square roots.} Burgess's bound $p^{1/(4\sqrt e)+\varepsilon}$~\cite{Bur57},
+from his character-sum method~\cite{Bur62}, is the best unconditional bound for the least non-residue.
+Under GRH it is $O(\log^2p)$ by Ankeny~\cite{Ank52}, with explicit constants by Bach~\cite{Bac90} and
+Lamzouri, Li and Soundararajan~\cite{LLS15}. Given a non-residue, square roots modulo $p$ take polynomial
+time by Tonelli~\cite{Ton91} and Shanks~\cite{Sha72}, or Cipolla~\cite{Cip03}; Schoof~\cite{Sch85}
+computes $\sqrt a\bmod p$ in polynomial time for fixed $a$. Finding a non-residue and taking square roots
+modulo $p$ are deterministic polynomial-time equivalent (folklore;~\cite{BS96}). For composite $m$, taking
+square roots is randomised-equivalent to factoring $m$~\cite{Rab79}, so the classical deterministic route
+first factors $m$, in $m^{1/5+o(1)}$~\cite{Har21}; our factoring note~\cite{TulFac26} would give a route in time $\rate$ as well, by factoring and then using~(iv), which we have not formalised. In contrast, we compute the \emph{least} root and the
+\emph{least} non-residue directly by counting, for every $m$, conditionally on \A's development.
+
+\paragraph{Class numbers.} Counting reduced forms is Gauss's method and is used to tabulate class
+numbers~\cite[\S2]{Sch82}, \cite{Bue89}; the best proven deterministic unconditional bound we know is
+$|D|^{1/2+o(1)}$~\cite[\S5]{Len92}. Under GRH, Shanks's method gives $|D|^{1/5+o(1)}$
+deterministically~\cite{Len82,Sch82}, \cite[\S5.4]{Coh93}, and Hafner and McCurley's Las Vegas algorithm
+runs in expected time $L(|D|)^{\sqrt2+o(1)}$, $L(x)=\exp\sqrt{\log x\log\log x}$~\cite{HM89}; its
+analysis assumes GRH~\cite[\S5]{Len92}. Mosunov and Jacobson~\cite{MJ16} tabulate all class groups with
+$|D|<2^{40}$ unconditionally, which is a different, amortised problem. In contrast, our algorithm is
+deterministic and unconditional except for \A's development, and it is $|D|^{o(1)}$; but it computes only
+the number, not the group.
+
+\paragraph{Lattice-point counts.} Sladkey~\cite{Sla12} computes $\sum_{m\le x}\tau(m)$ in $O(x^{1/3})$ steps,
+and Tao, Croot and Helfgott~\cite[\S2.1]{TCH12} sketch an $x^{1/3+o(1)}$ algorithm; Li~\cite{Li26} reports
+$x^{9/28+o(1)}$ expected time. For the circle count we found no dedicated reference; we expect the
+same convex-hull techniques to give $x^{1/3+o(1)}$. In contrast, we obtain $x^{o(1)}$, at the price of galactic
+constants.
+
+\paragraph{Counting engines applied to number theory.} Rudich and Rousseau~\cite{RR26} introduced prefix
+search by divisor counting and proved factoring in $N^{o(1)}$ in Lean; Shunia~\cite{Shu26} proved the rate
+$\rate$ on paper, and~\cite{IF26} and our factoring note~\cite{TulFac26} proved it in Lean. Closest to our
+work is the factoring note, whose multiplication network and level selection we reuse. In contrast, we
+replace its single network by a library for any few-product system and apply it to problems other than
+factoring. As of 4~November 2026 we found no derivation of the bounds of \cref{thm:main} from either ETH
+refutation. We searched the web for each problem together with ``ETH'', ``$\#$SAT'' and ``2026''; searched
+GitHub repositories for the problem names; checked the Hexagon records and repositories of the October
+and November 2026 follow-ups known to us (\cite{RR26,Shu26,IF26} and the fork
+\repo{orda-aska/integer-factoring}), which treat factoring only; and read our survey of
+targets~\cite{TulsyanRepo26}. Hexagon's listing is behind a login, so this negative is weak.
+
+\paragraph{Formal proofs.} We use Lean~4~\cite{Lean4} and Mathlib~\cite{Mathlib20}. Mathlib defines the class
+number of a number field (\lean{NumberField.classNumber}) and proves its finiteness, but has no theory of
+binary quadratic forms. In contrast, our statements are about forms, and the bridge to ideals is the
+classical theorem cited in \cref{sec:honesty}.
+
+% =====================================================================
+\section{Limitations}\label{sec:limitations}
+% =====================================================================
+
+\begin{itemize}
+\item \emph{The results stand or fall with \A's development.} Every theorem rests on \A's Lean development
+of its claimed refutation of the Exponential Time Hypothesis, and the labs' claims are under review. Lean
+checks that development as part of our proof, and our statements use only Mathlib, our quoted definitions
+and \A's \texttt{Outputs}. We do need the development, built from source at the pinned commit, to be a
+sound Lean development, and the toolchain to be sound.
+\item \emph{The two number-theoretic headlines share one source of strength.} Finding a non-residue and
+taking square roots modulo $p$ are classically polynomial-time equivalent~\cite{BS96}, so (iii) for prime $m$
+and (iv) do not give two independent improvements. Both, and (i) and (v), come from the same engine.
+\item \emph{The class number is the form class number.} Its equality with the ideal class number is
+classical but not formalised; for non-fundamental $D$ the theorem is about $\hF$
+(\cref{rem:nonfund}); the class group and real quadratic fields are not covered.
+\item \emph{The algorithms are galactic.} \A's levels start at $K_0=2^{x_0}$ with $x_0\ge18$, the level
+needs $K^{40}\lesssim n$, and the constants $c_0=2^{12}\cdot1152$ and $C$ are astronomical. The machines are
+of no practical use, and they beat the classical bounds only for astronomically large inputs.
+\item \emph{The machines use exponential space.}
+\item \emph{No human has checked the work.} The Lean code and this text were written with AI assistance.
+No human expert has yet checked that \cref{sec:statement} lists everything a reader must trust.
+\end{itemize}
+
+\section*{Acknowledgements}
+This work was done with AI assistance (Claude Code, Anthropic): the constructions, the Lean development,
+the literature and citation checks and the text were produced in sessions with Claude Code. The Lean
+theorems are checked by the Lean kernel; everything else awaits human expert review. Responsibility for any
+errors rests with the author. This note continues the project of~\cite{Tul26,TulFac26}.
+
+\begin{thebibliography}{99}
+
+\bibitem{Ank52}
+N.~C.~Ankeny, \emph{The least quadratic non residue}, Ann. of Math. (2) \textbf{55} (1952), 65--72.
+
+\bibitem{Anthropic26}
+Claude (Anthropic), \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, preprint dated 26~October 2026.
+Paper and Lean formalisation in the repository \url{https://github.com/anthropics/formal-math}, folder
+\texttt{eth}; we use commit \texttt{16a5ce41304fcdaea4e0be7c132e1c361dc26da5}.
+
+\bibitem{Bac90}
+E.~Bach, \emph{Explicit bounds for primality testing and related problems}, Math. Comp. \textbf{55}
+(1990), no.~191, 355--380.
+
+\bibitem{BS96}
+E.~Bach and J.~Shallit, \emph{Algorithmic Number Theory, Vol.~1: Efficient Algorithms}, MIT Press,
+Cambridge, MA, 1996.
+
+\bibitem{Bue89}
+D.~A.~Buell, \emph{Binary Quadratic Forms: Classical Theory and Modern Computations}, Springer-Verlag,
+New York, 1989.
+
+\bibitem{Bur57}
+D.~A.~Burgess, \emph{The distribution of quadratic residues and non-residues}, Mathematika \textbf{4}
+(1957), 106--112.
+
+\bibitem{Bur62}
+D.~A.~Burgess, \emph{On character sums and primitive roots}, Proc. London Math. Soc. (3) \textbf{12}
+(1962), 179--192.
+
+\bibitem{Cip03}
+M.~Cipolla, \emph{Un metodo per la risoluzione della congruenza di secondo grado}, Rend. Accad. Sci.
+Fis. Mat. Napoli (3) \textbf{9} (1903), 154--163.
+
+\bibitem{Coh93}
+H.~Cohen, \emph{A Course in Computational Algebraic Number Theory}, Graduate Texts in Mathematics, vol.~138,
+Springer-Verlag, Berlin, 1993.
+
+\bibitem{Cox13}
+D.~A.~Cox, \emph{Primes of the Form $x^2+ny^2$: Fermat, Class Field Theory, and Complex Multiplication},
+2nd ed., John Wiley \& Sons, Hoboken, NJ, 2013.
+
+\bibitem{Har21}
+D.~Harvey, \emph{An exponent one-fifth algorithm for deterministic integer factorisation}, Math. Comp.
+\textbf{90} (2021), no.~332, 2937--2950.
+
+\bibitem{HM89}
+J.~L.~Hafner and K.~S.~McCurley, \emph{A rigorous subexponential algorithm for computation of class
+groups}, J. Amer. Math. Soc. \textbf{2} (1989), no.~4, 837--850.
+
+\bibitem{IF26}
+1337isnot1337 (GitHub user) and contributors, \emph{integer-factoring: deterministic integer factoring
+bounds}, public repository \url{https://github.com/1337isnot1337/integer-factoring}; Lean formalisation in
+\texttt{formal-appendix/} (pull request \#20, merged 30~October 2026).
+
+\bibitem{LLS15}
+Y.~Lamzouri, X.~Li, and K.~Soundararajan, \emph{Conditional bounds for the least quadratic non-residue and
+related problems}, Math. Comp. \textbf{84} (2015), no.~295, 2391--2412; corrigendum, Math. Comp. \textbf{86}
+(2017), 2551--2554.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The {L}ean 4 theorem prover and programming language}, Automated
+Deduction -- CADE 28, Lecture Notes in Comput. Sci., vol. 12699, Springer, 2021, pp.~625--635.
+
+\bibitem{Len82}
+H.~W.~Lenstra, Jr., \emph{On the calculation of regulators and class numbers of quadratic fields},
+Journ\'ees Arithm\'etiques 1980 (J.~V.~Armitage, ed.), London Math. Soc. Lecture Note Ser., vol.~56,
+Cambridge Univ. Press, 1982, pp.~123--150.
+
+\bibitem{Len92}
+H.~W.~Lenstra, Jr., \emph{Algorithms in algebraic number theory}, Bull. Amer. Math. Soc. (N.S.)
+\textbf{26} (1992), no.~2, 211--244.
+
+\bibitem{Li26}
+D.~Li, \emph{Computing the divisor summatory function in $N^{9/28+o(1)}$}, arXiv:2609.29949, September 2026.
+
+\bibitem{Mathlib20}
+The mathlib Community, \emph{The {L}ean mathematical library}, Proc. 9th ACM SIGPLAN International
+Conference on Certified Programs and Proofs (CPP 2020), 2020, pp.~367--381.
+
+\bibitem{MJ16}
+A.~S.~Mosunov and M.~J.~Jacobson, Jr., \emph{Unconditional class group tabulation of imaginary quadratic
+fields to $|\Delta|<2^{40}$}, Math. Comp. \textbf{85} (2016), no.~300, 1983--2009.
+
+\bibitem{OpenAI26}
+OpenAI, \emph{The {E}xponential {T}ime {H}ypothesis is false}, preprint dated 17~October 2026, revised
+25~October 2026. Paper and Lean formalisation in the repository \url{https://github.com/openai/math}.
+
+\bibitem{Rab79}
+M.~O.~Rabin, \emph{Digitalized signatures and public-key functions as intractable as factorization},
+Technical Report MIT/LCS/TR-212, MIT Laboratory for Computer Science, January 1979.
+
+\bibitem{RR26}
+I.~Rudich and L.-M.~Rousseau, \emph{Deterministic factoring in time $N^{o(1)}$}, Hexagon preprint
+hexagon:2610.00600v1, published 29~October 2026, \url{https://hexagonmath.org/2610.00600v1}.
+
+\bibitem{Sch82}
+R.~J.~Schoof, \emph{Quadratic fields and factorization}, Computational Methods in Number Theory, Part~II
+(H.~W.~Lenstra, Jr. and R.~Tijdeman, eds.), Mathematical Centre Tracts, vol.~155, Mathematisch Centrum,
+Amsterdam, 1982, pp.~235--286.
+
+\bibitem{Sch85}
+R.~Schoof, \emph{Elliptic curves over finite fields and the computation of square roots mod $p$}, Math.
+Comp. \textbf{44} (1985), no.~170, 483--494.
+
+\bibitem{Sha72}
+D.~Shanks, \emph{Five number-theoretic algorithms}, Proc. Second Manitoba Conference on Numerical
+Mathematics (Winnipeg, 1972), Congressus Numerantium VII, Utilitas Math., 1973, pp.~51--70.
+
+\bibitem{Shu26}
+J.~Shunia, \emph{An improved subexponential bound for deterministic integer factorization}, Hexagon
+preprint hexagon:2610.00711v1, published 2~November 2026, \url{https://hexagonmath.org/2610.00711v1}.
+
+\bibitem{Sla12}
+R.~Sladkey, \emph{A successive approximation algorithm for computing the divisor summatory function},
+arXiv:1206.3369, June 2012.
+
+\bibitem{TCH12}
+T.~Tao, E.~Croot III, and H.~Helfgott, \emph{Deterministic methods to find primes}, Math. Comp. \textbf{81}
+(2012), no.~278, 1233--1246.
+
+\bibitem{Ton91}
+A.~Tonelli, \emph{Bemerkung \"uber die Aufl\"osung quadratischer Congruenzen}, Nachr. K\"onigl. Ges. Wiss.
+G\"ottingen (1891), 344--346.
+
+\bibitem{Tul26}
+V.~Tulsyan, \emph{Counting {H}amiltonian cycles in sparse graphs in subexponential time, assuming the
+new $\#${SAT} algorithms}, Hexagon preprint hexagon:2610.00672v1, October 2026; source and Lean
+development at \url{https://github.com/xennygrimmato/eth-hamiltonicity}.
+
+\bibitem{TulFac26}
+V.~Tulsyan, \emph{An independent machine-checked proof of deterministic factoring in time
+$2^{O(n/\sqrt{\log n})}$, via the new $\#${SAT} algorithms}, preprint, November 2026; source in the
+directory \texttt{factoring-note/} of~\cite{TulsyanRepo26}.
+
+\bibitem{TulsyanRepo26}
+V.~Tulsyan, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes}, public repository
+\url{https://github.com/xennygrimmato/eth-hamiltonicity}, 2026; Lean sources as of commit \texttt{b9ea3f1}.
+
+\end{thebibliography}
+
+% =====================================================================
+% CITATION CHECK (4 November 2026). Each entry was checked by web search or by fetching the source:
+%  Ank52  Ann. of Math. (2) 55 (1952) 65-72, DOI 10.2307/1969420; GRH bound O(log^2 p) per citing works
+%         (arXiv 2411.05095, MaRDI record).
+%  Bur57  Mathematika 4 (1957) 106-112: found only in reference lists (no abstract online); exponent
+%         1/(4 sqrt e) as in the standard literature (e.g. arXiv 2106.00544 cites it for this bound;
+%         that preprint itself is NOT cited, unrefereed).
+%  Bur62  Proc. LMS (3) 12 (1962) 179-192; mathnet.ru record of the Russian translation.
+%  Bac90  Math. Comp. 55 (1990) no. 191, 355-380; AMS page, DOI 10.1090/S0025-5718-1990-1023756-8.
+%  LLS15  Math. Comp. 84 (2015) no. 295, 2391-2412, arXiv 1309.3595; corrigendum Math. Comp. 86 (2017)
+%         2551-2554 (AMS listing).
+%  Ton91, Cip03, Sha72  Bibliographic data as in the standard secondary sources (Wikipedia
+%         "Tonelli-Shanks algorithm", Dickson's History); Shanks's proceedings appeared 1973
+%         (conference 1972). Originals not fetched.
+%  Sch85  Math. Comp. 44 (1985) no. 170, 483-494; AMS page; square roots of fixed a in poly time
+%         confirmed from the PDF (pages.cs.wisc.edu copy).
+%  BS96   MIT Press 1996; equivalence of QNR finding and square roots attributed to it in lecture notes
+%         (J. Booher, sqr_qnr.pdf) and in Sze, arXiv 0812.2591. Book itself not fetched.
+%  Rab79  MIT/LCS/TR-212, January 1979; MIT DSpace handle 1721.1/149499.
+%  Len92  Bull. AMS 26 (1992) no. 2, 211-244, arXiv math/9204234; full text read: Theorem 5.5 and
+%         Problem 5.6 ("For quadratic fields the answer is affirmative": deterministic |D|^{1/2+o(1)}),
+%         Problem 5.8 (GRH, L^{O(1)}) "For imaginary quadratic fields Problem 5.8 has been solved [28]"
+%         where [28] = Hafner-McCurley.
+%  HM89   J. AMS 2 (1989) no. 4, 837-850, DOI 10.1090/S0894-0347-1989-1002631-0. Abstract (geodesic.mathdoc)
+%         says "rigorous proof ... Las Vegas ... L(d)^{sqrt2+o(1)}" and does not name a hypothesis;
+%         Lenstra 1992 sec. 5 and de Boer-Pellet-Mary-Wesolowski (arXiv 2512.01588: "Assuming ERH, they
+%         prove that the expected running time is L(1/2, sqrt2)") state that the analysis assumes
+%         GRH/ERH. The AMS full text was not reachable (bot check). We state GRH, citing Lenstra.
+%  Len82  Journees Arithmetiques 1980 (Exeter), LMS Lecture Note Ser. 56, CUP 1982, 123-150 (Springer
+%         reference lists, Lenstra's publication list).
+%  Sch82  Math. Centre Tracts 155 (1982) 235-286; full PDF read (mat.uniroma2.it/~schoof/mcpaper.pdf):
+%         sec. 2 counting reduced forms for tables, sec. 3 Shanks's algorithm with a GRH derivation of the
+%         order (X ~ |D|^alpha, alpha = 1/5), sec. 4-5 real quadratic fields: "one does not simply count
+%         the forms, but one sums their distances to their successors".
+%  Coh93  GTM 138, Springer 1993; table of contents: 5.3 class numbers of imaginary quadratic fields
+%         (reduced forms), 5.4 class groups via Shanks's baby-step giant-step. The GRH 1/5 statement in
+%         5.4 was not re-read (book not fetched); cited for the method.
+%  "Buchmann |D|^{1/4} under GRH" (from the brief): NOT confirmed. Searches found |D|^{1/4+eps}
+%         unconditional-probabilistic / |D|^{1/5+eps} under ERH attributions without a clear source,
+%         so we do not cite a |D|^{1/4} bound.
+%  MJ16   Mosunov, Jacobson, Math. Comp. 85 (2016) no. 300, 1983-2009, arXiv 1502.07953 (author order
+%         Mosunov first, per AMS).
+%  Sla12  arXiv 1206.3369 (15 June 2012), abstract: O(n^{1/3}) time, O(log n) space.
+%  TCH12  Math. Comp. 81 (2012) no. 278, 1233-1246, arXiv 1009.3956; PDF read: sec. 2.1 "one can in
+%         fact compute sum tau(n) in O(x^{1/3+o(1)}) time" (sketch).
+%  Li26   arXiv 2609.29949 (D. Li, 24 Sep 2026): N^{9/28+o(1)} "expected time" per abstract.
+%  Cox13  Wiley 2nd ed. 2013; Thm 7.7 (forms <-> ideal classes of an order) confirmed via citing papers
+%         (arXiv 2308.11250 cites Thm 7.7(ii),(iii)). Bue89 Springer 1989 (standard; not fetched).
+%  RR26, Shu26, IF26, Anthropic26, OpenAI26, Tul26, Lean4, Mathlib20: as audited in the factoring note
+%         (factoring-note/main.tex, citation check of 4 Nov 2026). TulFac26: our own note, unpublished.
+%  TulsyanRepo26 commit: git log -1 --format=%h -- lean-bridge-anthropic/bridge/EthFollowup/ModP/Final.lean
+%         = b9ea3f1.
+%  Novelty searches (4 Nov 2026): web searches "class number ... 2026 ... #SAT / ETH", "least quadratic
+%         non-residue deterministic 2^{o(n)} 2026", "hexagonmath.org ... square roots / class number /
+%         divisor summatory"; gh search repos for the problem names: nothing relevant found.
+%  Mathlib 0df444a: NumberField.classNumber exists (Mathlib/NumberTheory/NumberField/ClassNumber.lean);
+%         no binary quadratic forms, no FundamentalDiscriminant.
+% =====================================================================
+
+\end{document}

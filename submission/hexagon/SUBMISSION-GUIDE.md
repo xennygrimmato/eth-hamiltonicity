@@ -166,8 +166,8 @@ verification are new to our knowledge.
 compile preview → fill the fields above → contributor = you, Claude and Lean under tools → declarations → submit).
 
 ## Paper 8 — Class numbers, square roots, non-residues (upload `hexagon-classnumber-note.zip`, main file `main.tex`)
-Status: Lean final theorems built with standard axioms (`EthFollowup.ModP.Final`); the fresh leanchecker replay is
-recorded in README rows N1–N3 once it passes. Do not upload before those rows exist.
+Status: READY (4 Nov 2026). Fresh leanchecker replay of `EthFollowup.ModP.Final` passed (README rows N1–N3).
+Paper 11 pp in `classnumber-note/main.tex`, PDF in `docs/classnumber-note.pdf`; the ZIP compiles cleanly from a fresh unzip.
 
 **Form answers**
 - **Title:** Class numbers, square roots and quadratic non-residues in time $2^{O(n/\sqrt{\log n})}$, assuming the new #SAT algorithms

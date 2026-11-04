@@ -7,6 +7,8 @@
 \usepackage{microtype}
 \usepackage{url}
 \usepackage{enumitem}
+\usepackage{alltt}
+\usepackage{booktabs}
 \usepackage[dvipsnames]{xcolor}
 \usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=OliveGreen,urlcolor=MidnightBlue]{hyperref}
 \usepackage[capitalize,nameinlink]{cleveref}
@@ -35,7 +37,10 @@
 \newcommand{\SIZE}{\mathrm{SIZE}}
 \newcommand{\A}{\textup{[A]}}
 \newcommand{\Oa}{\textup{[O]}}
-\newcommand{\lean}[1]{\texttt{#1}}
+% Lean names: typewriter, with line breaks allowed after '.' and '_'.
+\DeclareUrlCommand\lean{\urlstyle{tt}\def\UrlBreaks{\do\.\do\_}\def\UrlBigBreaks{}}
+% Repository paths: typewriter, with line breaks allowed after '/' and '-'.
+\DeclareUrlCommand\repo{\urlstyle{tt}\def\UrlBreaks{\do\/\do\-}\def\UrlBigBreaks{}}
 
 \begin{document}
 
@@ -45,25 +50,31 @@
 
 \date{November 2026}
 
-\subjclass[2020]{68Q17, 68Q06, 68Q25}
-\keywords{Circuit lower bounds, Exponential Time Hypothesis, algorithmic method, $\mathrm{E}^{\mathrm{NP}}$, satisfiability algorithms}
+\subjclass[2020]{68Q17, 68Q06, 68Q25, 03B35}
+\keywords{Circuit lower bounds, Exponential Time Hypothesis, algorithmic method, $\mathrm{E}^{\mathrm{NP}}$, satisfiability algorithms, Lean~4, formal verification}
 
 \begin{abstract}
-In October 2026 OpenAI and Anthropic claimed deterministic subexponential-time algorithms for
-$\#k$-SAT, refuting the Exponential Time Hypothesis. Anthropic's manuscript notes that, by a
-theorem of Williams, this implies that $\ENP$ does not have circuits of linear size. We record the
+Williams showed that faster satisfiability algorithms imply circuit lower bounds; in particular, if
+the Exponential Time Hypothesis fails, then $\ENP$ does not have circuits of linear size. In
+October 2026 OpenAI and Anthropic claimed deterministic subexponential-time algorithms for
+$\#k$-SAT, and Anthropic's manuscript draws this consequence. However, its argument uses only the
+qualitative failure of the hypothesis, so it gives ``not $O(n)$'' with no rate. We record the
 quantitative form. Assuming the clause-count bound $2^{C\cdot kM/\sqrt{\log M}}$ of Anthropic's
-Main Theorem, in the form of a Turing machine with engine constant $C$, there are $\varepsilon>0$
-and a language $L_0\in\ENP$ such that for infinitely many input lengths $n$, $L_0$ has no circuit
-of size $\varepsilon\,n\sqrt{\log n}$ over the full binary basis. The bound proved in OpenAI's Lean
-development gives $\varepsilon\,n\sqrt{\log n}/(\log\log n)^2$ in the same way. The proof is
+Main Theorem, in the form of a Turing machine with engine constant $C$, we prove that there are
+$\varepsilon>0$ and a language $L_0\in\ENP$ such that for infinitely many input lengths $n$, $L_0$
+has no circuit of size $\varepsilon\,n\sqrt{\log n}$ over the full binary basis. The proof is
 Williams' argument with the constants tracked: guess a witness circuit, check it with a circuit of
 $3s+O(n)$ gates, apply Tseitin's transformation to get at most $4S+1$ clauses, and decide
 satisfiability with the new algorithm; any $\varepsilon<1/(36aC)$ works, where $a$ is the
-input-length shift of the construction. We explain why these algorithms give nothing at $n\log n$,
+input-length shift of the construction. The existence statement is machine-checked in Lean~4 on top
+of Anthropic's Lean development, whose formalised engine supplies the rate, as
+\texttt{enp\_not\_size\_n\_sqrt\_log}, with the axioms
+\texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound} only. The bound proved in
+OpenAI's Lean development gives $\varepsilon\,n\sqrt{\log n}/(\log\log n)^2$ in the same way; this
+corollary is proved on paper only. We explain why these algorithms give nothing at $n\log n$,
 nothing for $\mathrm{NEXP}$ or $\mathrm{NQP}$, and nothing more from counting. The constant
-$\varepsilon$ is not explicit, the bound holds only infinitely often, and everything is
-conditional on the claimed refutations, which are under review.
+$\varepsilon$ is not explicit, the bound holds only infinitely often, and everything is conditional
+on the claimed refutations, which are under review.
 \end{abstract}
 
 \maketitle
@@ -72,22 +83,40 @@ conditional on the claimed refutations, which are under review.
 \section{Introduction}\label{sec:intro}
 % =====================================================================
 
+Proving that an explicit function needs large Boolean circuits is one of the central problems of
+complexity theory, and progress on it is slow. Before 2026 the best lower bound for a language in
+$\ENP$ over the full binary basis was $3.1n-o(n)$, by Li and Yang~\cite{LY22}. Williams'
+algorithmic method~\cite{Wil13} offers another route: a satisfiability algorithm slightly faster
+than exhaustive search implies a circuit lower bound. In particular, Williams~\cite[Theorem~6.1]{Wil13}
+showed that if the Exponential Time Hypothesis (ETH) is false, then $\ENP$ does not have circuits
+of linear size; see also Jahanjou, Miles and Viola~\cite[Corollary~2(1) with Corollary~3(1$'$)]{JMV15}.
+
 Two manuscripts, by OpenAI~\cite{OpenAI26} and by Anthropic~\cite{Anthropic26} (below \Oa{} and
 \A), each claim a deterministic algorithm that counts the satisfying assignments of a $k$-CNF in
-subexponential time, and hence a refutation of the Exponential Time Hypothesis (ETH). Both come
-with Lean~4 formalisations of their top-level statements. These are \emph{claimed} results, still
-under review. The Main Theorem of \A{} (Theorem~1, made explicit in its Corollary~11) counts the
-models of a $k$-CNF with $m\ge2$ clauses in which $n\ge4$ variables occur in time
+subexponential time, and hence a refutation of ETH. Both come with Lean~4 formalisations of their
+top-level statements. These are \emph{claimed} results, still under review. The Main Theorem of
+\A{} (Theorem~1, made explicit in its Corollary~11) counts the models of a $k$-CNF with $m\ge2$
+clauses in which $n\ge4$ variables occur in time
 \[
   \min\bigl\{2^{C\cdot km/\sqrt{\log m}},\;2^{C\cdot k^2 n\log\log n/\sqrt{\log n}}\bigr\}
 \]
 for an absolute constant $C$. Logarithms are to base~$2$.
 
-Williams~\cite[Theorem~6.1]{Wil13} showed that if ETH is false, then $\ENP$ does not have circuits
-of linear size; see also Jahanjou, Miles and Viola~\cite[Corollary~2(1) with Corollary~3(1$'$)]{JMV15}.
-\A{} draws this consequence and formalises it in Lean (\lean{ENP.CorCircuits}). Its proof uses only
-the qualitative statement that, for every $\delta>0$, $3$-SAT is decidable in time $2^{\delta N}$.
-It gives ``not $O(n)$'' with no rate. Here we use the rate.
+However, the circuit consequence drawn so far is only qualitative. \A{} states it and formalises
+it in Lean (\lean{ENP.CorCircuits}). Its proof uses only the qualitative statement that, for every
+$\delta>0$, $3$-SAT is decidable in time $2^{\delta N}$. It gives ``not $O(n)$'' with no rate. We
+are unaware of any statement of the rate that the claimed algorithms give.
+
+\subsection{The question, the naive route and the principle}
+We ask which superlinear size bound for $\ENP$ the claimed running times give. At first one might
+reuse \A's formal corollary with a larger size bound. However, its Lean module hard-wires both the
+size $c_0(m+1)$ and the time $2^{\delta N}$ (\cref{sec:formal}), and the $\delta$-form of the
+algorithm cannot see a rate at all. Instead, we rely on a simple principle: \emph{in Williams'
+argument every step except the satisfiability algorithm costs only a linear overhead, so a rate
+$2^{M/g(M)}$ turns into a size bound $\varepsilon n\,g(n)$.} The chain we track is short. A witness
+circuit of size $s=\varepsilon\ell\sqrt{\log\ell}$ gives a check circuit of
+$S\le 3s+O(n)$ gates, Tseitin's transformation gives $M\le4S+1$ clauses, and the exponent of the
+algorithm becomes $36aC\varepsilon n+o(n)$ (\cref{sec:proof}). We now state the model and the two hypotheses, then the results.
 
 \subsection{Model}
 A \emph{circuit} is over the full binary basis $B_2$: each gate computes one of the $16$
@@ -105,12 +134,12 @@ in length $L$, decides whether $\psi$ is satisfiable within $L^{C}\cdot2^{3C\cdo
 steps.
 \end{hypA}
 
-\noindent This is the $m$-branch of Corollary~11 of \A with $k=3$, stated for Turing machines. The
-constant $C$ here is the \emph{engine constant}, the constant of the machine that is actually run.
-It is not necessarily the $C$ printed in \A. \A{} counts operations in its own model, and turning
-those into Turing-machine steps changes $C$ by the polynomial overhead of the simulation. In
-Anthropic's Lean development the rate is available as the machine form \lean{Tied.TopM}
-(rate $e_M\le G\cdot k\cdot m/\sqrt{\log(m+2)}$, then a polynomial-time machine on a pad of length
+\noindent This is the $m$-branch of Corollary~11 of \A{} with $k=3$, stated for Turing machines. We
+call $C$ here the \emph{engine constant}: the constant of the machine that is actually run. It is not
+necessarily the $C$ printed in \A. \A{} counts operations in its own model, and turning those into
+Turing-machine steps changes $C$ by the polynomial overhead of the simulation. In Anthropic's Lean
+development the rate is available as the machine form \lean{Tied.TopM} (rate
+$e_M\le G\cdot k\cdot m/\sqrt{\log(m+2)}$, then a polynomial-time machine on a pad of length
 $2^{e_M}$). The engine constant is then determined by $G$ and by the polynomial exponent of that
 machine.
 
@@ -120,13 +149,15 @@ satisfiability of a $3$-CNF with $N\ge 16$ variables, encoded in length $L$, wit
 $L^{C_2}2^{C_2\rho(N)}$ steps, where $\rho(N)=N(\log\log N)^2/\sqrt{\log N}$.
 \end{hypO}
 
-\noindent This is the form of the theorem \lean{exact\_count\_and\_sat} in OpenAI's Lean
+\noindent This is the form of the theorem \lean{exact_count_and_sat} in OpenAI's Lean
 development, whose rate function is $\rho$, up to the base of the logarithms. The printed main
 theorem of \Oa{} has the exponent $O_k(n\log\log n/\sqrt{\log n})$, with one factor of
 $\log\log n$. It would give the bound of \cref{cor:openai} with $(\log\log n)^2$ replaced by
 $\log\log n$, in the same way.
 
-\begin{theorem}[Main theorem; machine-checked]\label{thm:main}
+\subsection{What we prove}
+
+\begin{theorem}[Main theorem; first part machine-checked]\label{thm:main}
 Assume $(\mathrm{H}_{\mathrm{A}})$. There are $\varepsilon>0$ and $L_0\in\ENP$ such that for every
 $N$ there is an $n\ge N$ for which $L_0\cap\{0,1\}^n$ is computed by no circuit over $B_2$ with at
 most $\varepsilon\,n\sqrt{\log n}$ gates.
@@ -154,7 +185,7 @@ $m$-branch.
 $L_0$ fails at a single length. With $\varepsilon$ small, $\lfloor\varepsilon n\sqrt{\log n}\rfloor=0$
 for many small $n$, so a single failing length would be close to vacuous. For a fixed $\varepsilon$,
 the infinitely-often form cannot be recovered from the single-length form by enlarging the size
-bound, which is what the linear case does (\lean{ENP.infinitely\_often}). We prove it directly by
+bound, which is what the linear case does (\lean{ENP.infinitely_often}). We prove it directly by
 assuming circuits only at lengths $\ge N$. The conclusion does not say that the bound holds for
 almost every $n$ (\cref{sec:limits}).
 \item \emph{An existential $\varepsilon$.} The constant $\varepsilon$ is not explicit, because $C$
@@ -165,19 +196,59 @@ informative: at infinitely many lengths, the lower bound grows faster than every
 \end{enumerate}
 \end{remark}
 
-\subsection{What is new, and what is not}
-The qualitative consequence ``$\ENP\not\subseteq\SIZE(O(n))$'' is stated, and formalised, in \A.
-JMV note that their proofs ``provide a close correspondence between the running time for
-satisfiability and the parameters of the circuit class''~\cite{JMV15}. Ben-Sasson and Viola's
-constant-level instance, as quoted there, is: $3$-SAT in time $c^n$ with $c<2^{1/10}$ implies
-$\ENP\not\subseteq\SIZE(3n)$. What we add is the substitution of the rate
+\subsection{Contributions}
+Our contributions are:
+\begin{itemize}
+\item We state Turing-machine forms $(\mathrm{H}_{\mathrm{A}})$ and $(\mathrm{H}_{\mathrm{O}})$ of the
+claimed theorems, and separate the engine constant from the printed one (\cref{sec:intro}).
+\item We prove \cref{thm:main}: under $(\mathrm{H}_{\mathrm{A}})$, $\ENP$ has a language without
+circuits of size $\varepsilon n\sqrt{\log n}$ at infinitely many lengths, for every $\varepsilon$ with
+$36aC\varepsilon<1$ (\cref{sec:imported,sec:proof}).
+\item We derive \cref{cor:openai}, the form with $(\log\log n)^2$, from OpenAI's bound
+(\cref{sec:proof}).
+\item We describe the Lean proof of the first part of \cref{thm:main}, quote its statement, and list
+the definitions a reader must check (\cref{sec:formal}).
+\item We explain where this route stops: at $n\log n$, below $\ENP$, with counting, almost everywhere,
+and for restricted classes (\cref{sec:limits}).
+\end{itemize}
+The idea is not new. JMV note that their proofs ``provide a close correspondence between the
+running time for satisfiability and the parameters of the circuit class''~\cite{JMV15}. Ben-Sasson
+and Viola's constant-level instance, as quoted there, is: $3$-SAT in time $c^n$ with $c<2^{1/10}$
+implies $\ENP\not\subseteq\SIZE(3n)$. What we add is the substitution of the rate
 $2^{O(M/\sqrt{\log M})}$, the bookkeeping that keeps every overhead linear, and the resulting
 explicit superlinear rate. We have not found this rate stated elsewhere. Given how direct it is, it
 may well have been noticed independently. We claim the careful statement and proof, not the idea.
 
+\subsection{Status of each claim}\label{sec:status}
+We separate four kinds of claim.
+\emph{Machine-checked in Lean}: the first part of \cref{thm:main}, as
+\lean{EthFollowup.Circuits.enp_not_size_n_sqrt_log}, with the variants
+\lean{enp_not_size_n_sqrt_log_shifted} and \lean{enp_not_hasCircuits_n_sqrt_log}; all with the
+axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound} only, and a fresh
+\lean{leanchecker} replay of the dependency closure passed. The Lean theorem has no hypothesis. The
+role of $(\mathrm{H}_{\mathrm{A}})$ is played by Anthropic's formalised rate engine
+\lean{Tied.TopM}, the language is Anthropic's \lean{CircuitLowerBound.L0}, and the proof follows
+Anthropic's lazy diagonalisation, not the route of \cref{sec:proof}. Its constant is
+$\varepsilon=1/(4608(qG+1))$ (\cref{sec:formal}).
+\emph{Proved on paper only}: the proof of \cref{sec:proof}, including the condition
+$36aC\varepsilon<1$ in the second part of \cref{thm:main}; \cref{cor:openai}, which is not claimed as
+machine-checked; \cref{rem:form,rem:constant}; and the discussion of \cref{sec:limits}.
+\emph{Assumed}: $(\mathrm{H}_{\mathrm{A}})$ and $(\mathrm{H}_{\mathrm{O}})$, and
+\cref{imp:hier,imp:jmv}, for the proofs on paper. For the Lean theorem, nothing beyond the three
+axioms; but it stands or falls with Anthropic's development (\cref{sec:limitations}).
+\emph{Checked numerically}: nothing; this note has no computations.
+
+\subsection*{Outline}
+\Cref{sec:imported} states the imported results, \cref{sec:proof} gives the proof,
+\cref{sec:formal} the Lean development, \cref{sec:known} related work, \cref{sec:limits} what these
+algorithms cannot give, and \cref{sec:limitations} the limitations.
+
 % =====================================================================
 \section{Imported results}\label{sec:imported}
 % =====================================================================
+
+In this section we state the two results that the proof on paper takes from the literature, and fix
+the input-length shift $a$.
 
 \begin{importedtheorem}[Nondeterministic time hierarchy, \v{Z}\'ak~\cite{Zak83}]\label{imp:hier}
 If $t_2$ is time-constructible and $t_1(n+1)=o(t_2(n))$, then
@@ -202,22 +273,24 @@ has at most $d\,n$ gates over $B_2$.
 length is $\ell=\log T+O(\log n)$, and every output bit is a decision tree of depth $O(\log r)$
 with $r=n/\log T=O(1)$. Williams' \cite[Theorem~6.1]{Wil13} is a \emph{sketch} with the same
 shape. Its formula comes from a tableau of size $O(2^{3n})$, and its check circuit has ``$O(cn)$
-wires and $3n+O(1)$ inputs''. The explicit count $3s+O(n)$ that we use is the one in JMV's \S6
-and in Anthropic's Lean module (\lean{StForm}). There the reduction is replaced by a
-self-contained succinct tableau formula and lazy diagonalisation. We may pad the variable names so
-that $v=v(n)$ depends only on $n$ and $n\mapsto n+v(n)$ is strictly increasing. Put
+wires and $3n+O(1)$ inputs''. The explicit count $3s+O(n)$ that we use is the one implicit in JMV's
+\S6 (three copies of the witness circuit and the decision trees) and explicit in Anthropic's Lean
+module (\lean{StForm}). There the reduction is replaced by a self-contained succinct tableau formula
+and lazy diagonalisation. We may pad the variable names so that $v=v(n)$ depends only on $n$ and
+$n\mapsto n+v(n)$ is strictly increasing. Put
 \[
   \ell(n):=n+v(n),\qquad a:=\max\{2,\;1+a_1\},\qquad\text{so}\qquad \ell(n)\le a n.
 \]
 
 % =====================================================================
-\section{Proof of \texorpdfstring{\cref{thm:main}}{Theorem 1.1}}\label{sec:proof}
+\section{Proof of \texorpdfstring{\cref{thm:main}}{Theorem 1.1}: every overhead is linear}\label{sec:proof}
 % =====================================================================
 
-We follow Williams' route~\cite[Lemma~3.2, Theorem~6.1]{Wil13}. Fix $\varepsilon>0$ with
-$36aC\varepsilon<1$, and fix $\gamma$ with $36aC\varepsilon<\gamma<1$. Let $L^\star$ be the
-language of \cref{imp:hier} for this $\gamma$, and let $E_x,\varphi_x,u,v,\ell$ be as in
-\cref{imp:jmv} for $L=L^\star$. Put
+In this section we define the hard language, give the nondeterministic algorithm, and bound its
+running time; the last step is where the rate enters. We follow Williams'
+route~\cite[Lemma~3.2, Theorem~6.1]{Wil13}. Fix $\varepsilon>0$ with $36aC\varepsilon<1$, and fix
+$\gamma$ with $36aC\varepsilon<\gamma<1$. Let $L^\star$ be the language of \cref{imp:hier} for this
+$\gamma$, and let $E_x,\varphi_x,u,v,\ell$ be as in \cref{imp:jmv} for $L=L^\star$. Put
 \[
   s(\ell):=\bigl\lfloor\varepsilon\,\ell\sqrt{\log\ell}\bigr\rfloor .
 \]
@@ -334,13 +407,13 @@ n\sqrt{\log n}$ the shift costs only the factor $a$ in the condition on $\vareps
 \item \emph{Lean normalisation.} Anthropic's module avoids the hierarchy theorem. It takes $m$ to be
 the input length of its $\ENP$ language. The tableau formula there has time $2^{b_t}$ with
 $b_t\ge3m/8$, and the engine is allowed a budget of $2^{m/32}$ inside a total of $2^{m/8}$
-(\lean{exists\_threshold}). Its check formula has $N_v\le3|K|+a_0(m+1)+g(e)$ variables and at most
+(\lean{exists_threshold}). Its check formula has $N_v\le3|K|+a_0(m+1)+g(e)$ variables and at most
 $4N_v+1$ clauses. With $|K|\le\varepsilon(m+1)\sqrt{\log(m+2)}$, the computation
 \eqref{eq:exp} becomes $36C\varepsilon m(1+o(1))+O(m/\sqrt{\log m})\le m/32-o(m)$. This holds for
 $\varepsilon<1/(1152\,C)$; for instance $\varepsilon=1/(1200C)$.
 \item \emph{Which $C$.} In either normalisation, $C$ is the effective engine constant of
 $(\mathrm{H}_{\mathrm{A}})$. In Lean this is $G$ together with the polynomial exponent of the
-machine on the pad, and possibly the exponent of the step bound in \lean{PaddedDescent.exists\_tm'}.
+machine on the pad, and possibly the exponent of the step bound in \lean{PaddedDescent.exists_tm'}.
 It is fixed before the formula table is chosen, so $\varepsilon$ is still an absolute constant.
 \end{enumerate}
 \end{remark}
@@ -358,38 +431,206 @@ and the rest is unchanged.
 \end{proof}
 
 % =====================================================================
-\section{Comparison with what is known}\label{sec:known}
+\section{The Lean development}\label{sec:formal}
 % =====================================================================
 
-The following statements were checked against the primary sources.
-\begin{itemize}
-\item \emph{$\ENP$ and $\mathrm{P}$ over $B_2$.} Before 2026 the best lower bound for a language in
-$\ENP$ was $3.1n-o(n)$, by Li and Yang~\cite{LY22}. They prove it for affine dispersers of
-sublinear dimension, which are constructible in polynomial time, so the bound holds already in
-$\mathrm{P}$. It improves the $(3+\tfrac1{86})n-o(n)$ of Find, Golovnev, Hirsch and
+In this section we say where the formal proof is, quote its statement exactly, list the definitions
+a reader must check, and state the trusted base.
+
+\paragraph{Anthropic's linear form.} Anthropic's Lean development~\cite{Anthropic26} proves the
+linear-size form,
+\[
+  \text{\lean{ENP.CorCircuits}}:\ \exists L,\ \text{\lean{InENP}}\ L\wedge\neg\,\text{\lean{HasLinearCircuits}}\ L,
+\]
+together with the infinitely-often variant \lean{CorCircuitsInf}. Its circuits are over $B_2$, and
+size is the number of gates. $\ENP$ is formalised with Mathlib \lean{FinTM2} oracle machines.
+The proof follows the route above, using the $\delta$-form of the engine (time $c\cdot2^{\delta N}$
+for every $\delta>0$) and lazy diagonalisation in place of \cref{imp:hier}. The statement
+\lean{HasCircuits}~$L$~$s$ is already parametric in $s$, but the module hard-wires both the size
+$c_0(m+1)$ and the time $2^{\delta N}$.
+
+\paragraph{Where the proof is.} \Cref{thm:main} (first part) is machine-checked in Lean~4 on top of
+that module. The proof is in the public repository
+\url{https://github.com/xennygrimmato/eth-hamiltonicity}~\cite{TulsyanRepo26}, at commit
+\texttt{9e5dfc8}, in the directory \repo{lean-bridge-anthropic/bridge/EthFollowup/Circuits/}: five
+files, 707 lines (\cref{tab:modules}). It builds on Anthropic's development at the commit pinned in
+the repository (\texttt{anthropics/formal-math}, folder \texttt{eth}, commit \texttt{16a5ce4}, Lean
+v4.33.1).
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}p{0.2\textwidth}p{0.66\textwidth}r@{}}
+\toprule
+file & content & lines\\
+\midrule
+\repo{Main.lean} & \lean{enp_not_size_n_sqrt_log} and its two variants; the size function and the interface statement of the algorithm & 128\\
+\repo{LowerBound.lean} & the lower-bound argument for a fixed size function, infinitely often (\lean{no_circuits_io}) & 93\\
+\repo{Engine.lean} & the rate engine \lean{Tied.TopM} packaged as one padded polynomial-time function & 202\\
+\repo{FormCount.lean} & the clause bound $M\le4N_v+1$ for the Tseitin formula & 50\\
+\repo{Arith.lean} & the threshold arithmetic, with $\varepsilon=1/(4608(qG+1))$ & 234\\
+\midrule
+total & & 707\\
+\bottomrule
+\end{tabular}
+\caption{The five files of the formal proof, with line counts (\texttt{wc -l}).}\label{tab:modules}
+\end{table}
+
+\paragraph{The statement.} The theorem is in \repo{Main.lean}, namespace
+\lean{EthFollowup.Circuits}, with \texttt{open ENP}. We copy it, rendering Unicode symbols as
+mathematics:
+\begin{alltt}\footnotesize
+theorem enp_not_size_n_sqrt_log : \(\exists\) (L : Lang) (\(\varepsilon\) : \(\mathbb{R}\)), 0 < \(\varepsilon\) \(\wedge\) InENP L \(\wedge\)
+    \(\forall\) N : \(\mathbb{N}\), \(\exists\) n : \(\mathbb{N}\), N \(\le\) n \(\wedge\) \(\neg\)DecidedAt L \(\lfloor\)\(\varepsilon\) * n * Real.sqrt (Real.logb 2 n)\(\rfloor\)\(\sb{+}\) n
+\end{alltt}
+Here $\lfloor\cdot\rfloor_+$ is \lean{Nat.floor}, \texttt{Real.logb 2} is $\log_2$, and the natural
+number $n$ is cast to $\mathbb{R}$ inside the floor. The variant
+\lean{enp_not_size_n_sqrt_log_shifted} has the size $\lfloor\varepsilon(n+1)\sqrt{\log_2(n+2)}\rfloor$
+in place of $\lfloor\varepsilon n\sqrt{\log_2 n}\rfloor$, and
+\lean{enp_not_hasCircuits_n_sqrt_log} concludes
+$\neg\,\text{\lean{HasCircuits}}\ L\ (n\mapsto\lfloor\varepsilon n\sqrt{\log_2 n}\rfloor)$, the negation of
+the module's \lean{HasCircuits}.
+
+\paragraph{The definitions a reader must check.} \lean{Lang}, \lean{InENP} and \lean{DecidedAt} are
+Anthropic's own definitions, in namespace \lean{ENP}, from the statement files
+\repo{eth/proof/statements/CircuitLowerBoundStatement.lean} and
+\repo{eth/proof/statements/CircuitLowerBoundInfinitelyOftenStatement.lean} of~\cite{Anthropic26}.
+The first imports Mathlib only, the second imports the first, and both contain definitions only. We copy what the statement unfolds to,
+omitting docstrings and rendering Unicode as mathematics:
+\begin{alltt}\footnotesize
+abbrev Lang : Type := List Bool \(\to\) Prop
+structure Gate where
+  op : Bool \(\to\) Bool \(\to\) Bool
+  in\(\sb{1}\) : \(\mathbb{N}\)
+  in\(\sb{2}\) : \(\mathbb{N}\)
+abbrev Circuit : Type := List Gate
+def wires (x : List Bool) (C : Circuit) : List Bool :=
+  C.foldl (fun w G => w ++ [G.op (w.getD G.in\(\sb{1}\) false) (w.getD G.in\(\sb{2}\) false)]) x
+def eval (C : Circuit) (x : List Bool) : Bool := (wires x C).getLastD false
+def DecidedAt (L : Lang) (s n : \(\mathbb{N}\)) : Prop :=
+  \(\exists\) C : Circuit, C.length \(\le\) s \(\wedge\) \(\forall\) x : List Bool, x.length = n \(\to\) (eval C x = true \(\leftrightarrow\) L x)
+def HasCircuits (L : Lang) (s : \(\mathbb{N}\) \(\to\) \(\mathbb{N}\)) : Prop :=
+  \(\forall\) n : \(\mathbb{N}\), \(\exists\) C : Circuit, C.length \(\le\) s n \(\wedge\) \(\forall\) x : List Bool, x.length = n \(\to\) (eval C x = true \(\leftrightarrow\) L x)
+abbrev Cnf : Type := List (List (\(\mathbb{N}\) \(\times\) Bool))
+def Sat (\(\varphi\) : Cnf) : Prop := \(\exists\) a : \(\mathbb{N}\) \(\to\) Bool, \(\forall\) C \(\in\) \(\varphi\), \(\exists\) l \(\in\) C, a l.1 = l.2
+def encLit (l : \(\mathbb{N}\) \(\times\) Bool) : List Bool := true :: (List.replicate l.1 true ++ [false, l.2])
+def encCnf (\(\varphi\) : Cnf) : List Bool :=
+  \(\varphi\).flatMap (fun C => C.flatMap encLit ++ [false, true]) ++ [false, false]
+def SAT : Lang := fun w => \(\exists\) \(\varphi\) : Cnf, w = encCnf \(\varphi\) \(\wedge\) Sat \(\varphi\)
+structure OTM where
+  tm : FinTM2
+  inp : tm.\(\Gamma\) tm.k\(\sb{0}\) \(\simeq\) Bool
+  out : tm.\(\Gamma\) tm.k\(\sb{1}\) \(\simeq\) Bool
+  q : tm.K
+  qry : tm.\(\Gamma\) q \(\simeq\) Bool
+  ask : tm.\(\Lambda\)
+  yes : tm.\(\Lambda\)
+  no : tm.\(\Lambda\)
+open Classical in
+noncomputable def OTM.step (M : OTM) (O : Lang) (c : M.tm.Cfg) : Option M.tm.Cfg :=
+  if c.l = some M.ask then
+    some \(\langle\)some (if O ((c.stk M.q).map M.qry) then M.yes else M.no), c.var,
+      Function.update c.stk M.q []\(\rangle\)
+  else M.tm.step c
+def OTM.Outputs (M : OTM) (O : Lang) (x : List Bool) (b : Bool) (T : \(\mathbb{N}\)) : Prop :=
+  Nonempty (StateTransition.EvalsToInTime (M.step O) (initList M.tm (x.map M.inp.symm))
+    (some (haltList M.tm [M.out.symm b])) T)
+def InENP (L : Lang) : Prop :=
+  \(\exists\) (M : OTM) (c : \(\mathbb{N}\)), (\(\forall\) k, Finite (M.tm.\(\Gamma\) k)) \(\wedge\)
+    \(\forall\) x : List Bool, \(\exists\) b : Bool, (b = true \(\leftrightarrow\) L x) \(\wedge\) M.Outputs SAT x b (2 ^ (c * (x.length + 1)))
+\end{alltt}
+In words: \texttt{DecidedAt L s n} says that some circuit with at most $s$ gates agrees with $L$ on
+all words of length $n$. A gate is any of the $16$ functions of two wires; the wires are the input
+bits followed by the gate values; the output is the last wire; a gate that names a wire that does
+not exist yet reads $0$ there. \texttt{InENP L} says that one oracle machine with finite stack
+alphabets and one constant $c$ output, with the oracle \lean{SAT} for satisfiability of CNFs, the
+bit ``$x\in L$'' on every input $x$ within $2^{c(|x|+1)}$ steps. A query costs one step, and the
+machine pushes it bit by bit, so queries have length at most $2^{c(|x|+1)}$. The remaining names are
+Mathlib's: \lean{Turing.FinTM2} (with its step function \lean{Turing.TM2.step}), \lean{Turing.initList}, \lean{Turing.haltList}, \lean{StateTransition.EvalsToInTime},
+\lean{Nat.floor}, \lean{Real.logb} and \lean{Real.sqrt}. The language $L$ of the proof is
+Anthropic's \lean{CircuitLowerBound.L0}, with membership \lean{CircuitLowerBound.stENP}; a reader
+need not check its definition, because the statement quantifies over $L$.
+
+\paragraph{How the proof goes.} The proof threads the size function through Anthropic's module.
+Three points needed more than arithmetic. First, the rate solver is packaged as one padded
+polynomial-time function and turned into a Turing machine by Anthropic's own padded-host lemma
+(\lean{PaddedDescent.exists_tm_padded}), so no polynomial bound on the machine's states is needed.
+Second, the solver counts over the occurring variables only; the proof compares that count with zero
+directly. Third, the infinitely-often form is obtained by threading the threshold $N$ through the
+module's diagonalisation (\lean{no_circuits_io}). The constant is
+$\varepsilon = 1/(4608(qG+1))$, where $q$ is the host's polynomial degree and $G$ the constant of the
+rate solver; it is existential because $q$ and $G$ are.
+
+\paragraph{Trusted base and axioms.} \texttt{\#print axioms} reports \lean{propext},
+\lean{Classical.choice} and \lean{Quot.sound} for \lean{enp_not_size_n_sqrt_log} and
+\lean{enp_not_hasCircuits_n_sqrt_log}, and a fresh \lean{leanchecker} replay of the full dependency
+closure passed. What must be trusted is the Lean kernel, the Mathlib definitions named above, and
+Anthropic's definitions quoted above. Anthropic's development and Mathlib's proofs are checked by the
+kernel with ours; they are part of the checked closure, not of the trusted base of definitions. But
+the soundness of the whole rests on them building as a sound development
+(\cref{sec:limitations}).
+
+\paragraph{What is not formalised.} \Cref{cor:openai} (the OpenAI form) is proved on paper only and
+is not claimed as machine-checked. The route of \cref{sec:proof} through \cref{imp:hier,imp:jmv}, the
+condition $36aC\varepsilon<1$, and \cref{rem:constant} are not formalised; Lean proves the first part
+of \cref{thm:main} with its own constant.
+
+% =====================================================================
+\section{Related work}\label{sec:known}
+% =====================================================================
+
+We organise related work by idea: explicit lower bounds for general circuits, near-maximum bounds
+above $\ENP$, the algorithmic method, and the claimed refutations with their formal proofs. The
+statements below were checked against the primary sources.
+
+\paragraph{Explicit lower bounds for $\ENP$ and $\mathrm{P}$ over $B_2$.} Before 2026 the best
+lower bound for a language in $\ENP$ was $3.1n-o(n)$, by Li and Yang~\cite{LY22}. They prove it for
+affine dispersers of sublinear dimension, which are constructible in polynomial time, so the bound
+holds already in $\mathrm{P}$. It improves the $(3+\tfrac1{86})n-o(n)$ of Find, Golovnev, Hirsch and
 Kulikov~\cite{FGHK16}, which in turn improves the $3n-o(n)$ of Blum. Williams wrote in 2010 that
 ``linear size circuit lower bounds are not known for this class''~\cite{Wil13}, that is, no proof
-that linear size does not suffice.
-\item \emph{Above $\ENP$.} Chen, Hirahara and Ren~\cite{CHR24} prove that
-$\mathrm{S}_2\mathrm{E}/_1\not\subseteq\SIZE[2^n/n]$. This gives the same near-maximum bounds for
-$\Sigma_2\mathrm{E}$, $(\Sigma_2\mathrm{E}\cap\Pi_2\mathrm{E})/_1$ and $\mathrm{ZPE}^{\mathrm{NP}}/_1$.
-The almost-everywhere, advice-free bound $\mathrm{S}_2\mathrm{E}\not\subseteq\text{i.o.-}\SIZE[2^n/n]$
-is due to Li~\cite{Li24}. $\ENP\subseteq\mathrm{S}_2\mathrm{E}$, so these classes lie above the
-one treated here.
-\item \emph{Fixed-polynomial bounds.} Kannan~\cite{Kannan82} showed that for each $k$,
+that linear size does not suffice. In contrast, \cref{thm:main} is superlinear, but conditional,
+and it holds only infinitely often.
+
+\paragraph{Near-maximum and fixed-polynomial bounds above $\ENP$.} Chen, Hirahara and
+Ren~\cite{CHR24} prove that $\mathrm{S}_2\mathrm{E}/_1\not\subseteq\SIZE[2^n/n]$. This gives the
+same near-maximum bounds for $\Sigma_2\mathrm{E}$, $(\Sigma_2\mathrm{E}\cap\Pi_2\mathrm{E})/_1$ and
+$\mathrm{ZPE}^{\mathrm{NP}}/_1$. The almost-everywhere, advice-free bound
+$\mathrm{S}_2\mathrm{E}\not\subseteq\text{i.o.-}\SIZE[2^n/n]$ is due to Li~\cite{Li24}.
+$\ENP\subseteq\mathrm{S}_2\mathrm{E}$, so these classes lie above the one treated here.
+Kannan~\cite{Kannan82} showed that for each $k$,
 $\Sigma_2\mathrm{P}\cap\Pi_2\mathrm{P}\not\subseteq\SIZE(n^k)$. Whether $\ENP\not\subseteq\SIZE(n^k)$
-for some fixed $k>1$ is open. Before the refutations, so was $\ENP\not\subseteq\SIZE(O(n))$.
-\item \emph{$\mathrm{NEXP}$ and linear size.} No superlinear lower bound for $\mathrm{NEXP}$ follows.
-JMV raise as an open problem the easy-witness strengthening of~\cite{IKW02} to linear-size
-circuits~\cite{JMV15}.
-\end{itemize}
+for some fixed $k>1$ is open. Before the refutations, so was $\ENP\not\subseteq\SIZE(O(n))$. In
+contrast, our class is $\ENP$ itself, and our bound is far below these sizes.
+
+\paragraph{The algorithmic method.} Williams~\cite[Lemma~3.2, Theorem~6.1]{Wil13} introduced the
+route we follow, and his $\mathrm{ACC}$ lower bounds~\cite{Wil14} and those of Murray and
+Williams~\cite{MW18} exploit counting or fast evaluation, for polynomial-size circuits. Jahanjou,
+Miles and Viola~\cite{JMV15} made the reduction local, which is what keeps the check circuit linear,
+and remark on the close correspondence between running times and circuit parameters; Ben-Sasson and
+Viola's instance $\ENP\not\subseteq\SIZE(3n)$ is quoted there. Below $\ENP$ one needs an easy-witness
+lemma~\cite{IKW02,MW18}, and JMV raise the strengthening of~\cite{IKW02} to linear-size circuits as an
+open problem. Chen, Lyu and Williams~\cite{CLW20} obtain almost-everywhere lower bounds for $\ENP$
+against $\mathrm{ACC}^0$. No superlinear lower bound for $\mathrm{NEXP}$ follows from our argument.
+Closest to our work are Williams' Theorem~6.1 and the constant-level remarks of JMV. In contrast, we
+substitute a subexponential rate and keep every overhead linear, which gives an explicit superlinear
+rate.
+
+\paragraph{The claimed refutations and formal proofs.} OpenAI~\cite{OpenAI26} and \A~\cite{Anthropic26}
+claim deterministic subexponential $\#$SAT algorithms, with Lean developments, under review. \A{}
+formalises the linear-size consequence (\cref{sec:formal}). Our earlier work~\cite{Tulsyan26} counts
+Hamiltonian cycles on top of \A's development. We use Lean~4~\cite{Lean4} and
+Mathlib~\cite{Mathlib20}. In contrast to \A's formal corollary, the Lean theorem here depends on the
+rate of the engine, not only on its $\delta$-form.
+
 So, conditionally, \cref{thm:main} is a superlinear lower bound with an explicit rate for a class
-below $\mathrm{S}_2\mathrm{E}$ over $B_2$, holding infinitely often. It is the first we know of,
-but we cannot rule out that it has been stated elsewhere.
+below $\mathrm{S}_2\mathrm{E}$ over $B_2$, holding infinitely often. To our knowledge no such bound
+was stated before, but we cannot rule out that it has been stated elsewhere.
 
 % =====================================================================
 \section{What these algorithms cannot give}\label{sec:limits}
 % =====================================================================
+
+In this section we explain where the route of \cref{sec:proof} stops with the claimed rates.
 
 \begin{itemize}
 \item \emph{Beyond $n\sqrt{\log n}$.} The check circuit and Tseitin's transformation are already
@@ -407,62 +648,30 @@ the algorithms is not used. The lower bounds of the algorithmic method that do e
 evaluation, such as those against $\mathrm{ACC}$ of Williams~\cite{Wil14} and
 Murray--Williams~\cite{MW18}, concern polynomial-size circuits and run into the previous item.
 \item \emph{Almost everywhere.} Chen, Lyu and Williams~\cite{CLW20} obtain almost-everywhere lower
-bounds for $\ENP$ (against $\mathrm{ACC}^0$) from non-trivial algorithms. Whether their machinery
-keeps the check circuit at $O(s)$ gates, so that it would give an almost-everywhere version of
-\cref{thm:main}, we have not checked. Their reductions involve PCPs, whose polylogarithmic overhead
-would absorb the $\sqrt{\log n}$.
+bounds for $\ENP$ (against $\mathrm{ACC}^0$) from non-trivial algorithms. We have not checked whether
+their machinery keeps the check circuit at $O(s)$ gates, so that it would give an almost-everywhere
+version of \cref{thm:main}. Their reductions involve PCPs, whose polylogarithmic overhead would
+absorb the $\sqrt{\log n}$.
 \item \emph{Restricted classes.} The algorithms are CNF algorithms, and the reduction goes through
 general circuits. The implied bounds for formulas or for log-depth circuits are no better than what
 \cref{thm:main} gives, and for formulas they are weaker than known bounds.
 \end{itemize}
 
 % =====================================================================
-\section{Formalisation status}\label{sec:formal}
-% =====================================================================
-
-Anthropic's Lean development~\cite{Anthropic26} proves the linear-size form,
-\[
-  \lean{ENP.CorCircuits}:\ \exists L,\ \lean{InENP}\ L\wedge\neg\,\lean{HasLinearCircuits}\ L,
-\]
-together with the infinitely-often variant \lean{CorCircuitsInf}. Its circuits are over $B_2$, and
-size is the number of gates. $\ENP$ is formalised with Mathlib \lean{FinTM2} oracle machines.
-The proof follows the route above, using the $\delta$-form of the engine (time $c\cdot2^{\delta N}$
-for every $\delta>0$) and lazy diagonalisation in place of \cref{imp:hier}. The statement
-\lean{HasCircuits}~$L$~$s$ is already parametric in $s$, but the module hard-wires both the size
-$c_0(m+1)$ and the time $2^{\delta N}$.
-
-\Cref{thm:main} is formally verified in Lean~4 on top of that module, in the public
-repository~\cite{TulsyanRepo26} (directory \texttt{lean-bridge-anthropic/bridge/EthFollowup/Circuits}, five
-files, 707 lines). The statement is
-\[
-\texttt{enp\_not\_size\_n\_sqrt\_log}:\quad
-\exists L\,\varepsilon,\ 0<\varepsilon \wedge \texttt{ENP.InENP}\,L \wedge
-\forall N\,\exists n,\ N\le n \wedge \neg\,\texttt{ENP.DecidedAt}\,L\,
-\lfloor \varepsilon\cdot n\cdot\sqrt{\log_2 n}\rfloor\, n ,
-\]
-together with the variants \lean{enp\_not\_hasCircuits\_n\_sqrt\_log} (the negation of the module's
-\lean{HasCircuits}) and \lean{enp\_not\_size\_n\_sqrt\_log\_shifted}. Here \lean{ENP.InENP},
-\lean{ENP.DecidedAt} and the circuit model are Anthropic's own definitions, and $L$ is their language
-\lean{CircuitLowerBound.L0}. The theorems depend only on the axioms \texttt{propext},
-\texttt{Classical.choice} and \texttt{Quot.sound}, and a fresh \texttt{leanchecker} replay of the full
-dependency closure passed. The three non-arithmetic points of the plan were resolved as follows: the rate
-solver is packaged as one padded polynomial-time function and turned into a Turing machine by
-Anthropic's own padded-host lemma, so no polynomial state bound is needed; the solver's count over the
-occurring variables is compared with zero directly; and the infinitely-often form is obtained by threading
-the threshold through the module's diagonalisation. The constant is
-$\varepsilon = 1/(4608(qG+1))$, where $q$ is the host's polynomial degree and $G$ the constant of the rate
-solver; it is existential because $q$ and $G$ are. \Cref{cor:openai} (the OpenAI form) is proved on paper
-only and is not claimed as machine-checked.
-
 \section{Limitations}\label{sec:limitations}
 % =====================================================================
 
-\begin{enumerate}[label=\textup{(\alph*)}]
-\item \emph{Conditional.} Everything is conditional on $(\mathrm{H}_{\mathrm{A}})$, or on
-$(\mathrm{H}_{\mathrm{O}})$ for \cref{cor:openai}. These are Turing-machine forms of the claimed
-theorems of \A{} and \Oa. Expert review of the manuscripts is pending, and if the hypotheses fail,
-the results lose their proofs. Our proofs are on paper, written with AI assistance, and not yet
-checked by a human.
+\begin{itemize}
+\item \emph{The result stands or falls with the claimed refutations.} The proofs on paper are
+conditional on $(\mathrm{H}_{\mathrm{A}})$, or on $(\mathrm{H}_{\mathrm{O}})$ for \cref{cor:openai}.
+These are Turing-machine forms of the claimed theorems of \A{} and \Oa. Expert review of the
+manuscripts is pending, and if the hypotheses fail, the results lose their proofs. The Lean theorem
+rests on Anthropic's development, built from source at the pinned commit, being sound.
+\item \emph{No human has checked the work.} Our proofs on paper and the Lean code were written with
+AI assistance and have not yet been checked by a human.
+\item \emph{Only the first part of \cref{thm:main} is machine-checked.} The condition
+$36aC\varepsilon<1$, the route through \cref{imp:hier,imp:jmv}, and \cref{cor:openai} are proved on
+paper only.
 \item \emph{$\varepsilon$ is not explicit.} It depends on the effective engine constant $C$,
 which is existential in \A{} and in its Lean statement, and on the constant $a$ of the reduction.
 No numerical value of $\varepsilon$ is claimed. The bound gives no meaningful statement at any
@@ -475,16 +684,125 @@ a sketch. The self-contained version is Anthropic's Lean module, for the linear 
 \item \emph{Literature.} The statements in \cref{sec:known} and all citations were checked against
 the primary sources (publisher records, arXiv, ECCC, the author's version of~\cite{Wil13}) on
 4~November~2026. We have not searched systematically for prior statements of \cref{thm:main}.
-\end{enumerate}
+\end{itemize}
 
 \section*{Acknowledgements}
-This work was done with AI assistance (Claude Code, Anthropic): the observation, the proofs, the
-referee check of the first draft and the literature checks were produced in sessions with Claude
-Code. Everything here has been checked against the primary sources as described, but awaits human
-expert review. Responsibility for any errors rests with the author. This note continues the
-project of~\cite{Tulsyan26}.
+This work was done with AI assistance (Claude Code, Anthropic): the observation, the proofs, the Lean
+development, the referee check of the first draft and the literature checks were produced in
+sessions with Claude Code. The Lean theorem is checked by the Lean kernel; everything else has been
+checked against the primary sources as described, but awaits human expert review. Responsibility for
+any errors rests with the author. This note continues the project of~\cite{Tulsyan26}.
 
-\bibliographystyle{amsplain}
-\bibliography{refs}
+\begin{thebibliography}{99}
+
+\bibitem{Anthropic26}
+Claude (Anthropic), \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, preprint dated 26~October 2026.
+Paper and Lean formalisation in the repository \url{https://github.com/anthropics/formal-math}, folder
+\texttt{eth}; we use commit \texttt{16a5ce41304fcdaea4e0be7c132e1c361dc26da5}.
+
+\bibitem{CHR24}
+L.~Chen, S.~Hirahara and H.~Ren, \emph{Symmetric exponential time requires near-maximum circuit
+size}, Proc. 56th Annual ACM Symposium on Theory of Computing (STOC 2024), 2024, pp.~1990--1999;
+ECCC TR23-144; arXiv:2309.12912. Journal version, with Z.~Li: J. ACM \textbf{73} (2026), no.~1,
+1--21.
+
+\bibitem{CLW20}
+L.~Chen, X.~Lyu and R.~R.~Williams, \emph{Almost-everywhere circuit lower bounds from non-trivial
+derandomization}, Proc. 61st Annual IEEE Symposium on Foundations of Computer Science (FOCS 2020),
+2020, pp.~1--12; ECCC TR20-150.
+
+\bibitem{FGHK16}
+M.~G.~Find, A.~Golovnev, E.~A.~Hirsch and A.~S.~Kulikov, \emph{A better-than-$3n$ lower bound for the
+circuit complexity of an explicit function}, Proc. 57th Annual IEEE Symposium on Foundations of
+Computer Science (FOCS 2016), 2016, pp.~89--98.
+
+\bibitem{IKW02}
+R.~Impagliazzo, V.~Kabanets and A.~Wigderson, \emph{In search of an easy witness: exponential time
+vs.\ probabilistic polynomial time}, J. Comput. System Sci. \textbf{65} (2002), no.~4, 672--694.
+
+\bibitem{JMV15}
+H.~Jahanjou, E.~Miles and E.~Viola, \emph{Local reductions}, Automata, Languages, and Programming
+(ICALP 2015), Part~I, Lecture Notes in Comput. Sci., vol.~9134, Springer, 2015, pp.~749--760.
+Numbering as in arXiv:1311.3171. Journal version: \emph{Local reduction}, Inform. and Comput.
+\textbf{261} (2018), 281--295.
+
+\bibitem{Kannan82}
+R.~Kannan, \emph{Circuit-size lower bounds and non-reducibility to sparse sets}, Inform. and Control
+\textbf{55} (1982), no.~1--3, 40--56.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The {L}ean 4 theorem prover and programming language}, Automated
+Deduction -- CADE 28, Lecture Notes in Comput. Sci., vol.~12699, Springer, 2021, pp.~625--635.
+
+\bibitem{Li24}
+Z.~Li, \emph{Symmetric exponential time requires near-maximum circuit size: simplified, truly
+uniform}, Proc. 56th Annual ACM Symposium on Theory of Computing (STOC 2024), 2024, pp.~2000--2007;
+arXiv:2310.17762.
+
+\bibitem{LY22}
+J.~Li and T.~Yang, \emph{$3.1n-o(n)$ circuit lower bounds for explicit functions}, Proc. 54th Annual
+ACM Symposium on Theory of Computing (STOC 2022), 2022, pp.~1180--1193; ECCC TR21-023.
+
+\bibitem{Mathlib20}
+The mathlib Community, \emph{The {L}ean mathematical library}, Proc. 9th ACM SIGPLAN International
+Conference on Certified Programs and Proofs (CPP 2020), 2020, pp.~367--381.
+
+\bibitem{MW18}
+C.~Murray and R.~Williams, \emph{Circuit lower bounds for nondeterministic quasi-polytime: an easy
+witness lemma for {NP} and {NQP}}, Proc. 50th Annual ACM Symposium on Theory of Computing (STOC
+2018), 2018, pp.~890--901. Journal version: SIAM J. Comput. \textbf{49} (2020), no.~5,
+STOC18-300--STOC18-322.
+
+\bibitem{OpenAI26}
+OpenAI, \emph{The {E}xponential {T}ime {H}ypothesis is false}, preprint dated 17~October 2026, revised
+25~October 2026. Paper and Lean formalisation in the repository \url{https://github.com/openai/math}.
+
+\bibitem{Tulsyan26}
+V.~Tulsyan, \emph{Counting {H}amiltonian cycles in sparse graphs in subexponential time, assuming the
+new $\#${SAT} algorithms}, Hexagon preprint hexagon:2610.00672v1, October 2026; source and Lean
+development at \url{https://github.com/xennygrimmato/eth-hamiltonicity}.
+
+\bibitem{TulsyanRepo26}
+V.~Tulsyan, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes}, public repository
+\url{https://github.com/xennygrimmato/eth-hamiltonicity}, 2026; Lean sources of this note in
+\repo{lean-bridge-anthropic/bridge/EthFollowup/Circuits/} as of commit \texttt{9e5dfc8}
+(\texttt{9e5dfc80579597271ee6e83c43d71e15ee6cb37e}).
+
+\bibitem{Wil13}
+R.~Williams, \emph{Improving exhaustive search implies superpolynomial lower bounds}, SIAM J. Comput.
+\textbf{42} (2013), no.~3, 1218--1244. Conference version in STOC 2010. Theorem numbers as in the
+author's version \url{https://people.csail.mit.edu/rrw/improved-algs-lbs2.pdf}.
+
+\bibitem{Wil14}
+R.~Williams, \emph{Nonuniform {ACC} circuit lower bounds}, J. ACM \textbf{61} (2014), no.~1, Art.~2,
+1--32.
+
+\bibitem{Zak83}
+S.~\v{Z}\'ak, \emph{A {T}uring machine time hierarchy}, Theoret. Comput. Sci. \textbf{26} (1983),
+no.~3, 327--333.
+
+\end{thebibliography}
+
+% =====================================================================
+% CITATION CHECK (4 November 2026).
+%  Crossref records fetched for: CHR24 (10.1145/3618260.3649624, pp. 1990-1999; JACM version
+%  10.1145/3778166, Chen, Hirahara, Li, Ren, J. ACM 73(1) 1-21, 2026), Li24 (10.1145/3618260.3649615,
+%  pp. 2000-2007), JMV15 (10.1007/978-3-662-47672-7_61, pp. 749-760; journal 10.1016/j.ic.2018.02.009,
+%  IC 261, 281-295), LY22 (10.1145/3519935.3519976, pp. 1180-1193), FGHK16 (10.1109/focs.2016.19,
+%  pp. 89-98), CLW20 (10.1109/focs46700.2020.00009, pp. 1-12), MW18 (10.1145/3188745.3188910,
+%  pp. 890-901; SICOMP 49(5) STOC18-300--322), Zak83 (10.1016/0304-3975(83)90015-4, TCS 26(3)
+%  327-333), Kannan82 (10.1016/s0019-9958(82)90382-5, IC 55(1-3) 40-56), IKW02
+%  (10.1016/s0022-0000(02)00024-7, JCSS 65(4) 672-694), Wil14 (10.1145/2559903, JACM 61(1) 1-32),
+%  Wil13 (10.1137/10080703x, SICOMP 42(3) 1218-1244).
+%  Content: arXiv abstracts of 2309.12912 and 2310.17762 (the S2E statements); arXiv 1311.3171
+%  full text (Theorem 1, Corollaries 2 and 3, the open problem, the "close correspondence" quote,
+%  the Ben-Sasson--Viola 2^{1/10} instance, the (x,i) input of length 2n+O(log n) in Section 6);
+%  Williams' author version (Theorem 6.1, Lemma 3.2, the "not known for this class" quote, the
+%  O(2^{3n}) tableau and "O(cn) wires and 3n+O(1) inputs"); Anthropic's paper.pdf at the pinned
+%  commit (Theorem 1, Corollary 11, Section 7).
+%  Anthropic26, OpenAI26, Tulsyan26, Lean4, Mathlib20: audited entries of the earlier notes
+%  (research/citation-audit.md). TulsyanRepo26: commit from `git log -1 --format=%h --
+%  lean-bridge-anthropic/bridge/EthFollowup/Circuits` = 9e5dfc8.
+% =====================================================================
 
 \end{document}

@@ -32,6 +32,7 @@
 \theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{example}{Example}
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
 
@@ -56,6 +57,10 @@
 \newcommand{\amp}[3]{\langle #1|#2|#3\rangle}
 \newcommand{\A}[1][]{\textup{[A\if\relax\detokenize{#1}\relax\else, #1\fi]}}
 \newcommand{\Oa}[1][]{\textup{[O\if\relax\detokenize{#1}\relax\else, #1\fi]}}
+% Lean names: typewriter, with line breaks allowed after '.' and '_'.
+\DeclareUrlCommand\lean{\urlstyle{tt}\def\UrlBreaks{\do\.\do\_}\def\UrlBigBreaks{}}
+% Repository paths: typewriter, with line breaks allowed after '/' and '-'.
+\DeclareUrlCommand\repo{\urlstyle{tt}\def\UrlBreaks{\do\/\do\-\do\_}\def\UrlBigBreaks{}}
 
 \begin{document}
 
@@ -63,34 +68,35 @@
 
 \author{Vaibhav Tulsyan}
 
-\date{October 2026}
+\date{November 2026}
 
 \subjclass[2020]{68Q12, 68Q25, 81P68}
 \keywords{Quantum circuit simulation, strong simulation, Exponential Time Hypothesis, fine-grained complexity, quantum supremacy, tensor networks, Clifford+T}
 
 \begin{abstract}
-In October 2026 OpenAI and Anthropic claimed deterministic subexponential-time algorithms for
-$\#k$-SAT, refuting the Exponential Time Hypothesis. We record a corollary for quantum circuits.
-Assuming three internal results of the Anthropic manuscript, the amplitude $\amp{y}{C}{x}$ of a
-Clifford+T circuit with $G$ two-qubit gates in arbitrary connectivity and $G_1$ single-qubit gates
-can be computed exactly, as an element of $\Z[\omega]/\sqrt2^{\,k}$ with $\omega=e^{i\pi/4}$, by
-one deterministic Turing machine in time $2^{O(G/\sqrt{\log G})}$ whenever the input length $L$
-satisfies $\log L\le G^{0.9}$; this theorem is formally verified in Lean on top of the Anthropic
-manuscript's own Lean development (sources at \url{https://github.com/xennygrimmato/eth-hamiltonicity}). On paper, the same method gives exact marginals and hence
-exact sampling, and depth-$d$ circuits in $2^{O(dn/\sqrt{\log n})}$. Through OpenAI's
-tensor-contraction theorem the bounds hold in polynomial space when the number of Hadamard-type
-gates is $O(G)$. The proof is a sum over paths with one bit per wire segment, read as an
-Anthropic-type network, with a Kronecker substitution for $\Z[\omega]$ and a Galois bound on the
-coefficients. Conversely, constant-depth circuits with $O(n)$ gates encode $\#3$-SAT with $O(n)$
-clauses, so the rate matches that of the refutations. We check the fine-grained
-quantum-supremacy conjectures of Morimae--Tamaki, Dalzell--Harrow--Koh--La Placa,
-Huang--Newman--Szegedy, Aaronson--Chen and Buhrman--Patro--Speelman against their sources and
-record which are refuted, which lose their premise, and which survive; a counting form of the
-Calabro--Impagliazzo--Paturi width reduction refutes the gap conjecture of Morimae and Tamaki's
-depth-scaling paper. Dense statements (cubic phases, permanents, random circuits) survive, and we
-explain why. Nothing here concerns
-approximate sampling, the constants are galactic, and everything is conditional on the claimed
-refutations, which are under review.
+Part of the case for quantum computational supremacy rests on fine-grained hypotheses: lower bounds
+on classical simulation are derived from the Exponential Time Hypothesis (ETH) and its relatives.
+However, in October 2026 OpenAI and Anthropic claimed deterministic subexponential-time algorithms for
+$\#k$-SAT, refuting ETH, and neither manuscript mentions quantum circuits. We record the corollary.
+Assuming three internal results of the Anthropic manuscript, one deterministic Turing machine computes
+the amplitude $\amp{y}{C}{x}$ of a Clifford+T circuit with $G$ two-qubit gates in arbitrary
+connectivity exactly, as an element of $\Zw/\sqrt2^{\,k}$ with $\omega=e^{i\pi/4}$, in time
+$2^{O(G/\sqrt{\log G})}$ whenever the input length $L$ satisfies $\log L\le G^{0.9}$. The proof reads
+the sum over paths, with one bit per wire segment, as an Anthropic-type network, with a Kronecker
+substitution for $\Zw$ and a Galois bound on the coefficients. We machine-check this theorem in
+Lean~4 (\texttt{amplitude\_TM\_rate'}, \texttt{amplitude\_TM\_rate}, \texttt{amplitude\_TM}; axioms
+\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}) on top of Anthropic's Lean
+development (sources at \url{https://github.com/xennygrimmato/eth-hamiltonicity}). On paper only,
+the method gives exact marginals and hence exact sampling, depth-$d$ circuits in
+$2^{O(dn/\sqrt{\log n})}$, and, through OpenAI's tensor-contraction theorem, polynomial space when
+the number of Hadamard-type gates is $O(G)$. Conversely, constant-depth circuits with $O(n)$ gates
+encode $\#3$-SAT with $O(n)$ clauses, so the rate matches that of the refutations. We check the
+fine-grained supremacy conjectures of Morimae--Tamaki, Dalzell--Harrow--Koh--La Placa,
+Huang--Newman--Szegedy, Aaronson--Chen and Buhrman--Patro--Speelman against their sources; a
+counting form of the Calabro--Impagliazzo--Paturi width reduction refutes the gap conjecture of
+Morimae and Tamaki's depth-scaling paper. Dense statements (cubic phases, permanents, random circuits)
+survive. Nothing here concerns approximate sampling, the constants are galactic, and everything is
+conditional on the claimed refutations, which are under review.
 \end{abstract}
 
 \maketitle
@@ -100,12 +106,17 @@ refutations, which are under review.
 \section{Introduction}\label{sec:intro}
 % =====================================================================
 
-\subsection{Background}
+Part of the case for ``quantum computational supremacy'' rests on fine-grained hypotheses.
+Morimae and Tamaki~\cite{MT19a,MT19b,MT20}, Huang, Newman and Szegedy~\cite{HNS18,HNS19} and
+Dalzell, Harrow, Koh and La Placa~\cite{DHKL20} derive lower bounds on the classical simulation of
+quantum circuits from ETH, SETH and relatives. They usually do so by writing $\#\mathrm{SAT}$, or the
+gap $\gap(f)=\sum_x(-1)^{f(x)}$ of a Boolean function, as a circuit amplitude.
 The Exponential Time Hypothesis (ETH) of Impagliazzo and Paturi~\cite{ImpagliazzoPaturi01}
 asserts that there is $\delta>0$ such that $3$-SAT on $n$ variables cannot be solved in time
 $O(2^{\delta n})$; by the sparsification lemma~\cite{IPZ01} it is equivalent to the same statement
 for the number $m$ of clauses.
-In October 2026 two manuscripts appeared, by OpenAI~\cite{OpenAI26} and by
+
+However, in October 2026 two manuscripts appeared, by OpenAI~\cite{OpenAI26} and by
 Anthropic~\cite{Anthropic26}, each claiming a deterministic algorithm that counts the satisfying
 assignments of a $k$-CNF in subexponential time, and hence a refutation of ETH. Both come with
 Lean~4 formalisations of their top-level statements. These are \emph{claimed} results, still
@@ -114,16 +125,15 @@ of \A{} counts the models of a $k$-CNF with $m$ clauses on $n$ variables determi
 $2^{O(\min\{km/\sqrt{\log m},\;k^2n\log\log n/\sqrt{\log n}\})}$; the main theorem of \Oa{} does
 so in $(n+m)^{O_k(1)}2^{O_k(n\log\log n/\sqrt{\log n})}$ bit operations and polynomial space, and
 in $2^{O_{k,D}(n/\sqrt{\log n})}$ when $m\le Dn$.
+Neither manuscript mentions quantum circuits (\cref{sec:related}). So we ask the converse question:
+what do the new algorithms give for the classical simulation of quantum circuits, and which of the
+lower bounds above survive? For depth $d=O(1)$ in arbitrary connectivity we know of no previous
+$2^{o(n)}$ exact method: the interaction graph of such a circuit can be a bounded-degree expander,
+whose treewidth is $\Theta(n)$.
 
-A part of the case for ``quantum computational supremacy'' rests on fine-grained hypotheses of
-exactly this kind. Morimae and Tamaki~\cite{MT19a,MT19b,MT20}, Huang, Newman and
-Szegedy~\cite{HNS18,HNS19} and Dalzell, Harrow, Koh and La Placa~\cite{DHKL20} derive lower
-bounds on the classical simulation of quantum circuits from ETH, SETH and relatives, usually by
-writing $\#\mathrm{SAT}$ or the gap $\gap(f)=\sum_x(-1)^{f(x)}$ of a Boolean function as a circuit
-amplitude. The question we ask is the converse: what do the new algorithms give for the classical
-simulation of quantum circuits, and which of these lower bounds survive?
-
-\subsection{Results}
+\subsection{The problem and a running example}
+We consider the \emph{exact amplitude problem}: given a circuit $C$ and basis states $x,y$, output
+$\amp{y}{C}{x}$ exactly, as an element of a fixed number ring. We fix the setting as follows.
 A circuit $C$ acts on $n$ qubits and is a sequence of gates from the set
 \[
   \cG=\{H,T,T^\dagger,S,S^\dagger,X,Z\}\cup\{\mathrm{CNOT},\mathrm{CZ},\mathrm{CS},\mathrm{SWAP},\mathrm{CH}\}.
@@ -136,6 +146,31 @@ otherwise (for $\mathrm{CH}$, $N=\mathrm{diag}(\sqrt2,\sqrt2)\oplus\left(\begin{
 $k(C):=\sum_U\kappa_U$, the number of $H$ and $\mathrm{CH}$ gates. Running times are counted as in
 \A: operations on words long enough to hold an address, plus table queries; all logarithms are to
 base~$2$. The input has length $\poly(n+G+G_1)$.
+
+\begin{example}[Running example]\label{ex:bell}
+Let $C$ act on $n=2$ qubits: first $H$ on qubit~$1$, then $\mathrm{CNOT}$ with control~$1$ and
+target~$2$, then $\mathrm{CZ}$. So $G=2$, $G_1=1$ and $k(C)=1$. The state before $\mathrm{CZ}$ is
+$(\ket{00}+\ket{11})/\sqrt2$, so $\amp{11}{C}{00}=-1/\sqrt2$, that is, $(a_0,a_1,a_2,a_3)=(-1,0,0,0)$
+over $\sqrt2^{\,1}$. Each qubit line runs from the first two-qubit gate to the second, so it carries
+one \emph{wire segment} between them. The amplitude is therefore a sum over the $2^2$ values of the
+two segment bits; we return to this in \cref{ex:bell-net}.
+\end{example}
+
+\subsection{The naive routes and the principle}
+At first one might use a known exact method (\cref{tab:sota}). The Feynman path sum takes time
+$2^{O(G)}$. Tensor contraction~\cite{MarkovShi08} takes time $2^{O(\mathrm{tw})}$, and
+$\mathrm{tw}=\Theta(n)$ is possible at $d=O(1)$. So neither is $2^{o(n)}$ for shallow circuits on
+expanders. Instead, we rely on a different principle: \emph{a qubit circuit is a sum over binary
+variables, one per wire segment, coupled by bounded-arity local tables, so it has $O(G)$ shared bits;
+that is the kind of input the network engine of \A{} consumes, whatever the connectivity.} What
+remains is arithmetic. Amplitudes live in $\Zw$, which is not a subring of $\Z$, nor of the
+truncated $2$-adic ring of \Oa. A Kronecker substitution maps $\Zw$ to $\Z/(2^{4b}+1)\Z$
+injectively on a box (\cref{lem:kron}), and a Galois-conjugate bound shows that the answer lies in
+the box (\cref{lem:galois}).
+
+\subsection{What we prove}
+We use the following hypotheses, which name exactly what we import from the two manuscripts
+(\cref{sec:imported}).
 
 \begin{hypA}
 The following statements of \A{} hold as stated there: Lemma~8, case~(i) (the reduction from
@@ -165,7 +200,7 @@ and for every $\delta>0$ there is a machine running within $\lfloor c_\delta\,2^
 the proof below also gives $2^{cG/\sqrt{\log G}}\poly(n+G_1)$ under the weaker condition
 $\log(G_1+2)\le G^{0.9}$, but that variant is not machine-checked and not claimed.
 
-\begin{theorem}[Polynomial space; written proof, not machine-checked]\label{thm:openai}
+\begin{theorem}[Polynomial space; proved on paper only]\label{thm:openai}
 Assume $(\mathrm{H}_{\mathrm{O}})$. Put $s:=\max\{4G,\,k(C),\,4\}$. The output of
 \cref{thm:main} can be computed in $\poly(n+G+G_1)\,2^{O(s/\sqrt{\log s})}$ bit operations and
 $\poly(n+G+G_1)$ bits of space. In particular, if $k(C)=O(G)$ (for example, if the number of
@@ -173,7 +208,7 @@ $H$ and $\mathrm{CH}$ gates is $O(G)$), the time is $2^{O(G/\sqrt{\log G})}\poly
 space is polynomial.
 \end{theorem}
 
-\begin{corollary}[Marginals and exact sampling; written proof, not machine-checked]\label{cor:marginals}
+\begin{corollary}[Marginals and exact sampling; proved on paper only]\label{cor:marginals}
 Assume $(\mathrm{H}_{\mathrm{A}})$, and let $C,x$ be as in \cref{thm:main}. For every
 $S\subseteq[n]$ and $y_S\in\{0,1\}^S$, the marginal probability
 $p(y_S)=\sum_{y_{[n]\setminus S}}|\amp{y}{C}{x}|^2$ can be computed exactly, as
@@ -184,13 +219,13 @@ $n\cdot2^{c'G/\sqrt{\log G}}\poly(n+G_1)$. Under $(\mathrm{H}_{\mathrm{O}})$ the
 polynomial space when $k(C)=O(G)$.
 \end{corollary}
 
-\begin{corollary}[Constant and slowly growing depth]\label{cor:depth}
+\begin{corollary}[Constant and slowly growing depth; proved on paper only]\label{cor:depth}
 Assume $(\mathrm{H}_{\mathrm{A}})$. Amplitudes, marginals and exact samples of depth-$d$ circuits
 over $\cG$ on $n\ge4$ qubits can be computed within $2^{O(dn/\sqrt{\log n})}$ operations; the
 exponent is $o(n)$ whenever $d=o(\sqrt{\log n})$.
 \end{corollary}
 
-\begin{proposition}[The rate is that of $\#3$-SAT]\label{prop:tight}
+\begin{proposition}[The rate is that of $\#3$-SAT; proved on paper only]\label{prop:tight}
 There is a polynomial-time map from $3$-CNFs $\varphi$ with $n$ variables and $m$ clauses to
 circuits $C_\varphi$ over $\cG$ of depth $O(1)$ with $O(n+m)$ qubits and $O(n+m)$ gates, and to
 an integer $n'$, such that $\amp{0}{C_\varphi}{0}=\#\varphi/2^{n'}$. Hence an algorithm for exact
@@ -225,65 +260,76 @@ geometrically local, dim.\ $\ge2$ & subexponential in $G$ & -- & \cite{WahlStrel
 \end{tabular}
 \end{table}
 
-For depth $d=O(1)$ in arbitrary connectivity we know of no previous $2^{o(n)}$ exact method:
-the interaction graph of such a circuit can be a bounded-degree expander, whose treewidth is
-$\Theta(n)$. Against the polynomial-space bound $(2d)^{O(n)}=2^{O(n\log d)}$ of Aaronson and
+Against the polynomial-space bound $(2d)^{O(n)}=2^{O(n\log d)}$ of Aaronson and
 Chen~\cite{AC17}, \cref{thm:openai} gives $2^{O(dn/\sqrt{\log n})}$ in the worst case $G=\Theta(dn)$,
 which is asymptotically smaller only when $d/\log d=O(\sqrt{\log n})$.
 
-\subsection{Contrast with BosonSampling}
-BosonSampling amplitudes are permanents of $n\times n$ submatrices of Haar-random
-unitaries~\cite{AaronsonArkhipov13}, and Ryser's $2^n\poly(n)$ formula~\cite{Ryser63} is still
-essentially the best exact method (for matrices of $\poly(n)$-bit integers it has been improved
-only to $2^{n-\Omega(\sqrt{n/\log n})}$~\cite{Bjorklund16}). Nothing above applies to them. A qubit circuit is a sum over \emph{binary}
-variables, one per wire segment, coupled by bounded-arity local tables, so it has $O(G)$ shared
-bits. A dense permanent is a sum over \emph{permutations}; written as an interferometer it has
-$\Theta(m^2)$ beam splitters on modes carrying up to $n$ photons, and any local encoding seems to
-need about $\log n$ bits per row. Informal notes in the project repository, not claimed here, show that
-``row-local'' networks for the permanent in the model of \A{} (rows grouped into clusters of at
-most $s$) have total at least $n\log(n/s)$, too much for the engine to beat $2^n$; only sparse
-matrices go through. The conjecture per-int-NSETH of~\cite{DHKL20} is therefore
-untouched (\cref{sec:table}).
-
-\subsection{What this does not do}
+\subsection{Contributions}
+Our contributions are:
 \begin{itemize}
-\item \emph{Approximate sampling; many gates.} Random-circuit sampling rests on the non-collapse
-of the polynomial hierarchy and on average-case conjectures about approximate amplitudes (QUATH,
-HOG~\cite{AC17}) for circuits with $G\ge n^2$ gates; none of this is touched. For
-$G\ge n\sqrt{\log n}$ the bound is no better than $2^n$.
-\item \emph{Practical simulation.} The constants are galactic. Using \A[Theorem~A(a)] with the
-smallest admissible $x_0=18$, the leading term of the exponent is $e_\ell U$ with $U\approx4G$
-when most wire segments cross the partition, and
-$15/\sqrt{\log G}\le e_\ell\le114/\sqrt{\log G}$ at the level chosen in \cref{sec:time}. For
-depth $d$, so $G\approx dn/2$, the leading term alone is below $n$ only if $\log n$ exceeds
-roughly $900\,d^2$ (with the lower estimate) to $5.2\cdot10^4\,d^2$ (with the upper one), and
-lower-order terms only make this worse. \Oa{} gives no explicit constants. Experiments with
-$50$ to $1000$ qubits are not affected.
+\item We prove that one deterministic Turing machine outputs the exact amplitudes of Clifford+T
+circuits with $G$ two-qubit gates in time $2^{O(G/\sqrt{\log G})}$, assuming $(\mathrm{H}_{\mathrm{A}})$
+(\cref{thm:main}, \cref{sec:proof}), and we machine-check this theorem in Lean on top of \A's
+development (\cref{sec:formalisation}).
+\item We give the route through \Oa{} in polynomial space, and show that its restriction $k(C)=O(G)$
+comes from the precision cap of \Oa's ring (\cref{thm:openai}, \cref{sec:openai}).
+\item We derive exact marginals, exact sampling and the depth-$d$ bound, and prove a converse
+reduction from $\#3$-SAT, so a better rate here would improve the rate of \A{} for $m=O(n)$
+(\cref{cor:marginals,cor:depth,prop:tight}, \cref{sec:corollaries}).
+\item We check the fine-grained supremacy statements we found, $24$ rows in all, against their primary
+sources, and record which are refuted, which lose their premise and which survive; for this we prove a
+counting form of the width reduction of Calabro, Impagliazzo and Paturi (\cref{lem:width},
+\cref{sec:table}).
+\item We explain why cubic phases resist the clause-count-free bound of \A, and prove the weaker
+$2$-adic truncation that does transfer (\cref{prop:2adic}, \cref{sec:cubic}).
+\item We check the reductions in exact arithmetic on random small circuits (\cref{sec:verification}).
 \end{itemize}
+Mathematically, \cref{thm:openai} is an immediate corollary of the appendix theorem of \Oa, which
+contracts Boolean tensor networks with one-bit wires: anyone who reads that theorem next to Markov and
+Shi will see it. What we add is the care needed to make it a theorem: the coefficient ring, the
+precision, which comes from \cref{lem:galois}, the resulting restriction $k(C)=O(G)$ in the route
+through \Oa{} and its absence in the route through \A, marginals and exact sampling, the converse
+reduction, the check of the literature, and the analysis of cubic phases. We claim the careful
+statement and proof, not the idea.
 
-\subsection{What is new here, and what is not}
-Neither manuscript mentions quantum circuits: in the source of \Oa{} the words ``quantum'',
-``qubit'' and ``amplitude'' do not occur, and \A{} mentions tensor networks, including Markov and
-Shi's paper on simulating quantum computation by tensor contraction~\cite{MarkovShi08}, only in
-its related work. Nor did we find the corollary in the press or discussion threads we searched.
-Mathematically, however, \cref{thm:openai} is an immediate corollary of
-the appendix theorem of \Oa, which contracts Boolean tensor networks with one-bit wires: anyone
-who reads that theorem next to Markov and Shi will see it. What we add is the care needed to make
-it a theorem: the coefficient ring ($\Zw$ is not a subring of $\Z$, nor of the truncated $2$-adic
-ring of \Oa), the precision needed, which comes from a Galois-conjugate bound
-(\cref{lem:galois}), the resulting restriction $k(C)=O(G)$ in the route through \Oa{} and its
-absence in the route through \A, marginals and exact sampling, the converse reduction, the
-check of the fine-grained supremacy literature against the primary sources
-(\cref{sec:table}), including a counting form of the width reduction of Calabro, Impagliazzo and
-Paturi (\cref{lem:width}), and the analysis of cubic phases (\cref{sec:cubic}). We claim the
-careful statement and proof, not the idea.
+\subsection{Status of each claim}\label{sec:status}
+We separate four kinds of claim.
+\emph{Machine-checked in Lean}: \cref{thm:main} only, as \lean{EthFollowup.Quantum.amplitude_TM_rate'}
+(the bound under the condition on $L$), \lean{EthFollowup.Quantum.amplitude_TM_rate} (all circuits) and
+\lean{EthFollowup.Quantum.amplitude_TM} (every $\delta>0$), with the axioms \lean{propext},
+\lean{Classical.choice} and \lean{Quot.sound} only. The sources are in our public
+repository~\cite{TulsyanRepo26}, \url{https://github.com/xennygrimmato/eth-hamiltonicity}, at commit
+\texttt{ca17a37} (\cref{sec:formalisation}). The bound under the condition on $L$ and the bound for all circuits are
+separate Lean theorems; the Lean proof of the former reuses the machine of the latter, so one machine
+gives both. In Lean, $(\mathrm{H}_{\mathrm{A}})$ is not a
+hypothesis: \A's Lean development proves the forms of the three imported results that our Lean proof
+uses (\cref{sec:imported}), and the kernel checks them together with ours.
+\emph{Proved on paper only}: everything else, in particular \cref{thm:openai},
+\cref{cor:marginals,cor:depth}, \cref{prop:tight}, \cref{lem:width}, \cref{cor:density},
+\cref{prop:2adic} and the entries of \cref{tab:conj}. We do not claim these as machine-checked.
+\emph{Assumed}: on paper, $(\mathrm{H}_{\mathrm{A}})$, $(\mathrm{H}_{\mathrm{O}})$ or the main theorem
+of \A{} or \Oa, as each result states; in Lean, nothing beyond the three axioms. Either way the results
+stand or fall with the claimed refutations (\cref{sec:limitations}). The bound after
+\cref{prop:2adic} is a sketch and is not claimed.
+\emph{Checked numerically}: the reductions of \cref{sec:proof,sec:openai,sec:corollaries} and
+\cref{prop:2adic}, in exact arithmetic on circuits with $n\le6$ and $G\le20$
+(\cref{sec:verification}); the running example is checked by hand.
+
+\subsection*{Outline}
+\Cref{sec:imported} recalls the imported results. \Cref{sec:proof} proves \cref{thm:main},
+\cref{sec:openai} gives the route through \Oa, and \cref{sec:corollaries} the corollaries and the
+converse. \Cref{sec:table} checks the fine-grained supremacy literature, and \cref{sec:cubic} treats
+cubic phases. \Cref{sec:related,sec:limitations,sec:verification} give related work, limitations,
+and the numerical checks and the formalisation.
 
 % =====================================================================
 \section{The imported results}\label{sec:imported}
 % =====================================================================
 
-We recall the definitions and results of \A{} that we use, in its notation except where a letter
-clashes with ours, as in~\cite{Tulsyan26}. Conventions of \A: $\log=\log_2$ and
+In this section we recall the definitions and results of \A{} and \Oa{} that we use, in the
+notation of \A{} except where a letter clashes with ours, as in~\cite{Tulsyan26}. We state them
+exactly as we use them, so that $(\mathrm{H}_{\mathrm{A}})$ and $(\mathrm{H}_{\mathrm{O}})$ can be
+checked against the sources. Conventions of \A: $\log=\log_2$ and
 $[x=u]\in\{0,1\}$.
 
 \begin{definition}[{\A[Definition~1]}]\label{def:factor}
@@ -374,8 +420,12 @@ of \cref{thm:main} applies them directly to the circuit network (\cref{sec:forma
 appendix of \Oa{} is not formalised, so \cref{thm:openai} is proved on paper only.
 
 % =====================================================================
-\section{Proof of \texorpdfstring{\cref{thm:main}}{Theorem 1.1}}\label{sec:proof}
+\section{Proof of \texorpdfstring{\cref{thm:main}}{Theorem 1.1}: one bit per wire segment}\label{sec:proof}
 % =====================================================================
+
+In this section we write the amplitude as a sum over the bits of the wire segments
+(\cref{sec:paths}), map its coefficients from $\Zw$ into the integers, read the sum as a network
+in the sense of \A{} (\cref{sec:network}), and bound the running time (\cref{sec:time}).
 
 \subsection{The sum over paths on wire segments}\label{sec:paths}
 For a qubit $q$ let $\gamma_{q,1},\dots,\gamma_{q,r_q}$ be the two-qubit gates acting on $q$, in
@@ -471,6 +521,16 @@ which factors through $c_{a,b}:=\#\{e\text{ crossing between }a\text{ and }b\}$ 
 \cref{def:factor}, with $f_{a,b}\in\{0,1\}$.
 \end{definition}
 
+\begin{example}[Running example, continued]\label{ex:bell-net}
+In \cref{ex:bell} both lines are touched, so there are no untouched scalars. The merged gates are
+$\hat\Gamma_1=\mathrm{CNOT}\,(H\otimes I)$, with $\hat\kappa_1=1$, and $\hat\Gamma_2=\mathrm{CZ}$, and
+there are $s_0=2G-n_t=2$ segments. Since $\hat N_1[\sigma,00]=1$ for $\sigma\in\{00,11\}$ and $0$
+otherwise, and $\mathrm{CZ}[11,11]=-1$, \cref{lem:paths} gives $A=-1$ and $\amp{11}{C}{00}=-1/\sqrt2$.
+Take $g=2$, $V_1=\{1\}$ and $V_2=\{2\}$. Both segments cross, so $P_1=P_2=c_{1,2}=2$ and
+$U=4\le4G$. Here $k_t=1$, so $b=3$ and $M_b=2^{12}+1$. The value of the network is
+$Z=\sum_{\sigma}W_1(\sigma)W_2(\sigma)=-1$, and \cref{lem:kron} decodes $A=-1$.
+\end{example}
+
 \begin{proposition}[Parameters and value]\label{prop:params}
 Let $P:=4\lceil G/g\rceil+1$, $B:=3b+2+4\lceil G/g\rceil+\lceil k_t/2\rceil$ and
 $\tau:=2^{2\lceil G/g\rceil}\poly(G,k(C))$. Then $\mathcal N=\mathcal N(C,x,y,(V_a),b)$ is a
@@ -552,9 +612,10 @@ quasi-polynomial in the input length. The route through \A{} is exact whatever $
 
 
 % =====================================================================
-\section{The route through \texorpdfstring{\Oa}{[O]}: proof of \texorpdfstring{\cref{thm:openai}}{Theorem 1.2}}\label{sec:openai}
+\section{The route through \texorpdfstring{\Oa}{[O]}: polynomial space when \texorpdfstring{$k(C)=O(G)$}{k(C)=O(G)}}\label{sec:openai}
 % =====================================================================
 
+In this section we prove \cref{thm:openai}.
 We check the hypotheses of \cref{imp:tensor} one by one, with $s=\max\{4G,k(C),4\}$ and $C=4$.
 
 \begin{itemize}
@@ -585,8 +646,11 @@ When $k(C)\gg G$ we see no way around the precision cap inside \Oa's ring: the n
 two-qubit Clifford+T unitary can need arbitrarily many bits.
 
 % =====================================================================
-\section{Corollaries and the converse}\label{sec:corollaries}
+\section{Corollaries, and why the rate is that of \texorpdfstring{$\#3$}{\#3}-SAT}\label{sec:corollaries}
 % =====================================================================
+
+In this section we prove \cref{cor:marginals,cor:depth} and the converse reduction,
+\cref{prop:tight}.
 
 \subsection{Marginals: the doubled network}
 \begin{proof}[Proof of \cref{cor:marginals}, marginals]
@@ -773,7 +837,7 @@ cost linear in the number of gates) extrapolate from the dense worst case to a s
 is asymptotically $2^{O(n/\sqrt{\log n})}$ under the refutations; at $n=208$ this has no force.
 
 % =====================================================================
-\section{Cubic phases}\label{sec:cubic}
+\section{Cubic phases: only a \texorpdfstring{$2$}{2}-adic truncation transfers}\label{sec:cubic}
 % =====================================================================
 
 Let $f=\sum_{t\in T}m_t$ over $\mathbb F_2$, with $m_t$ monomials of degree at most $3$ in $n$
@@ -795,7 +859,7 @@ assignments with many ``violated'' monomials carry a non-zero total in general. 
 on random instances (check C4 in \cref{sec:verification}). What does transfer is a weaker,
 $2$-adic truncation.
 
-\begin{proposition}[$2$-adic truncation; proved]\label{prop:2adic}
+\begin{proposition}[$2$-adic truncation; proved on paper]\label{prop:2adic}
 For $S\subseteq T$ let $V(S)$ be the set of variables occurring in the monomials of $S$.
 \begin{enumerate}[label=\textup{(\alph*)}]
 \item $\gap(f)=\sum_{S\subseteq T}(-2)^{|S|}\,2^{n-|V(S)|}$.
@@ -829,39 +893,101 @@ $m$-independent would decide dense poly3-NONBALANCED in $2^{o(n)}$ and refute po
 for every $a$; we record it as a target, not a result.
 
 % =====================================================================
+\section{Related work}\label{sec:related}
+% =====================================================================
+
+We organise related work by idea: fine-grained supremacy, exact strong simulation, the counting
+engines, and permanents.
+
+\paragraph{Fine-grained supremacy from ETH and SETH.} Morimae and Tamaki~\cite{MT19a,MT19b,MT20},
+Huang, Newman and Szegedy~\cite{HNS18,HNS19} and Dalzell, Harrow, Koh and La Placa~\cite{DHKL20}
+derive lower bounds on classical simulation from ETH, SETH, NSETH and their relatives. Aaronson and
+Chen~\cite{AC17} base random-circuit sampling on QUATH and HOG, and Buhrman, Patro and
+Speelman~\cite{BPS19} formulate quantum analogues of SETH. In contrast, we go in the converse
+direction: we assume the refutations and ask which of these statements survive (\cref{sec:table}).
+
+\paragraph{Exact strong simulation.} The state vector and the Feynman path sum are folklore; Aaronson
+and Chen~\cite[Thm.~4.1]{AC17} give a recursive polynomial-space method. Markov and
+Shi~\cite{MarkovShi08} contract tensor networks in time exponential in the treewidth, and Wahl and
+Strelchuk~\cite{WahlStrelchuk} obtain time subexponential in the number of gates for geometrically
+local circuits in dimension at least $2$. For circuits with $t$ $T$ gates, stabilizer-rank methods run
+in time exponential in $t$~\cite{BSS16,BravyiGosset16,QPG21}. These methods are unconditional and,
+unlike ours, some are practical. In contrast, our bound is subexponential in $G$ in arbitrary
+connectivity, but it is conditional and galactic (\cref{tab:sota}).
+
+\paragraph{The counting engines.} OpenAI~\cite{OpenAI26} and \A~\cite{Anthropic26} claim deterministic
+subexponential $\#$SAT algorithms, with Lean developments, under review. Our earlier
+work~\cite{Tulsyan26} counts Hamiltonian cycles on top of \A's development, and we reuse its
+conventions. Neither manuscript mentions quantum circuits: in the source of \Oa{} the words
+``quantum'', ``qubit'' and ``amplitude'' do not occur, and \A{} mentions tensor networks, including
+Markov and Shi's paper on simulating quantum computation by tensor contraction~\cite{MarkovShi08},
+only in its related work. Nor did we find the corollary in the press or discussion threads we
+searched. Closest to our work is the appendix theorem of \Oa{} (\cref{imp:tensor}), of which
+\cref{thm:openai} is an immediate corollary. In contrast, we work out the coefficient ring and the
+precision, take the route through \A{} that avoids the restriction $k(C)=O(G)$, and machine-check that
+route.
+
+\paragraph{Permanents and BosonSampling.} BosonSampling amplitudes are permanents of $n\times n$
+submatrices of Haar-random unitaries~\cite{AaronsonArkhipov13}, and Ryser's $2^n\poly(n)$
+formula~\cite{Ryser63} is still essentially the best exact method (for matrices of $\poly(n)$-bit
+integers it has been improved only to $2^{n-\Omega(\sqrt{n/\log n})}$~\cite{Bjorklund16}). Nothing
+above applies to them. A qubit circuit is a sum over \emph{binary} variables, one per wire segment,
+coupled by bounded-arity local tables, so it has $O(G)$ shared bits. A dense permanent is a sum over
+\emph{permutations}; written as an interferometer it has $\Theta(m^2)$ beam splitters on modes carrying
+up to $n$ photons, and any local encoding seems to need about $\log n$ bits per row. Informal notes in
+the project repository~\cite{TulsyanRepo26}, not claimed here, argue that ``row-local'' networks for
+the permanent in the model of \A{} (rows grouped into clusters of at most $s$) have total at least
+$n\log(n/s)$, too much for the engine to beat $2^n$; only sparse matrices go through. In contrast to
+the qubit case, the conjecture per-int-NSETH of~\cite{DHKL20} is therefore untouched
+(\cref{sec:table}).
+% =====================================================================
 \section{Limitations}\label{sec:limitations}
 % =====================================================================
 
+The results stand or fall with the claimed refutations. We list this and the other limitations
+plainly.
 \begin{enumerate}[label=\textup{(\alph*)}]
 \item \emph{Everything algorithmic is conditional} on $(\mathrm{H}_{\mathrm{A}})$,
 $(\mathrm{H}_{\mathrm{O}})$, or (for \cref{cor:density}) the main theorem of either manuscript.
 Expert review of the manuscripts is pending; if the hypotheses fail, the results lose their proofs,
-and we offer no independent route. The imported statements are used in sharp forms that are not
-machine-checked in the generality needed here; our proofs are on paper, written with AI
-assistance, and not yet checked by a human.
-\item \emph{Exact, gate-count-limited, galactic.} The results concern exact simulation of
-circuits with $G=o(n\sqrt{\log n})$ gates; approximate and average-case hardness (random-circuit
-sampling, cross-entropy benchmarking, QUATH) and polynomial-depth families are untouched, and the
-crossover with the state vector is astronomically large (\cref{sec:intro}).
+and we offer no independent route. \Cref{thm:main} is machine-checked on top of \A's Lean development,
+so it needs that development, built from source, to be sound. Our other results use the imported
+statements in sharp forms that are not machine-checked in the generality needed here; their proofs
+are on paper, written with AI assistance, and not yet checked by a human.
+\item \emph{Approximate sampling; many gates.} The results concern exact simulation of circuits with
+$G=o(n\sqrt{\log n})$ gates. Random-circuit sampling rests on the non-collapse of the polynomial
+hierarchy and on average-case conjectures about approximate amplitudes (QUATH, HOG~\cite{AC17}) for
+circuits with $G\ge n^2$ gates; none of this is touched, nor are cross-entropy benchmarking and
+polynomial-depth families. For $G\ge n\sqrt{\log n}$ the bound is no better than $2^n$.
+\item \emph{The constants are galactic.} Using \A[Theorem~A(a)] with the smallest admissible
+$x_0=18$, the leading term of the exponent is $e_\ell U$ with $U\approx4G$ when most wire segments
+cross the partition, and $15/\sqrt{\log G}\le e_\ell\le114/\sqrt{\log G}$ at the level chosen in
+\cref{sec:time}. For depth $d$, so $G\approx dn/2$, the leading term alone is below $n$ only if
+$\log n$ exceeds roughly $900\,d^2$ (with the lower estimate) to $5.2\cdot10^4\,d^2$ (with the upper
+one), and lower-order terms only make this worse. \Oa{} gives no explicit constants. Experiments with
+$50$ to $1000$ qubits are not affected.
 \item \emph{Denominators in the route through \Oa.} Its $2$-adic precision cap forces $k(C)=O(s)$.
 \item \emph{Sketches.} The bound after \cref{prop:2adic} is a sketch; the circuit of
 \cref{prop:tight} is not scripted; the reading of \A[Appendix~D] is ours.
 \item \emph{Literature.} Every row of \cref{tab:conj} was checked against the arXiv text of its
-source, and all citations were checked against the primary sources on 30 Oct 2026; theorem and
-conjecture numbers refer to the arXiv versions named in the bibliography. We have not searched
-systematically for prior statements of \cref{thm:main}; given how direct it is, it may well have
-been noticed independently.
+source, and all citations were checked against the primary sources on 30 Oct 2026, with a further
+spot-check on 4 Nov 2026; theorem and conjecture numbers refer to the arXiv versions named in the
+bibliography. We have not searched systematically for prior statements of \cref{thm:main}; given how
+direct it is, it may well have been noticed independently.
 \item \emph{Scale of the numerical checks.} They cover $n\le6$ and $G\le20$ and test the reductions
 (encodings, decodings, parameters, ring emulation), not the engines, which are replaced by brute
 force and variable elimination.
 \end{enumerate}
+% =====================================================================
+\section{Numerical checks and formalisation}\label{sec:verification}
+% =====================================================================
 
-% =====================================================================
-\section{Verification}\label{sec:verification}
-% =====================================================================
+In this section we describe the numerical checks of the reductions and the Lean development of
+\cref{thm:main}.
 
 \subsection{Numerical checks}
-The scripts (\texttt{research/scripts/qc\_*.py} in the project repository~\cite{TulsyanRepo26}) use exact integer and
+The scripts are \repo{research/scripts/qc_*.py} in the project repository~\cite{TulsyanRepo26};
+they are not part of this submission. They use exact integer and
 $\Zw$ arithmetic only and print PASS or FAIL; \texttt{qc\_lib.py} implements the objects of
 \cref{sec:proof,sec:openai,sec:corollaries}.
 
@@ -887,25 +1013,178 @@ on some instance; (C4) a non-zero total of the assignments with more than $\lflo
 ``violated'' monomials on some instance. Seeds $1$ ($120$ instances) and $3$ ($400$) PASS.
 
 \subsection{Formalisation}\label{sec:formalisation}
-\Cref{thm:main} is formally verified in Lean~4 on top of \A's development: \texttt{amplitude\_TM\_rate'}
-(the stated bound under the condition on $L$), \texttt{amplitude\_TM\_rate} (all circuits) and
-\texttt{amplitude\_TM} (every $\delta>0$), in the public repository~\cite{TulsyanRepo26} (\url{https://github.com/xennygrimmato/eth-hamiltonicity}, Lean sources as of commit \texttt{ca17a37}; directories
-\texttt{lean/EthFollowup/Quantum} and \texttt{lean-bridge-anthropic/bridge/EthFollowup/Quantum}).
-The semantics a reader must check are short: the gate matrices over $\mathbb{C}$, the circuit matrix as
-the ordered product, and the amplitude $\amp{y}{C}{x}$ (\texttt{Circuit.lean}, \S1), and the input
-and output encodings (\S7). The theorems depend only on the axioms \texttt{propext},
-\texttt{Classical.choice} and \texttt{Quot.sound}, and fresh \texttt{leanchecker} replays of their
-closures (\texttt{EthFollowup.Quantum.QRate}, which contains \texttt{QTheorem}, and
-\texttt{EthFollowup.Quantum.Paths}) passed. \Cref{thm:openai}, \cref{cor:marginals} and \cref{cor:density} are proved on paper
-only and are not claimed as machine-checked.
-
+We machine-check \cref{thm:main} in Lean~4 on top of \A's development, as three theorems in the
+namespace \lean{EthFollowup.Quantum}: \texttt{amplitude\_TM\_rate'} (the stated bound under the
+condition on $L$), \texttt{amplitude\_TM\_rate} (all circuits) and \texttt{amplitude\_TM} (every
+$\delta>0$). The sources are in our public repository~\cite{TulsyanRepo26},
+\url{https://github.com/xennygrimmato/eth-hamiltonicity}, as of commit \texttt{ca17a37}, in the
+directories \repo{lean/EthFollowup/Quantum} and \repo{lean-bridge-anthropic/bridge/EthFollowup/Quantum};
+they are not part of this submission. The semantics a reader must check are short: the gate matrices
+over $\mathbb{C}$, the circuit matrix as the ordered product, and the amplitude $\amp{y}{C}{x}$
+(\texttt{Circuit.lean}, \S1), and the input and output encodings (\S7). The theorems depend only on
+the axioms \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound}, and fresh
+\texttt{leanchecker} replays of their closures (\lean{EthFollowup.Quantum.QRate}, which contains
+\texttt{QTheorem}, and \lean{EthFollowup.Quantum.Paths}) passed. \Cref{thm:openai},
+\cref{cor:marginals} and \cref{cor:density} are proved on paper only and are not claimed as
+machine-checked; nor are the other results listed as proved on paper in \cref{sec:status}.
 \section*{Acknowledgements}
-This work was done with AI assistance (Claude Code, Anthropic): the observation, the proofs, the
-literature checks and the numerical verification scripts were produced in sessions with Claude
-Code. Everything here has been checked numerically or against the primary sources as described,
-but awaits human expert review. Responsibility for any errors rests with the author.
+This work was done with AI assistance (Claude Code, Anthropic): the observation, the proofs, the Lean
+development, the literature checks and the numerical verification scripts were produced in sessions
+with Claude Code. \Cref{thm:main} is checked by the Lean kernel; everything else has been checked
+numerically or against the primary sources as described, but awaits human expert review.
+Responsibility for any errors rests with the author.
+\begin{thebibliography}{99}
 
-\bibliographystyle{amsplain}
-\bibliography{refs}
+\bibitem{AaronsonArkhipov13}
+S.~Aaronson and A.~Arkhipov, \emph{The computational complexity of linear optics}, Theory Comput.
+\textbf{9} (2013), 143--252.
+
+\bibitem{AC17}
+S.~Aaronson and L.~Chen, \emph{Complexity-theoretic foundations of quantum supremacy experiments},
+Proc. 32nd Computational Complexity Conference (CCC 2017), LIPIcs, vol.~79, 2017, pp.~22:1--22:67;
+theorem numbers as in arXiv:1612.05903v2.
+
+\bibitem{Anthropic26}
+Claude (Anthropic), \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, preprint dated 26~October 2026.
+Paper and Lean formalisation in the repository \url{https://github.com/anthropics/formal-math}, folder
+\texttt{eth}; we use commit \texttt{16a5ce41304fcdaea4e0be7c132e1c361dc26da5}.
+
+\bibitem{Bjorklund16}
+A.~Bj{\"o}rklund, \emph{Below all subsets for some permutational counting problems}, Proc. 15th
+Scandinavian Symposium and Workshops on Algorithm Theory (SWAT 2016), LIPIcs, vol.~53, 2016,
+pp.~17:1--17:11.
+
+\bibitem{BravyiGosset16}
+S.~Bravyi and D.~Gosset, \emph{Improved classical simulation of quantum circuits dominated by
+{C}lifford gates}, Phys. Rev. Lett. \textbf{116} (2016), no.~25, 250501.
+
+\bibitem{BGK18}
+S.~Bravyi, D.~Gosset and R.~K{\"o}nig, \emph{Quantum advantage with shallow circuits}, Science
+\textbf{362} (2018), no.~6412, 308--311.
+
+\bibitem{BSS16}
+S.~Bravyi, G.~Smith and J.~A.~Smolin, \emph{Trading classical and quantum computational resources},
+Phys. Rev. X \textbf{6} (2016), no.~2, 021043.
+
+\bibitem{BJS11}
+M.~J.~Bremner, R.~Jozsa and D.~J.~Shepherd, \emph{Classical simulation of commuting quantum
+computations implies collapse of the polynomial hierarchy}, Proc. R. Soc. A \textbf{467} (2011),
+no.~2126, 459--472.
+
+\bibitem{BPS19}
+H.~Buhrman, S.~Patro and F.~Speelman, \emph{The quantum strong exponential-time hypothesis},
+arXiv:1911.05686 (v2), 2019. Published as \emph{A framework of quantum strong exponential-time
+hypotheses}, Proc. 38th STACS, LIPIcs, vol.~187, 2021, pp.~19:1--19:19.
+
+\bibitem{CIP06}
+C.~Calabro, R.~Impagliazzo and R.~Paturi, \emph{A duality between clause width and clause density
+for {SAT}}, Proc. 21st Annual IEEE Conference on Computational Complexity (CCC 2006), 2006,
+pp.~252--260.
+
+\bibitem{DHKL20}
+A.~M.~Dalzell, A.~W.~Harrow, D.~E.~Koh and R.~L.~La~Placa, \emph{How many qubits are needed for
+quantum computational supremacy?}, Quantum \textbf{4} (2020), 264; arXiv:1805.05224.
+
+\bibitem{DHMTW14}
+H.~Dell, T.~Husfeldt, D.~Marx, N.~Taslaman and M.~Wahl{\'e}n, \emph{Exponential time complexity of
+the permanent and the {T}utte polynomial}, ACM Trans. Algorithms \textbf{10} (2014), no.~4, Art.~21.
+
+\bibitem{HNS18}
+C.~Huang, M.~Newman and M.~Szegedy, \emph{Explicit lower bounds on strong quantum simulation},
+arXiv:1804.10368 (v2), 2018; published in IEEE Trans. Inform. Theory \textbf{66} (2020), no.~9,
+5585--5600.
+
+\bibitem{HNS19}
+C.~Huang, M.~Newman and M.~Szegedy, \emph{Explicit lower bounds on strong simulation of quantum
+circuits in terms of {$T$}-gate count}, arXiv:1902.04764 (v2), 2019.
+
+\bibitem{ImpagliazzoPaturi01}
+R.~Impagliazzo and R.~Paturi, \emph{On the complexity of $k$-{SAT}}, J. Comput. System Sci.
+\textbf{62} (2001), no.~2, 367--375.
+
+\bibitem{IPZ01}
+R.~Impagliazzo, R.~Paturi and F.~Zane, \emph{Which problems have strongly exponential complexity?},
+J. Comput. System Sci. \textbf{63} (2001), no.~4, 512--530.
+
+\bibitem{MarkovShi08}
+I.~L.~Markov and Y.~Shi, \emph{Simulating quantum computation by contracting tensor networks}, SIAM
+J. Comput. \textbf{38} (2008), no.~3, 963--981.
+
+\bibitem{MT19b}
+T.~Morimae and S.~Tamaki, \emph{Depth-scaling fine-grained quantum supremacy based on {SETH} and
+qubit-scaling fine-grained quantum supremacy based on {O}rthogonal {V}ectors and {3-SUM}},
+arXiv:1902.08382 (v1), 2019. Version~2 (November 2019), with R.~Hayakawa as additional author, is
+retitled \emph{Fine-grained quantum supremacy based on {O}rthogonal {V}ectors, {3-SUM} and
+{A}ll-{P}airs {S}hortest {P}aths}.
+
+\bibitem{MT19a}
+T.~Morimae and S.~Tamaki, \emph{Fine-grained quantum computational supremacy}, arXiv:1901.01637
+(v4), 2019; published in Quantum Inf. Comput. \textbf{19} (2019), no.~13\&14, 1089--1115.
+
+\bibitem{MT20}
+T.~Morimae and S.~Tamaki, \emph{Additive-error fine-grained quantum supremacy}, Quantum \textbf{4}
+(2020), 329; arXiv:1912.06336.
+
+\bibitem{NielsenChuang}
+M.~A.~Nielsen and I.~L.~Chuang, \emph{Quantum Computation and Quantum Information}, Cambridge
+University Press, 2000.
+
+\bibitem{OpenAI26}
+OpenAI, \emph{The {E}xponential {T}ime {H}ypothesis is false}, preprint dated 17~October 2026, revised
+25~October 2026. Paper and Lean formalisation in the repository \url{https://github.com/openai/math}.
+
+\bibitem{QPG21}
+H.~Qassim, H.~Pashayan and D.~Gosset, \emph{Improved upper bounds on the stabilizer rank of magic
+states}, Quantum \textbf{5} (2021), 606; arXiv:2106.07740.
+
+\bibitem{Ryser63}
+H.~J.~Ryser, \emph{Combinatorial Mathematics}, Carus Mathematical Monographs, no.~14, Mathematical
+Association of America, 1963.
+
+\bibitem{Schuler05}
+R.~Schuler, \emph{An algorithm for the satisfiability problem of formulas in conjunctive normal
+form}, J. Algorithms \textbf{54} (2005), no.~1, 40--44.
+
+\bibitem{TD04}
+B.~M.~Terhal and D.~P.~DiVincenzo, \emph{Adaptive quantum computation, constant depth quantum
+circuits and {A}rthur--{M}erlin games}, Quantum Inf. Comput. \textbf{4} (2004), no.~2, 134--145.
+
+\bibitem{Tovey84}
+C.~A.~Tovey, \emph{A simplified {NP}-complete satisfiability problem}, Discrete Appl. Math.
+\textbf{8} (1984), no.~1, 85--89.
+
+\bibitem{Tulsyan26}
+V.~Tulsyan, \emph{Counting {H}amiltonian cycles in sparse graphs in subexponential time, assuming the
+new $\#${SAT} algorithms}, Hexagon preprint hexagon:2610.00672v1, October 2026; source and Lean
+development at \url{https://github.com/xennygrimmato/eth-hamiltonicity}.
+
+\bibitem{TulsyanRepo26}
+V.~Tulsyan, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes}, public repository
+\url{https://github.com/xennygrimmato/eth-hamiltonicity}, 2026; Lean sources as of commit
+\texttt{ca17a37}.
+
+\bibitem{WahlStrelchuk}
+T.~B.~Wahl and S.~Strelchuk, \emph{Simulating quantum circuits using efficient tensor network
+contraction algorithms with subexponential upper bound}, Phys. Rev. Lett. \textbf{131} (2023),
+no.~18, 180601; arXiv:2208.01498.
+
+\end{thebibliography}
+
+% =====================================================================
+% CITATION CHECK (4 November 2026). All entries were checked against primary sources on
+% 30 Oct 2026 (research/citation-audit.md, section 2). Spot-checks in this pass:
+%  OpenAI26     secondary coverage (web search) agrees: posted in github.com/openai/math, dated
+%               17 Oct 2026, revised 25 Oct 2026.
+%  Anthropic26  github.com/anthropics/formal-math/tree/main/eth fetched: paper.pdf, "A 2^{o(n)} Time
+%               Algorithm for 3-SAT", Claude (Anthropic); commit from lean-bridge-anthropic/setup.sh
+%               at ca17a37 (REV=16a5ce41...).
+%  Tulsyan26    hexagonmath.org/abs/2610.00672v1 fetched: title and author match.
+%  TulsyanRepo26 github.com/xennygrimmato/eth-hamiltonicity/tree/ca17a37... fetched: commit exists and
+%               contains lean-bridge-anthropic/bridge/EthFollowup/Quantum (13 files). Commit from
+%               `git log -1 --format=%h -- lean-bridge-anthropic/bridge/EthFollowup/Quantum` = ca17a37.
+%  WahlStrelchuk Crossref 10.1103/PhysRevLett.131.180601: Wahl, Strelchuk, PRL 131, 180601 (2023).
+%  BPS19        DROPS 10.4230/LIPIcs.STACS.2021.19: STACS 2021, LIPIcs 187, 19:1-19:19, new title.
+%  MT19a        arXiv API journal_ref: Quantum Information and Computation 19, 1089-1115 (2019).
+% =====================================================================
 
 \end{document}

@@ -6,7 +6,6 @@
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage{microtype}
 \usepackage{booktabs}
-\usepackage{longtable}
 \usepackage{url}
 \usepackage{array}
 \usepackage{enumitem}
@@ -304,7 +303,7 @@ hypothesis: \A's Lean development proves the forms of the three imported results
 uses (\cref{sec:imported}), and the kernel checks them together with ours.
 \emph{Proved on paper only}: everything else, in particular \cref{thm:openai},
 \cref{cor:marginals,cor:depth}, \cref{prop:tight}, \cref{lem:width}, \cref{cor:density},
-\cref{prop:2adic} and the entries of \cref{tab:conj}. We do not claim these as machine-checked.
+\cref{prop:2adic} and the entries of the list in \cref{sec:table}. We do not claim these as machine-checked.
 \emph{Assumed}: on paper, $(\mathrm{H}_{\mathrm{A}})$, $(\mathrm{H}_{\mathrm{O}})$ or the main theorem
 of \A{} or \Oa, as each result states; in Lean, nothing beyond the three axioms. Either way the results
 stand or fall with the claimed refutations (\cref{sec:limitations}). The bound after
@@ -726,7 +725,7 @@ compiled into Clifford+T, is checked by \texttt{qc\_check.py} (\cref{sec:verific
 % =====================================================================
 
 Throughout this section ``refuted'' means \emph{refuted assuming the claimed refutations of ETH}.
-Rows 1, 2, 5, 12 and 13 of \cref{tab:conj} need only the main theorem of either \A{} or \Oa,
+Entries 1, 2, 5, 12 and 13 of the list in \cref{sec:table} need only the main theorem of either \A{} or \Oa,
 which is what the labs have formalised in Lean.
 
 \subsection{Two facts about SETH-type statements}
@@ -780,53 +779,44 @@ theorem is subexponential. That form of SETH is not known to follow, and some st
 rest on it.
 
 \subsection{The table}
-\Cref{tab:conj} lists the statements we found, with the wording checked against the primary
+The list below gives the statements we found, with the wording checked against the primary
 sources (arXiv versions cited). ``Witness family'' means the circuits built in the proof.
 \emph{Refuted} means the statement itself is false under the refutations; \emph{premise refuted}
 means a theorem whose hypothesis is now false, while its conclusion is not contradicted by
 anything here; \emph{survives} means we know no consequence of the refutations that touches it.
 
-{\footnotesize
-\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.35cm}>{\raggedright\arraybackslash}p{7.3cm}>{\raggedright\arraybackslash}p{1.45cm}>{\raggedright\arraybackslash}p{6.6cm}@{}}
-\caption{Fine-grained quantum-supremacy statements, assuming the refutations.}\label{tab:conj}\\
-\toprule
-& Statement (source) & Status & Reason\\
-\midrule
-\endfirsthead
-\toprule
-& Statement (source) & Status & Reason\\
-\midrule
-\endhead
-\bottomrule
-\endfoot
-1 & \cite{MT19a} Conj.~1: ETH as $2^{\Omega(m)}$ for $3$-CNF decision, $m$ clauses & refuted & \A: $\#3$-SAT in $2^{O(m/\sqrt{\log m})}$.\\
-2 & \cite{MT19a} Conj.~2 (``SETH''): deterministic CNF-SAT, $\le cn$ clauses, any width, needs $2^{(1-a)n}$ & refuted & \Cref{cor:density}.\\
-3 & \cite{MT19a} Conj.~3 (NSETH, polynomial-size circuits) & survives & General circuits.\\
-4 & \cite{MT19a} Conj.~4--6: nondeterministic $\gap\ne0$ for poly-size, log-depth, reversible circuits needs $2^{(1-a)n}$ & survive & $\poly(n)$-size instances; \cref{thm:main} gives nothing below $2^n$.\\
-5 & \cite{MT19a} Conj.~7: nondeterministic $\gap(f)\ne0$, $3$-CNF with $m$ clauses, needs $2^{\Omega(m)}$ & refuted & $\gap(f)=2^n-2\#f$ in deterministic $2^{O(m/\sqrt{\log m})}$.\\
-6 & \cite{MT19a} Thm.~6, \cite{HNS19} Thm.~1: ETH $\Rightarrow$ no $2^{o(t)}$ strong simulation of Clifford+T with $t$ $T$ gates (additive error $2^{-(3t+14)/7}$, resp.\ deciding $\amp0C0\ne0$) & premise refuted & Witness circuits have $O(t)$ gates and are solved exactly in $2^{O(t/\sqrt{\log t})}$; with $\poly(n)$ Cliffords the conclusion is open.\\
-7 & \cite{MT19a} Thms.~7, 8: Conj.~7 $\Rightarrow$ no $2^{o(t)}$ multiplicative-error sampling of Clifford+T, resp.\ $t$-qubit PBC & premise refuted & Witness circuits ($O(t)$ gates) sampled exactly in $2^{O(t/\sqrt{\log t})}$; conclusions open.\\
-8 & \cite{MT19a} Thm.~10: Conj.~2 $\Rightarrow$ exact probabilities with $h$ Hadamards not in $2^{(1-a)h}$ & premise refuted & Witness circuits have $\Theta(ch^2)$ gates; conclusion open.\\
-9 & \cite{MT19a} Thm.~12: ETH $\Rightarrow$ efficient stabilizer rank of $t$-Toffoli resources is $2^{\Omega(t)}$ & premise refuted & Conclusion open.\\
-10 & \cite{HNS18} Thm.~3: CNF-SAT needs $2^{n-o(n)}\poly(m)$ $\Rightarrow$ strong simulation of $\poly(n)$-size circuits to precision $2^{-n}/2$ needs $2^{n-o(n)}$ & survives & Premise is the CNF-SAT form with $\poly(m)$ clauses, not known to follow; unconditional monotone bound unaffected.\\
-11 & \cite{HNS19} Thm.~2: an $O(2^{2.2451\cdot10^{-8}N})$ simulator ($N$ $T$ gates) gives $3$-SAT in $O(1.3^n)$ & moot & The refutations give the consequent outright.\\
-12 & \cite{MT19b} Conj.~1 (``SETH'', $\le cn$ clauses, deterministic decision) & refuted & \Cref{cor:density}; Thm.~1 loses its premise.\\
-13 & \cite{MT19b} Conj.~2: nondeterministic $\gap(f)\ne0$, CNF with $\le cn$ clauses, needs $2^{(1-a)n}$ & refuted & \Cref{cor:density} (counting form). Thm.~2 loses its premise; its witness circuits have $\ge nm$ qubits.\\
-14 & \cite{MT19b} Conj.~3--4 (OV), 5--6 ($3$-SUM) & survive & OV is implied by SETH, not equivalent; $3$-SUM unrelated.\\
-15 & \cite{DHKL20} poly3-NSETH$(a)$ & survives & Worst case has $\Theta(n^3)$ monomials (\cref{sec:cubic}).\\
-16 & \cite{DHKL20} per-int-NSETH$(b)$ & survives & Dense permanents.\\
-17 & \cite{DHKL20} poly3-ave-SBSETH$(a')$ & survives & Average case, dense, additive error.\\
-18 & \cite{DHKL20} Thm.~2: ETH $\Rightarrow$ deterministic poly3-NONBALANCED needs $2^{an}$ & premise refuted & Reduction instances have $O(n)$ monomials; worst case open.\\
-19 & \cite{MT20} Conj.~1: random cubic, multiplicative error, $\mathrm{NTIME}[n^2]$ oracle, $2^{an}$ & survives & Dense, average case, approximate.\\
-20 & \cite{MT20} Conj.~2: random quadratic plus worst-case log-depth circuit & survives & General log-depth circuits.\\
-21 & \cite{MT20} Conj.~3: random quadratic plus worst-case $3$-CNF with $m$ clauses, $2^{am}$ & survives (not shown safe) & $\Theta(n^2+m)$ gates; nothing for $m=O(n)$.\\
-22 & \cite{AC17} QUATH (poly time, random circuits with $\ge n^2$ gates) and HOG & unaffected & Average case, approximate.\\
-23 & \cite{BPS19} basic QSETH: no quantum $O(2^{n(1-\delta)/2}m^{O(1)})$ CNF-SAT & survives & CNF-SAT form; the $k$-CNF variant of their footnote~8 is refuted.\\
-24 & $2^{\Omega(t)}$ $T$-count hardness with unboundedly many Cliffords; $\chi(\ket{T}^{\otimes t})=2^{\Omega(t)}$~\cite{BSS16} & open & ETH support gone; best known exact stabilizer-rank simulation $2^{0.3963t}\poly$~\cite{QPG21}, after~\cite{BSS16,BravyiGosset16}; compressed circuits have $\Theta(t^2)$ gates.\\
-\end{longtable}
+\paragraph{Fine-grained quantum-supremacy statements, assuming the refutations.}
+Each entry gives the statement and its source, its status, and the reason.
+{\small
+\begin{itemize}[leftmargin=2.2em,itemsep=2pt]
+\item[1.] \cite{MT19a} Conj.~1: ETH as $2^{\Omega(m)}$ for $3$-CNF decision, $m$ clauses. \emph{Status:} refuted. \A: $\#3$-SAT in $2^{O(m/\sqrt{\log m})}$.
+\item[2.] \cite{MT19a} Conj.~2 (``SETH''): deterministic CNF-SAT, $\le cn$ clauses, any width, needs $2^{(1-a)n}$. \emph{Status:} refuted. \Cref{cor:density}.
+\item[3.] \cite{MT19a} Conj.~3 (NSETH, polynomial-size circuits). \emph{Status:} survives. General circuits.
+\item[4.] \cite{MT19a} Conj.~4--6: nondeterministic $\gap\ne0$ for poly-size, log-depth, reversible circuits needs $2^{(1-a)n}$. \emph{Status:} survive. $\poly(n)$-size instances; \cref{thm:main} gives nothing below $2^n$.
+\item[5.] \cite{MT19a} Conj.~7: nondeterministic $\gap(f)\ne0$, $3$-CNF with $m$ clauses, needs $2^{\Omega(m)}$. \emph{Status:} refuted. $\gap(f)=2^n-2\#f$ in deterministic $2^{O(m/\sqrt{\log m})}$.
+\item[6.] \cite{MT19a} Thm.~6, \cite{HNS19} Thm.~1: ETH $\Rightarrow$ no $2^{o(t)}$ strong simulation of Clifford+T with $t$ $T$ gates (additive error $2^{-(3t+14)/7}$, resp.\ deciding $\amp0C0\ne0$). \emph{Status:} premise refuted. Witness circuits have $O(t)$ gates and are solved exactly in $2^{O(t/\sqrt{\log t})}$; with $\poly(n)$ Cliffords the conclusion is open.
+\item[7.] \cite{MT19a} Thms.~7, 8: Conj.~7 $\Rightarrow$ no $2^{o(t)}$ multiplicative-error sampling of Clifford+T, resp.\ $t$-qubit PBC. \emph{Status:} premise refuted. Witness circuits ($O(t)$ gates) sampled exactly in $2^{O(t/\sqrt{\log t})}$; conclusions open.
+\item[8.] \cite{MT19a} Thm.~10: Conj.~2 $\Rightarrow$ exact probabilities with $h$ Hadamards not in $2^{(1-a)h}$. \emph{Status:} premise refuted. Witness circuits have $\Theta(ch^2)$ gates; conclusion open.
+\item[9.] \cite{MT19a} Thm.~12: ETH $\Rightarrow$ efficient stabilizer rank of $t$-Toffoli resources is $2^{\Omega(t)}$. \emph{Status:} premise refuted. Conclusion open.
+\item[10.] \cite{HNS18} Thm.~3: CNF-SAT needs $2^{n-o(n)}\poly(m)$ $\Rightarrow$ strong simulation of $\poly(n)$-size circuits to precision $2^{-n}/2$ needs $2^{n-o(n)}$. \emph{Status:} survives. Premise is the CNF-SAT form with $\poly(m)$ clauses, not known to follow; unconditional monotone bound unaffected.
+\item[11.] \cite{HNS19} Thm.~2: an $O(2^{2.2451\cdot10^{-8}N})$ simulator ($N$ $T$ gates) gives $3$-SAT in $O(1.3^n)$. \emph{Status:} moot. The refutations give the consequent outright.
+\item[12.] \cite{MT19b} Conj.~1 (``SETH'', $\le cn$ clauses, deterministic decision). \emph{Status:} refuted. \Cref{cor:density}; Thm.~1 loses its premise.
+\item[13.] \cite{MT19b} Conj.~2: nondeterministic $\gap(f)\ne0$, CNF with $\le cn$ clauses, needs $2^{(1-a)n}$. \emph{Status:} refuted. \Cref{cor:density} (counting form). Thm.~2 loses its premise; its witness circuits have $\ge nm$ qubits.
+\item[14.] \cite{MT19b} Conj.~3--4 (OV), 5--6 ($3$-SUM). \emph{Status:} survive. OV is implied by SETH, not equivalent; $3$-SUM unrelated.
+\item[15.] \cite{DHKL20} poly3-NSETH$(a)$. \emph{Status:} survives. Worst case has $\Theta(n^3)$ monomials (\cref{sec:cubic}).
+\item[16.] \cite{DHKL20} per-int-NSETH$(b)$. \emph{Status:} survives. Dense permanents.
+\item[17.] \cite{DHKL20} poly3-ave-SBSETH$(a')$. \emph{Status:} survives. Average case, dense, additive error.
+\item[18.] \cite{DHKL20} Thm.~2: ETH $\Rightarrow$ deterministic poly3-NONBALANCED needs $2^{an}$. \emph{Status:} premise refuted. Reduction instances have $O(n)$ monomials; worst case open.
+\item[19.] \cite{MT20} Conj.~1: random cubic, multiplicative error, $\mathrm{NTIME}[n^2]$ oracle, $2^{an}$. \emph{Status:} survives. Dense, average case, approximate.
+\item[20.] \cite{MT20} Conj.~2: random quadratic plus worst-case log-depth circuit. \emph{Status:} survives. General log-depth circuits.
+\item[21.] \cite{MT20} Conj.~3: random quadratic plus worst-case $3$-CNF with $m$ clauses, $2^{am}$. \emph{Status:} survives (not shown safe). $\Theta(n^2+m)$ gates; nothing for $m=O(n)$.
+\item[22.] \cite{AC17} QUATH (poly time, random circuits with $\ge n^2$ gates) and HOG. \emph{Status:} unaffected. Average case, approximate.
+\item[23.] \cite{BPS19} basic QSETH: no quantum $O(2^{n(1-\delta)/2}m^{O(1)})$ CNF-SAT. \emph{Status:} survives. CNF-SAT form; the $k$-CNF variant of their footnote~8 is refuted.
+\item[24.] $2^{\Omega(t)}$ $T$-count hardness with unboundedly many Cliffords; $\chi(\ket{T}^{\otimes t})=2^{\Omega(t)}$~\cite{BSS16}. \emph{Status:} open. ETH support gone; best known exact stabilizer-rank simulation $2^{0.3963t}\poly$~\cite{QPG21}, after~\cite{BSS16,BravyiGosset16}; compressed circuits have $\Theta(t^2)$ gates.
+\end{itemize}
 }
 
-\emph{Row 13} was left open in our working notes: there we checked only the decision form of the
+\emph{Entry 13} was left open in our working notes: there we checked only the decision form of the
 width--density duality. \Cref{lem:width} settles it.
 
 \subsection{Sampling versus exact amplitudes}
@@ -977,7 +967,7 @@ $50$ to $1000$ qubits are not affected.
 \item \emph{Denominators in the route through \Oa.} Its $2$-adic precision cap forces $k(C)=O(s)$.
 \item \emph{Sketches.} The bound after \cref{prop:2adic} is a sketch; the circuit of
 \cref{prop:tight} is not scripted; the reading of \A[Appendix~D] is ours.
-\item \emph{Literature.} Every row of \cref{tab:conj} was checked against the arXiv text of its
+\item \emph{Literature.} Every entry of the list in \cref{sec:table} was checked against the arXiv text of its
 source, and all citations were checked against the primary sources on 30 Oct 2026, with a further
 spot-check on 4 Nov 2026; theorem and conjecture numbers refer to the arXiv versions named in the
 bibliography. We have not searched systematically for prior statements of \cref{thm:main}; given how

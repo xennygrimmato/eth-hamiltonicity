@@ -8,7 +8,8 @@ complete code are reused by import).
 * `aLabCode_complete`: every `Wa`-bit word is a code word;
 * `incA`, `pairA` (the incident wires of a node, the places of the wires on a pair) with `incA_eq`,
   `pairA_eq`; the layout `layA` and **`layA_describes`**;
-* the context `ACtx` (layout, `n` in unary, the description, `g`, the incidence lists) and `aCtxOf`;
+* the context `ACtx` (layout, `n` in unary, the description with `nV` in unary, `g`, the vertex range, the
+  incidence lists) and `aCtxOf`;
 * the table `tabA` (all checks of cluster `a`, wire values read from a setting via `MP.xz`), `tabAF`,
   `arithTp := Stepped.ofFun tabAF`, `tabA_eq` (= `aClusOK`), `tabAF_eq` (= the table `arithT`),
   **`arithSys_tspec`**;
@@ -129,21 +130,26 @@ theorem layA_describes {n : ℕ} {D : Desc} {g : ℕ} (hg : 2 ≤ g) (P : ℕ) :
     rw [getD_map_range' _ a.2, getD_map_range' _ c.2]
     exact pairA_eq hg a c
 
-/-- **The context**: the layout, (`n` in unary, the description), (`g`, per node the incident wires). -/
-abbrev ACtx : Type := Lay × ((List Unit × Desc) × (ℕ × List (List ℕ)))
+/-- **The context**: the layout, (`n` in unary, (the description, its `nV` in unary)), ((`g`, the vertex
+indices `[0, numAV)`), per node the incident wires). The ranges are stored so that every loop of the
+table runs over a list held by the context (polynomial time on every context, ArithPoly). -/
+abbrev ACtx : Type := Lay × ((List Unit × (Desc × List Unit)) × ((ℕ × List ℕ) × List (List ℕ)))
 
 /-- The context of `n`, `D`, `g` nodes and the bound `P`. -/
 def aCtxOf (n : ℕ) (D : Desc) (g P : ℕ) : ACtx :=
-  (layA n D g P, ((List.replicate n (), D), (g, (List.range g).map (incA n D g))))
+  (layA n D g P, ((List.replicate n (), (D, List.replicate D.nV ())),
+    ((g, List.range (numAV n D)), (List.range g).map (incA n D g))))
 
 namespace ACtx
 variable (c : ACtx)
 /-- `n`. -/
 def n : ℕ := c.2.1.1.length
-/-- The description. -/
-def D : Desc := c.2.1.2
+/-- The description, its number of variables read from the unary copy. -/
+def D : Desc := { c.2.1.2.1 with nV := c.2.1.2.2.length }
 /-- The number of nodes. -/
-def g : ℕ := c.2.2.1
+def g : ℕ := c.2.2.1.1
+/-- The vertex indices. -/
+def rV : List ℕ := c.2.2.1.2
 /-- The incidence lists. -/
 def inc : List (List ℕ) := c.2.2.2
 end ACtx
@@ -151,8 +157,10 @@ end ACtx
 section CtxOf
 variable (n : ℕ) (D : Desc) (g P : ℕ)
 @[simp] theorem aCtxOf_n : (aCtxOf n D g P).n = n := List.length_replicate
-@[simp] theorem aCtxOf_D : (aCtxOf n D g P).D = D := rfl
+@[simp] theorem aCtxOf_D : (aCtxOf n D g P).D = D := by
+  cases D; simp [ACtx.D, aCtxOf]
 @[simp] theorem aCtxOf_g : (aCtxOf n D g P).g = g := rfl
+@[simp] theorem aCtxOf_rV : (aCtxOf n D g P).rV = List.range (numAV n D) := rfl
 @[simp] theorem aCtxOf_inc : (aCtxOf n D g P).inc = (List.range g).map (incA n D g) := rfl
 @[simp] theorem aCtxOf_fst : (aCtxOf n D g P).1 = layA n D g P := rfl
 end CtxOf
@@ -161,7 +169,7 @@ end CtxOf
 
 /-- All checks of the vertices of cluster `a`, the wire values read from the setting `z`. -/
 def tabA (c : ACtx) (a : ℕ) (z : List Bool) : Bool :=
-  (List.range (numAV c.n c.D)).all fun j => !(decide (aClus c.n c.D c.g (avOf c.n c.D j) = a)) ||
+  c.rV.all fun j => !(decide (aClus c.n c.D c.g (avOf c.n c.D j) = a)) ||
     aChk c.n c.D (fun d => xz (Wa c.n) (c.inc.getD a []) z (awIdx c.n c.D d)) (avOf c.n c.D j)
 
 /-- The table entry. -/
@@ -196,7 +204,7 @@ theorem tabA_eq (P : ℕ) (a : Fin g) (x : (Fin (numAW n D) → ALab n) × (Empt
       ((arithSys n D g hg).incList a).map Fin.val := by
     rw [getD_map_range' _ a.2, incA_eq hg a]
   unfold tabA aClusOK
-  simp only [aCtxOf_n, aCtxOf_D, aCtxOf_g, aCtxOf_inc, hinc]
+  simp only [aCtxOf_n, aCtxOf_D, aCtxOf_g, aCtxOf_rV, aCtxOf_inc, hinc]
   rw [Bool.eq_iff_iff]
   simp only [List.all_eq_true, List.mem_range, Bool.or_eq_true, Bool.not_eq_true',
     decide_eq_false_iff_not]

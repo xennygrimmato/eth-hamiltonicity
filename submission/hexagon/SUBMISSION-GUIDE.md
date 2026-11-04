@@ -64,7 +64,7 @@ Source of the rules: hexagonmath.org/about and the public submission schema
   prebuilt `main.bbl`); each compiles from an empty directory with two `pdflatex` runs. They are
   snapshots of `paper/` and `quantum-note/`; rebuild them if those change.
 - `abstract-hc.txt`, `abstract-quantum.txt` — abstracts for the form (TeX math kept, paper macros expanded).
-- `provenance.txt` — a DRAFT provenance statement; edit it so every sentence is true for you.
+- `provenance.txt` — the provenance statement, ready to paste as is (no placeholders).
 
 ## Paper 3 — Crossover note (upload `hexagon-crossover-note.zip`, main file `main.tex`)
 - **Title:** When do the new #SAT algorithms beat brute force? Crossover points of the proven bounds behind the ETH refutations

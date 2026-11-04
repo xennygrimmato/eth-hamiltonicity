@@ -8,6 +8,12 @@ Tags: **[R]** proved here, **[L]** Lean-proved, **[K]** known, **[N]** exact com
 
 ## 0. Verdict
 
+* **Update (§8, later session).** The 3×3 level is now Lean-proved at S ≥ N⁸ (`Grid33.rankSum_ge`, any field, any
+  alphabet), and **8 is exactly the limit of every flattening argument**: combining all lossy contraction inequalities
+  (exact ILP, §8.2) and m-party CVZ/rank functionals with straddlers (§8.3) certifies no more than 8 on the 3×3 level,
+  and exactly Theorem 5's count on the g ≤ 6 levels (§8.5). Any decomposition beating 8 must consist of "hub" terms with
+  no bond between the two rows (columns) of a 2×2 block (§8.6). S ≥ N⁹ is Conjecture 8.1, open both ways.
+
 * **Update (§7, same day).** The 3×2 grid is closed: Σ_t min(rk_{b|ac}, rk_col) ≥ N³ for every decomposition
   (Theorem 4, [R][L], any field, any alphabet), so **ρ ≥ 1/2 on the minimal non-diagonal instance**. The tool is a
   *lossy* diagonal contraction: one leg may sit on the wrong side of the row cut and one on the wrong side of the column
@@ -201,6 +207,9 @@ All Lean theorems print `[propext, Classical.choice, Quot.sound]` under `#print 
   decomposition at λ = 1 and its costs. `Grid32.lean`: Theorem 4 (3×2 grid) and the relabelling no-go of §7.5(b).
 * `scripts/engine2d_lossy.py` / `.out`: §7 numeric check of Theorem 4, level counts (Theorem 5), sub-configurations.
 * `scripts/engine2d_grid32/` and `scripts/engine2d_grid32.out`: §7.5, §7.7 (min-cut model, λ = 1 matching MILPs).
+* `scripts/engine2d_g33/diff.py` (+ `diff.out`, `diff4.out`–`diff6.out`, `diff_real.py`): §8.2/8.5 exact flattening
+  optimum D_g; `game.py`: the earlier profile/adversary iteration (superseded by the reduction of §8.2).
+* `lean/EthFollowup/Scratch/Grid33/Lossy.lean`, `Level.lean`: §8.4 (general lossy lemma; S ≥ N⁸ on the 3×3 level).
 
 ---------------------------------------------------------------------------------------------------
 
@@ -413,7 +422,40 @@ Proposition 7.6 is a statement about a *single* contraction M (node-local maps, 
 (i) whether using *many* contractions at once (a term that is cheap for one contraction must be expensive for another;
 the bound of a row term under M depends on its bond *triple*, not only on its cost) can push the certified exponent to 9;
 (ii) whether m-party (CVZ) functionals with straddling legs can.
-Both are settled negatively below (8.2, 8.3); the single-flattening world, however it is combined, stops at 8.
+Both are settled negatively below (8.2, 8.3): the single-flattening world, however it is combined, stops at exactly 8.
+
+### 8.2 All flattening inequalities together certify exactly 8 on the 3×3 level [R][N]
+
+**Reduction [R].** Fix a keep/fix/pair contraction M: a set of edge-disjoint paths in the grid graph, each with one end
+leg on side X and one on side Y (a kept leg whose path returns to its own side, or whose partner is fixed, only adds
+loss). Write a_v, b_v for the numbers of X-ends and Y-ends at node v and n_r := Σ_{v∈row r}(a_v − b_v). For a row
+labelling σ, |E| − s_R(σ) = Σ_paths (1 − loss) = Σ_{σ(r)=X} n_r (a path counts +1 if its X-end's row is labelled X
+and its Y-end's row Y, −1 in the opposite case, 0 otherwise). Since Σ_r n_r = 0, the six non-trivial labellings give
+±n_a, ±n_b, ±n_c. So a row-network with bond exponents (e_ab, e_ac, e_bc) satisfies the inequality of M, i.e.
+N^{|E|} ≤ N^{s_R(σ)}·N^{e(σ)} for every σ, **iff** |n_r| ≤ e(r | rest) for r = a, b, c, where e(a|bc) = e_ab + e_ac
+etc. The cheapest such row term has cost exponent
+
+  d_R(M) := max( |n_a|, |n_b|, |n_c|, (|n_a| + |n_b| + |n_c|)/2 ),
+
+(the LP min e_ab+e_ac+e_bc subject to e(r|rest) ≥ |n_r|, e ≥ 0), and d_C(M) is defined the same way from the columns.
+Hence: **(i)** every decomposition has a term of cost ≥ min(d_R(M), d_C(M))·λ − o(λ) (this is §7.3 with the best
+labelling for each term), and **(ii)** no combination of flattening inequalities proves more than
+D₃ := max_M min(d_R(M), d_C(M)): the finite profile consisting of, for every M, one row term and one column term
+tailored to M (bonds from the LP above) satisfies every inequality N^{|E(M)|} ≤ Σ_t (bound of t under M) that any
+contraction can produce, with Σ_t 2^{cost_t} = O(N^{D₃}). The bounds of (ii) are the only information a single
+flattening extracts from a row- or column-network (its node-local pre-processing is covered by max-flow = min-cut:
+general node-local maps with output dimensions m_v realise the same (|E|, losses) as keep/fix/pair with k_v ≤ log_N m_v
+kept legs, §7.5(a)).
+
+**Computation [N]** (`scripts/engine2d_g33/diff.py`, exact ILP over flows + end counts, HiGHS, optimal status):
+
+  D₃ = **8** for the 3×3 level (and 1 = Q for the single rectangle, as a sanity check).
+
+An optimal M: X-ends a = (4,1,3; 2,0,0; 2,0,0), Y-ends b = (0,0,0; 0,3,3; 0,3,3) (nodes in reading order), |E| = 12,
+n_R = (8, −4, −4), n_C = (8, −5, −3), d_R = d_C = 8. The tight contraction of §7.4/Theorem 5 (block {a,b}×{1,2}
+on X) is another optimum, with n_R = (4,4,−8)... up to symmetry. So **Proposition 7.6 is sharp in the strongest sense:
+the fake profile of tailored terms (max cost 8λ, finitely many terms) passes every flattening test on the 3×3 level.**
+Beating 8 needs a functional that is not a flattening rank of a node-locally processed tensor.
 
 ### 8.3 m-party functionals with straddling legs do not help on the 3×3 level [R]
 
@@ -445,3 +487,99 @@ labelling. So **no m-party CVZ-type argument with straddling legs certifies more
 rank and geometric rank in place of F^θ: on the 3-party graph tensors that arise (matrix-multiplication tensors ⟨N^{e₁₂},
 N^{e₁₃}, N^{e₂₃}⟩) each of them is at most N^{(β/3)(e₁₂+e₁₃+e₂₃)} with β ≤ ω < 3 (and slice rank = the smallest
 flattening), so an edge is worth β/3 < 1 while a straddler still costs 1.
+
+The same ILP for the 4×4 level gives D₄ = **32** = 3h⁴ − 2h³ at h = 2, i.e. exactly Theorem 5's single contraction
+(optimum with |E| = 43, n_R = (14,−14,−18,18), n_C = (−15,−17,24,8)). So on the levels computed, combining all
+flattening inequalities never beats the one balanced contraction of §7.4, and the 3/8 of Proposition 7.6 is the
+limit of the whole flattening world, not only of one contraction (g = 5, 6: `diff5.out`, `diff6.out`, if finished).
+
+### 8.4 Lean: Theorem 5 at g = 3, and the lossy lemma in general [L]
+
+`lean/EthFollowup/Scratch/Grid33/Lossy.lean` (general lossy flattening lemma, no pairings) and
+`lean/EthFollowup/Scratch/Grid33/Level.lean` (self-contained copy of the lemma + the 3×3 level; sorry-free; axioms
+[propext, Classical.choice, Quot.sound]; both files check with `lake env lean`). Legs are an arbitrary finite type L,
+tensors `T : (L → α) → K`, any field K, any finite alphabet α.
+
+* `Lossy.rank_contr_le (KX KY S : Finset L) (o : α) (T) (hd : Disjoint KX KY) :
+   (contr KX KY o T).rank ≤ |α| ^ (|KX ∩ S| + |KY \ S|) * (flat S T).rank`
+  — §7.3 for kept/fixed legs: every kept leg on the wrong side of the cut S costs a factor |α| (proof: split the
+  columns by the wrong-side Y legs and the rows by the wrong-side X legs; each block is a submatrix of (flat S T)ᵀ).
+* `Lossy.rank_contr_graph`: for a graph tensor `graphT other` (other = the other end of a leg's edge) whose kept edges
+  match KX with KY and whose remaining edges have both ends fixed, `contr` is a permutation matrix of rank |α|^|KX|.
+* The 3×3 level: `Grid33.edges : Fin 18 → Node × Node`, legs `L = Fin 18 × Bool`, `G = graphT other`,
+  `Srow` = legs in row c, `Scol` = legs in column 3, `KX` = the 12 legs at the block {a,b}×{1,2} on edges leaving the
+  block, `KY` = their partners. All side conditions (disjointness, matching, fixed edges, |KX| = 12, the two loss
+  exponents = 4) are proved by `decide`.
+
+    theorem Grid33.rankSum_ge [Nonempty α] {ι} (s : Finset ι) (T : ι → Lossy.Tensor K Grid33.L α)
+        (hsum : ∑ t ∈ s, T t = G) :
+        Fintype.card α ^ 8 ≤ ∑ t ∈ s, min (Lossy.flat Srow (T t)).rank (Lossy.flat Scol (T t)).rank
+    theorem Grid33.exists_expensive ... : ∃ t ∈ s, Fintype.card α ^ 8 ≤ s.card * min (…) (…)
+
+  Since a row-network has rank(flat Srow) ≤ d_ac d_bc ≤ 2^{cost} and a column-network rank(flat Scol) ≤ 2^{cost},
+  this is **S ≥ N⁸ on the full 3×3 level, Lean-proved for every field and alphabet** (Theorem 5 at g = 3, ρ ≥ 4/9).
+  Together with 8.2 it is also the best that any flattening argument can give there.
+
+### 8.5 Table: the flattening optimum D_g on full levels [N]
+
+`scripts/engine2d_g33/diff.py g` (exact ILP, optimal status in every case; outputs `diff*.out`):
+
+| g | Q | Theorem 5 (one balanced contraction) | D_g = max_M min(d_R, d_C) (all flattening inequalities) | ratio |
+|---|---|---|---|---|
+| 2 | 1 | 1 | 1 | 1/2 (= Q) |
+| 3 | 9 | 8 | **8** | 4/9 |
+| 4 | 36 | 32 | **32** | 4/9 |
+| 5 | 100 | 84 | **84** | 21/50 |
+| 6 | 225 | 189 | **189** | 21/50 |
+
+The multi-inequality method is formally stronger than one contraction (d_R(M) ≥ max_r |n_r| because of the term
+Σ_r|n_r|/2, which sees two cuts of a triangle network at once), but at the optimum the gain is zero for every g ≤ 6.
+So on full levels the whole flattening world gives exactly Theorem 5, hence ρ ≥ 3/8 and nothing better [N for g ≤ 6;
+the asymptotic statement for D_g is a conjecture, Proposition 7.6 proves it only for single contractions].
+
+### 8.6 What a decomposition beating 8 must look like, and why no finite search decides it [R][C]
+
+* **Shape [R].** By 8.2 the only profiles that pass every flattening test have, for the balanced contraction M₀ (block
+  {a,b}×{1,2} on X; n_R = (4,4,−8), n_C = (4,4,−8)), a row term with bonds (d_ab, d_ac, d_bc) = (1, N⁴, N⁴) or a column
+  term with (d_12, d_13, d_23) = (1, N⁴, N⁴): a *hub* at the row (column) that is alone on its side, and **no bond at all
+  between the two rows (columns) of the block**. Such a term has rank ≤ N⁴ across (a | bc) and (b | ac) but N⁸ across
+  (c | ab). By the symmetry S₃ × S₃ × transpose there must be hub terms R_a, R_b, R_c, C_1, C_2, C_3 (or more), each of
+  cost 8λ, and the sum of all terms must reproduce the six a–b edges although no row term connects a and b directly:
+  the a–b rectangles must be produced by the column terms and by cancellation. In particular every such decomposition
+  is *far from a product*: in a product term the bond between rows a and b is the product of the row ranks of the three
+  pieces on the (a,b) rectangles, and §4.3 (clique-evaluation.md) already forces ρ ≥ 1/2 for products.
+* **Finite searches [C].** At λ = 1 the product decomposition itself has max cost 8 = 2·4 (choose I on four rectangles
+  and A on five), with T = 2⁹ terms: log T is not o(λ), so λ = 1 says nothing about ρ (as in §5). The first meaningful
+  alphabet is N = 4 (36 legs, 4³⁶ entries); the SL₂-invariant (matching) ansatz of §7.7 at N = 2 lives in a space of
+  dimension Catalan(18) ≈ 4.8·10⁸ for 36 legs (132 for the hexagon), out of reach for exact LP/MILP here. A structured
+  ansatz (hub terms built from the a–c and b–c identities with a column-term correction) is the only feasible route and
+  was not found in this session.
+
+### 8.7 Where this leaves the cap, and the open conjecture
+
+* Proved (Lean, any field, any alphabet): S ≥ N³ on the 3×2 grid (§7), S ≥ N⁸ on the full 3×3 level (§8.4). Proved on
+  paper: S ≥ N^{3h⁴−2h³} on the 2h × 2h level (Theorem 5), ρ ≥ 3/8, α' ≤ log₂(8/3) for every correlated network
+  decomposition. Proved on paper + exact computation: no flattening argument (any number of contractions, any
+  node-local pre-processing; 8.2) and no m-party CVZ/rank/slice-rank argument with straddling legs (8.3) certifies more
+  than 8 on the 3×3 level, or more than Theorem 5 on the g ≤ 6 levels.
+* **Conjecture 8.1 (network rank of the 3×3 level).** For every field K and alphabet of size N, every family of
+  tensors T_t with Σ_t T_t = G in which each T_t is a row-network or a column-network of cost c_t satisfies
+  Σ_t 2^{c_t} ≥ N⁹; equivalently, the tailored hub profile of 8.2/8.6 is not realisable by actual tensors.
+  Its g × g form, Σ_t 2^{c_t} ≥ N^{Q}, is exactly ρ ≥ 1/2 for all correlated decompositions and closes the cap
+  e_K ≥ c/log K for the "evaluate terms as smaller cliques" framework. A proof cannot be a rank bound on any
+  node-locally processed flattening; it has to use that a row-network's three cuts are produced by *one* triple of bonds
+  (e.g. the column space of its (ab | c) flattening lies in im W_a ⊗ im W_b with dim ≤ d_ab d_ac · d_ab d_bc), a kind
+  of information no subadditive functional of §8.2–8.3 retains. The weakest statement that would already be new:
+  S ≥ N^{8+ε} for some ε > 0 on the 3×3 level, or a decomposition with max cost ≤ (9 − ε)λ.
+
+### 8.8 Lean status (this section)
+
+| claim | status |
+|---|---|
+| lossy flattening lemma, kept/fixed legs, arbitrary finite leg set and cut: rank(contr) ≤ \|α\|^{#wrong-side legs}·rank(flat S) | **Lean-proved (general)**: `Lossy.rank_contr_le` |
+| contraction of a graph tensor with matched kept legs is a permutation matrix of rank \|α\|^{\|KX\|} | **Lean-proved (general)**: `Lossy.rank_contr_graph` |
+| Theorem 5 at g = 3: Σ_t min(rk_{c\|ab}, rk_{3\|12}) ≥ \|α\|⁸ for every family summing to the 3×3 level tensor | **Lean-proved (general)**: `Grid33.rankSum_ge`, `Grid33.exists_expensive`; axioms [propext, Classical.choice, Quot.sound] |
+| reduction 8.2 (a row term passes M iff \|n_r\| ≤ e(r\|rest); cheapest cost d_R) | [R] on paper; not formalised |
+| D₃ = 8, D₄ = 32, D₅ = 84, D₆ = 189 (flattening optimum = Theorem 5) | [N] exact ILP (HiGHS, optimal); not formalised |
+| 8.3 (m-party functionals ≤ 8 on 3×3) | [R] on paper (uses CVZ [K]); not formalised |
+| Conjecture 8.1 (S ≥ N⁹ on the 3×3 level) | **open**; no counterexample found, no proof |

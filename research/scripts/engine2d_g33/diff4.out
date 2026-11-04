@@ -1,0 +1,15 @@
+g 3 Q 9 max min(d_R,d_C) = 8 status 0
+Traceback (most recent call last):
+  File "/home/user/eth-hamiltonicity/research/scripts/engine2d_g33/diff_real.py", line 58, in <module>
+    print(" flow edges:",[(nodes[edges[e][0]],nodes[edges[e][1]],'+' if x[idx['fp'][e]] else '-') for e in range(nE) if x[idx['fp'][e]] or x[idx['fm'][e]]])
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [Errno 32] Broken pipe
+--- g=4
+g 4 Q 36 max min(d_R,d_C) = 32 status 0
+ a [0, 1, 8, 7, 0, 0, 7, 0, 0, 0, 2, 0, 1, 0, 9, 8]  b [0, 2, 0, 0, 8, 8, 2, 3, 8, 8, 0, 4, 0, 0, 0, 0]
+ n_R [14, -14, -18, 18]  n_C [-15, -17, 24, 8]  |E| 43
+Traceback (most recent call last):
+  File "/home/user/eth-hamiltonicity/research/scripts/engine2d_g33/diff.py", line 58, in <module>
+    print(" flow edges:",[(nodes[edges[e][0]],nodes[edges[e][1]],'+' if x[idx['fp'][e]] else '-') for e in range(nE) if x[idx['fp'][e]] or x[idx['fm'][e]]])
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [Errno 32] Broken pipe

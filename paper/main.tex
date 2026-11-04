@@ -1709,6 +1709,11 @@ of this section, a deterministic $2^{\delta n}$ algorithm for the whole polynomi
 such graphs. (The published implication of course remains true; it is vacuous once $\#$ETH fails.)
 The best previous algorithm computes the Tutte polynomial in vertex-exponential
 time~\cite{BHKK08Tutte}.
+Independently, Bhattacharjee~\cite{Bhattacharjee26} runs the algorithm of~\cite{OpenAI26} itself
+(a white-box extension) over commutative $\Q$-algebras; assuming that its steps remain valid there,
+this gives, without $(\mathrm{H}_{\mathrm{A}})$, exact sparse Max-Cut and Max-$k$-SAT with
+polynomial weights and the Tutte polynomial on the hyperbolas $(x-1)(y-1)=q$, but not Hamiltonian
+cycles or TSP.
 
 \begin{remark}[Further problems]
 A more general version of the template allows a constant number of global predicates (connected,
@@ -1939,8 +1944,10 @@ sets. These statements have written proofs but are not formalised.
 \subsection{The exponent} The leading term of the exponent is $e_\ell U$, and $e_\ell=\Theta(\rho^\ell)$
 is governed by the pieces of \A. Pieces with $\rho<1/\sqrt2$ would improve the exponent beyond
 $1/\sqrt{\log n}$, and $\rho\to\frac12$ would give $2^{O(m/\log m)}$, and
-$2^{O(n\log\bar d/\log n)}$ in \cref{thm:main-degree}. Can the $\sqrt{\log n}$ be
-improved, for $\HC$ specifically or in general?
+$2^{O(n\log\bar d/\log n)}$ in \cref{thm:main-degree}. De Brito~\cite{deBrito26} shows that,
+measured by weight counts, graded families of the shape of \A[Theorem~B] have $\rho\ge1/\sqrt2-o(1)$
+whatever the growth of the graded dimensions, so going below $1/\sqrt2$ needs pieces of another
+shape. Can the $\sqrt{\log n}$ be improved, for $\HC$ specifically or in general?
 
 \subsection{Planar and minor-free graphs} A bound of $2^{\delta n}$ does not beat the known
 $2^{O(\sqrt n)}$ on planar graphs. Does the blob network compose with balanced separators to give

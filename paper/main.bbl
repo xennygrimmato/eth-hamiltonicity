@@ -19,6 +19,11 @@ Eric~T. Bax, \emph{Inclusion and exclusion algorithm for the {H}amiltonian path
 Richard Bellman, \emph{Dynamic programming treatment of the travelling salesman
   problem}, J. ACM \textbf{9} (1962), no.~1, 61--63.
 
+\bibitem{Bhattacharjee26}
+Deep Bhattacharjee, \emph{Subexponential weighted counting and exact
+  optimisation}, Hexagon preprint hexagon:2610.00594v1, 29 October 2026,
+  \url{https://hexagonmath.org/abs/2610.00594}, 2026.
+
 \bibitem{Bjorklund14}
 Andreas Bj{\"o}rklund, \emph{Determinant sums for undirected {H}amiltonicity},
   SIAM J. Comput. \textbf{43} (2014), no.~1, 280--299, Preliminary version in
@@ -109,6 +114,12 @@ Marek Cygan, Jesper Nederlof, Marcin Pilipczuk, Micha{\l} Pilipczuk, Johan
   problems parameterized by treewidth in single exponential time}, Proc. 52nd
   IEEE Symposium on Foundations of Computer Science (FOCS), 2011, Journal
   version in ACM Trans. Algorithms 18 (2022), no.~2, pp.~150--159.
+
+\bibitem{deBrito26}
+Carlos Stein~Naves de~Brito, \emph{The partition exponent in the graded pieces
+  of the {C}laude {3-SAT} algorithm is optimal for pieces of that shape},
+  Hexagon preprint hexagon:2610.00692v1, 31 October 2026,
+  \url{https://hexagonmath.org/abs/2610.00692}, 2026.
 
 \bibitem{Lean4}
 Leonardo de~Moura and Sebastian Ullrich, \emph{The {L}ean 4 theorem prover and

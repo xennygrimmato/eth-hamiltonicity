@@ -42,6 +42,7 @@ outputs `fock_*.out`. Tags as before: **[R]** proved here, **[K]** known, **[N]*
   general problem `Exist ρ c`, ρ < 1/√2 (a Hurwitz/HWY-type tensor problem, §6); every *mechanism* known
   to produce two-order identities is now proved to force β = 1/2 and hence ρ ≥ 1/√2 (locality in all its
   polynomial-annihilator forms) or to give ρ ≥ 3/4 (Wick slicing). There is no "sparse" shortcut.
+* *Related work.* de Brito (hexagon:2610.00692, 31 Oct 2026) closes β < 1/2 for families of Theorem B's shape by a rank floor (their Thm 2.2), with the sharper bound 2^β/(2(4^β−1)) when (c) holds on all of V_h; `rho-lower-bound.md` Cor 3.4 (28 Oct) was first with the law 2^{β−1}. Their Prop 4.1 (single-mode operators on V_S do not satisfy Lemma 9) is a special case of the obstruction of Thm 3.1 here, and does not contradict Thm 2.1, whose embeddings do not have Theorem B's shape.
 
 ## 1. Sparse Fock spaces and their growth (Task 1)
 

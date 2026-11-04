@@ -242,6 +242,8 @@ have parameters (ρ, c) with the certified costs, then
 If f(E) = κE^β(1+o(1)) then ρ ≥ 2^{β−1}(1 − o(1)): β = 1/2 gives 1/√2, β = 1 gives 1 (no gain), and
 only β < 1/2 would give ρ < 1/√2 (App. H l.2995–2997 states the same law without proof).
 
+*Related work.* de Brito (hexagon:2610.00692, 31 Oct 2026) proves a rank floor (their Thm 2.2: |𝒳|·dim V_h ≤ Σ_{s,i} dim V_{s+i}, using only (b) and (c)) that closes β < 1/2 for families of Theorem B's shape: such families then exist only at finitely many weights, and wherever one exists ρ ≥ 2^{−β} − o(1) in weight counts (sharper, 2^β/(2(4^β−1)), when (c) holds on all of V_h). Cor 3.4 here (28 Oct) came first and is their 2^{β−1} branch; their floor is the new step on (G) within the shape.
+
 ### 3.3 The Fock space: ρ ≥ 1/√2 − O(log λ/λ) [R]
 
 **Corollary 3.5.** For the pieces of Theorem B (any dual families a_μ, b_ν, any h with p(h) ≥ 2^λ,
@@ -479,6 +481,8 @@ Theorem 3.3 reduces this to the disjunction:
    pieces whose sum is a nondegenerate pairing times the identity; or
  (O-T) pieces with true ranks far below their certified counts (not seen for h ≤ 9), or pieces
    that are not of the graded two-order form at all (the unrestricted problem of §2.2, HWY-hard).
+
+*Related work.* For families of Theorem B's shape (spread 2h, degrees s−h+i over 2h+1 terms), de Brito (hexagon:2610.00692, 31 Oct 2026) closes the case β < 1/2 of (O-G) by a rank floor (their Thm 2.2; see §3.2). (O-G) in the general sense, which `sparse-fock.md` Thm 2.1 shows is `Exist ρ c` itself, stays open.
 
 **Minimal counterexample structure.** The cheapest target is (O-G) on the sparse Fock space
 ℚ[t_k : k ∈ K] with K = {k²} (β = 1/3, so ρ would be 2^{−2/3} = 0.63 and α' = 2/3; |I| ≈ λ³ is still

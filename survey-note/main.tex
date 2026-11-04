@@ -315,10 +315,10 @@ B3 & P\u{a}tra\c{s}cu--Williams: $k$-DomSet in $O(n^{k-\varepsilon})$ for some $
 B4 & P\u{a}tra\c{s}cu--Williams: $d$-SUM on $N$ numbers of $O(d\log N)$ bits, $d<N^{0.99}$, in $N^{o(d)}$ $\Rightarrow$ $k$-SAT in $2^{o(n)}$~\cite[\S5]{PW10}\Lit & premise refuted & Conclusion of the contrapositive is now true; $d$-SUM bound open.\\
 B13 & ETH $\Rightarrow$ no $2^{o(n)}$ IS, Clique, VC, $k$-Col, DomSet on $n$ vertices, any density~\cite{IPZ01,LMS11}\Lit & conclusion refuted & \A, Corollary~7: deterministic $O(2^{\delta n})$ for every $\delta$, any number of edges, with counts by size and of $k$-colourings.\\
 B14 & ETH $\Rightarrow$ $k$-VC $\notin2^{o(k)}\poly(n)$ (from B13, as $k\le n$; cf.~\cite{CJ03})\Lit & conclusion refuted\Inf & $2k$-vertex LP kernel~\cite[\S2.5]{CyganEtAl15}, then Corollary~7 (\cref{sec:new}). Cai--Juedes: Max-SNP-complete problems have $2^{o(k)}p(n)$ algorithms iff $3$-SAT $\in\mathrm{DTIME}(2^{o(n)})$.\\
-B15 & ETH $\Rightarrow$ no $2^{o(n)}$ Max-Cut, Max-$k$-SAT with $O(n)$ constraints\Fol & conclusion refuted\Inf & Unweighted, or $O(1)$-bit weights; \cref{sec:new}. Polynomial weights: only under \HA. Dense: A27.\\
+B15 & ETH $\Rightarrow$ no $2^{o(n)}$ Max-Cut, Max-$k$-SAT with $O(n)$ constraints\Fol & conclusion refuted\Inf & Unweighted, or $O(1)$-bit weights; \cref{sec:new}. Polynomial weights: under \HA, or by the white-box extension of \Oa{} to $\mathbb{Q}$-algebra weights in~\cite{Bhattacharjee26} (not a consequence of the top-level theorem of \Oa). Dense: A27.\\
 B16 & ETH $\Rightarrow$ no $2^{o(n)}$ HC, HP, TSP, Steiner, FVS, CVC, CDS, Max-Leaf on sparse graphs~\cite[Thm.~3.3]{LMS11} & conclusion refuted under \HA\Own & \cite{Tulsyan26} and our notes~\cite{TulsyanRepo26}; on dense graphs only the premise is refuted.\\
 B19 & ETH $\Rightarrow$ $k$-Clique $\notin f(k)n^{o(k)}$ \cite[Thm.~5.5]{CHKX06}\Lit & premise refuted & $2^{\delta n}$ does not contradict it at small $k$.\\
-B20 & ETH $\Rightarrow$ binary CSP $\notin f(G)n^{o(k/\log k)}$, $k$ the treewidth~\cite{Marx10}; $\#$ETH $\Rightarrow$ $\#k$-matching (bipartite) $\notin f(k)n^{o(k/\log k)}$~\cite{CM14}\Lit & premise refuted & Parameter $k\ll n$.\\
+B20 & ETH $\Rightarrow$ binary CSP $\notin f(G)n^{o(k/\log k)}$, $k$ the treewidth~\cite{Marx10}; $\#$ETH $\Rightarrow$ $\#k$-matching (bipartite) $\notin f(k)n^{o(k/\log k)}$~\cite{CM14}\Lit & premise refuted & Parameter $k\ll n$. On a class of bounded-degree graphs of unbounded treewidth, Nguyen~\cite{Nguyen26} decides binary CSP in $f(G)n^{O(k/\sqrt{\log k})}$ via the network engine of \A, contradicting the literal (unconditional) form of Marx's Conjecture~1.4 ($n^{o(k)}$); the exponent $o(k/\log k)$ of the theorem is not reached.\\
 B21 & ETH $\Rightarrow$ no $2^{o(d\log d)}$ Closest String, Distortion, Disjoint Paths by tw, \dots~\cite{LMS18super}; no $2^{o(p\log p)}$ Cycle Packing~\cite[Thm.~1.4]{CutAndCount11}\Lit & premise refuted & \\
 B22 & ETH $\Rightarrow$ $2^{\Omega(\sqrt n)}$ planar bounds~\cite{LMS11}; $2^{\Omega(n^{1-1/d})}$ for fat-object graphs~\cite{dBBKMZ18} and Euclidean TSP~\cite{dBBKK18}\Lit & premise refuted & The refutations give only $2^{n/\mathrm{polylog}\,n}$, worse than the upper bounds. Under Almost-ETH the reductions give $2^{n^{1/2-\gamma}}$-type bounds\Inf.\\
 B11 & Under the Set Cover Conjecture: Steiner Tree $\notin2^{\varepsilon t}\poly$, CVC $\notin2^{\varepsilon t}\poly$, Set Partitioning $\notin2^{\varepsilon n}\poly(m)$, Subset Sum $\notin t^{\varepsilon}\poly(n)$~\cite[Thm.~1.2]{CDLMNOPSW16}\Lit & survives & A21 intact.\\
@@ -339,7 +339,7 @@ B10 & Results using $d=c\log n$ exactly, stated ``under SETH'' & premise refuted
 B26 & NSETH $\Rightarrow$ no deterministic fine-grained reduction from SAT to 3SUM, APSP~\cite{CGIMPS16}\Lit & premise refuted & The barrier is lifted; no reduction follows.\\
 \midrule
 \multicolumn{4}{@{}l}{\emph{Counting, quantum, circuits}}\\
-B17 & $\#$ETH bounds for the Tutte polynomial, the permanent and $\#$IS~\cite{DHMTW14,Curticapean18,BrandDellRoth19}\Lit & mixed & Conclusion refuted: $\#2$-SAT and $\#$IS on $n$ variables/vertices at any density (\A, Corollaries~6,~7); sparse permanent, $\#$PM, Boolean $\#$CSP, the integer hyperbolas $H_q$ (local encodings); $T(x,1)$ on sparse graphs under \HA\Own. Dense permanent and the rest: premise refuted.\\
+B17 & $\#$ETH bounds for the Tutte polynomial, the permanent and $\#$IS~\cite{DHMTW14,Curticapean18,BrandDellRoth19}\Lit & mixed & Conclusion refuted: $\#2$-SAT and $\#$IS on $n$ variables/vertices at any density (\A, Corollaries~6,~7); sparse permanent, $\#$PM, Boolean $\#$CSP, the integer hyperbolas $H_q$ (local encodings; also, independently and earlier, \cite{Bhattacharjee26}); $T(x,1)$ on sparse graphs under \HA\Own. Dense permanent and the rest: premise refuted.\\
 B18 & Quantum-supremacy statements from ETH/SETH~\cite{MT19a} and others & mixed & Of $24$ rows in~\cite[Table~2]{TulsyanQ26}: $5$ refuted, $5$ premise refuted, $1$ moot, $1$ open, $12$ survive.\\
 B27 & ETH false $\Rightarrow$ $\ENP\not\subseteq\mathrm{SIZE}(O(n))$~\cite[Thm.~6.1]{Wil13}; see~\cite{JMV15}\Lit & fires & \Cref{sec:circuits}.\\
 \end{longtable}
@@ -395,7 +395,7 @@ with $O(1)$-bit weights, encode each constraint by a forced indicator variable, 
 adder and a comparison with a target $t$, and apply Tseitin: a $3$-CNF with $O(n)$ variables whose
 models are the assignments of value exactly $t$. Corollary~6 counts them for each $t$, giving the
 exact optimum and the number of solutions of each value in $2^{\delta n}$. Weights up to $W$ cost
-$O(m\log W)$ gates, so polynomial weights are not covered by the main theorems.
+$O(m\log W)$ gates, so polynomial weights are not covered by the main theorems. Bhattacharjee~\cite{Bhattacharjee26} obtains them by running the algorithm of \Oa{} itself over truncated polynomial rings, a white-box extension.
 \item $\mathrm{M}[1]$-complete problems in FPT time (A15).
 \end{enumerate}
 
@@ -415,11 +415,11 @@ marginals and exact sampling on paper.
 \item \emph{Further sparse problems, on paper only}~\cite{TulsyanRepo26}: Steiner Tree, FVS,
 Connected VC and DS, Max-Leaf; the line $T(x,1)$ of the Tutte plane (forests counted by size) on
 sparse graphs, which is the line Brand, Dell and Roth~\cite{BrandDellRoth19} show $\#$ETH-hard;
-sparse Max-Cut with polynomial weights. All are conditional on \HA{} and not formalised.
+sparse Max-Cut with polynomial weights. All are conditional on \HA{} and not formalised. For Max-Cut and Max-$k$-SAT with polynomial weights, Bhattacharjee~\cite{Bhattacharjee26} gives an earlier, independent route that replaces \HA{} by the claim that the steps of \Oa{} remain valid over a commutative $\mathbb{Q}$-algebra (unrefereed, not formalised).
 \end{enumerate}
 
 \subsection{What gets no algorithm}
-Nothing parameterised by treewidth or pathwidth; no problem in P (edit distance, LCS, Fr\'echet,
+Nothing parameterised by treewidth or pathwidth, except binary CSP on one class of bounded-degree graphs, with exponent $O(\mathrm{tw}/\sqrt{\log\mathrm{tw}})$~\cite{Nguyen26} (B20); no problem in P (edit distance, LCS, Fr\'echet,
 diameter, OV, 3SUM, APSP, $k$-Clique); Set Cover by universe size; Subset Sum; dense Max-CSP;
 dense Hamiltonicity; planar problems (where $2^{O(\sqrt n)}$ is already better).
 

@@ -42,6 +42,8 @@ H_q = {(x,y) : (x−1)(y−1) = q}, and let 𝓛 := {y = 1}.
 So for m = O(n) the engine gives 2^{o(n)}, indeed 2^{δn} for every δ, on 𝓗 ∪ 𝓛, and also for
 q = q(n) as long as log q = o(√log n). §2 has the proof.
 
+*Related work.* Bhattacharjee (hexagon:2610.00594, 29 Oct 2026) was public first (our P1 commit: 30 Oct) with the Tutte polynomial on H_q, via a white-box extension of OpenAI's algorithm, stated (per its introduction; not checked in full) for bounded-degree graphs and positive integer q. P1 is stronger as stated: m = O(n) rather than bounded degree, the whole restriction T_G|_{H_q}, uniform in q. Nguyen (hexagon:2611.00004, 2 Nov 2026), dated after us, is an independent instance of the same q-uniform bound (domain-uniform binary CSP; the chromatic polynomial at integer q on bounded-degree graphs, one point of H_q).
+
 **Theorem B (barrier, unconditional).** Fix a point (x,y) ∈ ℂ² **off** 𝓗 ∪ 𝓛, that is, y ≠ 1 and
 (x−1)(y−1) ∉ {1,2,3,…}. Let N be a *vertex-local* network family on subcubic graphs (Model V(s),
 §3.1: each node's tables depend only on the edges at one cluster of ≤ s ≤ n/log₂ n vertices,

@@ -233,6 +233,8 @@ have to be of the form "problem X needs 2^{Ω(n/log n)}", which does not exist i
 Conversely, e_K = o(1/log K) gives (via `permanent-attack.md` §3) the dense permanent, dense #HC and ATSP in
 2^{o(n)}; none of these is believed impossible in a post-ETH world, so no barrier in that direction either.
 
+*Related work.* Nguyen (hexagon:2611.00004, 2 Nov 2026) gives the bounded-degree form: binary CSP in f(G)‖I‖^{O(tw/√log tw)} on a class of bounded-degree graphs of unbounded treewidth (Anthropic's network engine with log D label bits per edge), contradicting the literal, unconditional form of Marx's Conjecture 1.4; the ETH-conditional o(tw/log tw) is not reached. It does not touch dense or complete primal graphs and does not move e_K.
+
 ## 5. Hybrid: Theorem A with an FMM base case [N]
 Replacing e_0 = 1/2 by e_0 = ω/9 = 0.2635 at K_0 = 2^{18} and running the actual recurrence
 e_{ℓ+1} = (ρ + 3·2^{−ℓ−5})e_ℓ + 3/K_ℓ (`clique_bounds.out` (3)) multiplies e_ℓ by 0.527 at every level (the +3/K_ℓ

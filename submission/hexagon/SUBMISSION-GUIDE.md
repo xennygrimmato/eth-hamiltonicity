@@ -93,3 +93,10 @@ form; the papers cite the scripts in the repository instead.
 - **MSC2020:** 68Q17, 68Q25, 68Q15.
 - **Tags:** Exponential Time Hypothesis; SETH; fine-grained complexity; conditional lower bounds; parameterized complexity; survey.
 - Nothing in this note is claimed as machine-checked except where it cites our Lean theorems.
+
+## HC paper v2 candidate (4 Nov 2026)
+`hexagon-hc-paper-texonly.zip` (single `main.tex`, bibliography inlined) is now a **v2 candidate** for the
+existing record hexagon:2610.00672 (v1 is published). Upload it via **"Revise"** on that record, not as a new
+submission. Changes from v1: two citation sentences only, to Bhattacharjee (hexagon:2610.00594, independent
+white-box weighted route, in the Tutte subsection of the Extensions) and de Brito (hexagon:2610.00692, rank floor
+for Theorem-B-shaped pieces, in the open problem on the exponent). Abstract unchanged (`abstract-hc.txt`).

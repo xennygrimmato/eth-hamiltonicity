@@ -50,6 +50,11 @@ Arturs Backurs and Piotr Indyk, \emph{Edit distance cannot be computed in
   \textbf{47} (2018), no.~3, 1087--1097, Preliminary version in STOC 2015;
   arXiv:1412.0348.
 
+\bibitem{Bhattacharjee26}
+Deep Bhattacharjee, \emph{Subexponential weighted counting and exact
+  optimisation}, Hexagon preprint hexagon:2610.00594v1, 29 October 2026,
+  \url{https://hexagonmath.org/abs/2610.00594}, 2026.
+
 \bibitem{BrandDellRoth19}
 Cornelius Brand, Holger Dell, and Marc Roth, \emph{Fine-grained dichotomies for
   the {T}utte plane and {B}oolean \#{CSP}}, Algorithmica \textbf{81} (2019),
@@ -298,6 +303,11 @@ D{\'a}niel Marx, \emph{Can you beat treewidth?}, Theory Comput. \textbf{6}
 Tomoyuki Morimae and Suguru Tamaki, \emph{Fine-grained quantum computational
   supremacy}, arXiv:1901.01637 (v4, 2019); published in Quantum Inf. Comput.
   \textbf{19} (2019), no.~13\&14, 1089--1115, 2019.
+
+\bibitem{Nguyen26}
+Troy~Tri Nguyen, \emph{A sublinear treewidth exponent for binary constraint
+  satisfaction}, Hexagon preprint hexagon:2611.00004v1, 2 November 2026,
+  \url{https://hexagonmath.org/abs/2611.00004}, 2026.
 
 \bibitem{OpenAI26}
 {OpenAI}, \emph{The {E}xponential {T}ime {H}ypothesis is false}, Preprint dated

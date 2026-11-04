@@ -134,6 +134,7 @@ the pieces count enters the next exponent **additively**: e' = ρ e + log|I|/(4�
 * f(E) = E^β, 0 < β < 1/2: |I| = 4(λ)^{1/β} + 1 is polynomial, Definition 7(c) holds as stated, ρ = 2^{β−1},
   **α' = 1 − β**. This is the clean target: nothing in Theorem A changes. (Checked: β = 0.4 → ρ = 0.660,
   α' = 0.6; β = 0.25 → ρ = 0.595, α' = 0.75.)
+  *Related work.* de Brito (hexagon:2610.00692, 31 Oct 2026), Thm 2.2, shows by a rank floor that within Theorem B's shape this target is closed: for β < 1/2 such families exist only at finitely many weights, and their weight-count gain is ≥ max(2^{β−1}, 2^{−β}) − o(1) ≥ 1/√2 (sharper, 2^β/(2(4^β−1)), when (c) holds on all of V_h). The law ρ = 2^{β−1} with a proof is `rho-lower-bound.md` Cor 3.4 (28 Oct), before them.
 * f(E) = d·log E (polynomial growth): ρ = 1/2 + O(d/λ) but |I| = 2^{λ/d+2}, additive loss 1/(4d) per level:
   the recursion stalls at e ≈ 1/(2d). Useless unless d grows with the level, and d ≫ 1/e_ℓ.
 * f(E) = (log E)^γ, γ > 1: ρ = 1/2 + O(γ/λ^{1/γ}), log|I| = λ^{1/γ}, additive loss λ^{1/γ−1}/4. At the top

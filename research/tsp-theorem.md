@@ -333,6 +333,8 @@ Corollary 2.3 at z = Y. Proposition 1.5 applies (minimum degree ≥ 2 is checked
 *Remark.* [E, Proposition 5.4] has the sharper τ = 2^{1.5μ}·poly for the HC data (there |V_a| ≤
 μ_a/2); the cruder 2^{3μ} of Proposition 1.5 changes nothing, as log τ is a lower-order term.
 
+*Related work.* A parallel weighted-counting route: Bhattacharjee (hexagon:2610.00594, 29 Oct 2026) runs OpenAI's algorithm over truncated polynomial rings ℚ[W]/(W^N), the ring form of the Kronecker integer used here, for sparse Max-Cut / Max-k-SAT and the Tutte polynomial on H_q. It was public first for Tutte on H_q (29 Oct vs our 30 Oct commit), while our statement (`tutte-plane.md` P1) is stronger: m = O(n), the whole hyperbola, uniform in q. It does not treat TSP, HC or ATSP.
+
 ### 2.3 Degree reduction
 
 **Lemma 2.7.** Let Θ ≥ 2, H := {v : deg(v) > Θ}, and for each π = (π_v)_{v∈H} with π_v a 2-subset

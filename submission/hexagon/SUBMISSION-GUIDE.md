@@ -37,7 +37,11 @@ Source of the rules: hexagonmath.org/about and the public submission schema
 - **MSC2020:** 81P68, 68Q12, 68Q25, 68Q17, 03B35.
 - **Tags:** quantum circuit simulation; strong simulation; Clifford+T; quantum supremacy; fine-grained
   complexity; Exponential Time Hypothesis; tensor networks; Lean 4; formal verification.
-- **Tools / formalizations / arXiv:** as for paper 1.
+- **Tools:** Claude (Anthropic), via Claude Code; Lean 4 with Mathlib; TeX Live; Python (numeric checks).
+- **Formalizations / arXiv id:** leave empty.
+- Status: READY (revised 4 Nov 2026, 15 pp, house style, single main.tex, repository and commit cited). Machine-checked: Theorem 1.1
+  only (`amplitude_TM_rate'`, `amplitude_TM_rate`, `amplitude_TM`); everything else is labelled proved on paper only. The remark
+  after Theorem 1.1 was corrected (its sufficient condition on L was too weak); the theorem itself is unchanged.
 
 ## Your decisions (the form asks you to declare these; I have not filled them in for you)
 1. **Human understanding** — `all` / `some` / `none`: "whether all, some, or none of the contribution
@@ -72,7 +76,11 @@ Source of the rules: hexagonmath.org/about and the public submission schema
 - **Primary subject:** cs.CC. **Cross-lists:** cs.DS.
 - **MSC2020:** 68Q25, 68W40, 68Q17.
 - **Tags:** Exponential Time Hypothesis; model counting; fine-grained complexity; explicit constants; galactic algorithms; crossover point.
-- **Tools / formalizations / arXiv:** as for the other papers (tools: Claude (Anthropic) via Claude Code; Python with mpmath). Nothing in this note is machine-checked: the crossover numbers are computations, not theorems.
+- **Tools:** Claude (Anthropic), via Claude Code; Python with mpmath; TeX Live.
+- **Formalizations / arXiv id:** leave empty.
+- Status: READY (revised 4 Nov 2026, 11 pp, house style, repository and commit 2798867 cited). Nothing in this note is
+  machine-checked: the crossover numbers are computations, not theorems. Six errors found in review were fixed, including two
+  table rows recomputed after a floor/ceiling fix in the script; the headline numbers in the abstract are unchanged.
 
 ## Packaging lesson (from the HC upload)
 Hexagon rejected ZIPs containing `anc/` scripts and/or separate `.bib`/`.bbl` files with "file type not accepted",

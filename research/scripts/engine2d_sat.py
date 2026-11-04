@@ -36,7 +36,7 @@ def profiles(cfg, S):
     rec(0, S, [], frozenset())
     return res
 
-TLIM = 60
+TLIM = 10
 def solve(cfg, terms, tlim=None):
     """True/False, or None on timeout (TLIM seconds per instance)."""
     import threading
@@ -78,12 +78,12 @@ if __name__ == '__main__':
     if which in ('one', 'two', 'all'):
         minimise('single rectangle', [((0, 1), (0, 1))], 4, True)
     if which in ('two', 'all'):
-        minimise('A fat cell (same pairs)', [((0, 1), (0, 1)), ((0, 1), (0, 1))], 8, True)
-        minimise('B same rows, disj cols', [((0, 1), (0, 1)), ((0, 1), (2, 3))], 8, True)
-        minimise('B\' same rows, shared col', [((0, 1), (0, 1)), ((0, 1), (1, 2))], 8, True)
-        minimise('C disjoint', [((0, 1), (0, 1)), ((2, 3), (2, 3))], 8, True)
-        minimise('D chain rows, disj cols', [((0, 1), (0, 1)), ((1, 2), (2, 3))], 8, True)
-        minimise('E chain rows+cols', [((0, 1), (0, 1)), ((1, 2), (1, 2))], 8, True)
+        minimise('A fat cell (same pairs)', [((0, 1), (0, 1)), ((0, 1), (0, 1))], 10, True)
+        minimise('B same rows, disj cols', [((0, 1), (0, 1)), ((0, 1), (2, 3))], 10, True)
+        minimise('B\' same rows, shared col', [((0, 1), (0, 1)), ((0, 1), (1, 2))], 10, True)
+        minimise('C disjoint', [((0, 1), (0, 1)), ((2, 3), (2, 3))], 10, True)
+        minimise('D chain rows, disj cols', [((0, 1), (0, 1)), ((1, 2), (2, 3))], 10, True)
+        minimise('E chain rows+cols', [((0, 1), (0, 1)), ((1, 2), (1, 2))], 10, True)
     if which in ('three', 'all'):
-        minimise('triangle (diagonal)', [((0, 1), (0, 1)), ((1, 2), (1, 2)), ((0, 2), (0, 2))], 8, True)
-        minimise('3x2 grid (non-diagonal)', [((0, 1), (0, 1)), ((1, 2), (0, 1)), ((0, 2), (0, 1))], 8, False)
+        minimise('triangle (diagonal)', [((0, 1), (0, 1)), ((1, 2), (1, 2)), ((0, 2), (0, 2))], 10, True)
+        minimise('3x2 grid (non-diagonal)', [((0, 1), (0, 1)), ((1, 2), (0, 1)), ((0, 2), (0, 1))], 10, False)

@@ -188,7 +188,7 @@ would have shown the law fails there, at least at λ = 1. The product rank sum i
 | product decomposition at λ = 1: identity, min-ranks (1,4,4,1), rank sum 10, max 4 | **Lean-checked on the instance**: `DecorrelatedProduct.product_sum`, `product_costs`, `product_rank_sum` |
 | a correlated decomposition beating the product bound | none exists asymptotically (Theorem 1). The λ = 1 rank-sum improvements (7 < 10) are GF(2) SAT outputs, not formalised |
 | Theorem 2 (m ≥ 3, CVZ functionals), Theorem 3 (ρ ≥ 1/8) | not yet formalised (CVZ is not in Mathlib) |
-| 3×2: S ≥ 4 proved, S < 8 not found | S ≥ 4 is Theorem 1 on a sub-configuration (not formalised); search [N]/[C] |
+| 3×2: S ≥ 4 proved, S < 8 not found | superseded by §7: S ≥ N³ is **Lean-proved (general)** (`Grid32.rankSum_ge`) |
 
 All Lean theorems print `[propext, Classical.choice, Quot.sound]` under `#print axioms`. No sorry, no native_decide.
 
@@ -198,7 +198,9 @@ All Lean theorems print `[propext, Classical.choice, Quot.sound]` under `#print 
 * `scripts/engine2d_sat.py` / `.out`: exhaustive λ = 1 search (`two`: single rectangle and configurations A–E; `3x2`).
 * `scripts/engine2d_bound.py` / `.out`: exact ℚ check of Theorem 1 on random decompositions (λ = 1, 2), diagonal labellings.
 * `lean/EthFollowup/Scratch/Decorrelated/Basic.lean`: Theorem 1 (general α, any field). `Product.lean`: the product
-  decomposition at λ = 1 and its costs.
+  decomposition at λ = 1 and its costs. `Grid32.lean`: Theorem 4 (3×2 grid) and the relabelling no-go of §7.5(b).
+* `scripts/engine2d_lossy.py` / `.out`: §7 numeric check of Theorem 4, level counts (Theorem 5), sub-configurations.
+* `scripts/engine2d_grid32/` and `scripts/engine2d_grid32.out`: §7.5, §7.7 (min-cut model, λ = 1 matching MILPs).
 
 ---------------------------------------------------------------------------------------------------
 
@@ -347,7 +349,7 @@ On the full level with label densities p (rows) and q (columns), the useful agre
 4Q·[pq(1−pq) + p̄q̄(1−p̄q̄)] + O(Q/g). With a = √(pq), b = √(p̄q̄) we have a + b ≤ 1 (AM–GM), and
 a²−a⁴+b²−b⁴ ≤ 3/8, with the maximum at a = b = 1/2. Hence the method gives at most (3/4 + O(1/g))Q, so **ρ ≥ 3/8 is the
 limit of the 2-party lossy method on full levels**. For the 3×3 level the bound is exactly 8 (agreeing nodes: a 2×2
-block plus one node; each block node wastes one leg). [N] (`subconf.py` logic in `engine2d_lossy.py`, exhaustive over
+block plus one node; each block node wastes one leg). [N] (`engine2d_lossy.out` (c), exhaustive over
 labellings and edge subsets): every sub-configuration of the 3×3 grid with ≤ 8 rectangles, all configurations on the
 4×2 grid, and all configurations with ≤ 7 rectangles on the 5×2 grid reach |E| − max = Q. So ρ ≥ 1/2 holds for all of
 them, and the full 3×3 level is the smallest configuration found where the method falls short.

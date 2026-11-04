@@ -1,0 +1,19 @@
+(a) Theorem 4 check
+N 2 rank M(H) 16 =N^4 16
+ rkB 3 rkM 6 <= 6 | rkCol 3 rkM 6 <= 6
+ rkB 3 rkM 6 <= 6 | rkCol 3 rkM 6 <= 6
+ rkB 1 rkM 2 <= 2 | rkCol 1 rkM 2 <= 2
+ rkB 1 rkM 2 <= 2 | rkCol 1 rkM 2 <= 2
+N 3 rank M(H) 81 =N^4 81
+ rkB 2 rkM 6 <= 6 | rkCol 2 rkM 6 <= 6
+ rkB 3 rkM 9 <= 9 | rkCol 3 rkM 9 <= 9
+ rkB 1 rkM 3 <= 3 | rkCol 1 rkM 3 <= 3
+ rkB 3 rkM 9 <= 9 | rkCol 3 rkM 9 <= 9
+(b) level counts
+g 3 Q 9 balanced: e-s = 8 ratio 8/9 (free,n10,n01,n20) (4, 4, 4, 4) | best over all labellings 8
+g 4 Q 36 balanced: e-s = 32 ratio 8/9 (free,n10,n01,n20) (16, 16, 16, 16) | best over all labellings 32
+   closed form 3h^4-2h^3 = 32
+g 5 Q 100 balanced: e-s = 84 ratio 21/25 (free,n10,n01,n20) (36, 48, 48, 36) | best over all labellings 84
+g 6 Q 225 balanced: e-s = 189 ratio 21/25 (free,n10,n01,n20) (81, 108, 108, 81) | best over all labellings None
+   closed form 3h^4-2h^3 = 189
+3x2 no-merge best 3

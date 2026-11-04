@@ -1,0 +1,779 @@
+\documentclass[10pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{alltt}
+\usepackage{booktabs}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=OliveGreen,urlcolor=MidnightBlue]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+\setlist{leftmargin=*,itemsep=2pt,topsep=4pt}
+\emergencystretch=2.5em
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{importedtheorem}[theorem]{Imported Theorem}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\crefname{importedtheorem}{Imported Theorem}{Imported Theorems}
+\numberwithin{equation}{section}
+
+\newcommand{\A}{\textup{[A]}}
+\newcommand{\Oa}{\textup{[O]}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\tl}{\tau^{<}}
+\newcommand{\rate}{2^{O(n/\sqrt{\log n})}}
+% Lean names: typewriter, with line breaks allowed after '.' and '_'.
+\DeclareUrlCommand\lean{\urlstyle{tt}\def\UrlBreaks{\do\.\do\_}\def\UrlBigBreaks{}}
+% Repository names: typewriter, with line breaks allowed after '/' and '-'.
+\DeclareUrlCommand\repo{\urlstyle{tt}\def\UrlBreaks{\do\/\do\-}\def\UrlBigBreaks{}}
+
+\begin{document}
+
+\title[The parity of $\pi(x)$ in time $x^{o(1)}$]{The parity of the prime-counting function in time $x^{o(1)}$,\\ assuming the new $\#$SAT algorithms}
+
+\author{Vaibhav Tulsyan}
+
+\date{November 2026}
+
+\subjclass[2020]{11Y11, 11Y16, 11N05, 68Q25, 03B35}
+\keywords{Prime-counting function, parity, squarefree numbers, M\"obius function, deterministic prime finding, exact counting, Exponential Time Hypothesis, Lean~4, formal verification}
+
+\begin{abstract}
+Computing the prime-counting function $\pi(x)$ exactly takes $x^{1/2+o(1)}$ steps by the analytic
+method of Lagarias and Odlyzko, and to our knowledge its parity is known faster only on short intervals: Tao,
+Croot and Helfgott decide whether an interval of length at most $x^{1/2+c}$ near $x$ contains an odd
+number of primes in time $x^{1/2-c+o(1)}$. However, their identity needs the M\"obius function
+$\mu(d)$ for all $d\le\sqrt x$, and we know of no bound of the form $x^{o(1)}$ for the parity, even
+conditionally. We present deterministic algorithms that output
+$\pi(x)\bmod2$ and the parity of the number of primes in any interval $[A,B]$ in time
+$2^{O(n/\sqrt{\log n})}=x^{o(1)}$, where $n$ is the input bit length. Our approach replaces $\mu(d)$ by
+its residue modulo $2$, which is the squarefree indicator again: the number of chains
+$d_1^2\mid m$, $d_2^2\mid d_1,\dots$ of depth $L$ is odd exactly when $m$ is squarefree, for
+$m<2^{2^L}$. The parity of $\pi$ on $[A,B]$ is then the parity of one count of tuples satisfying
+$O(\log n)$ multiplications, which Anthropic's counting engine evaluates through a network whose
+variables have geometrically shrinking widths. We prove both theorems in Lean~4
+(\texttt{piParity\_TM\_rate}, \texttt{piIntervalParity\_TM\_rate}; axioms \texttt{propext},
+\texttt{Classical.choice}, \texttt{Quot.sound}). The result does not give deterministic prime finding
+or the exact value of $\pi(x)$: the parity can be even on every interval one queries, and exact counts
+seem to need iterated products, for whose product-tree verifiers we prove a lower bound in Lean. The
+constants are astronomical, and the result rests on Anthropic's Lean development of its claimed
+refutation of the Exponential Time Hypothesis, which is under review.
+\end{abstract}
+
+\maketitle
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+% =====================================================================
+
+How fast can one count primes? The prime-counting function $\pi(x)$ is computed exactly in
+$x^{2/3+o(1)}$ steps by the combinatorial method of Meissel, Lehmer, Lagarias, Miller and
+Odlyzko~\cite{LMO85,DR96}, and in $x^{1/2+o(1)}$ steps by the analytic method of Lagarias and
+Odlyzko~\cite{LO87}. The same bound $x^{1/2+o(1)}$ is the best known for deterministically
+\emph{finding} a prime between $x$ and $2x$, the question of the Polymath4 project~\cite{Tao09,TCH12}.
+Tao, Croot and Helfgott~\cite{TCH12} showed that one bit of $\pi$ can be had faster: they decide
+whether an interval $[a,b]\subseteq[N,2N]$ of length at most $N^{1/2+c}$ contains an odd number of
+primes in time $O(N^{1/2-c+o(1)})$, for an absolute $c>0$ (their Theorem~1.2), and
+Lelechenko~\cite{Lel13} made $c$ explicit.
+
+However, both results are for short intervals, and the obstacle to longer ones is structural. The
+identity behind~\cite{TCH12} sums a divisor-sum function over $d\le\sqrt N$ with weights $\mu(d)$, and
+$\mu(d)$ for every $d\le\sqrt N$ is itself an $N^{1/2}$ computation. We are not aware of a published bound
+below $x^{1/2+o(1)}$ for $\pi(x)\bmod 2$; Sladkey~\cite[ref.~5]{Sla12} cites a manuscript by Oliveira e
+Silva on computing the parity of $\pi$ as in preparation, and we could not find it.
+
+In October 2026 OpenAI~\cite{OpenAI26} and Anthropic~\cite{Anthropic26} (below \Oa{} and \A) each
+claimed a deterministic algorithm that counts the satisfying assignments of a $k$-CNF in subexponential
+time, refuting the Exponential Time Hypothesis; both claims come with Lean~4 developments and are under
+review. Rudich and Rousseau~\cite{RR26} used the engines to factor in $N^{o(1)}$, and our earlier
+notes~\cite{TulFac26,TulCN26} proved in Lean, on \A's engine, bounds of the form $\rate$ for factoring,
+class numbers, square roots and divisor sums. We found no derivation of a parity result for $\pi$ from
+either refutation (\cref{sec:related}).
+
+\subsection{The problem and the running example}
+We consider the \emph{interval prime parity} problem: given $A$ and $B$, output
+$\pi([A,B])\bmod 2$, where $\pi([A,B])=\#\{p\text{ prime}:A\le p\le B\}$. The case $A=1$, $B=x$ is
+$\pi(x)\bmod2$. We write $\tl(m)=\#\{(a,b):ab=m,\ a<b\}$ and
+\[
+  C_L(m)=\#\{(d_1,\dots,d_L):\ d_1^2\mid m,\ d_2^2\mid d_1,\ \dots,\ d_L^2\mid d_{L-1}\}.
+\]
+
+\begin{example}[Running example]\label{ex:ten}
+Take $[A,B]=[1,10]$ and $L=2$. \Cref{tab:ten} lists $\tl(m)$, $C_2(m)$ and their product. The sum of
+the last row is $16$, which is even, and indeed $\pi(10)=4$. The summand is odd exactly at the primes
+$2,3,5,7$: at $m=6$ and $m=10$ the factor $\tl(m)=2$ is even, and at $m=4,8,9$ the factor $C_2(m)=2$
+is even.
+\end{example}
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}lcccccccccc|c@{}}
+\toprule
+$m$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & sum\\
+\midrule
+$\tl(m)$ & 0 & 1 & 1 & 1 & 1 & 2 & 1 & 2 & 1 & 2 & \\
+$C_2(m)$ & 1 & 1 & 1 & 2 & 1 & 1 & 1 & 2 & 2 & 1 & \\
+$\tl(m)\,C_2(m)$ & 0 & 1 & 1 & 2 & 1 & 2 & 1 & 4 & 2 & 2 & 16\\
+\midrule
+$m$ prime & & $\ast$ & $\ast$ & & $\ast$ & & $\ast$ & & & & 4\\
+\bottomrule
+\end{tabular}
+\caption{The running example: the one-count identity on $[1,10]$ with $L=2$.}\label{tab:ten}
+\end{table}
+
+\subsection{The naive route and the principle}
+At first one might count primes exactly, through a signed identity such as
+$[m\text{ squarefree}]=\sum_{d^2\mid m}\mu(d)$, and read off the parity. However, a counting engine
+sums non-negative table entries over labellings; a weight $\mu(d)$ on a label $d$ of $\Theta(n)$ bits
+needs the factorisation of $d$ inside one node, and the nodes of \A's networks hold $o(n)$ bits. We
+call this the \emph{M\"obius barrier}. Instead, we rely on a different principle: \emph{modulo $2$,
+$\mu(d)\equiv[d\text{ squarefree}]$, so the M\"obius weight is the problem itself at half the size, and
+the recursion closes after $\log_2 n$ halvings.} The resulting chain count is a plain count of
+divisibility witnesses, and the witnesses shrink geometrically, so their total size is $O(n)$.
+
+\subsection{What we prove}
+In this paper we prove that one count of a fixed system of $O(\log n)$ multiplications has the parity of
+$\pi([A,B])$, build the network that evaluates the count with $O(n)$ shared bits, and prove in Lean that
+one Turing machine per problem outputs the parity.
+
+\begin{theorem}[\cref{sec:statement}; machine-checked]\label{thm:main}
+There are Turing machines $M_1,M_2$ in Mathlib's \lean{TM2} model, with finite alphabets on all stacks,
+and for each of them a constant $C\in\N$, such that on every input word $w$ of length $n$ the machine halts within
+$\lfloor C\cdot2^{Cn/\sqrt{\log_2(n+2)}}\rfloor$ steps with the following output:
+\begin{enumerate}[label=(\roman*)]
+\item on $w=$ \lean{encodeNat}~$x$, the machine $M_1$ outputs \lean{encodeNat}~$(\pi(x)\bmod2)$
+(\lean{piParity_TM_rate});
+\item on $w=$ \lean{encodePair}~$A$~$B$, the machine $M_2$ outputs
+\lean{encodeNat}~$(\pi([A,B])\bmod2)$ (\lean{piIntervalParity_TM_rate}).
+\end{enumerate}
+\end{theorem}
+
+\noindent Since $n=\log_2x+O(1)$ in (i), the bound is $x^{O(1/\sqrt{\log\log x})}=x^{o(1)}$, against
+$x^{1/2+o(1)}$ for the exact $\pi(x)$~\cite{LO87}. In (ii) it is $\max(A,B)^{o(1)}$ for every interval,
+against $N^{1/2-c+o(1)}$ for intervals of length at most $N^{1/2+c}$ in $[N,2N]$~\cite{TCH12}. To our
+knowledge, no bound of the form $x^{o(1)}$ was known for either problem, even conditionally.
+
+\subsection{Contributions}
+Our contributions are:
+\begin{itemize}
+\item We prove that the chain count $C_L(m)$ is odd exactly when $m$ is squarefree, for $1\le m<2^{2^L}$,
+and that $\sum_{m\in[A,B]}\tl(m)C_L(m)\equiv\pi([A,B])\pmod2$ for $B<2^{2^L}$
+(\cref{sec:chains}).
+\item We present a leveled description of this count, with $3L+3$ variables at levels $0,\dots,L$, and a
+version of our network library in which a level-$k$ variable has about $n/2^k$ bits, so that
+$\Theta(\log n)$ multiplications share $O(n)$ bits in total (\cref{sec:network}).
+\item We prove the two theorems of \cref{thm:main} in Lean and list what a reader must trust
+(\cref{sec:statement,sec:formal}).
+\item We show what the result does not give: an adversary argument (on paper) for why parities alone do
+not find primes, and a Lean-checked lower bound for product-tree verifiers of the iterated product that
+exact counting by this route would need (\cref{sec:not}).
+\end{itemize}
+The number-theoretic content is small: the chain lemma, and the observation that working modulo $2$
+bypasses the M\"obius barrier. The network is engineering on top of our earlier library~\cite{TulCN26};
+it is what makes the rate hold.
+
+\subsection{Status of each claim}
+We separate four kinds of claim. \emph{Machine-checked in Lean}: the two theorems of \cref{thm:main},
+with the axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound} only, and every lemma whose
+Lean name we give, including the tree bound of \cref{thm:tree}. \emph{Proved on paper only}: the
+adversary statement of \cref{prop:adv}; the link from network cuts to the tree model, and the circuit
+simulation, in \cref{sec:barrier}, where the need for long products is argued informally; the modulo-$k$ variant of \cref{rem:modk}; and the comparisons with earlier bounds.
+\emph{Assumed}: nothing beyond the three axioms; \A's results enter as Lean theorems of its development,
+which the kernel checks with ours. \emph{Checked numerically}: \cref{ex:ten}; the chain lemma for all
+$1\le m<\min(2^{2^L},5000)$, $L\le3$, and the one-count identity on every interval $[A,B]$ with
+$1\le A\le300$, $A\le B\le3000$, $L=4$, by a short exact computation that is not part of the proof; and
+the same identities for $m\le255$ and intervals in $[1,120]$ by \lean{#eval} in Lean.
+
+\subsection*{Outline}
+\Cref{sec:engine} recalls \A's counting theorem. \Cref{sec:chains} proves the chain lemma and the
+one-count identity, \cref{sec:network} builds the network and the machine, and \cref{sec:statement}
+quotes the statements. \Cref{sec:not} says what the result does not give,
+\cref{sec:formal} describes the Lean development, \cref{sec:related,sec:limitations} cover related
+work and limitations, and \cref{sec:conclusion} concludes.
+
+% =====================================================================
+\section{The engine counts accepted labellings}\label{sec:engine}
+% =====================================================================
+
+In this section we recall the one theorem of \A{} that we compose with, in the form used by our
+factoring note~\cite[\S2]{TulFac26}. We use \A's Lean development at commit \texttt{16a5ce4}
+(\texttt{anthropics/formal-math}, folder \texttt{eth}, Lean v4.33.1, Mathlib \texttt{0df444a}).
+
+A \emph{network on $[g]$ with parameters $P,B,\tau$} has, for every node $a$, settings of at most $P$
+bits and a weight $W_a$, and for every pair of nodes an interaction that factors through $c_{a,b}$
+shared bits, with $\sum_bc_{a,b}\le P$; its value is $Z=\sum_z\prod_aW_a(z_a)\prod_{\{a,b\}}\Psi_{a,b}$ and
+its total is $U=\sum_{a\ne b}c_{a,b}$. We use only \emph{label systems}: wires placed on pairs of
+nodes, each carrying a label seen by both ends, with $W_a$ a $0/1$ table. The value is then the
+number of labellings accepted by every table.
+
+\begin{importedtheorem}[\A, Lemma~8(i) and Theorem~A(b); see~{\cite[Imported Thm.~2.2]{TulFac26}}]\label{imp:engine}
+Let $K=K_\ell\ge2$ be a level of \A's schedule, $g=3K^8$, and $e_\ell\le(3x_0+6)/\sqrt{\log_2K}$ for an
+absolute $x_0$. A network on $[g]$ with parameters $P,B,\tau$ and total $U$ can be evaluated within
+$\bigl(K^g+2^{e_\ell K^2L}(K(L+B'))^{C_0K^2}2^{2gP/K}\tau\bigr)(g(P+B))^{C_1}$ operations, where
+$L=\lceil(U+gP/K)/K^2\rceil$, $B'=\lceil2gP/K\rceil+g^2B$ and $C_0,C_1$ are absolute.
+\end{importedtheorem}
+
+\noindent So a network family with $U=O(n)$ and $gP=O(n)$ is evaluated in $\rate$ steps at the level
+$K^{40}\lesssim n$ of~\cite[\S5]{TulFac26}. The cost is exponential in $U/\sqrt{\log n}$: a
+network with $U=\Theta(n\log n)$ would cost $2^{\Theta(n\sqrt{\log n})}$, which is superpolynomial in $x$.
+Everything below is about keeping $U$ linear.
+
+% =====================================================================
+\section{Squarefree chains and the one-count identity}\label{sec:chains}
+% =====================================================================
+
+In this section we prove the two counting facts. Both are in the pure Mathlib module
+\lean{ChainParity}, whose definitions are
+\begin{alltt}\footnotesize
+def chainCount : \(\mathbb{N}\) \(\to\) \(\mathbb{N}\) \(\to\) \(\mathbb{N}\)
+  | 0, _ => 1
+  | L+1, n => \(\sum\) d \(\in\) n.divisors.filter (fun d => d * d \(\mid\) n), chainCount L d
+def tauLt (m : \(\mathbb{N}\)) : \(\mathbb{N}\) := ((Nat.divisorsAntidiagonal m).filter fun p => p.1 < p.2).card
+\end{alltt}
+so \lean{chainCount}~$L$~$n=C_L(n)$ for $n\ge1$ and \lean{tauLt}~$m=\tl(m)$.
+
+\begin{lemma}[Chain lemma; \lean{chainCount_mod_two}]\label{lem:chain}
+For $L\ge0$ and $1\le n<2^{2^L}$, $C_L(n)\equiv[n\text{ squarefree}]\pmod2$. In Lean:
+\begin{alltt}\footnotesize
+theorem chainCount_mod_two \{L n : \(\mathbb{N}\)\} (h1 : 1 \(\le\) n) (h : n < 2 ^ 2 ^ L) :
+    chainCount L n % 2 = if Squarefree n then 1 else 0
+\end{alltt}
+\end{lemma}
+
+\begin{proof}
+Write $n=st^2$ with $s$ squarefree (\lean{Nat.sq_mul_squarefree_of_pos}). Then $d^2\mid n$ if and only
+if $d\mid t$ (\lean{dvd_of_mul_self_dvd}), and $n$ is squarefree if and only if $t=1$. Read the identity
+$\sum_{d\mid t}\mu(d)=[t=1]$ modulo $2$, where $\mu(d)\equiv[d\text{ squarefree}]$:
+\begin{equation}\label{eq:mu2}
+  \#\{d:\ d^2\mid n,\ d\text{ squarefree}\}\ \equiv\ \sum_{d\mid t}\mu(d)\ =\ [n\text{ squarefree}]\pmod 2
+\end{equation}
+(\lean{key_zmod}). Now induct on $L$. For $L=0$, $n<2$ forces $n=1$, and $C_0(1)=1$. For $L+1$,
+$C_{L+1}(n)=\sum_{d^2\mid n}C_L(d)$, and every such $d$ satisfies $d\le\sqrt n<2^{2^L}$, so by induction
+$C_L(d)\equiv[d\text{ squarefree}]$, and~\eqref{eq:mu2} finishes.
+\end{proof}
+
+\noindent The hypothesis $n<2^{2^L}$ cannot be dropped: $C_1(16)=3$ counts $d_1\in\{1,2,4\}$, but $16$
+is not squarefree, while $C_2(16)=C_1(1)+C_1(2)+C_1(4)=4$ is even. The depth must grow like $\log_2 n$.
+
+\begin{proposition}[One-count identity; \lean{primeParity}]\label{prop:onecount}
+If $B<2^{2^L}$, then $\sum_{m=A}^{B}\tl(m)\,C_L(m)\equiv\pi([A,B])\pmod2$. In Lean:
+\begin{alltt}\footnotesize
+theorem primeParity \{L A B : \(\mathbb{N}\)\} (hB : B < 2 ^ 2 ^ L) :
+    (\(\sum\) m \(\in\) Finset.Icc A B, tauLt m * chainCount L m) % 2 =
+      ((Finset.Icc A B).filter Nat.Prime).card % 2
+theorem primeCounting_eq_card (x : \(\mathbb{N}\)) :
+    Nat.primeCounting x = ((Finset.Icc 1 x).filter Nat.Prime).card
+\end{alltt}
+\end{proposition}
+
+\begin{proof}
+We show that each summand is odd exactly when $m$ is prime (\lean{term_zmod}). For $m=0$ and $m=1$,
+$\tl(m)=0$. For $m\ge2$ not squarefree, $C_L(m)$ is even by \cref{lem:chain}. For $m\ge2$ squarefree,
+$C_L(m)$ is odd, and the swap $(a,b)\mapsto(b,a)$ pairs the factorisations with $a<b$ and those with
+$a>b$, with none on the diagonal, so $\tau(m)=2\tl(m)$ (\lean{card_divisors_eq_two_tauLt}). Hence
+$\tl(m)=2^{\omega(m)-1}$, which is odd if and only if $\omega(m)=1$, that is, $m$ is prime
+(\lean{tauLt_prime}, \lean{tauLt_even}). The second statement relates Mathlib's \lean{Nat.primeCounting}
+to the count on $[1,x]$.
+\end{proof}
+
+\noindent In \cref{ex:ten}, $L=2$ suffices since $10<2^{2^2}$. The machine of \cref{sec:network} takes
+$L$ to be the bit length of $n$, here $L=3$; on $[1,10]$ the values $C_3(m)$ equal $C_2(m)$, and the
+count is again $16$.
+
+% =====================================================================
+\section{One count of a leveled network}\label{sec:network}
+% =====================================================================
+
+In this section we write the sum of \cref{prop:onecount} as the number of solutions of a system of
+products, explain why our earlier network library cannot evaluate it at the rate, describe the leveled
+version that can, and assemble the machine.
+
+\subsection{The description}
+A \emph{description}, in the sense of our class-number note~\cite[\S3]{TulCN26}, lists variables,
+products of a variable by a variable or a constant, chains (equations between sums of products) and
+comparisons with constants or other variables. For depth $L$ and interval $[A,B]$ the description
+\lean{primeDescL} has, for $k=0,\dots,L$, the variables $d_k,s_k,e_k$, with $d_0=m$, $s_0=a$, $e_0=b$,
+and the constraints
+\[
+  ab=m,\qquad d_k\cdot d_k=s_k,\quad s_k\cdot e_k=d_{k-1}\ \ (1\le k\le L),\qquad
+  m\ge\max(A,1),\quad m\le B,\quad a<b .
+\]
+So $s_k=d_k^2$ and $e_k=d_{k-1}/d_k^2$ witness $d_k^2\mid d_{k-1}$, and they are determined by the
+chain. A solution is a factorisation $m=ab$ with $a<b$ together with a chain of depth $L$ from $m$, so
+the number of solutions is $\sum_{m\in[A,B]}\tl(m)C_L(m)$ (\lean{primeDescL_count}). The condition
+$m\ge1$ excludes $m=0$, which every $d$ would divide. In \cref{ex:ten} the $16$ solutions include, for
+$m=8$, the four tuples with $(a,b)\in\{(1,8),(2,4)\}$ and $d_1\in\{1,2\}$, $d_2=1$.
+
+\subsection{Why the library of the class-number note does not suffice}
+ArithNet~\cite{TulCN26} gives every variable the full box $[0,2^{n_B})$ with $n_B>n$ bits, and its
+parameter bound is $U\le2^{11}c_A(D)(n+2)$ with $c_A(D)=64(\mathrm{nV}+\mathrm{nP}+\mathrm{nQ}+1)(\mathrm{nC}+1)$.
+Our description has $\mathrm{nV}=3L+3$ variables, $\mathrm{nP}=4L+2$ products and $\mathrm{nC}=2L+1$
+chains, so $c_A(D)=\Theta(L^2)$ and the bound is $U=\Theta(n\log^2n)$, which makes the engine cost
+$2^{\Theta(n\log^{3/2}n)}$, worse than trial division. Even with every per-chain copy removed, $3L+3$
+variables of $n$ bits carry $\Theta(n\log n)$ bits, which costs $2^{\Theta(n\sqrt{\log n})}$. The
+witnesses themselves are small: along a chain, $d_k^{2^k}\le m<2^n$ (\lean{chain_pow_le}), so $d_k$ has at
+most $n/2^k$ bits and all of them together fewer than $2n$. The network should pay for that.
+
+\subsection{Levels}
+A \emph{leveled description} (\lean{LDesc}, module \lean{ArithLDesc}) is a description together with a
+level for every variable and every chain. A variable of level $k$ ranges over $[0,2^{b\ell_k})$, where
+$b$ is the limb width of ArithNet and $\ell_k=\ell/4^{\min(\lfloor k/2\rfloor,\,r-1)}$ is the number of
+limbs at level $k$ (here $\ell=4^{r-1}$ is the number of limbs of a full-width variable in~\cite{TulFac26}); \lean{lbox_spec} shows that a
+level-$k$ variable $y$ with $y^{2^k}<2^n$ fits. A level-$k$ chain is checked by the two-dimensional
+Sch\"onhage--Strassen pipeline of~\cite{TulFac26} at the transform shape of level $k$, with the limb width
+and the Fermat modulus of the top level, so a level-$k$ variable is a prefix of the top-level limb
+format and the levels need no glue. Well-formedness (\lean{LDesc.WFB}) asks that the operands of a
+product have level at least that of its chain, that comparisons be between variables of one level or
+against constants, and that variables enter chains only as products with the constant~$1$. In
+\lean{primeDescL}, $m,a,b$ have level $0$, $d_k$ has level $k$, $s_k,e_k$ have level $k-1$, and the chains
+$d_k\cdot d_k=s_k$ and $s_k\cdot e_k=d_{k-1}$ have level $k-1$.
+
+Every object (variable, product, chain, comparison) has its own family of wires and vertices, so the
+cost is a sum over objects of a function of the level. The number of limbs is geometric,
+$\sum_{k<K}\ell_k\le4\ell+K$ (\lean{sum_kl_le}), and a description whose $i$-th object of each kind has
+level at least $i/c$ (\lean{LDesc.Spread}~$c$; \lean{primeDescL_spread} gives $c=8$) has $O(c)$ objects
+per level.
+
+\begin{proposition}[\lean{arithNet_value}, \lean{arithSys_U_le}, \lean{arithSys_is}]\label{prop:arithl}
+Let $g\ge2$ and let $D$ be a leveled description that is well formed at size $n$, has spread $c\ge1$ and
+at most $\lfloor\log_2(n+2)\rfloor+3$ levels. The network of $D$ has value equal to the number of solutions
+of $D$ in its boxes, total $U\le2^{19}c\,(n+2)$, and node load
+$P=2^{22}c\bigl((n+2)/g+d(n)\bigr)$ with $d(n)=O(n^{3/4})$ the vertex degree of~\cite{TulCN26}.
+\end{proposition}
+
+\noindent For \lean{primeDescL} at depth $L=\lfloor\log_2n\rfloor+1$ this gives $U\le2^{22}(n+2)$. We call
+this version of the library ArithL. It is a re-parameterisation of ArithNet with one more coordinate,
+not a new idea; its proofs reuse the factoring and class-number pipelines unchanged, and its value lies
+in the bookkeeping that keeps $U$ linear for $\Theta(\log n)$ multiplications.
+
+\subsection{The machine}
+A counting package~\cite[\S4]{TulCN26} provides, for every input word $w$ and query word $\pi$, a network
+whose value is $Q(w,\pi)$, with $U$ and $gP$ linear in $|w|$ and polynomial-time readers. From any
+polynomial-time map $w\mapsto D(w)$ to well-formed leveled descriptions with spread $c$,
+\lean{ArithLSpec.pkg_exists} builds a package with constant $2^{22}c$ and
+$Q(w,\pi)=\mathrm{count}(D(w))$. We use it twice, with $n=|w|$: \lean{arithPi} reads $x$ from $w$ and takes
+$[A,B]=[1,x]$, and \lean{arithPiInt} reads $A$ and $B$ from the two halves of \lean{encodePair}~$A$~$B$.
+Both take $L$ to be the bit length of $n$, so that $B<2^n<2^{2^L}$ (\lean{primeL_spec}), and
+\lean{primeDesc_count_parity} gives
+$\mathrm{count}\bmod2=\pi([A,B])\bmod2$.
+
+The query specification \lean{specPi} asks the single query $\pi=[\,]$ and outputs the binary word of
+the count modulo $2$. The generic one-query machine \lean{GR.queryM_TM} of~\cite[Thm.~4.1]{TulCN26}
+turns a package and a polynomial-time specification with output of length $O(|w|)$ into a finite-alphabet
+Turing machine that outputs the specified answer within $\lfloor C\cdot2^{C|w|/\sqrt{\log_2(|w|+2)}}\rfloor$
+steps. Composing the two gives \lean{piParity_TM_of} and \lean{piIntervalParity_TM_of}, which the module
+\lean{Final} restates as the theorems of \cref{thm:main}.
+
+% =====================================================================
+\section{What a reader must trust}\label{sec:statement}
+% =====================================================================
+
+A reader who wants to trust \cref{thm:main} must check the following definitions and nothing else of
+ours. The statements, verbatim from \lean{Final} up to line breaks, are below; we render Unicode
+symbols as mathematics.
+\begin{alltt}\footnotesize
+theorem piParity_TM_rate :
+    \(\exists\) (M : Turing.TM2ComputableAux Bool Bool) (C : \(\mathbb{N}\)), (\(\forall\) i, Finite (M.tm.\(\Gamma\) i)) \(\wedge\)
+      \(\forall\) x : \(\mathbb{N}\), GraphProblems.Outputs M (Computability.encodeNat x)
+        (Computability.encodeNat (Nat.primeCounting x % 2))
+        \(\lfloor\)(C : \(\mathbb{R}\)) * 2 ^ ((C : \(\mathbb{R}\)) * (Computability.encodeNat x).length /
+          Real.sqrt (Real.logb 2 ((Computability.encodeNat x).length + 2)))\(\rfloor\sb{+}\)
+theorem piIntervalParity_TM_rate :
+    \(\exists\) (M : Turing.TM2ComputableAux Bool Bool) (C : \(\mathbb{N}\)), (\(\forall\) i, Finite (M.tm.\(\Gamma\) i)) \(\wedge\)
+      \(\forall\) A B : \(\mathbb{N}\), GraphProblems.Outputs M (encodePair A B)
+        (Computability.encodeNat (((Finset.Icc A B).filter Nat.Prime).card % 2))
+        \(\lfloor\)(C : \(\mathbb{R}\)) * 2 ^ ((C : \(\mathbb{R}\)) * (encodePair A B).length /
+          Real.sqrt (Real.logb 2 ((encodePair A B).length + 2)))\(\rfloor\sb{+}\)
+\end{alltt}
+The only definitions of ours they use are those of the pair encoding (module \lean{ModP.Encode}
+of~\cite{TulCN26}):
+\begin{alltt}\footnotesize
+def padR (n : \(\mathbb{N}\)) (l : List Bool) : List Bool := l ++ List.replicate (n - l.length) false
+def encodePair (m a : \(\mathbb{N}\)) : List Bool :=
+  padR (max (encodeNat m).length (encodeNat a).length) (encodeNat m) ++
+    padR (max (encodeNat m).length (encodeNat a).length) (encodeNat a)
+\end{alltt}
+\texttt{Outputs} is the one-line definition of \A's statement file, which we also trust:
+\begin{alltt}\footnotesize
+def Outputs (M : TM2ComputableAux Bool Bool) (x y : List Bool) (T : \(\mathbb{N}\)) : Prop :=
+  Nonempty (TM2OutputsInTime M.tm (x.map M.inputAlphabet.invFun)
+    (some (y.map M.outputAlphabet.invFun)) T)
+\end{alltt}
+Behind these are Mathlib's \lean{TM2OutputsInTime}, \lean{Computability.encodeNat} (little-endian
+binary, the empty word for $0$), \lean{Nat.primeCounting}, \lean{Nat.Prime}, \lean{Finset.Icc},
+\lean{Real.logb} and \lean{Real.sqrt}, from Mathlib \texttt{0df444a}. The definitions \lean{chainCount}
+and \lean{tauLt} of \cref{sec:chains} do not occur in the statements; they are part of the proof.
+
+% =====================================================================
+\section{What the parity does not give}\label{sec:not}
+% =====================================================================
+
+In this section we say plainly what does not follow: a deterministic prime finder, the exact value of
+$\pi(x)$, and anything practical (the last is in \cref{sec:limitations}).
+
+\subsection{Prime finding}
+Bisection finds a prime from any interval with an odd number of primes: one of its halves again has an
+odd number, and after $O(n)$ queries the interval is a single prime. So a fast parity oracle gives a fast
+prime finder as soon as one knows \emph{some} interval of odd parity. Tao, Croot and Helfgott make the
+same remark and add that they ``do not know of a method to quickly and deterministically locate an
+interval with an odd number of primes''~\cite[\S1]{TCH12}. Our oracle is faster, but it does not change
+this. The parity of $\pi$ on $[x,2x]$ may be even, and nothing we know about the primes forces an odd
+count on any explicit family of intervals of small size. The following statement makes the gap precise in
+an oracle model; it is proved on paper only.
+
+\begin{proposition}[Adversary; on paper]\label{prop:adv}
+Let $H\ge4$. Consider deterministic algorithms that learn about an unknown set $S\subseteq[x,2x]$ only
+by adaptive queries of two kinds, the parity of $|S\cap I|$ for an interval $I$, and membership $y\in S$,
+and that are promised only that $S$ meets every interval of $H$ consecutive integers in $[x,2x]$. Every
+such algorithm that outputs an element of $S$ makes at least $(H-3)/2$ queries on some admissible $S$.
+\end{proposition}
+
+\begin{proof}
+Answer ``even'' to every parity query and ``no'' to every membership query, and suppose the algorithm
+stops after $q<(H-3)/2$ queries, $q_{\mathrm p}$ of parity and $q_{\mathrm m}$ of membership, with
+output $y$. The endpoints of the queried intervals cut $[x,2x]$ into at most $2q_{\mathrm p}+1$ cells, and every queried interval meets $[x,2x]$ in a union of cells. Let $S$ consist of
+all integers of $[x,2x]$ except the membership-queried points and $y$; then, in each cell where $S$ has
+an odd number of points, remove one more point of $S$. Every queried interval now meets $S$ in an even
+number of points, every membership answer is correct, and $y\notin S$. At most
+$q_{\mathrm m}+1+(2q_{\mathrm p}+1)\le2q+2<H$ integers of $[x,2x]$ are missing from $S$, so $S$ meets every
+window of $H$ consecutive integers. So $S$ is admissible, consistent with all answers, and the output is
+wrong.
+\end{proof}
+
+\noindent With $H=x^{0.525}$, the gap bound of Baker, Harman and Pintz~\cite{BHP01}, the matching
+strategy (test the integers from $x$ upwards by a polynomial-time primality test~\cite{AKS04}) takes
+$x^{0.525+o(1)}$ steps, worse than the $x^{1/2+o(1)}$ of~\cite{LO87}. The proposition does not say that
+parities cannot find primes; it says that a proof that they do must use more about the primes than a
+gap bound, and we know of no such argument. For residues modulo $M$ (\cref{rem:modk}) the same
+argument, removing up to $M-1$ points per cell, gives about $H/(2M)$ queries.
+
+\subsection{Exact counts, and the iterated-product barrier}\label{sec:barrier}
+The exact $\pi([A,B])$ would give prime finding at once. By this route it needs an identity that isolates
+$\omega(m)=1$ exactly, not modulo a small number. We argue informally, as in our working
+notes~\cite[\texttt{research/prime-finding.md}, \S4]{TulsyanRepo26}: on squarefree $m$, the weights
+built from $O(1)$ multiplications of divisors are combinations of $t^{\omega(m)}$ for small $t$; the
+indicator of $\omega=1$ on $0\le\omega\le n/\log n$ needs $\Omega(n/\log n)$ such terms, unless one works
+modulo $t^2$, which yields only residues. So exact counting asks for the $k$-fold divisor function with
+$k=\Theta(n/\log n)$: a verifier of $m=d_1\cdots d_k$ with $\sum_i\operatorname{bits}(d_i)=n$. The product
+tree verifies it with $U=\Theta(n\log k)=\Theta(n\log n)$, and then \cref{imp:engine} gives
+$2^{\Theta(n\sqrt{\log n})}$, which is superpolynomial in $x$. A verifier with $U=o(n\sqrt{\log n})$ would
+give the exact $\pi(x)$ in $x^{o(1)}$; we do not know one.
+
+In the restricted model of product trees we can prove that no tree shape helps. A \emph{tree verifier}
+multiplies the factors along a binary tree $T$ with leaf sizes $\ell_i$; its cost is
+$\mathrm{cost}(T)=\sum_{v}\mathrm{wt}(v)=\sum_i\ell_i\,\mathrm{depth}(i)$, where $\mathrm{wt}(v)$ is the
+total size of the leaves below the internal node $v$.
+
+\begin{theorem}[\lean{BTree.cost_ge_entropy}, \lean{BTree.cost_ge_equal}; machine-checked]\label{thm:tree}
+For every binary tree with positive leaf weights $\ell_i$ and $L=\sum_i\ell_i$,
+$\mathrm{cost}(T)\ge\sum_i\ell_i\log_2(L/\ell_i)$. If all $k$ leaves have weight $w$, then
+$\mathrm{cost}(T)\ge kw\log_2k=n\log_2k$ for $n=kw$.
+\end{theorem}
+
+\noindent The proof is an induction whose step is the bound $1$ on binary entropy
+(\lean{Real.binEntropy_le_log_two}). The link to networks is on paper: in a tree verifier the subtree of
+$v$ is separated from the rest by a cut across which the product indicator has rank $2^{\mathrm{wt}(v)}$
+(\lean{rank_prodMat_pow}, Lean-checked), so by the cut-rank lemma
+(\lean{rank_le_two_pow_of_eq_sum_mul}, module \lean{Barriers.RankBounds} of~\cite{TulsyanRepo26}) the cut carries at least $\mathrm{wt}(v)$ bits, and summing over $v$ gives
+$U\ge\mathrm{cost}(T)$. A lower bound for \emph{all} networks is out of reach: the engine simulates any
+Boolean circuit of size $O(n^{1+1/40})$ with $U$ of the order of its size, so $U=\omega(n)$ for every
+verifier of $m=\prod_id_i$ would be a superlinear circuit lower bound for an explicit function, which is
+open.
+
+\begin{remark}[Residues modulo $k$; on paper]\label{rem:modk}
+Modulo $k$, $\mu(d)\equiv\tau_{k-1}(d)[d\text{ squarefree}]$, since $\tau_{k-1}(d)=(k-1)^{\omega(d)}$ on
+squarefree $d$. Iterating as in \cref{lem:chain} gives a $\tau_{k-1}$-weighted chain $W_k(m)\equiv
+[m\text{ squarefree}]\pmod k$, and with $W=W_{k^2}$ one gets
+$\sum_{m\in I}\tau_k(m)W(m)\equiv[1\in I]+k\,\pi(I)\pmod{k^2}$, hence $\pi(I)\bmod k$. We checked this
+by \lean{#eval} for $k=2,3$ on all intervals in $[1,100]$. The verifier needs $(k^2-1)$-fold products,
+so its cut grows like $n\log k$; we have not built it and claim no running time. Residues modulo
+small $M$ do not escape \cref{prop:adv}.
+\end{remark}
+
+% =====================================================================
+\section{The Lean development}\label{sec:formal}
+% =====================================================================
+
+In this section we list the modules and state the trusted base. The development is in the public
+repository~\cite{TulsyanRepo26}: directories \texttt{lean/EthFollowup/Primes} (pure Mathlib; the files
+compile with Lean v4.33.1 and v4.34.1) and \texttt{lean-bridge-anthropic/bridge/EthFollowup/Primes} (on top
+of \A's development; the three pure files are linked into it). \Cref{tab:modules} lists the modules.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}p{0.40\textwidth}p{0.46\textwidth}r@{}}
+\toprule
+module & content & lines\\
+\midrule
+\lean{ChainParity} & chain lemma, one-count identity, $\pi(x)$ as a card & 249\\
+\lean{ArithLDesc} & leveled descriptions and their count & 124\\
+\lean{PrimeDesc} & the description \lean{primeDescL}, its count, well-formedness, spread & 589\\
+\midrule
+\lean{ArithLShape}, \lean{ArithLParams} & level shapes and boxes; wires, vertices, checks, canonical run & 1104\\
+\lean{ArithLNetDefs}, \lean{ArithLNetParsimony} & the label system and its value & 643\\
+\lean{ArithLNetDeg}, \lean{ArithLNetCount} & degrees; $U$ and $P$ (geometric sums) & 779\\
+\lean{ArithLProcs}, \lean{ArithLPolyChk}, \lean{ArithLPoly} & procedures, checks on codes, polynomial time & 1425\\
+\lean{ArithLPackage} & counting packages from leveled descriptions & 250\\
+\lean{PrimePoly}, \lean{SpecPrime}, \lean{PrimePkgs} & readers, the one-query specification, the two packages & 279\\
+\lean{Final} & the two final theorems & 46\\
+\midrule
+total & & 5488\\
+\midrule
+\lean{IterProdTree}, \lean{IterProdCutRank} & \cref{thm:tree}; rank of the product indicator (directory \texttt{Barriers}; not imported by \lean{Final}) & 142, 148\\
+\lean{Check}, \lean{LemmaA} (in \texttt{Scratch/Primes}) & numerical checks by \lean{#eval}, not part of the proof & 66, 253\\
+\bottomrule
+\end{tabular}
+\caption{The modules, with line counts (\texttt{wc -l}). The first three are pure Mathlib. The
+development reuses, unchanged, the factoring modules of~\cite{TulFac26}, the ArithNet, package and
+machine modules of~\cite{TulCN26} (\texttt{ArithDesc}, \texttt{ArithParams}, \texttt{GRate},
+\texttt{ArithPkgs}, \texttt{Encode}, \dots) and the bridge modules of~\cite{Tul26}.}\label{tab:modules}
+\end{table}
+
+\paragraph{Trusted base and axioms.} \texttt{\#print axioms} reports \lean{propext},
+\lean{Classical.choice} and \lean{Quot.sound} for the two theorems of \cref{thm:main}, for
+\lean{ArithLSpec.pkg_exists}, and for the two theorems of \cref{thm:tree}. No module contains
+\lean{sorry}, a new axiom or \lean{native_decide}.
+A fresh \lean{leanchecker} replay of the dependency closure of \lean{EthFollowup.Primes.Final}, the
+module holding the two final theorems, passed on 4~November 2026.
+What must be trusted is the Lean kernel, the Mathlib definitions named in \cref{sec:statement}, our
+definitions quoted there, and \A's definition of \texttt{Outputs}. \A's development, Mathlib's proofs and
+our other modules are checked by the kernel; they are part of the checked closure, not of the trusted
+base.
+
+\paragraph{One design point.} Polynomial time must hold on \emph{every} context the reader may be given,
+not only on the contexts it produces. The stored levels of a description are therefore clamped to the
+number of variables before the cell layout uses them (\lean{ACtx.L} in \lean{ArithLProcs}); otherwise a
+context with a large binary level would make the table procedure exponential.
+
+% =====================================================================
+\section{Related work}\label{sec:related}
+% =====================================================================
+
+We organise related work by idea: computing $\pi(x)$ exactly, parities on short intervals, deterministic
+prime finding, and the counting engines with their formal proofs.
+
+\paragraph{Computing $\pi(x)$ exactly.} The combinatorial method of Meissel and Lehmer, as extended by
+Lagarias, Miller and Odlyzko~\cite{LMO85}, computes $\pi(x)$ in $O(x^{2/3+\varepsilon})$ steps, and
+Del\'eglise and Rivat~\cite{DR96} save a factor $\log x$. The analytic method of Lagarias and
+Odlyzko~\cite{LO87} takes $x^{1/2+o(1)}$ steps. Both give the parity as a by-product. In contrast, we
+compute only the parity, but in $x^{o(1)}$ steps.
+
+\paragraph{Parities on short intervals.} Tao, Croot and Helfgott~\cite{TCH12} prove that one can decide
+whether an interval $[a,b]\subseteq[N,2N]$ of length at most $N^{1/2+c}$ contains an odd number of primes
+in time $O(N^{1/2-c+o(1)})$ (their Theorem~1.2), from the identity
+$\sum_{d^2\mid m}\mu(d)\tau(m/d^2)=2^{\omega(m)}$ and a fast divisor sum; they also treat the parity of
+primes in progressions to small moduli. Lelechenko~\cite{Lel13} gives an explicit exponent
+$O(x^{\max(c,7/15)+\varepsilon})$ for the same intervals (his Theorem~2). Sladkey~\cite{Sla12} computes the
+divisor summatory function in $O(x^{1/3})$ steps and mentions the parity of $\pi$ among its applications,
+citing a manuscript of Oliveira e Silva in preparation. Closest to our work is~\cite{TCH12}, whose
+reduction of the parity to divisor counts we share. In contrast, we remove the M\"obius sum by
+\cref{lem:chain} instead of evaluating it, which is what allows intervals of any length.
+
+\paragraph{Deterministic prime finding.} Polymath4~\cite{Tao09} asked for a deterministic algorithm that
+finds a $k$-bit prime in time polynomial in $k$, or at least $\exp(o(k))$; the best unconditional bound
+remains $x^{1/2+o(1)}$, by computing $\pi$ analytically and bisecting~\cite{LO87,TCH12}. Scanning up from
+$x$ with a primality test~\cite{AKS04} and the gap bound of~\cite{BHP01} gives $x^{0.525+o(1)}$. In
+contrast, we give no prime finder, and \cref{sec:not} explains why the parity alone does not yield one.
+
+\paragraph{Counting engines and formal proofs.} OpenAI~\cite{OpenAI26} and \A~\cite{Anthropic26} claim
+deterministic subexponential $\#$SAT algorithms, with Lean developments, under review. Rudich and
+Rousseau~\cite{RR26} factored in $N^{o(1)}$ with them, Shunia~\cite{Shu26} proved the rate $\rate$ on
+paper, and~\cite{IF26} and our factoring note~\cite{TulFac26} proved it in Lean; our class-number
+note~\cite{TulCN26} built the network library ArithNet, which we extend here by levels. We use
+Lean~4~\cite{Lean4} and Mathlib~\cite{Mathlib20}. As of 4~November 2026 we found no derivation of a
+parity result for $\pi$ from either ETH refutation. We searched the web for the parity of $\pi$ together
+with ``ETH'', ``$\#$SAT'' and ``2026''; searched GitHub repositories and code for prime-counting parity
+(the only hits were our own files); and checked the follow-ups known to us~\cite{RR26,Shu26,IF26}, which
+treat factoring. Hexagon's listing is behind a login, so this negative is weak. In contrast to our earlier
+notes, the number-theoretic content here is the chain lemma and the observation that working modulo
+$2$ bypasses the M\"obius barrier; the rest is the network bookkeeping.
+
+% =====================================================================
+\section{Limitations}\label{sec:limitations}
+% =====================================================================
+
+\begin{itemize}
+\item \emph{The result stands or falls with \A's development.} The proof rests on Anthropic's Lean
+development of its claimed refutation of the Exponential Time Hypothesis, which is under review. Lean
+checks that development as part of our proof, and our statements use only Mathlib, our quoted
+definitions and \A's \texttt{Outputs}. We do need the development, built from source at the pinned
+commit, to be sound, and the toolchain to be sound.
+\item \emph{One bit only.} The machines output $\pi(x)\bmod2$ and $\pi([A,B])\bmod2$, not $\pi(x)$, and
+not a prime. Residues modulo $k>2$ are on paper only (\cref{rem:modk}).
+\item \emph{No prime finding.} The parity may be even on every interval one queries; \cref{prop:adv} is
+an oracle-model statement on paper, and the barrier of \cref{sec:barrier} is proved only for product
+trees.
+\item \emph{The algorithms are galactic.} \A's levels start at $K_0=2^{x_0}$ with $x_0\ge18$, the level
+needs $K^{40}\lesssim n$, and the constants ($2^{22}\cdot8$ for the package, and $C$) are astronomical. The
+machines are of no practical use and beat $x^{1/2}$ only for astronomically large $x$.
+\item \emph{The machines use exponential space.}
+\item \emph{No human has checked the work.} The Lean code and this text were written with AI assistance.
+No human expert has yet checked that \cref{sec:statement} lists everything a reader must trust.
+\end{itemize}
+
+\section{Conclusion}\label{sec:conclusion}
+We have shown that one bit of $\pi$ on any interval is a single count of divisibility witnesses whose
+sizes halve along a chain, and that the counting engine evaluates it in $x^{o(1)}$ steps once the network
+pays for the witnesses at their true sizes. The result is a step towards, not a solution of, deterministic
+prime finding. An interesting direction is whether the iterated product $m=d_1\cdots d_k$ with
+$k=\Theta(n/\log n)$ has a parsimonious verifier with $o(n\sqrt{\log n})$ shared bits; a positive answer
+would give the exact $\pi(x)$, and hence a prime in $[x,2x]$, in time $x^{o(1)}$, while a negative answer for
+all networks would imply a circuit lower bound that is out of reach today.
+
+\section*{Acknowledgements}
+This work was done with AI assistance (Claude Code, Anthropic): the chain lemma, the Lean development,
+the numerical checks, the literature and citation checks and the text were produced in sessions with
+Claude Code. The Lean theorems are checked by the Lean kernel; everything else awaits human expert
+review. Responsibility for any errors rests with the author. This note continues the project
+of~\cite{Tul26,TulFac26,TulCN26}.
+
+\begin{thebibliography}{99}
+
+\bibitem{AKS04}
+M.~Agrawal, N.~Kayal, and N.~Saxena, \emph{{PRIMES} is in {P}}, Ann. of Math. (2) \textbf{160} (2004),
+no.~2, 781--793.
+
+\bibitem{Anthropic26}
+Claude (Anthropic), \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, preprint dated 26~October 2026.
+Paper and Lean formalisation in the repository \url{https://github.com/anthropics/formal-math}, folder
+\texttt{eth}; we use commit \texttt{16a5ce41304fcdaea4e0be7c132e1c361dc26da5}.
+
+\bibitem{BHP01}
+R.~C.~Baker, G.~Harman, and J.~Pintz, \emph{The difference between consecutive primes, {II}}, Proc.
+London Math. Soc. (3) \textbf{83} (2001), no.~3, 532--562.
+
+\bibitem{DR96}
+M.~Del\'eglise and J.~Rivat, \emph{Computing $\pi(x)$: the {M}eissel, {L}ehmer, {L}agarias, {M}iller,
+{O}dlyzko method}, Math. Comp. \textbf{65} (1996), no.~213, 235--245.
+
+\bibitem{IF26}
+1337isnot1337 (GitHub user) and contributors, \emph{integer-factoring: deterministic integer factoring
+bounds}, public repository \url{https://github.com/1337isnot1337/integer-factoring}; Lean formalisation in
+\texttt{formal-appendix/} (pull request \#20, merged 30~October 2026).
+
+\bibitem{LMO85}
+J.~C.~Lagarias, V.~S.~Miller, and A.~M.~Odlyzko, \emph{Computing $\pi(x)$: the {M}eissel--{L}ehmer
+method}, Math. Comp. \textbf{44} (1985), no.~170, 537--560.
+
+\bibitem{LO87}
+J.~C.~Lagarias and A.~M.~Odlyzko, \emph{Computing $\pi(x)$: an analytic method}, J. Algorithms
+\textbf{8} (1987), no.~2, 173--191.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The {L}ean 4 theorem prover and programming language}, Automated
+Deduction -- CADE 28, Lecture Notes in Comput. Sci., vol. 12699, Springer, 2021, pp.~625--635.
+
+\bibitem{Lel13}
+A.~V.~Lelechenko, \emph{Parity of the number of primes in a given interval and algorithms of the
+sublinear summation}, Visn. Odes. Nats. Univ., Mat. Mekh. \textbf{18} (2013), no.~1(17), 104--114;
+arXiv:1305.1639.
+
+\bibitem{Mathlib20}
+The mathlib Community, \emph{The {L}ean mathematical library}, Proc. 9th ACM SIGPLAN International
+Conference on Certified Programs and Proofs (CPP 2020), 2020, pp.~367--381.
+
+\bibitem{OpenAI26}
+OpenAI, \emph{The {E}xponential {T}ime {H}ypothesis is false}, preprint dated 17~October 2026, revised
+25~October 2026. Paper and Lean formalisation in the repository \url{https://github.com/openai/math}.
+
+\bibitem{RR26}
+I.~Rudich and L.-M.~Rousseau, \emph{Deterministic factoring in time $N^{o(1)}$}, Hexagon preprint
+hexagon:2610.00600v1, published 29~October 2026, \url{https://hexagonmath.org/2610.00600v1}.
+
+\bibitem{Shu26}
+J.~Shunia, \emph{An improved subexponential bound for deterministic integer factorization}, Hexagon
+preprint hexagon:2610.00711v1, published 2~November 2026, \url{https://hexagonmath.org/2610.00711v1}.
+
+\bibitem{Sla12}
+R.~Sladkey, \emph{A successive approximation algorithm for computing the divisor summatory function},
+arXiv:1206.3369, June 2012.
+
+\bibitem{Tao09}
+T.~Tao, \emph{Deterministic way to find primes -- discussion thread}, The polymath blog, 28~July 2009,
+\url{https://polymathprojects.org/2009/07/28/deterministic-way-to-find-primes-discussion-thread/}.
+
+\bibitem{TCH12}
+T.~Tao, E.~Croot III, and H.~Helfgott, \emph{Deterministic methods to find primes}, Math. Comp.
+\textbf{81} (2012), no.~278, 1233--1246; arXiv:1009.3956 (as D.~H.~J.~Polymath).
+
+\bibitem{Tul26}
+V.~Tulsyan, \emph{Counting {H}amiltonian cycles in sparse graphs in subexponential time, assuming the
+new $\#${SAT} algorithms}, Hexagon preprint hexagon:2610.00672v1, October 2026; source and Lean
+development at \url{https://github.com/xennygrimmato/eth-hamiltonicity}.
+
+\bibitem{TulCN26}
+V.~Tulsyan, \emph{Class numbers, square roots and quadratic non-residues in time
+$2^{O(n/\sqrt{\log n})}$, assuming the new $\#${SAT} algorithms}, preprint, November 2026; source in the
+directory \texttt{classnumber-note/} of~\cite{TulsyanRepo26}.
+
+\bibitem{TulFac26}
+V.~Tulsyan, \emph{An independent machine-checked proof of deterministic factoring in time
+$2^{O(n/\sqrt{\log n})}$, via the new $\#${SAT} algorithms}, preprint, November 2026; source in the
+directory \texttt{factoring-note/} of~\cite{TulsyanRepo26}.
+
+\bibitem{TulsyanRepo26}
+V.~Tulsyan, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes}, public repository
+\url{https://github.com/xennygrimmato/eth-hamiltonicity}, 2026; Lean sources as of commit \texttt{f5aad1a}.
+
+\end{thebibliography}
+
+% =====================================================================
+% CITATION CHECK (4 November 2026). Each entry was checked by web search or by fetching the source:
+%  TCH12  arXiv 1009.3956v4 (26 May 2012), PDF read (pdftotext): Conjecture 1.1 (decide whether
+%         [a,b] in [N,2N], length <= N^{1/2+c}, contains a prime in O(N^{1/2-c+o(1)})) open;
+%         Theorem 1.2 "Computing the parity of pi(x)": odd number of primes in such an interval in
+%         O(N^{1/2-c+o(1)}); sentence "we do not know of a method to quickly and deterministically
+%         locate an interval with an odd number of primes" (sec. 1); Odlyzko N^{1/2+o(1)} in the
+%         abstract; identity sum_{d^2|n} mu(d) tau(n/d^2) = 2^{omega(n)}; parity of pi(x;a,q) for
+%         q = O(N^{c/10}). arXiv abstract page: journal ref Math. Comp. 81 (2012), 1233-1246, authors
+%         listed in the journal as the main contributors (Tao, Croot, Helfgott). Issue no. 278 as in
+%         the class-number note's audit.
+%  Lel13  arXiv 1305.1639v3 (20 Sep 2013), PDF read: Theorem 2: [a,b] in [x,2x], b-a <= x^{1/2+c},
+%         0 < c <= 1/2, parity of #{p in [a,b]} in O(x^{max(c,7/15)+eps}). Journal ref from arXiv:
+%         Visn. Odessk. Univ., Ser. Mat. Mekh., 2013, vol. 18, #1 (17), 104-114.
+%  Sla12  arXiv 1206.3369 (15 Jun 2012): O(n^{1/3}) time, O(log n) space; PDF read: ref. [5] =
+%         "Tomas Oliveira e Silva, Efficient Computation of the Parity of the Prime Counting
+%         Function, in preparation". Web search found no published version; we cite it only as
+%         mentioned by Sladkey and give it no bibliography entry of its own.
+%  LO87   J. Algorithms 8 (1987) 173-191 (reference list of TCH12; DOI 10.1016/0196-6774(87)90037-X,
+%         June 1987); x^{1/2+eps} time per secondary sources (Platt, arXiv 1203.5712; DR96).
+%  LMO85  Math. Comp. 44 (1985) no. 170, 537-560 (AMS page S0025-5718-1985-0777285-5);
+%         O(x^{2/3+eps}) time, O(x^{1/3+eps}) space.
+%  DR96   Math. Comp. 65 (1996) no. 213, 235-245, DOI 10.1090/S0025-5718-96-00674-6; abstract:
+%         O(x^{2/3}/log^2 x) time.
+%  BHP01  Proc. LMS (3) 83 (2001) no. 3, 532-562 (TCH12 reference list; Royal Holloway record);
+%         [x - x^{0.525}, x] contains a prime for x > x_0.
+%  AKS04  Ann. of Math. 160 (2004) no. 2, 781-793 (TCH12 reference list).
+%  Tao09  polymathprojects.org post of 28 July 2009 by T. Tao (fetched): "Our goal is polynomial in
+%         k"; "What about a partial result, such as exp(o(k))?". The michaelnielsen.org wiki page
+%         "Finding primes" returned 404, so we cite the blog post.
+%  Alboiu, Ramanujan J. 2015 ("On the parity of the prime-counting function and related problems",
+%         DOI 10.1007/s11139-014-9596-1): about the distribution of pi(n) mod q, not computation;
+%         not cited.
+%  Anthropic26, OpenAI26, RR26, Shu26, IF26, Tul26, Lean4, Mathlib20: as audited in the factoring
+%         and class-number notes (citation checks of 4 Nov 2026). TulFac26, TulCN26: our own notes,
+%         unpublished.
+%  TulsyanRepo26 commit: git log -1 --format=%h --
+%         lean-bridge-anthropic/bridge/EthFollowup/Primes/Final.lean = f5aad1a.
+%  Novelty searches (4 Nov 2026): web searches "parity of prime counting function 2026 #SAT ETH
+%         refutation x^{o(1)} deterministic", "hexagonmath.org primes parity prime counting 2026",
+%         "Oliveira e Silva parity of the prime counting function"; gh search repos "prime parity
+%         ETH", "primeCounting parity lean"; gh search code "primeCounting x % 2" (only our own
+%         files). Nothing relevant found.
+% =====================================================================
+
+\end{document}

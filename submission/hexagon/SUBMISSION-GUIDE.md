@@ -209,3 +209,26 @@ the least non-residue theorem has a primality hypothesis, with a weaker clause f
 ## Submitted (record)
 - 2610.00672 HC paper (v1, earlier)
 - 4 Nov 2026: Eulerian circuits note (Paper 7); quantum note (Paper 2, fixed ZIP without the long table).
+
+## Paper 9 — Parity of the prime-counting function (upload `hexagon-parity-note.zip`, main file `main.tex`)
+Status: READY (4 Nov 2026). Fresh leanchecker replay of `EthFollowup.Primes.Final` passed (README row P1). 9 pp, no long tables,
+compiles from a fresh unzip with -halt-on-error.
+
+**Form answers**
+- **Title:** The parity of the prime-counting function in time $x^{o(1)}$, assuming the new #SAT algorithms
+- **Abstract:** paste `abstract-parity.txt` (1723 characters).
+- **Primary subject:** math.NT. **Cross-lists:** cs.CC, cs.DS, cs.LO.
+- **MSC2020** (all five checked against Hexagon's catalogue, 4 Nov 2026): 11N05 (Distribution of primes), 11Y16
+  (Number-theoretic algorithms; complexity), 11A25 (Arithmetic functions; related numbers; inversion formulas), 68Q25 (Analysis
+  of algorithms and problem complexity), 68V20 (Formalization of mathematics in connection with theorem provers).
+- **Tags:** prime-counting function; parity of pi(x); Polymath4; deterministic prime finding; squarefree numbers; Möbius function;
+  divisor chains; #SAT; Exponential Time Hypothesis; Lean 4; formal verification.
+- **Tools used:** Claude (Anthropic), via Claude Code; Lean 4 with Mathlib; TeX Live; Python (exact numeric checks).
+- **Formalizations / arXiv id:** leave empty.
+
+**What is claimed and what is not** (as the paper states): machine-checked are π(x) mod 2 and the interval parity in
+2^{O(n/√log n)}, the chain lemma and the one-count identity, and the product-tree lower bound; the adversary proposition, the
+link from networks to the tree model and the mod-k remark are proved on paper only. It does NOT give deterministic prime finding
+or the exact π(x).
+
+**Exact steps:** as for Paper 6.

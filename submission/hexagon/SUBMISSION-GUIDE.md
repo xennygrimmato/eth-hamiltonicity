@@ -133,3 +133,29 @@ confirmations, licence (suggested CC BY 4.0).
 6. Add yourself as the contributor. List Claude and Lean under tools, not as contributors.
 7. Make your declarations (human understanding, text origin, the four confirmations, licence).
 8. Submit. A moderator reviews it, usually within about 48 hours on weekdays.
+
+## Paper 7 — Eulerian circuits note (upload `hexagon-euler-note.zip`, main file `main.tex`)
+Status: proof final (fresh leanchecker replay of `EthFollowup.ExactHC.EulerTheorems` passed 4 Nov 2026; README row R4).
+The ZIP is built from `euler-note/main.tex` once the paper compiles; this section's form answers are fixed now.
+
+**Form answers**
+- **Title:** Counting Eulerian circuits in subexponential time, assuming the new #SAT algorithms
+- **Abstract:** paste `abstract-euler.txt`.
+- **Primary subject:** cs.DS. **Cross-lists:** cs.CC, math.CO, cs.LO.
+- **MSC2020** (all five checked against Hexagon's catalogue, `api/v1/msc`, on 4 Nov 2026): 05C45 (Eulerian and Hamiltonian
+  graphs), 05C30 (Enumeration in graph theory), 68Q25 (Analysis of algorithms and problem complexity), 68Q17 (Computational
+  difficulty of problems), 68V20 (Formalization of mathematics in connection with theorem provers).
+- **Tags:** Eulerian circuits; Euler tours; exact counting; #P-completeness; transition systems; Hamiltonian cycle; line graph;
+  Exponential Time Hypothesis; #SAT; Lean 4; formal verification.
+- **Tools used:** Claude (Anthropic), via Claude Code; Lean 4 with Mathlib; TeX Live; Python (brute-force checks).
+- **Formalizations:** none (GitHub is not an allowlisted host; the repository and commit are cited in the paper).
+- **arXiv id:** none.
+
+**What is claimed and what is not** (as the paper states): the theorems count Kotzig's transition systems with connected
+transition graph (= closed Euler trails up to rotation and reversal); the bridge to Mathlib's `Walk.IsEulerian` is not
+formalised; the time bounds carry a factor (n+2)^C for reading the n²-bit adjacency matrix (dropped when no vertex is
+isolated). The reduction (line graph of the double subdivision) is classical; the subexponential exact count and its
+verification are new to our knowledge.
+
+**Exact steps:** as for Paper 6 (sign in with ORCID → Submit a work → upload the ZIP, main file `main.tex` → check the
+compile preview → fill the fields above → contributor = you, Claude and Lean under tools → declarations → submit).

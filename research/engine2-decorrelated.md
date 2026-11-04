@@ -133,7 +133,18 @@ In a 2-class grouping ranks add, so one term per such grouping suffices. Every s
 entrywise. GF(2) makes the search space finite and genuinely exhaustive. Theorem 1 holds over every field, and the
 product baseline below has the same ranks over GF(2) and ℚ.
 
-RESULTS_TABLE
+| configuration (λ = 1) | Q | Thm 1 bound N^Q | product rank sum | SAT: S proven impossible (exact) | S tried, timeouts (10 s) | smallest S found (profile) |
+|---|---|---|---|---|---|---|
+| single rectangle | 1 | 2 | 2 | – | – | **2** = bound (row[1] + col[1]: F = I + (I+F)) |
+| A fat cell (same row and column pair) | 2 | 4 | 10 | 4 | 5 (4 t/o), 6 (7 t/o) | **7** (row rank 1 + col rank 6) |
+| B same row pair, disjoint columns | 2 | 4 | 10 | 4 | 5 (1 t/o), 6 (10 t/o) | **7** (col[1,1] + row rank 6) |
+| B′ same row pair, shared column | 2 | 4 | 10 | 4 | 5 (1 t/o), 6 (15 t/o) | **7** (col[1,1] + row rank 6) |
+| C disjoint | 2 | 4 | 10 | 4, 5 | 6 (7 t/o); S = 7 run stopped at the 50-min budget | ≤ 10 (product) |
+| D, E chains | 2 | 4 | 10 | not run (budget) | – | ≤ 10 (product) |
+| **3×2 grid (non-diagonal)** | 3 | (only N² = 4 proved; diagonal law would be N³ = 8) | 26 | 4 | 5 (5 t/o), 6 (23 t/o), 7 (100 t/o at 5 s); profiles failing Thm-1 cut inequalities skipped | **none with S ≤ 7 found** |
+
+(`scripts/engine2d_sat_two.out`, `scripts/engine2d_sat_3x2.out`; every reported solution re-verified entrywise, PASS.
+"Exact" = every profile of that weight returned UNSAT.)
 
 Product baseline, the pieces F = I + (F−I) with I = [x=u][y=v] (row rank 4, column rank 1) and F−I (row rank 1,
 column rank 4): terms I⊗I, I⊗A, A⊗I, A⊗A with min-ranks 1, 4, 4, 1, **rank sum 10, max cost 2 bits = Qλ**.
@@ -145,8 +156,9 @@ cannot separate ρ = 1/2 from anything, as the task anticipated: the λ-asymptot
 every λ. (ii) The rank-sum minima lie strictly between the bound 2^Q and the product value 10. Correlated decompositions
 beat products *in rank sum* at λ = 1 (e.g. A: 7 via F = I + (I+F) on the fat cell, which treats F⊗F as a
 single rectangle). They never get below Theorem 1. That is the expected picture: correlation can repack constants, but
-the diagonal contraction forbids an exponential gain. (iii) 3×2 grid: see the table. A decomposition with S < N³ = 8 would
-show that the diagonal law S ≥ N^Q fails off-diagonal, at least at λ = 1.
+the diagonal contraction forbids an exponential gain. (iii) 3×2 grid: no decomposition with S < N³ = 8 was found. S = 4 is excluded exactly, and S = 5–7 had many
+timeouts, so this is weak evidence [C] that the diagonal law S ≥ N^Q also holds off-diagonal. A solution
+would have shown the law fails there, at least at λ = 1. The product rank sum is 26 = 1+1+6·4.
 
 ## 6. What remains
 
@@ -156,6 +168,19 @@ show that the diagonal law S ≥ N^Q fails off-diagonal, at least at λ = 1.
    and the cap c/log K would then hold for all correlated network decompositions of grid levels.
 2. Lean: Theorem 1 is formalised for configurations A/B/C. Theorem 2 (m ≥ 3) needs the CVZ functionals, which are not in
    Mathlib. Theorem 3 is not formalised.
+
+## Lean status per claim
+
+| claim | status |
+|---|---|
+| Theorem 1, configurations A/B/C (Σ_t min(rk_row, rk_col) ≥ D², any field, any D, arbitrary terms) | **Lean-proved (general)**: `Decorrelated.rankSum_ge`, `exists_expensive` |
+| Theorem 1, chains D/E | by the symmetry of F (not yet formalised) |
+| product decomposition at λ = 1: identity, min-ranks (1,4,4,1), rank sum 10, max 4 | **Lean-checked on the instance**: `DecorrelatedProduct.product_sum`, `product_costs`, `product_rank_sum` |
+| a correlated decomposition beating the product bound | none exists asymptotically (Theorem 1). The λ = 1 rank-sum improvements (7 < 10) are GF(2) SAT outputs, not formalised |
+| Theorem 2 (m ≥ 3, CVZ functionals), Theorem 3 (ρ ≥ 1/8) | not yet formalised (CVZ is not in Mathlib) |
+| 3×2: S ≥ 4 proved, S < 8 not found | S ≥ 4 is Theorem 1 on a sub-configuration (not formalised); search [N]/[C] |
+
+All Lean theorems print `[propext, Classical.choice, Quot.sound]` under `#print axioms`. No sorry, no native_decide.
 
 ## Files
 

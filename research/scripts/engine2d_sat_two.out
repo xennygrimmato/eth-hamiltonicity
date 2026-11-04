@@ -1,0 +1,16 @@
+single rectangle             Q=1 min S= 2  (Thm1 bound 2)  profile: row[1] + col[1]   [1 profiles, 0.0s] PASS
+A fat cell (same pairs)        S= 4: no decomposition (0 of the profiles timed out at 10s)
+A fat cell (same pairs)        S= 5: no decomposition (4 of the profiles timed out at 10s)
+A fat cell (same pairs)        S= 6: no decomposition (7 of the profiles timed out at 10s)
+A fat cell (same pairs)      Q=2 min S= 7  (Thm1 bound 4)  profile: row[1] + col[6]   [19 profiles, 125.3s] PASS
+B same rows, disj cols         S= 4: no decomposition (0 of the profiles timed out at 10s)
+B same rows, disj cols         S= 5: no decomposition (1 of the profiles timed out at 10s)
+B same rows, disj cols         S= 6: no decomposition (10 of the profiles timed out at 10s)
+B same rows, disj cols       Q=2 min S= 7  (Thm1 bound 4)  profile: col[1, 1] + row[6]   [216 profiles, 540.0s] PASS
+B' same rows, shared col       S= 4: no decomposition (0 of the profiles timed out at 10s)
+B' same rows, shared col       S= 5: no decomposition (1 of the profiles timed out at 10s)
+B' same rows, shared col       S= 6: no decomposition (15 of the profiles timed out at 10s)
+B' same rows, shared col     Q=2 min S= 7  (Thm1 bound 4)  profile: col[1, 1] + row[6]   [216 profiles, 654.4s] PASS
+C disjoint                     S= 4: no decomposition (0 of the profiles timed out at 10s)
+C disjoint                     S= 5: no decomposition (0 of the profiles timed out at 10s)
+C disjoint                     S= 6: no decomposition (7 of the profiles timed out at 10s)

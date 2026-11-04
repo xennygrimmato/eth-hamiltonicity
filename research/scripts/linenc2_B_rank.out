@@ -1,0 +1,10 @@
+star-move sanity: PASS
+n  m  |   convex |   2lines |   3lines |   random |     grid |   2parab |  DFS-cvx | rank*(best) | m/2
+ 8  12 |        4 |        4 |        0 |        0 |        0 |        0 |        4 |           0 | 6
+ 8  12 |        2 |        2 |        0 |        0 |        0 |        2 |        4 |           0 | 6
+12  18 |        4 |        6 |        4 |        4 |        6 |        4 |        6 |           4 | 9
+12  18 |        6 |        4 |        4 |        4 |        6 |        2 |        4 |           2 | 9
+16  24 |        8 |       10 |        8 |        6 |       10 |        8 |        8 |           6 | 12
+16  24 |        8 |       10 |        6 |        4 |        8 |        6 |        6 |           4 | 12
+[run finished: 37m30s, exit code 0, but no rows for n = 24, 32, 48 were printed. The likely
+ cause is failed writes while the temp volume was full; not confirmed. Re-run to get them.]

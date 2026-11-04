@@ -1,0 +1,8 @@
+stats: {'graphs': 70, 'genus_hist': {2: 11, 1: 29, 4: 8, 3: 15, 0: 6, 5: 1}, 'systems': 7194, 'cycles': 6198, 'underdetermined_fit': 41, 'full_fit': 29}
+ablation W alone wrong on 3780 systems (must be > 0)
+check a              : PASS (0 failures)
+check b              : PASS (0 failures)
+check c              : PASS (0 failures)
+check d              : PASS (0 failures)
+check twist_solvable : PASS (0 failures)
+ALL PASS

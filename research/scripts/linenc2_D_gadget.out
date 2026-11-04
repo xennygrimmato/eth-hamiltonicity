@@ -1,0 +1,7 @@
+stats: {'graphs': 40, 'labellings': 4376, 'colourings': 6008}  zero-type cycle on 6 ordered vertices: (0, 1, 3, 5, 2, 4)
+check a       : PASS (0 failures)
+check b_found : PASS (0 failures)
+check b_cycle : PASS (0 failures)
+check b_total : PASS (0 failures)
+check c       : PASS (0 failures)
+ALL PASS

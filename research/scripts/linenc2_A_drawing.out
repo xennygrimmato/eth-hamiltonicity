@@ -1,0 +1,7 @@
+stats: {'graphs': 150, 'labellings': 11134, 'Q1': 310, 'Kn_systems': 14208}
+ablations (must be > 0): {'noN': 1666, 'noQ': 310}
+check a       : PASS (0 failures)
+check b       : PASS (0 failures)
+check c       : PASS (0 failures)
+check d_local : PASS (0 failures)
+ALL PASS

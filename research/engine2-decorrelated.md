@@ -8,6 +8,14 @@ Tags: **[R]** proved here, **[L]** Lean-proved, **[K]** known, **[N]** exact com
 
 ## 0. Verdict
 
+* **Update (§7, same day).** The 3×2 grid is closed: Σ_t min(rk_{b|ac}, rk_col) ≥ N³ for every decomposition
+  (Theorem 4, [R][L], any field, any alphabet), so **ρ ≥ 1/2 on the minimal non-diagonal instance**. The tool is a
+  *lossy* diagonal contraction: one leg may sit on the wrong side of the row cut and one on the wrong side of the column
+  cut, at a factor N each. The same lemma lifts Theorem 3 from ρ ≥ 1/8 to **ρ ≥ 3/8 for full grid levels** (Theorem 5,
+  α' ≤ log₂(8/3) ≈ 1.415 instead of 3), and 3/8 is the most this 2-party method can give (Proposition 7.6). The new
+  minimal open instance is the full 3×3 level (proved S ≥ N⁸, wanted N⁹). No correlated decomposition beating ρ = 1/2
+  exists on any configuration where the method reaches Q (§7.5). The bullets below are the state before §7.
+
 * **The §9.2 question has a negative answer [R][L].** For two rectangles, every decomposition
   F⊗F = Σ_{t≤T} T_t, with each term a row-network or a column-network (arbitrary local tensors, so a term
   may correlate the two rectangles), satisfies
@@ -161,6 +169,8 @@ timeouts, so this is weak evidence [C] that the diagonal law S ≥ N^Q also hold
 would have shown the law fails there, at least at λ = 1. The product rank sum is 26 = 1+1+6·4.
 
 ## 6. What remains
+
+*(Item 1 is settled by §7: S ≥ N³, Theorem 4.)*
 
 1. **The 3×2 grid.** Three rectangles between rows ab, ac, bc on one column pair. Column-networks are single cuts and
    row-networks are triangles. Proved: S ≥ N² (2 of the 3 rectangles are diagonal). Wanted: S ≥ N^{3−o(1)}, or a family with

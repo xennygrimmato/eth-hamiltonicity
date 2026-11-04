@@ -1,0 +1,23 @@
+# Outputs of research/scripts/engine2d_grid32/*.py, 4 Nov 2026 (recorded from the runs; HiGHS 1.x via scipy 1.18.1)
+## m2.py: Counter of min(r,c) over matchings; span tests
+Counter({2: 4500, 4: 4188, 3: 1184, 0: 251, 5: 192, 6: 80})
+total rank 132
+k=0: 251 matchings, span dim 32, H not in span
+k=1: 251, 32, no
+k=2: 4751, 131, H in span
+k>=3: H in span
+## m3.py
+single cost2 + cost0 span works: 0
+## m5.py 0 min 300  (weight 2^min(r,c), terms counted separately)
+Time limit reached. obj 24 bound 17.0
+ solution: 6 matchings, (r,c) = (6,2),(4,2),(2,4),(2,4),(4,2),(2,6), coefficients +-1
+## m6.py: verification
+full residual 6.7e-16 ; column-type terms (6,2),(4,2),(4,2) grouped into one column term: rank 10 (rank sum 10+12 = 22)
+## m5.py 0.5 theta 240  (weight 2^((r+c)/2): base of the tensor-power rank sum)
+Time limit reached. obj 64 bound 38.17
+## cert.py: fake profile P* = {row bond ab = 2, row bond ac = 2, row bond bc = 2, column bond 2} (units lambda)
+patterns 531441, max target mincut 12, violations (max_t m_t < m_H): 1392  -> P* refuted
+## cert3.py: per-pattern minimal covering cost
+colmin distribution: 0:377703 1:105624 2:38448 3:8512 4:1080 5:72 6:2
+candidates with colmin >= 2.5: 9666
+best: min 3.0 row 3.0 col 3, x=[0 0 0 2 0 2] y=[0 1 1 0 2 0] mH=4   (nodes 1..6 of the hexagon; 9 more such patterns)

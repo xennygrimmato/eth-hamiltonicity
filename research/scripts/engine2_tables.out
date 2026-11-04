@@ -1,0 +1,15 @@
+[PASS] (a) CP-rank-2 tables, K=3, D=3: Z = sum over r^K of edge inner products (-411)
+[PASS] (a) CP-rank-2 tables, K=4, D=2: Z = sum over r^K of edge inner products (-352)
+[PASS] (a) CP-rank-2 tables, K=4, D=3: Z = sum over r^K of edge inner products (-1560)
+[PASS] (a) CP-rank-2 tables, K=5, D=2: Z = sum over r^K of edge inner products (-16128)
+(b) lam=2, D=4, clause density 1.5: ranks (leg b | leg c) of 20 grouped 3-CNF tables [3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]; mean log2(rank)/lam = 0.99
+(b) lam=2, D=4, clause density 3.0: ranks (leg b | leg c) of 20 grouped 3-CNF tables [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4]; mean log2(rank)/lam = 0.60
+(b) lam=3, D=8, clause density 1.5: ranks (leg b | leg c) of 20 grouped 3-CNF tables [4, 4, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]; mean log2(rank)/lam = 0.93
+(b) lam=3, D=8, clause density 3.0: ranks (leg b | leg c) of 20 grouped 3-CNF tables [2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7]; mean log2(rank)/lam = 0.69
+[PASS] (b') edge (0,1) compressed from D=4 to rank alphabet r=2: Z unchanged (640)
+[PASS] (b') edge (0,1) compressed from D=4 to rank alphabet r=3: Z unchanged (586)
+[PASS] (b') edge (0,1) compressed from D=4 to rank alphabet r=2: Z unchanged (36)
+[PASS] (c) CRT over 12 primes reconstructs Z=2191145 from Z mod p computed with tables mod p
+[PASS] (c) rectangle F (D=2) has rank D^2 across both cuts over F_2, F_3, F_5
+[PASS] (c) rectangle F (D=4) has rank D^2 across both cuts over F_2, F_3, F_5
+ALL PASS

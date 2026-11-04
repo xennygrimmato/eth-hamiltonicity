@@ -1,0 +1,41 @@
+[PASS] (a) 20000 sets that are products across {0} and across {1}: all are full products over atoms (counterexamples: 0)
+   K=6 d=2 minus delta=0.0 : log|X|/log K = 2.0, max_S delta_S = 0.0
+   K=6 d=2 minus delta=0.05 : log|X|/log K = 1.984, max_S delta_S = 0.02
+   K=6 d=2 minus delta=0.2 : log|X|/log K = 1.934, max_S delta_S = 0.068
+   K=6 d=2 minus delta=0.5 : log|X|/log K = 1.672, max_S delta_S = 0.28
+   K=6 d=2 union delta=None : log|X|/log K = 1.818, max_S delta_S = 0.095
+   K=5 d=3 minus delta=0.0 : log|X|/log K = 3.0, max_S delta_S = 0.0
+   K=5 d=3 minus delta=0.05 : log|X|/log K = 2.954, max_S delta_S = 0.059
+   K=5 d=3 minus delta=0.2 : log|X|/log K = 2.892, max_S delta_S = 0.129
+   K=5 d=3 minus delta=0.5 : log|X|/log K = 2.666, max_S delta_S = 0.327
+   K=5 d=3 union delta=None : log|X|/log K = 2.431, max_S delta_S = 0.216
+   K=4 d=4 minus delta=0.0 : log|X|/log K = 4.0, max_S delta_S = 0.0
+   K=4 d=4 minus delta=0.05 : log|X|/log K = 3.977, max_S delta_S = 0.024
+   K=4 d=4 minus delta=0.2 : log|X|/log K = 3.826, max_S delta_S = 0.17
+   K=4 d=4 minus delta=0.5 : log|X|/log K = 3.483, max_S delta_S = 0.41
+   K=4 d=4 union delta=None : log|X|/log K = 3.554, max_S delta_S = 0.128
+[PASS] (b) chain log|X| >= sum_j H(A_j) - sum_{j<d} I_j holds on all designs
+[PASS] (b) I_S <= h(delta_S) + delta_S (d log K - log|X|) holds on all designs
+   q=5 m=3 dim=2: matroid components=2, max distinct cuts over edges=2, frac edges with more cuts than components=0.0 (bound 2^m/q=1.6)
+   q=5 m=3 dim=2: matroid components=1, max distinct cuts over edges=1, frac edges with more cuts than components=0.0 (bound 2^m/q=1.6)
+   q=5 m=3 dim=2: matroid components=1, max distinct cuts over edges=1, frac edges with more cuts than components=0.0 (bound 2^m/q=1.6)
+   q=7 m=4 dim=2: matroid components=2, max distinct cuts over edges=2, frac edges with more cuts than components=0.0 (bound 2^m/q=2.286)
+   q=7 m=4 dim=2: matroid components=2, max distinct cuts over edges=1, frac edges with more cuts than components=0.0 (bound 2^m/q=2.286)
+   q=7 m=4 dim=2: matroid components=1, max distinct cuts over edges=1, frac edges with more cuts than components=0.0 (bound 2^m/q=2.286)
+   q=7 m=4 dim=3: matroid components=2, max distinct cuts over edges=2, frac edges with more cuts than components=0.0 (bound 2^m/q=2.286)
+   q=7 m=4 dim=3: matroid components=1, max distinct cuts over edges=4, frac edges with more cuts than components=0.2632 (bound 2^m/q=2.286)
+   q=7 m=4 dim=3: matroid components=1, max distinct cuts over edges=4, frac edges with more cuts than components=0.2632 (bound 2^m/q=2.286)
+   q=5 m=4 dim=3: matroid components=2, max distinct cuts over edges=2, frac edges with more cuts than components=0.0 (bound 2^m/q=3.2)
+   q=5 m=4 dim=3: matroid components=1, max distinct cuts over edges=4, frac edges with more cuts than components=0.2903 (bound 2^m/q=3.2)
+   q=5 m=4 dim=3: matroid components=1, max distinct cuts over edges=4, frac edges with more cuts than components=0.2903 (bound 2^m/q=3.2)
+   q=17 m=4 dim=3: matroid components=3, max distinct cuts over edges=3, frac edges with more cuts than components=0.0 (bound 2^m/q=0.941)
+   q=17 m=4 dim=3: matroid components=1, max distinct cuts over edges=4, frac edges with more cuts than components=0.1466 (bound 2^m/q=0.941)
+   q=17 m=4 dim=3: matroid components=1, max distinct cuts over edges=4, frac edges with more cuts than components=0.1466 (bound 2^m/q=0.941)
+   q=31 m=4 dim=3: matroid components=2, max distinct cuts over edges=2, frac edges with more cuts than components=0.0 (bound 2^m/q=0.516)
+   q=31 m=4 dim=3: matroid components=1, max distinct cuts over edges=4, frac edges with more cuts than components=0.0876 (bound 2^m/q=0.516)
+   q=31 m=4 dim=3: matroid components=1, max distinct cuts over edges=4, frac edges with more cuts than components=0.0876 (bound 2^m/q=0.516)
+   q=101 m=3 dim=2: matroid components=2, max distinct cuts over edges=2, frac edges with more cuts than components=0.0 (bound 2^m/q=0.079)
+   q=101 m=3 dim=2: matroid components=1, max distinct cuts over edges=1, frac edges with more cuts than components=0.0 (bound 2^m/q=0.079)
+   q=101 m=3 dim=2: matroid components=1, max distinct cuts over edges=1, frac edges with more cuts than components=0.0 (bound 2^m/q=0.079)
+[PASS] (c) linear designs: edges with more distinct cuts than components have density <= 2^m/q
+ALL PASS

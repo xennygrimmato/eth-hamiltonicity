@@ -3,7 +3,7 @@
 4 Nov 2026. Follows `engine2-algebraic.md` §9 (the open step: correlated, non-product term sets) and
 `permanent/rate.md`, `permanent/rho-lower-bound.md` (pieces formalism, R1–R3). Scripts:
 `scripts/engine2d_lib.py`, `scripts/engine2d_sat.py` (GF(2) SAT, exhaustive at λ = 1), `scripts/engine2d_bound.py`
-(exact ℚ checks); outputs `scripts/engine2d_*.out`. Lean: `lean/EthFollowup/Scratch/Decorrelated/{Basic,Product}.lean`.
+(exact ℚ checks); outputs `scripts/engine2d_*.out`. Lean: Theorem 1 is in `lean/EthFollowup/Barriers/DecorrelatedRank.lean` (committed, standard axioms); the λ = 1 product check is in the local scratch file `Decorrelated/Product.lean` (not committed).
 Tags: **[R]** proved here, **[L]** Lean-proved, **[K]** known, **[N]** exact computation, **[C]** heuristic.
 
 ## 0. Verdict

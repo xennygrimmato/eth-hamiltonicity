@@ -160,3 +160,28 @@ verification are new to our knowledge.
 
 **Exact steps:** as for Paper 6 (sign in with ORCID → Submit a work → upload the ZIP, main file `main.tex` → check the
 compile preview → fill the fields above → contributor = you, Claude and Lean under tools → declarations → submit).
+
+## Paper 8 — Class numbers, square roots, non-residues (upload `hexagon-classnumber-note.zip`, main file `main.tex`)
+Status: Lean final theorems built with standard axioms (`EthFollowup.ModP.Final`); the fresh leanchecker replay is
+recorded in README rows N1–N3 once it passes. Do not upload before those rows exist.
+
+**Form answers**
+- **Title:** Class numbers, square roots and quadratic non-residues in time $2^{O(n/\sqrt{\log n})}$, assuming the new #SAT algorithms
+- **Abstract:** paste `abstract-classnumber.txt` (1895 characters).
+- **Primary subject:** math.NT. **Cross-lists:** cs.CC, cs.DS, cs.LO.
+- **MSC2020** (all five checked against Hexagon's catalogue, `api/v1/msc`, 4 Nov 2026): 11R29 (Class numbers, class groups,
+  discriminants), 11Y16 (Number-theoretic algorithms; complexity), 11Y40 (Algebraic number theory computations),
+  11A15 (Power residues, reciprocity), 68V20 (Formalization of mathematics in connection with theorem provers).
+- **Tags:** class number; binary quadratic forms; quadratic non-residue; Burgess bound; square roots modulo m; divisor sum;
+  Gauss circle problem; #SAT; Exponential Time Hypothesis; Lean 4; formal verification.
+- **Tools used:** Claude (Anthropic), via Claude Code; Lean 4 with Mathlib; TeX Live; Python (small numeric checks).
+- **Formalizations:** none (GitHub is not an allowlisted host; the repository and commit are cited in the paper).
+- **arXiv id:** none.
+
+**What is claimed and what is not** (as the paper states): Lean proves the number of reduced forms of discriminant −N
+(Gauss's form class number, with Cox's reduction conventions); its equality with the ideal class number of ℚ(√D) is
+classical and not in Mathlib; for fundamental discriminants every reduced form is primitive (`hFormPrim_TM_rate`);
+real quadratic fields are not covered. Square roots are the least root modulo any m (output m when none);
+the least non-residue theorem has a primality hypothesis, with a weaker clause for composite inputs.
+
+**Exact steps:** as for Paper 6.

@@ -17,7 +17,7 @@
  11         122772    0.01425    0.02187     0.6447  1.53e-5
  12         245646    0.01007    0.01563     0.6447  7.63e-6
  13         491400   0.007124    0.01094     0.6448  3.81e-6
-limit e_l/rho^l = 0.644772 (= 0.5 * prod(1+3 zeta_j/rho)); +3/K_l contributes < 2^-17 at l=0 and is negligible after
+limit e_l/rho^l = 0.644772 (= 0.5 * prod(1+3 zeta_j/rho)); +3/K_l contributes < 2^-16 at l=0 (3/K_0 = 1.5*2^-17) and is negligible after
 
 ====================================================================================================
 1. Anthropic 3-SAT decision machine (rates/PaddedDescent): explicit floor, TM degree q
@@ -25,8 +25,8 @@ limit e_l/rho^l = 0.644772 (= 0.5 * prod(1+3 zeta_j/rho)); +3/K_l contributes < 
 sOf n = floor(3(floor(log2 floor(log2 n)) - 911)/19);  exhaustive while s < s0K 3 = 128;  pad 2^{2^131 (n/2^s + 1)}
   q =     1 : rate q*2^(131-s) < 1 needs s >= 132  <=>  floor(log2 log2 n) >= 1747  i.e. n >= 2^(2^1747)
   q =     2 : rate q*2^(131-s) < 1 needs s >= 133  <=>  floor(log2 log2 n) >= 1754  i.e. n >= 2^(2^1754)
-  q =    10 : rate q*2^(131-s) < 1 needs s >= 136  <=>  floor(log2 log2 n) >= 1773  i.e. n >= 2^(2^1773)
-  q =  1000 : rate q*2^(131-s) < 1 needs s >= 142  <=>  floor(log2 log2 n) >= 1811  i.e. n >= 2^(2^1811)
+  q =    10 : rate q*2^(131-s) < 1 needs s >= 135  <=>  floor(log2 log2 n) >= 1766  i.e. n >= 2^(2^1766)
+  q =  1000 : rate q*2^(131-s) < 1 needs s >= 141  <=>  floor(log2 log2 n) >= 1804  i.e. n >= 2^(2^1804)
   (exhaustive search for all n < 2^(2^1722); ThreeSatRateStatement.lean says 2^(2^518), a weaker, true bound)
 
 ====================================================================================================

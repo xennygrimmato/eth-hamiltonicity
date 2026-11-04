@@ -93,10 +93,14 @@ repository, \url{https://github.com/xennygrimmato/eth-hamiltonicity}~\cite{Tulsy
 However, an $O(\cdot)$ in an exponent says nothing about when the algorithm first wins. The question
 is not idle. The sources fix almost all of their constants (the Lean development of \A{} fixes every
 schedule parameter), so the bound they prove is a concrete function of $n$, up to a few existential
-constants. Neither manuscript computes where its concrete bound crosses brute force (the Lean
-development of \A{} records only that its decision machine searches exhaustively below
-$2^{2^{518}}$, see \cref{sec:corrections}). We are not aware of such a computation, and we do it
-here.
+constants. Neither manuscript computes where its concrete bound crosses brute force. The Lean
+development of \A{} comes closest, for its $3$-SAT decision machine. The docstring of
+\lf{rates/PaddedDescent/Main.lean} (lines~52--59) states that the machine leaves exhaustive search
+only when $\lfloor\log_2\lfloor\log_2n\rfloor\rfloor\ge1722$, ``that is $n\ge2^{2^{1722}}$'', and that
+the pad ``is more than $2^n$ until $s\ge132$, that is until $n\ge2^{2^{1747}}$, and the running time
+is a polynomial of unknown degree in that length'' (notation rendered as mathematics; see
+\cref{sec:corrections}, item~(1)). So even there the crossover itself is left open. We are not aware
+of such a computation, and we do it here.
 
 \subsection{The crossover problem}
 We reserve the word \emph{crossover} for a proven bound, never for a running time.
@@ -167,7 +171,9 @@ So, for example, the official Lean theorem of \A{} first certifies a win over $2
 the satisfiability threshold density at about $n=2^{552\,040}$, and only if $q=1$. With $q=2$ it is
 $2^{2.21\cdot10^6}$, and with $q=10$ it is $2^{3.54\cdot10^7}$. OpenAI's Engine I as written needs
 $n\approx2^{3.02\cdot10^{13}}$. Our $\HC$ algorithm, which has no Turing-machine degree because it
-counts word operations, has the smallest crossover of all.
+counts word operations, has the smallest crossover in every column of \cref{tab:headline}. It is not
+the smallest in the note: at the sparser density $\alpha=1$ the $m$-route of \A{} is smaller in every
+tier (\cref{tab:mcross}), for example $\tst=33\,858$ against $55\,440$ in tier~A.
 
 \subsection{Contributions}
 Our contributions are:
@@ -271,7 +277,7 @@ $\ell$ & $\log_2K_\ell$ & $e_\ell$ & $e'_\ell$ & $e_\ell/\rho^\ell$ & $e'_\ell/e
 
 The ratio $e_\ell/\rho^\ell$ tends to $0.644772=\frac12\prod_j(1+3\zeta_j/\rho)$. The terms
 $3\zeta_\ell$ cost a factor $1.29$ over $\rho^\ell/2$, while the terms $3/K_\ell$ are below
-$2^{-17}$ at $\ell=0$ and doubly exponentially smaller afterwards. Two facts drive everything
+$2^{-16}$ at $\ell=0$ and doubly exponentially smaller afterwards. Two facts drive everything
 below: $e_\ell$ halves every two levels, and $\log_2K_\ell$ doubles with every level.
 
 \subsection{Tiers and labels}\label{sec:tiers}
@@ -399,7 +405,7 @@ C2 \Hh & $3.14\cdot10^4$ & $1.27\cdot10^5$ & $2.72\cdot10^5$ & $9.58\cdot10^5$ &
 $\lceil e'K^2\lambda\rceil\approx2e'_\ell km$, that is, the clique exponent times the network
 total $U\approx2km$. We return to the running example (\cref{ex:running}). At the tier-A crossover
 ($\alpha=4.26$, $\ell=10$) the solver term equals $0.79875\,n$, while the grouping search,
-$P(2g/K+1)$ and $(K-1)\lambda$ are each below $10^{-18459}\cdot n$. So the rate is $2e'_\ell k\alpha$
+$P(2g/K+1)$ and $(K-1)\lambda$ are each below $10^{-18458}\cdot n$. So the rate is $2e'_\ell k\alpha$
 to that accuracy, and two discrete facts fix $\nst$. One is the first level with
 $q\cdot2e'_\ell k\alpha<1$ (here $e'_{10}=1/32$, giving $25.56/32=0.79875$). The other is the least
 $n$ at which that level may be used. In tier A this is the rule $K_\ell^9\le m$, so
@@ -407,8 +413,9 @@ $\tst=9\log_2K_{10}-\log_2 4.26=552\,042-2.09$, the value in \cref{tab:mcross}. 
 binding constraint is the search term $3K^8\sz K\le n$, so $\tst\approx8\log_2K_9$. Since
 $\log_2K_\ell$ doubles per level and $e_\ell$ halves every two levels, $\nst$ is a staircase: a
 change of constant helps only once it crosses a level boundary, and then it halves $\tst$. Each
-doubling of $q$ costs two levels, hence the factor $4$ in \cref{tab:q} (the steps at $q=3$ and
-$q=5$ are the intermediate odd levels).
+doubling of $q$ costs two levels, hence the factor $4$ in \cref{tab:q}. In tier~A, $q=3$ and $q=5$
+use the levels $13$ and $14$, one level each beyond the level $12$ of $q=2$, hence the factors $2$
+there.
 
 \subsection{\texorpdfstring{\A}{[A]}, the \texorpdfstring{$n$}{n}-route (any number of clauses): the same term, at a later level rule}\label{sec:nroute}
 For formulas with arbitrarily many clauses, \A{} first sparsifies and then runs a network whose
@@ -461,8 +468,8 @@ only once $q\cdot2^{131-s}<1$:
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
 $q$ & 1 & 2 & 10 & 1000\\
-needs $s\ge$ & 132 & 133 & 136 & 142\\
-$\nst$ & $2^{2^{1747}}$ & $2^{2^{1754}}$ & $2^{2^{1773}}$ & $2^{2^{1811}}$\\
+needs $s\ge$ & 132 & 133 & 135 & 141\\
+$\nst$ & $2^{2^{1747}}$ & $2^{2^{1754}}$ & $2^{2^{1766}}$ & $2^{2^{1804}}$\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -668,7 +675,9 @@ our Hamiltonian-cycle counter, and the two ingredients that enter only as levers
 stated the ETH. OpenAI~\cite{OpenAI26} and Anthropic~\cite{Anthropic26} claim deterministic
 subexponential algorithms for counting the models of a $k$-CNF, with Lean formalisations of the
 top-level statements; both are under review. Both state their bounds with $O(\cdot)$ in the
-exponent, and neither computes where its concrete bound crosses brute force. In contrast, we
+exponent, and neither computes where its concrete bound crosses brute force. The Lean development
+of \A{} states explicit floors for its decision machine, $2^{2^{1722}}$ and $2^{2^{1747}}$, and leaves
+the crossover open (\cref{sec:corrections}). In contrast, we
 evaluate the proven bounds of both term by term, and report where they first beat brute force.
 
 \paragraph{Brute-force baselines.} For $\#3$-SAT the baseline is the $2^n$ of exhaustive search. For
@@ -716,8 +725,10 @@ and the threshold $2^{85}$ uses our reading of its parameter bounds as hypothese
 about the actual running time, which may be far smaller. Tier B is only the best point found by a
 coordinate search, not a proven optimum. The $\HC$ cost model uses the explicit bounds of our
 research notes, which accompany but are not identical with the Lean statements of~\cite{Tulsyan26}.
-\item \emph{Nothing practical follows.} The smallest crossover in this note, $\tst\approx4\,330$
-for $\HC$ with all heuristic changes, is an input with more than $10^{1300}$ vertices.
+\item \emph{Nothing practical follows.} The smallest crossover in this note,
+$\tst\approx1\,161$ for the $m$-route of \A{} at $\alpha=1$ with all heuristic changes (tier C4,
+\cref{tab:mcross}), is a formula with more than $10^{349}$ variables. The smallest for $\HC$,
+$\tst\approx4\,330$ (tier C4, $\Delta=3$), is a graph with more than $10^{1300}$ vertices.
 \end{itemize}
 
 % =====================================================================
@@ -730,9 +741,9 @@ The computation is the Python script \repo{research/scripts/crossover.py} in our
 attached to this submission. It is run as \texttt{python3 -I crossover.py} (isolated mode, so that no
 file of the working directory is imported) and writes \lf{crossover.out} beside itself. It needs only
 the Python standard library and mpmath~\cite{mpmath} at $60$ significant digits
-(\texttt{mp.mp.dps = 60}). On 3~November 2026, with Python~3.13.17 and mpmath~1.3.0, a fresh run took
-$29$~seconds of wall-clock time and reproduced the stored \lf{crossover.out} byte for byte; a second
-fresh run on 4~November 2026 did the same. Every number in this note is either printed in that file
+(\texttt{mp.mp.dps = 60}). On 4~November 2026, with Python~3.13.17 and mpmath~1.3.0, a fresh run
+took $30$~seconds of wall-clock time, and a second fresh run reproduced its \lf{crossover.out} byte
+for byte. Every number in this note is either printed in that file
 or, where stated, a ratio or difference of printed values. The script also asserts the closed form
 of $\log_2K_\ell$ and condition~(ii) for the Lean schedule for $\ell<40$.
 

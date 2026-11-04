@@ -1,4 +1,6 @@
-> **Corrections (3 Nov 2026).** Checked against a fresh run of `scripts/crossover.py` while writing `crossover-note/` (the note follows the script output): FMM base case ×3.8 (not ×4); x₀ = 10 gives ×1.18; degree-network U at Δ = 4 is 8.885n; negligible terms are bounded in the output as 10^{−18459}, 10^{−555}, 10^{−6·10⁸} (the 2^{…} bounds quoted below are true but weaker); the script prints break-even constants only for #HC and for C₀ on the m-route, so the blanket "2^{5·10⁴}" statement is stated in the note only for those; the "R is 32× larger than needed" figure (one-off check: 31.75) is not printed by the script.
+> **Corrections (3 Nov 2026).** Checked against a fresh run of `scripts/crossover.py` while writing `crossover-note/` (the note follows the script output): FMM base case ×3.8 (not ×4); x₀ = 10 gives ×1.18; degree-network U at Δ = 4 is 8.885n; negligible terms are bounded in the output as 10^{−18458} (printed: 2.072·10^{−18459}), 10^{−555}, 10^{−6·10⁸} (the 2^{…} bounds quoted below are true but weaker); the script prints break-even constants only for #HC and for C₀ on the m-route, so the blanket "2^{5·10⁴}" statement is stated in the note only for those; the "R is 32× larger than needed" figure (one-off check: 31.75) is not printed by the script.
+>
+> **Corrections (4 Nov 2026).** From a review of `crossover-note/`: (i) decision machine: the least s with q·2^{131−s} < 1 is 132 + ⌊log₂q⌋, not 132 + ⌈log₂q⌉ (they agree for powers of two); the script is fixed, and q = 10 now needs s ≥ 135, n\* = 2^{2^{1766}} (was 136, 2^{2^{1773}}), q = 1000 needs s ≥ 141, n\* = 2^{2^{1804}} (was 142, 2^{2^{1811}}); q = 1, 2 unchanged (2^{2^{1747}}, 2^{2^{1754}}). (ii) 3/K₀ = 1.5·2^{−17}, so the bound is 2^{−16}, not 2^{−17}. (iii) the m-route negligible terms are below 10^{−18458} (2.072·10^{−18459} is printed), not 10^{−18459}. (iv) #HC is not the smallest crossover overall: the m-route at α = 1 is smaller (t\* = 1 161 in tier C4).
 
 # Crossover: where the ETH-refutation algorithms first beat brute force
 
@@ -131,7 +133,7 @@ Theorem A(b) and Lemma 8, and both count word-RAM operations, so there is no TM 
 | 12 | 245 646 | 0.0101 | 0.0156 | 0.645 |
 
 e_ℓ/ρ^ℓ tends to 0.6448 = ½·∏(1+3ζ_j/ρ). So the 3ζ_ℓ terms cost a factor of 1.29. The +3/K_ℓ terms are negligible:
-they are < 2^{−17} at ℓ = 0 and doubly exponentially smaller after. (Lever 4: confirmed for 3/K, refuted for 3ζ.)
+they are < 2^{−16} at ℓ = 0 (3/K₀ = 1.5·2^{−17}) and doubly exponentially smaller after. (Lever 4: confirmed for 3/K, refuted for 3ζ.)
 
 ### 3.2 3-SAT decision machine (`Sat3.inRateTM`, PaddedDescent): tier A only [P]
 
@@ -142,8 +144,8 @@ so it is below 2^n only once q·2^{131−s} < 1:
 |---|---|---|
 | 1 | 132 | 2^{2^{1747}} |
 | 2 | 133 | 2^{2^{1754}} |
-| 10 | 136 | 2^{2^{1773}} |
-| 1000 | 142 | 2^{2^{1811}} |
+| 10 | 135 | 2^{2^{1766}} |
+| 1000 | 141 | 2^{2^{1804}} |
 
 This is a decision procedure (not #SAT). It is far worse than the counting routes below because of its padding
 constant C0K 3 = 2^{131}.
@@ -258,7 +260,7 @@ branches (n^{4m/Θ}) and profiles ((2ν+1)^{C(g,2)}) are below 2^{−12000}·n. 
 the g³ = 27K²⁴ copy-bit term in U and gP, so n\* ≈ K_ℓ²⁴ (t\* ≈ 24 log₂K_ℓ). Break-even constants at the tier-A n\*
 (Δ = 3): C₀ > 2^{51726}, C₁ > 2^{55422}, C₂ > 2^{55421}. Within these ranges the constants do not move n\*.
 The degree network has the smaller U from Δ ≥ 4 (8.885n against 9.30n at Δ = 4). It lowers n\* in tier A only at Δ = 8,
-where it is 4× smaller, because the level is discrete. At Δ = 3 the old network is better (6.98n against 8.06n). With no TM degree q and no padding, #HC has the smallest crossover of all the algorithms here: about
+where it is 4× smaller, because the level is discrete. At Δ = 3 the old network is better (6.98n against 8.06n). With no TM degree q and no padding, #HC has the smallest crossover of the algorithms in the note's headline table (density 4.26 for the m-route; at α = 1 the m-route is smaller, t\* = 33 858 in tier A and 1 161 in tier C4 [H]): about
 n ≈ 2^{55 000} as written, and n ≈ 2^{4 900} with FMM base and re-tuned schedule.
 
 ## 5. OpenAI (#3-SAT, any m), Engine I: the interpolation route of `prop:interpolation-bound`

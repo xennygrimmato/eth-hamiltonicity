@@ -74,29 +74,26 @@
 \keywords{Quantum circuit simulation, strong simulation, Exponential Time Hypothesis, fine-grained complexity, quantum supremacy, tensor networks, Clifford+T}
 
 \begin{abstract}
-Part of the case for quantum computational supremacy rests on fine-grained hypotheses: lower bounds
-on classical simulation are derived from the Exponential Time Hypothesis (ETH) and its relatives.
-However, in October 2026 OpenAI and Anthropic claimed deterministic subexponential-time algorithms for
-$\#k$-SAT, refuting ETH, and neither manuscript mentions quantum circuits. We record the corollary.
-Assuming three internal results of the Anthropic manuscript, one deterministic Turing machine computes
-the amplitude $\amp{y}{C}{x}$ of a Clifford+T circuit with $G$ two-qubit gates in arbitrary
-connectivity exactly, as an element of $\Zw/\sqrt2^{\,k}$ with $\omega=e^{i\pi/4}$, in time
+Classical simulation lower bounds for quantum circuits have been derived from the Exponential Time
+Hypothesis (ETH). However, in October 2026 OpenAI and Anthropic claimed deterministic subexponential
+algorithms for $\#k$-SAT, refuting ETH, and neither manuscript mentions quantum circuits. We record the
+corollary. Assuming three internal results of the Anthropic manuscript, one deterministic Turing
+machine computes the amplitude $\amp{y}{C}{x}$ of a Clifford+T circuit with $G$ two-qubit gates in
+arbitrary connectivity exactly, as an element of $\Zw/\sqrt2^{\,k}$ with $\omega=e^{i\pi/4}$, in time
 $2^{O(G/\sqrt{\log G})}$ whenever the input length $L$ satisfies $\log L\le G^{0.9}$. The proof reads
-the sum over paths, with one bit per wire segment, as an Anthropic-type network, with a Kronecker
-substitution for $\Zw$ and a Galois bound on the coefficients. We machine-check this theorem in
-Lean~4 (\texttt{amplitude\_TM\_rate'}, \texttt{amplitude\_TM\_rate}, \texttt{amplitude\_TM}; axioms
-\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}) on top of Anthropic's Lean
-development (sources at \url{https://github.com/xennygrimmato/eth-hamiltonicity}). On paper only,
-the method gives exact marginals and hence exact sampling, depth-$d$ circuits in
-$2^{O(dn/\sqrt{\log n})}$, and, through OpenAI's tensor-contraction theorem, polynomial space when
-the number of Hadamard-type gates is $O(G)$. Conversely, constant-depth circuits with $O(n)$ gates
-encode $\#3$-SAT with $O(n)$ clauses, so the rate matches that of the refutations. We check the
-fine-grained supremacy conjectures of Morimae--Tamaki, Dalzell--Harrow--Koh--La Placa,
-Huang--Newman--Szegedy, Aaronson--Chen and Buhrman--Patro--Speelman against their sources; a
-counting form of the Calabro--Impagliazzo--Paturi width reduction refutes the gap conjecture of
-Morimae and Tamaki's depth-scaling paper. Dense statements (cubic phases, permanents, random circuits)
-survive. Nothing here concerns approximate sampling, the constants are galactic, and everything is
-conditional on the claimed refutations, which are under review.
+the sum over paths, one bit per wire segment, as an Anthropic-type network, with a Kronecker map for
+$\Zw$ and a Galois bound. We machine-check this theorem in Lean~4 (\texttt{amplitude\_TM\_rate'},
+\texttt{amplitude\_TM\_rate}, \texttt{amplitude\_TM}; axioms \texttt{propext},
+\texttt{Classical.choice}, \texttt{Quot.sound}) on top of Anthropic's Lean development (sources at
+\url{https://github.com/xennygrimmato/eth-hamiltonicity}). On paper only, the method gives exact
+marginals and exact sampling, depth-$d$ circuits in $2^{O(dn/\sqrt{\log n})}$, and, through OpenAI's
+tensor-contraction theorem, polynomial space when the number of Hadamard-type gates is $O(G)$.
+Conversely, constant-depth circuits with $O(n)$ gates encode $\#3$-SAT with $O(n)$ clauses, so the
+rate matches that of the refutations. We check the fine-grained supremacy conjectures we
+found against their sources; a counting form of the Calabro--Impagliazzo--Paturi width reduction refutes the
+gap conjecture of Morimae and Tamaki's depth-scaling paper. Dense statements (cubic phases,
+permanents, random circuits) survive. Nothing here concerns approximate sampling, the constants are
+galactic, and everything is conditional on the claimed refutations, which are under review.
 \end{abstract}
 
 \maketitle
@@ -311,9 +308,10 @@ uses (\cref{sec:imported}), and the kernel checks them together with ours.
 of \A{} or \Oa, as each result states; in Lean, nothing beyond the three axioms. Either way the results
 stand or fall with the claimed refutations (\cref{sec:limitations}). The bound after
 \cref{prop:2adic} is a sketch and is not claimed.
-\emph{Checked numerically}: the reductions of \cref{sec:proof,sec:openai,sec:corollaries} and
-\cref{prop:2adic}, in exact arithmetic on circuits with $n\le6$ and $G\le20$
-(\cref{sec:verification}); the running example is checked by hand.
+\emph{Checked numerically}: the reductions of \cref{sec:proof,sec:openai} and the marginals of
+\cref{cor:marginals}, on circuits with $n\le6$ and $G\le20$, and \cref{prop:2adic}, on cubic
+phases with $n\le7$ and $m\le14$, all in exact arithmetic (\cref{sec:verification}). The circuit of \cref{prop:tight} is not scripted; only its
+analogue for IQP circuits is. The running example is checked by hand.
 
 \subsection*{Outline}
 \Cref{sec:imported} recalls the imported results. \Cref{sec:proof} proves \cref{thm:main},
@@ -899,7 +897,7 @@ for every $a$; we record it as a target, not a result.
 We organise related work by idea: fine-grained supremacy, exact strong simulation, the counting
 engines, and permanents.
 
-\paragraph{Fine-grained supremacy from ETH and SETH.} Morimae and Tamaki~\cite{MT19a,MT19b,MT20},
+\paragraph{Fine-grained supremacy from ETH and SETH\@.} Morimae and Tamaki~\cite{MT19a,MT19b,MT20},
 Huang, Newman and Szegedy~\cite{HNS18,HNS19} and Dalzell, Harrow, Koh and La Placa~\cite{DHKL20}
 derive lower bounds on classical simulation from ETH, SETH, NSETH and their relatives. Aaronson and
 Chen~\cite{AC17} base random-circuit sampling on QUATH and HOG, and Buhrman, Patro and
@@ -915,7 +913,7 @@ in time exponential in $t$~\cite{BSS16,BravyiGosset16,QPG21}. These methods are 
 unlike ours, some are practical. In contrast, our bound is subexponential in $G$ in arbitrary
 connectivity, but it is conditional and galactic (\cref{tab:sota}).
 
-\paragraph{The counting engines.} OpenAI~\cite{OpenAI26} and \A~\cite{Anthropic26} claim deterministic
+\paragraph{The counting engines.} OpenAI~\cite{OpenAI26} and Anthropic~\cite{Anthropic26} claim deterministic
 subexponential $\#$SAT algorithms, with Lean developments, under review. Our earlier
 work~\cite{Tulsyan26} counts Hamiltonian cycles on top of \A's development, and we reuse its
 conventions. Neither manuscript mentions quantum circuits: in the source of \Oa{} the words

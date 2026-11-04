@@ -217,7 +217,7 @@ cycles as duplicate-free lists, turns, `F : Fin n → Fin n → Fin n → (Fin k
 | k* = 1 for planar (⇐) | Lean-checked on instances (K₄, prism: explicit 1-bit good labellings) |
 | k*(K₅) = k*(K₃,₃) = 2 | Lean-checked on instances: explicit 2-bit good labellings, and no good 1-bit labelling for *any* F (odd certificates of 11 and 5 cycles) |
 | Lemma L2: B is a directed cycle of H_{4,4}, with corner word (VH+− HV++ VH−+ HV−−)² | Lean-checked on instance (`B44_cycle`, `B44_balanced`) |
-| Lemmas L1 and L3, and Theorem L | not yet formalised (Python-checked: `kstar_lower.out`) |
+| Lemmas L1 (for the lifted cycles) and L3, and Theorem L | **Lean-proved (general)**, `lean/EthFollowup/Barriers/KstarLower.lean`: `Kstar.theoremL` (a good k-bit labelling of H_t forces t < 2^(20k+10)) and `theoremL_log`; iterated pigeonhole replaces Kővári–Sós–Turán, so the constant is 1/20 in log₂ t instead of 1/16. Standard axioms only. L1 for arbitrary cycles and the corollaries (expanders, K_s, non-abelian gadgets) are not formalised. |
 | k*(rep2) ≥ 3 | stated with `sorry`; it stands for the SAT UNSAT result |
 
 ## References (checked)

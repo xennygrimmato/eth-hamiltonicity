@@ -193,7 +193,8 @@ within $\lfloor c\cdot2^{c(G+2)/\sqrt{\log_2(G+2)}}\rfloor$ steps. Without the c
 the same holds within $\lfloor c\cdot2^{cG/\sqrt{\log_2(G+2)}}(L+2)^{c(G+2)^{1/15}}\rfloor$ steps,
 and for every $\delta>0$ there is a machine running within $\lfloor c_\delta\,2^{\delta G}(L+2)^{c_\delta}\rfloor$ steps.
 \end{theorem}
-\noindent The condition on $L$ holds, for example, whenever $n(G+G_1)\le 2^{G^{0.9}}$; on paper,
+\noindent Since the input word has length $L=3n+1+(G+G_1)(2n+4)$, we have $L+2\le 6n(G+G_1+1)$ for
+$n\ge1$, so the condition on $L$ holds, for example, whenever $n\ge1$ and $6n(G+G_1+1)\le 2^{G^{0.9}}$; on paper,
 the proof below also gives $2^{cG/\sqrt{\log G}}\poly(n+G_1)$ under the weaker condition
 $\log(G_1+2)\le G^{0.9}$, but that variant is not machine-checked and not claimed.
 
@@ -206,7 +207,7 @@ space is polynomial.
 \end{theorem}
 
 \begin{corollary}[Marginals and exact sampling; proved on paper only]\label{cor:marginals}
-Assume $(\mathrm{H}_{\mathrm{A}})$, and let $C,x$ be as in \cref{thm:main}. For every
+Assume $(\mathrm{H}_{\mathrm{A}})$, and let $C,x$ be as in \cref{thm:main}, including its condition on $L$. For every
 $S\subseteq[n]$ and $y_S\in\{0,1\}^S$, the marginal probability
 $p(y_S)=\sum_{y_{[n]\setminus S}}|\amp{y}{C}{x}|^2$ can be computed exactly, as
 $(r_0+r_1\sqrt2)/2^{k(C)}$ with $r_0,r_1\in\Z$, within $2^{c'G/\sqrt{\log G}}\poly(n+G_1)$

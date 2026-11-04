@@ -87,3 +87,34 @@ if __name__ == '__main__':
     if which in ('three', 'all'):
         minimise('triangle (diagonal)', [((0, 1), (0, 1)), ((1, 2), (1, 2)), ((0, 2), (0, 2))], 10, True)
         minimise('3x2 grid (non-diagonal)', [((0, 1), (0, 1)), ((1, 2), (0, 1)), ((0, 2), (0, 1))], 10, False)
+
+def run_3x2(Smax=7, tlim=5):
+    """3x2 grid (non-diagonal): does sum_t 2^{cost_t} < N^3 = 8 occur?  Profiles violating the proved
+    diagonal-cut inequalities (sum over terms of the single-row-cut weight >= 4 for each row) are skipped."""
+    global TLIM
+    TLIM = tlim
+    rects = [((0, 1), (0, 1)), ((1, 2), (0, 1)), ((0, 2), (0, 1))]
+    cfg = make_config(rects); t0 = time.time()
+    def rowcut(G, b, i):
+        if G == 'col': return list(b.values())[0]
+        w = 1
+        for p, d in b.items():
+            if i in p: w *= d
+        return w
+    for S in range(4, Smax + 1):
+        tried = skipped = nto = 0
+        for prof in profiles(cfg, S):
+            if any(sum(rowcut(G, b, i) for G, b in prof) < 4 for i in range(3)):
+                skipped += 1; continue
+            tried += 1
+            ok, Ts = solve(cfg, prof)
+            if ok is None: nto += 1
+            if ok:
+                good = check_solution(cfg, prof, Ts)
+                print(f"3x2 grid: S={S} decomposition FOUND {prof} verified={good} [{time.time()-t0:.0f}s]", flush=True)
+                return S, prof, Ts
+        print(f"3x2 grid: S={S}: {tried} profiles tried, {skipped} excluded by Thm 1, {nto} timed out at {tlim}s, none SAT [{time.time()-t0:.0f}s]", flush=True)
+    return None
+
+if __name__ == '__main__' and len(sys.argv) > 1 and sys.argv[1] == '3x2':
+    run_3x2()

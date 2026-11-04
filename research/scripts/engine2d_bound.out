@@ -1,0 +1,19 @@
+[PASS] Thm1 A fat cell               lam=1: 6 random exact decompositions, min sum_t min(rk_row,rk_col) = 17 >= N^Q = 4
+[PASS] Thm1 B same rows              lam=1: 6 random exact decompositions, min sum_t min(rk_row,rk_col) = 18 >= N^Q = 4
+[PASS] Thm1 B' shared col            lam=1: 6 random exact decompositions, min sum_t min(rk_row,rk_col) = 18 >= N^Q = 4
+[PASS] Thm1 C disjoint               lam=1: 6 random exact decompositions, min sum_t min(rk_row,rk_col) = 17 >= N^Q = 4
+[PASS] Thm1 D chain rows             lam=1: 6 random exact decompositions, min sum_t min(rk_row,rk_col) = 18 >= N^Q = 4
+[PASS] Thm1 E chain rows+cols        lam=1: 6 random exact decompositions, min sum_t min(rk_row,rk_col) = 18 >= N^Q = 4
+[PASS] Thm1 C disjoint               lam=2: 2 random exact decompositions, min sum_t min(rk_row,rk_col) = 260 >= N^Q = 16
+(b) diagonal labellings (max #rectangles diagonal, over m <= 3 labels):
+    A fat cell        : 2/2 diagonal
+    B same rows       : 2/2 diagonal
+    B' shared col     : 2/2 diagonal
+    C disjoint        : 2/2 diagonal
+    D chain rows      : 2/2 diagonal
+    E chain rows+cols : 2/2 diagonal
+    triangle          : 3/3 diagonal
+    3x2 grid          : 2/3 diagonal
+    full 3x3 grid: |R| = 9, best diagonal sub-configuration m=2: 4, m=3: 4
+    full 4x4 grid: |R| = 36, best diagonal sub-configuration m=2: 16, m=3: 16
+[PASS] engine2d_bound overall

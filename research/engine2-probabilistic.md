@@ -194,3 +194,145 @@ flattening rank 2^{λ|S||S^c|} is a one-line fact, not formalised; Theorem A's i
 
 **Mechanism 4 verdict: killed.** Lean: the support-rank fact (permutation support ⇒ full rank) not
 formalised; the adversary half is `adversary_two_groupings` [L] (general n).
+
+## 5. Mechanism 5: dense/sparse splits and non-uniform schedules
+
+### 5.1 Bit splits [L]
+Brute-forcing λ₁ bits of every edge and recursing on λ − λ₁ costs 2^{λ₁E + eK²(λ−λ₁)} ≥ 2^{eK²λ}
+(`Engine2p.split_exponent_ge`, with E ≥ eK² from `brute_force_is_E`). Splitting by *nodes* (fix all labels at
+a node set S) is sequential contraction, e ≥ 1/4 + 1/(2K) − 1/K². Anthropic's own level structure is not a
+dense/sparse bit split: it is the pieces (bits saved multiplicatively) plus the Four-Russians regrouping
+(bits conserved). `engine2p_schedule.py` (A): PASS, minimum gap 0.
+
+### 5.2 Schedules [L]+[N]
+General level recurrence (Theorem A(b), g×g grid, g ≥ K any power of two): e' = (ρ + aK/g)e + b/K, K' = g².
+Lower bound for *every* schedule: e_{ℓ+1} ≥ ρe_ℓ gives e_ℓ ≥ ρ^ℓ e_0 (`schedule_lower` [L]) and lg K_{ℓ+1} ≥ 2 lg K_ℓ
+gives lg K_ℓ ≥ 2^ℓ lg K_0 (`lgK_lower` [L]); so ℓ ≤ log₂(lg K/lg K₀) levels can reach K and
+**e(K) ≥ e_0·(lg K₀/lg K)^{log₂(1/ρ)}** for any schedule. DP over all schedules (jumps j = lg g − lg K ∈ [0,200],
+lg K ≤ 4000, ρ = 1/√2): the optimum obeys the bound at every reachable K (PASS); the product
+e·(lg K)^{1/2} over optimal schedules lies in [2.5, 3.0] for lg K ≥ 200 (spread factor 1.27); Anthropic's fixed
+schedule g = 2^{3ℓ+x₀}K gives e = 0.080 at lg K = 3762 against the optimum 0.047 — a constant factor 1.7, the
+same rate. Pieces count 2^{tλ}: fixed point t/(4(1−ρ)) reproduced (PASS). **The rate agent was right: the
+schedule is pure balancing.**
+
+## 6. Mechanism 6: fine-grained hypotheses, both directions
+
+### 6.1 Encoding cost of pairwise-checked witnesses [R]
+Let a problem have a witness made of k "names" of log n bits each with all C(k,2) pairs to be checked
+(k-Clique; k-SUM with k summands checked jointly is similar; OV is k = 2 with a d-bit check; Hyperclique: all
+k-subsets of ℓ names). In a (K,λ)-clique each check must happen at a node that *sees* all names involved
+(labels are the only inter-node information; a global shared value costs λ ≥ its length on every pair that
+needs it, and consistency of a value spread over a matching of edges is uncheckable locally). If node a sees
+s_a names, Σ_a C(s_a, 2) ≥ C(k, 2) and (K−1)λ ≥ s_a log n. Cost ≥ query bound 2^{(K−1)λ} ≥ n^{max s_a}, and with
+e_K = c/log K the exponent is eK²λ ≥ cK·s·log n/log K with Ks² ≥ k²: **≥ n^{ck√K/log K} ≥ n^{1.36ck}**. So even
+e_K = Θ(1/log K) at the best K yields nothing below n^{Ω(k)} for k-Clique; n^{(ω/3−ε)k} is untouched, and k-SUM,
+OV (any d), Hyperclique, Subset Sum (2^{(1/2−ε)n}; its check is an n·log t-bit global sum, λ ≥ log t on a
+chain) are untouched a fortiori. Problems that *do* embed cheaply are those with local constraints and
+witness ≈ U bits (CNFs, networks), where ETH/#ETH/SETH are already false.
+
+### 6.2 Conversely [R]
+A hypothesis implying e_K ≥ c/log K would have to say "some problem needs 2^{Ω(n/log n)}" — none exists; ETH
+implies inf e_K > 0 and is false. CNF-SETH (unbounded width, m = poly(n)) survives: the m-route gives 2^{o(km/log m)}
+at best, useless at m = n²; the n-route needs k ≤ polylog. What e_K = o(1/log K) *does* give is listed in
+`tutte-plane.md` §4.1 and `permanent-attack.md` §3: dense per / #PM / #HC / ATSP in 2^{o(n)}, the whole Tutte
+plane on sparse graphs in 2^{o(n)}, and (the only "hypothesis-flavoured" consequence) the DHMTW
+#ETH-permanent bound falls — whose premise is already false. **No conditional barrier and no conditional
+breakthrough is available.** Lean: the inequality Ks² ≥ k² ⇒ Ks ≥ k√K is trivial; not formalised.
+
+## 7. Mechanism 7 (new): many / random / adaptive groupings — the covering bound
+
+### 7.1 Setting [R]
+One level of Theorem A on the g×g grid: N = g⁴λ bits, |R| ≈ g⁴/4 rectangles q = (i<i', j<j') with corners
+x=(i,j), y=(i,j'), u=(i',j), v=(i',j'), crossing tensor F = [x=v][y=u], pieces F = Σ_{s∈I} A_s, |I| = 2^{o(λ)}.
+A term ι ∈ I^R is evaluated as a network on the blocks of *some* partition π of the g² nodes (blocks of size
+≤ g, so that the sub-network has ≥ g nodes and its tables are cheap). Theorem A uses the family
+𝒢₀ = {rows, columns}; here 𝒢 is **any** family, and the algorithm may pick π = π(ι) adaptively, or at random.
+π induces on q a type: `row` if x~y, u~v in two distinct blocks; `col` if x~u, y~v; `free` if x~v, y~u (F has rank 1
+there); `int` if all four corners share a block; `other` if ≥ 3 blocks are touched. One-ended cost of q in
+(ι, π): log rank of A_{ι(q)} across the induced cut when the type is row/col/free; ≥ max of the row and col
+log-ranks when `other` (the 4-party network must pay every coarsening of its partition); 0 when `int`.
+
+### 7.2 Two counting lemmas [R]
+**Lemma 7.1 (free rectangles).** Under any partition π into blocks of size ≤ g, #free ≤ Σ_B C(|B|,2) ≤ g²(g−1)/2 ≤
+(2/g)·|R|. *Proof.* A free rectangle is determined by its two corners x, v in the same block (distinct row and
+column); each unordered pair in a block gives at most one rectangle. ∎ (Lean: the block-pair count
+`internal_pairs_le` [L]; the identification "pair ↦ rectangle" is injective by construction.)
+**Lemma 7.2 (int rectangles).** #int ≤ #free bound as well (same pairs), and both are o(|R|).
+
+### 7.3 Theorem A (covering bound) [R]
+Let s_r, s_c ∈ I have row rank ≥ N²/|I| and col rank ≥ N²/|I| respectively (they exist by subadditivity, since
+both flattenings of F are permutation matrices of size N² = 2^{2λ}). Let 𝒢 be any family of partitions into
+blocks of size ≤ g, M = |𝒢|. Then there is a term ι ∈ {s_r, s_c}^R with
+
+    min_{π∈𝒢} cost(ι, π) ≥ 2λ(1 − o(1))·( |R|/2 − |R|/g − √(|R| ln(2M)/2) )   (one-ended; both ends: ×2),
+
+i.e. ρ_eff ≥ 1/2 − 1/g − √(ln(2M)/(2|R|)) − o(1). For 𝒢 = all partitions, ln M ≤ g² ln g², so
+ρ_eff ≥ 1/2 − O(√(log g)/g).
+
+*Proof.* For the adversary's pieces, cost(ι, π) ≥ 2λ(1−o(1))·agree(ι, π) where agree counts rectangles q with
+(ι(q) = s_r and type ∈ {row, other}) or (ι(q) = s_c and type ∈ {col, other}); free and int rectangles contribute
+≥ 0 and there are ≤ 2|R|/g of them (Lemma 7.1). Draw ι uniformly from {s_r, s_c}^R. For a fixed π, every
+row/col-type rectangle agrees with probability exactly 1/2, independently, and other-type ones always; so
+agree(ι,π) ≥ Bin(|R| − 2|R|/g, 1/2) stochastically, and Hoeffding gives Pr[agree < (|R| − 2|R|/g)/2 − t] ≤ e^{−2t²/|R|}.
+Union bound over the M partitions with t = √(|R| ln(2M)/2): with probability ≥ 1/2 the random ι satisfies the
+bound for all π simultaneously. The term count being 2^{o(N)}, the level cost is dominated by the worst ι. ∎
+
+**Corollary.** For every level of this shape, ρ ≥ 1/2 − o(1) and hence α' ≤ 1 (with K' ≥ K² forced as in
+`rate.md` §3.4), **whatever grouping family is used, deterministically, adaptively or at random**. The
+randomised variants of mechanisms 1 and 5 ("pick a random grouping per term") are special cases.
+
+### 7.4 Exact check [N] (`engine2p_covering.py`, PASS)
+* g = 3: 9 rectangles; all 12 644 partitions into blocks ≤ 3 (and the 280 balanced ones): the adversary's
+  value is max_ι min_π agree = 4/9 (two groupings: 5/9). At g = 3 the free fraction bound 2/g = 2/3 is vacuous,
+  so the small deficit is the expected small-g artefact.
+* g = 4: 36 rectangles; **all 2 627 625 balanced partitions** into 4 blocks of 4 (average 1.42 free, 0.08 int
+  rectangles each); a local-search adversary reaches min_π agree = 18 = |R|/2, exactly the two-grouping value:
+  the full family of groupings buys nothing at g = 4.
+* Lean: Hoeffding/union bound not formalised; the base case (two complementary patterns, adversary gets
+  ⌈n/2⌉ and ⌊n/2⌋) is `adversary_two_groupings` [L, general n] and `adversary_two_groupings_6` [Li].
+
+### 7.5 What Theorem A does not cover [R]
+(i) *Non-product terms*: pieces decomposing the whole F^{⊗m} between two blocks jointly rather than per
+rectangle. The averaging-over-cuts argument (sum over all balanced bipartitions of the columns; each edge
+crosses half of them) gives the adversary's lower bound λm − 2 log|I| on the total column bits of a joint piece
+with high row rank, so ρ ≥ 1/2 persists for joint pieces under the two groupings; combining this with the
+covering argument for arbitrary 𝒢 is routine but not written. (ii) *Sub-instances not arising from groupings*
+(e.g. tables transformed non-linearly, elimination-like steps): no bound, and `wild-ideas.md` §8 argues this
+is the only unexplored kind of algorithm. (iii) 2^{Θ(N)} terms: fixed point t/(4(1−ρ)) > 0, no e → 0 at all.
+
+## 8. Ranking and the single most promising next step
+
+| # | mechanism | status | what kills it / what remains |
+|---|---|---|---|
+| 7 | covering bound (new) | **proved** (α' ≤ 1 for all grouping families) | extend to non-product terms → full "expansion-class" lower bound |
+| 1 | randomisation (hash / sieve / isolation) | killed for the rate | residue: ⊕-pieces over F₂ (open, capped at α' = 1) |
+| 5 | splits / schedules | killed [L]+[N] | constant factor 1.7 available by rescheduling |
+| 4 | representative sets / decision | killed | decision pieces obey ρ ≥ 1/2 |
+| 2 | low-rank table classes | killed | equivalent to the problem (subset DP ↔ κ) |
+| 6 | hypotheses | no barrier, no breakthrough | pairwise-check lemma: n^{Ω(k√K/log K)} |
+| 3 | unconditional oblivious LB | out of reach | would be N^{Ω(K/log K)} set-multilinear circuit lower bounds |
+
+**Most promising next step.** Turn Theorem A into the theorem the brief asks for on the negative side: *every
+algorithm that evaluates a (K,λ)-clique as a sum of 2^{o(N)} clique-type sub-instances whose tables are linear
+in the original tables (any pieces, any field, any family of groupings, adaptive or randomised) has
+α' ≤ 1, i.e. e_K ≥ c/log K.* Two concrete sub-steps, both finite and Lean-checkable on instances: (a) the joint-
+piece version of §7.5(i) (state the averaging identity Σ_{cuts} #crossing edges = 2^{g−2}·m as a Finset identity
+and the adversary's two inequalities); (b) a formal model of "linear sub-instance" general enough to contain
+Theorem A's ι-terms, with the rank-subadditivity adversary as the only tool. If that theorem holds, the
+positive route to e_K = o(1/log K) is confined to algorithms whose sub-computations are not clique sums at all
+(elimination-like, adaptive in the tables), which no one has for any dense counting problem; the honest
+positive residue of this note is the ⊕-pieces question (§1.4), where randomisation changes the field but not
+the cap.
+
+## Lean status (per claim)
+| claim | file / name | status |
+|---|---|---|
+| bit-split & decomposition convexity (Lemma B, §1.1, §5.1) | `Accounting.lean: split_exponent_ge, brute_force_is_E` | Lean-proved (general) |
+| schedule bound e_ℓ ≥ ρ^ℓ e_0, lg K_ℓ ≥ 2^ℓ lg K_0 (§5.2) | `schedule_lower, lgK_lower` | Lean-proved (general) |
+| block-pair count behind Lemma 7.1 | `internal_pairs_le` | Lean-proved (general) |
+| two-grouping adversary ⌈n/2⌉/⌊n/2⌋ (§4, §7.4) | `Instances.lean: adversary_two_groupings` (+ `_6`) | Lean-proved (general); instance n = 6 by `decide` |
+| hash averaging identity E_h[E_h] = I + (J−I)/m (§1.1) | `hash_identity_m2` | Lean-checked on instance (m = 2, all maps Fin 4 → Fin 2) |
+| collision correction J_s − I_s nonsingular (§1.1) | `detJI2, detJI3, detJI4` | Lean-checked on instances s = 2,3,4 |
+| covering bound Theorem A (Hoeffding + union) (§7.3) | — | not yet formalised; Python-exact at g = 3, 4 |
+| Prop. 2.1, §3, §6 accounting | — | not formalised (model statements) |
+| ⊕-pieces over F₂ (§1.4) | — | open; exhaustive λ = 1 only |

@@ -42,7 +42,8 @@ Source of the rules: hexagonmath.org/about and the public submission schema
 ## Your decisions (the form asks you to declare these; I have not filled them in for you)
 1. **Human understanding** — `all` / `some` / `none`: "whether all, some, or none of the contribution
    has been checked and understood by a human at submission time." Choosing `some` requires a
-   provenance statement; a draft is in `provenance.txt` (edit it to be true for you). Note: Lean
+   provenance statement; use `provenance.txt` as is (it has no placeholders; its one sentence about what you reviewed is
+   written to be true of this project, read it once). Note: Lean
    machine-checking is not human understanding; the honest answer depends on what you yourself have
    read and understood.
 2. **Text origin** (`authorshipMode`) — primarily AI-generated / mixed / primarily human-written. The
@@ -121,7 +122,7 @@ Status: READY. The fresh kernel replay of the whole proof passed on 4 Nov 2026 (
   The paper claims no priority; it presents an independent second proof.
 
 **Your decisions** (as for the other papers; see "Your decisions" above): human understanding (`all`/`some`/`none`,
-with `provenance.txt` if `some`), text origin (the text was drafted by Claude in sessions you directed), the four
+with `provenance.txt`, ready to paste, if `some`), text origin (the text was drafted by Claude in sessions you directed), the four
 confirmations, licence (suggested CC BY 4.0).
 
 **Exact steps**

@@ -390,3 +390,58 @@ of cost r(m) (pairs between rows) and a column-network of cost c(m). (`engine2d_
 2. **Full levels:** 3/8 ≤ ρ (proved). ρ ≥ 1/2 would close the c/log K cap for all correlated network decompositions.
    The obstruction to the method is exactly the A_X–A_X and A_Y–A_Y edges.
 3. Lean: the lossy lemma for general configurations, and Theorem 5.
+
+---------------------------------------------------------------------------------------------------
+
+## 8. The full 3×3 level: can anything beat N⁸?
+
+4 Nov 2026 (later session). Follows §7.9. Question: does a correlated decomposition of the full 3×3 level
+(Q = 9, 18 crossing edges, 36 legs) with Σ_t 2^{cost_t} < N⁹ exist, or can S ≥ N⁹ be proved? §7 proved S ≥ N⁸
+(Theorem 5 at g = 3) and showed (Proposition 7.6) that no single lossy flattening gives more than 8. Scripts:
+`scripts/engine2d_g33/` (this section); Lean: `lean/EthFollowup/Scratch/Grid33/`.
+Tags as before: **[R]** proved here, **[L]** Lean-proved, **[K]** known, **[N]** exact computation, **[C]** heuristic.
+
+### 8.1 Setting, and what "8" means
+
+Nodes (r,c), r ∈ {a,b,c}, c ∈ {1,2,3}. The target G is the graph tensor of K₃ × K₃ (categorical product): the 18 edges
+join nodes in different rows *and* different columns, every node has degree 4, every edge is an identity of dimension N.
+A row-network is a triangle network on the rows with bonds (d_ab, d_ac, d_bc), cost = Σ log₂ d; the three row cuts have
+ranks ≤ d_ab d_ac, d_ab d_bc, d_ac d_bc. Likewise for columns. S ≥ N⁹ ⟺ ρ ≥ 1/2 − o(1) on this level.
+
+Proposition 7.6 is a statement about a *single* contraction M (node-local maps, then one flattening) and the exponent
+|E(M)| − max(s_R, s_C) it can certify. Two things were left open by it:
+(i) whether using *many* contractions at once (a term that is cheap for one contraction must be expensive for another;
+the bound of a row term under M depends on its bond *triple*, not only on its cost) can push the certified exponent to 9;
+(ii) whether m-party (CVZ) functionals with straddling legs can.
+Both are settled negatively below (8.2, 8.3); the single-flattening world, however it is combined, stops at 8.
+
+### 8.3 m-party functionals with straddling legs do not help on the 3×3 level [R]
+
+Setting. Take a subadditive, restriction-monotone functional F on m-party tensors with F(⟨graph tensor⟩) = Π_e d_e^{w_e}
+and F(T) ≤ Π_i rk_i(T)^{θ_i}, Σθ_i = 1 (the CVZ quantum functionals F^θ [K]; for m = 2, F = rank, θ = (½,½)). To use F
+on the level, every row must lie inside one party up to straddling legs (otherwise a cost-0 row-network W_a ⊗ W_b ⊗ W_c
+can be an EPR pair between two parties and F is unbounded on it), and the same for columns. So the data are labellings
+f: rows → [m], h: columns → [m] and a party p(v) ∈ {f(r), h(c)} for each node v = (r,c); a kept leg at v straddles in the
+row grouping iff p(v) ≠ f(r), in the column grouping iff p(v) ≠ h(c). *Agreeing* nodes (f(r) = h(c)) never straddle;
+every other node straddles in exactly one grouping for each of its kept legs.
+
+(i) **Per edge, m parties gain at most what 2 parties gain; per straddler they lose at least as much.** After fixing
+the unused legs the target is a graph tensor whose kept edges join parties, and F(G') = N^{Σ_{e kept}(θ_{p}+θ_{q})} ≤
+N^{μ|E|}, μ := max_{i≠j}(θ_i+θ_j) ≤ 1. A row-network of cost c with s_R straddling legs is, after splitting it by the
+values of the straddlers (T = Σ_w T_w ⊗ e_w, so F(T) ≤ Σ_w F(T_w) by monotonicity and additivity under ⊕), a sum of
+N^{s_R} restrictions of the graph tensor with bonds d_rs between parties f(r), f(s), so F(T) ≤ N^{s_R}·2^{μc}. Hence
+max_t c_t ≥ λ·(Σ_e(θ_p+θ_q) − max(s_R,s_C))/μ − o(λ) ≤ λ·(|E| − max(s_R,s_C)/μ) ≤ λ·(|E| − max(s_R, s_C)).
+The loss N per straddler cannot be improved to N^{θ_p} in general: for m = 2, moving one leg of an EPR pair that lies
+inside party X to party Y raises the rank from 1 to N = N^{θ_X+θ_Y}. The best conceivable loss, N^{μ}, gives exactly the
+2-party value |E| − max(s_R, s_C).
+
+(ii) **Fewer agreeing nodes.** The counting argument of Proposition 7.6 applies verbatim (a path's value splits into ½
+per agreeing end, 0 per straddling end; agreeing ends whose partner is a same-party agreeing node are injected into
+useful agreeing legs), so the certified exponent is ≤ ½·#(useful agreeing legs). On the 3×3 grid the number of agreeing
+nodes is Σ_i |f⁻¹(i)|·|h⁻¹(i)|, which is 5 for m = 2 (a 2×2 block and a node; 16 useful legs; bound 8, Theorem 5) and
+≤ 3 for m ≥ 3 with both labellings surjective (12 useful legs; bound 6); a non-surjective labelling is an m' < m
+labelling. So **no m-party CVZ-type argument with straddling legs certifies more than 8 on the 3×3 level**, and the
+2-party lossy contraction of §7 is the optimum of this whole family. The same holds for tensor rank, border rank, slice
+rank and geometric rank in place of F^θ: on the 3-party graph tensors that arise (matrix-multiplication tensors ⟨N^{e₁₂},
+N^{e₁₃}, N^{e₂₃}⟩) each of them is at most N^{(β/3)(e₁₂+e₁₃+e₂₃)} with β ≤ ω < 3 (and slice rank = the smallest
+flattening), so an edge is worth β/3 < 1 while a straddler still costs 1.

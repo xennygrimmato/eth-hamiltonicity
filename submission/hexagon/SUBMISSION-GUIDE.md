@@ -85,3 +85,11 @@ form; the papers cite the scripts in the repository instead.
 - **MSC2020:** 68Q17, 68Q15, 68Q25, 03B35 (all checked against Hexagon's catalogue).
 - **Tags:** circuit lower bounds; E^NP; Exponential Time Hypothesis; Williams' algorithmic method; Lean 4; formal verification.
 - **Tools:** as for the other papers (Claude via Claude Code; Lean 4 + Mathlib). Theorem 1 is machine-checked (fresh leanchecker replay passed); the OpenAI corollary is written proof only.
+
+## Paper 5 — Survey note (upload `hexagon-survey-note.zip`, main file `main.tex`)
+- **Title:** as in survey-note/main.tex ("What survives the ETH refutations? …").
+- **Abstract:** paste `abstract-survey.txt`.
+- **Primary subject:** cs.CC. **Cross-lists:** cs.DS.
+- **MSC2020:** 68Q17, 68Q25, 68Q15.
+- **Tags:** Exponential Time Hypothesis; SETH; fine-grained complexity; conditional lower bounds; parameterized complexity; survey.
+- Nothing in this note is claimed as machine-checked except where it cites our Lean theorems.

@@ -1,0 +1,370 @@
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }
+% \MRhref is called by the amsart/book/proc definition of \MR.
+\providecommand{\MRhref}[2]{%
+  \href{http://www.ams.org/mathscinet-getitem?mr=#1}{#2}
+}
+\providecommand{\href}[2]{#2}
+\begin{thebibliography}{10}
+
+\bibitem{AIM14}
+Scott Aaronson, Russell Impagliazzo, and Dana Moshkovitz, \emph{{AM} with
+  multiple {M}erlins}, Proc. 29th IEEE Conference on Computational Complexity
+  (CCC), 2014, arXiv:1401.6848, pp.~44--55.
+
+\bibitem{ABV15}
+Amir Abboud, Arturs Backurs, and Virginia Vassilevska~Williams, \emph{Tight
+  hardness results for {LCS} and other sequence similarity measures}, Proc.
+  56th Annual IEEE Symposium on Foundations of Computer Science (FOCS), 2015,
+  arXiv:1501.07053, titled ``Quadratic-time hardness of {LCS} and other
+  sequence similarity measures'', pp.~59--78.
+
+\bibitem{ABHS19}
+Amir Abboud, Karl Bringmann, Danny Hermelin, and Dvir Shabtay,
+  \emph{{SETH}-based lower bounds for subset sum and bicriteria path}, Proc.
+  30th Annual ACM-SIAM Symposium on Discrete Algorithms (SODA), 2019,
+  arXiv:1704.04546. Journal version: ACM Trans. Algorithms \textbf{18} (2022),
+  no.~1, pp.~41--57.
+
+\bibitem{AHVWW16}
+Amir Abboud, Thomas~Dueholm Hansen, Virginia Vassilevska~Williams, and Ryan
+  Williams, \emph{Simulating branching programs with edit distance and friends,
+  or: a polylog shaved is a lower bound made}, Proc. 48th Annual ACM Symposium
+  on Theory of Computing (STOC), 2016, arXiv:1511.06022, pp.~375--388.
+
+\bibitem{AVW14}
+Amir Abboud and Virginia Vassilevska~Williams, \emph{Popular conjectures imply
+  strong lower bounds for dynamic problems}, Proc. 55th Annual IEEE Symposium
+  on Foundations of Computer Science (FOCS), 2014, arXiv:1402.0054,
+  pp.~434--443.
+
+\bibitem{AVWW16}
+Amir Abboud, Virginia Vassilevska~Williams, and Joshua Wang,
+  \emph{Approximation and fixed parameter subquadratic algorithms for radius
+  and diameter in sparse graphs}, Proc. 27th Annual ACM-SIAM Symposium on
+  Discrete Algorithms (SODA), 2016, arXiv:1506.01799, pp.~377--391.
+
+\bibitem{BI18}
+Arturs Backurs and Piotr Indyk, \emph{Edit distance cannot be computed in
+  strongly subquadratic time (unless {SETH} is false)}, SIAM J. Comput.
+  \textbf{47} (2018), no.~3, 1087--1097, Preliminary version in STOC 2015;
+  arXiv:1412.0348.
+
+\bibitem{BrandDellRoth19}
+Cornelius Brand, Holger Dell, and Marc Roth, \emph{Fine-grained dichotomies for
+  the {T}utte plane and {B}oolean \#{CSP}}, Algorithmica \textbf{81} (2019),
+  no.~2, 541--556, Preliminary version in IPEC 2016; arXiv:1606.06581.
+
+\bibitem{BKW15}
+Mark Braverman, Young~Kun Ko, and Omri Weinstein, \emph{Approximating the best
+  {N}ash equilibrium in $n^{o(\log n)}$-time breaks the exponential time
+  hypothesis}, Proc. 26th Annual ACM-SIAM Symposium on Discrete Algorithms
+  (SODA), 2015, ECCC TR14-092, pp.~970--982.
+
+\bibitem{Bri14}
+Karl Bringmann, \emph{Why walking the dog takes time: {F}r{\'e}chet distance
+  has no strongly subquadratic algorithms unless {SETH} fails}, Proc. 55th
+  Annual IEEE Symposium on Foundations of Computer Science (FOCS), 2014,
+  arXiv:1404.1448, pp.~661--670.
+
+\bibitem{BK15}
+Karl Bringmann and Marvin K{\"u}nnemann, \emph{Quadratic conditional lower
+  bounds for string problems and dynamic time warping}, Proc. 56th Annual IEEE
+  Symposium on Foundations of Computer Science (FOCS), 2015, arXiv:1502.01063,
+  pp.~79--97.
+
+\bibitem{BPS19}
+Harry Buhrman, Subhasree Patro, and Florian Speelman, \emph{The quantum strong
+  exponential-time hypothesis}, arXiv:1911.05686 (v2). Published as ``A
+  framework of quantum strong exponential-time hypotheses'', Proc.\ 38th STACS,
+  LIPIcs \textbf{187} (2021), 19:1--19:19, 2019.
+
+\bibitem{CJ03}
+Liming Cai and David Juedes, \emph{On the existence of subexponential
+  parameterized algorithms}, J. Comput. System Sci. \textbf{67} (2003), no.~4,
+  789--807.
+
+\bibitem{CIP06}
+Chris Calabro, Russell Impagliazzo, and Ramamohan Paturi, \emph{A duality
+  between clause width and clause density for {SAT}}, Proc. 21st Annual IEEE
+  Conference on Computational Complexity (CCC), 2006, pp.~252--260.
+
+\bibitem{CGIMPS16}
+Marco~L. Carmosino, Jiawei Gao, Russell Impagliazzo, Ivan Mihajlin, Ramamohan
+  Paturi, and Stefan Schneider, \emph{Nondeterministic extensions of the strong
+  exponential time hypothesis and consequences for non-reducibility}, Proc.
+  2016 ACM Conference on Innovations in Theoretical Computer Science (ITCS),
+  2016, ECCC TR15-148, pp.~261--270.
+
+\bibitem{CCKLMNT17}
+Parinya Chalermsook, Marek Cygan, Guy Kortsarz, Bundit Laekhanukit, Pasin
+  Manurangsi, Danupon Nanongkai, and Luca Trevisan, \emph{From {G}ap-{ETH} to
+  {FPT}-inapproximability: clique, dominating set, and more}, Proc. 58th Annual
+  IEEE Symposium on Foundations of Computer Science (FOCS), 2017,
+  arXiv:1708.04218. Journal version: SIAM J. Comput. \textbf{49} (2020), no.~4,
+  772--810, pp.~743--754.
+
+\bibitem{CHKX06}
+Jianer Chen, Xiuzhen Huang, Iyad~A. Kanj, and Ge~Xia, \emph{Strong
+  computational lower bounds via parameterized complexity}, J. Comput. System
+  Sci. \textbf{72} (2006), no.~8, 1346--1367.
+
+\bibitem{CFLL25}
+Yijia Chen, Yi~Feng, Bundit Laekhanukit, and Yanlin Liu, \emph{Simple
+  combinatorial construction of the $k^{o(1)}$-lower bound for approximating
+  the parameterized $k$-clique}, Proc. 2025 Symposium on Simplicity in
+  Algorithms (SOSA), 2025, arXiv:2304.07516, pp.~263--280.
+
+\bibitem{CG07}
+Yijia Chen and Martin Grohe, \emph{An isomorphism between subexponential and
+  parameterized complexity theory}, SIAM J. Comput. \textbf{37} (2007), no.~4,
+  1228--1258, Preliminary version in CCC 2006; ECCC TR06-011.
+
+\bibitem{Anthropic26}
+{Claude (Anthropic)}, \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, Preprint
+  dated October 26, 2026. Paper and Lean formalisation in the repository
+  \url{https://github.com/anthropics/formal-math}, folder \texttt{eth}, 2026.
+
+\bibitem{Curticapean18}
+Radu Curticapean, \emph{Block interpolation: a framework for tight
+  exponential-time counting complexity}, Inform. and Comput. \textbf{261}
+  (2018), 265--280, Preliminary version in ICALP 2015.
+
+\bibitem{CM14}
+Radu Curticapean and D{\'a}niel Marx, \emph{Complexity of counting subgraphs:
+  only the boundedness of the vertex-cover number counts}, Proc. 55th Annual
+  IEEE Symposium on Foundations of Computer Science (FOCS), 2014,
+  arXiv:1407.2929, pp.~130--139.
+
+\bibitem{CDLMNOPSW16}
+Marek Cygan, Holger Dell, Daniel Lokshtanov, D{\'a}niel Marx, Jesper Nederlof,
+  Yoshio Okamoto, Ramamohan Paturi, Saket Saurabh, and Magnus Wahlstr{\"o}m,
+  \emph{On problems as hard as {CNF-SAT}}, ACM Trans. Algorithms \textbf{12}
+  (2016), no.~3, Art.~41, Preliminary version in CCC 2012. Theorem numbers as
+  in arXiv:1112.2275v3.
+
+\bibitem{CyganEtAl15}
+Marek Cygan, Fedor~V. Fomin, {\L}ukasz Kowalik, Daniel Lokshtanov, D{\'a}niel
+  Marx, Marcin Pilipczuk, Micha{\l} Pilipczuk, and Saket Saurabh,
+  \emph{Parameterized algorithms}, Springer, 2015.
+
+\bibitem{CutAndCount11}
+Marek Cygan, Jesper Nederlof, Marcin Pilipczuk, Micha{\l} Pilipczuk, Johan
+  M.~M. van Rooij, and Jakub~Onufry Wojtaszczyk, \emph{Solving connectivity
+  problems parameterized by treewidth in single exponential time}, Proc. 52nd
+  IEEE Symposium on Foundations of Computer Science (FOCS), 2011, Journal
+  version in ACM Trans. Algorithms 18 (2022), no.~2, pp.~150--159.
+
+\bibitem{dBBKK18}
+Mark de~Berg, Hans~L. Bodlaender, S{\'a}ndor Kisfaludi-Bak, and Sudeshna Kolay,
+  \emph{An {ETH}-tight exact algorithm for {E}uclidean {TSP}}, Proc. 59th
+  Annual IEEE Symposium on Foundations of Computer Science (FOCS), 2018,
+  arXiv:1807.06933, pp.~450--461.
+
+\bibitem{dBBKMZ18}
+Mark de~Berg, Hans~L. Bodlaender, S{\'a}ndor Kisfaludi-Bak, D{\'a}niel Marx,
+  and Tom~C. van~der Zanden, \emph{A framework for {ETH}-tight algorithms and
+  lower bounds in geometric intersection graphs}, Proc. 50th Annual ACM
+  Symposium on Theory of Computing (STOC), 2018, arXiv:1803.10633,
+  pp.~574--586.
+
+\bibitem{DHMTW14}
+Holger Dell, Thore Husfeldt, D{\'a}niel Marx, Nina Taslaman, and Martin
+  Wahl{\'e}n, \emph{Exponential time complexity of the permanent and the
+  {T}utte polynomial}, ACM Trans. Algorithms \textbf{10} (2014), no.~4,
+  Art.~21.
+
+\bibitem{Dinur16}
+Irit Dinur, \emph{Mildly exponential reduction from gap {3SAT} to
+  polynomial-gap label-cover}, Electronic Colloquium on Computational
+  Complexity, TR16-128, 2016.
+
+\bibitem{DM18}
+Irit Dinur and Pasin Manurangsi, \emph{{ETH}-hardness of approximating 2-{CSP}s
+  and directed {S}teiner network}, 9th Innovations in Theoretical Computer
+  Science Conference (ITCS 2018), LIPIcs, vol.~94, 2018, arXiv:1805.03867,
+  pp.~36:1--36:20.
+
+\bibitem{DT11}
+Rodney~G. Downey and Dimitrios~M. Thilikos, \emph{Confronting intractability
+  via parameters}, Comput. Sci. Rev. \textbf{5} (2011), no.~4, 279--317,
+  Section numbers as in arXiv:1106.3161.
+
+\bibitem{Feige02}
+Uriel Feige, \emph{Relations between average case complexity and approximation
+  complexity}, Proc. 34th Annual ACM Symposium on Theory of Computing (STOC),
+  2002, pp.~534--543.
+
+\bibitem{GIKW17}
+Jiawei Gao, Russell Impagliazzo, Antonina Kolokolova, and Ryan Williams,
+  \emph{Completeness for first-order properties on sparse structures with
+  algorithmic applications}, Proc. 28th Annual ACM-SIAM Symposium on Discrete
+  Algorithms (SODA), 2017, ECCC TR16-053. Journal version: ACM Trans.
+  Algorithms \textbf{15}, no.~2, pp.~2162--2181.
+
+\bibitem{GLRSW24}
+Venkatesan Guruswami, Bingkai Lin, Xuandi Ren, Yican Sun, and Kewen Wu,
+  \emph{Parameterized inapproximability hypothesis under {ETH}}, Proc. 56th
+  Annual ACM Symposium on Theory of Computing (STOC), 2024, arXiv:2311.16587.
+  Journal version: J. ACM \textbf{72} (2025), no.~5, pp.~24--35.
+
+\bibitem{GLRSW25}
+\bysame, \emph{Almost optimal time lower bound for approximating parameterized
+  clique, {CSP}, and more, under {ETH}}, Proc. 57th Annual ACM Symposium on
+  Theory of Computing (STOC), 2025, arXiv:2404.08870, pp.~2136--2144.
+
+\bibitem{IP99}
+Russell Impagliazzo and Ramamohan Paturi, \emph{Complexity of $k$-{SAT}}, Proc.
+  14th Annual IEEE Conference on Computational Complexity (CCC), 1999,
+  pp.~237--240.
+
+\bibitem{ImpagliazzoPaturi01}
+\bysame, \emph{On the complexity of $k$-{SAT}}, J. Comput. System Sci.
+  \textbf{62} (2001), no.~2, 367--375.
+
+\bibitem{IPZ01}
+Russell Impagliazzo, Ramamohan Paturi, and Francis Zane, \emph{Which problems
+  have strongly exponential complexity?}, J. Comput. System Sci. \textbf{63}
+  (2001), no.~4, 512--530.
+
+\bibitem{JMV15}
+Hamid Jahanjou, Eric Miles, and Emanuele Viola, \emph{Local reductions},
+  Automata, Languages, and Programming (ICALP 2015), Part~I, Lecture Notes in
+  Comput. Sci., vol. 9134, Springer, 2015, Numbering as in arXiv:1311.3171.
+  Journal version: ``Local reduction'', Inform. and Comput. \textbf{261}
+  (2018), 281--295, pp.~749--760.
+
+\bibitem{KK22}
+{Karthik C. S.} and Subhash Khot, \emph{Almost polynomial factor
+  inapproximability for parameterized $k$-clique}, 37th Computational
+  Complexity Conference (CCC 2022), LIPIcs, vol. 234, 2022, arXiv:2112.03983,
+  pp.~6:1--6:21.
+
+\bibitem{KLM18}
+{Karthik C. S.}, Bundit Laekhanukit, and Pasin Manurangsi, \emph{On the
+  parameterized complexity of approximating dominating set}, Proc. 50th Annual
+  ACM Symposium on Theory of Computing (STOC), 2018, arXiv:1711.11029. Journal
+  version: J. ACM \textbf{66} (2019), no.~5, pp.~1283--1296.
+
+\bibitem{Lin21}
+Bingkai Lin, \emph{Constant approximating $k$-clique is {W[1]}-hard}, Proc.
+  53rd Annual ACM Symposium on Theory of Computing (STOC), 2021,
+  arXiv:2102.04769, pp.~1749--1756.
+
+\bibitem{LVWW18}
+Andrea Lincoln, Virginia Vassilevska~Williams, and Ryan Williams, \emph{Tight
+  hardness for shortest cycles and paths in sparse graphs}, Proc. 29th Annual
+  ACM-SIAM Symposium on Discrete Algorithms (SODA), 2018, arXiv:1712.08147,
+  pp.~1236--1252.
+
+\bibitem{LMS11tw}
+Daniel Lokshtanov, D{\'a}niel Marx, and Saket Saurabh, \emph{Known algorithms
+  on graphs of bounded treewidth are probably optimal}, Proc. 22nd Annual
+  ACM-SIAM Symposium on Discrete Algorithms (SODA), 2011, arXiv:1007.5450.
+  Journal version: ACM Trans. Algorithms \textbf{14} (2018), no.~2,
+  pp.~777--789.
+
+\bibitem{LMS11}
+\bysame, \emph{Lower bounds based on the {E}xponential {T}ime {H}ypothesis},
+  Bull. Eur. Assoc. Theor. Comput. Sci. EATCS \textbf{105} (2011), 41--72.
+
+\bibitem{LMS18super}
+\bysame, \emph{Slightly superexponential parameterized problems}, SIAM J.
+  Comput. \textbf{47} (2018), no.~3, 675--702, Preliminary version in SODA
+  2011; arXiv:1902.08723.
+
+\bibitem{LRSZ20}
+Daniel Lokshtanov, M.~S. Ramanujan, Saket Saurabh, and Meirav Zehavi,
+  \emph{Parameterized complexity and approximability of directed odd cycle
+  transversal}, Proc. 31st Annual ACM-SIAM Symposium on Discrete Algorithms
+  (SODA), 2020, arXiv:1704.04249, pp.~2181--2200.
+
+\bibitem{Man26}
+Pasin Manurangsi, \emph{Almost-polynomial ratio {A}lmost-{ETH}-hardness of
+  approximating densest $k$-subgraph}, arXiv:1611.05991v3, 27 October 2026.
+  Versions~1--2 (2016), titled ``Almost-polynomial ratio {ETH}-hardness of
+  approximating densest $k$-subgraph'', appeared in Proc.\ 49th STOC (2017),
+  954--961, 2026.
+
+\bibitem{MR16}
+Pasin Manurangsi and Prasad Raghavendra, \emph{A birthday repetition theorem
+  and complexity of approximating dense {CSP}s}, arXiv:1607.02986, 2016.
+
+\bibitem{Marx10}
+D{\'a}niel Marx, \emph{Can you beat treewidth?}, Theory Comput. \textbf{6}
+  (2010), 85--112.
+
+\bibitem{MT19a}
+Tomoyuki Morimae and Suguru Tamaki, \emph{Fine-grained quantum computational
+  supremacy}, arXiv:1901.01637 (v4, 2019); published in Quantum Inf. Comput.
+  \textbf{19} (2019), no.~13\&14, 1089--1115, 2019.
+
+\bibitem{OpenAI26}
+{OpenAI}, \emph{The {E}xponential {T}ime {H}ypothesis is false}, Preprint dated
+  17 October 2026, revised 25 October 2026. Paper and Lean formalisation in the
+  repository \url{https://github.com/openai/math}, 2026.
+
+\bibitem{PW10}
+Mihai P{\v{a}}tra{\c{s}}cu and Ryan Williams, \emph{On the possibility of
+  faster {SAT} algorithms}, Proc. 21st Annual ACM-SIAM Symposium on Discrete
+  Algorithms (SODA), 2010, pp.~1065--1075.
+
+\bibitem{RVW13}
+Liam Roditty and Virginia Vassilevska~Williams, \emph{Fast approximation
+  algorithms for the diameter and radius of sparse graphs}, Proc. 45th Annual
+  ACM Symposium on Theory of Computing (STOC), 2013, arXiv:1207.3622, titled
+  ``Approximating the diameter of a graph'', pp.~515--524.
+
+\bibitem{Rub16}
+Aviad Rubinstein, \emph{Settling the complexity of computing approximate
+  two-player {N}ash equilibria}, Proc. 57th Annual IEEE Symposium on
+  Foundations of Computer Science (FOCS), 2016, arXiv:1606.04550, pp.~258--265.
+
+\bibitem{Tulsyan26}
+Vaibhav Tulsyan, \emph{Counting {H}amiltonian cycles in sparse graphs in
+  subexponential time, assuming the new $\#${SAT} algorithms}, Hexagon preprint
+  hexagon:2610.00672v1, October 2026; source and Lean development at
+  \url{https://github.com/xennygrimmato/eth-hamiltonicity}, 2026.
+
+\bibitem{TulsyanRepo26}
+\bysame, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes},
+  Public repository \url{https://github.com/xennygrimmato/eth-hamiltonicity},
+  Lean sources as of commit
+  \url{https://github.com/xennygrimmato/eth-hamiltonicity/tree/ca17a3762bb21ddbe5942eeac9f29fa58123bb42},
+  2026.
+
+\bibitem{TulsyanQ26}
+\bysame, \emph{Exact amplitudes of sparse quantum circuits in subexponential
+  time, assuming the new $\#${SAT} algorithms}, Manuscript, October 2026;
+  \texttt{docs/quantum-note.pdf} in the repository
+  \url{https://github.com/xennygrimmato/eth-hamiltonicity}, 2026.
+
+\bibitem{TulsyanC26}
+\bysame, \emph{Superlinear circuit lower bounds for $\mathrm{E}^{\mathrm{np}}$,
+  assuming the new $\#${SAT} algorithms}, Manuscript, November 2026;
+  \texttt{docs/circuit-note.pdf} in the repository
+  \url{https://github.com/xennygrimmato/eth-hamiltonicity}, 2026.
+
+\bibitem{VW21}
+Nikhil Vyas and Ryan Williams, \emph{On super strong {ETH}}, J. Artificial
+  Intelligence Res. \textbf{70} (2021), 473--495, Preliminary version in SAT
+  2019, Lecture Notes in Comput. Sci. 11628, 406--423.
+
+\bibitem{Wil16MA}
+Richard~Ryan Williams, \emph{Strong {ETH} breaks with {M}erlin and {A}rthur:
+  short non-interactive proofs of batch evaluation}, 31st Conference on
+  Computational Complexity (CCC 2016), LIPIcs, vol.~50, 2016, arXiv:1601.04743,
+  pp.~2:1--2:17.
+
+\bibitem{Wil05}
+Ryan Williams, \emph{A new algorithm for optimal 2-constraint satisfaction and
+  its implications}, Theoret. Comput. Sci. \textbf{348} (2005), no.~2--3,
+  357--365.
+
+\bibitem{Wil13}
+\bysame, \emph{Improving exhaustive search implies superpolynomial lower
+  bounds}, SIAM J. Comput. \textbf{42} (2013), no.~3, 1218--1244, Conference
+  version in STOC 2010. Theorem numbers as in the author's version
+  \url{https://people.csail.mit.edu/rrw/improved-algs-lbs2.pdf}.
+
+\end{thebibliography}

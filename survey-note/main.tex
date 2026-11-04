@@ -1,0 +1,554 @@
+\documentclass[10pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{url}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=OliveGreen,urlcolor=MidnightBlue]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+\setlist{leftmargin=*,itemsep=2pt,topsep=4pt}
+\emergencystretch=2.5em
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+
+% ---------------------------------------------------------------- theorems
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{importedtheorem}[theorem]{Imported Theorem}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\crefname{importedtheorem}{Imported Theorem}{Imported Theorems}
+\numberwithin{equation}{section}
+
+% ---------------------------------------------------------------- macros
+\newcommand{\poly}{\operatorname{poly}}
+\newcommand{\A}[1][]{\textup{[A\if\relax\detokenize{#1}\relax\else, #1\fi]}}
+\newcommand{\Oa}[1][]{\textup{[O\if\relax\detokenize{#1}\relax\else, #1\fi]}}
+\newcommand{\ENP}{\mathrm{E}^{\mathrm{NP}}}
+\newcommand{\HA}{\ensuremath{(\mathrm{H}_{\mathrm{A}})}}
+\newcommand{\st}[1]{\textsc{#1}}
+\newcommand{\Lit}{\textsuperscript{L}}
+\newcommand{\Inf}{\textsuperscript{I}}
+\newcommand{\Fol}{\textsuperscript{F}}
+\newcommand{\Own}{\textsuperscript{O}}
+
+\begin{document}
+
+\title[What survives the ETH refutations?]{What survives the ETH refutations?\\ A map of fine-grained hypotheses\\ and conditional lower bounds}
+
+\author{Vaibhav Tulsyan}
+
+\date{November 2026}
+
+\subjclass[2020]{68Q17, 68Q25, 68Q27, 68W40}
+\keywords{Exponential Time Hypothesis, Strong Exponential Time Hypothesis, fine-grained complexity, conditional lower bounds, parameterized complexity, CNF-SAT, clause width}
+
+\begin{abstract}
+In October 2026 OpenAI and Anthropic claimed deterministic subexponential-time algorithms for
+$\#k$-SAT, refuting the Exponential Time Hypothesis (ETH) and with it the Strong ETH. This note
+records, row by row, which fine-grained hypotheses and which published conditional lower bounds
+are affected, assuming the claimed algorithms are correct. We classify $33$ hypotheses and $27$
+conditional theorems as refuted, as having lost their premise, or as surviving; a fourth label
+marks the few theorems whose conclusion is now contradicted by an explicit algorithm. The map is
+organised by one distinction: the new algorithms handle $k$-CNF formulas of bounded width, and,
+through the width reduction of Calabro, Impagliazzo and Paturi, CNFs of any width with at most
+$n\cdot 2^{o((\log n)^{1/4}/\sqrt{\log\log n})}$ clauses (a short derivation of ours from the
+explicit rate of the Anthropic manuscript), but nothing is known for CNF-SAT with polynomially
+many clauses of unbounded width. Many of the best-known lower bounds (treewidth optimality,
+edit distance, Fr\'echet distance, LCS, diameter approximation) are proved from that
+``CNF-SETH'' and survive with their premise intact. Gap-ETH and the ETH-based proof of the
+Parameterized Inapproximability Hypothesis lose their force; Almost-ETH, OV, 3SUM, APSP and the
+Set Cover Conjecture are untouched. We list the few genuinely new algorithms that follow. A
+refutation removes premises; it does not by itself give algorithms, and nothing here is
+practical. Everything is conditional on the claimed refutations, which are under review.
+\end{abstract}
+
+\maketitle
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+% =====================================================================
+
+\subsection{The two refutations}
+The Exponential Time Hypothesis (ETH) of Impagliazzo and Paturi~\cite{IP99,ImpagliazzoPaturi01}
+defines $s_k$, for $k\ge3$, as the infimum of the $\delta$ such that $k$-SAT on $n$ variables is
+solvable in time $O(2^{\delta n})$, and asserts $s_k>0$ for $k\ge3$; the Strong ETH (SETH) is
+$s_\infty=\lim_k s_k=1$~\cite{ImpagliazzoPaturi01}. In October 2026 two manuscripts appeared, by
+OpenAI~\cite{OpenAI26} and by Anthropic~\cite{Anthropic26}, each claiming a deterministic algorithm
+that counts the satisfying assignments of a $k$-CNF in subexponential time. Both come with Lean~4
+formalisations of their top-level statements. These are \emph{claimed} results, still under
+review. We write \A{} and \Oa{} for them, and use them in the following forms.
+
+\begin{importedtheorem}[{\A, Main Theorem, eq.~(1)}]\label{imp:A}
+There is an absolute constant $C$ and a deterministic algorithm that counts the models of a $k$-CNF
+with $n$ variables and $m$ clauses in time
+\[
+  2^{C\cdot\min\{k^2 n\log\log n/\sqrt{\log n},\;km/\sqrt{\log m}\}}.
+\]
+\end{importedtheorem}
+
+\begin{importedtheorem}[{\Oa, main theorem}]\label{imp:O}
+For each fixed $k$ there is a deterministic algorithm that counts the models of a $k$-CNF with $n$
+variables and $m$ clauses in $(n+m)^{O_k(1)}2^{O_k(n\log\log n/\sqrt{\log n})}$ bit operations and
+polynomial space, and in $2^{O_{k,D}(n/\sqrt{\log n})}$ when $m\le Dn$.
+\end{importedtheorem}
+
+Two features matter below. First, \cref{imp:A} is \emph{uniform in $k$}: $C$ is absolute, so the
+bound is subexponential in $n$ as long as $k=o((\log n)^{1/4}/\sqrt{\log\log n})$. \Oa{} states
+no dependence on $k$, so it is not known to be uniform. Uniformity is irrelevant for ETH and SETH:
+each engine gives $s_k=0$ for every fixed $k$, hence $s_\infty=0$ (\A, Corollary~5; the reduction
+from $3$-SAT to $k$-SAT is the deterministic sparsification of~\cite{IPZ01}). It matters only for
+formulas whose width grows with $n$ (\cref{sec:width}). Second, both algorithms are deterministic
+and count, so they refute the randomized, counting and nondeterministic variants of ETH and SETH
+\emph{for $k$-CNFs} at once (\A, Corollaries~5 and~6 and the remark after Corollary~5).
+
+\subsection{The direction of implication}
+A conditional lower bound ``$H\Rightarrow$ problem $X$ needs time $T$'' is proved by a reduction
+\emph{from} a problem covered by $H$ \emph{to} $X$. Refuting $H$ removes the premise; it says
+nothing about $X$. New algorithms for $X$ arise only when there is a reduction in the other
+direction, from $X$ to $k$-SAT with a linear number of variables (the SERF framework
+of~\cite{IPZ01}, and \A, Corollary~7), or from more general theorems inside the manuscripts that
+the top-level statements do not expose (our own sparse results, \cref{sec:new}). Most rows below
+therefore lose a premise and gain nothing. We say so row by row.
+
+\subsection{Statuses}\label{sec:statuses}
+Throughout, ``refuted'' means \emph{refuted assuming the claimed refutations}.
+\begin{itemize}
+\item \textbf{refuted}: the hypothesis itself is false.
+\item \textbf{premise refuted}: a theorem $H\Rightarrow X$ with $H$ false; nothing here contradicts $X$.
+\item \textbf{survives}: we know of no consequence of the refutations that touches the statement.
+For a theorem this means that its premise, as actually used in the proof, still stands.
+\end{itemize}
+The additional label \textbf{conclusion refuted} marks a theorem $H\Rightarrow X$ whose conclusion
+$X$ is contradicted by an explicit algorithm. One row is a theorem whose premise is the
+\emph{negation} of ETH, so that the theorem now \textbf{fires} (\cref{sec:circuits}); a few rows
+are \textbf{mixed} and are split in the reason column.
+
+\subsection{Sources}
+The map was compiled from the primary sources: for every row tagged \Lit{} in
+\cref{tab:hyp,tab:thm} the wording was checked against the abstract or full text of the cited
+source (arXiv, ECCC, DROPS, journal, or authors' copy). Rows tagged \Fol{} are folklore
+conjectures without a single primary statement; \Inf{} marks our own inference, and \Own{} our own
+results. In an earlier pass, nine rows rested on secondary sources or on sources we had not
+re-read (ETH itself; the CIP duality; Williams' Max-2-CSP algorithm; Feige's hypothesis;
+P\u{a}tra\c{s}cu--Williams, twice; Cai--Juedes; Chen--Huang--Kanj--Xia; Marx's treewidth paper).
+All nine were re-verified against the primary text or abstract for this note, so no row now
+rests on a secondary source. Theorem numbers refer to the versions named in the bibliography.
+
+% =====================================================================
+\section{Bounded width versus unbounded width}\label{sec:width}
+% =====================================================================
+
+\subsection{Three facts}
+\begin{enumerate}[label=\textup{(F\arabic*)}]
+\item\label{F1} $s_k=0$ for every $k$. This refutes ETH, SETH, $\#$ETH, $\#$SETH, $\oplus$SETH and
+NSETH in their $k$-CNF forms.
+\item\label{F2} \emph{Local witnesses.} A problem with complexity parameter $n$ whose yes-instances
+have an $O(n)$-bit witness checkable by an $O(n)$-gate circuit, or by bounded-width clauses on
+$O(n)$ variables, gets deterministic time $2^{\delta n}$ for every $\delta>0$ by Tseitin's
+transformation; counts follow when the encoding is parsimonious. This is the SERF
+route~\cite{IPZ01}; \A, Corollary~7, uses it with a cardinality circuit of $O(n)$ gates.
+\item\label{F3} \emph{The width frontier} (\cref{prop:frontier} below). CNFs of arbitrary width are
+reached only when the number of clauses is barely superlinear.
+\end{enumerate}
+
+\subsection{The width reduction and the density frontier}
+Calabro, Impagliazzo and Paturi~\cite{CIP06} relate CNF-SAT of bounded density to $k$-SAT by
+Schuler's width reduction: while some clause $C$ has more than $k$ literals, pick $k$ of them,
+$C'$, and branch on ``$C'$ is satisfied'' (replace $C$ by $C'$) versus ``$C'$ is falsified'' (set
+its $k$ literals to false). The branches are disjoint, so model counts add up, and the leaves are
+$k$-CNFs. This counting form is \cite[Lemma~6.1]{TulsyanQ26}; with constant $k$ it gives
+$\#$CNF-SAT with $m\le cn$ clauses in time $2^{\varepsilon n}$ for all $c,\varepsilon>0$, from
+either engine~\cite[Corollary~6.2]{TulsyanQ26}. The uniformity of \cref{imp:A} lets $k$ grow, and
+gives a little more.
+
+\begin{proposition}[our derivation from \cref{imp:A}]\label{prop:frontier}
+Put $L(n)=(\log n)^{1/4}/\sqrt{\log\log n}$. Assume \cref{imp:A}. For every function $f$ with
+$f(n)=o(L(n))$ there is a deterministic algorithm that counts the models of CNF formulas of
+arbitrary width with $n$ variables and at most $n\cdot2^{f(n)}$ clauses in time $2^{o(n)}$.
+\end{proposition}
+
+\begin{proof}
+Let $m\le Dn$ with $\log D=f(n)$, and fix $k\ge2$, to be chosen. Run the width reduction. Along a
+root-to-leaf path every ``satisfied'' branch removes one long clause, so there are at most $m$ of
+them, and every ``falsified'' branch fixes $k$ variables, so there are $r\le n/k$ of them. The
+leaves with exactly $r$ falsified branches number at most $\binom{m+r}{r}$~\cite[proof of
+Lemma~5]{CIP06}, so there are at most
+$(n/k+1)\binom{m+\lfloor n/k\rfloor}{\lfloor n/k\rfloor}\le(n+1)\bigl(e(Dk+1)\bigr)^{n/k}$ leaves.
+Each leaf is a $k$-CNF with $n'\le n$ variables and at most $m$ clauses. If $n'\le\sqrt n$, count
+by brute force in time $2^{\sqrt n}\poly(m)$. Otherwise $\log n'\ge\frac12\log n$, so
+$\log\log n'/\sqrt{\log n'}\le2\log\log n/\sqrt{\log n}$ for $n$ large, and \cref{imp:A} counts
+the leaf in time $2^{s n}$ with $s=2Ck^2\log\log n/\sqrt{\log n}$. The total time is at most
+\[
+  \poly(n,m)\cdot2^{\,(n/k)\,(f(n)+\log(k+1)+2)\;+\;sn\;+\;\sqrt n}.
+\]
+Take $k=\lceil\sqrt{\max\{f(n),1\}\cdot L(n)}\,\rceil$. Then $k\to\infty$, $f(n)/k\le\sqrt{f(n)/L(n)}\to0$
+and $(\log k)/k\to0$, while $k/L(n)\to0$ gives $s=2C(k/L(n))^2\to0$. Every term of the exponent
+is $o(n)$, and $\poly(n,m)=2^{o(n)}$ since $m\le n^{1+o(1)}$.
+\end{proof}
+
+\begin{remark}[what does not follow]\label{rem:frontier}
+\leavevmode
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item The clause-count branch of \cref{imp:A} does worse here: it needs $km=o(n\sqrt{\log m})$,
+which allows only $m\le n(\log n)^{1/2-o(1)}$.
+\item Through \Oa{} only constant density is reached explicitly, since its $O_k$-constants are not
+stated; a diagonal argument gives some unbounded but non-explicit density.
+\item For $m=n^{1+\Omega(1)}$, or $m\ge n\cdot2^{(\log n)^{1/4+\Omega(1)}}$, nothing follows: the
+leaf count forces $k\gtrsim\log(m/n)$, where neither engine is subexponential in $n$. Hence the
+statement
+\begin{center}
+\emph{CNF-SETH}: for every $\varepsilon>0$, CNF-SAT with $n$ variables and $m$ clauses of
+unbounded width is not solvable in time $2^{(1-\varepsilon)n}\poly(m)$
+\end{center}
+survives, together with its counting, parity and nondeterministic forms.
+\end{enumerate}
+\end{remark}
+
+\noindent CNF-SETH is exactly the premise that many famous reductions use. Lokshtanov, Marx and
+Saurabh~\cite{LMS11tw} assume that ``SAT cannot be solved in $(2-\varepsilon)^n m^{O(1)}$ time''
+and stress that they need no sparsification; Backurs and Indyk~\cite{BI18} reduce from CNF-SAT
+with $M$ clauses to edit distance; Bringmann's ``SETH$'$''~\cite{Bri14} is ``no $O^*((2-\delta)^N)$
+algorithm for CNF-SAT''; Roditty and Vassilevska Williams~\cite[Theorem~1]{RVW13} conclude
+``CNF-SAT on $n$ variables is in $O^*((2-\delta)^n)$''; and the moderate-dimension Orthogonal
+Vectors conjecture follows from CNF-SETH by Williams' split-and-list reduction with $d=m$. What
+dies is everything that genuinely goes through sparsification to $O(n)$ clauses, or through
+bounded width.
+
+% =====================================================================
+\section{Table A: hypotheses}\label{sec:tableA}
+% =====================================================================
+
+\Cref{tab:hyp} lists the hypotheses. ``Gives algorithms'' is noted in the reason column when a
+refutation also yields an explicit faster algorithm for the problem named.
+
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.55cm}>{\raggedright\arraybackslash}p{6.2cm}>{\raggedright\arraybackslash}p{1.65cm}>{\raggedright\arraybackslash}p{7.0cm}@{}}
+\caption{Hypotheses, assuming the claimed refutations.}\label{tab:hyp}\\
+\toprule
+& Hypothesis (source) & Status & Reason\\
+\midrule
+\endfirsthead
+\toprule
+& Hypothesis (source) & Status & Reason\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+A1 & ETH: $s_k>0$ for $k\ge3$~\cite{IP99,ImpagliazzoPaturi01}\Lit & refuted & Either engine; $3$-SAT and $k$-SAT in $2^{o(n)}$.\\
+A2 & SETH: $s_\infty=1$~\cite{ImpagliazzoPaturi01}; randomized algorithms allowed in~\cite{CDLMNOPSW16}\Lit & refuted & \ref{F1}; \Oa{} suffices despite non-uniformity in $k$.\\
+A3 & Density-SETH: CNF of any width with $\le cn$ clauses needs $2^{(1-\varepsilon)n}$~\cite{CIP06}; \cite[Conj.~2]{MT19a}\Lit & refuted & Counting width reduction~\cite[Cor.~6.2]{TulsyanQ26}.\\
+A4 & CNF-SETH: CNF-SAT $\notin2^{(1-\varepsilon)n}\poly(m)$, unbounded width~\cite{LMS11tw,BI18,Bri14,RVW13}\Lit & survives & \Cref{prop:frontier,rem:frontier}: reach ends at $n2^{o(L(n))}$ clauses.\\
+A5 & Super-SETH: for every unbounded $f$, $k$-SAT $\notin2^{n(1-f(k)/k)}$~\cite{VW21}\Lit & refuted & It implies SETH.\\
+A6 & $\#$ETH~\cite[p.~21:5]{DHMTW14}\Lit & refuted & \A, Corollary~6; \Oa. Gives $\#3$-SAT in $2^{o(n)}$.\\
+A7 & $\#$SETH, $\oplus$SETH for $k$-CNF; equivalent to $k$-$\oplus$Hitting Set and $k$-$\oplus$Set Cover hardness~\cite[Thm.~1.3]{CDLMNOPSW16}\Lit & refuted & \ref{F1}.\\
+A8 & $\#$CNF-SETH, $\oplus$CNF-SETH ($\poly(m)$ clauses)\Inf & survives & As A4.\\
+A9 & NSETH: $\forall\varepsilon\,\exists k$, $k$-TAUT $\notin\mathrm{NTIME}[2^{(1-\varepsilon)n}]$~\cite{CGIMPS16}\Lit & refuted & A deterministic algorithm is a nondeterministic one (\A, after Corollary~5).\\
+A10 & NSETH for CNF with $\poly(m)$ clauses, or for $\poly$-size circuits~\cite[Conj.~3]{MT19a}\Lit & survives & As A4.\\
+A11 & MA-SETH, AM-SETH & refuted (2016) & Williams~\cite{Wil16MA}: MA proofs in $c^n$ time, $c<2$, for $\#$SAT of sublinear-depth circuits; ``strongly refute'' both\Lit. For $k$-CNF also by \ref{F1}.\\
+A12 & Gap-ETH: no $2^{o(n)}$ (randomized) algorithm distinguishes satisfiable $3$-CNFs from those not $(1-\varepsilon)$-satisfiable~\cite{Dinur16,MR16}, as quoted in~\cite{CCKLMNT17}\Lit & refuted & An exact deterministic $2^{o(n)}$ decider distinguishes the cases. \cite{Man26} also records Gap-ETH as false.\\
+A13 & ETH for Circuit-SAT of linear size; VSP-Circuit-SAT of size $cn$~\cite[Thm.~1.1(v)]{CDLMNOPSW16}\Lit & refuted & Tseitin gives $O(n)$ variables; gives algorithms.\\
+A14 & Circuit-, NC- and BP-SETH~\cite{AHVWW16}\Lit & survives & Superlinear-size representations.\\
+A15 & $\mathrm{FPT}\ne\mathrm{M}[1]$ (miniaturised CNF of size $k\log n$)~\cite[\S3.5]{DT11}. Chen--Grohe: $\mathrm{M}[1]=\mathrm{FPT}$ iff $3$-SAT $\in\mathrm{DTIME}(2^{o^{\mathrm{eff}}(n)})$~\cite{CG07}\Lit & refuted & The iff needs an effective little-$o$; \A{} (rate with absolute $C$) and \Oa{} at $k=3$ supply one. Gives algorithms for M[1]-complete problems.\\
+A16 & $\mathrm{FPT}\ne\mathrm{W}[1]$ & survives & ETH implies it, not conversely; \cite[\S6]{CG07} list ``ETH $\Leftrightarrow$ FPT $\ne$ W[1]?'' as open\Lit.\\
+A17 & Low-dimension OVC: $\forall\varepsilon\,\exists c$, OV with $d=c\log n$ $\notin n^{2-\varepsilon}$ (``LDOVC'' of~\cite{GIKW17})\Lit & survives & SETH support gone (it was via sparsification~\cite[Lemma~2.1]{BK15}); \A{} notes it does not refute OV.\\
+A18 & Moderate-dimension OVC: no $n^{2-\varepsilon}\poly(d)$~\cite{GIKW17}\Lit & survives & Implied by CNF-SETH with $d=m$~\cite[Lemma~1]{ABV15}; premise intact.\\
+A19 & $k$-OV, low and moderate dimension\Inf & survives & As A17, A18.\\
+A20 & Hitting Set conjecture~\cite{AVWW16}\Lit & survives & Not known to follow from SETH; implies OVC.\\
+A21 & Set Cover Conjecture: $\forall\varepsilon\,\exists k$, Set Cover with sets of size $\le k$ $\notin2^{\varepsilon n}\poly(m)$, $n$ the universe~\cite[Thm.~1.2]{CDLMNOPSW16}\Lit & survives & Not implied by SETH even before 2026; the natural witness has $\Theta(n\log n)$ bits, so \ref{F2} does not apply.\\
+A22 & $k$-Hitting Set, $k$-Set Splitting, $k$-NAE-SAT need $2^{(1-\varepsilon)n}$ for large $k$, each equivalent to SETH~\cite[Thm.~1.1]{CDLMNOPSW16}\Lit & refuted & Equivalent to SETH; directly, they are $k$-CNFs on the universe. Gives algorithms.\\
+A23 & 3SUM conjecture\Fol & survives & No SAT premise; see B26.\\
+A24 & APSP; combinatorial BMM; OMv\Fol & survives & Unrelated to SAT.\\
+A25 & $k$-Clique in $n^{\omega k/3-\varepsilon}$; min-, exact- and zero-weight $k$-Clique\Fol & survives & Unrelated.\\
+A26 & $(\ell,k)$-Hyperclique hypothesis~\cite[Hyp.~1.4]{LVWW18}\Lit & survives & Its refutation would give dense Max-$k$-SAT in $2^{(1-\varepsilon)n}$, which A27 leaves open; no converse from SAT.\\
+A27 & Dense Max-$3$-SAT $\notin2^{(1-\varepsilon)n}$; Max-$2$-SAT, Max-Cut not below $2^{\omega n/3}$ (algorithm:~\cite{Wil05})\Fol & survives & A counter over $\Theta(n^2)$ clauses has $\Theta(n^2)$ variables.\\
+A28 & Subset Sum $\notin2^{(1/2-\varepsilon)n}$\Fol & survives & Weights are not local.\\
+A29 & Basic QSETH (CNF-SAT)~\cite{BPS19}; its $k$-CNF variant\Lit & mixed & CNF form survives (as A4); $k$-CNF variant refuted~\cite[Table~2, row~23]{TulsyanQ26}.\\
+A30 & PIH~\cite{LRSZ20}\Lit & survives & Unproved again: both proofs, from Gap-ETH and from ETH~\cite{GLRSW24}, lose their premises.\\
+A31 & ETH for End-of-a-Line~\cite{Rub16}\Lit & survives & A different, query-type hypothesis.\\
+A32 & Feige's random $3$-SAT hypothesis~\cite{Feige02}\Lit & survives & About polynomial-time average-case refutation.\\
+A33 & Almost-ETH: $\forall\gamma>0$, $3$-SAT $\notin O(2^{n^{1-\gamma}})$~\cite{Man26}\Lit & survives & Both engines give $2^{n/(\log n)^{\Theta(1)}}=2^{n^{1-o(1)}}$, not $2^{n^{1-\gamma}}$.\\
+\end{longtable}
+}
+
+\emph{Remarks.} Row A11 was refuted before 2026 and is listed for completeness. Row A15 is the one
+place where an \emph{effective} rate matters: Chen and Grohe's miniaturisation isomorphism maps
+SUBEPT to FPT, and the explicit rates of both manuscripts make the conclusion $\mathrm{M}[1]=\mathrm{FPT}$
+unconditional modulo the refutations. Row A33 was proposed by Manurangsi in the 27 October 2026
+revision of~\cite{Man26} because of the refutations; its comment states that the earlier
+versions' ETH and Gap-ETH premises ``are now known to be false''.
+
+% =====================================================================
+\section{Table B: conditional theorems}\label{sec:tableB}
+% =====================================================================
+
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.55cm}>{\raggedright\arraybackslash}p{6.2cm}>{\raggedright\arraybackslash}p{1.65cm}>{\raggedright\arraybackslash}p{7.0cm}@{}}
+\caption{Conditional theorems ``$H\Rightarrow X$'', assuming the claimed refutations.}\label{tab:thm}\\
+\toprule
+& Theorem (source) & Status & Reason\\
+\midrule
+\endfirsthead
+\toprule
+& Theorem (source) & Status & Reason\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\multicolumn{4}{@{}l}{\emph{Parameterised and exact exponential}}\\
+B1 & Treewidth DP optimality: no $(2-\varepsilon)^{\mathrm{tw}}$ IS, $(3-\varepsilon)^{\mathrm{tw}}$ DomSet, $(2-\varepsilon)^{\mathrm{tw}}$ Max-Cut, $(3-\varepsilon)^{\mathrm{tw}}$ OCT, $(q-\varepsilon)^{\mathrm{tw}}$ $q$-Col, $(2-\varepsilon)^{\mathrm{tw}}$ Partition into Triangles~\cite{LMS11tw}\Lit & survives & The premise as proved is CNF-SETH (A4), with $m^{O(1)}$ clauses; no sparsification is used. No faster DP follows.\\
+B2 & Cut\&Count pathwidth bounds: no $(3-\varepsilon)^{\mathrm{pw}}$ CVC, FVS, Steiner Tree; no $(4-\varepsilon)^{\mathrm{pw}}$ CDS, CFVS, COCT; Exact $k$-Leaf Spanning Tree~\cite[Thm.~1.3, App.~D]{CutAndCount11}\Lit & survives & Every reduction of App.~D starts from CNF-SAT with $n$ variables and $m$ clauses: CNF-SETH. (Their Thm.~1.4 is in B21.)\\
+B3 & P\u{a}tra\c{s}cu--Williams: $k$-DomSet in $O(n^{k-\varepsilon})$ for some $k\ge3$ $\Rightarrow$ CNF-SAT in $2^{\delta n}\poly(m)$, $\delta<1$~\cite[Thm.~2.1]{PW10}\Lit & survives & CNF form.\\
+B4 & P\u{a}tra\c{s}cu--Williams: $d$-SUM on $N$ numbers of $O(d\log N)$ bits, $d<N^{0.99}$, in $N^{o(d)}$ $\Rightarrow$ $k$-SAT in $2^{o(n)}$~\cite[\S5]{PW10}\Lit & premise refuted & Conclusion of the contrapositive is now true; $d$-SUM bound open.\\
+B13 & ETH $\Rightarrow$ no $2^{o(n)}$ IS, Clique, VC, $k$-Col, DomSet on $n$ vertices, any density~\cite{IPZ01,LMS11}\Lit & conclusion refuted & \A, Corollary~7: deterministic $O(2^{\delta n})$ for every $\delta$, any number of edges, with counts by size and of $k$-colourings.\\
+B14 & ETH $\Rightarrow$ $k$-VC $\notin2^{o(k)}\poly(n)$ (from B13, as $k\le n$; cf.~\cite{CJ03})\Lit & conclusion refuted\Inf & $2k$-vertex LP kernel~\cite[\S2.5]{CyganEtAl15}, then Corollary~7 (\cref{sec:new}). Cai--Juedes: Max-SNP-complete problems have $2^{o(k)}p(n)$ algorithms iff $3$-SAT $\in\mathrm{DTIME}(2^{o(n)})$.\\
+B15 & ETH $\Rightarrow$ no $2^{o(n)}$ Max-Cut, Max-$k$-SAT with $O(n)$ constraints\Fol & conclusion refuted\Inf & Unweighted, or $O(1)$-bit weights; \cref{sec:new}. Polynomial weights: only under \HA. Dense: A27.\\
+B16 & ETH $\Rightarrow$ no $2^{o(n)}$ HC, HP, TSP, Steiner, FVS, CVC, CDS, Max-Leaf on sparse graphs~\cite[Thm.~3.3]{LMS11} & conclusion refuted under \HA\Own & \cite{Tulsyan26} and our notes~\cite{TulsyanRepo26}; on dense graphs only the premise is refuted.\\
+B19 & ETH $\Rightarrow$ $k$-Clique $\notin f(k)n^{o(k)}$ \cite[Thm.~5.5]{CHKX06}\Lit & premise refuted & $2^{\delta n}$ does not contradict it at small $k$.\\
+B20 & ETH $\Rightarrow$ binary CSP $\notin f(G)n^{o(k/\log k)}$, $k$ the treewidth~\cite{Marx10}; $\#$ETH $\Rightarrow$ $\#k$-matching (bipartite) $\notin f(k)n^{o(k/\log k)}$~\cite{CM14}\Lit & premise refuted & Parameter $k\ll n$.\\
+B21 & ETH $\Rightarrow$ no $2^{o(d\log d)}$ Closest String, Distortion, Disjoint Paths by tw, \dots~\cite{LMS18super}; no $2^{o(p\log p)}$ Cycle Packing~\cite[Thm.~1.4]{CutAndCount11}\Lit & premise refuted & \\
+B22 & ETH $\Rightarrow$ $2^{\Omega(\sqrt n)}$ planar bounds~\cite{LMS11}; $2^{\Omega(n^{1-1/d})}$ for fat-object graphs~\cite{dBBKMZ18} and Euclidean TSP~\cite{dBBKK18}\Lit & premise refuted & The refutations give only $2^{n/\mathrm{polylog}\,n}$, worse than the upper bounds. Under Almost-ETH the reductions give $2^{n^{1/2-\gamma}}$-type bounds\Inf.\\
+B11 & Under the Set Cover Conjecture: Steiner Tree $\notin2^{\varepsilon t}\poly$, CVC $\notin2^{\varepsilon t}\poly$, Set Partitioning $\notin2^{\varepsilon n}\poly(m)$, Subset Sum $\notin t^{\varepsilon}\poly(n)$~\cite[Thm.~1.2]{CDLMNOPSW16}\Lit & survives & A21 intact.\\
+B12 & Subset Sum $\notin T^{1-\varepsilon}2^{o(n)}$~\cite{ABHS19}\Lit & premise refuted & Reduces from $k$-SAT; the $T^{1-\varepsilon}\poly(n)$ form survives via B11.\\
+\midrule
+\multicolumn{4}{@{}l}{\emph{Approximation}}\\
+B23 & Gap-ETH $\Rightarrow$ FPT-inapproximability of $k$-Clique, $k$-DomSet, Biclique, induced matching, DkS~\cite{CCKLMNT17}\Lit & premise refuted & Partly re-proved under W[1] $\ne$ FPT (survives): constant-factor $k$-Clique~\cite{Lin21}, $k^{1/H(k)}$ for $k$-Clique~\cite{KK22}, any $F(k)$ for $k$-DomSet~\cite{KLM18}. The ETH parts (KLM's $T(k)n^{o(k)}$; the $k^{o(1)}$ bounds discussed in~\cite{CFLL25}) lose their premise. No W[1] re-proof found for the others.\\
+B24 & ETH-hardness of approximation: 2-CSP to $|V|^{1-o(1)}$, Directed Steiner Network to $k^{1/4-o(1)}$~\cite{DM18}; DkS~\cite{Man26}; best Nash~\cite{BKW15}; free games~\cite{AIM14}\Lit & mixed & DkS to $2^{(\log n)^{1-\varepsilon}}$ re-proved under Almost-ETH in~\cite{Man26} (v3): survives. \cite{DM18,BKW15,AIM14}: premise refuted; quasi-polynomial reductions plausibly give weaker bounds under Almost-ETH\Inf.\\
+B25 & ETH $\Rightarrow$ PIH~\cite{GLRSW24}; near-optimal $f(k)n^{o(k)}$-type bounds for approximate $k$-Clique and CSP under ETH~\cite{GLRSW25}\Lit & premise refuted & See A30.\\
+\midrule
+\multicolumn{4}{@{}l}{\emph{Problems in P}}\\
+B5 & Edit distance $\notin n^{2-\varepsilon}$~\cite{BI18}; also from NC-SETH~\cite{AHVWW16}\Lit & survives & Reduction from CNF-SAT with $M$ clauses: CNF-SETH.\\
+B6 & LCS, DTW: Most-OV with threshold, $n^{2-\varepsilon}\poly(d)$ $\Rightarrow$ $k$-LCS $\notin n^{k-\varepsilon}$~\cite[Thm.~1, Conj.~1]{ABV15}; binary LCS, edit distance with costs, DTW~\cite{BK15}\Lit & survives & \cite[Lemma~1]{ABV15}: Conj.~1 follows from Max-CNF-SAT hardness with $\poly(m)$ clauses. \cite{BK15} is stated under $k$-SETH but proved from OVH, which CNF-SETH implies.\\
+B7 & Fr\'echet distance $\notin n^{2-\varepsilon}$; no $1.001$-approximation in $(nm)^{1-\delta}$~\cite{Bri14}\Lit & survives & Stated from SETH$'$: no $O^*((2-\delta)^N)$ CNF-SAT.\\
+B8 & Diameter: no $(3/2-\varepsilon)$-approximation in $O(m^{2-\varepsilon})$, undirected unweighted~\cite[Thm.~1]{RVW13}\Lit & survives & Stated with conclusion ``CNF-SAT in $O^*((2-\delta)^n)$''. Later $k$-OV-based tradeoffs not checked here.\\
+B9 & Dynamic problems under SETH (\#SSR, SubConn, SCC, \dots)~\cite{AVW14}\Lit & survives\Inf & Stated via $k$-SAT with $O(n)$ clauses (sparsification), which is refuted; but the constructions use one node per clause, so the proofs run from CNF-SETH. Triangle, BMM and 3SUM-based bounds untouched.\\
+B10 & Results using $d=c\log n$ exactly, stated ``under SETH'' & premise refuted & They survive if restated under low-dimension OVC (A17).\\
+B26 & NSETH $\Rightarrow$ no deterministic fine-grained reduction from SAT to 3SUM, APSP~\cite{CGIMPS16}\Lit & premise refuted & The barrier is lifted; no reduction follows.\\
+\midrule
+\multicolumn{4}{@{}l}{\emph{Counting, quantum, circuits}}\\
+B17 & $\#$ETH bounds for the Tutte polynomial, the permanent and $\#$IS~\cite{DHMTW14,Curticapean18,BrandDellRoth19}\Lit & mixed & Conclusion refuted: $\#2$-SAT and $\#$IS on $n$ variables/vertices at any density (\A, Corollaries~6,~7); sparse permanent, $\#$PM, Boolean $\#$CSP, the integer hyperbolas $H_q$ (local encodings); $T(x,1)$ on sparse graphs under \HA\Own. Dense permanent and the rest: premise refuted.\\
+B18 & Quantum-supremacy statements from ETH/SETH~\cite{MT19a} and others & mixed & Of $24$ rows in~\cite[Table~2]{TulsyanQ26}: $5$ refuted, $5$ premise refuted, $1$ moot, $1$ open, $12$ survive.\\
+B27 & ETH false $\Rightarrow$ $\ENP\not\subseteq\mathrm{SIZE}(O(n))$~\cite[Thm.~6.1]{Wil13}; see~\cite{JMV15}\Lit & fires & \Cref{sec:circuits}.\\
+\end{longtable}
+}
+
+\noindent Rows are grouped by area rather than by number; the numbering follows our working map
+in~\cite{TulsyanRepo26}. Row B3 is stated in~\cite{PW10} as ``Hypothesis~1 implies that CNF-SAT has
+an improved algorithm''; Section~2 of~\cite{PW10} remarks that the earlier $f(k)n^{o(k)}$ bound for
+$k$-DomSet of Chen et al.\ concerns only $k$-SAT, which is precisely the distinction of
+\cref{sec:width}.
+
+\subsection{Circuit lower bounds}\label{sec:circuits}
+Williams~\cite[Theorem~6.1]{Wil13} proved that if ETH is false then $\ENP$ has no circuits of
+linear size; \A{} draws this consequence and formalises it in Lean. Modulo the refutations,
+$\ENP\not\subseteq\mathrm{SIZE}(O(n))$ is therefore unconditional. In a companion
+note~\cite{TulsyanC26} we track the constants through Williams' argument and the local reductions
+of Jahanjou, Miles and Viola~\cite{JMV15}: assuming the clause-count bound of \cref{imp:A} in a
+Turing-machine form, there are $\varepsilon>0$ and $L_0\in\ENP$ with no circuits of size
+$\varepsilon n\sqrt{\log n}$ for infinitely many $n$. That result is machine-checked in Lean on top of
+Anthropic's own circuit-lower-bound module (\texttt{enp\_not\_size\_n\_sqrt\_log}; standard axioms;
+fresh kernel replay), holds only infinitely often, and has a non-explicit $\varepsilon$. It gives nothing at $n\log n$ and nothing for NEXP. Carmosino et
+al.~\cite{CGIMPS16} note that disproving NSETH gives circuit lower bounds; for the $k$-CNF form
+refuted here this is subsumed by the above.
+
+% =====================================================================
+\section{The new algorithms}\label{sec:new}
+% =====================================================================
+
+The refutations give few explicit algorithms beyond $k$-SAT itself. We list all we know of,
+separating what needs only the formalised top-level statements from what needs internal results
+of \A.
+
+\subsection{From the main theorems alone}
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $k$-SAT, $\#k$-SAT, $\oplus k$-SAT and $k$-TAUT; $\#$CNF-SAT of any width with $O(n)$ clauses
+(either engine), and with $n2^{o(L(n))}$ clauses (\A; \cref{prop:frontier}); linear-size Circuit-SAT.
+\item \A, Corollary~7: for every $\delta>0$, deterministic $O(2^{\delta n})$ algorithms that count
+the independent sets, cliques, vertex covers and dominating sets of each size $s$, and the proper
+$k$-colourings, of a graph on $n$ vertices with any number of edges. Decision for IS, Clique, VC
+and $k$-Colouring was implied before by~\cite{IPZ01}; Dominating Set and the counts are new
+in~\A.
+\item $k$-Hitting Set, $k$-Set Splitting, $k$-NAE-SAT, $\#2$-SAT, sparse permanent, $\#$PM, Boolean
+$\#$CSP, and the integer Potts and flow hyperbolas of the Tutte plane on sparse graphs (local
+encodings, \ref{F2}).
+\item \emph{Vertex Cover in $2^{o(k)}+\poly(n)$} (our observation). The LP kernel leaves at most $2k$
+vertices in polynomial time~\cite[\S2.5]{CyganEtAl15}; Corollary~7 then counts vertex covers of
+size $k$ in $2^{2\delta k}$ for every $\delta$. A single algorithm in time
+$2^{O(k\log\log k/\sqrt{\log k})}+\poly(n)$ follows by running the explicit $n$-bound of
+\cref{imp:A} on the $O(k)$-variable $3$-CNF of the proof of Corollary~7. This contradicts the
+conclusion of Cai--Juedes' ETH bound (B14), consistently with their own equivalence.
+\item \emph{Sparse Max-Cut and Max-$k$-SAT, unweighted} (our observation). For $m=O(n)$ constraints
+with $O(1)$-bit weights, encode each constraint by a forced indicator variable, add an $O(m)$-gate
+adder and a comparison with a target $t$, and apply Tseitin: a $3$-CNF with $O(n)$ variables whose
+models are the assignments of value exactly $t$. Corollary~6 counts them for each $t$, giving the
+exact optimum and the number of solutions of each value in $2^{\delta n}$. Weights up to $W$ cost
+$O(m\log W)$ gates, so polynomial weights are not covered by the main theorems.
+\item $\mathrm{M}[1]$-complete problems in FPT time (A15).
+\end{enumerate}
+
+\subsection{From internal results of \texorpdfstring{\A}{[A]}}
+Our other results assume three internal statements of \A{} (a network-to-clique reduction, an
+algorithm for cliques of all levels, and the existence of its ``pieces''), called \HA{}
+in~\cite{Tulsyan26,TulsyanQ26}. They are not consequences of the top-level theorems.
+\begin{enumerate}[label=\textup{(\roman*)},resume]
+\item \emph{Sparse Hamiltonicity}~\cite{Tulsyan26}: assuming \HA, the number of Hamiltonian cycles of
+a graph with $n$ vertices and $O(n)$ edges in $O(2^{\delta n})$ for every $\delta$, and in
+$2^{O(\max(m,n)/\sqrt{\log n})}$ in general; hence decision, search, Hamiltonian paths, sparse TSP
+with polynomial weights, directed cycles and ATSP. These theorems are machine-checked in Lean on top
+of the development of \A, relative to \HA.
+\item \emph{Exact quantum amplitudes}~\cite{TulsyanQ26}: assuming \HA, amplitudes of Clifford+T
+circuits with $G$ two-qubit gates in $2^{O(G/\sqrt{\log G})}$, machine-checked relative to \HA;
+marginals and exact sampling on paper.
+\item \emph{Further sparse problems, on paper only}~\cite{TulsyanRepo26}: Steiner Tree, FVS,
+Connected VC and DS, Max-Leaf; the line $T(x,1)$ of the Tutte plane (forests counted by size) on
+sparse graphs, which is the line Brand, Dell and Roth~\cite{BrandDellRoth19} show $\#$ETH-hard;
+sparse Max-Cut with polynomial weights. All are conditional on \HA{} and not formalised.
+\end{enumerate}
+
+\subsection{What gets no algorithm}
+Nothing parameterised by treewidth or pathwidth; no problem in P (edit distance, LCS, Fr\'echet,
+diameter, OV, 3SUM, APSP, $k$-Clique); Set Cover by universe size; Subset Sum; dense Max-CSP;
+dense Hamiltonicity; planar problems (where $2^{O(\sqrt n)}$ is already better).
+
+% =====================================================================
+\section{Reading the map by area}\label{sec:areas}
+% =====================================================================
+
+\subsection{Exact and parameterised algorithms}
+The treewidth and pathwidth bounds (B1, B2) are the clearest case of a premise that survives
+because of how it is stated. Lokshtanov, Marx and Saurabh build, from a CNF formula with $n$
+variables and $m$ clauses, a graph of size polynomial in $n+m$ and treewidth roughly $n/\log_2 c$
+(the precise form varies by problem),
+so a $(c-\varepsilon)^{\mathrm{tw}}$ algorithm would decide CNF-SAT in time
+$2^{(1-\delta)n}\poly(m)$. Nothing in the reduction requires bounded width or few clauses, and
+\cref{rem:frontier} shows that the new algorithms reach only $m\le n2^{o(L(n))}$. To refute B1
+one would need CNF-SAT with, say, $n^2$ clauses of width up to $n$ in time $2^{(1-\delta)n}$; the
+width reduction would then need $k\approx\log n$, where the bound of \cref{imp:A} is
+$2^{\Theta(n(\log n)^{3/2}\log\log n)}$, far above $2^n$.
+
+The ETH-based bounds for parameterised problems (B19--B22) lose their premise, but are not
+contradicted: a $2^{\delta n}$ algorithm says nothing about $f(k)n^{o(k)}$ when $k\ll n$. The two
+exceptions are structural. Chen and Grohe's equivalence (A15) is an ``if and only if'', so its
+other direction now yields $\mathrm{M}[1]=\mathrm{FPT}$. And Vertex Cover parameterised by solution
+size has a linear kernel, so the parameter and the number of vertices coincide after
+preprocessing, and the $2^{\delta n}$ algorithm of \A{} becomes a $2^{o(k)}$ algorithm (B14).
+Whether $\mathrm{W}[1]\ne\mathrm{FPT}$ (A16) is unaffected: Chen and Grohe list its equivalence
+with ETH as open, and the refutations settle ETH without touching it.
+
+\subsection{Approximation}
+Gap-ETH is refuted by any exact $2^{o(n)}$ algorithm, so it falls with ETH; the gap does not help.
+The FPT-inapproximability results of Chalermsook et al.\ (B23) therefore lose their premise, and
+so do the ETH-hardness results of Dinur--Manurangsi, Braverman--Ko--Weinstein and
+Aaronson--Impagliazzo--Moshkovitz (B24) and the ETH proof of PIH (B25). Two kinds of result
+survive. The first are the re-proofs under $\mathrm{W}[1]\ne\mathrm{FPT}$: constant-factor
+$k$-Clique (Lin), $k^{1/H(k)}$-factor $k$-Clique (Karthik--Khot) and $F(k)$-factor $k$-DomSet
+(Karthik--Laekhanukit--Manurangsi). The second are results whose reductions are only mildly
+exponential, so that a weaker hypothesis suffices: Manurangsi's Densest-$k$-Subgraph bound, now
+stated under Almost-ETH (A33). The refutations give $3$-SAT in $2^{n/(\log n)^{c}}$ for every constant
+$c<1/2$, which is $2^{n^{1-o(1)}}$ but not $2^{n^{1-\gamma}}$, so Almost-ETH stands. We expect
+other quasi-polynomial-size reductions (Nash, free games, 2-CSP) to give weaker but non-trivial
+bounds under Almost-ETH; we have not checked this (\Inf).
+
+\subsection{Problems in P}
+Here the map is almost entirely ``survives''. Edit distance, Fr\'echet distance and diameter are
+stated from CNF-SAT with $\poly(m)$ clauses (B5, B7, B8); LCS and DTW go through Most-OV or OV
+with dimension $d=m$ (B6), which CNF-SETH implies. What is lost is the derivation of the
+\emph{low-dimension} OV conjecture ($d=c\log n$) from SETH, which uses sparsification to $O(n)$
+clauses (A17, B10). OVC itself, 3SUM, APSP and the hyperclique hypothesis were never consequences
+of ETH. The dynamic lower bounds of Abboud and Vassilevska Williams (B9) are a borderline case:
+stated through sparsification, but by our reading proved by constructions that also run from
+CNF-SETH. The barrier of Carmosino et al.\ (B26), that NSETH forbids deterministic fine-grained
+reductions from SAT to 3SUM and APSP, disappears for $k$-SAT; no such reduction is known.
+
+\subsection{Counting and quantum}
+Counting statements behave like decision ones: $\#$ETH and the $k$-CNF form of $\#$SETH fall
+(A6, A7), and lower bounds proved by local reductions on sparse instances are contradicted by
+explicit algorithms (B17): Corollaries~6 and~7 of \A{} count independent sets and models of
+$2$-CNFs at any density, and local encodings handle sparse permanents, perfect matchings and the
+integer hyperbolas of the Tutte plane. The non-local cases (Hamiltonian cycles, forests) need
+\HA{}. Dense permanents, and the Tutte plane on dense graphs, are untouched. For the quantum
+statements (B18) the same split appears: sparse Clifford+T circuits fall under \HA, while dense
+or average-case conjectures survive~\cite[\S6]{TulsyanQ26}.
+
+% =====================================================================
+\section{Summary}\label{sec:summary}
+% =====================================================================
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Status & Table A ($33$) & Table B ($27$) & Total\\
+\midrule
+refuted & $12$ & -- & $12$\\
+conclusion refuted & -- & $4$ (B13--B16) & $4$\\
+fires & -- & $1$ (B27) & $1$\\
+premise refuted & -- & $10$ & $10$\\
+survives & $20$ & $9$ & $29$\\
+mixed & $1$ (A29) & $3$ (B17, B18, B24) & $4$\\
+\bottomrule
+\end{tabular}
+\caption{Counts per status. Refuted: A1--A3, A5--A7, A9, A11--A13, A15, A22. Premise refuted:
+B4, B10, B12, B19--B23, B25, B26. Survives: A4, A8, A10, A14, A16--A21, A23--A28, A30--A33, B1--B3,
+B5--B9, B11.}\label{tab:counts}
+\end{table}
+
+Three points stand out. First, the most-cited SETH lower bounds, for treewidth DP and for edit
+distance, Fr\'echet distance, LCS and diameter, survive with an intact premise, because they are
+proved from CNF-SAT with polynomially many clauses; what dies is ``$k$-SETH $\Rightarrow$
+low-dimension OVC'' and anything that genuinely needs sparsification. Second, Gap-ETH is refuted,
+so the Gap-ETH programme in parameterised inapproximability and the ETH proof of PIH lose their
+premises; the parts re-proved under W[1] $\ne$ FPT survive. Third, the frontier of the new
+algorithms in clause density is sharp in an unusual way: $n\cdot2^{o(L(n))}$ clauses through the
+explicit rate of \A, constant density through \Oa, and nothing at $n^{1+\Omega(1)}$.
+
+% =====================================================================
+\section{Limitations}\label{sec:limitations}
+% =====================================================================
+
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item \emph{Everything is conditional} on the claimed refutations~\cite{Anthropic26,OpenAI26},
+whose expert review is pending. If they fail, every ``refuted'' becomes ``open'' and every
+``premise refuted'' reverts to a valid conditional theorem; \cref{prop:frontier} and the
+observations of \cref{sec:new} lose their proofs. Results marked \HA{} need internal statements
+of \A{} that are not part of its formalised top level.
+\item \emph{Direction.} A refutation removes premises. Except through \ref{F2} and the network
+theorems, it gives no algorithm, and ``premise refuted'' is never evidence that a conclusion is
+false.
+\item \emph{Sources.} Every row was checked against its primary source; the nine rows that earlier
+rested on secondary sources were re-verified for this note (\cref{sec:intro}), and no row is now
+secondary. Rows marked \Fol{} have no single primary statement; rows marked \Inf{} are our
+inferences and are argued only in the reason column. B8 omits later diameter tradeoffs. The map is
+not exhaustive: \A{} reports more than $800$ papers with results proved only under ETH or a
+hypothesis implying it.
+\item \emph{Proofs.} \Cref{prop:frontier} and the observations (iv)--(v) of \cref{sec:new} are short
+written arguments, produced with AI assistance and not machine-checked or reviewed by a human
+expert. Only the results so labelled in \cref{sec:new} are machine-checked, and only relative to
+their stated hypotheses.
+\item \emph{Nothing practical.} \A{} notes that its bound does not beat $2^n$ for $3$-CNFs with
+$5n$ clauses unless $n>10^{10\,000}$. All algorithms here are galactic.
+\end{enumerate}
+
+\section*{Acknowledgements}
+This work was done with AI assistance (Claude Code, Anthropic): the classification, the
+derivations, and the literature checks were produced in sessions with Claude Code. Everything here
+has been checked against the primary sources as described, but awaits human expert review.
+Responsibility for any errors rests with the author.
+
+\bibliographystyle{amsplain}
+\bibliography{refs}
+
+\end{document}

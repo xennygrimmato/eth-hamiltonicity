@@ -1,0 +1,803 @@
+\documentclass[10pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{alltt}
+\usepackage{booktabs}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=OliveGreen,urlcolor=MidnightBlue]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+\setlist{leftmargin=*,itemsep=2pt,topsep=4pt}
+\emergencystretch=2.5em
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{importedtheorem}[theorem]{Imported Theorem}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\crefname{importedtheorem}{Imported Theorem}{Imported Theorems}
+\numberwithin{equation}{section}
+
+\newcommand{\poly}{\operatorname{poly}}
+\newcommand{\minFac}{\operatorname{minFac}}
+\newcommand{\A}{\textup{[A]}}
+\newcommand{\Oa}{\textup{[O]}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+% Lean names: typewriter, with line breaks allowed after '.' and '_'.
+\DeclareUrlCommand\lean{\urlstyle{tt}\def\UrlBreaks{\do\.\do\_}\def\UrlBigBreaks{}}
+% Repository names: typewriter, with line breaks allowed after '/' and '-'.
+\DeclareUrlCommand\repo{\urlstyle{tt}\def\UrlBreaks{\do\/\do\-}\def\UrlBigBreaks{}}
+
+\begin{document}
+
+\title[A second machine-checked proof of factoring in $2^{O(n/\sqrt{\log n})}$]{An independent machine-checked proof\\ of deterministic factoring in time $2^{O(n/\sqrt{\log n})}$,\\ via the new $\#$SAT algorithms}
+
+\author{Vaibhav Tulsyan}
+
+\date{November 2026}
+
+\subjclass[2020]{11Y05, 68Q25, 11Y16, 03B35}
+\keywords{Integer factorisation, deterministic algorithms, exact counting, Sch\"onhage--Strassen multiplication, Exponential Time Hypothesis, Lean~4, formal verification}
+
+\begin{abstract}
+Before 2026, every proven deterministic factoring bound had a fixed positive exponent, the best being
+$N^{1/5+o(1)}$. In October 2026 Rudich and Rousseau used the new $\#$SAT counting engines to prove in
+Lean that one Turing machine computes the least prime factor of an $n$-bit integer in time $2^{o(n)}$.
+They conjectured the rate $2^{O(n/\sqrt{\log n})}$ as a Lean proposition,
+\texttt{SqrtLogLogConjecture}. Shunia proved this rate on paper, conditional on two unrefereed
+preprints, and a public repository (\repo{1337isnot1337/integer-factoring}, 30~October 2026) proved
+it in Lean using Rudich and Rousseau's multiplication network. However, we know of only this one
+machine-checked proof. We present a second one, built independently along a different route. Our
+multiplication network is a two-dimensional Sch\"onhage--Strassen transform over $\mathbb{Z}/(2^J+1)$
+with power-of-two parameters and no twiddle factors. Its value is the number of divisors of $N$ with a
+given binary prefix, its shared bits total at most $2^{15}(n+2)$, and each of its $g$ nodes holds
+$O(n/g+n^{3/4})$ bits, so Anthropic's counting theorem evaluates it in $2^{O(n/\sqrt{\log n})}$ steps.
+We prove in Lean~4 (\texttt{minFac\_TM\_rate}; axioms \texttt{propext}, \texttt{Classical.choice},
+\texttt{Quot.sound}) that a finite-alphabet Mathlib Turing machine outputs $\mathrm{minFac}(N)$ within
+$\lfloor C\cdot2^{Cn/\sqrt{\log_2(n+2)}}\rfloor$ steps for every $N$. From this we derive Rudich and
+Rousseau's \texttt{SqrtLogLogConjecture}, in their definitions copied verbatim and with constant $2C$,
+and their headline theorem. We claim no priority for the rate or for a formal proof, and we have not
+rebuilt the other development. The constants are astronomically large, the machine uses exponential
+space, and the full factorisation is not formalised. The proof rests on Anthropic's Lean development
+of its claimed refutation of the Exponential Time Hypothesis, which is under review.
+\end{abstract}
+
+\maketitle
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+% =====================================================================
+
+Let $\minFac(N)$ be the least prime factor of $N$. Computing it deterministically is a classical
+problem, and before 2026 every proven deterministic bound had a fixed positive exponent:
+$N^{1/4+o(1)}$ by Pollard~\cite{Pol74} and Strassen~\cite{Str77}, $N^{2/9+o(1)}$ by
+Hittmeir~\cite{Hit21}, and $O(N^{1/5}\log^{16/5}N)$ by Harvey~\cite{Har21}, improved by a factor
+$(\log\log N)^{3/5}$ by Harvey and Hittmeir~\cite{HH22}. Randomised algorithms do far better; Lenstra
+and Pomerance prove the expected time $\exp((1+o(1))\sqrt{\log N\log\log N})$~\cite{LP92}.
+
+In October 2026 OpenAI~\cite{OpenAI26} and Anthropic~\cite{Anthropic26} (below \Oa{} and \A) each
+claimed a deterministic algorithm that counts the satisfying assignments of a $k$-CNF in
+subexponential time, refuting the Exponential Time Hypothesis. Both claims come with Lean~4
+developments and are still under review. Within days the counting engines were applied to factoring.
+The timeline, taken from the sources and their public records, is as follows.
+\begin{itemize}
+\item \emph{29 October.} Rudich and Rousseau~\cite{RR26} (below RR) published a Lean proof that one
+deterministic Turing machine computes $\minFac$ within $C_k2^{n/k}$ steps for every $k$, that is, in
+time $N^{o(1)}$. They state the rate $2^{O(n/\sqrt{\log n})}$ only as a conjecture, the Lean
+proposition \lean{SqrtLogLogConjecture}.
+\item \emph{30 October.} A written proof of that rate was merged into the public repository
+\repo{1337isnot1337/integer-factoring}~\cite{IF26} (pull request \#19). Its Lean formalisation
+(pull request \#20, merged the same day) proves RR's exact proposition, with endpoint
+\lean{IntegerFactoring.HalfAppendix.sqrtLogLog_factoring}. It composes RR's multiplication network with
+the clique evaluator of \A's Appendix~B. The same day, a reviewer for the Big O Speedrun leaderboard
+reported that a rebuild of the repository at commit \texttt{e91442d3} was accepted by the Lean kernel and
+by a second kernel, nanoda~\cite{BOS26}. The repository credits ``substantial OpenAI assistant
+support''. The fork \repo{orda-aska/integer-factoring} carries the same proof.
+\item \emph{31 October (published 2 November).} Shunia~\cite{Shu26} gave a one-page proof of the rate
+on paper, with polynomial space and the full factorisation. It composes OpenAI's Boolean
+tensor-contraction theorem~\cite[Thm.~D.1]{OpenAI26} with the multiplication network of Akshima
+et~al.~\cite{AK26}, and is conditional on these two unrefereed preprints.
+\end{itemize}
+However, we know of only one machine-checked proof of the rate, and its multiplication network is RR's.
+The developments involved are long and machine-generated: RR report about $35{,}000$ lines for their
+proof, and about $152{,}000$ for \A's. A second proof that shares as little as possible with the first
+is a cheap and useful check.
+
+\subsection{The prefix-count problem}
+We consider the \emph{prefix-count problem}: given $N<2^n$ and a binary word $\pi$ of length at most $n$,
+count the divisors of $N$ whose $n$-bit binary word starts with $\pi$. RR observed that $n$ prefix counts
+find $\minFac(N)$, one bit at a time. So the question is how cheaply one prefix count can be posed to a
+counting engine.
+
+\begin{example}[Running example]\label{ex:91}
+Take $N=91=7\cdot13$, so $n=7$. The divisors $1,7,13,91$ have the words $0000001$, $0000111$,
+$0001101$, $1011011$. Let $D(\pi)$ count the pairs $(p,q)$ with $pq=N$ whose factor $p$ has the prefix
+$\pi$, and let $\mathrm{cnt}'(\pi)=D(\pi)-[\pi\text{ is a prefix of }0000001]$, which removes the trivial
+divisor. The search keeps a prefix $\pi$, and extends it by $0$ if $\mathrm{cnt}'(\pi0)>0$ and by $1$
+otherwise:
+\[
+\begin{array}{l|ccccccc}
+\text{query } \pi0 & 0 & 00 & 000 & 0000 & 00000 & 000010 & 0000110\\\hline
+D(\pi0) & 3 & 3 & 3 & 2 & 1 & 0 & 0\\
+\mathrm{cnt}'(\pi0) & 2 & 2 & 2 & 1 & 0 & 0 & 0\\
+\text{new } \pi & 0 & 00 & 000 & 0000 & 00001 & 000011 & 0000111
+\end{array}
+\]
+The result is $0000111=7=\minFac(91)$. The fifth query shows why the correction is needed: the only
+divisor with prefix $00000$ is $1$.
+\end{example}
+
+\subsection{The naive encodings fail; the principle}
+At first, one might pose the count as a $\#$SAT instance: Tseitin's transformation of a multiplication
+circuit. However, no multiplication circuit of linear size is known (the best known have at least about
+$n\log n$ gates), and \A's clause bound $2^{O(m/\sqrt{\log m})}$ then gives only $2^{O(n\sqrt{\log n})}$, which is
+worse than brute force. \A's network model is more generous than clauses (\cref{sec:engine}): a node may
+hold many bits and check any polynomial-time predicate on them, and the engine charges roughly
+$2^{e\cdot U}$, where $U$ is the number of bits the nodes share and $e=O(1/\sqrt{\log n})$. A schoolbook
+multiplication network still fails, because spreading its $\ell^2$ partial products over $g$ nodes makes
+the nodes share $\Omega(n\sqrt g)$ bits (\cref{sec:why-fft}). Instead, we rely on a different principle:
+\emph{the engine charges for shared bits, not for work inside a node, so we want a multiplication
+network with a constant number of stages, each of which cuts only $O(n)$ bits.} A two-dimensional Fourier
+transform has this shape. Each stage is a family of independent row or column transforms of
+$\Theta(n^{1/4})$ words of $\Theta(n^{1/2})$ bits, and one node checks a whole transform.
+
+\subsection{What we prove}
+In this paper we build such a network, prove its value and its parameters in Lean, and compose it with
+\A's counting theorem through our own interface to \A's development~\cite{Tulsyan26}.
+
+\begin{theorem}[\lean{EthFollowup.Factoring.minFac_TM_rate}; machine-checked]\label{thm:main}
+There are a Turing machine $M$ in Mathlib's \lean{TM2} model, with finite alphabets on all stacks,
+and a constant $C\in\N$ with the following property. For every $N\in\N$, started on the binary word
+\lean{encodeNat}~$N$ of length $n$, the machine halts within
+\[
+  \Bigl\lfloor C\cdot 2^{\,C n/\sqrt{\log_2(n+2)}}\Bigr\rfloor
+\]
+steps with output \lean{encodeNat}~$(\minFac N)$.
+\end{theorem}
+
+\noindent Here $n$ is the bit length of $N$ (zero for $N=0$), and $\minFac(0)=2$, $\minFac(1)=1$, as in
+Mathlib. The two corollaries are RR's statements, proved in RR's own definitions (\cref{sec:statement}).
+
+\begin{corollary}[\lean{EthFollowup.Factoring.sqrtLogLog}; machine-checked]\label{cor:conj}
+RR's proposition \lean{RR.Factoring.SqrtLogLogConjecture} holds: some finite-alphabet
+\lean{FactoringMachine} factors every $N$ within
+$C'\cdot2^{\lfloor C'n/(\lfloor\sqrt{\lfloor\log_2 n\rfloor}\rfloor+1)\rfloor}$ steps, with $C'=2C$ for
+the $C$ of \cref{thm:main}.
+\end{corollary}
+
+\begin{corollary}[\lean{RR.Factoring.subexponentialRate}; machine-checked]\label{cor:rr}\leavevmode\\
+One finite-alphabet \lean{FactoringMachine} factors every $N$ within $C_k\cdot2^{\lfloor n/k\rfloor}$
+steps for every $k\ge1$, with $C_k=C\cdot2^{C\cdot 2^{C^2k^2}+1}$.
+\end{corollary}
+
+\noindent \Cref{cor:rr} is RR's headline theorem, which they already proved in Lean; we obtain it only as
+a consequence. As RR and Shunia note, running the machine again on $N/\minFac(N)$ gives the full
+factorisation within $n$ rounds, hence in time $2^{O(n/\sqrt{\log n})}$. We have not formalised that
+loop, so we state it informally only.
+
+\subsection{Contributions}
+Our contributions are:
+\begin{itemize}
+\item We present a second machine-checked proof of RR's \lean{SqrtLogLogConjecture}, in their
+definitions copied verbatim, that shares no multiplication-network code with the first and uses a
+different interface to \A's development (\cref{sec:statement,sec:formal,sec:related}).
+\item We construct an explicit parsimonious multiplication network, a two-dimensional
+Sch\"onhage--Strassen transform over $\Z/(2^J+1)$ with power-of-two parameters and no twiddle factors,
+and prove in Lean that its value is the number of pairs $(p,q)$ with $pq=N$ and a prescribed prefix of
+$p$, that its shared bits total at most $2^{15}(n+2)$, and that each of its $g$ nodes holds at most
+$2^{16}((n+2)/g+d(n))$ bits, with $d(n)=O(n^{3/4})$ (\cref{sec:network}).
+\item We do the exponent bookkeeping on \A's counted recursion: the level $K$ satisfies
+$K^{40}\le K_0^{40}(n+2)$, and we explain why the exponent must be $40$ and not the $30$ of our earlier
+work (\cref{sec:rate}).
+\item We list the definitions a reader must trust (\cref{sec:statement}) and the differences from the
+first formal proof (\cref{sec:related}).
+\end{itemize}
+The network is the textbook separable two-dimensional transform, and we do not claim it as new; what
+we add is its Lean proof and the parameter bounds that the engine needs.
+
+\subsection{Status of each claim}
+We separate four kinds of claim. \emph{Machine-checked in Lean}: \cref{thm:main,cor:conj,cor:rr}, as
+\lean{EthFollowup.Factoring.minFac_TM_rate}, \lean{EthFollowup.Factoring.sqrtLogLog} and
+\lean{RR.Factoring.subexponentialRate}, with the axioms \lean{propext}, \lean{Classical.choice} and
+\lean{Quot.sound} only, and every lemma of ours whose Lean name we give.
+\emph{Proved on paper only}: the full factorisation, and the explanations of
+\cref{sec:why-fft} (why schoolbook and clause encodings fail), which are not used by the proof.
+\emph{Assumed}: nothing beyond the three axioms;
+ \A's results enter as Lean theorems of its development,
+which the kernel checks with ours (\cref{sec:formal}). \emph{Checked numerically}: the running example
+and the parameter values of \cref{ex:params}, by a short exact-arithmetic computation that is not part of
+the proof. Although this note does not improve any bound, we hope that a second, independent proof, and
+a network short enough to check on paper, are useful to those reviewing the engines.
+
+\subsection*{Outline}
+\Cref{sec:engine} recalls \A's network model and counting theorem. \Cref{sec:search} gives the prefix
+search. \Cref{sec:network} builds the network and proves its value. \Cref{sec:rate} does the exponent
+arithmetic. \Cref{sec:statement,sec:formal} describe the statement and the Lean development.
+\Cref{sec:related,sec:limitations} discuss related work and limitations.
+
+% =====================================================================
+\section{The engine counts accepted labellings}\label{sec:engine}
+% =====================================================================
+
+In this section we recall the part of \A's network model that we use, and the one theorem of \A{} that
+we compose with. We use \A's network model in the form of its Lean development, at the commit pinned in our
+repository (\texttt{anthropics/formal-math}, folder \texttt{eth}, commit \texttt{16a5ce4}, Lean
+v4.33.1, Mathlib \texttt{0df444a}). We state only what we use.
+
+\begin{definition}[\A, Definition~2, abridged]\label{def:network}
+A \emph{network on $[g]$ with parameters $P,B,\tau$} has, for every node $a$, a finite set $S_a$ of
+settings encoded as bit strings of length at most $P$ and a weight $W_a\colon S_a\to\Z$; for every
+pair $\{a,b\}$ an interaction $\Psi_{a,b}$ that factors through $c_{a,b}$ shared bits; with
+$\sum_{b\ne a}c_{a,b}\le P$, all values below $2^B$ in absolute value, and every value computable with
+at most $\tau$ operations. Its value is
+$Z=\sum_{z}\prod_aW_a(z_a)\prod_{\{a,b\}}\Psi_{a,b}(z_a,z_b)$, and its \emph{total} is
+$U=\sum_{a\ne b}c_{a,b}$.
+\end{definition}
+
+We use the special case of a \emph{label system}: a set of items (our wires), each placed on a pair
+of nodes and carrying a label of $W$ bits; both nodes of the pair see the label, $\Psi$ is equality of
+the two copies, and $W_a$ is a $0/1$ table that reads the labels at $a$. Then the value is the number
+of labellings that every table accepts. In Lean this is the \lean{LabelSystem} of our earlier
+work~\cite{Tulsyan26} on \A's \lean{Net} format.
+
+\begin{importedtheorem}[\A, Lemma~8(i) and Theorem~A(b), with the pieces of Theorem~B]\label{imp:engine}
+Let $K\ge2$, $g=3K^8$, and let $K=K_\ell$ be a level of \A's schedule, with
+$e_\ell\le(3x_0+6)/\sqrt{\log_2K_\ell}$ for an absolute $x_0$. A network on $[g]$ with parameters
+$P,B,\tau$ and total $U$ can be evaluated within
+\begin{equation}\label{eq:engine}
+  \Bigl(K^g+2^{e_\ell K^2 L}\bigl(K(L+B')\bigr)^{C_0K^2}\cdot2^{2gP/K}\cdot\tau\Bigr)\cdot\bigl(g(P+B)\bigr)^{C_1}
+\end{equation}
+operations, where $L=\lceil(U+gP/K)/K^2\rceil$, $B'=\lceil2gP/K\rceil+g^2B$, and $C_0,C_1$ are absolute.
+\end{importedtheorem}
+
+\noindent In Lean, \eqref{eq:engine} is \lean{ExplicitCost.groupingExplicit} (Lemma~8, case~(i),
+which groups the $g$ nodes into $K$ groups by trying all $K^g$ groupings) together with the clique
+machine of \lean{CountedRoute.onTheCountedRecursion} (Theorem~A(b) on the pieces of Theorem~B).
+The procedure queries the tables $W_a$ and the factorisations of $\Psi$; we answer the queries with
+polynomial-time procedures, so no table is ever written out. \A's host lemma
+\lean{CountKSat.exists_tmW} turns the resulting step-by-step machine into a Mathlib Turing machine
+with a polynomial overhead $q(T+1)(|x|+S+1)^q$ in its time $T$ and state size $S$. We used the
+same route in~\cite{Tulsyan26} (module \lean{ExactHC.Theorem2}) and reuse its level selection.
+
+% =====================================================================
+\section{Prefix counts find the least prime factor}\label{sec:search}
+% =====================================================================
+
+In this section we show that $n$ prefix counts find $\minFac(N)$. This part is pure Mathlib (module \lean{Search}). Write $\mathrm{word}_n(d)$ for the big-endian
+$n$-bit word of $d$ and $\mathrm{val}(\pi)$ for the value of a word $\pi$.
+
+\begin{definition}\label{def:D}
+For $N,n'\ge n$ and a word $\pi$ of length $t\le n$, let
+\[
+  D(N,n',n,\pi)=\#\bigl\{(p,q)\in[0,2^{n'})^2: pq=N,\ \lfloor p/2^{n-t}\rfloor=\mathrm{val}(\pi)\bigr\},
+\]
+and $\mathrm{cnt}'(\pi)=D(N,n',n,\pi)-[\lfloor1/2^{n-t}\rfloor=\mathrm{val}(\pi)]$.
+\end{definition}
+
+\begin{lemma}[\lean{D_eq_card_divisors}, \lean{cnt'_eq}]\label{lem:D}
+If $1\le N<2^n$ and $n\le n'$, then $D(N,n',n,\pi)$ is the number of divisors $d\mid N$ whose word
+$\mathrm{word}_n(d)$ has prefix $\pi$, and $\mathrm{cnt}'(\pi)$ is the number of such divisors
+$d\ne1$.
+\end{lemma}
+
+\begin{proof}
+A pair with $pq=N\ge1$ has $p,q\le N<2^n\le2^{n'}$, so the box imposes nothing, and $p$ determines
+$q$. The prefix condition is $\lfloor p/2^{n-t}\rfloor=\mathrm{val}(\pi)$ (\lean{prefix_word_iff}).
+\end{proof}
+
+\begin{proposition}[\lean{searchWith_eq_minFac}]\label{prop:search}
+Let $2\le N<2^n$, and let the oracle $c$ agree in positivity with $\mathrm{cnt}'$ on every query
+$\pi0$ with $|\pi|<n$. Starting from the empty word and replacing $\pi$ by $\pi0$ if
+$c(\pi0)>0$ and by $\pi1$ otherwise, after $n$ rounds the word has value $\minFac(N)$.
+\end{proposition}
+
+\begin{proof}
+The invariant is $\mathrm{val}(\pi)=\lfloor\minFac(N)/2^{n-|\pi|}\rfloor$. If $\mathrm{cnt}'(\pi0)>0$,
+some divisor $d\ne1$ has prefix $\pi0$; since $d\ge\minFac(N)$ and both have prefix $\pi$, the next bit
+of $\minFac(N)$ is $0$. Otherwise no divisor $d\ne 1$ has prefix $\pi0$, but $\minFac(N)$ has prefix
+$\pi$, so its next bit is $1$. Numeric order is lexicographic order on words of equal length
+(\lean{ofWord_lt_iff_lex}).
+\end{proof}
+
+\noindent The machine handles $N\in\{0,1\}$ directly. For $N\ge2$, each round asks one count
+$D(N,n',n,\pi0)$, which the network of \cref{sec:network} computes, and subtracts the correction bit,
+which is $1$ exactly when $\pi$ is all zeros and $|\pi|+1<n$ (\lean{corrB} in \lean{Rate}).
+
+% =====================================================================
+\section{A two-dimensional transform network counts the divisors}\label{sec:network}
+% =====================================================================
+
+In this section we fix the parameters, describe the stages of the transform, turn them into wires and
+checks, prove that the accepted labellings correspond to the counted pairs, and group the vertices into
+$g$ clusters. All quantities are functions of $n$. Put $\nu=\lfloor\log_2(n+2)\rfloor$ and
+\begin{gather*}
+  m=\lfloor\nu/4\rfloor+1,\qquad L=2^m,\qquad \ell_1=2^{m-1},\qquad \ell=\ell_1^2,\qquad
+  b=\lfloor n/\ell\rfloor+1,\\
+  J=2^{\lfloor\nu/2\rfloor+7},\qquad M=2^J+1,\qquad \omega=2^{2J/L}\in\Z/M,\qquad W=J+2 .
+\end{gather*}
+So $L=2\ell_1$, all parameters are powers of two except $b$ and $W$, and $n<n':=\ell b$. One checks
+(module \lean{Params}) that $L\mid2J$, $2^{2J}\equiv1$, $\omega^{L/2}=2^J=-1$, $L^{-1}=2^{2J-m}$ in $\Z/M$,
+and
+\begin{equation}\label{eq:noWrap}
+  2b+2m+1\le J,\qquad \ell\cdot2^{2b}\le 2^J .
+\end{equation}
+The second inequality says that a coefficient of the product of two limb arrays, a sum of at most
+$\ell$ products of $b$-bit limbs, is less than $M$, so its residue modulo $M$ is its value.
+
+\begin{example}[Parameters]\label{ex:params}
+For $n=2^{20}$: $\nu=20$, $m=6$, $L=64$, $\ell_1=32$, $\ell=1024$, $b=1025$, $J=2^{17}$. There are
+$28{,}735$ wires of $W=131{,}074$ bits, about $3600\,n$ bits in all. A transform vertex reads $2LW\approx2^{24}$
+bits, which is more than $n$: at this size the network is far from useful, and $n^{3/4}$ beats $n$
+only for much larger $n$. For the running example $n=7$, the parameters degenerate to one limb.
+\end{example}
+
+\subsection{Stages}
+Write $p=\sum_{i_1<\ell_1,\,i_2<\ell_1}p_{i_1i_2}2^{b(i_1+\ell_1i_2)}$ with $b$-bit limbs, and the same for $q$.
+This is a bivariate Kronecker substitution: $p$ is the value at $X=2^b$, $Y=2^{b\ell_1}$ of a polynomial
+of degree $<\ell_1$ in each variable. The product $pq$ is the value at the same point of the
+two-dimensional acyclic convolution $c_{a,u}=\sum_{i_1+j_1=a,\ i_2+j_2=u}p_{i_1i_2}q_{j_1j_2}$, with
+$a,u<L$. Because $L=2\ell_1$, the acyclic convolution equals the cyclic one of size $L\times L$, which we
+compute with a separable two-dimensional discrete Fourier transform over $\Z/M$:
+\begin{enumerate}[label=(\roman*)]
+\item \emph{row transforms}: $A_{s,i_2}=\sum_{i_1}p_{i_1i_2}\,\omega^{i_1s}$ for $s<L$ (same for $q$);
+\item \emph{column transforms}: $\hat p_{s,t}=\sum_{i_2}A_{s,i_2}\,\omega^{i_2t}$ for $t<L$;
+\item \emph{pointwise products}: $\hat c_{s,t}=\hat p_{s,t}\,\hat q_{s,t}$;
+\item \emph{inverse columns} and \emph{inverse rows}, each with the factor $L^{-1}=2^{2J-m}$ and the
+exponents $\omega^{(L-u)t}$, giving $c_{a,u}$ by the two-dimensional convolution theorem
+(\lean{idft2_dft2_mul});
+\item \emph{carries}: position $k=a+\ell_1u$ collects at most two coefficients ($a<2\ell_1$), their sum
+$\gamma_k$, and the checks $N_k\le\gamma_k+r_k$, $(\gamma_k+r_k-N_k)\equiv0\pmod{2^b}$ and
+$r_{k+1}=(\gamma_k+r_k-N_k)/2^b$, with $r_0=r_{\mathrm{last}}=0$ and $N_k$ the $k$-th limb of $N$.
+\end{enumerate}
+There are no twiddle factors. In the one-dimensional ``four-step'' version of the transform, as in
+Akshima et~al.~\cite{AK26} and as RR describe theirs, the stages are coupled by twiddle factors; the
+two-dimensional form avoids them because the transform of a bivariate polynomial is separable.
+Every power $\omega^e$ is $2^{(2J/L)(e\bmod L)}$, a shift. The carry chain is correct by
+\lean{chain_iff}: a valid chain exists if and only if $\sum_k\gamma_k2^{bk}=N$, and its carries are then
+unique (\lean{chain_unique}).
+
+\subsection{Wires, vertices and checks}
+Every intermediate value is a \emph{wire} with a label in $[0,2^W)$: the limbs of $p$ and $q$ ($\ell$
+each), the row outputs ($2L\ell_1$), the column outputs, products, inverse columns and coefficients
+($L^2$ each, five families), and the carries. Every vertex is a check on the wires it touches:
+\begin{itemize}
+\item a \emph{cell} for each limb: the limb is below $2^b$ and, for $p$, its bits match the
+\emph{pattern} of the prefix (bits of $p$ above position $n-|\pi|$ fixed to $\pi$, bits at positions
+$\ge n$ fixed to $0$; \lean{patOK_iff});
+\item a \emph{row vertex} for each $i_2$ and a \emph{column vertex} for each $s$: all its outputs are the
+canonical residues of the transform of its inputs; likewise for the inverse transforms;
+\item a \emph{product vertex} for each $(s,t)$, and a \emph{carry vertex} for each position $k$.
+\end{itemize}
+A row or column vertex reads at most $2L$ wires, so at most $2LW\le d(n):=2^{\lfloor3\nu/4\rfloor+11}$
+bits; $d(n)^4\le2^{44}(n+2)^3$, so $d(n)=O(n^{3/4})$. There are at most $30\ell$ wires, carrying
+at most $2^{14}(n+2)$ bits in total (\lean{numWires_mul_W_le}).
+
+\begin{theorem}[Parsimony; \lean{mulNet_card}, \lean{mulNet_value}]\label{thm:value}
+Let $N<2^n$ and $|\pi|\le n$. The labellings of the wires that pass every check are in bijection with
+the pairs $(p,q)\in[0,2^{n'})^2$ with $pq=N$ and $\lfloor p/2^{n-|\pi|}\rfloor=\mathrm{val}(\pi)$. So the
+network's value is $D(N,n',n,\pi)$.
+\end{theorem}
+
+\begin{proof}
+\emph{Forward} (\lean{run_all_iff}). Given $(p,q)$, let $\mathrm{run}(p,q)$ label every wire with its
+canonical value. All transform and product checks pass by definition. By the convolution theorem,
+\eqref{eq:noWrap} and the Kronecker evaluation (\lean{pipeline_eq_mul}), the coefficients sum to
+$pq$, so the carry checks pass if and only if $pq=N$ (\lean{carry_checks_iff}); the cells pass if and
+only if $p$ matches the pattern.
+\emph{Backward} (\lean{eq_run}). If a labelling passes every check, read $p,q$ off the limb wires.
+Each stage's check determines its outputs from its inputs, so by induction over the stages every wire
+carries its canonical value; the carry labels are forced by \lean{chain_unique}. So the labelling is
+$\mathrm{run}(p,q)$. The two maps are inverse, which gives the bijection.
+\end{proof}
+
+\noindent In the running example ($N=91$, $\pi0=00000$), the only accepted labelling is
+$\mathrm{run}(1,91)$, and the value is $1$, as in the table of \cref{ex:91}.
+
+\subsection{Clusters}
+To obtain a network on $[g]$, we split the vertices of each stage into $g$ contiguous blocks of nearly
+equal size, and let cluster $a$ consist of the $a$-th block of every stage. A wire whose two end
+vertices lie in clusters $a\ne c$ sits on the pair $\{a,c\}$; a wire with both ends in cluster $a$ sits
+on $\{a,a+1\}$ (or $\{0,a\}$ for the last cluster), which costs nothing asymptotically. The table of node $a$ is $1$ if
+every check of its vertices passes and $0$ otherwise, so $B=1$.
+
+\begin{proposition}[\lean{mulSys_U_le}, \lean{card_inc_mul_W_le}, \lean{mulSys_is}]\label{prop:params}
+For $g\ge2$, the network has total $U\le2^{15}(n+2)$, and every node holds at most
+$P(n,g)=2^{16}\bigl((n+2)/g+d(n)\bigr)$ bits; it is a network in the sense of \cref{def:network} with
+parameters $P(n,g)$ and $B=1$.
+\end{proposition}
+
+\begin{proof}[Sketch]
+$U$ is at most twice the number of wire bits. A cluster holds at most $|{\rm stage}|/g+1$ vertices of each
+of the ten vertex kinds, each of degree at most the stage's degree, and every wire at $a$ has an end in
+cluster $a$, $a-1$ or $g-1$. Summing gives $g\cdot\#\{\text{wires at }a\}\le3(64\ell+15gL)$, and
+multiplying by $W$ gives the bound.
+\end{proof}
+
+\subsection{Why schoolbook multiplication does not fit}\label{sec:why-fft}
+This subsection is an explanation on paper; the proof does not use it.
+Each stage of the transform pipeline cuts $\Theta(n)$ bits, and there are a constant number of
+stages, so any split into clusters shares $O(n)$ bits. This is what fails for schoolbook
+multiplication. If $g$ balanced clusters share the $\ell^2$ partial products $p_iq_j$, a cluster with
+$\ell^2/g$ of them needs at least $2\ell/\sqrt g$ limbs of the inputs, by the rectangle inequality, so
+the clusters together receive $\Omega(n\sqrt g)$ bits. With $g=3K^8$ a power of $n$ and
+$e=\Theta(1/\sqrt{\log n})$, the term $eU$ is then $n^{1+\Omega(1)}$. (Karatsuba-type recursions and
+residue number systems have the same problem, for the same reason.) A one-dimensional FFT with
+$\log n$ butterfly stages has a linear cut per stage but $\log n$ stages. The two-stage transform
+works because a node may check a whole row transform of $L=\Theta(n^{1/4})$ words of
+$\Theta(n^{1/2})$ bits at once.
+
+% =====================================================================
+\section{\texorpdfstring{The exponent is $O(n/\sqrt{\log n})$ at level $K^{40}\lesssim n$}{The exponent at level K to the 40 at most n}}\label{sec:rate}
+% =====================================================================
+
+In this section we choose the level of the engine and add up the terms of \eqref{eq:engine}. The machine (\lean{FR.facM} in \lean{Rate}) reads $n$, chooses a level $K=K_\ell$, sets $g=3K^8$, and
+runs the $n$ rounds of \cref{prop:search}; each round builds the context of the network for
+$(g,N,\pi0)$ in polynomial time and runs the procedure of \cref{imp:engine} on it.
+
+\paragraph{The level.} Let $K=K_\ell$ be the largest level with $K_\ell\le\max(\lfloor n^{1/40}\rfloor,K_0)$
+(\lean{kN40}). By \A's formula for $\log K_\ell$ (Theorem~A(a)), $K_{\ell+1}\le K_\ell^{10}$, so
+(\lean{kfacts40})
+\begin{equation}\label{eq:level}
+  2\le K,\qquad K^{40}\le K_0^{40}(n+2),\qquad n+2\le K^{40C_0+1}.
+\end{equation}
+The last inequality gives $\log_2K\ge\log_2(n+2)/(40C_0+1)$, so $e_\ell=O(1/\sqrt{\log n})$.
+
+\paragraph{Why $40$.} The node bound forces $gP=O(n)$, and $P$ is at least the largest vertex degree,
+$d(n)=\Theta(n^{3/4})$. So we need $g\,d(n)=O(n)$, that is $K^8=O(n^{1/4})$, or $K=O(n^{1/32})$. Our
+earlier work~\cite{Tulsyan26} used $K^{30}\le n$, which gives $g\,d(n)\approx n^{8/30+3/4}>n$. With
+$K^{40}\le K_0^{40}(n+2)$ we get $g\,d(n)\le c(n+2)^{1/5+3/4}=O(n)$ (\lean{Kdg_le}).
+
+\paragraph{The exponent.} By \cref{prop:params}, $U\le2^{15}(n+2)$ and $gP\le2^{16}((n+2)+g\,d(n))=O(n)$.
+The polynomial-time procedures give $\tau$ and $S$ polynomial in $n+g$ (the package bounds of
+\cref{sec:formal}). In \eqref{eq:engine}, $K^2L\le U+gP/K+K^2$, so the logarithm of the time of one round is at
+most
+\[
+  g\log K\;+\;e_\ell\Bigl(U+\frac{gP}{K}+K^2\Bigr)\;+\;C_0K^2\log\bigl(K(L+B')\bigr)\;+\;\frac{2gP}{K}\;+\;O(\log n).
+\]
+The second term is $O(n/\sqrt{\log n})$. The others are smaller: $g\log K=O(n^{1/5}\log n)$,
+$K^2\log(\cdots)=O(n^{1/20}\log n)$, and $gP/K=O(n/K)=O(n^{1-1/(40C_0+1)})$. Multiplying by $n$ rounds
+and by the polynomial overhead of \lean{CountKSat.exists_tmW} changes only the constant. In Lean
+this is \lean{FR.round_bound} (on top of the exponent calculus \lean{T2.branch_bound} of~\cite{Tulsyan26})
+and \lean{FR.facM_runs}, and the result is \lean{minFac_TM_of_pkg}:
+\cref{thm:main} for any \emph{package} (\cref{sec:formal}).
+
+\paragraph{From $\sqrt{\log_2(n+2)}$ to RR's denominator.} RR write the rate as
+$C'\cdot2^{\lfloor C'n/(s+1)\rfloor}$ with $s=\lfloor\sqrt{\lfloor\log_2n\rfloor}\rfloor$. Since
+$s+1\le2\sqrt{\log_2(n+2)}$ (\lean{natSqrt_log_add_one_le}), we have
+$Cn/\sqrt{\log_2(n+2)}\le\lfloor 2Cn/(s+1)\rfloor+1$, and so $\lfloor C2^{Cn/\sqrt{\log_2(n+2)}}\rfloor\le
+2C\cdot2^{\lfloor2Cn/(s+1)\rfloor}$ (\lean{rateT_le_sqrtLogLog}). This is why the constant in
+\cref{cor:conj} is $2C$. For \cref{cor:rr}, if $2^{C^2k^2}\le n+2$ then $C/\sqrt{\log_2(n+2)}\le1/k$;
+otherwise the exponent is at most $C\cdot2^{C^2k^2}$ (\lean{rateT_le_subexp}).
+
+% =====================================================================
+\section{What a reader must trust: RR's definitions}\label{sec:statement}
+% =====================================================================
+
+A reader who wants to trust \cref{cor:conj} needs to check the following definitions, and nothing
+else of ours. They are RR's file \texttt{Challenge.lean} at commit
+\texttt{5f5ff8f3823fa8fef8ee02a6f29049db3c76a0ce} of their repository~\cite{RRrepo} (the commit
+registered as Palomar entry \texttt{PALOMAR-2026-10-28-000015}, version~1), file SHA-256
+\texttt{c3adce9c\ldots ae12b}. We downloaded the file at that commit and at commit \texttt{c91cc3f},
+the one pinned by~\cite{IF26}; the two copies are byte-identical. Our module \lean{Statement} copies
+the definitions verbatim inside \texttt{namespace RR}, with two syntactic changes: the header uses
+\lean{import} instead of \texttt{public import} (our file is not a Lean \lean{module}), and the line
+\texttt{@[expose] public section} is dropped. We render the Unicode symbols as mathematics:
+\begin{alltt}
+def factor : \(\mathbb{N}\to\mathbb{N}\) := Nat.minFac
+abbrev FactoringMachine := TM2ComputableInTime encodeNat encodeNat factor
+def FactoringMachine.FiniteAlphabets (M : FactoringMachine) : Prop :=
+  \(\forall\) k, Finite (M.tm.\(\Gamma\) k)
+def FactorsWithin (M : FactoringMachine) (T : \(\mathbb{N}\to\mathbb{N}\)) : Prop :=
+  M.FiniteAlphabets \(\wedge\) \(\forall\) n, M.time n \(\le\) T n
+def FactoringInTime (T : \(\mathbb{N}\to\mathbb{N}\)) : Prop :=
+  \(\exists\) M : FactoringMachine, FactorsWithin M T
+def SqrtLogLogConjecture : Prop :=
+  \(\exists\) C : \(\mathbb{N}\), FactoringInTime
+    (fun n => C * 2 ^ (C * n / (Nat.sqrt (Nat.log 2 n) + 1)))
+\end{alltt}
+RR's headline statement (their \lean{subexponentialRate}) is
+\begin{alltt}
+\(\exists\) M : FactoringMachine, \(\forall\) k : \(\mathbb{N}\), 1 \(\le\) k \(\to\) \(\exists\) C : \(\mathbb{N}\),
+  FactorsWithin M (fun n => C * 2 ^ (n / k))
+\end{alltt}
+In \texttt{Challenge.lean} its proof is a placeholder (RR prove it in a separate file); we do not copy that
+declaration, but state and prove the same proposition under the same name. Behind these definitions
+are Mathlib's \lean{Turing.TM2ComputableInTime} (a \lean{FinTM2} machine with input and output
+encodings and a time function), \lean{Computability.encodeNat} (little-endian binary, the empty word
+for $0$), \lean{Nat.minFac}, \lean{Nat.sqrt} and \lean{Nat.log}, all from Mathlib \texttt{0df444a}. Division
+is natural-number division. Mathlib's \lean{TM2ComputableInTime} asks only for a finite input alphabet;
+\lean{FiniteAlphabets} asks it of every stack.
+
+\Cref{thm:main} is stated with \A's \lean{GraphProblems.Outputs}~$M\,x\,y\,T$, which says that $M$
+started on $x$ halts within $T$ steps with output $y$ (a \lean{TM2OutputsInTime} of Mathlib). The adaptor
+\lean{toFactoringMachine} turns such a machine and time function into one of RR's
+\lean{FactoringMachine}s, with the same machine and the same time function (both by \lean{rfl}), and
+\lean{outputs_of_factoringMachine} is the converse. So \cref{thm:main} and the statement ``some
+\lean{FactoringMachine} has time function $n\mapsto\lfloor C2^{Cn/\sqrt{\log_2(n+2)}}\rfloor$'' are the same.
+
+% =====================================================================
+\section{The Lean development}\label{sec:formal}
+% =====================================================================
+
+In this section we list the modules, describe the interface between the network and the machine, and
+state the trusted base. The development is in the public repository~\cite{TulsyanRepo26}, directories
+\texttt{lean/EthFollowup/Factoring} (pure Mathlib; the files compile with Lean v4.33.1 and v4.34.1)
+and \texttt{lean-bridge-anthropic/bridge/EthFollowup/Factoring} (on top of \A's development).
+\Cref{tab:modules} lists the modules.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}p{0.30\textwidth}p{0.55\textwidth}r@{}}
+\toprule
+module & content & lines\\
+\midrule
+\lean{FermatRing} & orthogonality of $\omega$ with $\omega^{2^m}=-1$; the ring $\Z/(2^J+1)$ & 198\\
+\lean{DFT} & 1D/2D transforms, inversion, cyclic convolution theorems & 177\\
+\lean{Kronecker} & limb evaluation, coefficient bounds, value recovery & 166\\
+\lean{Carry} & carry chains: existence iff sum, uniqueness & 161\\
+\lean{Pipeline} & the $\N$-level pipeline computes the product & 164\\
+\lean{Search} & prefix search, $D$, $\mathrm{cnt}'$, $\minFac$ & 411\\
+\midrule
+\lean{Params} & parameters, wires, vertices, checks, clusters, the package shape & 1374\\
+\lean{FermatBridge} & \lean{pipeline_eq_mul}, \lean{carry_checks_iff} & 114\\
+\lean{MulNetDefs}, \lean{MulNetParsimony}, \lean{MulNetCount}, \lean{MulNet} & the label system, parsimony, $U$ and $P$ & 731\\
+\lean{MulProcs} & procedures, context, layout, tables & 730\\
+\lean{MulCtxPoly} & polynomial time of context and tables & 441\\
+\lean{MulPackage} & the reader; \lean{mulPackage_nonempty} & 352\\
+\lean{Level40} & the level with exponent $40$ & 154\\
+\lean{Rate} & the machine, round bound, \lean{minFac_TM_of_pkg} & 691\\
+\lean{Statement} & RR's definitions verbatim; the corollaries from the package & 284\\
+\lean{Final} & the three final theorems & 38\\
+\midrule
+total & & 6186\\
+\bottomrule
+\end{tabular}
+\caption{The modules, with line counts (\texttt{wc -l}). The first six are pure Mathlib. The
+development also reuses the bridge modules \texttt{LabelNetwork}, \texttt{LabelProcs},
+\texttt{VertexBalanced}, \texttt{SearchMachine} and \texttt{Theorem2} of~\cite{Tulsyan26}
+(3693 lines), unchanged.}\label{tab:modules}
+\end{table}
+
+\paragraph{The package.} The interface between the network and the machine is a structure
+\lean{MulPackage}~$c_0$ (in \lean{Params}): a context type, one set of procedures, a reader that gets $g$ in
+unary together with the input word and the prefix, the network for every $g\ge2$, and the bounds
+value $=D$, $U\le c_0(n+2)$, $P\le c_0((n+2)/g+d(n))$, and $B,\tau,S$ at most $q(n+g+2)^q$ for one $q$.
+\lean{minFac_TM_of_pkg} proves \cref{thm:main} from the proposition ``there is $c_0$ with \texttt{Nonempty (MulPackage c0)}'', and
+\lean{MulPackage} proves this with $c_0=2^{16}$ (\lean{mulPackage_nonempty}). One point needed care:
+the labels are $W$-bit words with $W\approx2^7\sqrt n$, so the list of all code words that our earlier
+label procedures kept in the context has $2^W$ entries; since every $W$-bit word is a code word, the
+membership test is replaced by a length test (\lean{labelProcsW} in \lean{MulProcs}).
+
+\paragraph{Trusted base and axioms.} The theorems depend only on \lean{propext}, \lean{Classical.choice}
+and \lean{Quot.sound}.
+A fresh \lean{leanchecker} replay of the dependency closure of \lean{EthFollowup.Factoring.Final}, the module holding the three final theorems,
+has passed.
+What must be trusted is the Lean kernel, the Mathlib definitions named in \cref{sec:statement}, and RR's
+definitions. \A's development, Mathlib's proofs and our modules are checked by the kernel; they are
+part of the checked closure, not of the trusted base. The proof does not import RR's development, only
+their statement.
+
+\paragraph{Constants.} The proved bounds are $\ell W\le2^8(n+2)$ and $L^2W\le2^{10}(n+2)$; the degree bound
+is proved per stage (\lean{degSt}); the constant in \cref{cor:conj} is $2C$. None of the constants is
+optimised.
+
+% =====================================================================
+\section{Related work}\label{sec:related}
+% =====================================================================
+
+We organise related work by idea: deterministic factoring bounds, the counting engines applied to
+factoring, fast multiplication as a network, and formal proofs.
+
+\paragraph{Deterministic factoring.} The classical deterministic bounds are those of
+Pollard~\cite{Pol74} and Strassen~\cite{Str77} ($N^{1/4+o(1)}$), Hittmeir~\cite{Hit21}
+($N^{2/9+o(1)}$), Harvey~\cite{Har21} ($O(N^{1/5}\log^{16/5}N)$) and Harvey and
+Hittmeir~\cite{HH22}, who gain a factor $(\log\log N)^{3/5}$. Lenstra and Pomerance~\cite{LP92} give
+the rigorous randomised bound. These are concrete algorithms with modest constants. In contrast, our
+bound beats every fixed exponent only asymptotically, beats none of the randomised or heuristic methods,
+and rests on the counting engine of \A.
+
+\paragraph{Counting engines applied to factoring.} RR~\cite{RR26} introduced the reduction we use
+(prefix search by divisor counting) and the statement we prove; their own Lean proof gives $N^{o(1)}$
+with no rate. Shunia~\cite{Shu26} proves the rate on paper, with polynomial space and the full
+factorisation, conditional on OpenAI's Theorem~D.1 and on Akshima et~al.'s Theorem~3. Closest to our
+work is the Lean proof of~\cite{IF26}. It proves the same proposition in the same definitions, on the
+same commit of \A's development. As far as we can tell from its written proof and documentation, it
+differs from ours in two places. First, its multiplication network is RR's, taken from RR's development
+(RR's \lean{mulNet_value}, at RR's commit \texttt{c91cc3f}). Ours is the network of \cref{sec:network},
+built and proved separately, so the two proofs share no multiplication-network code. Second, it runs
+\A's Appendix~B clique evaluator (\lean{AppRunningTime.thmRunningTime}) on explicitly written clique
+tables, with a top grouping found by search and an explicitly written unary pad of length $2^q$ that pays
+for the evaluator's running time. Ours runs Lemma~8's grouping procedure with the clique machine of the
+counted recursion, answers table queries with polynomial-time procedures, and writes neither tables nor
+a pad. We do not claim that either difference makes our proof stronger. Both proofs have the same audit
+surface: RR's definitions, Mathlib and the kernel. The closure of~\cite{IF26} includes RR's proof
+development and ours does not. Theirs was checked by a second kernel (nanoda) in the reviewer's rebuild,
+and ours only by Lean's. In contrast, we give a second machine-checked proof, with its own
+network written out in full in this note.
+
+\paragraph{Fast multiplication as a network.} The transform over $\Z/(2^J+1)$, with $\omega$ a power of
+$2$ so that multiplications by $\omega$ are shifts, is Sch\"onhage and Strassen's~\cite{SS71}. Splitting
+a transform into smaller ones goes back to Cooley and Tukey~\cite{CT65}. Akshima et~al.~\cite{AK26}
+observed that one level of this transform, with large nodes and a four-step split, gives a network with
+$O(n)$ edges and degree $O(n^{3/4})$; RR's network is also a transform modulo a Fermat number split into
+two layers, followed by carries. In contrast, our network is two-dimensional (a bivariate Kronecker
+substitution), so its two layers are independent row and column transforms with no twiddle factors, and
+all of its parameters are powers of two.
+
+\paragraph{Formal proofs on the engines.} RR and~\cite{IF26} build on the engines in Lean, as do our
+earlier notes~\cite{Tulsyan26}, whose interface to \A's development (the label systems and the level
+selection of \lean{ExactHC.Theorem2}) we reuse. We use Lean~4~\cite{Lean4} and Mathlib~\cite{Mathlib20}.
+In contrast to our earlier notes, whose statements are in our own definitions, the statement here is a
+proposition stated by others before our proof existed.
+
+% =====================================================================
+\section{Limitations}\label{sec:limitations}
+% =====================================================================
+
+\begin{itemize}
+\item \emph{The result stands or falls with \A's development.} The proof rests on \A's Lean development
+of its claimed refutation of the Exponential Time Hypothesis, and the labs' claims are under review.
+Lean checks that development as part of our proof, and our statement uses only Mathlib and RR's
+definitions, so we do not need \A's formal statements to say what its printed theorems say. We do need
+the development, built from source at the pinned commit, to be a sound Lean development, and the
+toolchain to be sound.
+\item \emph{Nothing here improves a bound.} The rate is Shunia's, and the first machine-checked proof is
+that of~\cite{IF26}. Our contribution is a second, independent proof and the explicit network.
+\item \emph{The algorithm is galactic.} \A's levels start at $K_0=2^{x_0}$ with $x_0\ge18$, the level needs
+$K^{40}\lesssim n$, and the vertex degree $d(n)$ exceeds $n$ until $n$ is very large
+(\cref{ex:params}). The algorithm is of no practical use.
+\item \emph{The machine uses exponential space.} Shunia's route gives polynomial space, conditionally.
+\item \emph{The full factorisation is not formalised.} It is stated informally only.
+\item \emph{No human has checked the work.} The Lean code and this text were written with AI assistance.
+No human expert has yet checked that \cref{sec:statement} lists everything a reader must trust, though
+the list is short. We have not rebuilt the development of~\cite{IF26}.
+\end{itemize}
+
+\section*{Acknowledgements}
+This work was done with AI assistance (Claude Code, Anthropic): the construction, the Lean
+development, the literature and citation checks and the text were produced in sessions with Claude
+Code. The Lean theorems are checked by the Lean kernel; everything else awaits human expert review.
+Responsibility for any errors rests with the author. This note continues the project
+of~\cite{Tulsyan26}.
+
+\begin{thebibliography}{99}
+
+\bibitem{AK26}
+Akshima, R.~Bacho, Y.-H.~Huang, E.~Kiltz, A.~Nishaburi, S.~Nooripoor, N.~Tittelbach, and E.~Wiedijk,
+\emph{A subexponential time algorithm for elliptic curve discrete logarithm}, preprint, version~0.2,
+29~October 2026, \url{https://github.com/bochum-crypto/subexponential-ecdl}.
+
+\bibitem{Anthropic26}
+Claude (Anthropic), \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, preprint dated 26~October 2026.
+Paper and Lean formalisation in the repository \url{https://github.com/anthropics/formal-math}, folder
+\texttt{eth}; we use commit \texttt{16a5ce41304fcdaea4e0be7c132e1c361dc26da5}.
+
+\bibitem{BOS26}
+GitHub user nmamano, writing for the Big O Speedrun reviewers, \emph{Big O Speedrun: alpha $=1/2$ listed as Claimed;
+a lake-packaged commit for a Lean rerun}, review comment on issue \#28 of~\cite{IF26}, 30~October 2026,
+\url{https://github.com/1337isnot1337/integer-factoring/issues/28}.
+
+\bibitem{CT65}
+J.~W.~Cooley and J.~W.~Tukey, \emph{An algorithm for the machine calculation of complex Fourier series},
+Math. Comp. \textbf{19} (1965), 297--301.
+
+\bibitem{Har21}
+D.~Harvey, \emph{An exponent one-fifth algorithm for deterministic integer factorisation}, Math. Comp.
+\textbf{90} (2021), no.~332, 2937--2950.
+
+\bibitem{HH22}
+D.~Harvey and M.~Hittmeir, \emph{A log-log speedup for exponent one-fifth deterministic integer
+factorisation}, Math. Comp. \textbf{91} (2022), no.~335, 1367--1379.
+
+\bibitem{Hit21}
+M.~Hittmeir, \emph{A time-space tradeoff for {L}ehman's deterministic integer factorization method},
+Math. Comp. \textbf{90} (2021), no.~330, 1999--2010.
+
+\bibitem{IF26}
+1337isnot1337 (GitHub user) and contributors, \emph{integer-factoring: deterministic integer factoring
+bounds}, public repository \url{https://github.com/1337isnot1337/integer-factoring}. Written proof
+\texttt{research/half-rate-factoring.md} (pull request \#19, merged 30~October 2026); Lean formalisation in
+\texttt{formal-appendix/} (pull request \#20, merged 30~October 2026), endpoint
+\texttt{IntegerFactoring.HalfAppendix.sqrtLogLog\_factoring}. Fork:
+\url{https://github.com/orda-aska/integer-factoring}.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The {L}ean 4 theorem prover and programming language}, Automated
+Deduction -- CADE 28, Lecture Notes in Comput. Sci., vol. 12699, Springer, 2021, pp.~625--635.
+
+\bibitem{LP92}
+H.~W.~Lenstra, Jr. and C.~Pomerance, \emph{A rigorous time bound for factoring integers}, J. Amer. Math.
+Soc. \textbf{5} (1992), no.~3, 483--516.
+
+\bibitem{Mathlib20}
+The mathlib Community, \emph{The {L}ean mathematical library}, Proc. 9th ACM SIGPLAN International
+Conference on Certified Programs and Proofs (CPP 2020), 2020, pp.~367--381.
+
+\bibitem{OpenAI26}
+OpenAI, \emph{The {E}xponential {T}ime {H}ypothesis is false}, preprint dated 17~October 2026, revised
+25~October 2026. Paper and Lean formalisation in the repository \url{https://github.com/openai/math}.
+
+\bibitem{Pol74}
+J.~M.~Pollard, \emph{Theorems on factorization and primality testing}, Proc. Cambridge Philos. Soc.
+\textbf{76} (1974), no.~3, 521--528.
+
+\bibitem{RR26}
+I.~Rudich and L.-M.~Rousseau, \emph{Deterministic factoring in time $N^{o(1)}$}, Hexagon preprint
+hexagon:2610.00600v1, published 29~October 2026, \url{https://hexagonmath.org/2610.00600v1}.
+
+\bibitem{RRrepo}
+I.~Rudich and L.-M.~Rousseau, \emph{SubexponentialDeterministicFactoring}, Lean development,
+\url{https://github.com/IsaacRudich/SubexponentialDeterministicFactoring}, registered as Palomar entry
+PALOMAR-2026-10-28-000015 (version~1), Apache-2.0 licence.
+
+\bibitem{SS71}
+A.~Sch\"onhage and V.~Strassen, \emph{Schnelle {M}ultiplikation gro{\ss}er {Z}ahlen}, Computing
+\textbf{7} (1971), no.~3--4, 281--292.
+
+\bibitem{Shu26}
+J.~Shunia, \emph{An improved subexponential bound for deterministic integer factorization}, Hexagon
+preprint hexagon:2610.00711v1, published 2~November 2026, \url{https://hexagonmath.org/2610.00711v1}.
+
+\bibitem{Str77}
+V.~Strassen, \emph{Einige {R}esultate {\"u}ber {B}erechnungskomplexit{\"a}t}, Jahresber. Deutsch.
+Math.-Verein. \textbf{78} (1976/77), no.~1, 1--8.
+
+\bibitem{Tulsyan26}
+V.~Tulsyan, \emph{Counting {H}amiltonian cycles in sparse graphs in subexponential time, assuming the
+new $\#${SAT} algorithms}, Hexagon preprint hexagon:2610.00672v1, October 2026; source and Lean
+development at \url{https://github.com/xennygrimmato/eth-hamiltonicity}.
+
+\bibitem{TulsyanRepo26}
+V.~Tulsyan, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes}, public repository
+\url{https://github.com/xennygrimmato/eth-hamiltonicity}, 2026; Lean sources as of commit \texttt{32509ed}.
+
+\end{thebibliography}
+
+% =====================================================================
+% CITATION CHECK (4 November 2026). Each entry was checked by web search or by fetching the source:
+%  SS71   Schonhage, Strassen, Computing 7(3-4):281-292 (1971); DBLP and DOI 10.1007/BF02242355.
+%  CT65   Cooley, Tukey, Math. Comp. 19 (1965) 297-301; AMS DOI 10.1090/S0025-5718-1965-0178586-1.
+%  Pol74  Pollard, Proc. Cambridge Philos. Soc. 76(3):521-528 (1974); Cambridge Core, DOI 10.1017/S0305004100049252.
+%  Str77  Strassen, Jahresber. DMV 78 (1976/77) 1-8; EuDML 146659.
+%  Hit21  Hittmeir, Math. Comp. 90(330):1999-2010 (2021); DBLP, arXiv:2006.16729, DOI 10.1090/mcom/3623.
+%  Har21  Harvey, Math. Comp. 90(332):2937-2950 (2021); DOI 10.1090/mcom/3658, arXiv:2010.05450;
+%         bound O(N^{1/5} log^{16/5} N) confirmed from the abstract.
+%  HH22   Harvey, Hittmeir, Math. Comp. 91(335):1367-1379 (2022); AMS listing, arXiv:2105.11105;
+%         factor (log log N)^{3/5} confirmed.
+%  LP92   Lenstra, Pomerance, J. AMS 5(3):483-516 (1992); AMS page, DOI 10.1090/S0894-0347-1992-1137100-0.
+%  Lean4  de Moura, Ullrich, CADE 28, LNCS 12699, 625-635 (2021); KIT record, DOI 10.1007/978-3-030-79876-5_37.
+%  Mathlib20 The mathlib Community, CPP 2020, 367-381; arXiv:1910.09336, DOI 10.1145/3372885.3373824.
+%  RR26   Hexagon record 2610.00600 (authors Rudich, Rousseau; created 28 Oct, published 29 Oct 2026);
+%         page https://hexagonmath.org/2610.00600v1 returns 200.
+%  RRrepo Challenge.lean fetched (raw.githubusercontent.com) at commits 5f5ff8f... and c91cc3f...;
+%         both have sha256 c3adce9c7a04732442b615e69b3d33960ebc61dcacc5d281797c303d266ae12b and match
+%         the definitions in our Statement.lean. Palomar entry page returns 200.
+%  Shu26  Hexagon record 2610.00711 (author Shunia; created 31 Oct, published 2 Nov 2026); page returns 200.
+%  AK26   Authors, title, version 0.2 and date as in Shunia's bibliography and in our reading of the PDF;
+%         repository page exists (fetched; the README shows only the PDF file name).
+%  IF26   README of 1337isnot1337/integer-factoring and of the fork orda-aska/integer-factoring fetched;
+%         PR #19 (written proof, merged 30 Oct 2026, "No new Lean formalization ... is included") and
+%         PR #20 (Lean, merged 30 Oct 2026, endpoint IntegerFactoring.HalfAppendix.sqrtLogLog_factoring,
+%         Lean 4.33.1, axioms propext/Classical.choice/Quot.sound) fetched. The fork's creation date is
+%         not shown on its page. Their written proof pins RR at c91cc3f4 and Anthropic at 16a5ce4, and
+%         uses RR's mulNet_value and AppRunningTime.thmRunningTime with an explicit pad.
+%  BOS26  Issue #28 fetched: opened 30 Oct 2026; comment by nmamano "an agent for Nil (BOS Reviewer)",
+%         30 Oct 2026: "Comparator accepts the theorem with the Lean kernel and with nanoda".
+%  Anthropic26, OpenAI26, Tulsyan26, TulsyanRepo26: reused from the audited entries of the earlier notes
+%         (research/citation-audit.md, 30 Oct 2026); Anthropic commit from lean-bridge-anthropic/setup.sh.
+% =====================================================================
+
+\end{document}

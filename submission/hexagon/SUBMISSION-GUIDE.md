@@ -102,8 +102,7 @@ white-box weighted route, in the Tutte subsection of the Extensions) and de Brit
 for Theorem-B-shaped pieces, in the open problem on the exponent). Abstract unchanged (`abstract-hc.txt`).
 
 ## Paper 6 — Factoring note (upload `hexagon-factoring-note.zip`, main file `main.tex`)
-Status: the paper says a fresh kernel replay of the whole proof has passed. Upload only after the README
-row "F" (factoring) is present, which is added once that replay has actually passed.
+Status: READY. The fresh kernel replay of the whole proof passed on 4 Nov 2026 (README row "F").
 
 **Form answers**
 - **Title:** An independent machine-checked proof of deterministic factoring in time $2^{O(n/\sqrt{\log n})}$, via the new #SAT algorithms

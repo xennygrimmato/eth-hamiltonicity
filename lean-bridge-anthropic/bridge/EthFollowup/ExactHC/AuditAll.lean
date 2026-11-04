@@ -9,6 +9,7 @@ import EthFollowup.ExactHC.DirectedNetwork
 import EthFollowup.AnthropicUnconditional
 import EthFollowup.Quantum.QTheorem
 import EthFollowup.Quantum.QRate
+import EthFollowup.Circuits.Main
 
 /-!
 # Axiom audit of every Turing-machine theorem built on Anthropic's development
@@ -49,3 +50,6 @@ open EthFollowup.ExactHC
 #print axioms EthFollowup.Quantum.amplitude_TM
 #print axioms EthFollowup.Quantum.amplitude_TM_rate
 #print axioms EthFollowup.Quantum.amplitude_TM_rate'
+-- Circuit lower bound
+#print axioms EthFollowup.Circuits.enp_not_size_n_sqrt_log
+#print axioms EthFollowup.Circuits.enp_not_hasCircuits_n_sqrt_log

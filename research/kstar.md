@@ -9,10 +9,13 @@ for them, and the GF(2)^k gap gadget of Theorem G can never be smaller than `Θ(
 The old lower bound was `Ω(log log log n)`, from hypergraph Ramsey. The new one is `Ω(log n)` and uses
 only the Kővári–Sós–Turán theorem. The best upper bound is still linear, `O(m)`.
 
+Lean (scratch, Mathlib, `lean/EthFollowup/Scratch/Kstar/`): see §6.
+
 Scripts (python-sat is used only as a search tool; every SAT answer is re-verified on all cycles):
 * `research/scripts/kstar_grid.py`: the graph `H_{p,q}`, and a search for balanced cycles.
 * `research/scripts/kstar_lower.py`: checks the decomposition lemma, the lifting and the planted-zero
   property. Output is in `kstar_lower.out`, **ALL PASS**.
+* `research/scripts/kstar_lean_data.py` (+`.out`): produces the tables and certificates used by the Lean instances.
 * `research/scripts/kstar_sat.py`: computes `k*` by CEGAR SAT for grids, random cubic graphs and `K_t`.
 
 ## 1. Definitions and reformulation
@@ -166,7 +169,9 @@ vertex pairs. `kstar_lower.py` (b) checks this on 200 random lifts into `H_9`. *
 |---|---|---|---|---|---|
 | H_{3,3} | 18 | 21 | 30 | 2 | |
 | H_{3,4} | 24 | 29 | 108 | 2 | |
-DATA_ROWS
+| H_{4,4} | 32 | 40 | 760 | 2 | k=2 SAT after 557 s; contains the balanced cycle B, but too small for Theorem L |
+| H_{4,5} | 40 | 51 | 4984 | ≥ 2 | k=2 undecided within budget |
+| random cubic n=22, 24, 26 (seed 1) | 22–26 | 33–39 | 4000, 8420, 15500 | ≥ 2 | k=1 UNSAT; k=2 undecided within budget (CPU-starved) |
 | (part 2) K5…K7, K4,4, K4,5, Heawood | ≤14 | ≤21 | ≤2344 | 2 | |
 | (part 2) cubic n=18, `rep2` | 18 | 27 | 1448 | 3 | solver UNSAT for k=2 |
 
@@ -194,6 +199,26 @@ is why the SAT data stop where they do.
     balanced spiral (verified for exponents up to 5). What remains open there: non-abelian gadgets whose
     exponent has no spiral (if any exist), and gadgets that are not of the "local turn label + per-cycle
     character sum" form at all.
+
+## 6. Lean status (`lean/EthFollowup/Scratch/Kstar/`, no `native_decide`)
+
+`Basic.lean` (sorry-free) gives the definitions: graphs on `Fin n` with Boolean adjacency, directed
+cycles as duplicate-free lists, turns, `F : Fin n → Fin n → Fin n → (Fin k → ZMod 2)`, and `Good`
+(quantified over **all** lists). `Instances.lean` is sorry-free. `Unproved.lean` contains one marked `sorry`.
+
+| claim | status |
+|---|---|
+| `Good` reduces to a finite check over all duplicate-free lists (`good_of_check`) | Lean-proved (general) |
+| Subgraph monotonicity (`good_mono`) | Lean-proved (general) |
+| Minor monotonicity, the contraction half | not yet formalised |
+| Odd cancelling cycle family ⇒ no good 1-bit labelling (`not_good_one`) | Lean-proved (general) |
+| Theorem G core: `Σ_χ(−1)^{χ·y} = 0` and `Σ_{χ≠0} = −1` for `y≠0`; independent colours on `c` cycles give `(−1)^c` (`coloured_sum`) | Lean-proved (general) |
+| Rest of Theorem G (CNF, gap = n·#HC) | not yet formalised |
+| k* = 1 for planar (⇐) | Lean-checked on instances (K₄, prism: explicit 1-bit good labellings) |
+| k*(K₅) = k*(K₃,₃) = 2 | Lean-checked on instances: explicit 2-bit good labellings, and no good 1-bit labelling for *any* F (odd certificates of 11 and 5 cycles) |
+| Lemma L2: B is a directed cycle of H_{4,4}, with corner word (VH+− HV++ VH−+ HV−−)² | Lean-checked on instance (`B44_cycle`, `B44_balanced`) |
+| Lemmas L1 and L3, and Theorem L | not yet formalised (Python-checked: `kstar_lower.out`) |
+| k*(rep2) ≥ 3 | stated with `sorry`; it stands for the SAT UNSAT result |
 
 ## References (checked)
 

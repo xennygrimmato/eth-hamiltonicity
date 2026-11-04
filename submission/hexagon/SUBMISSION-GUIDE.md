@@ -42,6 +42,7 @@ Source of the rules: hexagonmath.org/about and the public submission schema
 - Status: READY (revised 4 Nov 2026, 15 pp, house style, single main.tex, repository and commit cited). Machine-checked: Theorem 1.1
   only (`amplitude_TM_rate'`, `amplitude_TM_rate`, `amplitude_TM`); everything else is labelled proved on paper only. The remark
   after Theorem 1.1 was corrected (its sufficient condition on L was too weak); the theorem itself is unchanged.
+  Bhattacharjee hexagon:2610.00594 Thm 5.3 is now cited as a near route to the polynomial-space variant (not claimed).
 
 ## Your decisions (the form asks you to declare these; I have not filled them in for you)
 1. **Human understanding** — `all` / `some` / `none`: "whether all, some, or none of the contribution
@@ -88,13 +89,15 @@ and accepted a ZIP with a single `main.tex` (bibliography inlined from the `.bbl
 form; the papers cite the scripts in the repository instead.
 
 ## Paper 4 — Circuit lower bound note (upload `hexagon-circuit-note.zip`, main file `main.tex`)
-- **Title:** Superlinear circuit lower bounds for E^NP, assuming the new #SAT algorithms
+- **Title:** A machine-checked proof of superlinear circuit lower bounds for E^NP, assuming the new #SAT algorithms
 - **Abstract:** paste `abstract-circuit.txt`.
 - **Primary subject:** cs.CC. **Cross-lists:** cs.LO.
 - **MSC2020:** 68Q17, 68Q15, 68Q25, 03B35 (all checked against Hexagon's catalogue).
 - **Tags:** circuit lower bounds; E^NP; Exponential Time Hypothesis; Williams' algorithmic method; Lean 4; formal verification.
 - **Tools:** Claude (Anthropic), via Claude Code; Lean 4 with Mathlib; TeX Live.
 - **Formalizations / arXiv id:** leave empty.
+- PRIORITY: the bound itself is OpenAI's Corollary 1.4 (preprint revised 25 Oct 2026, proved on paper there); the note now says so
+  and claims only the machine-checked proof. Earlier versions of this ZIP claimed the bound was new; do not use them.
 - Status: READY (revised 4 Nov 2026, 10 pp, house style, repository and commit 9e5dfc8 cited). What is machine-checked: the
   first part of Theorem 1.1 as `enp_not_size_n_sqrt_log` (Anthropic's language L0, ε = 1/(4608(qG+1)), fresh leanchecker
   replay passed); the second part (any ε with 36aCε < 1) and the OpenAI corollary are proved on paper only.

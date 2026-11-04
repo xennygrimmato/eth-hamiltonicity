@@ -44,7 +44,7 @@
 
 \begin{document}
 
-\title[Superlinear circuit lower bounds for $\mathrm{E}^{\mathrm{NP}}$]{Superlinear circuit lower bounds for $\mathrm{E}^{\mathrm{NP}}$,\\ assuming the new $\#$SAT algorithms}
+\title[A machine-checked superlinear circuit lower bound for $\mathrm{E}^{\mathrm{NP}}$]{A machine-checked proof of superlinear circuit lower bounds\\ for $\mathrm{E}^{\mathrm{NP}}$, assuming the new $\#$SAT algorithms}
 
 \author{Vaibhav Tulsyan}
 
@@ -54,27 +54,25 @@
 \keywords{Circuit lower bounds, Exponential Time Hypothesis, algorithmic method, $\mathrm{E}^{\mathrm{NP}}$, satisfiability algorithms, Lean~4, formal verification}
 
 \begin{abstract}
-Williams showed that faster satisfiability algorithms imply circuit lower bounds; in particular, if
-the Exponential Time Hypothesis fails, then $\ENP$ does not have circuits of linear size. In
-October 2026 OpenAI and Anthropic claimed deterministic subexponential-time algorithms for
-$\#k$-SAT, and Anthropic's manuscript draws this consequence. However, its argument uses only the
-qualitative failure of the hypothesis, so it gives ``not $O(n)$'' with no rate. We record the
-quantitative form. Assuming the clause-count bound $2^{C\cdot kM/\sqrt{\log M}}$ of Anthropic's
-Main Theorem, in the form of a Turing machine with engine constant $C$, we prove that there are
-$\varepsilon>0$ and a language $L_0\in\ENP$ such that for infinitely many input lengths $n$, $L_0$
-has no circuit of size $\varepsilon\,n\sqrt{\log n}$ over the full binary basis. The proof is
-Williams' argument with the constants tracked: guess a witness circuit, check it with a circuit of
-$3s+O(n)$ gates, apply Tseitin's transformation to get at most $4S+1$ clauses, and decide
-satisfiability with the new algorithm; any $\varepsilon<1/(36aC)$ works, where $a$ is the
-input-length shift of the construction. The existence statement is machine-checked in Lean~4 on top
-of Anthropic's Lean development, whose formalised engine supplies the rate, as
-\texttt{enp\_not\_size\_n\_sqrt\_log}, with the axioms
-\texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound} only. The bound proved in
-OpenAI's Lean development gives $\varepsilon\,n\sqrt{\log n}/(\log\log n)^2$ in the same way; this
-corollary is proved on paper only. We explain why these algorithms give nothing at $n\log n$,
-nothing for $\mathrm{NEXP}$ or $\mathrm{NQP}$, and nothing more from counting. The constant
-$\varepsilon$ is not explicit, the bound holds only infinitely often, and everything is conditional
-on the claimed refutations, which are under review.
+By a theorem of Williams, if the Exponential Time Hypothesis fails, then $\ENP$ does not have
+circuits of linear size. In October 2026 OpenAI and Anthropic claimed deterministic
+subexponential-time algorithms for $\#k$-SAT. OpenAI's revised preprint (25~October 2026) states the
+quantitative consequence as its Corollary~1.4, proved on paper: some $L\in\ENP$ has no circuit with
+at most $c\,n\sqrt{\log n}$ fan-in-two gates for infinitely many $n$. However, this bound is not
+machine-checked, and Anthropic's Lean development proves only the linear-size form. We machine-check
+OpenAI's superlinear circuit lower bound in Lean~4 on top of Anthropic's development, whose formalised
+engine supplies the rate: \texttt{enp\_not\_size\_n\_sqrt\_log} gives a language $L_0\in\ENP$ and
+$\varepsilon>0$ (in the proof, $\varepsilon=1/(4608(qG+1))$ for existential constants $q,G$) such that
+for infinitely many $n$, $L_0$ has no circuit with at most $\varepsilon\,n\sqrt{\log n}$ gates over
+the full binary basis, with the axioms \texttt{propext}, \texttt{Classical.choice} and
+\texttt{Quot.sound} only. On paper, assuming the clause-count bound $2^{C\cdot kM/\sqrt{\log M}}$ of
+Anthropic's Main Theorem as a Turing machine with engine constant $C$, we track the constants of
+Williams' argument: a check circuit of $3s+O(n)$ gates, at most $4S+1$ clauses after Tseitin's
+transformation, and any $\varepsilon<1/(36aC)$, with $a$ the input-length shift. From the weaker bound in OpenAI's Lean development, rather than the stronger one in
+its paper, the same argument gives $\varepsilon\,n\sqrt{\log n}/(\log\log n)^2$. We explain why
+these algorithms give nothing at $n\log n$, nothing for $\mathrm{NEXP}$ or $\mathrm{NQP}$, and
+nothing more from counting. The constant $\varepsilon$ has no numerical value, the bound holds only
+infinitely often, and everything is conditional on the claimed refutations, which are under review.
 \end{abstract}
 
 \maketitle
@@ -102,13 +100,19 @@ clauses in which $n\ge4$ variables occur in time
 \]
 for an absolute constant $C$. Logarithms are to base~$2$.
 
-However, the circuit consequence drawn so far is only qualitative. \A{} states it and formalises
-it in Lean (\lean{ENP.CorCircuits}). Its proof uses only the qualitative statement that, for every
-$\delta>0$, $3$-SAT is decidable in time $2^{\delta N}$. It gives ``not $O(n)$'' with no rate. We
-are unaware of any statement of the rate that the claimed algorithms give.
+Both manuscripts draw circuit consequences. \Oa, in its revision of 25~October 2026, states the
+quantitative one as its Corollary~1.4~\cite{OpenAI26}: there are $L\in\ENP$ and $c>0$
+such that $L$ has no circuit with at most $c\,n\sqrt{\log n}$ gates of fan-in at most two, with
+arbitrary Boolean gates, for infinitely many $n$. \Oa{} proves it on paper in its Appendix~C, by
+Williams' Theorem~6.1, the local reduction of JMV and \v{Z}\'ak's hierarchy theorem, from the
+constant-density part of its Theorem~1.1. \A{} states the linear-size consequence and formalises it
+in Lean (\lean{ENP.CorCircuits}). Its proof uses only the qualitative statement that, for every
+$\delta>0$, $3$-SAT is decidable in time $2^{\delta N}$, and it gives ``not $O(n)$'' with no rate.
+However, the superlinear bound has no machine-checked proof: \Oa's Corollary~1.4 is proved on paper
+only, and \A's formal corollary does not see the rate.
 
 \subsection{The question, the naive route and the principle}
-We ask which superlinear size bound for $\ENP$ the claimed running times give. At first one might
+We ask for a machine-checked proof of the superlinear bound. At first one might
 reuse \A's formal corollary with a larger size bound. However, its Lean module hard-wires both the
 size $c_0(m+1)$ and the time $2^{\delta N}$ (\cref{sec:formal}), and the $\delta$-form of the
 algorithm cannot see a rate at all. Instead, we rely on a simple principle: \emph{in Williams'
@@ -150,14 +154,16 @@ $L^{C_2}2^{C_2\rho(N)}$ steps, where $\rho(N)=N(\log\log N)^2/\sqrt{\log N}$.
 \end{hypO}
 
 \noindent This is the form of the theorem \lean{exact_count_and_sat} in OpenAI's Lean
-development, whose rate function is $\rho$, up to the base of the logarithms. The printed main
-theorem of \Oa{} has the exponent $O_k(n\log\log n/\sqrt{\log n})$, with one factor of
-$\log\log n$. It would give the bound of \cref{cor:openai} with $(\log\log n)^2$ replaced by
-$\log\log n$, in the same way.
+development, whose rate function is $\rho$, up to the base of the logarithms. The printed
+Theorem~1.1 of \Oa{} is stronger than its Lean form. Its general exponent is
+$O_k(n\log\log n/\sqrt{\log n})$, with one factor of $\log\log n$, and for $m\le Dn$ it is
+$O_{k,D}(n/\sqrt{\log n})$. That constant-density bound gives $c\,n\sqrt{\log n}$, and \Oa{} states
+exactly this as its Corollary~1.4. \Cref{cor:openai} derives the weaker $(\log\log n)^2$ form from the
+Lean-formalised statement $(\mathrm{H}_{\mathrm{O}})$ only.
 
 \subsection{What we prove}
 
-\begin{theorem}[Main theorem; first part machine-checked]\label{thm:main}
+\begin{theorem}[{Main theorem; the statement of \cite[Corollary~1.4]{OpenAI26}; first part machine-checked}]\label{thm:main}
 Assume $(\mathrm{H}_{\mathrm{A}})$. There are $\varepsilon>0$ and $L_0\in\ENP$ such that for every
 $N$ there is an $n\ge N$ for which $L_0\cap\{0,1\}^n$ is computed by no circuit over $B_2$ with at
 most $\varepsilon\,n\sqrt{\log n}$ gates.
@@ -167,7 +173,7 @@ More precisely, there is a constant $a\ge2$, which depends only on the succinct 
 $36\,a\,C\,\varepsilon<1$ works.
 \end{theorem}
 
-\begin{corollary}[Through OpenAI's bound]\label{cor:openai}
+\begin{corollary}[Through OpenAI's Lean-formalised bound]\label{cor:openai}
 Assume $(\mathrm{H}_{\mathrm{O}})$. There are $\varepsilon>0$ and $L_0\in\ENP$ such that for
 infinitely many $n$, $L_0\cap\{0,1\}^n$ has no circuit with at most
 $\varepsilon\,n\sqrt{\log n}/(\log\log n)^2$ gates. Any $\varepsilon$ with
@@ -197,31 +203,38 @@ informative: at infinitely many lengths, the lower bound grows faster than every
 \end{remark}
 
 \subsection{Contributions}
-Our contributions are:
+The conclusion of \cref{thm:main} is the statement of \Oa's Corollary~1.4, proved there on paper
+from \Oa's own algorithm; we do not claim it.
+In this paper we machine-check OpenAI's superlinear circuit lower bound. Our contributions are:
 \begin{itemize}
+\item We give a machine-checked proof in Lean of the first part of \cref{thm:main}, on top of
+Anthropic's development, as \lean{enp_not_size_n_sqrt_log}. Its proof uses Anthropic's language
+\lean{CircuitLowerBound.L0} and the explicit formula $\varepsilon=1/(4608(qG+1))$ in Anthropic's
+constants. We
+quote its statement and list the definitions a reader must check (\cref{sec:formal}).
 \item We state Turing-machine forms $(\mathrm{H}_{\mathrm{A}})$ and $(\mathrm{H}_{\mathrm{O}})$ of the
 claimed theorems, and separate the engine constant from the printed one (\cref{sec:intro}).
-\item We prove \cref{thm:main}: under $(\mathrm{H}_{\mathrm{A}})$, $\ENP$ has a language without
-circuits of size $\varepsilon n\sqrt{\log n}$ at infinitely many lengths, for every $\varepsilon$ with
-$36aC\varepsilon<1$ (\cref{sec:imported,sec:proof}).
-\item We derive \cref{cor:openai}, the form with $(\log\log n)^2$, from OpenAI's bound
-(\cref{sec:proof}).
-\item We describe the Lean proof of the first part of \cref{thm:main}, quote its statement, and list
-the definitions a reader must check (\cref{sec:formal}).
+\item We prove \cref{thm:main} on paper from Anthropic's rate $(\mathrm{H}_{\mathrm{A}})$, with the
+constants tracked: every overhead is linear, and every $\varepsilon$ with $36aC\varepsilon<1$ works
+(\cref{sec:imported,sec:proof}).
+\item We derive \cref{cor:openai}, the form with $(\log\log n)^2$, from OpenAI's Lean-formalised
+bound; OpenAI's paper itself states the stronger $c\,n\sqrt{\log n}$ (\cref{sec:proof}).
 \item We explain where this route stops: at $n\log n$, below $\ENP$, with counting, almost everywhere,
 and for restricted classes (\cref{sec:limits}).
 \end{itemize}
-The underlying correspondence is known. JMV note that their proofs ``provide a close correspondence between the
-running time for satisfiability and the parameters of the circuit class''~\cite{JMV15}. Ben-Sasson
-and Viola's constant-level instance, as quoted there, is: $3$-SAT in time $c^n$ with $c<2^{1/10}$
-implies $\ENP\not\subseteq\SIZE(3n)$. What we add is the substitution of the rate
-$2^{O(M/\sqrt{\log M})}$, the bookkeeping that keeps every overhead linear, and the resulting
-explicit superlinear rate. We have not found this rate stated elsewhere. Given how direct it is, it
-may well have been noticed independently. We claim the careful statement and proof, not the idea.
+What we add to \Oa's Corollary~1.4 is the machine-checked proof, on a different engine and with a
+different language; the explicit constant bookkeeping on paper; and the discussion of why nothing
+beyond $n\sqrt{\log n}$ follows. We found our proof without \Oa's corollary: we became aware of it
+only after the formalisation was complete (4~November 2026), although \Oa's revision is dated
+25~October 2026. We claim no independence beyond that. The underlying correspondence is older still:
+JMV note that their proofs ``provide a close correspondence between the running time for
+satisfiability and the parameters of the circuit class''~\cite{JMV15}, and Ben-Sasson and Viola's
+constant-level instance, as quoted there, is: $3$-SAT in time $c^n$ with $c<2^{1/10}$ implies
+$\ENP\not\subseteq\SIZE(3n)$.
 
 \subsection{Status of each claim}\label{sec:status}
-We separate four kinds of claim.
-\emph{Machine-checked in Lean}: the first part of \cref{thm:main}, as
+We separate four kinds of claim. The conclusion of \cref{thm:main} is the statement of \Oa's
+Corollary~1.4; the labels below concern our proofs. \emph{Machine-checked in Lean}: the first part of \cref{thm:main}, as
 \lean{EthFollowup.Circuits.enp_not_size_n_sqrt_log}, with the variants
 \lean{enp_not_size_n_sqrt_log_shifted} and \lean{enp_not_hasCircuits_n_sqrt_log}; all with the
 axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound} only, and a fresh
@@ -611,20 +624,21 @@ Viola's instance $\ENP\not\subseteq\SIZE(3n)$ is quoted there. Below $\ENP$ one 
 lemma~\cite{IKW02,MW18}, and JMV raise the strengthening of~\cite{IKW02} to linear-size circuits as an
 open problem. Chen, Lyu and Williams~\cite{CLW20} obtain almost-everywhere lower bounds for $\ENP$
 against $\mathrm{ACC}^0$. No superlinear lower bound for $\mathrm{NEXP}$ follows from our argument.
-Closest to our work are Williams' Theorem~6.1 and the constant-level remarks of JMV. In contrast, we
-substitute a subexponential rate and keep every overhead linear, which gives an explicit superlinear
-rate.
+In contrast to these works, we substitute a subexponential rate and keep every overhead linear,
+which gives a superlinear bound.
 
-\paragraph{The claimed refutations and formal proofs.} OpenAI~\cite{OpenAI26} and \A~\cite{Anthropic26}
-claim deterministic subexponential $\#$SAT algorithms, with Lean developments, under review. \A{}
+\paragraph{The claimed refutations and their circuit corollaries.} OpenAI~\cite{OpenAI26} and
+\A~\cite{Anthropic26} claim deterministic subexponential $\#$SAT algorithms, with Lean developments,
+under review. Closest to our work is \Oa's Corollary~1.4~\cite[Corollary~1.4]{OpenAI26}, which states
+the bound of \cref{thm:main}, $c\,n\sqrt{\log n}$ for infinitely many $n$ with arbitrary fan-in-two
+gates, and proves it on paper by the same route: Williams' witness circuits, the local reduction of
+JMV, \v{Z}\'ak's hierarchy theorem, and the constant-density part of \Oa's Theorem~1.1. \Oa's Lean
+development formalises the counting theorem with the weaker exponent $\rho$, not the corollary. \A{}
 formalises the linear-size consequence (\cref{sec:formal}). Our earlier work~\cite{Tulsyan26} counts
 Hamiltonian cycles on top of \A's development. We use Lean~4~\cite{Lean4} and
-Mathlib~\cite{Mathlib20}. In contrast to \A's formal corollary, the Lean theorem here depends on the
-rate of the engine, not only on its $\delta$-form.
-
-So, conditionally, \cref{thm:main} is a superlinear lower bound with an explicit rate for a class
-below $\mathrm{S}_2\mathrm{E}$ over $B_2$, holding infinitely often. To our knowledge no such bound
-was stated before, but we cannot rule out that it has been stated elsewhere.
+Mathlib~\cite{Mathlib20}. In contrast to \Oa's corollary, our proof of the bound is machine-checked,
+from Anthropic's engine rather than OpenAI's; in contrast to \A's formal corollary, the Lean theorem
+here depends on the rate of the engine, not only on its $\delta$-form.
 
 % =====================================================================
 \section{What these algorithms cannot give}\label{sec:limits}
@@ -669,6 +683,9 @@ manuscripts is pending, and if the hypotheses fail, the results lose their proof
 rests on Anthropic's development, built from source at the pinned commit, being sound.
 \item \emph{No human has checked the work.} Our proofs on paper and the Lean code were written with
 AI assistance and have not yet been checked by a human.
+\item \emph{The statement is not ours.} The conclusion of \cref{thm:main} is \Oa's Corollary~1.4, proved there on
+paper. Our contribution is a machine-checked proof on Anthropic's development and the bookkeeping on
+paper.
 \item \emph{Only the first part of \cref{thm:main} is machine-checked.} The condition
 $36aC\varepsilon<1$, the route through \cref{imp:hier,imp:jmv}, and \cref{cor:openai} are proved on
 paper only.
@@ -683,11 +700,12 @@ count read off from depth-$O(1)$ decision trees. Williams' Theorem~6.1, which we
 a sketch. The self-contained version is Anthropic's Lean module, for the linear case.
 \item \emph{Literature.} The statements in \cref{sec:known} and all citations were checked against
 the primary sources (publisher records, arXiv, ECCC, the author's version of~\cite{Wil13}) on
-4~November~2026. We have not searched systematically for prior statements of \cref{thm:main}.
+4~November~2026. We missed \Oa's Corollary~1.4 until after the formalisation was complete, and we
+have not searched systematically for other prior statements of \cref{thm:main}.
 \end{itemize}
 
 \section*{Acknowledgements}
-This work was done with AI assistance (Claude Code, Anthropic): the observation, the proofs, the Lean
+This work was done with AI assistance (Claude Code, Anthropic): the proofs, the Lean
 development, the referee check of the first draft and the literature checks were produced in
 sessions with Claude Code. The Lean theorem is checked by the Lean kernel; everything else has been
 checked against the primary sources as described, but awaits human expert review. Responsibility for
@@ -755,7 +773,9 @@ STOC18-300--STOC18-322.
 
 \bibitem{OpenAI26}
 OpenAI, \emph{The {E}xponential {T}ime {H}ypothesis is false}, preprint dated 17~October 2026, revised
-25~October 2026. Paper and Lean formalisation in the repository \url{https://github.com/openai/math}.
+25~October 2026; Corollary~1.4 and its proof in Appendix~C are in the revision of 25~October 2026.
+Paper and Lean formalisation in the repository \url{https://github.com/openai/math}, folder
+\repo{preprints/The-Exponential-Time-Hypothesis-is-False-October-25-2026}.
 
 \bibitem{Tulsyan26}
 V.~Tulsyan, \emph{Counting {H}amiltonian cycles in sparse graphs in subexponential time, assuming the
@@ -800,6 +820,9 @@ no.~3, 327--333.
 %  Williams' author version (Theorem 6.1, Lemma 3.2, the "not known for this class" quote, the
 %  O(2^{3n}) tableau and "O(cn) wires and 3n+O(1) inputs"); Anthropic's paper.pdf at the pinned
 %  commit (Theorem 1, Corollary 11, Section 7).
+%  OpenAI26 Corollary 1.4 (cor:quantitative-circuits, main_full_version.tex l.183-191), its proof in
+%  Appendix C (quantitative-circuits.tex), Theorem 1.1 (both exponents) and lean/docs/378.md (Lean scope:
+%  exponent n(loglog n)^2/sqrt(log n) only) read in the openai/math checkout at 7ef5c0c.
 %  Anthropic26, OpenAI26, Tulsyan26, Lean4, Mathlib20: audited entries of the earlier notes
 %  (research/citation-audit.md). TulsyanRepo26: commit from `git log -1 --format=%h --
 %  lean-bridge-anthropic/bridge/EthFollowup/Circuits` = 9e5dfc8.

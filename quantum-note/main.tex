@@ -642,7 +642,13 @@ The conclusion of \cref{imp:tensor} gives $(s+\cL)^{O(1)}2^{O(s/\sqrt{\log s})}$
 $(s+\cL)^{O(1)}$ space; merging and the untouched scalars cost polynomial time and space.\qed
 
 When $k(C)\gg G$ we see no way around the precision cap inside \Oa's ring: the numerator of a
-two-qubit Clifford+T unitary can need arbitrarily many bits.
+two-qubit Clifford+T unitary can need arbitrarily many bits. A different route avoids the cap at a
+weaker rate: Bhattacharjee's factor-system theorem~\cite[Thm.~5.3]{Bhattacharjee26} sums products of
+bounded-scope factors with values in any commutative $\mathbb{Q}$-algebra in $\poly(n)\,2^{O(\rho(n))}$
+operations of the algebra and polynomial storage, where $\rho(n)=n(\log\log n)^2/\sqrt{\log n}$.
+Applied to our path sum with the algebra $\mathbb{Q}(\omega)$ it suggests polynomial space with no
+restriction on $k(C)$; we have not checked the bit complexity in $\mathbb{Q}(\omega)$, which that theorem
+does not state, and we do not claim this variant.
 
 % =====================================================================
 \section{Corollaries, and why the rate is that of \texorpdfstring{$\#3$}{\#3}-SAT}\label{sec:corollaries}
@@ -922,9 +928,12 @@ conventions. Neither manuscript mentions quantum circuits: in the source of \Oa{
 Markov and Shi's paper on simulating quantum computation by tensor contraction~\cite{MarkovShi08},
 only in its related work. Nor did we find the corollary in the press or discussion threads we
 searched. Closest to our work is the appendix theorem of \Oa{} (\cref{imp:tensor}), of which
-\cref{thm:openai} is an immediate corollary. In contrast, we work out the coefficient ring and the
-precision, take the route through \A{} that avoids the restriction $k(C)=O(G)$, and machine-check that
-route.
+\cref{thm:openai} is an immediate corollary. Bhattacharjee's factor-system theorem over commutative
+$\mathbb{Q}$-algebras~\cite[Thm.~5.3]{Bhattacharjee26} is also close: it does not mention quantum circuits,
+but it suggests a polynomial-space route without the restriction $k(C)=O(G)$, at the weaker rate
+$2^{O(G(\log\log G)^2/\sqrt{\log G})}$ (\cref{sec:openai}). In contrast, we work out the coefficient ring and the
+precision, take the route through \A{} at the rate $2^{O(G/\sqrt{\log G})}$ without the restriction
+$k(C)=O(G)$, and machine-check that route.
 
 \paragraph{Permanents and BosonSampling.} BosonSampling amplitudes are permanents of $n\times n$
 submatrices of Haar-random unitaries~\cite{AaronsonArkhipov13}, and Ryser's $2^n\poly(n)$
@@ -1047,6 +1056,10 @@ theorem numbers as in arXiv:1612.05903v2.
 Claude (Anthropic), \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, preprint dated 26~October 2026.
 Paper and Lean formalisation in the repository \url{https://github.com/anthropics/formal-math}, folder
 \texttt{eth}; we use commit \texttt{16a5ce41304fcdaea4e0be7c132e1c361dc26da5}.
+
+\bibitem{Bhattacharjee26}
+D.~Bhattacharjee, \emph{Subexponential weighted counting and exact optimisation}, Hexagon preprint
+hexagon:2610.00594v1, 29~October 2026, \url{https://hexagonmath.org/abs/2610.00594}.
 
 \bibitem{Bjorklund16}
 A.~Bj{\"o}rklund, \emph{Below all subsets for some permutational counting problems}, Proc. 15th

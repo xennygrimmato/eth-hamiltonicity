@@ -1,0 +1,97 @@
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }
+% \MRhref is called by the amsart/book/proc definition of \MR.
+\providecommand{\MRhref}[2]{%
+  \href{http://www.ams.org/mathscinet-getitem?mr=#1}{#2}
+}
+\providecommand{\href}[2]{#2}
+\begin{thebibliography}{10}
+
+\bibitem{CHR24}
+Lijie Chen, Shuichi Hirahara, and Hanlin Ren, \emph{Symmetric exponential time
+  requires near-maximum circuit size}, Proc. 56th Annual ACM Symposium on
+  Theory of Computing (STOC), 2024, ECCC TR23-144; arXiv:2309.12912,
+  pp.~1990--1999.
+
+\bibitem{CLW20}
+Lijie Chen, Xin Lyu, and R.~Ryan Williams, \emph{Almost-everywhere circuit
+  lower bounds from non-trivial derandomization}, Proc. 61st Annual IEEE
+  Symposium on Foundations of Computer Science (FOCS), 2020, ECCC TR20-150,
+  pp.~1--12.
+
+\bibitem{Anthropic26}
+{Claude (Anthropic)}, \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, Preprint
+  dated October 26, 2026. Paper and Lean formalisation in the repository
+  \url{https://github.com/anthropics/formal-math}, folder \texttt{eth}, 2026.
+
+\bibitem{FGHK16}
+Magnus~Gausdal Find, Alexander Golovnev, Edward~A. Hirsch, and Alexander~S.
+  Kulikov, \emph{A better-than-$3n$ lower bound for the circuit complexity of
+  an explicit function}, Proc. 57th Annual IEEE Symposium on Foundations of
+  Computer Science (FOCS), 2016, pp.~89--98.
+
+\bibitem{IKW02}
+Russell Impagliazzo, Valentine Kabanets, and Avi Wigderson, \emph{In search of
+  an easy witness: exponential time vs.\ probabilistic polynomial time}, J.
+  Comput. System Sci. \textbf{65} (2002), no.~4, 672--694.
+
+\bibitem{JMV15}
+Hamid Jahanjou, Eric Miles, and Emanuele Viola, \emph{Local reductions},
+  Automata, Languages, and Programming (ICALP 2015), Part~I, Lecture Notes in
+  Comput. Sci., vol. 9134, Springer, 2015, Numbering as in arXiv:1311.3171.
+  Journal version: ``Local reduction'', Inform. and Comput. \textbf{261}
+  (2018), 281--295, pp.~749--760.
+
+\bibitem{Kannan82}
+Ravi Kannan, \emph{Circuit-size lower bounds and non-reducibility to sparse
+  sets}, Inform. and Control \textbf{55} (1982), no.~1--3, 40--56.
+
+\bibitem{LY22}
+Jiatu Li and Tianqi Yang, \emph{$3.1n-o(n)$ circuit lower bounds for explicit
+  functions}, Proc. 54th Annual ACM Symposium on Theory of Computing (STOC),
+  2022, ECCC TR21-023, pp.~1180--1193.
+
+\bibitem{Li24}
+Zeyong Li, \emph{Symmetric exponential time requires near-maximum circuit size:
+  simplified, truly uniform}, Proc. 56th Annual ACM Symposium on Theory of
+  Computing (STOC), 2024, arXiv:2310.17762, pp.~2000--2007.
+
+\bibitem{MW18}
+Cody Murray and Ryan Williams, \emph{Circuit lower bounds for nondeterministic
+  quasi-polytime: an easy witness lemma for {NP} and {NQP}}, Proc. 50th Annual
+  ACM Symposium on Theory of Computing (STOC), 2018, Journal version: SIAM J.
+  Comput. \textbf{49} (2020), no.~5, STOC18-300--STOC18-322, pp.~890--901.
+
+\bibitem{OpenAI26}
+{OpenAI}, \emph{The {E}xponential {T}ime {H}ypothesis is false}, Preprint dated
+  17 October 2026, revised 25 October 2026. Paper and Lean formalisation in the
+  repository \url{https://github.com/openai/math}, 2026.
+
+\bibitem{Tulsyan26}
+Vaibhav Tulsyan, \emph{Counting {H}amiltonian cycles in sparse graphs in
+  subexponential time, assuming the new $\#${SAT} algorithms}, Hexagon preprint
+  hexagon:2610.00672v1, October 2026; source and Lean development at
+  \url{https://github.com/xennygrimmato/eth-hamiltonicity}, 2026.
+
+\bibitem{TulsyanRepo26}
+\bysame, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes},
+  Public repository \url{https://github.com/xennygrimmato/eth-hamiltonicity},
+  Lean sources as of commit
+  \url{https://github.com/xennygrimmato/eth-hamiltonicity/tree/ca17a3762bb21ddbe5942eeac9f29fa58123bb42},
+  2026.
+
+\bibitem{Wil13}
+Ryan Williams, \emph{Improving exhaustive search implies superpolynomial lower
+  bounds}, SIAM J. Comput. \textbf{42} (2013), no.~3, 1218--1244, Conference
+  version in STOC 2010. Theorem numbers as in the author's version
+  \url{https://people.csail.mit.edu/rrw/improved-algs-lbs2.pdf}.
+
+\bibitem{Wil14}
+\bysame, \emph{Nonuniform {ACC} circuit lower bounds}, J. ACM \textbf{61}
+  (2014), no.~1, Art.~2, 1--32.
+
+\bibitem{Zak83}
+Stanislav {\v{Z}}{\'a}k, \emph{A {T}uring machine time hierarchy}, Theoret.
+  Comput. Sci. \textbf{26} (1983), no.~3, 327--333.
+
+\end{thebibliography}

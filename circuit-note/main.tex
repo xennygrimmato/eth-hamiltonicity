@@ -1,0 +1,481 @@
+\documentclass[10pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=OliveGreen,urlcolor=MidnightBlue]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+\setlist{leftmargin=*,itemsep=2pt,topsep=4pt}
+\emergencystretch=2.5em
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{importedtheorem}[theorem]{Imported Theorem}
+\newtheorem*{hypA}{Hypothesis $(\mathrm{H}_{\mathrm{A}})$}
+\newtheorem*{hypO}{Hypothesis $(\mathrm{H}_{\mathrm{O}})$}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\crefname{importedtheorem}{Imported Theorem}{Imported Theorems}
+\numberwithin{equation}{section}
+
+\newcommand{\poly}{\operatorname{poly}}
+\newcommand{\ENP}{\mathrm{E}^{\mathrm{NP}}}
+\newcommand{\NTIME}{\mathrm{NTIME}}
+\newcommand{\SIZE}{\mathrm{SIZE}}
+\newcommand{\A}{\textup{[A]}}
+\newcommand{\Oa}{\textup{[O]}}
+\newcommand{\lean}[1]{\texttt{#1}}
+
+\begin{document}
+
+\title[Superlinear circuit lower bounds for $\mathrm{E}^{\mathrm{NP}}$]{Superlinear circuit lower bounds for $\mathrm{E}^{\mathrm{NP}}$,\\ assuming the new $\#$SAT algorithms}
+
+\author{Vaibhav Tulsyan}
+
+\date{November 2026}
+
+\subjclass[2020]{68Q17, 68Q06, 68Q25}
+\keywords{Circuit lower bounds, Exponential Time Hypothesis, algorithmic method, $\mathrm{E}^{\mathrm{NP}}$, satisfiability algorithms}
+
+\begin{abstract}
+In October 2026 OpenAI and Anthropic claimed deterministic subexponential-time algorithms for
+$\#k$-SAT, refuting the Exponential Time Hypothesis. Anthropic's manuscript notes that, by a
+theorem of Williams, this implies that $\ENP$ does not have circuits of linear size. We record the
+quantitative form. Assuming the clause-count bound $2^{C\cdot kM/\sqrt{\log M}}$ of Anthropic's
+Main Theorem, in the form of a Turing machine with engine constant $C$, there are $\varepsilon>0$
+and a language $L_0\in\ENP$ such that for infinitely many input lengths $n$, $L_0$ has no circuit
+of size $\varepsilon\,n\sqrt{\log n}$ over the full binary basis. The bound proved in OpenAI's Lean
+development gives $\varepsilon\,n\sqrt{\log n}/(\log\log n)^2$ in the same way. The proof is
+Williams' argument with the constants tracked: guess a witness circuit, check it with a circuit of
+$3s+O(n)$ gates, apply Tseitin's transformation to get at most $4S+1$ clauses, and decide
+satisfiability with the new algorithm; any $\varepsilon<1/(36aC)$ works, where $a$ is the
+input-length shift of the construction. We explain why these algorithms give nothing at $n\log n$,
+nothing for $\mathrm{NEXP}$ or $\mathrm{NQP}$, and nothing more from counting. The constant
+$\varepsilon$ is not explicit, the bound holds only infinitely often, and everything is
+conditional on the claimed refutations, which are under review.
+\end{abstract}
+
+\maketitle
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+% =====================================================================
+
+Two manuscripts, by OpenAI~\cite{OpenAI26} and by Anthropic~\cite{Anthropic26} (below \Oa{} and
+\A), each claim a deterministic algorithm that counts the satisfying assignments of a $k$-CNF in
+subexponential time, and hence a refutation of the Exponential Time Hypothesis (ETH). Both come
+with Lean~4 formalisations of their top-level statements. These are \emph{claimed} results, still
+under review. The Main Theorem of \A{} (Theorem~1, made explicit in its Corollary~11) counts the
+models of a $k$-CNF with $m\ge2$ clauses in which $n\ge4$ variables occur in time
+\[
+  \min\bigl\{2^{C\cdot km/\sqrt{\log m}},\;2^{C\cdot k^2 n\log\log n/\sqrt{\log n}}\bigr\}
+\]
+for an absolute constant $C$. Logarithms are to base~$2$.
+
+Williams~\cite[Theorem~6.1]{Wil13} showed that if ETH is false, then $\ENP$ does not have circuits
+of linear size; see also Jahanjou, Miles and Viola~\cite[Corollary~2(1) with Corollary~3(1$'$)]{JMV15}.
+\A{} draws this consequence and formalises it in Lean (\lean{ENP.CorCircuits}). Its proof uses only
+the qualitative statement that, for every $\delta>0$, $3$-SAT is decidable in time $2^{\delta N}$.
+It gives ``not $O(n)$'' with no rate. Here we use the rate.
+
+\subsection{Model}
+A \emph{circuit} is over the full binary basis $B_2$: each gate computes one of the $16$
+functions $\{0,1\}^2\to\{0,1\}$ of two earlier wires. Its \emph{size} is the number of gates;
+inputs are not counted. Circuits are non-uniform, one per input length. For $s\colon\mathbb N\to\mathbb N$,
+a language $L$ \emph{has circuits of size $s$ at length $n$} if some circuit with at most $s(n)$
+gates computes $L\cap\{0,1\}^n$. $\ENP$ is the class of languages decided in time $2^{O(n)}$ by a
+deterministic oracle Turing machine with an oracle for $\mathrm{SAT}$, where queries may have
+length $2^{O(n)}$.
+
+\begin{hypA}
+There are a constant $C\ge1$ and a deterministic multitape Turing machine that, given a $3$-CNF
+$\psi$ with no repeated clause, with $M\ge2$ clauses and at least $4$ occurring variables, encoded
+in length $L$, decides whether $\psi$ is satisfiable within $L^{C}\cdot2^{3C\cdot M/\sqrt{\log M}}$
+steps.
+\end{hypA}
+
+\noindent This is the $m$-branch of Corollary~11 of \A with $k=3$, stated for Turing machines. The
+constant $C$ here is the \emph{engine constant}, the constant of the machine that is actually run.
+It is not necessarily the $C$ printed in \A. \A{} counts operations in its own model, and turning
+those into Turing-machine steps changes $C$ by the polynomial overhead of the simulation. In
+Anthropic's Lean development the rate is available as the machine form \lean{Tied.TopM}
+(rate $e_M\le G\cdot k\cdot m/\sqrt{\log(m+2)}$, then a polynomial-time machine on a pad of length
+$2^{e_M}$). The engine constant is then determined by $G$ and by the polynomial exponent of that
+machine.
+
+\begin{hypO}
+There are a constant $C_2\ge1$ and a deterministic multitape Turing machine that decides the
+satisfiability of a $3$-CNF with $N\ge 16$ variables, encoded in length $L$, within
+$L^{C_2}2^{C_2\rho(N)}$ steps, where $\rho(N)=N(\log\log N)^2/\sqrt{\log N}$.
+\end{hypO}
+
+\noindent This is the form of the theorem \lean{exact\_count\_and\_sat} in OpenAI's Lean
+development, whose rate function is $\rho$, up to the base of the logarithms. The printed main
+theorem of \Oa{} has the exponent $O_k(n\log\log n/\sqrt{\log n})$, with one factor of
+$\log\log n$. It would give the bound of \cref{cor:openai} with $(\log\log n)^2$ replaced by
+$\log\log n$, in the same way.
+
+\begin{theorem}[Main theorem; written proof, not machine-checked]\label{thm:main}
+Assume $(\mathrm{H}_{\mathrm{A}})$. There are $\varepsilon>0$ and $L_0\in\ENP$ such that for every
+$N$ there is an $n\ge N$ for which $L_0\cap\{0,1\}^n$ is computed by no circuit over $B_2$ with at
+most $\varepsilon\,n\sqrt{\log n}$ gates.
+
+More precisely, there is a constant $a\ge2$, which depends only on the succinct reduction of
+\cref{imp:jmv} applied to one fixed language, such that every $\varepsilon$ with
+$36\,a\,C\,\varepsilon<1$ works.
+\end{theorem}
+
+\begin{corollary}[Through OpenAI's bound]\label{cor:openai}
+Assume $(\mathrm{H}_{\mathrm{O}})$. There are $\varepsilon>0$ and $L_0\in\ENP$ such that for
+infinitely many $n$, $L_0\cap\{0,1\}^n$ has no circuit with at most
+$\varepsilon\,n\sqrt{\log n}/(\log\log n)^2$ gates. Any $\varepsilon$ with
+$3aC_2\varepsilon<1$ works.
+\end{corollary}
+
+The $n$-branch of \A{} is a bound in the number of variables, $2^{C k^2N\log\log N/\sqrt{\log N}}$.
+Used in the same way, it gives only $\varepsilon\,n\sqrt{\log n}/\log\log n$. So we use the
+$m$-branch.
+
+\begin{remark}[What the statement does and does not say]\label{rem:form}
+\leavevmode
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item \emph{Infinitely often.} The conclusion is ``$\forall N\,\exists n\ge N$''. It is not that
+$L_0$ fails at a single length. With $\varepsilon$ small, $\lfloor\varepsilon n\sqrt{\log n}\rfloor=0$
+for many small $n$, so a single failing length would be close to vacuous. For a fixed $\varepsilon$,
+the infinitely-often form cannot be recovered from the single-length form by enlarging the size
+bound, which is what the linear case does (\lean{ENP.infinitely\_often}). We prove it directly by
+assuming circuits only at lengths $\ge N$. The conclusion does not say that the bound holds for
+almost every $n$ (\cref{sec:limits}).
+\item \emph{An existential $\varepsilon$.} The constant $\varepsilon$ is not explicit, because $C$
+is not: \A{} and its Lean statement only assert that some $C$ exists. The result therefore does not
+give $c\,n\sqrt{\log n}$ for every $c$. That would need a rate $2^{o(M/\sqrt{\log M})}$.
+\item \emph{Strength.} The theorem implies the linear-size statement of \A, and it is strictly more
+informative: at infinitely many lengths, the lower bound grows faster than every linear function.
+\end{enumerate}
+\end{remark}
+
+\subsection{What is new, and what is not}
+The qualitative consequence ``$\ENP\not\subseteq\SIZE(O(n))$'' is stated, and formalised, in \A.
+JMV note that their proofs ``provide a close correspondence between the running time for
+satisfiability and the parameters of the circuit class''~\cite{JMV15}. Ben-Sasson and Viola's
+constant-level instance, as quoted there, is: $3$-SAT in time $c^n$ with $c<2^{1/10}$ implies
+$\ENP\not\subseteq\SIZE(3n)$. What we add is the substitution of the rate
+$2^{O(M/\sqrt{\log M})}$, the bookkeeping that keeps every overhead linear, and the resulting
+explicit superlinear rate. We have not found this rate stated elsewhere. Given how direct it is, it
+may well have been noticed independently. We claim the careful statement and proof, not the idea.
+
+% =====================================================================
+\section{Imported results}\label{sec:imported}
+% =====================================================================
+
+\begin{importedtheorem}[Nondeterministic time hierarchy, \v{Z}\'ak~\cite{Zak83}]\label{imp:hier}
+If $t_2$ is time-constructible and $t_1(n+1)=o(t_2(n))$, then
+$\NTIME[t_1]\subsetneq\NTIME[t_2]$. In particular, for every $\gamma<1$ there is a language
+$L^\star\in\NTIME[2^n]\setminus\NTIME[2^{\gamma n}]$.
+\end{importedtheorem}
+
+\begin{importedtheorem}[Local reductions, {\cite[Theorem~1 and the remark after it]{JMV15}}]\label{imp:jmv}
+Let $L\in\NTIME[2^n]$. There are constants $d,a_1$ and a polynomial-time map sending
+$x\in\{0,1\}^n$ to a circuit $E_x\colon\{0,1\}^{u}\to\{0,1\}^{3v+3}$, with $u=n+O(\log n)$ and
+$v\le a_1 n$, such that the following hold.
+\begin{itemize}
+\item $E_x(j)$ lists the three variables (each in $\{0,1\}^v$) and three signs of the $j$-th clause
+of a $3$-CNF $\varphi_x$ with $2^u$ clauses on the variable set $\{0,1\}^v$.
+\item $x\in L$ if and only if $\varphi_x$ is satisfiable.
+\item Every output bit of $E_x$ is a decision tree of depth $O(1)$ in the bits of $j$. Hence $E_x$
+has at most $d\,n$ gates over $B_2$.
+\end{itemize}
+\end{importedtheorem}
+
+\noindent JMV state this for algorithms $M(x,y)$ running in time $T\ge2^{\Omega(n)}$. Their index
+length is $\ell=\log T+O(\log n)$, and every output bit is a decision tree of depth $O(\log r)$
+with $r=n/\log T=O(1)$. Williams' \cite[Theorem~6.1]{Wil13} is a \emph{sketch} with the same
+shape. Its formula comes from a tableau of size $O(2^{3n})$, and its check circuit has ``$O(cn)$
+wires and $3n+O(1)$ inputs''. The explicit count $3s+O(n)$ that we use is the one in JMV's \S6
+and in Anthropic's Lean module (\lean{StForm}). There the reduction is replaced by a
+self-contained succinct tableau formula and lazy diagonalisation. We may pad the variable names so
+that $v=v(n)$ depends only on $n$ and $n\mapsto n+v(n)$ is strictly increasing. Put
+\[
+  \ell(n):=n+v(n),\qquad a:=\max\{2,\;1+a_1\},\qquad\text{so}\qquad \ell(n)\le a n.
+\]
+
+% =====================================================================
+\section{Proof of \texorpdfstring{\cref{thm:main}}{Theorem 1.1}}\label{sec:proof}
+% =====================================================================
+
+We follow Williams' route~\cite[Lemma~3.2, Theorem~6.1]{Wil13}. Fix $\varepsilon>0$ with
+$36aC\varepsilon<1$, and fix $\gamma$ with $36aC\varepsilon<\gamma<1$. Let $L^\star$ be the
+language of \cref{imp:hier} for this $\gamma$, and let $E_x,\varphi_x,u,v,\ell$ be as in
+\cref{imp:jmv} for $L=L^\star$. Put
+\[
+  s(\ell):=\bigl\lfloor\varepsilon\,\ell\sqrt{\log\ell}\bigr\rfloor .
+\]
+
+\subsection{The language \texorpdfstring{$L_0$}{L0}}
+For $x$ with $\varphi_x$ satisfiable, let $w^\ast(x)\in\{0,1\}^{2^{v}}$ be its lexicographically
+first satisfying assignment, indexed by $\{0,1\}^{v}$. Let $L_0$ be the set of strings $xi$ with
+$|x|=n$, $i\in\{0,1\}^{v(n)}$, $\varphi_x$ satisfiable, and $w^\ast(x)_i=1$. Strings whose length is
+not of the form $\ell(n)$ are not in $L_0$. Since $\ell$ is strictly increasing, $n$ and the
+split $xi$ can be read off from the length.
+
+\begin{lemma}\label{lem:enp}
+$L_0\in\ENP$.
+\end{lemma}
+
+\begin{proof}
+This is \cite[Lemma~3.2]{Wil13}. On input $xi$ of length $\ell(n)$, write out $\varphi_x$ by
+evaluating $E_x$ on all $2^u$ indices, which takes time $2^{O(n)}$. The language
+\[
+  \{\langle\varphi,p\rangle:\varphi\text{ has a satisfying assignment extending the partial assignment }p\}
+\]
+is in $\mathrm{NP}$. Use it to fix the bits of $w^\ast(x)$ one at a time, in
+lexicographic order. This takes $2^{v}$ queries of length $2^{O(n)}$, after one query that rejects
+if $\varphi_x$ is unsatisfiable. Then output bit $i$. The total time is $2^{O(n)}=2^{O(\ell)}$.
+\end{proof}
+
+\subsection{The algorithm}
+Suppose, for a contradiction, that there is an $N$ such that $L_0$ has circuits of size $s$ at every
+length $\ell\ge N$. Let $n$ be so large that $\ell(n)\ge N$, and let $x\in\{0,1\}^n$. Consider the
+following nondeterministic algorithm.
+
+\begin{enumerate}[label=\textup{(\arabic*)}]
+\item \emph{Guess} a circuit $K$ on $\ell(n)$ inputs with at most $s(\ell(n))$ gates. Hardwire $x$
+to get $W(i):=K(xi)$, a circuit on $v$ inputs with at most $s(\ell(n))$ gates (substituting
+constants does not add gates).
+\item \emph{Build the check circuit} $D\colon\{0,1\}^u\to\{0,1\}$. On input $j$, compute
+$E_x(j)=(y_1,\sigma_1,y_2,\sigma_2,y_3,\sigma_3)$. Evaluate the three copies $W(y_1),W(y_2),W(y_3)$.
+Compute the three literal values $W(y_t)\oplus\neg\sigma_t$ (one gate each), and output $1$ if all
+three are $0$ (two gates). So $D(j)=1$ if and only if clause $j$ of $\varphi_x$ is violated by the
+assignment $i\mapsto W(i)$. Its size is
+\begin{equation}\label{eq:S}
+  S\;\le\;3\,s(\ell(n))+d\,n+5 .
+\end{equation}
+\item \emph{Tseitin.} Introduce one variable per input and per gate of $D$. For a gate
+$g=f(p,q)$, add for each $(\alpha,\beta)\in\{0,1\}^2$ the clause
+$(p\ne\alpha)\vee(q\ne\beta)\vee(g=f(\alpha,\beta))$, of width at most $3$. Add the unit clause on
+the output gate. Delete tautological and repeated clauses. The result $\psi$ is a $3$-CNF with no
+repeated clause and
+\begin{equation}\label{eq:M}
+  M\;\le\;4S+1
+\end{equation}
+clauses. It is satisfiable if and only if $D(j)=1$ for some $j$, since the gate variables are
+forced. The number of variables is $u+S$, so also $M\le4N_v+1$, where $N_v$ is the number of
+variables.
+\item \emph{Decide.} If $M\le1$ or fewer than $4$ variables occur, decide $\psi$ by brute force.
+Otherwise run the machine of $(\mathrm{H}_{\mathrm{A}})$. \emph{Accept} if and only if $\psi$ is
+unsatisfiable.
+\end{enumerate}
+
+\begin{lemma}[Correctness]\label{lem:correct}
+For $|x|=n$ as above, the algorithm has an accepting branch if and only if $x\in L^\star$.
+\end{lemma}
+
+\begin{proof}
+If $x\in L^\star$, then $\varphi_x$ is satisfiable. Some circuit $K$ of size $\le s(\ell(n))$
+computes $L_0$ at length $\ell(n)$, so on the branch that guesses it,
+$W(i)=w^\ast(x)_i$ for every $i$. That assignment violates no clause, so $D\equiv0$, $\psi$ is
+unsatisfiable, and the branch accepts. If $x\notin L^\star$, then every assignment, in particular
+$i\mapsto W(i)$ for every guessed $K$, violates some clause $j$. So $D(j)=1$, $\psi$ is satisfiable,
+and every branch rejects.
+\end{proof}
+
+\subsection{The arithmetic}
+\begin{lemma}[Running time]\label{lem:time}
+For all sufficiently large $n$, every branch halts within $2^{\gamma n}$ steps.
+\end{lemma}
+
+\begin{proof}
+Steps (1)--(3) take $\poly(n,s)=2^{O(\log n)}$ steps, and the encoding length of $\psi$ is
+$L=\poly(n)$. It remains to bound the exponent $3C\,M/\sqrt{\log M}$ of step (4).
+
+By \eqref{eq:S}, \eqref{eq:M} and $\ell(n)\le an$,
+\[
+  M\;\le\;M^\ast:=12\,\varepsilon\,a\,n\sqrt{\log(an)}+4dn+21 .
+\]
+The function $x\mapsto x/\sqrt{\log x}$ is increasing for $x\ge2$, since its derivative is
+$(\log x)^{-1/2}\bigl(1-\tfrac{1}{2\ln x}\bigr)>0$ there. Also $M^\ast\ge n$, so
+$\log M^\ast\ge\log n$. Hence
+\begin{equation}\label{eq:exp}
+  \frac{3C\,M}{\sqrt{\log M}}\;\le\;\frac{3C\,M^\ast}{\sqrt{\log n}}
+  \;=\;36\,a\,C\,\varepsilon\,n\sqrt{\frac{\log(an)}{\log n}}+\frac{3C(4dn+21)}{\sqrt{\log n}}
+  \;=\;36\,a\,C\,\varepsilon\,n+o(n).
+\end{equation}
+So the running time is at most $2^{O(\log n)}\cdot L^C\cdot2^{(36aC\varepsilon+o(1))n}$, which is
+at most $2^{\gamma n}$ for large $n$, because $36aC\varepsilon<\gamma$.
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:main}]
+The algorithm needs to know $s(\ell(n))$, which is computable in time $\poly(n)$. Under the
+assumption, \cref{lem:correct,lem:time} decide $L^\star$ correctly within $2^{\gamma n}$ steps on all
+inputs of all sufficiently large lengths. The finitely many remaining inputs are handled by a
+table. Hence $L^\star\in\NTIME[2^{\gamma n}]$, which contradicts \cref{imp:hier}. So for every $N$
+there is an $\ell\ge N$, indeed one of the form $\ell(n)$, at which $L_0$ has no circuit with at
+most $s(\ell)$ gates. Together with \cref{lem:enp}, this is the theorem.
+\end{proof}
+
+\begin{remark}[The input-length shift and the constant]\label{rem:constant}
+\leavevmode
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item \emph{The shift.} The witness circuit is a circuit for $L_0$ at length $\ell(n)$, not $n$.
+So the check circuit has $3s(\ell(n))+O(n)$ gates, not ``$3s(n)+O(n)$''. In JMV's own
+construction the $\ENP$ input is $(x,i)$ of length $2n+O(\log n)$. For $s=\varepsilon
+n\sqrt{\log n}$ the shift costs only the factor $a$ in the condition on $\varepsilon$.
+\item \emph{Lean normalisation.} Anthropic's module avoids the hierarchy theorem. It takes $m$ to be
+the input length of its $\ENP$ language. The tableau formula there has time $2^{b_t}$ with
+$b_t\ge3m/8$, and the engine is allowed a budget of $2^{m/32}$ inside a total of $2^{m/8}$
+(\lean{exists\_threshold}). Its check formula has $N_v\le3|K|+a_0(m+1)+g(e)$ variables and at most
+$4N_v+1$ clauses. With $|K|\le\varepsilon(m+1)\sqrt{\log(m+2)}$, the computation
+\eqref{eq:exp} becomes $36C\varepsilon m(1+o(1))+O(m/\sqrt{\log m})\le m/32-o(m)$. This holds for
+$\varepsilon<1/(1152\,C)$; for instance $\varepsilon=1/(1200C)$.
+\item \emph{Which $C$.} In either normalisation, $C$ is the effective engine constant of
+$(\mathrm{H}_{\mathrm{A}})$. In Lean this is $G$ together with the polynomial exponent of the
+machine on the pad, and possibly the exponent of the step bound in \lean{PaddedDescent.exists\_tm'}.
+It is fixed before the formula table is chosen, so $\varepsilon$ is still an absolute constant.
+\end{enumerate}
+\end{remark}
+
+\begin{proof}[Proof of \cref{cor:openai}]
+Take $s(\ell)=\lfloor\varepsilon\ell\sqrt{\log\ell}/(\log\log\ell)^2\rfloor$ and $3aC_2\varepsilon<\gamma<1$.
+Run the same algorithm with the machine of $(\mathrm{H}_{\mathrm{O}})$ in step (4). Now
+$N_v\le u+S\le N^\ast:=3\varepsilon an\sqrt{\log(an)}/(\log\log n)^2+(d+2)n$ for large $n$. The
+function $\rho$ is increasing for large arguments. We have $\log N^\ast=\log n+O(\log\log n)$, and
+so $\log\log N^\ast=\log\log n+o(1)$. Therefore
+\[
+  C_2\,\rho(N_v)\le C_2\,\rho(N^\ast)=3aC_2\varepsilon\,n(1+o(1))+O\!\left(\frac{n(\log\log n)^2}{\sqrt{\log n}}\right)\le(\gamma-o(1))\,n,
+\]
+and the rest is unchanged.
+\end{proof}
+
+% =====================================================================
+\section{Comparison with what is known}\label{sec:known}
+% =====================================================================
+
+The following statements were checked against the primary sources.
+\begin{itemize}
+\item \emph{$\ENP$ and $\mathrm{P}$ over $B_2$.} Before 2026 the best lower bound for a language in
+$\ENP$ was $3.1n-o(n)$, by Li and Yang~\cite{LY22}. They prove it for affine dispersers of
+sublinear dimension, which are constructible in polynomial time, so the bound holds already in
+$\mathrm{P}$. It improves the $(3+\tfrac1{86})n-o(n)$ of Find, Golovnev, Hirsch and
+Kulikov~\cite{FGHK16}, which in turn improves the $3n-o(n)$ of Blum. Williams wrote in 2010 that
+``linear size circuit lower bounds are not known for this class''~\cite{Wil13}, that is, no proof
+that linear size does not suffice.
+\item \emph{Above $\ENP$.} Chen, Hirahara and Ren~\cite{CHR24} prove that
+$\mathrm{S}_2\mathrm{E}/_1\not\subseteq\SIZE[2^n/n]$. This gives the same near-maximum bounds for
+$\Sigma_2\mathrm{E}$, $(\Sigma_2\mathrm{E}\cap\Pi_2\mathrm{E})/_1$ and $\mathrm{ZPE}^{\mathrm{NP}}/_1$.
+The almost-everywhere, advice-free bound $\mathrm{S}_2\mathrm{E}\not\subseteq\text{i.o.-}\SIZE[2^n/n]$
+is due to Li~\cite{Li24}. $\ENP\subseteq\mathrm{S}_2\mathrm{E}$, so these classes lie above the
+one treated here.
+\item \emph{Fixed-polynomial bounds.} Kannan~\cite{Kannan82} showed that for each $k$,
+$\Sigma_2\mathrm{P}\cap\Pi_2\mathrm{P}\not\subseteq\SIZE(n^k)$. Whether $\ENP\not\subseteq\SIZE(n^k)$
+for some fixed $k>1$ is open. Before the refutations, so was $\ENP\not\subseteq\SIZE(O(n))$.
+\item \emph{$\mathrm{NEXP}$ and linear size.} No superlinear lower bound for $\mathrm{NEXP}$ follows.
+JMV raise as an open problem the easy-witness strengthening of~\cite{IKW02} to linear-size
+circuits~\cite{JMV15}.
+\end{itemize}
+So, conditionally, \cref{thm:main} is a superlinear lower bound with an explicit rate for a class
+below $\mathrm{S}_2\mathrm{E}$ over $B_2$, holding infinitely often. It is the first we know of,
+but we cannot rule out that it has been stated elsewhere.
+
+% =====================================================================
+\section{What these algorithms cannot give}\label{sec:limits}
+% =====================================================================
+
+\begin{itemize}
+\item \emph{Beyond $n\sqrt{\log n}$.} The check circuit and Tseitin's transformation are already
+linear. So the only lever is the rate: an algorithm in time $2^{M/g(M)}$ converts into
+$s=\varepsilon n\,g(n)$. Size $n\log n$ would need $3$-SAT in $2^{O(M/\log M)}$, and size
+$n^{1+\delta}$ would need $2^{M^{1-\delta'}}$. Neither manuscript claims such a rate.
+\item \emph{$\mathrm{NEXP}$ and $\mathrm{NQP}$.} Moving below $\ENP$ needs an easy-witness lemma.
+Those of Impagliazzo, Kabanets and Wigderson~\cite{IKW02} and of Murray and Williams~\cite{MW18}
+work for polynomial size. The second loses a polynomial in the size. After the loss, one needs
+satisfiability of $\poly(n)$-size circuits in time $2^n/n^{\omega(1)}$, and $2^{O(s/\sqrt{\log s})}$
+with $s=n^k$ gives nothing. Linear-size easy witnesses are JMV's open problem.
+\item \emph{Counting adds nothing here.} The $\mathrm{NP}$ oracle of $\ENP$ is used only to fix the
+lexicographically first witness, and the final check is a decision question. The counting form of
+the algorithms is not used. The lower bounds of the algorithmic method that do exploit counting or fast
+evaluation, such as those against $\mathrm{ACC}$ of Williams~\cite{Wil14} and
+Murray--Williams~\cite{MW18}, concern polynomial-size circuits and run into the previous item.
+\item \emph{Almost everywhere.} Chen, Lyu and Williams~\cite{CLW20} obtain almost-everywhere lower
+bounds for $\ENP$ (against $\mathrm{ACC}^0$) from non-trivial algorithms. Whether their machinery
+keeps the check circuit at $O(s)$ gates, so that it would give an almost-everywhere version of
+\cref{thm:main}, we have not checked. Their reductions involve PCPs, whose polylogarithmic overhead
+would absorb the $\sqrt{\log n}$.
+\item \emph{Restricted classes.} The algorithms are CNF algorithms, and the reduction goes through
+general circuits. The implied bounds for formulas or for log-depth circuits are no better than what
+\cref{thm:main} gives, and for formulas they are weaker than known bounds.
+\end{itemize}
+
+% =====================================================================
+\section{Formalisation status}\label{sec:formal}
+% =====================================================================
+
+Anthropic's Lean development~\cite{Anthropic26} proves the linear-size form,
+\[
+  \lean{ENP.CorCircuits}:\ \exists L,\ \lean{InENP}\ L\wedge\neg\,\lean{HasLinearCircuits}\ L,
+\]
+together with the infinitely-often variant \lean{CorCircuitsInf}. Its circuits are over $B_2$, and
+size is the number of gates. $\ENP$ is formalised with Mathlib \lean{FinTM2} oracle machines.
+The proof follows the route above, using the $\delta$-form of the engine (time $c\cdot2^{\delta N}$
+for every $\delta>0$) and lazy diagonalisation in place of \cref{imp:hier}. The statement
+\lean{HasCircuits}~$L$~$s$ is already parametric in $s$, but the module hard-wires both the size
+$c_0(m+1)$ and the time $2^{\delta N}$.
+
+A Lean formalisation of the $n\sqrt{\log n}$ form on top of that module is in progress.
+
+\Cref{thm:main} and \cref{cor:openai} are therefore proved here on paper only. We do not claim that
+they are machine-checked. The changes needed are recorded in the project
+repository~\cite{TulsyanRepo26}. Three points are not purely arithmetic.
+\begin{itemize}
+\item The engine's states must be allowed to grow with the rate, not polynomially in the input:
+the rate machine runs on a pad of length $2^{e_M}$.
+\item The engine interface must be weakened to a decision specification, or its count fixed up
+over non-occurring variables.
+\item The target must be stated in the infinitely-often form of \cref{rem:form}(a).
+\end{itemize}
+
+% =====================================================================
+\section{Limitations}\label{sec:limitations}
+% =====================================================================
+
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item \emph{Conditional.} Everything is conditional on $(\mathrm{H}_{\mathrm{A}})$, or on
+$(\mathrm{H}_{\mathrm{O}})$ for \cref{cor:openai}. These are Turing-machine forms of the claimed
+theorems of \A{} and \Oa. Expert review of the manuscripts is pending, and if the hypotheses fail,
+the results lose their proofs. Our proofs are on paper, written with AI assistance, and not yet
+checked by a human.
+\item \emph{$\varepsilon$ is not explicit.} It depends on the effective engine constant $C$,
+which is existential in \A{} and in its Lean statement, and on the constant $a$ of the reduction.
+No numerical value of $\varepsilon$ is claimed. The bound gives no meaningful statement at any
+concrete input length.
+\item \emph{Infinitely often only.} The lower bound holds at infinitely many lengths, not at almost
+every length (\cref{sec:limits}).
+\item \emph{Imported reduction.} \Cref{imp:jmv} is used as stated by JMV, with the linear gate
+count read off from depth-$O(1)$ decision trees. Williams' Theorem~6.1, which we follow, is itself
+a sketch. The self-contained version is Anthropic's Lean module, for the linear case.
+\item \emph{Literature.} The statements in \cref{sec:known} and all citations were checked against
+the primary sources (publisher records, arXiv, ECCC, the author's version of~\cite{Wil13}) on
+4~November~2026. We have not searched systematically for prior statements of \cref{thm:main}.
+\end{enumerate}
+
+\section*{Acknowledgements}
+This work was done with AI assistance (Claude Code, Anthropic): the observation, the proofs, the
+referee check of the first draft and the literature checks were produced in sessions with Claude
+Code. Everything here has been checked against the primary sources as described, but awaits human
+expert review. Responsibility for any errors rests with the author. This note continues the
+project of~\cite{Tulsyan26}.
+
+\bibliographystyle{amsplain}
+\bibliography{refs}
+
+\end{document}

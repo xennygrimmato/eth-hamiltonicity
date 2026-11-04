@@ -199,3 +199,192 @@ All Lean theorems print `[propext, Classical.choice, Quot.sound]` under `#print 
 * `scripts/engine2d_bound.py` / `.out`: exact ℚ check of Theorem 1 on random decompositions (λ = 1, 2), diagonal labellings.
 * `lean/EthFollowup/Scratch/Decorrelated/Basic.lean`: Theorem 1 (general α, any field). `Product.lean`: the product
   decomposition at λ = 1 and its costs.
+
+---------------------------------------------------------------------------------------------------
+
+## 7. Lossy diagonal contractions: the 3×2 grid is closed, full levels have ρ ≥ 3/8
+
+Follows §6 item 1. Lean: `lean/EthFollowup/Scratch/Decorrelated/Grid32.lean` (scratch, sorry-free, standard axioms).
+Scripts: `scripts/engine2d_lossy.py` / `.out` (numeric check of Theorem 4, level counts),
+`scripts/engine2d_grid32/` and `scripts/engine2d_grid32.out` (λ = 1 searches, min-cut model).
+
+### 7.0 Verdict
+
+* **3×2 grid: correlation buys nothing [R][L].** Every decomposition H = Σ_t T_t of the three rectangles into
+  row-networks and column-networks, over any field, satisfies Σ_t min(rk_{b|ac} T_t, rk_col T_t) ≥ N³. Hence
+  Σ_t 2^{cost_t} ≥ N³, max_t cost_t ≥ 3λ − log₂T, **ρ ≥ 1/2 − log₂T/(6λ)**. This is exactly the product bound.
+  No decomposition of the kind asked for in the task can beat ρ = 1/2 there, at any λ, over any field.
+* **Mechanism.** The diagonal contractions of Theorems 1–3 put every kept leg on its "own" side of a cut that is
+  both a row cut and a column cut. On the 3×2 grid such cuts see at most two edges (§7.5(a)). Theorem 4 lets **one leg
+  straddle the row cut and one leg straddle the column cut**. Each costs a factor N, but only in its own grouping:
+  a row-network pays for the row-straddler and a column-network for the column-straddler, never both. The target gains
+  N² (rank N⁴ instead of N²), so the net gain is N.
+* **Full grid levels [R].** The same lemma (§7.3) with balanced 2-labellings gives, for the g×g level with g = 2h,
+  Σ_t 2^{cost_t} ≥ N^{3h⁴−2h³}, i.e. **ρ ≥ h(3h−2)/(2(2h−1)²) − o(1) → 3/8** (4/9 at g = 3, 4; 21/50 at g = 5, 6).
+  This replaces Theorem 3's ρ ≥ 1/8. The cap becomes **α' ≤ log₂(8/3) ≈ 1.415** (it was 3). The target α' ≤ 1 still
+  needs ρ ≥ 1/2.
+* **Limit of the method [R].** No 2-party lossy contraction (any 2-labellings, any kept, fixed or paired legs) gives
+  more than (3/4 + O(1/g))Q on the full level (Proposition 7.6). Exhaustive check [N]: every proper sub-configuration of
+  the 3×3 grid, every configuration on a 4×2 grid, and every configuration with ≤ 7 rectangles on a 5×2 grid reaches the
+  full exponent Q, so ρ ≥ 1/2 holds for all of them. The full 3×3 level (Q = 9) gets 8. **It is the new minimal open
+  instance** (S ≥ N⁸ proved, N⁹ wanted).
+* **Search for a beating decomposition.** None can exist on the 3×2 grid (Theorem 4). The λ = 1 data are consistent
+  with this (§7.7): SL₂-invariant (matching) decompositions need rank sum ≥ 17 > 8 = N³, and the best found is 22.
+
+### 7.1 The 3×2 grid as a hexagon
+
+Rows a, b, c; columns j, j'; rectangles ab, ac, bc on (j, j'). Write the six nodes in the cyclic order
+1 = (a,j), 2 = (b,j'), 3 = (c,j), 4 = (a,j'), 5 = (b,j), 6 = (c,j'). The six crossing equalities are then the edges of
+a hexagon 1–2–3–4–5–6–1 (each an identity of dimension N). Rows are the antipodal pairs {1,4}, {2,5}, {3,6}. Columns
+are the two colour classes {1,3,5}, {2,4,6}. Every edge joins two rows and the two columns. A column-network is a
+single cut (odd | even), with cost log₂ of the column rank. A row-network is a triangle network on the antipodal
+pairs. Legs (Lean order): x1 y1 u1 v1 (ab), x2 y2 u2 v2 (ac), x3 y3 u3 v3 (bc), H = Π_q [x_q = v_q][y_q = u_q].
+
+### 7.2 Theorem 4 (3×2 grid) [R][L]
+
+**Theorem 4.** For every finite family of terms with Σ_t T_t = H, over any field and any alphabet of size N:
+
+  N³ ≤ Σ_t min(rank flat_{b|ac} T_t, rank flat_{j|j'} T_t).
+
+Since a row-network has rank flat_{b|ac} ≤ d_ab·d_bc ≤ 2^{cost} and a column-network has rank flat_{j|j'} ≤ 2^{cost},
+this gives Σ_t 2^{cost_t} ≥ N³.
+
+*Proof.* Define the contraction (pair the two legs at node (a,j), fix the bc-legs y3 = u3 = o):
+
+  M(T)[(y1, y2, v2, v3), (u1, x3, u2, v1)] = Σ_z T(z, y1, u1, v1, z, y2, u2, v2, x3, o, o, v3).
+
+(i) M(H) = [y1 = u1][y2 = u2][v2 = v1][v3 = x3] is a permutation matrix, rank N⁴. The pairing at (a,j) merges the
+two edges 1–2 and 1–6 into one edge v1 – v2.
+(ii) For fixed u2 = w the columns of M(T) form a pairing contraction of flat_{b|ac}(T)ᵀ (rows (y1,y2,v2,v3) are legs of
+rows a and c, columns (u1, v1, x3) are legs of row b). So M(T) = Σ_w (block w) has rank ≤ N·rank flat_{b|ac}(T). The
+only straddling leg is u2 (row c, placed with row b).
+(iii) For fixed v1 = w the columns of M(T) form a pairing contraction of flat_{j|j'}(T): the rows (y1, y2, v2, v3) lie in
+column j', and (u1, x3, u2) together with the paired x1 = x2 lie in column j. So rank M(T) ≤ N·rank flat_{j|j'}(T). The
+only straddling leg is v1.
+Then N⁴ = rank M(Σ_t T_t) ≤ Σ_t rank M(T_t) ≤ N·Σ_t min(…). ∎
+
+Checked numerically on random terms for N = 2, 3 (`engine2d_lossy.out` (a)). The bound in (ii), (iii) is attained:
+rank M(T) = N·r for generic T of rank r. *Lean* (`Grid32.lean`, general α, any field K, arbitrary terms):
+
+    theorem Grid32.rankSum_ge [Nonempty α] {ι} (s : Finset ι) (T : ι → Tensor3 K α) (hsum : ∑ t ∈ s, T t = H) :
+        Fintype.card α ^ 3 ≤ ∑ t ∈ s, min (flatB (T t)).rank (colFlat (T t)).rank
+    theorem Grid32.exists_expensive ... :
+        ∃ t ∈ s, Fintype.card α ^ 3 ≤ s.card * min (flatB (T t)).rank (colFlat (T t)).rank
+
+with the auxiliary lemmas `rank_M_H` (rank M(H) = |α|⁴), `rank_M_le_flatB`, `rank_M_le_col`, `rank_pair_le` (a pairing
+contraction does not raise rank) and `rank_le_card_mul` (splitting the columns by one coordinate).
+
+### 7.3 The lossy diagonal lemma (any configuration) [R]
+
+Fix 2-labellings σ_R of the rows and σ_C of the columns. Choose a set E of crossing edges. At any node, two legs may
+be paired, which merges two edges into one path whose ends lie at other nodes. Choose an orientation for each edge or
+path (one end in X, the other in Y). A kept end leg ℓ at node (r,c) placed on side Z has **row loss** [σ_R(r) ≠ Z]
+and **column loss** [σ_C(c) ≠ Z]. Let s_R and s_C be the total losses. Then every decomposition into row- and
+column-networks satisfies
+
+  Σ_t 2^{cost_t} ≥ N^{|E| − max(s_R, s_C)}.
+
+*Proof.* Fix all legs that are neither kept nor paired. The target becomes a permutation matrix of size N^{|E|}
+across X | Y. In a row-network, put W_r on side σ_R(r). The bonds that cross have total dimension ≤ 2^{cost}, and every
+leg with row loss crosses at dimension N. Pairings are inside one node, hence inside one W_r and inside one column
+tensor. So rank ≤ N^{s_R}·2^{cost}. The same holds for column-networks with σ_C, and subadditivity finishes. ∎
+
+Theorem 4 is the case σ_R: a, c ↦ X, b ↦ Y and σ_C: j' ↦ X, j ↦ Y. There |E| = 4 (edges 4–5, 4–3, 6–5 and the merged
+path 6–1–2), s_R = 1 (u2) and s_C = 1 (v1). A labelling also reaches 3 without any pairing (`engine2d_lossy.out` (b),
+"3x2 no-merge best 3"). Theorems 1–3 are the case s_R = s_C = 0.
+
+### 7.4 Theorem 5 (full grid levels) [R], counts [N]
+
+Classify the nodes as *agreeing* (σ_R(r) = σ_C(c), types A_X, A_Y) or *disagreeing* (D). A crossing edge between
+an A_X and an A_Y node is free. An edge between an agreeing node and a D node costs exactly one loss, in the row budget
+or in the column budget according to the types (A_X–D₁ and A_Y–D₂ cost a row loss, A_X–D₂ and A_Y–D₁ a column loss,
+with D₁ = (X,Y) and D₂ = (Y,X)). For the g×g level, g = 2h, with balanced labellings: there are h⁴ free edges, and
+2h³(h−1) edges of each single-loss type. Taking all of them gives |E| − max(s_R, s_C) = h⁴ + 2h³(h−1) = 3h⁴ − 2h³,
+out of Q = h²(2h−1)².
+
+**Theorem 5.** For every decomposition of the g×g level (g = 2h) into row- and column-networks,
+Σ_t 2^{cost_t} ≥ N^{3h⁴−2h³}. Hence max_t cost_t ≥ (3h⁴−2h³)λ − log₂T and **ρ ≥ h(3h−2)/(2(2h−1)²) − o(1) → 3/8**.
+
+`engine2d_lossy.out` (b) checks this by brute force (with the optimal choice of subset and orientation, over all
+labellings for g ≤ 5): e − s = 8 of 9 (g = 3), 32 of 36 (g = 4), 84 of 100 (g = 5) and 189 of 225 (g = 6), so ρ ≥ 4/9,
+4/9, 21/50, 21/50. Consequence for the cap: correlated network decompositions of full levels have **α' ≤ log₂(8/3)
+≈ 1.415** (Theorem 3 gave 3). The loss of Theorem 3 to "only 1/4 of the rectangles are diagonal" is mostly
+recovered. What is left is the A_X–A_X and A_Y–A_Y edges (Proposition 7.6).
+
+### 7.5 What the earlier methods could and could not do (certificates) [R][L]
+
+(a) **Common cuts give only N² on the 3×2 grid [R].** Apply node-local maps that keep, fix or pair legs, and take
+any leg cut that is a union of rows and a union of columns on the kept legs. Then every row keeps legs at one node
+only (otherwise both columns fall on one side), so the cut has one node, with ≤ 2 legs, on one side, and rank ≤ N².
+The "fake profile" of three single-bond row-networks of cost 2λ plus a column term of cost 2λ satisfies every such
+inequality. This is why Theorems 1–3 could not exceed max cost 2λ here. Straddling legs are necessary: in the
+min-cut model of all node-local maps plus one flattening (`engine2d_grid32/cert.py`, all 3¹² capacity patterns), the fake profile is violated by 1392
+patterns, and 10 patterns force cost ≥ 3λ for both kinds of terms. The first of these is exactly the contraction M
+of Theorem 4 (`cert3.py`).
+(b) **Row-local (or column-local) invariants are useless [L].** H is obtained from T0 = Π_q [x_q = u_q][y_q = v_q] by
+swapping x_q ↔ y_q in each rectangle's top row (`Grid32.H_eq_rowTwist_T0`). That is a row-local relabelling, and T0 has
+column rank 1 (`rank_colFlat_T0`). Dually, H is a column-local relabelling of J = Π_q [x_q = y_q][u_q = v_q], which has
+rank 1 across the row-b cut (`H_eq_colTwist_J`, `rank_flatB_J`). Hence any subadditive functional that is unchanged
+by row-local relabellings and bounded on column-networks of cost 0 takes the same value on H as on a cost-0 term. It
+cannot prove anything. This is the precise form of §4's remark that "a functional local to the grid nodes is not
+bounded on row-networks". A valid argument must use maps that are local to the *nodes* and then break the row
+structure in a controlled way, which is what the straddling legs do.
+
+### 7.6 Proposition (the 3/8 limit of the 2-party lossy method) [R]
+
+For every choice in §7.3 (2-labellings; legs kept, fixed or paired at nodes; orientations):
+
+  |E| − max(s_R, s_C) ≤ ½ · #{legs at agreeing nodes whose partner leg is not at an agreeing node of the same type}.
+
+*Proof.* |E| − max ≤ |E| − (s_R+s_C)/2 = Σ_paths (1 − loss/2), and a path's value splits over its two ends: ½ for an
+agreeing end on its natural side, 0 for a D end (loss exactly 1), −½ for an agreeing end on the wrong side (loss 2).
+Suppose an agreeing natural end ℓ₀ has its partner at a same-type agreeing node. Its path must continue through
+pairings at same-type nodes (otherwise both ends sit on one side). Let ℓ be the first consumed (paired) leg on that
+path whose partner is not at a same-type node. Then ℓ₀ ↦ ℓ is injective, and ℓ is a "useful" agreeing leg that is not
+an end. So the number of agreeing natural ends is at most the number of useful agreeing legs. ∎
+
+On the full level with label densities p (rows) and q (columns), the useful agreeing legs number
+4Q·[pq(1−pq) + p̄q̄(1−p̄q̄)] + O(Q/g). With a = √(pq), b = √(p̄q̄) we have a + b ≤ 1 (AM–GM), and
+a²−a⁴+b²−b⁴ ≤ 3/8, with the maximum at a = b = 1/2. Hence the method gives at most (3/4 + O(1/g))Q, so **ρ ≥ 3/8 is the
+limit of the 2-party lossy method on full levels**. For the 3×3 level the bound is exactly 8 (agreeing nodes: a 2×2
+block plus one node; each block node wastes one leg). [N] (`subconf.py` logic in `engine2d_lossy.py`, exhaustive over
+labellings and edge subsets): every sub-configuration of the 3×3 grid with ≤ 8 rectangles, all configurations on the
+4×2 grid, and all configurations with ≤ 7 rectangles on the 5×2 grid reach |E| − max = Q. So ρ ≥ 1/2 holds for all of
+them, and the full 3×3 level is the smallest configuration found where the method falls short.
+
+### 7.7 λ = 1 data [N]
+
+At N = 2, after the node-local twist by ε at the even nodes, H is the matching of the six hexagon edges inside the
+132-dimensional SL₂-invariant space of the 12 legs. A perfect matching m of the legs is simultaneously a row-network
+of cost r(m) (pairs between rows) and a column-network of cost c(m). (`engine2d_grid32.out`, scripts in
+`engine2d_grid32/`.)
+
+* H is not in the span of cost-0 matchings (dimension 32), nor in that span plus any single cost-2 matching. It lies
+  in the span of matchings of min-cost ≤ 2.
+* MILP (HiGHS, terms counted separately): minimum Σ 2^{min(r,c)} ≥ 17 (dual bound, 300 s). The best found is 24 with six
+  matchings, or 22 once its three column-type matchings are grouped into one column term of rank 10. The product
+  decomposition gives 26, and the bound of Theorem 4 is 8.
+* The weight 2^{(r+c)/2}, which governs tensor powers of λ = 1 decompositions, has minimum ≥ 38 > 8. So no λ = 1
+  matching decomposition, tensored, gets below N³ in rank sum, even with exponentially many terms.
+* These are consistent with Theorem 4, which makes them moot for the asymptotic question. They are not formalised.
+
+### 7.8 Lean status (this section)
+
+| claim | status |
+|---|---|
+| Theorem 4: Σ_t min(rk_{b\|ac}, rk_col) ≥ \|α\|³ for every family summing to H (3×2 grid, any field, any alphabet) | **Lean-proved (general)**: `Grid32.rankSum_ge`, `Grid32.exists_expensive`; axioms [propext, Classical.choice, Quot.sound] |
+| rank M(H) = \|α\|⁴, rank M(T) ≤ \|α\|·rk_{b\|ac}(T), rank M(T) ≤ \|α\|·rk_col(T) | **Lean-proved (general)**: `rank_M_H`, `rank_M_le_flatB`, `rank_M_le_col` |
+| no-go (b): H is a row-local relabelling of a column-rank-1 tensor and a column-local relabelling of a row-rank-1 tensor | **Lean-proved (general)**: `H_eq_rowTwist_T0`, `rank_colFlat_T0`, `H_eq_colTwist_J`, `rank_flatB_J` |
+| row-network ⇒ rk_{b\|ac} ≤ d_ab d_bc ≤ 2^{cost}; column-network ⇒ rk_col ≤ 2^{cost} | [R] (Lemma 1.1-type, as in §1); not formalised |
+| lossy diagonal lemma (§7.3), Theorem 5 (ρ ≥ 3/8 on full levels) | [R]; counts [N] for g ≤ 6; not formalised (needs a general configuration framework) |
+| Proposition 7.6 (method limit 3/8), certificate (a) | [R]; min-cut model [N]; not formalised |
+| λ = 1 matching data | [N] only |
+
+### 7.9 What remains
+
+1. **The full 3×3 level** (Q = 9). Proved S ≥ N⁸ (ρ ≥ 4/9). The 2-party lossy method is capped at 8 there. Wanted:
+   S ≥ N⁹, or a decomposition with max cost ≤ (9−ε)λ. Candidates for the proof: m-party (CVZ) functionals with
+   straddling legs, or a contraction that is not a single flattening.
+2. **Full levels:** 3/8 ≤ ρ (proved). ρ ≥ 1/2 would close the c/log K cap for all correlated network decompositions.
+   The obstruction to the method is exactly the A_X–A_X and A_Y–A_Y edges.
+3. Lean: the lossy lemma for general configurations, and Theorem 5.

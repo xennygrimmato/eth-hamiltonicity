@@ -86,3 +86,12 @@ for g in [3,4,5,6]:
 rects=[(0,1,0,1),(0,2,0,1),(1,2,0,1)]
 b=max(optimum(3,2,rects,sR,sC)[0][0] for sR in itertools.product([0,1],repeat=3) for sC in itertools.product([0,1],repeat=2))
 print('3x2 no-merge best',b)
+print("(c) sub-configurations: number of configurations with lossy bound < Q")
+def bestconf(rows,cols,rects):
+    return max(optimum(rows,cols,rects,sR,sC)[0][0] for sR in itertools.product([0,1],repeat=rows) for sC in itertools.product([0,1],repeat=cols))
+for (R,C,kmax) in [(3,3,9),(4,2,6),(5,2,7)]:
+    allr=[(r1,r2,c1,c2) for r1,r2 in itertools.combinations(range(R),2) for c1,c2 in itertools.combinations(range(C),2)]
+    for k in range(1,kmax+1):
+        res=[(sub,bestconf(R,C,list(sub))) for sub in itertools.combinations(allr,k)]
+        bad=[(s,b) for s,b in res if b<k]
+        print(f"{R}x{C} k={k}: configs {len(res)}, falling short {len(bad)}", bad[:1], flush=True)

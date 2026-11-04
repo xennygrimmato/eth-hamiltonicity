@@ -1,0 +1,709 @@
+\documentclass[10pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{alltt}
+\usepackage{booktabs}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=OliveGreen,urlcolor=MidnightBlue]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+\setlist{leftmargin=*,itemsep=2pt,topsep=4pt}
+\emergencystretch=2.5em
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+
+\newcommand{\A}{\textup{[A]}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\EC}{\operatorname{ec}}
+\newcommand{\HC}{\operatorname{hc}}
+% Lean names: typewriter, with line breaks allowed after '.' and '_'.
+\DeclareUrlCommand\lean{\urlstyle{tt}\def\UrlBreaks{\do\.\do\_}\def\UrlBigBreaks{}}
+% Repository names: typewriter, with line breaks allowed after '/' and '-'.
+\DeclareUrlCommand\repo{\urlstyle{tt}\def\UrlBreaks{\do\/\do\-}\def\UrlBigBreaks{}}
+
+\begin{document}
+
+\title[Counting Eulerian circuits in subexponential time]{Counting Eulerian circuits in subexponential time,\\ assuming the new $\#$SAT algorithms}
+
+\author{Vaibhav Tulsyan}
+
+\date{November 2026}
+
+\subjclass[2020]{05C45, 05C30, 68Q25, 68W40, 03B35}
+\keywords{Eulerian circuits, exact counting, transition systems, line graphs, Hamiltonian cycles, Exponential Time Hypothesis, Lean~4, formal verification}
+
+\begin{abstract}
+Counting the Eulerian circuits of an undirected graph is $\#$P-complete, even for planar $4$-regular
+graphs, while for directed graphs the BEST theorem counts them in polynomial time. However, we are
+unaware of any exact algorithm for undirected graphs of bounded degree that runs in time $2^{o(m)}$,
+where $m$ is the number of edges; the simple methods enumerate transition systems or Eulerian
+orientations. We show that such an algorithm follows from the exact counting of Hamiltonian cycles
+that we proved earlier on top of Anthropic's claimed $\#$SAT algorithm. The reduction is classical:
+by Kotzig's description, the Eulerian circuits of $G$ are in bijection with the Hamiltonian cycles of
+the line graph of the double subdivision of $G$, which has $3m$ vertices and at most $(\Delta+1)m$
+edges. We prove in Lean~4 (\texttt{theoremEuler}, \texttt{theoremEuler\_noIso},
+\texttt{theoremEuler\_rate}; axioms \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound})
+that for every $\delta>0$ and $\Delta$ a finite-alphabet Mathlib Turing machine outputs the number of
+Eulerian circuits of every graph of maximum degree at most $\Delta$ within
+$\lfloor C(n+2)^C2^{\delta m}\rfloor$ steps, and within $\lfloor C2^{\delta m}\rfloor$ steps when there is
+no isolated vertex; and that one machine does so for all graphs within
+$\lfloor C(n+2)^C2^{Cm\log_2(\Delta+2)/\sqrt{\log_2(m+2)}}\rfloor$ steps. The factor $(n+2)^C$ pays for
+reading the $n^2$-bit adjacency matrix and cannot be dropped. The bijection is checked by brute force
+on twelve small graphs, for example $132$ circuits for $K_5$. The formal object is Kotzig's
+transition-system definition; its agreement with Mathlib's Eulerian walks is not formalised. The
+constants are astronomical, and the proof rests on Anthropic's Lean development of its claimed
+refutation of the Exponential Time Hypothesis, which is under review.
+\end{abstract}
+
+\maketitle
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+% =====================================================================
+
+An \emph{Eulerian circuit} of a graph is a closed trail that uses every edge exactly once. Deciding
+whether one exists is easy (Euler: the graph is connected apart from isolated vertices and every
+degree is even), but counting them is not. For directed graphs the BEST theorem of de Bruijn and van
+Aardenne-Ehrenfest~\cite{BE51}, building on Smith and Tutte~\cite{ST41}, expresses the number as a
+spanning-tree count times $\prod_v(d^+_v-1)!$, so it is computable in polynomial time. For undirected
+graphs Brightwell and Winkler~\cite{BW05} proved the problem $\#$P-complete, and Ge and
+\v{S}tefankovi\v{c}~\cite{GS10} proved it $\#$P-complete even for planar $4$-regular graphs.
+
+However, the exact algorithms we know for general undirected graphs take time exponential in the
+number $m$ of edges, even when the degree is bounded. The simplest one lists the
+$\prod_v(d_v-1)!!$ \emph{transition systems} (a pairing of the edge ends at every vertex) and keeps
+those that form one closed trail. Another sums the BEST formula over the Eulerian orientations,
+of which a $2k$-regular graph has at least $(\binom{2k}{k}/2^k)^n$ by Schrijver~\cite{Sch83}, so also
+exponentially many in $m$. Polynomial algorithms exist for restricted classes: generalised
+series-parallel graphs~\cite{CCM12} and graphs of bounded treewidth~\cite{BDG15}. We are unaware of
+an exact algorithm that runs in time $2^{o(m)}$ on all graphs of bounded degree, even conditionally.
+
+\subsection{The problem and the running example}
+We consider the problem $\#\mathrm{EC}$: given a finite simple graph $G$ with vertex set
+$\{0,\dots,n-1\}$ as its adjacency matrix, output the number $\EC(G)$ of its Eulerian circuits,
+each counted once up to the choice of starting point and direction. Following Kotzig~\cite{Kot68}, we
+\emph{define} this number through transitions (\cref{def:kotzig}): $\EC(G)$ is the number of
+transition systems whose trails form a single closed trail. With this definition $\EC(G)=0$ if some
+degree is odd, if the edges do not lie in one component, or if $G$ has no edges.
+
+\begin{example}[Running example]\label{ex:k5}
+Take $G=K_5$, so $n=5$, $m=10$ and every degree is $4$. At each vertex the four edge ends can be
+paired in $3$ ways, so there are $3^5=243$ transition systems. Splitting them by the number of closed
+trails they form gives $132$ with one trail, $96$ with two and $15$ with three. So $\EC(K_5)=132$.
+(OEIS A007082~\cite{OEIS} lists $264$ for $K_5$, counting the two directions separately, and records
+that $132$ tours start with a fixed directed edge.)
+\end{example}
+
+\subsection{The naive route and the principle}
+At first one might encode $\#\mathrm{EC}$ directly as a counting problem for a $\#$SAT engine:
+a variable block per vertex for its transition, and a constraint that the trails form one circuit.
+However, ``one circuit'' is a global connectivity constraint, and the engines of
+OpenAI~\cite{OpenAI26} and Anthropic~\cite{Anthropic26} (below \A) count only local constraints;
+encoding connectivity was the whole difficulty of our earlier work on Hamiltonian
+cycles~\cite{Tulsyan26}. Instead, we rely on a different principle: \emph{connectivity has already
+been paid for once, in the Hamiltonian-cycle counter, so a problem whose global constraint is
+Hamiltonicity of a sparse graph needs only a polynomial-time reduction.} Kotzig's description provides
+exactly that reduction. Subdivide every edge of $G$ twice and take the line graph. The result $G'$
+has $3m$ vertices, and its Hamiltonian cycles are the transition systems of $G$ with one trail
+(\cref{sec:bijection}). For $K_5$, $G'$ has $30$ vertices and $50$ edges, and $132$ Hamiltonian
+cycles.
+
+\subsection{What we prove}
+In this paper we compose this reduction with our machine-checked Hamiltonian-cycle
+counters~\cite{Tulsyan26}, and prove the result in Lean. Write $\Delta$ for the maximum degree of
+$G$. Informally, the three theorems of \cref{sec:theorems} say the following.
+
+\begin{theorem}[informal; machine-checked]\label{thm:informal}
+\leavevmode
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item For every $\delta>0$ and $\Delta$ there are a Turing machine and a constant $C$ that output
+$\EC(G)$ for every $G$ of maximum degree at most $\Delta$ within $C(n+2)^C2^{\delta m}$ steps.
+\item The same holds within $C2^{\delta m}$ steps for graphs without isolated vertices.
+\item One machine and one $C$ output $\EC(G)$ for every $G$ within
+$C(n+2)^C\,2^{Cm\log_2(\Delta+2)/\sqrt{\log_2(m+2)}}$ steps.
+\end{enumerate}
+\end{theorem}
+
+\noindent Part~(c) is subexponential in $m$ whenever $\log\Delta=o(\sqrt{\log m})$; for bounded
+degree it is $2^{O(m/\sqrt{\log m})}$.
+
+\subsection{Contributions}
+Our contributions are:
+\begin{itemize}
+\item We state the problem $\#\mathrm{EC}$ in Kotzig's form as Lean definitions short enough to check
+by eye, and list them (\cref{sec:defs}).
+\item We prove in Lean that the Hamiltonian cycles of the line graph of the double subdivision are in
+bijection with the Eulerian circuits, and bound its size by $3m$ vertices and $2(\Delta+1)m$ edges
+(\cref{sec:bijection}).
+\item We prove three Turing-machine theorems for $\#\mathrm{EC}$, with bounds $2^{\delta m}$ (bounded
+degree) and $2^{O(m\log\Delta/\sqrt{\log m})}$ (one machine), and explain why the factor $(n+2)^C$ is
+needed (\cref{sec:theorems}).
+\item We check the bijection numerically on twelve graphs in three independent ways
+(\cref{sec:numerics}), and describe the Lean development and its trusted base (\cref{sec:formal}).
+\end{itemize}
+The bijection is classical; Balaji, Datta and Ganesan~\cite{BDG15} count Euler tours of a graph as the
+Hamiltonian cycles of the line graph of a modified graph. What we add is the
+subexponential count, conditional on \A, and its machine-checked proof. To our knowledge no
+$2^{o(m)}$ exact algorithm for bounded-degree graphs was stated before, even conditionally; we make
+no claim of practicality.
+
+\subsection{Status of each claim}
+We separate four kinds of claim.
+\emph{Machine-checked in Lean}: \cref{thm:euler,thm:noiso,thm:rate}, as
+\lean{EthFollowup.ExactHC.theoremEuler}, \lean{EthFollowup.ExactHC.theoremEuler_noIso} and
+\lean{EthFollowup.ExactHC.theoremEuler_rate}, and \cref{lem:bij,lem:size}, as
+\lean{ESplit.card_hamCycles_eulerSplit} and \lean{ESplit.card_edgeFinset_eulerSplit_le}; all with the
+axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound} only.
+\emph{Proved on paper only}: the agreement of Kotzig's definition with closed trails up to rotation
+and reversal (\cref{rem:kotzig}), the lower bound behind the factor $(n+2)^C$ (\cref{prop:lower}), and
+the reduction for multigraphs (\cref{rem:multi}).
+\emph{Assumed}: nothing beyond the three axioms. \A's results and our Hamiltonian-cycle theorems
+enter as Lean theorems, which the kernel checks with ours; but the result stands or falls with \A's
+development (\cref{sec:limitations}).
+\emph{Checked numerically}: the table of \cref{sec:numerics} and the counts in \cref{ex:k5}.
+
+\subsection*{Outline}
+\Cref{sec:defs} gives the definitions, \cref{sec:bijection} the bijection, \cref{sec:theorems} the
+theorems, \cref{sec:numerics} the numerical checks, \cref{sec:formal} the Lean development, and
+\cref{sec:related,sec:limitations} related work and limitations.
+
+% =====================================================================
+\section{Kotzig's definition, as a reader must check it}\label{sec:defs}
+% =====================================================================
+
+In this section we give the definitions on paper and then in Lean. Everything a reader must check to
+trust the theorems of \cref{sec:theorems} is here, together with Mathlib and \A's input format
+(\cref{sec:theorems}).
+
+Let $G$ be a simple graph on $[n]=\{0,\dots,n-1\}$ and list its edges $e_i=\{u_i,v_i\}$, $u_i<v_i$,
+in lexicographic order, $i<m$. Each edge has two \emph{ends}, its end at $u_i$ and its end at $v_i$.
+
+\begin{definition}[Kotzig]\label{def:kotzig}
+A \emph{transition system} of $G$ is a choice, at every vertex $x$, of a perfect matching of the ends
+at $x$; a matched pair is a \emph{transition}. Following the transitions, the edges fall into closed
+trails. An \emph{Eulerian circuit} is a transition system with exactly one closed trail, and $\EC(G)$
+is their number.
+\end{definition}
+
+\begin{remark}[on paper]\label{rem:kotzig}
+For $m\ge1$, a closed trail through every edge, taken up to rotation and reversal, determines its
+transition system (consecutive edges at each passage through a vertex), and a transition system with
+one trail determines the circuit up to rotation and reversal. This is the standard
+correspondence~\cite{Kot68}; we use it only to explain the name, and we do not formalise it.
+\end{remark}
+
+\paragraph{The split graph.} The graph $G'$ has vertex set $[3m]$. Edge $e_i$ owns three
+\emph{copies}: $\mathrm{lo}_i=3i$ (its end at $u_i$), $\mathrm{mid}_i=3i+1$, and $\mathrm{hi}_i=3i+2$
+(its end at $v_i$). Its edges are the \emph{internal} edges $\{\mathrm{lo}_i,\mathrm{mid}_i\}$,
+$\{\mathrm{mid}_i,\mathrm{hi}_i\}$, and, for every vertex $x$ and distinct edges $e_i,e_j$ at $x$, the
+\emph{transition edge} between the copies of $e_i$ and $e_j$ at $x$. So the copies at $x$ form a
+clique. Subdividing $e_i$ as $u_i\,a_i\,b_i\,v_i$ and naming the three pieces
+$\mathrm{lo}_i=u_ia_i$, $\mathrm{mid}_i=a_ib_i$, $\mathrm{hi}_i=b_iv_i$ shows that $G'$ is the line
+graph of the double subdivision of $G$. A transition system of $G$ is exactly a set $T$ of transition
+edges with one edge at every $\mathrm{lo}$ and every $\mathrm{hi}$ copy, and its \emph{transition
+graph} is $T$ together with the internal edges.
+
+\paragraph{In Lean.} The definitions are in \lean{lean/EthFollowup/ExactHC/EulerSplit.lean}, namespace
+\lean{EthFollowup.ExactHC.ESplit}, with \texttt{variable \{n : $\mathbb{N}$\} (G : SimpleGraph (Fin
+n)) [DecidableRel G.Adj]}. The transition predicate \texttt{A x y z} allows or forbids the
+transition at $x$ between the edges $xy$ and $xz$; the theorems use \lean{eulerSplitAll} and
+\lean{eulerCircuitsAll}, where every transition is allowed. We copy the definitions, rendering Unicode
+symbols as mathematics and omitting docstrings and the proof terms in \lean{cLo}, \lean{cMid},
+\lean{cHi}:
+\begin{alltt}\small
+def edgeList : List (Fin n \(\times\) Fin n) :=
+  (List.finRange n).flatMap fun u =>
+    ((List.finRange n).filter fun v => decide (u < v \(\wedge\) G.Adj u v)).map fun v => (u, v)
+abbrev M : \(\mathbb{N}\) := (edgeList G).length
+def eLo (i : Fin (M G)) : Fin n := ((edgeList G).get i).1
+def eHi (i : Fin (M G)) : Fin n := ((edgeList G).get i).2
+def cLo (i : Fin (M G)) : Fin (3 * M G) := \(\langle\)3 * i.val, _\(\rangle\)      -- cMid: 3i+1, cHi: 3i+2
+def copyAt (i : Fin (M G)) (x : Fin n) : Fin (3 * M G) :=
+  if eLo G i = x then cLo G i else cHi G i
+def other (i : Fin (M G)) (x : Fin n) : Fin n := if eLo G i = x then eHi G i else eLo G i
+def intE : Finset (Sym2 (Fin (3 * M G))) :=
+  univ.image (fun i => s(cLo G i, cMid G i)) \(\cup\) univ.image (fun i => s(cMid G i, cHi G i))
+def cliqueE (A : Fin n \(\to\) Fin n \(\to\) Fin n \(\to\) Bool) : Finset (Sym2 (Fin (3 * M G))) :=
+  (univ.filter fun t : Fin (M G) \(\times\) Fin (M G) \(\times\) Fin n => t.1 \(\ne\) t.2.1 \(\wedge\)
+      (eLo G t.1 = t.2.2 \(\vee\) eHi G t.1 = t.2.2) \(\wedge\) (eLo G t.2.1 = t.2.2 \(\vee\) eHi G t.2.1 = t.2.2) \(\wedge\)
+      A t.2.2 (other G t.1 t.2.2) (other G t.2.1 t.2.2) = true).image
+    fun t => s(copyAt G t.1 t.2.2, copyAt G t.2.1 t.2.2)
+abbrev eulerSplit (A) : SimpleGraph (Fin (3 * M G)) := graphOf (intE G \(\cup\) cliqueE G A)
+abbrev eulerSplitAll : SimpleGraph (Fin (3 * M G)) := eulerSplit G fun _ _ _ => true
+def transSys (A) : Finset (Finset (Sym2 (Fin (3 * M G)))) :=
+  (cliqueE G A).powerset.filter fun T => \(\forall\) i : Fin (M G),
+    (T.filter fun e => cLo G i \(\in\) e).card = 1 \(\wedge\) (T.filter fun e => cHi G i \(\in\) e).card = 1
+def phiE (T : Finset (Sym2 (Fin (3 * M G)))) : Finset (Sym2 (Fin (3 * M G))) := T \(\cup\) intE G
+def eulerCircuits (A) : Finset (Finset (Sym2 (Fin (3 * M G)))) :=
+  (transSys G A).filter fun T => (graphOf (phiE G T)).Connected
+abbrev eulerCircuitsAll : Finset (Finset (Sym2 (Fin (3 * M G)))) :=
+  eulerCircuits G fun _ _ _ => true
+\end{alltt}
+Here \texttt{(A)} abbreviates \texttt{(A : Fin n $\to$ Fin n $\to$ Fin n $\to$ Bool)}. The helpers come
+from our earlier development~\cite{Tulsyan26} (module \lean{HamiltonianParity}):
+\lean{graphOf X} is \lean{SimpleGraph.fromEdgeSet X}; \lean{TwoRegular X} says that every vertex
+meets exactly two edges of \texttt{X}; \lean{twoFactors G} is
+\lean{G.edgeFinset.powerset.filter TwoRegular}; and \lean{hamCycles G} is the set of those
+\texttt{X} in \lean{twoFactors G} with \lean{(graphOf X).Connected}. Connectedness is Mathlib's, so
+a graph on zero vertices is not connected, and $\EC(G)=0$ when $m=0$. The trails of $T$ are the
+components of the transition graph, so \lean{eulerCircuitsAll G} is \cref{def:kotzig} verbatim.
+
+% =====================================================================
+\section{Hamiltonian cycles of the split graph are Eulerian circuits}\label{sec:bijection}
+% =====================================================================
+
+In this section we prove the bijection and bound the size of $G'$.
+
+\begin{lemma}[\lean{ESplit.hamCycles_eulerSplit}, \lean{ESplit.card_hamCycles_eulerSplit}; machine-checked]\label{lem:bij}
+For every transition predicate $A$,
+\[
+  \texttt{hamCycles (eulerSplit G A)} = \texttt{(eulerCircuits G A).image (phiE G)},
+\]
+and \lean{phiE G} is injective on \lean{eulerCircuits G A}. Hence
+\[
+  \texttt{(hamCycles (eulerSplit G A)).card = (eulerCircuits G A).card},
+\]
+and in particular $\HC(G')=\EC(G)$.
+\end{lemma}
+
+\begin{proof}
+A middle copy $\mathrm{mid}_i$ has exactly two neighbours, $\mathrm{lo}_i$ and $\mathrm{hi}_i$. So
+every Hamiltonian cycle $H$ of $G'$, indeed every $2$-factor, contains all internal edges, and then
+uses exactly one transition edge at every $\mathrm{lo}$ and every $\mathrm{hi}$ copy: the set $T$ of
+its transition edges is a transition system, and $H=T\cup\mathrm{intE}$
+(\lean{twoRegular_phiE_iff}). Conversely, for every transition system $T$ the set
+$T\cup\mathrm{intE}$ is a $2$-factor, and it is a Hamiltonian cycle exactly when it is connected.
+Transition edges and internal edges are disjoint, so $T$ is recovered from $H$ as $H\cap\mathrm{cliqueE}$
+(\lean{filter_phiE}), which gives injectivity.
+\end{proof}
+
+\noindent In the running example a Hamiltonian cycle of $G'$ for $K_5$ walks
+$\mathrm{lo}_i\,\mathrm{mid}_i\,\mathrm{hi}_i$ along every edge and jumps between edges through a
+transition edge at the shared vertex; the $243-132=111$ transition systems with two or three trails
+give the $2$-factors of $G'$ with two or three cycles.
+
+\begin{lemma}[\lean{ESplit.card_edgeFinset_eulerSplit_le}, \lean{Eul.card_edge_eulerSplitAll_le}; machine-checked]\label{lem:size}
+$G'$ has $3m$ vertices (\lean{ESplit.length_edgeList}: \lean{M G} $=|E(G)|$) and at most
+$2(\Delta+1)m$ edges; if $\Delta\le D$, then $|E(G')|\le(D+1)\cdot3m$.
+\end{lemma}
+
+\noindent On paper, $|E(G')|=2m+\sum_x\binom{d_x}{2}\le(\Delta+1)m$, and the maximum degree of $G'$
+is $\max(2,\Delta)$ when $m\ge1$: a copy at $x$ has $d_x-1$ transition neighbours and one middle
+neighbour. The Lean bound is cruder by a factor~$2$, which is harmless. For $K_5$:
+$20+5\binom42=50$.
+
+\paragraph{The preprocessing.} The machine of \cref{sec:theorems} must write the adjacency matrix of
+$G'$ from that of $G$. We prove an arithmetic description of the edges: for copies $x\ne y$ of $[3m]$,
+$\{x,y\}$ is internal iff $\lfloor x/3\rfloor=\lfloor y/3\rfloor$ and $x\bmod3+y\bmod3\in\{1,3\}$, and is
+a transition edge iff $\lfloor x/3\rfloor\ne\lfloor y/3\rfloor$, neither residue is $1$, and the two
+copies sit at the same vertex of $G$ (\lean{mem_intE_arith}, \lean{mem_cliqueE_arith},
+\lean{adj_eulerSplitAll_iff}). The word map \lean{Eul.eulW} lists the edges from the matrix
+(\lean{Eul.edgeListW}), writes $3m$ in unary and the $(3m)^2$ entries, and satisfies
+\lean{eulW_code : eulW (code G) = code (eulerSplitAll G)}; it is polynomial-time in \A's sense
+(\lean{eulW_polyT}).
+
+% =====================================================================
+\section{The theorems}\label{sec:theorems}
+% =====================================================================
+
+In this section we state the three theorems exactly as in Lean, explain the factor $(n+2)^C$, and
+sketch the proofs. The theorems are in
+\lean{lean-bridge-anthropic/bridge/EthFollowup/ExactHC/EulerTheorems.lean}, namespace
+\lean{EthFollowup.ExactHC}. They use \A's input format and running-time predicate, from \A's file
+\texttt{GraphProblemsStatement.lean}: \lean{GraphProblems.code G} is $n$ in unary ($n$ ones and a
+zero) followed by the $n^2$ entries of the adjacency matrix row by row, a word of length $n^2+n+1$;
+and \lean{GraphProblems.Outputs M x y T} says that the Mathlib machine \texttt{M}
+(\lean{Turing.TM2ComputableAux}) started on \texttt{x} halts within \texttt{T} steps with output
+\texttt{y} (Mathlib's \lean{TM2OutputsInTime}). \lean{Nat.bits} is Mathlib's little-endian binary
+representation.
+
+\begin{theorem}[\lean{EthFollowup.ExactHC.theoremEuler}; machine-checked]\label{thm:euler}
+In Lean:
+\begin{alltt}\footnotesize
+theorem theoremEuler (\(\delta\) : \(\mathbb{R}\)) (h\(\delta\) : 0 < \(\delta\)) (\(\Delta\) : \(\mathbb{N}\)) :
+    \(\exists\) (Mc : Turing.TM2ComputableAux Bool Bool) (C : \(\mathbb{N}\)), (\(\forall\) i, Finite (Mc.tm.\(\Gamma\) i)) \(\wedge\)
+      \(\forall\) (n : \(\mathbb{N}\)) (G : SimpleGraph (Fin n)) [DecidableRel G.Adj], G.maxDegree \(\le\) \(\Delta\) \(\to\)
+        GraphProblems.Outputs Mc (GraphProblems.code G) (Nat.bits (eulerCircuitsAll G).card)
+          \(\lfloor\)(C : \(\mathbb{R}\)) * ((n : \(\mathbb{R}\)) + 2) ^ C *
+            (2 : \(\mathbb{R}\)) ^ (\(\delta\) * (G.edgeFinset.card : \(\mathbb{R}\)))\(\rfloor\)\(\sb{+}\)
+\end{alltt}
+\end{theorem}
+
+\begin{theorem}[\lean{EthFollowup.ExactHC.theoremEuler_noIso}; machine-checked]\label{thm:noiso}
+In Lean:
+\begin{alltt}\footnotesize
+theorem theoremEuler_noIso (\(\delta\) : \(\mathbb{R}\)) (h\(\delta\) : 0 < \(\delta\)) (\(\Delta\) : \(\mathbb{N}\)) :
+    \(\exists\) (Mc : Turing.TM2ComputableAux Bool Bool) (C : \(\mathbb{N}\)), (\(\forall\) i, Finite (Mc.tm.\(\Gamma\) i)) \(\wedge\)
+      \(\forall\) (n : \(\mathbb{N}\)) (G : SimpleGraph (Fin n)) [DecidableRel G.Adj], G.maxDegree \(\le\) \(\Delta\) \(\to\)
+        (\(\forall\) v, 0 < G.degree v) \(\to\)
+        GraphProblems.Outputs Mc (GraphProblems.code G) (Nat.bits (eulerCircuitsAll G).card)
+          \(\lfloor\)(C : \(\mathbb{R}\)) * (2 : \(\mathbb{R}\)) ^ (\(\delta\) * (G.edgeFinset.card : \(\mathbb{R}\)))\(\rfloor\)\(\sb{+}\)
+\end{alltt}
+\end{theorem}
+
+\begin{theorem}[\lean{EthFollowup.ExactHC.theoremEuler_rate}; machine-checked]\label{thm:rate}
+In Lean:
+\begin{alltt}\footnotesize
+theorem theoremEuler_rate :
+    \(\exists\) (Mc : Turing.TM2ComputableAux Bool Bool) (C : \(\mathbb{N}\)), (\(\forall\) i, Finite (Mc.tm.\(\Gamma\) i)) \(\wedge\)
+      \(\forall\) (n : \(\mathbb{N}\)) (G : SimpleGraph (Fin n)) [DecidableRel G.Adj],
+        GraphProblems.Outputs Mc (GraphProblems.code G) (Nat.bits (eulerCircuitsAll G).card)
+          \(\lfloor\)(C : \(\mathbb{R}\)) * ((n : \(\mathbb{R}\)) + 2) ^ C *
+            (2 : \(\mathbb{R}\)) ^ ((C : \(\mathbb{R}\)) * (G.edgeFinset.card : \(\mathbb{R}\)) *
+              Real.logb 2 ((G.maxDegree : \(\mathbb{R}\)) + 2) /
+                Real.sqrt (Real.logb 2 ((G.edgeFinset.card : \(\mathbb{R}\)) + 2)))\(\rfloor\)\(\sb{+}\)
+\end{alltt}
+\end{theorem}
+
+\noindent In words: with $m=|E(G)|$, the bounds are $\lfloor C(n+2)^C2^{\delta m}\rfloor$,
+$\lfloor C2^{\delta m}\rfloor$ and
+$\lfloor C(n+2)^C2^{Cm\log_2(\Delta+2)/\sqrt{\log_2(m+2)}}\rfloor$, where $\lfloor\cdot\rfloor$ is
+\lean{Nat.floor}.
+
+\subsection{The factor \texorpdfstring{$(n+2)^C$}{(n+2)\^{}C} is needed}
+Our planned statement of \cref{thm:euler} had the bound $C2^{\delta m}$ alone. That statement is
+false, for a reason that has nothing to do with Eulerian circuits: the input is the $n^2$-bit
+adjacency matrix, and a graph may consist mostly of isolated vertices, so that $n$ grows while $m$ and
+the bound stay constant.
+
+\begin{proposition}[on paper]\label{prop:lower}
+Let $f\colon\N\to\N$. No machine in Mathlib's \lean{TM2} model outputs \lean{Nat.bits} $\EC(G)$ on
+\lean{code G} within $f(|E(G)|)$ steps for all graphs $G$.
+\end{proposition}
+
+\begin{proof}
+The machine reads its input from the top of a stack, one symbol per step, so within $t$ steps it sees
+at most the first $t$ symbols. Let $E_n$ be the edgeless graph on $[n]$ and $E_n^+$ the same graph with
+a triangle on $n-3,n-2,n-1$. Their codes agree on the first $n+1+(n-3)n$ symbols, the triangle's
+entries lie in the last three rows, and $\EC(E_n)=0\ne1=\EC(E_n^+)$. Both graphs have at most $3$
+edges, so a machine within $f(|E|)$ steps halts after at most $\max(f(0),f(3))$ steps on both, sees
+the same prefix once $n^2-2n+1>\max(f(0),f(3))$, and gives the same output. That is a contradiction.
+\end{proof}
+
+\noindent The same argument shows that $\Omega(n^2)$ steps are needed on $E_n$, so a factor
+polynomial in $n$ is the right repair. When $G$ has no isolated vertex, $n\le2m$, so $(n+2)^C\le
+(2m+2)^C$ is absorbed by $2^{(\delta/2)m}$ at the price of a larger constant; this is
+\cref{thm:noiso}, the planned form. The factor is a matter of the input format, not of the method:
+our Hamiltonian-cycle theorems avoid it only because their bounds already grow with $n$.
+
+\subsection{Proofs}
+\emph{\Cref{thm:euler}.} We use the step-level form of our fixed-density Hamiltonian-cycle machine,
+\lean{hc_stepped} (in \lean{DirectedTheorems}, the stepped machine behind \lean{theorem1}
+of~\cite{Tulsyan26}), with parameters $\delta/3$ and density $D=\Delta+1$. Precompose it with
+\lean{eulW} (\lean{Stepped.mapIn}; polynomial overhead by \lean{eulW_polyT}). On \lean{code G} the
+composed machine runs the Hamiltonian-cycle machine on \lean{code (eulerSplitAll G)}, a graph with
+$n'=3m$ vertices and at most $(\Delta+1)n'$ edges (\cref{lem:size}), and so outputs
+$\HC(G')=\EC(G)$ (\cref{lem:bij}) within $A\cdot2^{(\delta/6)\cdot3m}$ simulated steps, with a
+polynomial overhead in $n'$ and in the input length $n^2+n+1$. \A's host lemma
+\lean{CountKSat.exists_tmW} turns the step-level machine into a finite-alphabet Mathlib machine with
+overhead $q(T+1)(|x|+S+1)^q$. Collecting terms gives $C(n+2)^C2^{\delta m}$.
+
+\emph{\Cref{thm:noiso}.} Apply \cref{thm:euler} with $\delta/2$, and bound
+$(n+2)^C\le(2m+2)^C\le C_p2^{(\delta/4)m}$ (\lean{exists_pow_le}).
+
+\emph{\Cref{thm:rate}.} We use the machine \lean{T3.hcM3} of our maximum-degree theorem
+\lean{theorem3_maxdeg}~\cite{Tulsyan26}, which outputs $\HC(H)$ within
+$\lfloor C2^{Cn\log_2(\Delta(H)+2)/\sqrt{\log_2(n+2)}}\rfloor$ steps for every graph $H$ on $n$
+vertices, with \A's degree package \lean{exists_dPackage}, again after \lean{eulW}. For $H=G'$ we
+have $3m$ vertices, maximum degree at most $\max(2,\Delta)$, and $\log_2(3m+2)\ge\log_2(m+2)$, so the
+exponent is at most $C'm\log_2(\Delta+2)/\sqrt{\log_2(m+2)}$; the reading cost again gives
+$(n+2)^C$. Graphs that are not codes are sent to output $0$ inside the machine, as in our directed
+theorems.
+
+\begin{remark}[Multigraphs; on paper]\label{rem:multi}
+For a loopless multigraph $G$, subdividing every edge once gives a simple graph $G_1$ with $2m$ edges
+and the same maximum degree when $\Delta\ge2$. Each new vertex has degree $2$ and a single
+transition, so the transition systems of $G$ and $G_1$ correspond and $\EC(G_1)=\EC(G)$. So the
+theorems extend to loopless multigraphs given as edge lists, with $m$ replaced by $2m$. Loops need a
+convention about their two ends, and we do not treat them. None of this is formalised.
+\end{remark}
+
+% =====================================================================
+\section{Numerical checks}\label{sec:numerics}
+% =====================================================================
+
+Before writing the proofs we computed, for twelve small graphs, three numbers that should agree, in a
+Lean scratch file (\lean{lean/EthFollowup/Scratch/Euler/Check.lean}, evaluated with \texttt{\#eval},
+Lean v4.34.1): Kotzig's count (transition systems with connected transition graph), $\HC(G')$ by
+depth-first search on the arithmetic adjacency used by the word map, and the number of closed
+Eulerian trails that start with edge $0$ in a fixed direction. These computations are separate from the
+proof and are not machine-checked theorems. In a second scratch file (\lean{Check2.lean}) the kernel
+evaluates the formal definitions themselves with \texttt{decide +kernel} (no \texttt{native\_decide}):
+\lean{(eulerCircuitsAll G).card = 1} for the triangle and for $C_4$, and
+\lean{(hamCycles (eulerSplitAll G)).card = 1} for the triangle.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+graph & $m$ & Kotzig & $\HC(G')$ & closed trails & $|E(G')|$\\
+\midrule
+$K_5$ & 10 & 132 & 132 & 132 & 50\\
+octahedron $K_{2,2,2}$ & 12 & 372 & 372 & 372 & 60\\
+$C_7^2$ (circulant, jumps $1,2$) & 14 & 1052 & 1052 & 1052 & 70\\
+$K_4$ with two pendant triangles & 10 & 44 & 44 & 44 & 46\\
+$K_{2,4}$ & 8 & 6 & 6 & 6 & 32\\
+bowtie & 6 & 2 & 2 & 2 & 22\\
+$C_6$ & 6 & 1 & 1 & 1 & 18\\
+$K_4$ & 6 & 0 & 0 & 0 & 24\\
+$K_5-e$ & 9 & 0 & 0 & 0 & 42\\
+$K_{3,3}$ & 9 & 0 & 0 & 0 & 36\\
+triangle & 3 & 1 & 1 & 1 & 9\\
+$C_4$ & 4 & 1 & 1 & 1 & 12\\
+\bottomrule
+\end{tabular}
+\caption{Checked numerically: three independent counts agree on every graph, and
+$|E(G')|=2m+\sum_x\binom{d_x}{2}$ in every row. ``$K_4$ with two pendant triangles'' has the edges
+$01,02,03,12,13,23,04,14,25,35$. $K_4$, $K_5-e$ and $K_{3,3}$ have odd degrees.}\label{tab:numerics}
+\end{table}
+
+\noindent A separate Python enumeration of all transition systems, by number of trails, gives
+$243=132+96+15$ for $K_5$, $729=372+296+59+2$ for the octahedron, and $2187=1052+904+217+14$ for
+$C_7^2$; the first terms agree with the table. The $K_5$ value agrees with OEIS
+A007082~\cite{OEIS} (\cref{ex:k5}).
+
+% =====================================================================
+\section{The Lean development}\label{sec:formal}
+% =====================================================================
+
+In this section we list the modules and state the trusted base. The development is in the public
+repository~\cite{TulsyanRepo26}. \Cref{tab:modules} lists the new modules.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}p{0.42\textwidth}p{0.43\textwidth}r@{}}
+\toprule
+module & content & lines\\
+\midrule
+\repo{lean/EthFollowup/ExactHC/EulerSplit.lean} & definitions of \cref{sec:defs}; bijection, size, arithmetic edges & 661\\
+\repo{lean-bridge-anthropic/bridge/EthFollowup/ExactHC/EulerTheorems.lean} & word map \lean{eulW}, its polynomial time; the three theorems & 429\\
+\midrule
+total (proof) & & 1090\\
+\midrule
+\repo{lean/EthFollowup/Scratch/Euler/Check.lean}, \texttt{Check2.lean} & numerical checks, not part of the proof & 180, 98\\
+\bottomrule
+\end{tabular}
+\caption{New modules, with line counts (\texttt{wc -l}). \texttt{EulerSplit} imports only
+\texttt{HamiltonianParity} (431 lines) and Mathlib. \texttt{EulerTheorems} imports, unchanged, the
+modules \texttt{DirectedTheorems} (790 lines), \texttt{DPackage} (548) and through them
+\texttt{Theorem3} (1182), \texttt{Package} (1037), \texttt{Theorem2} (1764) and the rest of the verified
+Hamiltonian-cycle development of~\cite{Tulsyan26}.}\label{tab:modules}
+\end{table}
+
+\paragraph{Toolchain.} The bridge builds on \A's Lean development at the commit pinned in our
+repository (\texttt{anthropics/formal-math}, folder \texttt{eth}, commit \texttt{16a5ce4}, Lean
+v4.33.1). The pure module \lean{EulerSplit} also compiles with Lean v4.34.1.
+
+\paragraph{Trusted base and axioms.} \lean{\#print axioms} reports \lean{propext},
+\lean{Classical.choice} and \lean{Quot.sound} for each of the three theorems. A fresh
+\lean{leanchecker} replay of the dependency closure of the module
+\lean{EthFollowup.ExactHC.EulerTheorems} passed on 4~November 2026. What must be trusted is the Lean
+kernel; the Mathlib definitions used in the statements (\lean{SimpleGraph}, \lean{Connected},
+\lean{Finset}, \lean{Sym2}, \lean{Nat.bits}, \lean{Nat.floor}, \lean{Real.logb}, \lean{Real.sqrt},
+\lean{TM2OutputsInTime}); \A's two definitions \lean{GraphProblems.code} and
+\lean{GraphProblems.Outputs}; and the definitions of \cref{sec:defs}. \A's development, our verified
+Hamiltonian-cycle development~\cite{Tulsyan26} and Mathlib's proofs are checked by the kernel with ours;
+they are part of the checked closure, not of the trusted base of definitions. But the soundness of the
+whole rests on them building as a sound development (\cref{sec:limitations}).
+
+\paragraph{What is not formalised.} The formal object is \lean{eulerCircuitsAll G}, Kotzig's
+transition-system definition. We have not formalised that its size equals the number of closed
+Eulerian walks of Mathlib (\lean{SimpleGraph.Walk.IsEulerian}) up to rotation and reversal; that
+bridge (\cref{rem:kotzig}) is proved on paper only and checked numerically (\cref{tab:numerics},
+column ``closed trails'').
+
+% =====================================================================
+\section{Related work}\label{sec:related}
+% =====================================================================
+
+We organise related work by idea: the complexity of counting Eulerian circuits, exact algorithms on
+restricted classes, transitions and line graphs, and the counting engines with their formal proofs.
+
+\paragraph{Complexity of counting.} For directed graphs the BEST theorem~\cite{BE51,ST41} gives a
+polynomial-time count. For undirected graphs Brightwell and Winkler~\cite{BW05} proved
+$\#$P-completeness, by a reduction from counting Eulerian orientations, and Ge and
+\v{S}tefankovi\v{c}~\cite{GS10} extended it to planar $4$-regular graphs. Schrijver~\cite{Sch83}
+bounds the number of Eulerian orientations, which is what the BEST-sum algorithm enumerates. In
+contrast, we give no polynomial algorithm and no hardness result; we give an exact algorithm that is
+subexponential in $m$, conditional on \A.
+
+\paragraph{Exact algorithms on restricted classes.} Chebolu, Cryan and Martin~\cite{CCM12} count
+Eulerian circuits in polynomial time on generalised series-parallel graphs, and Balaji, Datta and
+Ganesan~\cite{BDG15} on graphs of bounded treewidth, even in parallel ($\#\mathrm{SAC}^1$). These are
+unconditional and practical on their classes. In contrast, our bound holds for all graphs of bounded
+degree, including expanders, but is conditional and galactic.
+
+\paragraph{Transitions and line graphs.} Describing Eulerian circuits by transitions goes back to
+Kotzig~\cite{Kot68}, who also studied Eulerian circuits with forbidden
+transitions~\cite{Kot68b}. The bijection between Eulerian circuits and Hamiltonian cycles of a line
+graph of a subdivision is classical, and Balaji, Datta and Ganesan~\cite{BDG15} count Euler tours by
+modifying $G$ to a graph $G'$ with the same number of Euler tours and counting the Hamiltonian cycles of
+$L(G')$ (their text does not fix $G'$ as the double subdivision). Closest to our work is that reduction; in contrast,
+we use the bijection as a reduction to a Hamiltonian-cycle counter, and we prove it in Lean.
+
+\paragraph{The counting engines and formal proofs.} OpenAI~\cite{OpenAI26} and \A~\cite{Anthropic26}
+claim deterministic subexponential $\#$SAT algorithms, with Lean developments, under review. Our earlier
+work~\cite{Tulsyan26} counts Hamiltonian cycles on top of \A's development; this note uses its
+theorems as black boxes. We use Lean~4~\cite{Lean4} and Mathlib~\cite{Mathlib20}. In contrast to our
+earlier work, the new mathematics here is small: a classical bijection and its size bounds, which we
+state and check in full.
+
+% =====================================================================
+\section{Limitations}\label{sec:limitations}
+% =====================================================================
+
+\begin{itemize}
+\item \emph{The result stands or falls with \A's development.} The proof rests on Anthropic's Lean
+development of its claimed refutation of the Exponential Time Hypothesis, which is under review, and
+on our Hamiltonian-cycle development built on it. Lean checks both as part of our proof, so we do not
+need \A's printed theorems to match its formal ones; we do need the development, built from source at
+the pinned commit, to be sound, and the toolchain to be sound.
+\item \emph{The constants are astronomical.} They come from \A's levels and from our network
+constructions, and none is optimised. The algorithm is of no practical use.
+\item \emph{The formal object is Kotzig's definition.} The bridge to Mathlib's Eulerian walks is not
+formalised (\cref{sec:formal}).
+\item \emph{Simple graphs only.} Multigraphs reduce to simple graphs by subdivision
+(\cref{rem:multi}), on paper only; loops are not treated.
+\item \emph{Dense graphs are not covered.} \Cref{thm:rate} is subexponential in $m$ only when
+$\log\Delta=o(\sqrt{\log m})$; \cref{thm:euler} needs bounded degree.
+\item \emph{Variants are in progress and not claimed.} The bijection of \cref{lem:bij} holds for every
+transition predicate $A$, which covers forbidden transitions, but the Turing-machine theorems for
+forbidden transitions, for the minimum-cost Eulerian circuit with transition costs, and for outputting
+a circuit are in progress, and we claim none of them here.
+\item \emph{No human has checked the work.} The Lean code and this text were written with AI
+assistance; no human expert has yet checked that \cref{sec:defs} lists everything a reader must
+trust.
+\end{itemize}
+
+\section*{Acknowledgements}
+This work was done with AI assistance (Claude Code, Anthropic): the reduction, the Lean development,
+the numerical checks, the literature and citation checks and the text were produced in sessions with
+Claude Code. The Lean theorems are checked by the Lean kernel; everything else awaits human expert
+review. Responsibility for any errors rests with the author. This note continues the project
+of~\cite{Tulsyan26}.
+
+\begin{thebibliography}{99}
+
+\bibitem{Anthropic26}
+Claude (Anthropic), \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, preprint dated 26~October 2026.
+Paper and Lean formalisation in the repository \url{https://github.com/anthropics/formal-math}, folder
+\texttt{eth}; we use commit \texttt{16a5ce41304fcdaea4e0be7c132e1c361dc26da5}.
+
+\bibitem{BDG15}
+N.~Balaji, S.~Datta and V.~Ganesan, \emph{Counting {E}uler tours in undirected bounded treewidth
+graphs}, 35th IARCS Annual Conference on Foundations of Software Technology and Theoretical Computer
+Science (FSTTCS 2015), LIPIcs, vol.~45, 2015, pp.~246--260; arXiv:1510.04035.
+
+\bibitem{BE51}
+T.~van Aardenne-Ehrenfest and N.~G.~de Bruijn, \emph{Circuits and trees in oriented linear graphs},
+Simon Stevin \textbf{28} (1951), 203--217.
+
+\bibitem{BW05}
+G.~Brightwell and P.~Winkler, \emph{Counting {E}ulerian circuits is $\#${P}-complete}, Proc. 7th
+Workshop on Algorithm Engineering and Experiments and 2nd Workshop on Analytic Algorithmics and
+Combinatorics (ALENEX/ANALCO 2005), SIAM, 2005, pp.~259--262; arXiv:cs/0405067.
+
+\bibitem{CCM12}
+P.~Chebolu, M.~Cryan and R.~Martin, \emph{Exact counting of {E}uler tours for generalized
+series-parallel graphs}, J. Discrete Algorithms \textbf{10} (2012), 110--122.
+
+\bibitem{GS10}
+Q.~Ge and D.~\v{S}tefankovi\v{c}, \emph{The complexity of counting {E}ulerian tours in $4$-regular
+graphs}, LATIN 2010: Theoretical Informatics, Lecture Notes in Comput. Sci., vol.~6034, Springer,
+2010, pp.~638--649.
+
+\bibitem{Kot68}
+A.~Kotzig, \emph{Eulerian lines in finite $4$-valent graphs and their transformations}, Theory of
+Graphs (Proc. Colloq., Tihany, 1966), Academic Press, New York, 1968, pp.~219--230.
+
+\bibitem{Kot68b}
+A.~Kotzig, \emph{Moves without forbidden transitions in a graph}, Mat. \v{C}asopis \textbf{18}
+(1968), no.~1, 76--80.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The {L}ean 4 theorem prover and programming language}, Automated
+Deduction -- CADE 28, Lecture Notes in Comput. Sci., vol. 12699, Springer, 2021, pp.~625--635.
+
+\bibitem{Mathlib20}
+The mathlib Community, \emph{The {L}ean mathematical library}, Proc. 9th ACM SIGPLAN International
+Conference on Certified Programs and Proofs (CPP 2020), 2020, pp.~367--381.
+
+\bibitem{OEIS}
+OEIS Foundation, \emph{The On-Line Encyclopedia of Integer Sequences}, sequence A007082,
+\url{https://oeis.org/A007082}.
+
+\bibitem{OpenAI26}
+OpenAI, \emph{The {E}xponential {T}ime {H}ypothesis is false}, preprint dated 17~October 2026, revised
+25~October 2026. Paper and Lean formalisation in the repository \url{https://github.com/openai/math}.
+
+\bibitem{Sch83}
+A.~Schrijver, \emph{Bounds on the number of {E}ulerian orientations}, Combinatorica \textbf{3}
+(1983), no.~3--4, 375--380.
+
+\bibitem{ST41}
+C.~A.~B.~Smith and W.~T.~Tutte, \emph{On unicursal paths in a network of degree $4$}, Amer. Math.
+Monthly \textbf{48} (1941), 233--237.
+
+\bibitem{Tulsyan26}
+V.~Tulsyan, \emph{Counting {H}amiltonian cycles in sparse graphs in subexponential time, assuming the
+new $\#${SAT} algorithms}, Hexagon preprint hexagon:2610.00672v1, October 2026; source and Lean
+development at \url{https://github.com/xennygrimmato/eth-hamiltonicity}.
+
+\bibitem{TulsyanRepo26}
+V.~Tulsyan, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes}, public repository
+\url{https://github.com/xennygrimmato/eth-hamiltonicity}, 2026; Lean sources as of commit \texttt{394740c}.
+
+\end{thebibliography}
+
+% =====================================================================
+% CITATION CHECK (4 November 2026). Each entry was checked by web search or by fetching the source:
+%  BW05   arXiv cs/0405067 (Brightwell, Winkler, submitted 18 May 2004, arXiv title "Note on counting
+%         Eulerian circuits"; Thm 2.1: counting Eulerian circuits is #P-complete); published as
+%         "Counting Eulerian circuits is #P-complete", ALENEX/ANALCO 2005 (researchr BrightwellW05;
+%         LSE eprint 13350). Pages 259-262 from the standard citation; not seen on a publisher page.
+%  GS10   Ge, Stefankovic, LATIN 2010, LNCS 6034, 638-649, DOI 10.1007/978-3-642-12200-2_55
+%         (latintcs.org bib); #P-complete for planar 4-regular graphs; arXiv 1009.5019.
+%  BDG15  Balaji, Datta, Ganesan, arXiv 1510.04035 (v2, Dec 2015), FSTTCS 2015, LIPIcs 45, 246-260.
+%         Full text checked 4 Nov 2026 (pdftotext): they count Euler tours of G as Hamiltonian tours of L(G') for a
+%         modified G' with tw(G') <= tw(G)+3; the text does not identify G' as the double subdivision, so the paper
+%         attributes to them only the line-graph reduction, not our exact construction.
+%         (Dagstuhl DROPS). v1 claimed GapL, retracted in v2; we cite only bounded treewidth and
+%         #SAC^1. Line graph of the double subdivision: as stated in our EulerSplit.lean docstring,
+%         taken from the planner's reading of the paper; not re-read in this pass.
+%  CCM12  Chebolu, Cryan, Martin, J. Discrete Algorithms 10 (2012) 110-122,
+%         DOI 10.1016/j.jda.2011.03.011 (DBLP journals/jda/CheboluCM12; arXiv 1005.3477).
+%  BE51   van Aardenne-Ehrenfest, de Bruijn, Simon Stevin 28 (1951) 203-217 (Wikipedia BEST theorem,
+%         MathWorld, Canad. J. Math. reference list agree).
+%  ST41   Smith, Tutte, Amer. Math. Monthly 48 (1941) 233-237 (course reference list; consistent with
+%         the BEST theorem literature). Volume/pages not seen on JSTOR.
+%  Kot68  Kotzig, Theory of Graphs (Proc. Colloq. Tihany, Sept. 1966; eds. Erdos, Katona),
+%         Academic Press 1968, 219-230 (Springer reference and a bibliography agree).
+%  Kot68b Kotzig, Mat. Casopis 18 (1968), no. 1, 76-80 (EuDML 33972, fetched).
+%  Sch83  Schrijver, Combinatorica 3 (1983), no. 3-4, 375-380 (CWI repository 10053); lower bound
+%         (binom(d,d/2)/2^(d/2))^n for d-regular graphs, d even.
+%  OEIS   A007082 fetched: K5 value 264 (reversed tours counted separately); "if we fix the Euler
+%         tour to start with the edge 12, we get 132 Euler tours".
+%  Lean4, Mathlib20, Anthropic26, OpenAI26, Tulsyan26: reused from the audited entries of the earlier
+%         notes (research/citation-audit.md, 30 Oct 2026); Anthropic commit from
+%         lean-bridge-anthropic/setup.sh (REV=16a5ce41...).
+%  TulsyanRepo26: commit from `git log -1 --format=%h --
+%         lean-bridge-anthropic/bridge/EthFollowup/ExactHC/EulerTheorems.lean` = 394740c.
+% =====================================================================
+
+\end{document}

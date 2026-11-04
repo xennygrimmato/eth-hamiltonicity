@@ -136,7 +136,7 @@ confirmations, licence (suggested CC BY 4.0).
 
 ## Paper 7 — Eulerian circuits note (upload `hexagon-euler-note.zip`, main file `main.tex`)
 Status: proof final (fresh leanchecker replay of `EthFollowup.ExactHC.EulerTheorems` passed 4 Nov 2026; README row R4).
-The ZIP is built from `euler-note/main.tex` once the paper compiles; this section's form answers are fixed now.
+Status: READY (4 Nov 2026). Paper 8 pp in `euler-note/main.tex`, PDF in `docs/euler-note.pdf`; the ZIP compiles cleanly from a fresh unzip.
 
 **Form answers**
 - **Title:** Counting Eulerian circuits in subexponential time, assuming the new #SAT algorithms

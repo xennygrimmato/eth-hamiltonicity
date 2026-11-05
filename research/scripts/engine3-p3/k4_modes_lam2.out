@@ -1,0 +1,38 @@
+A=3 L=8 lam=2: G_e(0) = identity (equality of lam-bit strings) for all 6 edges: OK
+ node t=1 (merge along matching 0 = ['a', 'b']|['c', 'd']): crossing edges ['ac', 'ad', 'bc', 'bd']; rank over Q of G_e(t) per edge {'ab': 1, 'ac': 1, 'ad': 1, 'bc': 1, 'bd': 1, 'cd': 1}
+ node t=3 (merge along matching 0 = ['a', 'b']|['c', 'd']): crossing edges ['ac', 'ad', 'bc', 'bd']; rank over Q of G_e(t) per edge {'ab': 1, 'ac': 1, 'ad': 1, 'bc': 1, 'bd': 1, 'cd': 1}
+ node t=2 (merge along matching 1 = ['a', 'c']|['b', 'd']): crossing edges ['ab', 'ad', 'bc', 'cd']; rank over Q of G_e(t) per edge {'ab': 1, 'ac': 1, 'ad': 1, 'bc': 1, 'bd': 1, 'cd': 1}
+ node t=6 (merge along matching 1 = ['a', 'c']|['b', 'd']): crossing edges ['ab', 'ad', 'bc', 'cd']; rank over Q of G_e(t) per edge {'ab': 1, 'ac': 1, 'ad': 1, 'bc': 1, 'bd': 1, 'cd': 1}
+ node t=4 (merge along matching 2 = ['a', 'd']|['b', 'c']): crossing edges ['ab', 'ac', 'bd', 'cd']; rank over Q of G_e(t) per edge {'ab': 1, 'ac': 1, 'ad': 1, 'bc': 1, 'bd': 1, 'cd': 1}
+ node t=-4 (merge along matching 2 = ['a', 'd']|['b', 'c']): crossing edges ['ab', 'ac', 'bd', 'cd']; rank over Q of G_e(t) per edge {'ab': 1, 'ac': 1, 'ad': 1, 'bc': 1, 'bd': 1, 'cd': 1}
+ p : edge t : D.1 tuples | nonzero pieces | 2-adic rank (#Smith inv < p) | 2^lam   [identity verified mod 2^p]
+  4 : ac t=1 :     10 |      1 |    1 | 4  OK
+  8 : ac t=1 :     36 |     10 |    3 | 4  OK
+ 12 : ac t=1 :     78 |     18 |    4 | 4  OK
+ 16 : ac t=1 :    136 |     26 |    4 | 4  OK
+     Smith valuations of G_ac(t+alpha) : [0, 4, 4, 8]
+  4 : ad t=1 :     10 |      1 |    1 | 4  OK
+  8 : ad t=1 :     36 |     10 |    3 | 4  OK
+ 12 : ad t=1 :     78 |     18 |    4 | 4  OK
+ 16 : ad t=1 :    136 |     26 |    4 | 4  OK
+     Smith valuations of G_ad(t+alpha) : [0, 4, 4, 8]
+  4 : ab t=2 :     25 |      4 |    3 | 4  OK
+  8 : ab t=2 :    113 |     12 |    4 | 4  OK
+ 12 : ab t=2 :    265 |     20 |    4 | 4  OK
+ 16 : ab t=2 :    481 |     28 |    4 | 4  OK
+     Smith valuations of G_ab(t+alpha) : [0, 3, 3, 6]
+  4 : ad t=2 :     25 |      4 |    3 | 4  OK
+  8 : ad t=2 :    113 |      4 |    4 | 4  OK
+ 12 : ad t=2 :    265 |      4 |    4 | 4  OK
+ 16 : ad t=2 :    481 |      4 |    4 | 4  OK
+     Smith valuations of G_ad(t+alpha) : [0, 3, 3, 6]
+  4 : ab t=4 :     73 |      4 |    3 | 4  OK
+  8 : ab t=4 :    393 |      4 |    4 | 4  OK
+ 12 : ab t=4 :    969 |      4 |    4 | 4  OK
+ 16 : ab t=4 :   1801 |      4 |    4 | 4  OK
+     Smith valuations of G_ab(t+alpha) : [0, 2, 2, 4]
+  4 : ac t=4 :     73 |      4 |    3 | 4  OK
+  8 : ac t=4 :    393 |      4 |    4 | 4  OK
+ 12 : ac t=4 :    969 |      4 |    4 | 4  OK
+ 16 : ac t=4 :   1801 |      4 |    4 | 4  OK
+     Smith valuations of G_ac(t+alpha) : [0, 2, 2, 4]

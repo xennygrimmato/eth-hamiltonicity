@@ -1,0 +1,21 @@
+lam=1 N=2: direct clique sum Z = 256
+ F(T) recovered: degree 75 (bound M(2L-1) = 90); F(0) == Z: True
+ Hermite [D.1 taper q(i)=M(3-i)] Sum q_t = 204 > 75: exact recovery True; with jets perturbed mod 2^p_t, result = Z mod 2^1: True
+ Hermite [D.1 taper q(i)=M(3-i)] Sum q_t = 204 > 75: exact recovery True; with jets perturbed mod 2^p_t, result = Z mod 2^8: True
+ Hermite [near-minimal uniform] Sum q_t = 98 > 75: exact recovery True; with jets perturbed mod 2^p_t, result = Z mod 2^1: True
+ Hermite [near-minimal uniform] Sum q_t = 98 > 75: exact recovery True; with jets perturbed mod 2^p_t, result = Z mod 2^8: True
+ node t=1 (merge ['a', 'b']|['c', 'd']), p= 4:     1 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True
+ node t=1 (merge ['a', 'b']|['c', 'd']), p= 8:     5 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True
+ node t=1 (merge ['a', 'b']|['c', 'd']), p=12:    11 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True
+ node t=1 (merge ['a', 'b']|['c', 'd']), p=16:    15 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True
+ node t=1 (merge ['a', 'b']|['c', 'd']), p=24:    16 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True
+ node t=2 (merge ['a', 'c']|['b', 'd']), p= 4:     5 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True
+ node t=2 (merge ['a', 'c']|['b', 'd']), p= 8:    11 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True
+ node t=2 (merge ['a', 'c']|['b', 'd']), p=12:    15 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True
+ node t=2 (merge ['a', 'c']|['b', 'd']), p=16:    16 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True
+ node t=2 (merge ['a', 'c']|['b', 'd']), p=24:    16 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True
+ node t=4 (merge ['a', 'd']|['b', 'c']), p= 4:     5 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True
+ node t=4 (merge ['a', 'd']|['b', 'c']), p= 8:    15 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True
+ node t=4 (merge ['a', 'd']|['b', 'c']), p=12:    16 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True
+ node t=4 (merge ['a', 'd']|['b', 'c']), p=16:    16 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True
+ node t=4 (merge ['a', 'd']|['b', 'c']), p=24:    16 names (N^4=16) ; signed-network-sum value == F(t+alpha) mod 2^p: True

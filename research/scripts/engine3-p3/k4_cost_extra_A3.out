@@ -1,0 +1,28 @@
+A=3, L=8; nodes 14
+ lam=4: uniform q=26 (Sum=364 > deg 360): worst log_N R = 4.0000; per level (t, q_t, v2E_t(0), p_t, log_N R_t, max total valuation):
+    level 0 [(-7, 26, -78, 179, 4.0, 72), (-5, 26, -78, 179, 4.0, 72), (-3, 26, -78, 179, 4.0, 72)]
+    level 1 [(-6, 26, -52, 128, 4.0, 52), (-2, 26, -52, 128, 4.0, 52), (2, 26, -52, 128, 4.0, 52)]
+    level 2 [(-4, 26, -26, 77, 4.0, 32), (4, 26, -26, 77, 4.0, 32)]
+    D.1 taper: worst log_N R = 4.0000
+ lam=16: uniform q=103 (Sum=1442 > deg 1440): worst log_N R = 4.0000; per level (t, q_t, v2E_t(0), p_t, log_N R_t, max total valuation):
+    level 0 [(-7, 103, -309, 718, 4.0, 288), (-5, 103, -309, 718, 4.0, 288), (-3, 103, -309, 718, 4.0, 288)]
+    level 1 [(-6, 103, -206, 513, 4.0, 208), (-2, 103, -206, 513, 4.0, 208), (2, 103, -206, 513, 4.0, 208)]
+    level 2 [(-4, 103, -103, 308, 4.0, 128), (4, 103, -103, 308, 4.0, 128)]
+    D.1 taper: worst log_N R = 4.0000
+ lam=64: uniform q=412 (Sum=5768 > deg 5760): worst log_N R = 4.0000; per level (t, q_t, v2E_t(0), p_t, log_N R_t, max total valuation):
+    level 0 [(-7, 412, -1236, 2881, 4.0, 1152), (-5, 412, -1236, 2881, 4.0, 1152), (-3, 412, -1236, 2881, 4.0, 1152)]
+    level 1 [(-6, 412, -824, 2058, 4.0, 832), (-2, 412, -824, 2058, 4.0, 832), (2, 412, -824, 2058, 4.0, 832)]
+    level 2 [(-4, 412, -412, 1235, 4.0, 512), (4, 412, -412, 1235, 4.0, 512)]
+    D.1 taper: worst log_N R = 4.0000
+  hypothetical D = 22*lam: best worst exponent 3.9999 at (102, 100, 97)
+  hypothetical D = 21*lam: best worst exponent 3.9995 at (98, 94, 93)
+  hypothetical D = 20*lam: best worst exponent 3.9971 at (92, 92, 89)
+  hypothetical D = 19*lam: best worst exponent 3.9826 at (88, 86, 85)
+  hypothetical D = 18*lam: best worst exponent 3.9676 at (84, 80, 81)
+  hypothetical D = 17*lam: best worst exponent 3.9352 at (78, 78, 77)
+  hypothetical D = 16*lam: best worst exponent 3.8891 at (74, 72, 73)
+  hypothetical D = 15*lam: best worst exponent 3.8349 at (70, 68, 65)
+  hypothetical D = 14*lam: best worst exponent 3.7706 at (64, 64, 65)
+  hypothetical D = 13*lam: best worst exponent 3.6844 at (60, 60, 57)
+  hypothetical D = 12*lam: best worst exponent 3.5441 at (56, 54, 53)
+  hypothetical D = 10*lam: best worst exponent 3.2799 at (46, 46, 45)

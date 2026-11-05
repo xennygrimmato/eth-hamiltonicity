@@ -1,0 +1,41 @@
+A=3 L=8 alpha=16; nodes used: levels 0,1,2 = matchings rows/cols/diagonals; deg F <= M(2L-1), M = 6*lam
+Smith profiles identical for zeta=1 and zeta=3: True
+  t=  1 level 0: per-edge Smith valuations (lam=4, one packet): [[0, 4, 4, 6, 6, 8, 9, 9, 10, 10, 12, 13, 13, 15, 15, 18], [0, 4, 4, 8, 8, 8, 9, 9, 12, 12, 13, 13, 16, 17, 17, 18], [0, 4, 4, 8, 8, 8, 9, 9, 12, 12, 13, 13, 16, 17, 17, 18], [0, 4, 4, 6, 6, 8, 9, 9, 10, 10, 12, 13, 13, 15, 15, 18]]
+  t=  3 level 0: per-edge Smith valuations (lam=4, one packet): [[0, 4, 4, 6, 6, 8, 9, 9, 10, 10, 12, 13, 13, 15, 15, 18], [0, 4, 4, 8, 8, 8, 9, 9, 12, 12, 13, 13, 16, 17, 17, 18], [0, 4, 4, 8, 8, 8, 9, 9, 12, 12, 13, 13, 16, 17, 17, 18], [0, 4, 4, 6, 6, 8, 9, 9, 10, 10, 12, 13, 13, 15, 15, 18]]
+  t=  2 level 1: per-edge Smith valuations (lam=4, one packet): [[0, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 9, 9, 9, 9, 12], [0, 3, 3, 5, 5, 6, 7, 7, 8, 8, 10, 10, 10, 12, 12, 14], [0, 3, 3, 5, 5, 6, 7, 7, 8, 8, 10, 10, 10, 12, 12, 14], [0, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 9, 9, 9, 9, 12]]
+  t=  6 level 1: per-edge Smith valuations (lam=4, one packet): [[0, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 9, 9, 9, 9, 12], [0, 3, 3, 5, 5, 6, 7, 7, 8, 8, 10, 10, 10, 12, 12, 14], [0, 3, 3, 5, 5, 6, 7, 7, 8, 8, 10, 10, 10, 12, 12, 14], [0, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 9, 9, 9, 9, 12]]
+  t=  4 level 2: per-edge Smith valuations (lam=4, one packet): [[0, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 8], [0, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 8], [0, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 8], [0, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 8]]
+
+=== (A) D.1's own taper: u=3, h=ceil(3M/u)=M, q(i)=h(u-i) ===
+ lam  N        Sum q  deg-bound | worst log_N R_t (p=1) | (p=6lam+1) | max total valuation per level
+    1 2^1       204     90 | 4.0000 | 4.0000 | maxval {0: 16, 1: 12, 2: 8}  min p_t {0: 195, 1: 70, 2: 17}
+    2 2^2       408    180 | 4.0000 | 4.0000 | maxval {0: 32, 1: 24, 2: 16}  min p_t {0: 393, 1: 142, 2: 35}
+    3 2^3       612    270 | 4.0000 | 4.0000 | maxval {0: 52, 1: 38, 2: 24}  min p_t {0: 591, 1: 214, 2: 53}
+    4 2^4       816    360 | 4.0000 | 4.0000 | maxval {0: 72, 1: 52, 2: 32}  min p_t {0: 789, 1: 286, 2: 71}
+    8 2^8      1632    720 | 4.0000 | 4.0000 | maxval {0: 144, 1: 104, 2: 64}  min p_t {0: 1581, 1: 574, 2: 143}
+   16 2^16     3264   1440 | 4.0000 | 4.0000 | maxval {0: 288, 1: 208, 2: 128}  min p_t {0: 3165, 1: 1150, 2: 287}
+   32 2^32     6528   2880 | 4.0000 | 4.0000 | maxval {0: 576, 1: 416, 2: 256}  min p_t {0: 6333, 1: 2302, 2: 575}
+   64 2^64    13056   5760 | 4.0000 | 4.0000 | maxval {0: 1152, 1: 832, 2: 512}  min p_t {0: 12669, 1: 4606, 2: 1151}
+  128 2^128   26112  11520 | 4.0000 | 4.0000 | maxval {0: 2304, 1: 1664, 2: 1024}  min p_t {0: 25341, 1: 9214, 2: 2303}
+
+=== (B) best uniform-per-level multiplicities (q0,q1,q2), subject to Sum q_t > deg F = M(2L-1) ===
+ lam  N    best worst log_N R_t (p=1)  at (q0,q1,q2)  [exhaustive grid]
+    1 2^1    4.0000  at (0, 0, 46)
+    2 2^2    4.0000  at (0, 0, 91)
+    3 2^3    4.0000  at (0, 0, 136)
+    4 2^4    4.0000  at (0, 0, 181)
+    8 2^8    4.0000  at (0, 0, 361)
+   16 2^16   4.0000  at (0, 0, 721)
+   32 2^32   4.0000  at (0, 0, 1441)
+
+=== (C) hypothetical: same nodes/precisions but a deformation of total degree D = c*lam (not realisable by
+    D.1's kernel, whose degree is 90*lam); smallest worst exponent over (q0,q1,q2) with Sum q_t > D, lam = 64 ===
+  D =  90*lam : worst log_N R_t = 4.0000 at (0, 0, 2881)
+  D =  56*lam : worst log_N R_t = 4.0000 at (0, 0, 1793)
+  D =  40*lam : worst log_N R_t = 4.0000 at (0, 0, 1281)
+  D =  30*lam : worst log_N R_t = 4.0000 at (0, 0, 961)
+  D =  24*lam : worst log_N R_t = 4.0000 at (112, 108, 105)
+  D =  20*lam : worst log_N R_t = 3.9971 at (92, 92, 89)
+  D =  16*lam : worst log_N R_t = 3.9246 at (72, 76, 73)
+  D =  12*lam : worst log_N R_t = 3.6005 at (56, 52, 57)
+  D =   8*lam : worst log_N R_t = 3.0865 at (36, 36, 41)

@@ -261,11 +261,10 @@ p^{0.152} there). Not covered: F_q with q = p^k.
 
 ## Paper 11 — Barrier note (upload `to-submit/09-barrier/hexagon-barrier-note.zip`, main file `main.tex`)
 Status: READY (5 Nov 2026). 24 pp, single `main.tex` with inlined bibliography, no long tables, compiles from a fresh unzip with
-`-halt-on-error` (0 errors, no undefined references); repository and commit `d7c4118` cited. Repositioned after Majdoddin
+`-halt-on-error` (0 errors, no undefined references); repository and commit `946c499` cited. Repositioned after Majdoddin
 (arXiv:2610.41622) and Dias–Lima (arXiv:2611.00517): the product-term caps are credited to them and to Anthropic's Appendix H; the paper's
 new content is the correlated (non-product) decompositions, the walls for the problems beyond SAT and the Lean development. The covering
-proof (`research/engine2-probabilistic.md` §7) was repaired and the conditional cap corrected to K = Θ(n^{1/9}); those research-note
-edits are not yet committed (see the folder's `INSTRUCTIONS.md`).
+proof (`research/engine2-probabilistic.md` §7) was repaired and the conditional cap corrected to K = Θ(n^{1/9}); both are committed in `946c499`.
 
 **Form answers**
 - **Title:** What the ETH refutations do not give: barriers for the counting engines, with machine-checked lemmas

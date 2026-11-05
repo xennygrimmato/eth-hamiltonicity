@@ -65,20 +65,21 @@ Many lower bounds in exact, parameterised and fine-grained complexity are proved
 Exponential Time Hypothesis (ETH) or the Strong ETH. In October 2026 OpenAI and Anthropic claimed
 deterministic subexponential-time algorithms for $\#k$-SAT that refute both. However, a refuted
 hypothesis does not settle the theorems proved from it: what falls depends on the premise that each
-proof actually uses, and beyond remarks in the manuscripts we are unaware of a systematic account. We present a map of $33$
+proof actually uses, and outside learning theory we know of no systematic account. We present a map of $34$
 hypotheses and $27$ published conditional theorems, assuming the claimed algorithms are correct.
 Each row is refuted, has lost its premise, or survives; a fourth label marks the few theorems whose
 conclusion is now contradicted by an explicit algorithm. The map rests on one distinction. The new
 algorithms handle $k$-CNF formulas of bounded width and, through the width reduction of Calabro,
 Impagliazzo and Paturi, CNFs of any width with at most $n\cdot 2^{o((\log n)^{1/4}/\sqrt{\log\log n})}$
-clauses (a short derivation of ours from the explicit rate of the Anthropic manuscript). Nothing is
+clauses (our derivation from the explicit rate of the Anthropic manuscript). Nothing is
 known for CNF-SAT with polynomially many clauses of unbounded width. Many of the best-known lower
 bounds (treewidth optimality, edit distance, Fr\'echet distance, LCS, diameter approximation) are
 proved from that ``CNF-SETH'' and survive with their premise intact. Gap-ETH and the ETH-based proof
-of the Parameterized Inapproximability Hypothesis lose their force; Almost-ETH, OV, 3SUM, APSP and
-the Set Cover Conjecture are untouched. We list the few new algorithms that follow. A refutation
+of the Parameterized Inapproximability Hypothesis lose their force; Almost-ETH, OV and
+the Set Cover Conjecture are untouched. We list the few new algorithms that follow and place the
+first follow-ups: crossover points, barriers, and the Satisfiability Hypothesis (SH). A refutation
 removes premises; it does not by itself give algorithms, and nothing here is practical. Everything
-is conditional on the claimed refutations, which are under review. The supporting notes are in our
+is conditional on the claimed refutations, still under review. Supporting notes are in our
 public repository, \url{https://github.com/xennygrimmato/eth-hamiltonicity}.
 \end{abstract}
 
@@ -134,9 +135,10 @@ nothing about $X$. Worse, the premise named in a theorem is often stronger than 
 proof uses. OpenAI~\cite[\S1.1.3]{OpenAI26} already observe this for several bounds: those for
 Fr\'echet distance, diameter approximation and the treewidth dependence of Independent Set and
 Dominating Set also follow from CNF-SAT of unbounded width, which their theorem does not reach, and
-new algorithms need reductions in the other direction. Beyond such remarks we are unaware of a
-systematic account of what the refutations affect, and without one every result stated ``under
-ETH'' or ``under SETH'' is in doubt.
+new algorithms need reductions in the other direction. For learning theory, Li~\cite[\S6]{Li26}
+takes stock of the lower bounds and of the fine-grained hypotheses they use. Beyond this and such
+remarks we are unaware of a systematic account of what the refutations affect across areas, and
+without one every result stated ``under ETH'' or ``under SETH'' is in doubt.
 
 We consider the \emph{classification problem}: for each fine-grained hypothesis and each published
 theorem $H\Rightarrow X$, decide what follows from \A{} and \Oa. We take the view that the status of
@@ -152,7 +154,9 @@ For a theorem this means that its premise, as actually used in the proof, still 
 The additional label \textbf{conclusion refuted} marks a theorem $H\Rightarrow X$ whose conclusion
 $X$ is contradicted by an explicit algorithm. One row is a theorem whose premise is the
 \emph{negation} of ETH, so that the theorem now \textbf{fires} (\cref{sec:circuits}). A few rows
-are \textbf{mixed} and are split in the reason column.
+are \textbf{mixed} and are split in the reason column. Statuses record what follows from the two
+ETH refutations only. Where a row has since been claimed refuted on unrelated grounds, the reason
+column says so (A23--A25).
 
 \begin{example}[Running example]\label{ex:running}
 Lokshtanov, Marx and Saurabh~\cite{LMS11tw} prove that Independent Set has no $(2-\varepsilon)^{\mathrm{tw}}$
@@ -182,13 +186,14 @@ Our contributions are:
 of any width with at most $n\cdot2^{o(L(n))}$ clauses in time $2^{o(n)}$, where
 $L(n)=(\log n)^{1/4}/\sqrt{\log\log n}$, and that nothing follows at $n^{1+\Omega(1)}$ clauses
 (\cref{sec:width}).
-\item We classify $33$ hypotheses: $12$ are refuted, $20$ survive and $1$ is mixed
+\item We classify $34$ hypotheses: $13$ are refuted, $20$ survive and $1$ is mixed
 (\cref{sec:tableA}).
 \item We classify $27$ conditional theorems: $3$ have their conclusion refuted, $1$ fires, $10$ lose
 their premise, $9$ survive and $4$ are mixed (\cref{sec:tableB}).
 \item We list the new algorithms that follow, and separate those that need only the formalised
 top-level theorems from those that need internal results of \A{} (\cref{sec:new}).
-\item We read the map by area and relate it to the literature
+\item We read the map by area, and place the first follow-up works by kind: new algorithms,
+constants and crossover points, barriers, and replacement hypotheses
 (\cref{sec:areas,sec:related}).
 \end{itemize}
 Much of the classification is bookkeeping that an expert in each area could do. What we add is one
@@ -208,8 +213,10 @@ a secondary source. Theorem numbers refer to the versions named in the bibliogra
 The working map behind this note, \repo{research/fine-grained-map.md}, names for each row the source
 we checked, with its URL where there is one. It is in our public repository
 \url{https://github.com/xennygrimmato/eth-hamiltonicity}~\cite{TulsyanRepo26}, together with the
-Lean proofs of our own results that we cite. Rows B14--B17 and B23 of this note correct the map at
-the commit we cite: they add priority credits and split B16 by what is machine-checked. We separate three kinds of claim. \emph{Proved on
+Lean proofs of our own results that we cite. Rows A3, A23--A25, A33, A34, B13--B17, B22--B24 and
+B27 of this note correct or extend the map at the commit we cite: they add priority credits, add
+the follow-up works found by a novelty search of arXiv and Hexagon on 5~November 2026, and split
+B16 by what is machine-checked. We separate three kinds of claim. \emph{Proved on
 paper}: \cref{prop:frontier} and the observations of \cref{sec:new}. \emph{Machine-checked in
 Lean}: only the results of ours that \cref{sec:new} labels so; each uses only the standard axioms
 and is built on the labs' own Lean developments. \emph{Conjectured, not claimed}: the further
@@ -304,7 +311,7 @@ treewidth bounds, and note that the LCS bounds follow from OVC. What dies is eve
 genuinely goes through sparsification to $O(n)$ clauses, or through bounded width.
 
 % =====================================================================
-\section{Hypotheses: twelve refuted, twenty survive}\label{sec:tableA}
+\section{Hypotheses: thirteen refuted, twenty survive}\label{sec:tableA}
 % =====================================================================
 
 In this section we classify the hypotheses. The list below gives them. ``Gives algorithms'' is noted
@@ -317,7 +324,7 @@ Each row gives the hypothesis and its source, its status, and the reason.
 \begin{itemize}[leftmargin=2.6em,itemsep=2pt]
 \item[A1] ETH: $s_k>0$ for $k\ge3$~\cite{IP99,ImpagliazzoPaturi01}\Lit. \emph{Status:} refuted. Either engine; $3$-SAT and $k$-SAT in $2^{o(n)}$.
 \item[A2] SETH: $s_\infty=1$~\cite{ImpagliazzoPaturi01}; randomized algorithms allowed in~\cite{CDLMNOPSW16}\Lit. \emph{Status:} refuted. \ref{F1}; \Oa{} suffices despite non-uniformity in $k$.
-\item[A3] Density-SETH: CNF of any width with $\le cn$ clauses needs $2^{(1-\varepsilon)n}$~\cite{CIP06}; \cite[Conj.~2]{MT19a}\Lit. \emph{Status:} refuted. Counting width reduction~\cite[Cor.~6.2]{TulsyanQ26}.
+\item[A3] Density-SETH: CNF of any width with $\le cn$ clauses needs $2^{(1-\varepsilon)n}$~\cite{CIP06}; \cite[Conj.~2]{MT19a}\Lit. \emph{Status:} refuted. Counting width reduction~\cite[Cor.~6.2]{TulsyanQ26}; also~\cite[Prop.~6.1]{Li26}.
 \item[A4] CNF-SETH: CNF-SAT $\notin2^{(1-\varepsilon)n}\poly(m)$, unbounded width~\cite{LMS11tw,BI18,Bri14,RVW13}\Lit. \emph{Status:} survives. \Cref{prop:frontier,rem:frontier}: reach ends at $n2^{o(L(n))}$ clauses.
 \item[A5] Super-SETH: for every unbounded $f$, $k$-SAT $\notin2^{n(1-f(k)/k)}$~\cite{VW21}\Lit. \emph{Status:} refuted. It implies SETH.
 \item[A6] $\#$ETH~\cite[p.~21:5]{DHMTW14}\Lit. \emph{Status:} refuted. \A, Corollary~6; \Oa. Gives $\#3$-SAT in $2^{o(n)}$.
@@ -337,17 +344,18 @@ Each row gives the hypothesis and its source, its status, and the reason.
 \item[A20] Hitting Set conjecture~\cite{AVWW16}\Lit. \emph{Status:} survives. Not known to follow from SETH; implies OVC.
 \item[A21] Set Cover Conjecture: $\forall\varepsilon\,\exists k$, Set Cover with sets of size $\le k$ $\notin2^{\varepsilon n}\poly(m)$, $n$ the universe~\cite[Thm.~1.2]{CDLMNOPSW16}\Lit. \emph{Status:} survives. Not implied by SETH even before 2026; the natural witness has $\Theta(n\log n)$ bits, so \ref{F2} does not apply.
 \item[A22] $k$-Hitting Set, $k$-Set Splitting, $k$-NAE-SAT need $2^{(1-\varepsilon)n}$ for large $k$, each equivalent to SETH~\cite[Thm.~1.1]{CDLMNOPSW16}\Lit. \emph{Status:} refuted. Equivalent to SETH; directly, they are $k$-CNFs on the universe. Gives algorithms.
-\item[A23] 3SUM conjecture\Fol. \emph{Status:} survives. No SAT premise; see B26.
-\item[A24] APSP; combinatorial BMM; OMv\Fol. \emph{Status:} survives. Unrelated to SAT.
-\item[A25] $k$-Clique in $n^{\omega k/3-\varepsilon}$; min-, exact- and zero-weight $k$-Clique\Fol. \emph{Status:} survives. Unrelated.
+\item[A23] 3SUM conjecture\Fol. \emph{Status:} survives. No SAT premise; see B26. Claimed refuted independently of SAT, in $O(n^{1.9992})$, by Alman and Vassilevska Williams~\cite{AVW26}\Lit.
+\item[A24] APSP; combinatorial BMM; OMv\Fol. \emph{Status:} survives. Unrelated to SAT. APSP claimed refuted independently, in $O(n^{2.9995})$~\cite{AVW26}\Lit.
+\item[A25] $k$-Clique in $n^{\omega k/3-\varepsilon}$; min-, exact- and zero-weight $k$-Clique\Fol. \emph{Status:} survives. Unrelated to SAT. Zero-weight $k$-Clique claimed refuted independently~\cite{AVW26}\Lit.
 \item[A26] $(\ell,k)$-Hyperclique hypothesis~\cite[Hyp.~1.4]{LVWW18}\Lit. \emph{Status:} survives. Its refutation would give dense Max-$k$-SAT in $2^{(1-\varepsilon)n}$, which A27 leaves open; no converse from SAT.
 \item[A27] Dense Max-$3$-SAT $\notin2^{(1-\varepsilon)n}$; Max-$2$-SAT, Max-Cut not below $2^{\omega n/3}$ (algorithm:~\cite{Wil05})\Fol. \emph{Status:} survives. A counter over $\Theta(n^2)$ clauses has $\Theta(n^2)$ variables.
 \item[A28] Subset Sum $\notin2^{(1/2-\varepsilon)n}$\Fol. \emph{Status:} survives. Weights are not local.
-\item[A29] Basic QSETH (CNF-SAT)~\cite{BPS19}; its $k$-CNF variant\Lit. \emph{Status:} mixed. CNF form survives (as A4); $k$-CNF variant refuted~\cite[Table~2, row~23]{TulsyanQ26}.
+\item[A29] Basic QSETH (CNF-SAT)~\cite{BPS19}; its $k$-CNF variant\Lit. \emph{Status:} mixed. CNF form survives (as A4); $k$-CNF variant refuted~\cite[\S6.2, entry~23]{TulsyanQ26}.
 \item[A30] PIH~\cite{LRSZ20}\Lit. \emph{Status:} survives. Unproved again: both proofs, from Gap-ETH and from ETH~\cite{GLRSW24}, lose their premises.
 \item[A31] ETH for End-of-a-Line~\cite{Rub16}\Lit. \emph{Status:} survives. A different, query-type hypothesis.
 \item[A32] Feige's random $3$-SAT hypothesis~\cite{Feige02}\Lit. \emph{Status:} survives. About polynomial-time average-case refutation.
-\item[A33] Almost-ETH: $\forall\gamma>0$, $3$-SAT $\notin O(2^{n^{1-\gamma}})$~\cite{Man26}\Lit. \emph{Status:} survives. Both engines give $2^{n/(\log n)^{\Theta(1)}}=2^{n^{1-o(1)}}$, not $2^{n^{1-\gamma}}$.
+\item[A33] Almost-ETH: $\forall\gamma>0$, $3$-SAT $\notin O(2^{n^{1-\gamma}})$~\cite{Man26}\Lit. \emph{Status:} survives. Both engines give $2^{n/(\log n)^{\Theta(1)}}=2^{n^{1-o(1)}}$, not $2^{n^{1-\gamma}}$. Called Weak ETH in~\cite{MIT26}, which proves it equivalent to the Satisfiability Hypothesis (SH) of Stearns and Hunt (CNF-SAT of input length $L$ is not in $O(2^{L^{1-\varepsilon}})$), and $\#$SH equivalent to Weak $\#$ETH~\cite[Thm.~2.4]{MIT26}\Lit.
+\item[A34] Sparse Max-SAT: for every $\varepsilon>0$ some $c$ makes Max-$3$-SAT on $cn$ clauses need $2^{(1-\varepsilon)n}$, and Max-$2$-SAT need $2^{(\omega/3-\varepsilon)n}$~\cite[Hyp.~3,~4]{AVW20}\Lit. \emph{Status:} refuted. Exact Max-$k$-SAT with $O(n)$ clauses in $2^{o(n)}$ (B15); recorded by Li~\cite[Cor.~4.5]{Li26} and Majdoddin~\cite[\S3.8]{Maj26}. Gives algorithms.
 \end{itemize}
 }
 
@@ -356,7 +364,16 @@ place where an \emph{effective} rate matters. Chen and Grohe's miniaturisation i
 SUBEPT to FPT, and the explicit rates of both manuscripts make the conclusion $\mathrm{M}[1]=\mathrm{FPT}$
 unconditional modulo the refutations. Manurangsi proposed row A33 in the 27 October 2026
 revision of~\cite{Man26}, because of the refutations; its comment states that the earlier
-versions' ETH and Gap-ETH premises ``are now known to be false''.
+versions' ETH and Gap-ETH premises ``are now known to be false''. Row A34 was posed because no
+sparsification lemma is known for Max-SAT~\cite{AVW20}; it falls because its sparse instances are
+local in the sense of~\ref{F2}. Two further proposals concern what should replace ETH. The MIT
+Hardness Group~\cite{MIT26} argue for SH, which is equivalent to Almost-ETH (A33), and prove a
+transfer theorem: a polynomial-time reduction from $3$-SAT with $s$ variables and clauses to
+instances of size $N\le s^{b+o(1)}$ rules out time $O(2^{N^{1/b-\varepsilon}})$ under
+SH~\cite[Thm.~3.1]{MIT26}. Li~\cite[Hyp.~2.14]{Li26} proposes a length form of ETH at rate $C$, that
+CNF-SAT of length $L$ has no randomized $2^{L/(\log L)^C}$ algorithm; as he notes, the new
+algorithms refute it for $C<1/2$ and leave it open for $C\ge1/2$. We mention it here rather than
+as a row.
 
 % =====================================================================
 \section{Conditional theorems: three contradicted, one fires}\label{sec:tableB}
@@ -374,21 +391,21 @@ Each row gives the theorem and its source, its status, and the reason.
 \item[B2] Cut\&Count pathwidth bounds: no $(3-\varepsilon)^{\mathrm{pw}}$ CVC, FVS, Steiner Tree; no $(4-\varepsilon)^{\mathrm{pw}}$ CDS, CFVS, COCT; Exact $k$-Leaf Spanning Tree~\cite[Thm.~1.3, App.~D]{CutAndCount11}\Lit. \emph{Status:} survives. Every reduction of App.~D starts from CNF-SAT with $n$ variables and $m$ clauses: CNF-SETH. (Their Thm.~1.4 is in B21.)
 \item[B3] P\u{a}tra\c{s}cu--Williams: $k$-DomSet in $O(n^{k-\varepsilon})$ for some $k\ge3$ $\Rightarrow$ CNF-SAT in $2^{\delta n}\poly(m)$, $\delta<1$~\cite[Thm.~2.1]{PW10}\Lit. \emph{Status:} survives. CNF form.
 \item[B4] P\u{a}tra\c{s}cu--Williams: $d$-SUM on $N$ numbers of $O(d\log N)$ bits, $d<N^{0.99}$, in $N^{o(d)}$ $\Rightarrow$ $k$-SAT in $2^{o(n)}$~\cite[\S5]{PW10}\Lit. \emph{Status:} premise refuted. Conclusion of the contrapositive is now true; $d$-SUM bound open.
-\item[B13] ETH $\Rightarrow$ no $2^{o(n)}$ IS, Clique, VC, $k$-Col, DomSet on $n$ vertices, any density~\cite{IPZ01,LMS11}\Lit. \emph{Status:} conclusion refuted. \A, Corollary~7: deterministic $O(2^{\delta n})$ for every $\delta$, any number of edges, with counts by size and of $k$-colourings. Counting independent sets and $q$-colourings is also \Oa, Corollary~1.3.
-\item[B14] ETH $\Rightarrow$ $k$-VC $\notin2^{o(k)}\poly(n)$ (from B13, as $k\le n$; cf.~\cite{CJ03})\Lit. \emph{Status:} conclusion refuted\Inf. $2k$-vertex LP kernel~\cite[\S2.5]{CyganEtAl15}, then Corollary~7 (\cref{sec:new}); obtained earlier by Bhattacharjee~\cite[Thm.~6.13]{Bhattacharjee26}; we arrived at it independently. Cai--Juedes: Max-SNP-complete problems have $2^{o(k)}p(n)$ algorithms iff $3$-SAT $\in\mathrm{DTIME}(2^{o(n)})$.
-\item[B15] ETH $\Rightarrow$ no $2^{o(n)}$ Max-Cut, Max-$k$-SAT with $O(n)$ constraints\Fol. \emph{Status:} conclusion refuted\Inf. Unweighted, or $O(1)$-bit weights; \cref{sec:new}, and earlier~\cite[Rem.~6.5, Cor.~6.4]{Bhattacharjee26}. Polynomial weights: under \HA, or by the white-box extension of \Oa{} to $\mathbb{Q}$-algebra weights in~\cite{Bhattacharjee26} (not a consequence of the top-level theorem of \Oa). Dense: A27.
-\item[B16] ETH $\Rightarrow$ no $2^{o(n)}$ HC, HP, TSP, Steiner, FVS, CVC, CDS, Max-Leaf on sparse graphs (\cite[Thm.~3.3]{LMS11} for Hamiltonian Path; folklore for the rest). \emph{Status:} mixed\Own. Conclusion refuted (machine-checked, under \HA): HC, HP, TSP and their directed forms~\cite{Tulsyan26} (\cref{sec:new}). Premise refuted: Steiner, FVS, CVC, CDS, Max-Leaf, which we only conjecture, with identities checked numerically~\cite{TulsyanRepo26}; and all of these problems on dense graphs.
+\item[B13] ETH $\Rightarrow$ no $2^{o(n)}$ IS, Clique, VC, $k$-Col, DomSet on $n$ vertices, any density~\cite{IPZ01,LMS11}\Lit. \emph{Status:} conclusion refuted. \A, Corollary~7: deterministic $O(2^{\delta n})$ for every $\delta$, any number of edges, with counts by size and of $k$-colourings. Counting independent sets and $q$-colourings is also \Oa, Corollary~1.3. Under SH (A33), no $2^{O(n^{1-\varepsilon})}L^{O(1)}$ for VC, IS and $3$-Colouring~\cite[Table~1]{MIT26}.
+\item[B14] ETH $\Rightarrow$ $k$-VC $\notin2^{o(k)}\poly(n)$ (from B13, as $k\le n$; cf.~\cite{CJ03})\Lit. \emph{Status:} conclusion refuted\Inf. $2k$-vertex LP kernel~\cite[\S2.5]{CyganEtAl15}, then Corollary~7 (\cref{sec:new}); obtained earlier by Bhattacharjee~\cite[Thm.~6.13]{Bhattacharjee26}; we arrived at it independently. Cai--Juedes: Max-SNP-complete problems have $2^{o(k)}p(n)$ algorithms iff $3$-SAT $\in\mathrm{DTIME}(2^{o(n)})$. Under SH, no $2^{O(k^{1-\varepsilon})}L^{O(1)}$~\cite[Table~1]{MIT26}.
+\item[B15] ETH $\Rightarrow$ no $2^{o(n)}$ Max-Cut, Max-$k$-SAT with $O(n)$ constraints\Fol. \emph{Status:} conclusion refuted\Inf. Unweighted, or $O(1)$-bit weights; \cref{sec:new}, and earlier~\cite[Rem.~6.5, Cor.~6.4]{Bhattacharjee26}. Polynomial weights: under \HA, or by the white-box extension of \Oa{} to $\mathbb{Q}$-algebra weights in~\cite{Bhattacharjee26} (not a consequence of the top-level theorem of \Oa). The sparse Max-SAT hypotheses fall with it (A34). Dense: A27.
+\item[B16] ETH $\Rightarrow$ no $2^{o(n)}$ HC, HP, TSP, Steiner, FVS, CVC, CDS, Max-Leaf on sparse graphs (\cite[Thm.~3.3]{LMS11} for Hamiltonian Path; folklore for the rest). \emph{Status:} mixed\Own. Conclusion refuted (machine-checked, under \HA): HC, HP, TSP and their directed forms~\cite{Tulsyan26} (\cref{sec:new}). Conclusion refuted on paper, assuming Theorem~D.1 of \Oa{} (not a consequence of its top-level theorem): FVS at any density, with counts of every size, and Steiner trees on sparse graphs, by Wu and Wang~\cite{WW26f}. Premise refuted: CVC, CDS, Max-Leaf, which we only conjecture, with identities checked numerically~\cite{TulsyanRepo26}; and the remaining problems on dense graphs.
 \item[B19] ETH $\Rightarrow$ $k$-Clique $\notin f(k)n^{o(k)}$ \cite[Thm.~5.5]{CHKX06}\Lit. \emph{Status:} premise refuted. $2^{\delta n}$ does not contradict it at small $k$.
 \item[B20] ETH $\Rightarrow$ binary CSP $\notin f(G)n^{o(k/\log k)}$, $k$ the treewidth~\cite{Marx10}; $\#$ETH $\Rightarrow$ $\#k$-matching (bipartite) $\notin f(k)n^{o(k/\log k)}$~\cite{CM14}\Lit. \emph{Status:} premise refuted. Parameter $k\ll n$. On a class of bounded-degree graphs of unbounded treewidth, Nguyen~\cite{Nguyen26} decides binary CSP in $f(G)n^{O(k/\sqrt{\log k})}$ via the network engine of \A, contradicting the literal (unconditional) form of Marx's Conjecture~1.4 ($n^{o(k)}$); the exponent $o(k/\log k)$ of the theorem is not reached.
 \item[B21] ETH $\Rightarrow$ no $2^{o(d\log d)}$ Closest String, Distortion, Disjoint Paths by tw, \dots~\cite{LMS18super}; no $2^{o(p\log p)}$ Cycle Packing~\cite[Thm.~1.4]{CutAndCount11}\Lit. \emph{Status:} premise refuted. 
-\item[B22] ETH $\Rightarrow$ $2^{\Omega(\sqrt n)}$ planar bounds~\cite{LMS11}; $2^{\Omega(n^{1-1/d})}$ for fat-object graphs~\cite{dBBKMZ18} and Euclidean TSP~\cite{dBBKK18}\Lit. \emph{Status:} premise refuted. The refutations give only $2^{n/\mathrm{polylog}\,n}$, worse than the upper bounds. Under Almost-ETH the reductions give $2^{n^{1/2-\gamma}}$-type bounds\Inf.
+\item[B22] ETH $\Rightarrow$ $2^{\Omega(\sqrt n)}$ planar bounds~\cite{LMS11}; $2^{\Omega(n^{1-1/d})}$ for fat-object graphs~\cite{dBBKMZ18} and Euclidean TSP~\cite{dBBKK18}\Lit. \emph{Status:} premise refuted. The refutations give only $2^{n/\mathrm{polylog}\,n}$, worse than the upper bounds. Under Almost-ETH, equivalently SH, the reductions give bounds such as no $2^{O(n^{1/2-\varepsilon})}L^{O(1)}$ for planar Hamiltonian Cycle and no $2^{O(n^{1-1/d-\varepsilon})}L^{O(1)}$ for Euclidean TSP in $\mathbb{R}^d$~\cite[Thm.~3.1, Table~1]{MIT26}\Lit.
 \item[B11] Under the Set Cover Conjecture: Steiner Tree $\notin2^{\varepsilon t}\poly$, CVC $\notin2^{\varepsilon t}\poly$, Set Partitioning $\notin2^{\varepsilon n}\poly(m)$, Subset Sum $\notin t^{\varepsilon}\poly(n)$~\cite[Thm.~1.2]{CDLMNOPSW16}\Lit. \emph{Status:} survives. A21 intact.
 \item[B12] Subset Sum $\notin T^{1-\varepsilon}2^{o(n)}$~\cite{ABHS19}\Lit. \emph{Status:} premise refuted. Reduces from $k$-SAT; the $T^{1-\varepsilon}\poly(n)$ form survives via B11.
 \end{itemize}
 \subsubsection*{Approximation}
 \begin{itemize}[leftmargin=2.6em,itemsep=2pt]
 \item[B23] Gap-ETH $\Rightarrow$ FPT-inapproximability of $k$-Clique, $k$-DomSet, Biclique, induced matching, DkS~\cite{CCKLMNT17}\Lit. \emph{Status:} premise refuted. Partly re-proved under W[1] $\ne$ FPT (survives): constant-factor $k$-Clique~\cite{Lin21}, $k^{1/H(k)}$-factor $k$-Clique~\cite{KK22}, $k^{o(1)}$-factor $k$-Clique~\cite{CFLL25}, any $F(k)$ for $k$-DomSet~\cite{KLM18}. Only the ETH-based versions lose their premise: the $k^{o(1)}$ bound of Lin, Ren, Sun and Wang~\cite{LRSW22} and KLM's $T(k)n^{o(k)}$. No W[1] re-proof found for the others.
-\item[B24] ETH-hardness of approximation: 2-CSP to $|V|^{1-o(1)}$, Directed Steiner Network to $k^{1/4-o(1)}$~\cite{DM18}; DkS~\cite{Man26}; best Nash~\cite{BKW15}; free games~\cite{AIM14}\Lit. \emph{Status:} mixed. DkS to $2^{(\log n)^{1-\varepsilon}}$ re-proved under Almost-ETH in~\cite{Man26} (v3): survives. \cite{DM18,BKW15,AIM14}: premise refuted; quasi-polynomial reductions plausibly give weaker bounds under Almost-ETH\Inf.
+\item[B24] ETH-hardness of approximation: 2-CSP to $|V|^{1-o(1)}$, Directed Steiner Network to $k^{1/4-o(1)}$~\cite{DM18}; DkS~\cite{Man26}; best Nash~\cite{BKW15}; free games~\cite{AIM14}\Lit. \emph{Status:} mixed. DkS to $2^{(\log n)^{1-\varepsilon}}$ re-proved under Almost-ETH in~\cite{Man26} (v3), and under SH in~\cite[\S4]{MIT26}: survives. \cite{DM18,BKW15,AIM14}: premise refuted; quasi-polynomial reductions plausibly give weaker bounds under Almost-ETH\Inf.
 \item[B25] ETH $\Rightarrow$ PIH~\cite{GLRSW24}; near-optimal $f(k)n^{o(k)}$-type bounds for approximate $k$-Clique and CSP under ETH~\cite{GLRSW25}\Lit. \emph{Status:} premise refuted. See A30.
 \end{itemize}
 \subsubsection*{Problems in P}
@@ -403,8 +420,8 @@ Each row gives the theorem and its source, its status, and the reason.
 \end{itemize}
 \subsubsection*{Counting, quantum, circuits}
 \begin{itemize}[leftmargin=2.6em,itemsep=2pt]
-\item[B17] $\#$ETH bounds for the Tutte polynomial, the permanent and $\#$IS~\cite{DHMTW14,Curticapean18,BrandDellRoth19}\Lit. \emph{Status:} mixed. Conclusion refuted: $\#2$-SAT and $\#$IS on $n$ variables/vertices at any density (\A, Corollaries~6,~7); $\#$PM (\Oa, Corollary~1.3); sparse permanent, Boolean $\#$CSP, the integer hyperbolas $H_q$ (local encodings; also, independently and earlier, \cite{Bhattacharjee26}). Premise refuted: $T(x,1)$ on sparse graphs, which we only conjecture under \HA, with identities checked numerically\Own; the dense permanent and the rest.
-\item[B18] Quantum-supremacy statements from ETH/SETH~\cite{MT19a} and others. \emph{Status:} mixed. Of $24$ rows in~\cite[Table~2]{TulsyanQ26}: $5$ refuted, $5$ premise refuted, $1$ moot, $1$ open, $12$ survive.
+\item[B17] $\#$ETH bounds for the Tutte polynomial, the permanent and $\#$IS~\cite{DHMTW14,Curticapean18,BrandDellRoth19}\Lit. \emph{Status:} mixed. Conclusion refuted: $\#2$-SAT and $\#$IS on $n$ variables/vertices at any density (\A, Corollaries~6,~7); $\#$PM (\Oa, Corollary~1.3); sparse permanent, Boolean $\#$CSP, the integer hyperbolas $H_q$ (local encodings; also, independently and earlier, \cite{Bhattacharjee26}). The line $T(x,1)$ on sparse graphs, which we only conjecture under \HA, with identities checked numerically\Own, is claimed by Wu and Wang~\cite[Cor.~10]{WW26f}, assuming Theorem~D.1 of \Oa: all edge-cardinality counts of spanning forests. Premise refuted: the dense permanent and the rest. Under $\#$SH, $\#2$-SAT has no $O(2^{(n+m)^{1-\varepsilon}})$ algorithm~\cite[Cor.~5.1]{MIT26}.
+\item[B18] Quantum-supremacy statements from ETH/SETH~\cite{MT19a} and others. \emph{Status:} mixed. Of $24$ entries in~\cite[\S6.2]{TulsyanQ26}: $5$ refuted, $5$ premise refuted, $1$ moot, $1$ open, $12$ survive.
 \item[B27] ETH false $\Rightarrow$ $\ENP\not\subseteq\mathrm{SIZE}(O(n))$~\cite[Thm.~6.1]{Wil13}; see~\cite{JMV15}\Lit. \emph{Status:} fires. \Cref{sec:circuits}.
 \end{itemize}
 }
@@ -430,6 +447,10 @@ We machine-check it in Lean on top of Anthropic's own circuit-lower-bound module
 (\lean{enp_not_size_n_sqrt_log}; standard axioms; fresh kernel replay). The statement is OpenAI's;
 what we add is the formal proof. It holds only infinitely often, and the constant is not
 explicit. It gives nothing at $n\log n$ and nothing for NEXP.
+Wu and Wang~\cite{WW26c} extend the bound to larger gate bases: $c\,m\sqrt{\log m}/\log\log m$
+gates infinitely often over arbitrary-fan-in AND and OR with binary XOR, from the main theorem of
+\A, and $c\,m\sqrt{\log m}$ for fan-in-two circuits with a linear budget of arbitrary-fan-in XOR and
+symmetric gates, from an extension-ring form of Theorem~D.1 of \Oa.
 Carmosino et al.~\cite{CGIMPS16} note that disproving NSETH gives circuit lower bounds; for the
 $k$-CNF form refuted here this is subsumed by the above.
 
@@ -439,8 +460,7 @@ $k$-CNF form refuted here this is subsumed by the above.
 
 The refutations give few explicit algorithms beyond $k$-SAT itself. In this section we list those
 we know of. We separate what needs only the formalised top-level statements from what needs
-internal results of \A. Bhattacharjee~\cite{Bhattacharjee26} claims further weighted consequences,
-which we do not list.
+internal results of \A{} and what needs internal results of \Oa.
 
 \subsection{From the main theorems alone}
 \begin{enumerate}[label=\textup{(\roman*)}]
@@ -498,7 +518,7 @@ formal object is Kotzig's transition-system definition.
 \item \emph{Exact quantum amplitudes}~\cite{TulsyanQ26}: amplitudes of Clifford+T circuits with $G$
 two-qubit gates in $2^{O(G/\sqrt{\log G})}$, machine-checked. The polynomial-space variant and the
 marginal and sampling corollaries have written proofs only and are not claimed.
-\item \emph{Deterministic factoring.} Rudich and Rousseau~\cite{RR26} used the counting engine to
+\item\label{it:fact} \emph{Deterministic factoring.} Rudich and Rousseau~\cite{RR26} used the counting engine to
 prove in Lean that one deterministic Turing machine computes the least prime factor of an $n$-bit
 integer within $C_k2^{n/k}$ steps for every $k$, and conjectured the rate $2^{O(n/\sqrt{\log n})}$.
 Before 2026 every proven deterministic bound had a fixed positive exponent, the best being
@@ -508,21 +528,63 @@ preprints. We give an independent second Lean proof, along a different route~\ci
 one Turing machine outputs the least prime factor of $N$ within
 $\lfloor C\cdot2^{Cn/\sqrt{\log_2(n+2)}}\rfloor$ steps, by evaluating a two-dimensional
 Sch\"onhage--Strassen multiplication network with Anthropic's counting theorem. Machine-checked.
+\item \emph{Class numbers and lattice-point counts}~\cite{TulsyanCN26}: one Turing machine outputs,
+within $\lfloor C\cdot2^{Cn/\sqrt{\log_2(n+2)}}\rfloor$ steps on $n$-bit inputs, the number of reduced
+forms of discriminant $-N$ (for fundamental discriminants, $h(-N)$), and others give
+$\sum_{m\le x}\tau(m)$, $\sum_{m\le x}\sigma(m)$ and the Gauss circle count. Before, the best proven
+deterministic bounds were fixed powers of the input. Machine-checked; Lean proves the count of
+reduced forms, whose equality with the class number is classical and not formalised. The same note
+machine-checks the least square root modulo $m$ and the least quadratic non-residue modulo a prime,
+but these bounds are not new. Modulo a prime both take deterministic polynomial time, by OpenAI's
+proof of the quasi-Riemann hypothesis~\cite[Cor.~1.2]{OAI003} and by its deterministic factorisation
+of polynomials over $\mathbb{F}_p$~\cite{OAI142}, both posted before the refutations; for composite
+$m$ the least square root follows on paper from deterministic factoring~\cite{Shu26}, Hensel lifting
+and the Chinese remainder theorem. Vega~\cite{Vega26} shows, unconditionally, that $h(-d)$ is
+computable in $\mathrm{FP}^{\Sigma_2^{\mathrm P}}$, a statement of a different kind.
+\item \emph{The parity of $\pi(x)$}~\cite{TulsyanP26}: $\pi(x)\bmod2$, and the parity of the number
+of primes in any interval $[A,B]$, in time $2^{O(n/\sqrt{\log n})}=x^{o(1)}$. Machine-checked. It
+gives neither prime finding nor the value of $\pi(x)$.
 \item \emph{Further sparse problems, conjectured and not claimed}~\cite{TulsyanRepo26}: Steiner
 Tree, FVS, Connected VC and DS, Max-Leaf; the line $T(x,1)$ of the Tutte plane (forests counted by
 size) on sparse graphs, which is the line Brand, Dell and Roth~\cite{BrandDellRoth19} show
 $\#$ETH-hard; sparse Max-Cut with polynomial weights. All are conditional on \HA. For the Tutte
 and connectivity problems the identities are checked numerically only; none is formalised. For
+FVS, Steiner trees and $T(x,1)$, Wu and Wang~\cite{WW26f} give a different route, through \Oa{}
+(\cref{sec:newO}). For
 Max-Cut and Max-$k$-SAT with polynomial weights, Bhattacharjee~\cite{Bhattacharjee26} gives an
 earlier, independent route. It replaces \HA{} by the claim that the steps of \Oa{} remain valid
 over a commutative $\mathbb{Q}$-algebra (unrefereed, not formalised).
 \end{enumerate}
 
+\subsection{From internal results of \texorpdfstring{\Oa}{[O]}}\label{sec:newO}
+Other follow-up works use statements inside \Oa, chiefly its Boolean tensor-contraction theorem
+(Theorem~D.1). It proves the headline bound of \Oa, but OpenAI's Lean development covers only the
+weaker bound of its Theorem~1.1, not Theorem~D.1~\cite[\S2.3]{Li26}. None of these works reports a
+formalisation of its own results; we list them as claimed.
+\begin{enumerate}[label=\textup{(\roman*)},resume]
+\item \emph{Weighted counting.} Bhattacharjee~\cite{Bhattacharjee26} reproduces the algorithm of
+\Oa{} and extends it to sums of local weights in any commutative $\mathbb{Q}$-algebra, with many
+weighted consequences, among them exact sparse Max-Cut and Max-$k$-SAT and the independence
+polynomial on every graph.
+\item \emph{Factoring.} Shunia~\cite{Shu26}, from the tensor-contraction theorem of \Oa: the
+complete factorisation of an $n$-bit integer in deterministic time $2^{O(n/\sqrt{\log n})}$ and
+polynomial space (item~\ref{it:fact} above).
+\item \emph{Feedback vertex sets and forests.} Wu and Wang~\cite{WW26f}, assuming Theorem~D.1: the
+number of feedback vertex sets of each size of any $n$-vertex graph, in time
+$\poly(n+m)2^{O(n(\log\log n)^2/\sqrt{\log n})}$ and polynomial space, and likewise induced trees
+and paths; and, with $s=n(1+\log_2(1+m/n))$, directed Hamiltonian cycles, spanning forests by number
+of edges and Steiner trees by number of vertices in $\poly(n+m)2^{O(s/\sqrt{\log s})}$.
+\item \emph{Learning and inference.} Li~\cite{Li26}, from a special case of Theorem~D.1 over truncated
+polynomial rings: exact error profiles, hence exact empirical risk minimisation and exact sparse
+Max-CSP, and exact inference in graphical models of bounded degree and arity in
+$2^{O(n/\sqrt{\log n})}$.
+\end{enumerate}
+
 \subsection{What gets no algorithm}
 Nothing parameterised by treewidth or pathwidth gets an algorithm, except binary CSP on one class of
 bounded-degree graphs, with exponent $O(\mathrm{tw}/\sqrt{\log\mathrm{tw}})$~\cite{Nguyen26} (B20).
-Nor does any problem in P (edit distance, LCS, Fr\'echet, diameter, OV, 3SUM, APSP, $k$-Clique), Set
-Cover by universe size, Subset Sum, dense Max-CSP, dense Hamiltonicity, or a planar problem (where
+Nor does any problem in P (edit distance, LCS, Fr\'echet, diameter, OV, 3SUM, APSP, $k$-Clique; for
+3SUM and APSP see~\cite{AVW26}, which is unrelated to SAT), Set Cover by universe size, Subset Sum, dense Max-CSP, dense Hamiltonicity, or a planar problem (where
 $2^{O(\sqrt n)}$ is already better).
 
 % =====================================================================
@@ -555,7 +617,10 @@ size has a linear kernel, so the parameter and the number of vertices coincide a
 preprocessing, and the $2^{\delta n}$ algorithm of \A{} becomes a $2^{o(k)}$ algorithm (B14), as Bhattacharjee
 observed first.
 Whether $\mathrm{W}[1]\ne\mathrm{FPT}$ (A16) is unaffected: Chen and Grohe list its equivalence
-with ETH as open, and the refutations settle ETH without touching it.
+with ETH as open, and the refutations settle ETH without touching it. Most of the ETH-based bounds
+return in a weaker form under SH (A33): the transfer theorem of the MIT Hardness
+Group~\cite[Thm.~3.1]{MIT26} loses only $\varepsilon$ in the exponent, and their Table~1 lists such
+bounds for planar, geometric and parameterised problems (B13, B14, B22).
 
 \subsection{Approximation}
 Gap-ETH is refuted by any exact $2^{o(n)}$ algorithm, so it falls with ETH; the gap does not help.
@@ -583,15 +648,18 @@ of ETH. The dynamic lower bounds of Abboud and Vassilevska Williams (B9) are a b
 They are stated through sparsification, but by our reading proved by constructions that also run
 from CNF-SETH. The barrier of Carmosino et al.\ (B26), that NSETH forbids deterministic
 fine-grained reductions from SAT to 3SUM and APSP, disappears for $k$-SAT; no such reduction is
-known.
+known. Separately, Alman and Vassilevska Williams~\cite{AVW26} claim truly subquadratic 3SUM and
+truly subcubic APSP by an algorithm for thin matrix products that has nothing to do with SAT. This
+changes no status in the map, which records only what follows from the ETH refutations (A23--A25).
 
 \subsection{Counting and quantum}
 Counting statements behave like decision ones. $\#$ETH and the $k$-CNF form of $\#$SETH fall
 (A6, A7). Lower bounds proved by local reductions on sparse instances are contradicted by explicit
 algorithms (B17): Corollaries~6 and~7 of \A{} count independent sets and models of $2$-CNFs at any
 density, and local encodings handle sparse permanents, perfect matchings and the integer hyperbolas
-of the Tutte plane. The non-local cases need \HA{}: Hamiltonian cycles are machine-checked
-(B16), while forests, the line $T(x,1)$, are only conjectured (B17). Dense permanents,
+of the Tutte plane. The non-local cases need internal results: Hamiltonian cycles are machine-checked under \HA{}
+(B16), while forests, the line $T(x,1)$, are conjectured under \HA{} and claimed by Wu and Wang
+under Theorem~D.1 of \Oa{} (B17). Dense permanents,
 and the Tutte plane on dense graphs, are untouched. For the quantum statements (B18) the same split
 appears: sparse Clifford+T circuits fall under \HA, while dense or average-case conjectures
 survive~\cite[\S6]{TulsyanQ26}.
@@ -601,16 +669,24 @@ survive~\cite[\S6]{TulsyanQ26}.
 % =====================================================================
 
 We organise related work by idea: collections of ETH-based lower bounds, the structure of SETH and
-its variants, and the first responses to the refutations.
+its variants, and four kinds of follow-up work: replacement hypotheses, new algorithms, constants and
+barriers, and expositions.
 
 \paragraph{Collections of lower bounds.} Lokshtanov, Marx and Saurabh~\cite{LMS11} survey lower
 bounds based on ETH, and so does Chapter~14 of the textbook of Cygan et al.~\cite{CyganEtAl15}. Both were written to \emph{use} the hypotheses. In contrast, we take each
 bound as an object and ask which of its premises the refutations remove.
 
-\paragraph{The structure of the hypotheses.} Closest to our work is Section~1.1.3 of OpenAI's
+\paragraph{The structure of the hypotheses.} Closest to our work are Section~1.1.3 of OpenAI's
 manuscript~\cite{OpenAI26}, which already separates fixed from unbounded width for the Fr\'echet,
-diameter and treewidth bounds and points to OVC for LCS. In contrast, we classify each row, including
-the approximation, parameterised and counting bounds, against the premise its proof uses. Cygan et
+diameter and treewidth bounds and points to OVC for LCS, and the ledger of Li~\cite[\S6]{Li26},
+posted on 29~October 2026, which takes stock of learning theory. Li's table of fine-grained
+hypotheses agrees with ours where they overlap: the $k$-CNF forms of ETH and SETH, Gap-ETH and the
+sparse Max-SAT hypotheses are false; CNF-SETH and its counting form are open; the hard instances of
+CNF-SETH need superlinearly many clauses; and low-dimension OV no longer follows from a hypothesis
+about SAT~\cite[Table~1, Prop.~6.1]{Li26}. His Lemma~3.5 and Corollary~3.6 sharpen
+\cref{rem:frontier}(c): under CNF-SETH, width $O(\log n)$ already needs time $2^{(1-\gamma)n}$. In
+contrast, we classify each row, including the approximation, parameterised, counting and
+fine-grained bounds outside learning, against the premise its proof uses. Cygan et
 al.~\cite{CDLMNOPSW16} map which problems are equivalent to SETH and which are tied to the Set Cover Conjecture
 instead. Calabro, Impagliazzo and Paturi~\cite{CIP06} relate clause width to clause density, and
 Gao, Impagliazzo, Kolokolova and Williams~\cite{GIKW17} separate low- and moderate-dimension OV.
@@ -619,15 +695,49 @@ distinctions our map depends on. In contrast, they ask which hypotheses imply wh
 left once the $k$-CNF forms are false. The width--density relation of~\cite{CIP06} becomes the
 dividing line of \cref{sec:width}.
 
-\paragraph{Responses to the refutations.} Manurangsi~\cite{Man26} restates his Densest-$k$-Subgraph
-bound under Almost-ETH. Bhattacharjee~\cite{Bhattacharjee26} extends the algorithm of \Oa{} to
+\paragraph{Replacement hypotheses.} Manurangsi~\cite{Man26} restates his Densest-$k$-Subgraph
+bound under Almost-ETH. The MIT Hardness Group~\cite{MIT26} prove that Almost-ETH, which they call
+Weak ETH, is equivalent to the Satisfiability Hypothesis of Stearns and Hunt, and $\#$SH to Weak
+$\#$ETH; their transfer theorem keeps the usual reductions at the cost of $\varepsilon$ in the
+exponent. Li~\cite[Hyp.~2.14]{Li26} proposes a length form of ETH at an explicit rate. These works
+ask which hypothesis should carry lower bounds from now on. In contrast, we ask what the
+refutations do to the hypotheses and theorems already in the literature; rows A33, B13, B14, B22
+and B24 use their results.
+
+\paragraph{New algorithms.} Bhattacharjee~\cite{Bhattacharjee26} extends the algorithm of \Oa{} to
 weighted sums, Nguyen~\cite{Nguyen26} decides binary CSP with a sublinear treewidth exponent on one
-class of graphs, and Rudich and Rousseau~\cite{RR26} factor in time $2^{o(n)}$. Our own notes count
-Hamiltonian cycles~\cite{Tulsyan26}, Eulerian circuits~\cite{TulsyanE26} and quantum
-amplitudes~\cite{TulsyanQ26}, factor~\cite{TulsyanF26}, and machine-check OpenAI's superlinear circuit lower
-bound~\cite{TulsyanC26}; \cite[Table~2]{TulsyanQ26} classifies the fine-grained quantum-supremacy
-conjectures, which row B18 summarises. These works add algorithms one problem at a time. In
-contrast, this note asks what the refutations do to the hypotheses and lower bounds themselves.
+class of graphs, Rudich and Rousseau~\cite{RR26} and Shunia~\cite{Shu26} factor, Wu and Wang count
+feedback vertex sets~\cite{WW26f} and extend the circuit lower bound to larger gate
+bases~\cite{WW26c}, and Li~\cite{Li26} speeds up learning of local hypothesis classes. Our own notes
+count Hamiltonian cycles~\cite{Tulsyan26}, Eulerian circuits~\cite{TulsyanE26} and quantum
+amplitudes~\cite{TulsyanQ26}, compute class numbers and lattice-point counts~\cite{TulsyanCN26} and
+the parity of $\pi(x)$~\cite{TulsyanP26}, factor~\cite{TulsyanF26}, and machine-check OpenAI's
+superlinear circuit lower bound~\cite{TulsyanC26}; \cite[\S6.2]{TulsyanQ26} classifies the
+fine-grained quantum-supremacy conjectures, which row B18 summarises. Two neighbouring problems were
+settled before the refutations, by other results of OpenAI: square roots and least quadratic
+non-residues modulo a prime take polynomial time~\cite{OAI003,OAI142} (\cref{sec:new}). Vega's
+placement of class numbers in $\mathrm{FP}^{\Sigma_2^{\mathrm P}}$~\cite{Vega26} is unconditional.
+These works add algorithms one problem at a time. In contrast, this note asks what the refutations
+do to the hypotheses and lower bounds themselves.
+
+\paragraph{Constants, crossover points and barriers.} OpenAI's manuscript states no
+constants~\cite{DL26}. Szeider~\cite{Sze26} computes from OpenAI's own parameter choices that its main-text algorithm is
+an exhaustive search on every input with fewer than $2^{10^{10}}$ variables, and its Appendix~D
+algorithm on every input with fewer than $2^{131071}$ variables and clauses; an addendum treats \A.
+Majdoddin~\cite{Maj26} makes the recursion of \A{} explicit and lowers its crossover points by proved
+changes: at clause density one, to about $2^{420}$ clauses from $2^{33858}$, and for general $3$-SAT
+to an estimated $2^{8.6\cdot10^9}$ variables. He also proves a barrier: every grid algorithm in a
+rewrite-and-merge class that contains the recursion has exponent at least $1/\log_2K$ per edge bit on
+clique sums with $K$ nodes, so in his main-term model none gains for general $3$-SAT below about
+$2^{6000}$ variables~\cite[Thm.~4.13, Cor.~4.15, Cor.~4.19]{Maj26}. Dias and Lima~\cite{DL26} extract
+the constants of OpenAI's tensor-contraction proof, whose certified time at bounded density stays
+above $2^n$ unless $\log_2(n+m)>10^9$, and prove limits in a cost model for its interpolation
+scheme, such as $2^{\Omega(\sqrt{\mathrm{tw}})}$ at treewidth $\mathrm{tw}$. In contrast, the map
+concerns asymptotic statements only; these works explain why nothing in it is practical.
+
+\paragraph{Expositions.} O'Donnell~\cite{ODo26} and Kominers~\cite{Kom26} expound the algorithm of
+\Oa, the second in a qualitative form. In contrast, we use both manuscripts only through their
+stated theorems.
 
 % =====================================================================
 \section{Summary: three findings}\label{sec:summary}
@@ -639,9 +749,9 @@ contrast, this note asks what the refutations do to the hypotheses and lower bou
 \centering\small
 \begin{tabular}{@{}lccc@{}}
 \toprule
-Status & Hypotheses ($33$) & Theorems ($27$) & Total\\
+Status & Hypotheses ($34$) & Theorems ($27$) & Total\\
 \midrule
-refuted & $12$ & -- & $12$\\
+refuted & $13$ & -- & $13$\\
 conclusion refuted & -- & $3$ (B13--B15) & $3$\\
 fires & -- & $1$ (B27) & $1$\\
 premise refuted & -- & $10$ & $10$\\
@@ -649,7 +759,7 @@ survives & $20$ & $9$ & $29$\\
 mixed & $1$ (A29) & $4$ (B16--B18, B24) & $5$\\
 \bottomrule
 \end{tabular}
-\caption{Counts per status. Refuted: A1--A3, A5--A7, A9, A11--A13, A15, A22. Premise refuted:
+\caption{Counts per status. Refuted: A1--A3, A5--A7, A9, A11--A13, A15, A22, A34. Premise refuted:
 B4, B10, B12, B19--B23, B25, B26. Survives: A4, A8, A10, A14, A16--A21, A23--A28, A30--A33, B1--B3,
 B5--B9, B11.}\label{tab:counts}
 \end{table}
@@ -681,14 +791,19 @@ its primary source; the nine rows that earlier rested on secondary sources were 
 this note (\cref{sec:sources}), and no row is now secondary. Rows marked \Fol{} have no single
 primary statement. Rows marked \Inf{} are our inferences and are argued only in the reason column.
 B8 omits later diameter tradeoffs. \A{} reports more than $800$ papers with results proved only
-under ETH or a hypothesis implying it.
+under ETH or a hypothesis implying it. A novelty search of arXiv and Hexagon on 5~November 2026 added
+row A34, the notes in A23--A25 and the follow-up works of \cref{sec:related}; the literature is
+moving fast, and we may have missed others.
 \item \emph{Our written arguments are not machine-checked.} \Cref{prop:frontier} and the
 observations (iv)--(v) of \cref{sec:new} are short written arguments, produced with AI assistance
 and not machine-checked or reviewed by a human expert. Only the results so labelled in
 \cref{sec:new} are machine-checked, on top of the labs' Lean developments. No human has yet checked
 that their formal statements match the printed ones.
 \item \emph{Nothing is practical.} \A{} notes that its bound does not beat $2^n$ for $3$-CNFs with
-$5n$ clauses unless $n>10^{10\,000}$. All algorithms here are galactic.
+$5n$ clauses unless $n>10^{10\,000}$. Later computations lower such crossover points but leave
+them astronomical: about $2^{420}$ clauses at density one for \A~\cite{Maj26}, while the Appendix~D
+algorithm of \Oa{} is an exhaustive search below $2^{131071}$ variables and clauses~\cite{Sze26}.
+All algorithms here are galactic.
 \end{itemize}
 
 \section*{Acknowledgements}
@@ -718,6 +833,15 @@ pp.~41--57; arXiv:1704.04546. Journal version: ACM Trans. Algorithms \textbf{18}
 A.~Abboud, T.~D.~Hansen, V.~Vassilevska Williams and R.~Williams, \emph{Simulating branching
 programs with edit distance and friends, or: a polylog shaved is a lower bound made}, Proc. 48th
 Annual ACM Symposium on Theory of Computing (STOC), 2016, pp.~375--388; arXiv:1511.06022.
+
+\bibitem{AVW20}
+J.~Alman and V.~Vassilevska Williams, \emph{{OV} graphs are (probably) hard instances}, 11th
+Innovations in Theoretical Computer Science Conference (ITCS 2020), LIPIcs, vol.~151, 2020,
+pp.~83:1--83:18.
+
+\bibitem{AVW26}
+J.~Alman and V.~Vassilevska Williams, \emph{Truly subquadratic {3SUM} and truly subcubic {APSP} via
+triangles in sparse lopsided graphs}, arXiv:2610.06783v1, 5~October 2026.
 
 \bibitem{AVW14}
 A.~Abboud and V.~Vassilevska Williams, \emph{Popular conjectures imply strong lower bounds for
@@ -842,6 +966,10 @@ M.~de Berg, H.~L.~Bodlaender, S.~Kisfaludi-Bak, D.~Marx and T.~C.~van der Zanden
 for {ETH}-tight algorithms and lower bounds in geometric intersection graphs}, Proc. 50th Annual
 ACM Symposium on Theory of Computing (STOC), 2018, pp.~574--586; arXiv:1803.10633.
 
+\bibitem{DL26}
+F.~Dias and Y.~Lima, \emph{Limits and constants of {OpenAI}'s claimed {ETH} refutation},
+arXiv:2611.00517v1, 31~October 2026.
+
 \bibitem{DHMTW14}
 H.~Dell, T.~Husfeldt, D.~Marx, N.~Taslaman and M.~Wahl{\'e}n, \emph{Exponential time complexity of
 the permanent and the {T}utte polynomial}, ACM Trans. Algorithms \textbf{10} (2014), no.~4,
@@ -909,6 +1037,10 @@ H.~Jahanjou, E.~Miles and E.~Viola, \emph{Local reductions}, Automata, Languages
 Numbering as in arXiv:1311.3171. Journal version: ``Local reduction'', Inform. and Comput.
 \textbf{261} (2018), 281--295.
 
+\bibitem{Kom26}
+S.~Kominers, \emph{On counting satisfying assignments via polynomial separation}, Hexagon preprint
+hexagon:2610.00574v1, 27~October 2026, \url{https://hexagonmath.org/abs/2610.00574}.
+
 \bibitem{KK22}
 Karthik~C.~S. and S.~Khot, \emph{Almost polynomial factor inapproximability for parameterized
 $k$-clique}, 37th Computational Complexity Conference (CCC 2022), LIPIcs, vol.~234, 2022,
@@ -918,6 +1050,11 @@ pp.~6:1--6:21; arXiv:2112.03983.
 Karthik~C.~S., B.~Laekhanukit and P.~Manurangsi, \emph{On the parameterized complexity of
 approximating dominating set}, Proc. 50th Annual ACM Symposium on Theory of Computing (STOC), 2018,
 pp.~1283--1296; arXiv:1711.11029. Journal version: J. ACM \textbf{66} (2019), no.~5.
+
+\bibitem{Li26}
+X.~Li, \emph{What does the refutation of the {E}xponential {T}ime {H}ypothesis mean for learning
+theory?}, Hexagon preprint hexagon:2610.00613, v1 29~October 2026, v2 30~October 2026,
+\url{https://hexagonmath.org/abs/2610.00613}. Numbering as in v2.
 
 \bibitem{Lin21}
 B.~Lin, \emph{Constant approximating $k$-clique is {W[1]}-hard}, Proc. 53rd Annual ACM Symposium on
@@ -951,6 +1088,10 @@ D.~Lokshtanov, M.~S.~Ramanujan, S.~Saurabh and M.~Zehavi, \emph{Parameterized co
 approximability of directed odd cycle transversal}, Proc. 31st Annual ACM-SIAM Symposium on
 Discrete Algorithms (SODA), 2020, pp.~2181--2200; arXiv:1704.04249.
 
+\bibitem{Maj26}
+R.~Majdoddin, \emph{Lowered crossover points of {A}nthropic's subexponential 3-{SAT} algorithm},
+arXiv:2610.41622v1, 30~October 2026.
+
 \bibitem{Man26}
 P.~Manurangsi, \emph{Almost-polynomial ratio {A}lmost-{ETH}-hardness of approximating densest
 $k$-subgraph}, arXiv:1611.05991v3, 27~October 2026. Versions~1--2 (2016--2017), titled
@@ -964,6 +1105,10 @@ approximating dense {CSP}s}, arXiv:1607.02986, 2016.
 \bibitem{Marx10}
 D.~Marx, \emph{Can you beat treewidth?}, Theory Comput. \textbf{6} (2010), 85--112.
 
+\bibitem{MIT26}
+MIT Hardness Group, J.~Brunner, E.~D.~Demaine, F.~Frei, T.~Gomez, M.~Hecher, J.~Li and J.~Lynch,
+\emph{{ETH} is dead, long live {SH}}, arXiv:2611.02650v1, 2~November 2026.
+
 \bibitem{MT19a}
 T.~Morimae and S.~Tamaki, \emph{Fine-grained quantum computational supremacy}, arXiv:1901.01637
 (v4, 2019); published in Quantum Inf. Comput. \textbf{19} (2019), no.~13\&14, 1089--1115.
@@ -971,6 +1116,20 @@ T.~Morimae and S.~Tamaki, \emph{Fine-grained quantum computational supremacy}, a
 \bibitem{Nguyen26}
 T.~T.~Nguyen, \emph{A sublinear treewidth exponent for binary constraint satisfaction}, Hexagon
 preprint hexagon:2611.00004v1, 2~November 2026, \url{https://hexagonmath.org/abs/2611.00004}.
+
+\bibitem{ODo26}
+R.~O'Donnell, \emph{Some exposition of ``{T}he {E}xponential {T}ime {H}ypothesis is false''}, Hexagon
+preprint hexagon:2610.00572v1, 27~October 2026, \url{https://hexagonmath.org/abs/2610.00572}.
+
+\bibitem{OAI003}
+OpenAI, \emph{The {Q}uasi-{R}iemann {H}ypothesis: {A} {Z}ero-{F}ree {H}alf-{P}lane $\Re s>7/8$}, preprint
+dated 30~September 2026; entry~003, ``The quasi-Riemann hypothesis'', of the catalogue \texttt{CONTENTS.md}
+in the repository \url{https://github.com/openai/math}.
+
+\bibitem{OAI142}
+OpenAI, \emph{Deterministic {P}olynomial {F}actorization over {P}rime {F}ields}, preprint dated 4~October
+2026; entry~142, ``Deterministic polynomial factorization over prime fields'', of the catalogue
+\texttt{CONTENTS.md} in the repository \url{https://github.com/openai/math}.
 
 \bibitem{OpenAI26}
 OpenAI, \emph{The {E}xponential {T}ime {H}ypothesis is false}, preprint dated 17~October 2026,
@@ -999,20 +1158,31 @@ hexagon:2610.00600v1, 29~October 2026, \url{https://hexagonmath.org/abs/2610.006
 J.~Shunia, \emph{An improved subexponential bound for deterministic integer factorization}, Hexagon
 preprint hexagon:2610.00711v1, 2~November 2026, \url{https://hexagonmath.org/abs/2610.00711}.
 
+\bibitem{Sze26}
+S.~Szeider, \emph{{OpenAI}'s claimed refutation of {ETH}: exhaustive search below $2^{131071}$}, Zenodo,
+27~October 2026, with an addendum on~\cite{Anthropic26}, \url{https://doi.org/10.5281/zenodo.23688832}.
+
 \bibitem{Tulsyan26}
 V.~Tulsyan, \emph{Counting {H}amiltonian cycles in sparse graphs in subexponential time, assuming
 the new $\#${SAT} algorithms}, Hexagon preprint hexagon:2610.00672v1, October 2026; source and Lean
 development at \url{https://github.com/xennygrimmato/eth-hamiltonicity}.
 
 \bibitem{TulsyanC26}
-V.~Tulsyan, \emph{Superlinear circuit lower bounds for $\mathrm{E}^{\mathrm{NP}}$, assuming the new
-$\#${SAT} algorithms}, manuscript, November 2026; \texttt{docs/circuit-note.pdf} in the
-repository~\cite{TulsyanRepo26}.
+V.~Tulsyan, \emph{A machine-checked proof of superlinear circuit lower bounds for
+$\mathrm{E}^{\mathrm{NP}}$, assuming the new $\#${SAT} algorithms}, manuscript, November 2026;
+\texttt{docs/circuit-note.pdf} in the repository~\cite{TulsyanRepo26}.
+
+\bibitem{TulsyanCN26}
+V.~Tulsyan, \emph{Class numbers and lattice-point counts in time $2^{O(n/\sqrt{\log n})}$, assuming the
+new $\#${SAT} algorithms}, Hexagon preprint hexagon:2611.00115, November 2026,
+\url{https://hexagonmath.org/abs/2611.00115}. Title of version~2, which corrects the claims of
+version~1 (5~November 2026, ``Class numbers, square roots and quadratic non-residues in time
+$2^{O(n/\sqrt{\log n})}$, assuming the new $\#${SAT} algorithms'') about non-residues and square roots.
 
 \bibitem{TulsyanE26}
 V.~Tulsyan, \emph{Counting {E}ulerian circuits in subexponential time, assuming the new $\#${SAT}
-algorithms}, manuscript, November 2026; \texttt{docs/euler-note.pdf} in the
-repository~\cite{TulsyanRepo26}, Lean sources as of commit \texttt{394740c}.
+algorithms}, Hexagon preprint hexagon:2611.00088v1, 4~November 2026,
+\url{https://hexagonmath.org/abs/2611.00088}.
 
 \bibitem{TulsyanF26}
 V.~Tulsyan, \emph{An independent machine-checked proof of deterministic factoring in time
@@ -1020,10 +1190,14 @@ $2^{O(n/\sqrt{\log n})}$, via the new $\#${SAT} algorithms}, manuscript, Novembe
 \texttt{docs/factoring-note.pdf} in the repository~\cite{TulsyanRepo26}, Lean sources as of commit
 \texttt{32509ed}.
 
+\bibitem{TulsyanP26}
+V.~Tulsyan, \emph{The parity of the prime-counting function in time $x^{o(1)}$}, Hexagon preprint
+hexagon:2611.00116v1, 5~November 2026, \url{https://hexagonmath.org/abs/2611.00116}.
+
 \bibitem{TulsyanQ26}
 V.~Tulsyan, \emph{Exact amplitudes of sparse quantum circuits in subexponential time, assuming the
-new $\#${SAT} algorithms}, manuscript, October 2026; \texttt{docs/quantum-note.pdf} in the
-repository~\cite{TulsyanRepo26}.
+new $\#${SAT} algorithms}, Hexagon preprint hexagon:2611.00090v1, 4~November 2026,
+\url{https://hexagonmath.org/abs/2611.00090}.
 
 \bibitem{TulsyanRepo26}
 V.~Tulsyan, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes}, public repository
@@ -1042,6 +1216,18 @@ pp.~2:1--2:17; arXiv:1601.04743.
 \bibitem{Wil05}
 R.~Williams, \emph{A new algorithm for optimal 2-constraint satisfaction and its implications},
 Theoret. Comput. Sci. \textbf{348} (2005), no.~2--3, 357--365.
+
+\bibitem{Vega26}
+F.~Vega, \emph{Class numbers of imaginary quadratic orders in the polynomial hierarchy}, Hexagon
+preprint hexagon:2611.00086v1, 4~November 2026, \url{https://hexagonmath.org/abs/2611.00086}.
+
+\bibitem{WW26c}
+M.~Wu and M.~Wang, \emph{Circuit lower bounds for extended gate bases from subexponential counting},
+arXiv:2611.02560v1, 2~November 2026.
+
+\bibitem{WW26f}
+M.~Wu and M.~Wang, \emph{Counting feedback vertex sets of all sizes in subexponential time,
+conditionally}, arXiv:2611.02548v1, 2~November 2026.
 
 \bibitem{Wil13}
 R.~Williams, \emph{Improving exhaustive search implies superpolynomial lower bounds}, SIAM J.
@@ -1082,6 +1268,22 @@ in the author's version \url{https://people.csail.mit.edu/rrw/improved-algs-lbs2
 %          unbounded width for Frechet, diameter, treewidth IS/DomSet; OVC for LCS).
 %  Bhattacharjee26 Thm 6.13 (VC 2^{o(k)}+poly), Cor. 6.4 and Rem. 6.5 (sparse Max-Cut), Thm 6.21.
 %  TulsyanRepo26: commit from `git log -1 --format=%h -- research/fine-grained-map.md` = 713c6b4.
+% ADDED 5 November 2026 (novelty audit research/novelty-audit-2026-11-05.md):
+%  arXiv API records (id, authors, dates, abstracts) and v1 full texts read for WW26c 2611.02560
+%          (Thms 1-2), WW26f 2611.02548 (Thm 1, Hyp. 1 = OpenAI Thm D.1, Cors 9-10), MIT26 2611.02650
+%          (Thm 2.4 SH <=> Weak ETH, fn. 3 = Almost-ETH; Thm 3.1; Table 1; Sec. 4; Cor 5.1 #2SAT).
+%  Maj26 2610.41622 and DL26 2611.00517: local full texts (abstract numbers; Maj26 Sec. 3.8 on the
+%          AVW sparse Max-SAT hypotheses, Thm 4.13, Cors 4.15, 4.19).
+%  Sze26 Zenodo record 23688832: title, author, 27 Oct 2026, thresholds 2^(10^10), 2^131071; addendum.
+%  AVW20 DROPS PDF LIPIcs.ITCS.2020.83 (pp. 83:1-83:18): Hypotheses 3 and 4 read verbatim.
+%  AVW26 arXiv 2610.06783 abstract (5 Oct 2026): O(n^1.9992) 3SUM, O(n^2.9995) APSP, zero-weight
+%          k-Clique refuted.
+%  Li26 Hexagon 2610.00613 v1 (29 Oct) and v2 full texts: Sec. 2.3 (D.1 not in OpenAI's Lean),
+%          Hyp. 2.13-2.14, Lemma 3.5, Cor 3.6, Cor 4.5, Sec. 6 Table 1, Prop 6.1.
+%  ODo26, Kom26, Vega26, Nguyen26: Hexagon API records. OAI003 (Cor 1.2 read in the preprint) and
+%          OAI142: openai/math CONTENTS.md entries 003 and 142.
+%  Own works: Hexagon API records 2611.00088, 2611.00090 (Sec. 6.2, 24 entries, entry 23 checked in
+%          the compiled PDF), 2611.00115 (v1 live; v2 title from classnumber-note/main.tex), 2611.00116.
 % =====================================================================
 
 \end{document}

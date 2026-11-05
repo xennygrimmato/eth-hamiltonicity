@@ -1,13 +1,13 @@
 # Hexagon submission 4: survey note
 
-Files in this folder: `hexagon-survey-note.zip` (upload this), `abstract.txt` (paste), `provenance.txt` (paste if you choose "some"), `preview.pdf` (what the compiled paper should look like, 14 pages).
+Files in this folder: `hexagon-survey-note.zip` (upload this), `abstract.txt` (paste), `provenance.txt` (paste if you choose "some"), `preview.pdf` (what the compiled paper should look like, 16 pages).
 
 ## Steps
 
 1. Go to https://hexagonmath.org and sign in with your ORCID iD.
 2. Click **Submit a work**. New accounts may deposit once per UTC day; check the queue in `../README.md`.
 3. **Upload** `hexagon-survey-note.zip`. When asked for the main file, choose `main.tex`.
-4. **Preview**: wait for the compile preview. It should show **14 pages**. If it reports an error, send Claude a screenshot.
+4. **Preview**: wait for the compile preview. It should show **16 pages**. If it reports an error, send Claude a screenshot.
 5. Fill in the form fields below, in order.
 6. **Contributors**: yourself only. AI systems are listed under tools, not as contributors.
 7. **Declarations** (your decisions; see the section below).
@@ -21,7 +21,7 @@ Files in this folder: `hexagon-survey-note.zip` (upload this), `abstract.txt` (p
 What survives the ETH refutations? A map of fine-grained hypotheses and conditional lower bounds
 ```
 
-**Abstract** — paste the full contents of `abstract.txt` (1862 characters, under the 1920 limit).
+**Abstract** — paste the full contents of `abstract.txt` (1913 characters, under the 1920 limit).
 
 **Primary subject:** `cs.CC`
 
@@ -61,8 +61,9 @@ What survives the ETH refutations? A map of fine-grained hypotheses and conditio
 
 ## What the paper claims (so your declarations match)
 
-- A survey: 33 hypotheses and 27 conditional theorems classified. Nothing is claimed as machine-checked except where it cites our Lean theorems.
+- A survey: 34 hypotheses and 27 conditional theorems classified. Nothing is claimed as machine-checked except where it cites our Lean theorems.
 - Review fixes: priority credit to OpenAI and Bhattacharjee; rows B16, B17, B23 corrected; long tables replaced by lists for Hexagon.
+- Rebuilt 5 Nov 2026 after the novelty audit: new row A34 (sparse Max-SAT hypotheses, refuted; credited to Li and Majdoddin); SH = Almost-ETH (MIT Hardness Group); Wu-Wang FVS/forests/Steiner (under OpenAI Thm D.1) in B16/B17; 3SUM/APSP noted as claimed refuted independently (Alman-Vassilevska Williams); a related-work map of follow-ups (Li, MIT, Majdoddin, Szeider, Dias-Lima, Wu-Wang, O'Donnell, Kominers, Vega, OpenAI 003/142); our own works cited by Hexagon ID (2611.00088, 2611.00090, 2611.00115, 2611.00116).
 
 ## Package checks done
 

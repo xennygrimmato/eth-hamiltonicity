@@ -68,11 +68,11 @@ the full binary basis, with the axioms \texttt{propext}, \texttt{Classical.choic
 \texttt{Quot.sound} only. On paper, assuming the clause-count bound $2^{C\cdot kM/\sqrt{\log M}}$ of
 Anthropic's Main Theorem as a Turing machine with engine constant $C$, we track the constants of
 Williams' argument: a check circuit of $3s+O(n)$ gates, at most $4S+1$ clauses after Tseitin's
-transformation, and any $\varepsilon<1/(36aC)$, with $a$ the input-length shift. From the weaker bound in OpenAI's Lean development, rather than the stronger one in
+transformation, and any $\varepsilon<1/(36aC)$, with $a$ the input-length shift. From the weaker bound in OpenAI's Lean development, not the stronger one in
 its paper, the same argument gives $\varepsilon\,n\sqrt{\log n}/(\log\log n)^2$. We explain why
 these algorithms give nothing at $n\log n$, nothing for $\mathrm{NEXP}$ or $\mathrm{NQP}$, and
-nothing more from counting. The constant $\varepsilon$ has no numerical value, the bound holds only
-infinitely often, and everything is conditional on the claimed refutations, which are under review.
+nothing more from counting for binary gates. The constant $\varepsilon$ has no numerical value, the bound holds only
+infinitely often, and everything is conditional on the claimed refutations, still under review.
 \end{abstract}
 
 \maketitle
@@ -592,8 +592,8 @@ of \cref{thm:main} with its own constant.
 % =====================================================================
 
 We organise related work by idea: explicit lower bounds for general circuits, near-maximum bounds
-above $\ENP$, the algorithmic method, and the claimed refutations with their formal proofs. The
-statements below were checked against the primary sources.
+above $\ENP$, the algorithmic method, the claimed refutations with their formal proofs, and the
+extension to larger gate bases. The statements below were checked against the primary sources.
 
 \paragraph{Explicit lower bounds for $\ENP$ and $\mathrm{P}$ over $B_2$.} Before 2026 the best
 lower bound for a language in $\ENP$ was $3.1n-o(n)$, by Li and Yang~\cite{LY22}. They prove it for
@@ -640,6 +640,20 @@ Mathlib~\cite{Mathlib20}. In contrast to \Oa's corollary, our proof of the bound
 from Anthropic's engine rather than OpenAI's; in contrast to \A's formal corollary, the Lean theorem
 here depends on the rate of the engine, not only on its $\delta$-form.
 
+\paragraph{Larger gate bases.} Wu and Wang~\cite{WW26} extend \Oa's binary-gate bound to richer
+bases. From the variable branch of \A's Theorem~1 they obtain a language in $\ENP$ that, at
+infinitely many input lengths $m$, needs more than $c\,m\sqrt{\log m}/\log\log m$ gates over
+arbitrary-fan-in AND and OR with binary XOR~\cite[Theorem~1]{WW26}. From an extension-ring form of
+Theorem~D.1 of \Oa{} they obtain $c\,m\sqrt{\log m}$ gates infinitely often for fan-in-two circuits
+that may also use arbitrary-fan-in XOR and symmetric gates within a budget of $\delta m$, where an
+XOR gate costs one and a symmetric gate of arity $d$ costs $\log_2(d+1)$~\cite[Theorem~2]{WW26}.
+Both are proved by a quantitative form of the same local-reduction transfer. Their first
+bound agrees with our observation after \cref{cor:openai}: they need the variable branch of \A,
+which loses a factor $\log\log m$, because long AND and OR gates make the clause count polynomial.
+Nothing in~\cite{WW26} contradicts a statement here. In contrast to their work, we stay with
+fan-in-two gates over $B_2$, where the clause branch applies, and what we add is a machine-checked
+proof; their bases are larger, and they report no formalisation of their proofs.
+
 % =====================================================================
 \section{What these algorithms cannot give}\label{sec:limits}
 % =====================================================================
@@ -656,11 +670,14 @@ Those of Impagliazzo, Kabanets and Wigderson~\cite{IKW02} and of Murray and Will
 work for polynomial size. The second loses a polynomial in the size. After the loss, one needs
 satisfiability of $\poly(n)$-size circuits in time $2^n/n^{\omega(1)}$, and $2^{O(s/\sqrt{\log s})}$
 with $s=n^k$ gives nothing. Linear-size easy witnesses are JMV's open problem.
-\item \emph{Counting adds nothing here.} The $\mathrm{NP}$ oracle of $\ENP$ is used only to fix the
+\item \emph{Counting adds nothing over $B_2$.} The $\mathrm{NP}$ oracle of $\ENP$ is used only to fix the
 lexicographically first witness, and the final check is a decision question. The counting form of
 the algorithms is not used. The lower bounds of the algorithmic method that do exploit counting or fast
 evaluation, such as those against $\mathrm{ACC}$ of Williams~\cite{Wil14} and
 Murray--Williams~\cite{MW18}, concern polynomial-size circuits and run into the previous item.
+Over larger bases counting does help at near-linear size: Wu and Wang~\cite{WW26} write the check
+for arbitrary-fan-in AND and OR gates as a difference of two model counts, so that a long gate
+costs one extra variable rather than one per input (\cref{sec:known}).
 \item \emph{Almost everywhere.} Chen, Lyu and Williams~\cite{CLW20} obtain almost-everywhere lower
 bounds for $\ENP$ (against $\mathrm{ACC}^0$) from non-trivial algorithms. We have not checked whether
 their machinery keeps the check circuit at $O(s)$ gates, so that it would give an almost-everywhere
@@ -700,8 +717,10 @@ count read off from depth-$O(1)$ decision trees. Williams' Theorem~6.1, which we
 a sketch. The self-contained version is Anthropic's Lean module, for the linear case.
 \item \emph{Literature.} The statements in \cref{sec:known} and all citations were checked against
 the primary sources (publisher records, arXiv, ECCC, the author's version of~\cite{Wil13}) on
-4~November~2026. We missed \Oa's Corollary~1.4 until after the formalisation was complete, and we
-have not searched systematically for other prior statements of \cref{thm:main}.
+4~November~2026. We missed \Oa's Corollary~1.4 until after the formalisation was complete. A
+novelty search of arXiv and Hexagon on 5~November~2026 found the parallel work of Wu and
+Wang~\cite{WW26} on larger gate bases (\cref{sec:known}), and no other statement of
+\cref{thm:main}.
 \end{itemize}
 
 \section*{Acknowledgements}
@@ -788,6 +807,10 @@ V.~Tulsyan, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes},
 \repo{lean-bridge-anthropic/bridge/EthFollowup/Circuits/} as of commit \texttt{9e5dfc8}
 (\texttt{9e5dfc80579597271ee6e83c43d71e15ee6cb37e}).
 
+\bibitem{WW26}
+M.~Wu and M.~Wang, \emph{Circuit lower bounds for extended gate bases from subexponential counting},
+arXiv:2611.02560v1, 2~November 2026. Theorem numbers as in v1.
+
 \bibitem{Wil13}
 R.~Williams, \emph{Improving exhaustive search implies superpolynomial lower bounds}, SIAM J. Comput.
 \textbf{42} (2013), no.~3, 1218--1244. Conference version in STOC 2010. Theorem numbers as in the
@@ -826,6 +849,13 @@ no.~3, 327--333.
 %  Anthropic26, OpenAI26, Tulsyan26, Lean4, Mathlib20: audited entries of the earlier notes
 %  (research/citation-audit.md). TulsyanRepo26: commit from `git log -1 --format=%h --
 %  lean-bridge-anthropic/bridge/EthFollowup/Circuits` = 9e5dfc8.
+%  WW26 (added 5 November 2026): arXiv API record of 2611.02560v1 (Wu, Wang; published
+%  2026-11-02T05:38Z; 16 pages) and full text of v1 read: Theorem 1 (U = arbitrary-fan-in AND/OR,
+%  binary XOR, NOT/COPY; > c m sqrt(log m)/loglog m gates at infinitely many m, from Anthropic's
+%  Theorem 1, variable term), Theorem 2 (binary base with budget b(C) <= delta m, XOR cost 1,
+%  symmetric gate cost log2(d+1); >= c m sqrt(log m), from the extension-ring form of OpenAI D.1),
+%  Table 1 (credits OpenAI Cor. 1.4 for binary gates), Lemma 7 (difference of two 3-CNF counts).
+%  No statement there contradicts this note.
 % =====================================================================
 
 \end{document}

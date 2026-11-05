@@ -23,7 +23,7 @@ Files in this folder: `hexagon-circuit-note.zip` (upload this), `abstract.txt` (
 A machine-checked proof of superlinear circuit lower bounds for E^NP, assuming the new #SAT algorithms
 ```
 
-**Abstract** — paste the full contents of `abstract.txt` (1913 characters, under the 1920 limit).
+**Abstract** — paste the full contents of `abstract.txt` (1918 characters, under the 1920 limit).
 
 **Primary subject:** `cs.CC`
 
@@ -67,6 +67,7 @@ A machine-checked proof of superlinear circuit lower bounds for E^NP, assuming t
 
 - The bound itself is OpenAI's Corollary 1.4 (preprint revised 25 Oct 2026, proved on paper). The paper says so and claims only the machine-checked proof.
 - Machine-checked: the first part of Theorem 1.1 (enp_not_size_n_sqrt_log). The second part and the OpenAI corollary are proved on paper only.
+- Related work (rebuilt 5 Nov 2026) cites Wu and Wang, arXiv:2611.02560 (2 Nov 2026), who extend OpenAI's bound to larger gate bases on paper. Nothing there contradicts the note; the abstract now says "nothing more from counting for binary gates", since their extension uses counting.
 
 ## Package checks done
 

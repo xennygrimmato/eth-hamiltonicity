@@ -10,8 +10,8 @@ next UTC day (00:00 UTC = 4 pm Pacific).
 
 ## Already submitted
 - hexagon:2610.00672 — Hamiltonian cycles (v1)
-- 4 Nov 2026 — Eulerian circuits note
-- 4 Nov 2026 — Quantum circuits note
+- hexagon:2611.00088 — Eulerian circuits note
+- hexagon:2611.00090 — Quantum circuits note
 
 ## To submit, in this order
 

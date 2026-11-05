@@ -758,9 +758,8 @@ reuses, unchanged, the ArithNet, package and machine modules of~\cite{TulCN26} (
 and \lean{Quot.sound} for the three theorems of \cref{thm:main}; we ran it on 5~November 2026 against a build of
 the pinned development whose sources are identical to the files of \cref{tab:modules}. No new module contains
 \lean{sorry}, a new axiom or \lean{native_decide}.
-%PENDING-REPLAY
 A fresh \lean{leanchecker} replay of the dependency closure of \lean{EthFollowup.ModP.FinalRep}, the module
-holding the three final theorems, is pending at the time of writing.
+holding the three final theorems, passed on 5~November 2026.
 What must be trusted is the Lean kernel, the Mathlib definitions named in \cref{sec:statement}, our definitions
 quoted there, and \A's definition of \texttt{Outputs}. \A's development, Mathlib's proofs and our other modules
 are checked by the kernel; they are part of the checked closure, not of the trusted base.

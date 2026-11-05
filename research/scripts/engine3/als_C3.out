@@ -1,0 +1,5 @@
+N=3 profile [(0, (3, 27, 3)), (1, (3, 9, 9))]  S=486 (N^6=729, max cost 7.92 bits): residual 1.025e-08
+N=3 profile [(0, (3, 9, 9)), (1, (3, 9, 9))]  S=486 (N^6=729, max cost 7.92 bits): residual 5.774e-01
+N=3 profile [(0, (3, 9, 3)), (1, (3, 9, 9))]  S=324 (N^6=729, max cost 7.92 bits): residual 6.015e-01
+N=3 profile [(0, (3, 27, 3)), (1, (3, 3, 9))]  S=324 (N^6=729, max cost 7.92 bits): residual 7.698e-01
+N=3 profile [(0, (3, 9, 3)), (1, (3, 3, 9)), (2, (3, 9, 3))]  S=243 (N^6=729, max cost 6.34 bits): residual 7.834e-01

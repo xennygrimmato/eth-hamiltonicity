@@ -1,0 +1,22 @@
+m=1 i=0: ranks(bits) x,y,u,v=1,1,1,1 row=0.000 col=2.000 | c_flat=(2.000,0.000,2.000) c_net<=(2.000,0.000,2.000)
+m=1 i=1: ranks(bits) x,y,u,v=1,1,1,1 row=2.000 col=0.000 | c_flat=(1.000,2.000,1.000) c_net<=(1.000,2.000,1.000)
+  m=1: rho(c_flat) = 0.6667   rho(c_net upper bound) = 0.6667
+m=2 i=0: ranks(bits) x,y,u,v=2,2,2,2 row=0.000 col=4.000 | c_flat=(4.000,0.000,4.000) c_net<=(4.000,0.000,4.000)
+m=2 i=1: ranks(bits) x,y,u,v=2,2,2,2 row=2.807 col=2.807 | c_flat=(3.404,2.807,3.404) c_net<=(4.000,2.807,4.000)
+m=2 i=2: ranks(bits) x,y,u,v=2,2,2,2 row=4.000 col=0.000 | c_flat=(2.000,4.000,2.000) c_net<=(2.000,4.000,2.000)
+  m=2: rho(c_flat) = 0.7703   rho(c_net upper bound) = 0.8132
+m=3 i=0: ranks(bits) x,y,u,v=3,3,3,3 row=0.000 col=6.000 | c_flat=(6.000,0.000,6.000) c_net<=(6.000,0.000,6.000)
+m=3 i=1: ranks(bits) x,y,u,v=3,3,3,3 row=3.322 col=5.209 | c_flat=(5.605,3.322,5.605) c_net<=(6.000,3.322,6.000)
+m=3 i=2: ranks(bits) x,y,u,v=3,3,3,3 row=5.209 col=3.322 | c_flat=(4.661,5.209,4.661) c_net<=(6.000,5.209,6.000)
+m=3 i=3: ranks(bits) x,y,u,v=3,3,3,3 row=6.000 col=0.000 | c_flat=(3.000,6.000,3.000) c_net<=(3.000,6.000,3.000)
+  m=3: rho(c_flat) = 0.8073   rho(c_net upper bound) = 0.8957
+m=4 i=0: ranks(bits) x,y,u,v=4,4,4,4 row=0.000 col=8.000 | c_flat=(8.000,0.000,8.000) c_net<=(8.000,0.000,8.000)
+m=4 i=1: ranks(bits) x,y,u,v=4,4,4,4 row=3.700 col=7.451 | c_flat=(7.726,3.700,7.726) c_net<=(8.000,3.700,8.000)
+m=4 i=2: ranks(bits) x,y,u,v=4,4,4,4 row=6.066 col=6.066 | c_flat=(7.033,6.066,7.033) c_net<=(8.000,6.066,8.000)
+m=4 i=3: ranks(bits) x,y,u,v=4,4,4,4 row=7.451 col=3.700 | c_flat=(5.850,7.451,5.850) c_net<=(7.700,7.451,7.700)
+m=4 i=4: ranks(bits) x,y,u,v=4,4,4,4 row=8.000 col=0.000 | c_flat=(4.000,8.000,4.000) c_net<=(4.000,8.000,4.000)
+  m=4: rho(c_flat) = 0.8235   rho(c_net upper bound) = 0.9354
+m->inf (single-bit pieces, rank count): rho(c_flat) = 0.9289 (support a = [0.544, 0.545])
+                                         rho(c_net upper bound) = 1.0000
+ideal pieces (P-like (m,2m,m), B-like (2m,0,2m)): rho = 0.6667
+App. B-shaped pieces (c_row + c_col = 2 sqrt2 m), c_flat: rho = 0.8047

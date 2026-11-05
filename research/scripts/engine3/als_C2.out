@@ -1,0 +1,10 @@
+N=2 profile [(0, (2, 8, 2)), (1, (1, 4, 4))]  S=48 (N^6=64, max cost 5.00 bits): residual 2.670e-10
+N=2 profile [(0, (2, 2, 4)), (1, (2, 2, 4))]  S=32 (N^6=64, max cost 4.00 bits): residual 6.169e-01
+N=2 profile [(0, (4, 2, 2)), (1, (2, 4, 2))]  S=32 (N^6=64, max cost 4.00 bits): residual 6.163e-01
+N=2 profile [(0, (2, 4, 2)), (1, (2, 2, 4))]  S=32 (N^6=64, max cost 4.00 bits): residual 6.167e-01
+N=2 profile [(0, (2, 2, 4)), (2, (2, 2, 4))]  S=32 (N^6=64, max cost 4.00 bits): residual 6.169e-01
+N=2 profile [(0, (2, 2, 2)), (1, (2, 2, 2)), (2, (2, 2, 2))]  S=24 (N^6=64, max cost 3.00 bits): residual 7.319e-01
+N=2 profile [(0, (2, 2, 4)), (1, (2, 2, 4)), (2, (2, 2, 4))]  S=48 (N^6=64, max cost 4.00 bits): residual 3.615e-01
+N=2 profile [(0, (2, 4, 4)), (1, (2, 2, 4))]  S=48 (N^6=64, max cost 5.00 bits): residual 1.061e-01
+N=2 profile [(0, (4, 4, 2)), (1, (2, 2, 2))]  S=40 (N^6=64, max cost 5.00 bits): residual 5.056e-01
+N=2 profile [(0, (2, 4, 2)), (1, (1, 4, 4))]  S=32 (N^6=64, max cost 4.00 bits): residual 5.111e-01

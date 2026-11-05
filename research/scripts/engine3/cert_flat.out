@@ -1,0 +1,6 @@
+crossing: D = 1   (|E| = 2; optimal orientation (0, 1))
+hexagon (3x2 grid): D = 3   (|E| = 6; optimal orientation (0, 1, 1, -1, 1, -1))
+Majdoddin's C: D = 2   (|E| = 6; optimal orientation (0, 0, 0, 0, 1, 1))
+C restricted to merges (0, 1): D = 4
+C restricted to merges (0,): D = 4
+C restricted to merges (1,): D = 4

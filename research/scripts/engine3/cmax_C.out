@@ -1,0 +1,8 @@
+N=2 f_C: c_max per merge (bits) [4.0, 4.0, 4.0]
+N=2 P(x)F(x)F: c_max per merge (bits) [4.0, 4.0, 4.0]
+N=2 B(x)F(x)F: c_max per merge (bits) [4.0, 4.0, 4.0]
+N=2 PPP: c_max per merge (bits) [2.0, 4.0, 2.0]
+N=3 f_C: c_max per merge (bits) [6.34, 6.34, 6.34]
+N=3 P(x)F(x)F: c_max per merge (bits) [6.34, 6.34, 6.34]
+N=3 B(x)F(x)F: c_max per merge (bits) [6.34, 6.34, 6.34]
+N=3 PPP: c_max per merge (bits) [3.17, 6.34, 3.17]

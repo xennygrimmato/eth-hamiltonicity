@@ -1,0 +1,10 @@
+A_(m=2,i=1) under merge 0, bonds (x-yv, x-u, yv-u) = (2, 2, 4), cost 4 bits (2m = 4): best residual 3.87e-01
+A_(m=2,i=1) under merge 0, bonds (x-yv, x-u, yv-u) = (4, 2, 2), cost 4 bits (2m = 4): best residual 3.87e-01
+A_(m=2,i=1) under merge 0, bonds (x-yv, x-u, yv-u) = (2, 4, 2), cost 4 bits (2m = 4): best residual 5.48e-01
+A_(m=3,i=2) under merge 0, bonds (x-yv, x-u, yv-u) = (4, 2, 4), cost 5 bits (2m = 6): best residual 4.08e-01
+A_(m=3,i=2) under merge 0, bonds (x-yv, x-u, yv-u) = (4, 4, 2), cost 5 bits (2m = 6): best residual 4.94e-01
+A_(m=3,i=2) under merge 0, bonds (x-yv, x-u, yv-u) = (2, 4, 4), cost 5 bits (2m = 6): best residual 4.94e-01
+A_(m=3,i=2) under merge 0, bonds (x-yv, x-u, yv-u) = (8, 1, 4), cost 5 bits (2m = 6): best residual 7.07e-01
+A_(m=3,i=1) under merge 0, bonds (x-yv, x-u, yv-u) = (4, 2, 4), cost 5 bits (2m = 6): best residual 6.45e-01
+A_(m=3,i=1) under merge 0, bonds (x-yv, x-u, yv-u) = (8, 2, 4), cost 6 bits (2m = 6): best residual 4.86e-01
+A_(m=3,i=2) under merge 0, bonds (x-yv, x-u, yv-u) = (4, 2, 8), cost 6 bits (2m = 6): best residual 2.70e-01

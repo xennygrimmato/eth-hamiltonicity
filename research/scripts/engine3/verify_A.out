@@ -1,0 +1,21 @@
+eight-square: R + C = 2 [x=v][y=u] at all 4096 settings: OK
+  R: rank row-wise 8, column-wise 64
+  C: rank row-wise 64, column-wise 8
+  F: rank row-wise 64, column-wise 64
+  simple count per 3-bit block: log 8 + log 64 + 2 naming bits = 3+6+2 = 11 of 12
+Lemma 2 pieces (eight-square), t blocks, i = #blocks taking C:
+  t=1 i=0: rank row 8, col 64  (App. H formula: 8, 64)
+  t=1 i=1: rank row 64, col 8  (App. H formula: 64, 8)
+  t=2 i=0: rank row 64, col 4096  (App. H formula: 64, 4096)
+  t=2 i=1: rank row 960, col 960  (App. H formula: 960, 960)
+  t=2 i=2: rank row 4096, col 64  (App. H formula: 4096, 64)
+  t->inf, i=t/2: per 3-bit block 2*(1 + (log2 56 + 3)/2) = 10.8074 = 2 + log2 448 = 10.8074 of 12 bits
+single-bit identity [x=v][y=u] = [x=u][y=v] - [x!=y](-1)^x [u!=v](-1)^u: OK
+  P: rank row 4, col 1
+  B: rank row 1, col 4
+  t=1: ranks match sum_(z<=i) C(t,z)3^z (row) and same with t-i (col) for all i; worst piece row+col bits per bit = 2.0000
+  t=2: ranks match sum_(z<=i) C(t,z)3^z (row) and same with t-i (col) for all i; worst piece row+col bits per bit = 2.8074
+  t=3: ranks match sum_(z<=i) C(t,z)3^z (row) and same with t-i (col) for all i; worst piece row+col bits per bit = 2.8438
+  t=4: ranks match sum_(z<=i) C(t,z)3^z (row) and same with t-i (col) for all i; worst piece row+col bits per bit = 3.0330
+  t=5: ranks match sum_(z<=i) C(t,z)3^z (row) and same with t-i (col) for all i; worst piece row+col bits per bit = 3.0565
+  t->inf: worst piece i=t/2 gives 2*(H(1/2)+log2(3)/2) = 3.5850 = log2 12 = 3.5850 of 4 bits

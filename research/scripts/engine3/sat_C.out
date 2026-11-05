@@ -1,0 +1,8 @@
+sanity: P(x)F(x)F + B(x)F(x)F, S=48: S=48 -> timeout (150.8s)
+S=32 m0(2,2,4)+m1(2,2,4): S=32 -> timeout (150.6s)
+S=32 m0(4,2,2)+m1(2,4,2): S=32 -> timeout (151.1s)
+S=32 m0(2,4,2)+m1(4,2,2): S=32 -> timeout (150.6s)
+S=32 m0(2,2,4)+m2(2,2,4): S=32 -> timeout (150.4s)
+S=24 m0(2,2,2)+m1(2,2,4): S=24 -> timeout (150.5s)
+S=24 m0(2,2,4)+m1(2,2,2): S=24 -> timeout (153.3s)
+[stopped by hand after this line: remaining profiles not run]

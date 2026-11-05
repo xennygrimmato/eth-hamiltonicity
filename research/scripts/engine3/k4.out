@@ -1,0 +1,8 @@
+K4, three 2+2 merges: flattening certificate D = 2  (rank floor of one split: 4 = |cut|; input floor 3)
+S=1: [((1, 0, 0), 'UNSAT')]
+S=2: [((1, 1, 0), 'UNSAT'), ((2, 0, 0), 'UNSAT')]
+S=3: [((1, 1, 1), 'UNSAT'), ((2, 1, 0), 'UNSAT'), ((3, 0, 0), 'UNSAT')]
+S=4: [((2, 1, 1), 'UNSAT'), ((2, 2, 0), 'UNSAT'), ((3, 1, 0), 'UNSAT'), ((4, 0, 0), 'UNSAT')]
+S=5: [((2, 2, 1), 't/o'), ((3, 1, 1), 't/o'), ((3, 2, 0), 't/o'), ((4, 1, 0), 'UNSAT'), ((5, 0, 0), 'UNSAT')]
+S=6: [((2, 2, 2), 't/o'), ((3, 2, 1), 't/o'), ((3, 3, 0), 't/o'), ((4, 1, 1), 't/o'), ((4, 2, 0), 't/o'), ((5, 1, 0), 't/o'), ((6, 0, 0), 't/o')]
+[stopped by hand during S=6]

@@ -1,0 +1,17 @@
+f_C cost vector (merge0,1,2): [6.0, 6.0, 6.0]
+rank across Q of f_C: 64
+piece P on all 3 pairs: cost vector [3.0, 6.0, 3.0]  rank_Q 64
+piece B on all 3 pairs: cost vector [6.0, 0.0, 6.0]  rank_Q 1
+piece F on all 3 pairs: cost vector [6.0, 6.0, 6.0]  rank_Q 64
+PPP [3.0, 6.0, 3.0] min 3.0 rank_Q 64
+PPB [4.0, 4.0, 4.0] min 4.0 rank_Q 16
+PBP [4.0, 4.0, 4.0] min 4.0 rank_Q 16
+PBB [5.0, 2.0, 5.0] min 2.0 rank_Q 4
+BPP [4.0, 4.0, 4.0] min 4.0 rank_Q 16
+BPB [5.0, 2.0, 5.0] min 2.0 rank_Q 4
+BBP [5.0, 2.0, 5.0] min 2.0 rank_Q 4
+BBB [6.0, 0.0, 6.0] min 0.0 rank_Q 1
+8 product terms, S = sum 2^min = 69.0
+two-term decomposition f_C = PPP + (f_C - PPP):
+  PPP [3.0, 6.0, 3.0]   f_C-PPP [6.0, 6.0, 6.0]  ranks: {frozenset({0}): 4.0, frozenset({1, 2}): 4.0, frozenset({0, 1}): 4.0, frozenset({2}): 4.0, frozenset({0, 2}): 4.0, frozenset({1}): 4.0}
+best 3-bucket grouping of the 8 products (c_flat): (48.0, [(0, 'PPPPPBPBPPBB', 5.0), (1, 'BPPBPBBBPBBB', 4.0)])

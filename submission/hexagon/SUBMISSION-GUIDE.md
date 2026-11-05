@@ -287,3 +287,31 @@ not claimed: rho >= 1/2 for pieces (Anthropic App. H; Majdoddin) and the sharper
 about all algorithms.
 
 **Exact steps:** as for Paper 6 (details in `to-submit/09-barrier/INSTRUCTIONS.md`).
+
+## Paper 12 — Representation numbers and Tunnell's test (upload `to-submit/10-repnum/hexagon-repnum-note.zip`, main file `main.tex`)
+Status: READY (5 Nov 2026). Fresh leanchecker replay of `EthFollowup.ModP.FinalRep` passed (README row N4). 13 pp, single
+`main.tex` with inlined bibliography, no long tables, compiles from a fresh unzip with `-halt-on-error` (0 errors, no undefined
+references); repository and commit `3e181e7` cited (contains the seven Lean modules, unchanged at `b7b7352`). One stale sentence
+in the Limitations section (replay "pending") was corrected to "passed on 5 November 2026"; not yet committed.
+
+**Form answers**
+- **Title:** Representation numbers of quadratic forms and Tunnell's congruent-number test in time $n^{o(1)}$, assuming the new #SAT algorithms
+- **Abstract:** paste `to-submit/10-repnum/abstract.txt` (1916 characters).
+- **Primary subject:** math.NT. **Cross-lists:** cs.CC, cs.DS, cs.LO.
+- **MSC2020** (all five checked against Hexagon's catalogue, 5 Nov 2026): 11E25 (Sums of squares and representations by other
+  particular quadratic forms), 11G05 (Elliptic curves over global fields), 11G40 (L-functions of varieties over global fields;
+  Birch-Swinnerton-Dyer conjecture), 11Y16 (Number-theoretic algorithms; complexity), 68V20 (Formalization of mathematics in
+  connection with theorem provers). 11E20 (General ternary and quaternary quadratic forms) is also valid as a substitute for 11G05.
+- **Tags:** representation numbers; positive-definite quadratic forms; ternary quadratic forms; congruent number problem; Tunnell's
+  theorem; central L-values; Waldspurger's theorem; Tate-Shafarevich group; #SAT; Exponential Time Hypothesis; Lean 4; formal verification.
+- **Tools used:** Claude (Anthropic), via Claude Code; Lean 4 with Mathlib; TeX Live; PARI/GP and Python (numerical checks).
+- **Formalizations / arXiv id:** leave empty.
+
+**What is claimed and what is not** (as the paper states): machine-checked are `repNum_TM_rate`, `diagRep_TM_rate` and
+`tunnell_TM_rate` (a Turing machine outputs r_A(n) for each fixed positive-definite A, the diagonal count and Tunnell's test bit in
+2^{O(L/√log L)} = n^{o(1)} steps; standard axioms). On paper only: exact L(E_n,1) via Tunnell's Theorem 3, central values of imaginary
+quadratic twists via Böcherer–Schulze-Pillot, the doubling reduction for odd cross coefficients. Conditional on OpenAI's unrefereed
+full-BSD entry 002: |Sha(E_n)| in analytic rank 0. Checked numerically only (PARI/GP, Python). Congruence in analytic rank ≥ 2 still
+needs BSD. Everything rests on Anthropic's Lean development of its claimed ETH refutation, under review.
+
+**Exact steps:** as for Paper 6 (details in `to-submit/10-repnum/INSTRUCTIONS.md`).

@@ -1,0 +1,21 @@
+This work was produced by Vaibhav Tulsyan in sessions with Claude Code (Anthropic). The mathematical
+arguments, the Lean 4 formalisation and the text were drafted by Claude under my direction. I chose the
+problems, directed the research, and reviewed the statements of the main theorems together with the
+paper's own account of what is machine-checked, what is proved on paper, what is assumed and what is
+checked numerically. Every result the paper labels as machine-checked is checked in Lean 4, on top of the
+Anthropic manuscript's own Lean development: the three theorems EthFollowup.ModP.repNum_TM_rate,
+EthFollowup.ModP.diagRep_TM_rate and EthFollowup.ModP.tunnell_TM_rate in the module
+EthFollowup.ModP.FinalRep (a finite-alphabet Mathlib Turing machine outputs the representation number of a
+fixed positive-definite form, of a diagonal form, and Tunnell's test bit, within the stated step bound).
+#print axioms shows only propext, Classical.choice and Quot.sound, no new module contains sorry or
+native_decide, and a fresh leanchecker replay of the dependency closure of EthFollowup.ModP.FinalRep passed
+on 5 November 2026. The Lean sources are public at https://github.com/xennygrimmato/eth-hamiltonicity
+(directory lean-bridge-anthropic/bridge/EthFollowup/ModP: RepQF, SlpDesc, RepDesc, CntPad, RepPoly, RepPkg,
+FinalRep), committed at 3e181e776a38ada042c0c3318c0d66cc2ccf498b, the commit the paper cites, and unchanged
+at b7b73525c1be026efdcf92c95a97c26e37cbeaf1. The consequences for L-values (Tunnell's Theorem 3), for central
+values of imaginary quadratic twists (Bocherer-Schulze-Pillot) and, conditionally on OpenAI's unrefereed
+full-BSD result, for Tate-Shafarevich groups are proved on paper only and are labelled as such; they were
+checked numerically with PARI/GP and Python on small ranges, and these checks are not part of any proof.
+One independent AI referee pass was carried out and its corrections were made. No human expert has yet
+reviewed the work. All results are conditional on Anthropic's claimed refutation of the Exponential Time
+Hypothesis, which is under review.

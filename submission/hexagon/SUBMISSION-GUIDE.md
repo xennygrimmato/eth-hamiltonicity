@@ -232,3 +232,27 @@ link from networks to the tree model and the mod-k remark are proved on paper on
 or the exact π(x).
 
 **Exact steps:** as for Paper 6.
+
+## Paper 10 — Roots of fixed-degree polynomials modulo any integer (upload `hexagon-roots-note.zip`, main file `main.tex`)
+Status: Lean final theorems built with standard axioms (`EthFollowup.ModP.FinalRoots`); fresh leanchecker replay in progress.
+Do not upload before README row N4 exists.
+
+**Form answers**
+- **Title:** Roots of fixed-degree polynomials modulo any integer in time $2^{O(n/\sqrt{\log n})}$, assuming the new #SAT algorithms
+- **Abstract:** paste `abstract-roots.txt` (1731 characters).
+- **Primary subject:** math.NT. **Cross-lists:** cs.CC, cs.DS, cs.LO.
+- **MSC2020** (checked against Hexagon's catalogue, 5 Nov 2026): 11T06 (Polynomials over finite fields), 11Y16 (Number-theoretic
+  algorithms; complexity), 13P05 (Polynomials, factorization in commutative rings), 68Q25 (Analysis of algorithms and problem
+  complexity), 68V20 (Formalization of mathematics in connection with theorem provers).
+- **Tags:** root finding; polynomials over finite fields; deterministic factoring of polynomials; Berlekamp; Horner's rule;
+  #SAT; Exponential Time Hypothesis; Lean 4; formal verification.
+- **Tools used:** Claude (Anthropic), via Claude Code; Lean 4 with Mathlib; TeX Live; Python (small numeric checks).
+- **Formalizations / arXiv id:** leave empty.
+
+**What is claimed and what is not** (as the paper states): machine-checked, for each fixed degree d ≥ 1: the least root modulo
+any m, the least root above a bound, and the number of roots, in time 2^{O_d(n/√log n)}; the constant C_d is not tracked and the
+theorem is per fixed d. Proved on paper only: factoring of degree-≤d polynomials over F_p via Berlekamp's reduction. Classical,
+not claimed: the root count and irreducibility tests are polynomial-time; degree 2 reduces to square roots (Burgess gives
+p^{0.152} there). Not covered: F_q with q = p^k.
+
+**Exact steps:** as for Paper 6.

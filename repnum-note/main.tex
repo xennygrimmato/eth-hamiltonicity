@@ -1,0 +1,1021 @@
+\documentclass[10pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{alltt}
+\usepackage{booktabs}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=OliveGreen,urlcolor=MidnightBlue]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+\setlist{leftmargin=*,itemsep=2pt,topsep=4pt}
+\emergencystretch=2.5em
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{importedtheorem}[theorem]{Imported Theorem}
+\newtheorem{citedtheorem}[theorem]{Cited Theorem}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\crefname{importedtheorem}{Imported Theorem}{Imported Theorems}
+\crefname{citedtheorem}{Cited Theorem}{Cited Theorems}
+\numberwithin{equation}{section}
+
+% The Tate--Shafarevich group (Cyrillic Sha from the AMS wncyr fonts).
+\DeclareFontFamily{U}{wncy}{}
+\DeclareFontShape{U}{wncy}{m}{n}{<->wncyr10}{}
+\DeclareSymbolFont{mcy}{U}{wncy}{m}{n}
+\DeclareMathSymbol{\Sha}{\mathord}{mcy}{"58}
+
+\newcommand{\A}{\textup{[A]}}
+\newcommand{\Oa}{\textup{[O]}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\rate}{2^{O(L/\sqrt{\log L})}}
+\newcommand{\nr}{\dag}% cited from the standard literature, not re-read for this note
+% Lean names: typewriter, with line breaks allowed after '.' and '_'.
+\DeclareUrlCommand\lean{\urlstyle{tt}\def\UrlBreaks{\do\.\do\_}\def\UrlBigBreaks{}}
+% Repository names: typewriter, with line breaks allowed after '/' and '-'.
+\DeclareUrlCommand\repo{\urlstyle{tt}\def\UrlBreaks{\do\/\do\-}\def\UrlBigBreaks{}}
+
+\begin{document}
+
+\title[Representation numbers and Tunnell's test in time $n^{o(1)}$]{Representation numbers of quadratic forms\\ and Tunnell's congruent-number test in time $n^{o(1)}$,\\ assuming the new $\#$SAT algorithms}
+
+\author{Vaibhav Tulsyan}
+
+\date{November 2026 (5 November 2026)}
+
+\subjclass[2020]{11Y16, 11E25, 11G05, 11F67, 68Q25, 03B35}
+\keywords{Representation numbers, ternary quadratic forms, congruent numbers, Tunnell's theorem, central $L$-values, quadratic twists, exact counting, Exponential Time Hypothesis, Lean~4}
+
+\begin{abstract}
+For a fixed positive-definite integer matrix $A$, the representation number $r_A(n)=\#\{x\in\mathbb{Z}^k : x^{\top}Ax=n\}$ is a classical object. Four ternary representation numbers decide Tunnell's congruent-number test, and through Waldspurger's theorem such numbers give central values of twisted $L$-functions. However, for a general ternary form the best deterministic bound we know for a single $r_A(n)$ is $n^{1/2+o(1)}$, and we know of no bound of the form $n^{o(1)}$, even conditionally. We present a deterministic algorithm that outputs $r_A(n)$ in time $2^{O(L/\sqrt{\log L})}=n^{o(1)}$, where $L$ is the bit length of $n$, for every fixed positive-definite $A$ of any dimension. Our approach shifts $x$ into a box of naturals by an adjugate Cauchy--Schwarz bound, splits signs so that $Q(u-B)=n$ becomes an identity between two nonnegative straight-line programs, pads the input so that all values fit, and counts the solutions with Anthropic's counting engine through our earlier network library. We prove three theorems in Lean~4 (\texttt{repNum\_TM\_rate}, \texttt{diagRep\_TM\_rate}, \texttt{tunnell\_TM\_rate}; axioms \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}): a finite-alphabet Mathlib Turing machine outputs the general count, the diagonal count, and Tunnell's test bit within $\lfloor C\cdot 2^{CL/\sqrt{\log_2(L+2)}}\rfloor$ steps. On paper, Tunnell's Theorem~3 then gives $L(E_n,1)$ exactly for squarefree $n$, and a theorem of B\"ocherer and Schulze-Pillot gives central values of imaginary quadratic twists of a fixed curve of squarefree conductor, in time $n^{o(1)}$; if OpenAI's unrefereed full-BSD result holds, the counts also give the order of the Tate--Shafarevich group of $E_n$ in analytic rank~$0$. The constants are astronomical, the machines use exponential space, and everything rests on Anthropic's Lean development of its claimed refutation of the Exponential Time Hypothesis, which is under review.
+\end{abstract}
+
+\maketitle
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+% =====================================================================
+
+How many ways can an integer be written by a quadratic form? For a positive-definite integer matrix
+$A\in\Z^{k\times k}$ we write
+\[
+  Q_A(x)=x^{\top}Ax,\qquad r_A(n)=\#\{x\in\Z^k:\ Q_A(x)=n\}.
+\]
+These numbers are old. Gauss related $r_A(n)$ for $x^2+y^2+z^2$ to class numbers, and Jacobi expressed
+the four-square count through divisor sums. They are also current. Tunnell~\cite{Tun83} showed that four
+ternary representation numbers decide whether a squarefree $n$ is the area of a rational right triangle,
+up to the Birch and Swinnerton-Dyer conjecture (BSD). His proof goes through Waldspurger's theorem, which
+relates the coefficients of weight-$3/2$ theta series to central values of twisted $L$-functions. Gross~\cite{Gro87}
+and B\"ocherer and Schulze-Pillot~\cite{BSP90} made this explicit for many curves.
+
+Computing one $r_A(n)$ is not easy. Enumerating the ternary box takes $O(n^{3/2})$ steps; Tunnell wrote
+that his criterion reduces the congruent-number problem ``to an algebraic computation involving
+$O(D^{3/2})$ steps''~\cite[p.~325]{Tun83}. Fixing one variable and counting representations by binary
+forms gives about $n^{1/2+o(1)}$ steps per $n$~\cite[\S1.3]{HTW10}. Hart, Tornar\'ia and Watkins computed
+Tunnell's counts for all $n\le10^{12}$ by fast multiplication of theta series~\cite{HTW10}, which is
+quasi-linear in the range but not faster for one $n$. However, for a general ternary form we know of no
+deterministic algorithm for a single $r_A(n)$ in time $n^{o(1)}$, even conditionally.
+
+In October 2026 OpenAI~\cite{OpenAI26} and Anthropic~\cite{Anthropic26} (below \Oa{} and \A) each
+claimed a deterministic algorithm that counts the satisfying assignments of a $k$-CNF in subexponential
+time, refuting the Exponential Time Hypothesis; both claims come with Lean~4 developments and are under
+review. Rudich and Rousseau~\cite{RR26} used the engines to factor in $N^{o(1)}$, Shunia~\cite{Shu26}
+proved the rate $2^{O(L/\sqrt{\log L})}$ on paper, and our factoring note~\cite{TulFac26} proved it in Lean
+on \A's engine. Our class-number note~\cite{TulCN26} built a library, ArithNet, that evaluates counts of
+solutions of systems with few products, and our parity note~\cite{TulPar26} extended it. We found no
+derivation of representation numbers, Tunnell's counts or these $L$-values from either engine
+(\cref{sec:related}).
+
+\subsection{The problem and the running example}
+We consider the \emph{representation-number problem}: for a fixed $k$ and a fixed positive-definite
+$A\in\Z^{k\times k}$, given $n\in\N$ in binary, output $r_A(n)$ in binary. We also consider Tunnell's
+counts. With the names of our Lean development, let
+\[
+  A_n=r_{x^2+2y^2+8z^2}(n),\quad B_n=r_{x^2+2y^2+32z^2}(n),\quad
+  C_n=r_{8x^2+2y^2+16z^2}(n),\quad D_n=r_{8x^2+2y^2+64z^2}(n),
+\]
+and let \emph{Tunnell's test} be the bit $[A_n=2B_n]$ for odd $n$ and $[C_n=2D_n]$ for even $n$.
+
+\begin{example}[Running example]\label{ex:three}
+Take $n=3$. The solutions of $x^2+2y^2+8z^2=3$ are $(\pm1,\pm1,0)$, so $A_3=4$; likewise $B_3=4$. The test
+asks whether $4=8$; it is false. By Tunnell's Theorem~3 (\cref{sec:tunnell}) this means
+$L(E_3,1)=(A_3-2B_3)^2\beta/(16\sqrt3)=\beta/\sqrt3\approx1.5138$ for the curve $E_3:y^2=x^3-9x$, with
+$\beta\approx2.62206$ a fixed period. So $E_3$ has rank $0$, and $3$ is not congruent.
+\end{example}
+
+\subsection{The naive route and the principle}
+At first one might enumerate the box of candidate vectors. However, the box has $\Theta(n^{k/2})$ points.
+One might instead reduce the equation to $\#$SAT and apply the engines' headline theorems. However,
+Tseitin's transformation of a multiplication circuit has $\Omega(L\log L)$ clauses for every known circuit,
+and \A's clause bound then gives $2^{O(L\sqrt{\log L})}$, which is superpolynomial in $n$; our factoring
+note makes this point in detail~\cite[\S1]{TulFac26}. ArithNet avoids it, but it counts \emph{natural}
+solutions of \emph{nonnegative} linear combinations of products. A quadratic form has integer variables
+and may have negative entries.
+
+Instead, we rely on a different principle: \emph{a positive-definite form is coercive, so after a shift every
+solution is a vector of naturals in a box of side $O(n)$, and after splitting the entries of $A$ into
+positive and negative parts, $Q_A(u-B)=n$ is an equality between two sums of products with natural
+coefficients.} Such an equality is a straight-line program with $O(k^2)$ products, which ArithNet counts
+with $O(L)$ shared bits. The values are about $n^2$, larger than the input word allows, so we pad the
+input with zeros; this changes the rate by a constant factor only.
+
+\subsection{What we prove}
+In this paper we build the straight-line description of $Q_A(u-B)=n$, prove that its count is $r_A(n)$, pad
+it, and prove in Lean that one Turing machine per form outputs the answer.
+
+\begin{theorem}[\cref{sec:statement}; machine-checked]\label{thm:main}
+Let $L=|\mathtt{encodeNat}\ n|$ be the length of the binary word of $n$. There are Turing machines in
+Mathlib's \lean{TM2} model, with finite alphabets on all stacks, and constants $C\in\N$, such that for every
+$n\in\N$ the machine halts on \lean{encodeNat}~$n$ within $\lfloor C\cdot2^{CL/\sqrt{\log_2(L+2)}}\rfloor$
+steps with the following output:
+\begin{enumerate}[label=(\roman*)]
+\item \lean{repNum_TM_rate}: for every $k$ and every positive-definite $A\in\Z^{k\times k}$ (one machine
+and one $C$ per $A$), the word \lean{encodeNat}~$r_A(n)$;
+\item \lean{diagRep_TM_rate}: for every $k$ and all $a_1,\dots,a_k\ge1$, the word
+\lean{encodeNat}~$\#\{x\in\Z^k:\sum_ia_ix_i^2=n\}$;
+\item \lean{tunnell_TM_rate}: one machine, the one-bit word of Tunnell's test.
+\end{enumerate}
+\end{theorem}
+
+\noindent Since $L=\lfloor\log_2n\rfloor+1$ for $n\ge1$, the bound is $n^{O(1/\sqrt{\log\log n})}=n^{o(1)}$,
+against the trivial $O(n^{k/2})$ and, for ternary forms, $n^{1/2+o(1)}$. To our knowledge, no deterministic
+algorithm with a bound of the form $n^{o(1)}$ was known for a general ternary form, even conditionally.
+\Cref{sec:new} says which special forms were already within reach.
+
+\subsection{Consequences on paper}
+The theorem computes counts, and the meaning of the counts is classical. On paper, and not formalised, we
+derive four consequences in \cref{sec:tunnell,sec:twists,sec:sha,sec:new}.
+\begin{enumerate}[label=(\arabic*)]
+\item For squarefree $n$, Tunnell's Theorem~3~\cite{Tun83} gives $L(E_n,1)$ exactly from the counts, so
+$L(E_n,1)\sqrt n/\beta\in\Q$ is computed in time $n^{o(1)}$. If the test is false, $n$ is not congruent,
+unconditionally. If it is true and $n\equiv1,2,3\pmod8$, the analytic rank is at least $2$, and only then is
+BSD needed to conclude that $n$ is congruent. For $n\equiv5,6,7\pmod8$ the counts vanish identically.
+\item For a fixed elliptic curve $E$ of squarefree conductor $N$ with $L(E,1)\ne0$, the theorem of
+B\"ocherer and Schulze-Pillot~\cite{BSP90} writes $L(E,1)L(E\otimes\chi_{-D},1)\sqrt D$ as a constant times
+$m_D^2$, where $m_D$ is a fixed rational combination of $O(1)$ ternary representation numbers, for the $D$ that
+satisfy fixed residue conditions. So these central values are computed exactly in time $|D|^{o(1)}$.
+\item If OpenAI's catalogue entry~002~\cite{OAI002} is correct (it is unrefereed), Tunnell's conjecture
+$|\Sha(E_n)|=(a(n)/\sigma_0(n))^2$ holds for every odd squarefree $n$ with $L(E_n,1)\neq0$, and its analogue
+for even $n$, so $|\Sha(E_n)|$ is also
+computed in time $n^{o(1)}$.
+\item Some special cases were already within reach: binary forms, even rank, and forms alone in their
+genus reduce to factoring and known methods (for ternary genera, with class numbers, which our
+class-number note computes in the same time). The new content is odd rank, where the cusp part of the
+theta series carries central $L$-values.
+\end{enumerate}
+
+\subsection{Contributions}
+Our contributions are:
+\begin{itemize}
+\item We introduce a sign-split straight-line description of $Q_A(u-B)=n$ with $16k^2+3$ steps, one product
+and one chain of coefficient mass $3$ per step, and prove that its count is $r_A(n)$ once $B$ exceeds the
+adjugate box bound (\cref{sec:method}).
+\item We present a generic padding transformer for counting packages, which lets a description use values
+of $2L+O(1)$ bits on an input of $L$ bits at a constant-factor cost in the exponent (\cref{sec:padding}).
+\item We prove the three theorems of \cref{thm:main} in Lean and list what a reader must trust
+(\cref{sec:statement,sec:formal}).
+\item We derive on paper the consequences for Tunnell's test, for central values of imaginary quadratic twists
+and, conditionally, for Tate--Shafarevich groups, and we say which special forms were already within reach
+(\cref{sec:tunnell,sec:twists,sec:sha,sec:new}).
+\end{itemize}
+The method is simple: a box bound, a shift, a sign split and a padding step. The network library and the
+machines are those of our class-number note~\cite{TulCN26}; what we add is the description, its counting
+proof, the padding, and the bridge to the number theory.
+
+\subsection{Status of each claim}\label{sec:status}
+We separate four kinds of claim.
+\emph{Machine-checked in Lean}: the three theorems of \cref{thm:main}, with the axioms \lean{propext},
+\lean{Classical.choice} and \lean{Quot.sound} only, and every lemma whose Lean name we give.
+\emph{Proved on paper only}: everything in \cref{sec:tunnell,sec:twists,sec:sha,sec:new}, which connects the
+counts to congruent numbers, $L$-values and Tate--Shafarevich groups; the reduction of forms with odd
+cross coefficients to \cref{thm:main} by doubling (\cref{rem:odd}); and the comparisons with earlier bounds.
+\emph{Assumed}: for \cref{thm:main}, nothing beyond the three axioms, since \A's results enter as Lean
+theorems of its development, which the kernel checks with ours. For the consequences on paper, the cited
+theorems of the literature; BSD where we say so; and, for \cref{sec:sha} only, OpenAI's unrefereed catalogue
+entry~002~\cite{OAI002}.
+\emph{Checked numerically}, by short exact computations that are not part of any proof (PARI/GP~2.17.2~\cite{PARI}
+and Python): the running examples; Tunnell's $L$-value formula for all $183$ squarefree $n\le300$; the
+vanishing of the counts for $n\equiv5,6,7\pmod 8$ in that range; Tunnell's formula for $|\Sha|$ against
+the analytic order of $\Sha$ for the $73$ squarefree $n\le300$ with $L(E_n,1)\ne0$; Gross's formula for
+the curve $11a$ for all fundamental $-D$ with $D<140$ and $(\frac{-D}{11})=-1$; and Gauss's formula for
+$r_3(n)$ for squarefree $5\le n<800$.
+
+\paragraph{How we read the literature.} We read in the original: Tunnell~\cite{Tun83}, B\"ocherer and
+Schulze-Pillot~\cite{BSP90}, Pal~\cite{Pal12}, Mao, Rodriguez-Villegas and Tornar\'ia~\cite{MRVT07},
+Pacetti and Tornar\'ia~\cite{PT08}, Hart, Tornar\'ia and Watkins~\cite{HTW10}, Conrad~\cite{Con08} and
+OpenAI's catalogue entries~\cite{OAI002,OAI006}. We could not obtain Gross's paper~\cite{Gro87} and use the
+restatement in~\cite[(3.1)]{MRVT07}. We mark with~\nr{} the results that we cite from the standard
+literature without having re-read the source for this note.
+
+\subsection*{Outline}
+\Cref{sec:engine} recalls \A's counting theorem and our library. \Cref{sec:method} turns a form into a
+description and \cref{sec:padding} pads it. \Cref{sec:statement} quotes the statements. \Cref{sec:tunnell,sec:twists,sec:sha,sec:new}
+give the consequences on paper. \Cref{sec:formal} describes the Lean development, and
+\cref{sec:related,sec:limitations,sec:conclusion} cover related work, limitations and conclusions.
+
+% =====================================================================
+\section{The engine and the network library}\label{sec:engine}
+% =====================================================================
+
+In this section we recall the one theorem of \A{} that we compose with and the interface of ArithNet, both
+from our earlier notes~\cite[\S2]{TulFac26} and~\cite[\S\S2--4]{TulCN26}. We use \A's Lean development at
+commit \texttt{16a5ce4} (\texttt{anthropics/formal-math}, folder \texttt{eth}, Lean v4.33.1, Mathlib
+\texttt{0df444a}).
+
+A \emph{network on $[g]$ with parameters $P,B,\tau$} has, for every node $a$, settings of at most $P$ bits and
+a weight $W_a$, and for every pair of nodes an interaction through $c_{a,b}$ shared bits with
+$\sum_bc_{a,b}\le P$. Its value is $Z=\sum_z\prod_aW_a(z_a)\prod_{\{a,b\}}\Psi_{a,b}$ and its total is
+$U=\sum_{a\ne b}c_{a,b}$. We use only label systems with $0/1$ tables, whose value is the number of
+accepted labellings.
+
+\begin{importedtheorem}[\A, Lemma~8(i) and Theorem~A(b); see~{\cite[Imported Thm.~2.2]{TulFac26}}]\label{imp:engine}
+Let $K=K_\ell\ge2$ be a level of \A's schedule, $g=3K^8$, and $e_\ell\le(3x_0+6)/\sqrt{\log_2K}$ for an
+absolute $x_0$. A network on $[g]$ with parameters $P,B,\tau$ and total $U$ can be evaluated within
+$\bigl(K^g+2^{e_\ell K^2L'}(K(L'+B'))^{C_0K^2}2^{2gP/K}\tau\bigr)(g(P+B))^{C_1}$ operations, where
+$L'=\lceil(U+gP/K)/K^2\rceil$, $B'=\lceil2gP/K\rceil+g^2B$ and $C_0,C_1$ are absolute.
+\end{importedtheorem}
+
+\noindent So a network family of size $s$ with $U=O(s)$ and $gP=O(s)$ is evaluated in $2^{O(s/\sqrt{\log s})}$ steps
+at the level $K^{40}\lesssim s$ of~\cite[\S5]{TulFac26}.
+
+\paragraph{Descriptions.} ArithNet~\cite[\S3]{TulCN26} takes a \emph{description}: variables
+$x_0,x_1,\dots$ ranging over $[0,2^{n_B})$, products $x_u\cdot w$ of a variable by a variable or a constant,
+chains $\sum c_t\,\mathrm{val}_t=\sum c'_t\,\mathrm{val}'_t$ with natural coefficients of mass at most $32$ per
+side, comparisons, and bit patterns. Its count at size $s$ is the number of assignments in
+$[0,2^{n_B})^{\mathrm{nV}}$ that satisfy everything, where the box width $n_B>s$ is fixed by the size. The
+parsimony theorem (\lean{arithNet_value}) says that the network value is this count, and the parameter
+bound (\lean{arithSys_U_le}) gives $U\le2^{11}c_A(D)(s+2)$ with the shape constant
+$c_A(D)=64(\mathrm{nV}+\mathrm{nP}+\mathrm{nQ}+1)(\mathrm{nC}+1)$. A polynomial-time map from input words
+to well-formed descriptions with bounded $c_A$ gives a counting package (\lean{ArithSpec.pkg_exists}), and
+the one- and two-query machines (\lean{GR.queryM_TM}) turn a package into a Turing machine with the rate
+of \cref{thm:main}. Everything in this paragraph is machine-checked in~\cite{TulCN26} and reused unchanged.
+
+% =====================================================================
+\section{From a quadratic form to a nonnegative straight-line program}\label{sec:method}
+% =====================================================================
+
+In this section we bound the solutions, shift them into the naturals, split the signs, and write the
+result as a straight-line program. All of it is in the pure Mathlib modules \lean{RepQF}, \lean{SlpDesc}
+and \lean{RepDesc}. Throughout, $A\in\Z^{k\times k}$ is positive definite in the sense of Mathlib's
+\lean{Matrix.PosDef}, so in particular symmetric, and $Q=Q_A$.
+
+\subsection{The box}
+The first step is a bound on each coordinate that is linear in $Q(x)$ and has an integer constant.
+
+\begin{lemma}[\lean{posDef_sq_le}, \lean{posDef_coercive}]\label{lem:box}
+For every $x\in\Z^k$ and every $j$, $x_j^2\le|\mathrm{adj}(A)_{jj}|\cdot Q(x)$. Hence $x_j^2\le c(A)\,Q(x)$
+with $c(A)=\sum_j|\mathrm{adj}(A)_{jj}|$.
+\end{lemma}
+
+\begin{proof}
+Let $y=\mathrm{adj}(A)e_j$, so $Ay=\det(A)e_j$. Then $x^{\top}Ay=\det(A)x_j$ and
+$y^{\top}Ay=\det(A)\,\mathrm{adj}(A)_{jj}$. Cauchy--Schwarz for the positive form (\lean{cs}) gives
+$\det(A)^2x_j^2\le Q(x)\det(A)\,\mathrm{adj}(A)_{jj}\le Q(x)\,|\det A|\,|\mathrm{adj}(A)_{jj}|$. Since
+$\det A$ is a nonzero integer, $|\det A|\le\det(A)^2$, and the claim follows.
+\end{proof}
+
+\noindent For an integer, $|x_j|\le x_j^2$, so every solution of $Q(x)=n$ lies in the box $[-cn,cn]^k$ with
+$c=c(A)$ (\lean{repNum_eq_card_box}). This is crude, since $|x_j|\le\sqrt{cn}$ also holds, but the padding of
+\cref{sec:padding} absorbs the extra bits.
+
+\subsection{The shift}
+Let $B=cn+1$. The map $x\mapsto u=x+B$ is a bijection between the solutions of $Q(x)=n$ and the vectors
+$u\in[0,B_x)^k$ with $Q(u-B)=n$, for every box size $B_x\ge2B$, and all such $u$ lie in $[1,2B)^k$
+(\lean{card_shift_two}, \lean{shift_bounds}). The machine for diagonal forms with $a_i\ge1$, and hence
+Tunnell's machine, uses $c=1$ (\lean{coercive_diagonal}).
+
+\subsection{The sign split}
+Write $A=A^+-A^-$ with $A^{\pm}_{ij}=\max(\pm A_{ij},0)$. For each entry the identity
+\begin{multline*}
+A^+_{ij}u_iu_j+A^-_{ij}Bu_i+A^-_{ij}Bu_j+A^+_{ij}B^2\\
+=A^-_{ij}u_iu_j+A^+_{ij}Bu_i+A^+_{ij}Bu_j+A^-_{ij}B^2+A_{ij}(u_i-B)(u_j-B)
+\end{multline*}
+holds over $\Z$. Summing over $i,j$, the left sides give a sum $S_L(u)$ of $4k^2$ monomials $c\,x_px_q$ with
+natural $c$, where $x_i=u_i$ for $i<k$ and $x_k=B$, and the right sides give $S_R(u)+Q(u-B)$ with $S_R$ of
+the same shape. So
+\begin{equation}\label{eq:split}
+  Q(u-B)=n\iff S_L(u)=n+S_R(u)\qquad\text{(\lean{monos_shift})}.
+\end{equation}
+Both sides of~\eqref{eq:split} are natural numbers with nonnegative coefficients; no subtraction remains.
+
+\begin{example}[\cref{ex:three}, continued]\label{ex:three-shift}
+For $A=\mathrm{diag}(1,2,8)$ only diagonal entries are nonzero and $A^-=0$, so~\eqref{eq:split} reads
+$\sum_ia_i(u_i^2+B^2)=n+\sum_i2a_iBu_i$. Tunnell's machine has $c=1$, so $B=n+1=4$, and the four solutions
+become $u\in\{3,5\}\times\{3,5\}\times\{4\}$. At $u=(5,5,4)$ both sides equal $379$: the left side is
+$(25+16)+2(25+16)+8(16+16)$ and the right side is $3+8(5+10+32)$. The general machine of
+\cref{thm:main}(i) uses $c(A)=16+8+2=26$ and $B=79$ instead.
+\end{example}
+
+\subsection{The straight-line program}
+A \emph{step} computes $z:=(x_a\text{ or }0)+x_u\cdot w+\mathrm{const}$, where $w$ is a variable or a constant. It
+is encoded as one product $x_u\cdot w$ and one chain $1\cdot x_a+1\cdot(x_u\cdot w)+1\cdot\mathrm{const}=1\cdot z$,
+of mass $3$. A program of steps defines the description \lean{slpDesc}: the $k$ free variables, one
+auxiliary variable per step, and final comparisons. When every step reads only free variables and earlier
+auxiliaries, each free tuple has exactly one satisfying run (\lean{slpRun_unique}), so the count is the
+number of free tuples in the box whose run satisfies the comparisons, provided that the run's values fit in
+the box (\lean{slpDesc_count}).
+
+Our program (\lean{repProg}) first sets $x_k:=B$. Then each side of~\eqref{eq:split} is an accumulator: for
+the monomials $c_mx_{p_m}x_{q_m}$ it computes $y_m:=c_m\cdot x_{p_m}$ and $\mathrm{acc}_{m+1}:=\mathrm{acc}_m+x_{q_m}\cdot y_m$,
+starting from $0$ on the left and from $n$ on the right. The final comparison asks that the two accumulators be
+equal. There are $1+2(1+8k^2)=16k^2+3$ steps, so $\mathrm{nV}=k+16k^2+3$, $\mathrm{nP}=\mathrm{nC}=16k^2+3$ and
+$\mathrm{nQ}=1$; the shape constant is $c_A=64\,(k+2(16k^2+3)+2)(16k^2+4)$ (\lean{repDesc_cA_eq}), a constant
+for fixed $k$.
+
+\begin{proposition}[\lean{repDesc_count}]\label{prop:count}
+Let $x_j^2\le c\,Q(x)$ for all $x$, $|A_{ij}|\le c_m$, $cn<B$, and $K=16(k^2+1)(c_m+1)$. If $n+KB^2<B_x$ and
+$n+KB^2<2^{b\ell}$ (the limb capacity), then the count of the description in $[0,B_x)$ is the number of
+solutions of $Q(x)=n$ in $[-cn,cn]^k$, which is $r_A(n)$.
+\end{proposition}
+
+\noindent The proof combines the shift bijection, \eqref{eq:split}, and the bound $n+KB^2$ on every value of
+the run (\lean{sumProg_bound}). Well-formedness is unconditional (\lean{repDesc_WF}).
+
+\begin{remark}[Forms with odd cross coefficients]\label{rem:odd}
+\Cref{thm:main} is about $x^{\top}Ax$ with $A$ symmetric and integral, so its cross coefficients
+$2A_{ij}$ are even. An integer-valued form $Q(x)=\sum_ia_{ii}x_i^2+\sum_{i<j}a_{ij}x_ix_j$ with some $a_{ij}$
+odd has $2Q=x^{\top}Gx$ for its integral Gram matrix $G$, and $r_Q(n)=r_G(2n)$. A machine for $r_Q$ then
+doubles its input and runs the machine for $G$. This is on paper only; the forms in
+\cref{sec:tunnell,sec:twists} that we write out have even cross coefficients.
+\end{remark}
+
+% =====================================================================
+\section{Padding the input so that the values fit}\label{sec:padding}
+% =====================================================================
+
+In this section we explain why the description cannot be counted on the input word itself, and how a
+generic padding step fixes this. The modules are \lean{CntPad} and \lean{RepPkg}.
+
+The package of a description family sets the size from the input word $w$, and the box width $n_B$ grows
+linearly with $|w|$. For the input \lean{encodeNat}~$n$ we have $n<2^{L}$, but the run of
+\cref{prop:count} reaches $n+K(cn+1)^2$, which needs about $2L$ bits. So the box condition of
+\cref{prop:count} fails on the input word. We pad instead. For a constant $c_3$, let
+\[
+  \mathrm{padW}_{c_3}(w)=w\,0^{|w|+c_3},
+\]
+so that $|\mathrm{padW}_{c_3}(w)|=2|w|+c_3$ and the little-endian value is unchanged (\lean{gofWord_padW}).
+The padded package (\lean{CntPackage.padded}) answers the query of the original package on the padded word,
+and keeps every bound with the constant $c_0\cdot(c_3+2)2^{\lfloor\log_2(c_3+2)\rfloor+2}$; the depth term uses
+$d(2L+c_3)\le2^{\lfloor\log_2(c_3+2)\rfloor+2}\,d(L)$ (\lean{dg_pad}). The rate theorem for the padded package
+(\lean{GR.queryM_TM_padded}) has its hypotheses stated on the original one.
+
+\begin{lemma}[\lean{size_bound}, \lean{repFam_Q_pad}]\label{lem:pad}
+Let $c_3=\lfloor\log_2(1+K(c+1)^2)\rfloor+1$. If $n<2^L$, then $n+K(cn+1)^2<2^{2L+c_3}$. Hence, on the padded
+word, the count of the description is $\#\{x:Q(x)=n\}$ for every $n$.
+\end{lemma}
+
+\noindent The network now has size $s=2L+c_3=O(L)$, and $c_A$ is a constant, so $U,gP=O(L)$ and
+\cref{imp:engine} gives $2^{O(L/\sqrt{\log L})}$. The machine for (i) asks one query (\lean{specRep}). The
+machine for (iii) asks two, one for each form of the parity of $n$, and outputs $[Q_1=2Q_2]$
+(\lean{specTun}); it answers $n=0$ directly, where \lean{tunnellTest}~$0$ is false. For $k=0$ the answer
+$[n=0]$ needs no count (\lean{repNum_TM_zero}). The final theorems are \lean{repNum_TM_of} and
+\lean{tunnell_TM_of}, instantiated in \lean{FinalRep}.
+
+% =====================================================================
+\section{What a reader must trust}\label{sec:statement}
+% =====================================================================
+
+A reader who wants to trust \cref{thm:main} must check the following definitions and nothing else of ours.
+They are in the pure module \lean{RepQF}; we render Unicode symbols as mathematics. Here
+\texttt{\(\cdot\sb{v}\)} is Mathlib's dot product (\lean{dotProduct}) and \texttt{*\(\sb{v}\)} its matrix--vector
+product (\lean{Matrix.mulVec}).
+\begin{alltt}\footnotesize
+def qf \{k : \(\mathbb{N}\)\} (A : Matrix (Fin k) (Fin k) \(\mathbb{Z}\)) (x : Fin k \(\to\) \(\mathbb{Z}\)) : \(\mathbb{Z}\) := x \(\cdot\sb{v}\) A *\(\sb{v}\) x
+noncomputable def repNum \{k : \(\mathbb{N}\)\} (A : Matrix (Fin k) (Fin k) \(\mathbb{Z}\)) (n : \(\mathbb{N}\)) : \(\mathbb{N}\) :=
+  Set.ncard \{x : Fin k \(\to\) \(\mathbb{Z}\) | x \(\cdot\sb{v}\) A *\(\sb{v}\) x = n\}
+def tForm (a b c : \(\mathbb{N}\)) : Matrix (Fin 3) (Fin 3) \(\mathbb{Z}\) := Matrix.diagonal ![(a : \(\mathbb{Z}\)), b, c]
+noncomputable def tunnellTest (n : \(\mathbb{N}\)) : Bool :=
+  if n % 2 = 1 then decide (repNum (tForm 1 2 8) n = 2 * repNum (tForm 1 2 32) n)
+  else decide (repNum (tForm 8 2 16) n = 2 * repNum (tForm 8 2 64) n)
+\end{alltt}
+\lean{Set.ncard} is $0$ on infinite sets, but by \cref{lem:box} the set is finite for positive-definite $A$, and
+Lean proves that it equals the finite box count (\lean{repNum_eq_card_box}). \lean{repNum} does not use
+\lean{qf}; we list \lean{qf} because the coercivity bound behind \cref{lem:box} is stated with it. The final statements,
+verbatim from \lean{FinalRep} up to line breaks (proofs omitted), are:
+\begin{alltt}\footnotesize
+theorem repNum_TM_rate (k : \(\mathbb{N}\)) (A : Matrix (Fin k) (Fin k) \(\mathbb{Z}\)) (hA : A.PosDef) :
+    \(\exists\) (M : Turing.TM2ComputableAux Bool Bool) (C : \(\mathbb{N}\)), (\(\forall\) i, Finite (M.tm.\(\Gamma\) i)) \(\wedge\)
+      \(\forall\) n : \(\mathbb{N}\), GraphProblems.Outputs M (Computability.encodeNat n)
+        (Computability.encodeNat (repNum A n))
+        \(\lfloor\)(C : \(\mathbb{R}\)) * 2 ^ ((C : \(\mathbb{R}\)) * (Computability.encodeNat n).length /
+          Real.sqrt (Real.logb 2 ((Computability.encodeNat n).length + 2)))\(\rfloor\sb{+}\)
+theorem diagRep_TM_rate (k : \(\mathbb{N}\)) (a : Fin k \(\to\) \(\mathbb{N}\)) (ha : \(\forall\) i, 0 < a i) :
+    \(\exists\) (M : Turing.TM2ComputableAux Bool Bool) (C : \(\mathbb{N}\)), (\(\forall\) i, Finite (M.tm.\(\Gamma\) i)) \(\wedge\)
+      \(\forall\) n : \(\mathbb{N}\), GraphProblems.Outputs M (Computability.encodeNat n)
+        (Computability.encodeNat (Set.ncard \{x : Fin k \(\to\) \(\mathbb{Z}\) | \(\sum\) i, (a i : \(\mathbb{Z}\)) * x i ^ 2 = n\}))
+        \(\lfloor\)(C : \(\mathbb{R}\)) * 2 ^ ((C : \(\mathbb{R}\)) * (Computability.encodeNat n).length /
+          Real.sqrt (Real.logb 2 ((Computability.encodeNat n).length + 2)))\(\rfloor\sb{+}\)
+theorem tunnell_TM_rate :
+    \(\exists\) (M : Turing.TM2ComputableAux Bool Bool) (C : \(\mathbb{N}\)), (\(\forall\) i, Finite (M.tm.\(\Gamma\) i)) \(\wedge\)
+      \(\forall\) n : \(\mathbb{N}\), GraphProblems.Outputs M (Computability.encodeNat n) [tunnellTest n]
+        \(\lfloor\)(C : \(\mathbb{R}\)) * 2 ^ ((C : \(\mathbb{R}\)) * (Computability.encodeNat n).length /
+          Real.sqrt (Real.logb 2 ((Computability.encodeNat n).length + 2)))\(\rfloor\sb{+}\)
+\end{alltt}
+The binary encoding is Mathlib's (\lean{Mathlib.Computability.Encoding}), little-endian with the empty word for $0$:
+\begin{alltt}\footnotesize
+def encodePosNum : PosNum \(\to\) List Bool
+  | PosNum.one => [true]
+  | PosNum.bit0 n => false :: encodePosNum n
+  | PosNum.bit1 n => true :: encodePosNum n
+def encodeNum : Num \(\to\) List Bool
+  | Num.zero => []
+  | Num.pos n => encodePosNum n
+def encodeNat (n : \(\mathbb{N}\)) : List Bool := encodeNum n
+\end{alltt}
+\texttt{Outputs} is the one-line definition of \A's statement file \texttt{GraphProblemsStatement}, which we
+also trust:
+\begin{alltt}\footnotesize
+def Outputs (M : TM2ComputableAux Bool Bool) (x y : List Bool) (T : \(\mathbb{N}\)) : Prop :=
+  Nonempty (TM2OutputsInTime M.tm (x.map M.inputAlphabet.invFun)
+    (some (y.map M.outputAlphabet.invFun)) T)
+\end{alltt}
+Behind these are Mathlib's \lean{Matrix.PosDef}, \lean{Matrix.diagonal}, \lean{dotProduct},
+\lean{Matrix.mulVec}, \lean{Set.ncard}, \lean{TM2OutputsInTime}, \lean{Real.logb} and \lean{Real.sqrt},
+from Mathlib \texttt{0df444a}. Note that \lean{tunnellTest} is defined for every $n$, while Tunnell's theorem is
+about squarefree $n$; congruent numbers and $L$-functions do not occur in the statements. The constant $C$
+depends on $A$ and is not tracked.
+
+% =====================================================================
+\section{Tunnell's test and exact central values}\label{sec:tunnell}
+% =====================================================================
+
+In this section we state what Tunnell's counts mean, and what follows from \cref{thm:main}. Everything here
+is on paper. Let $E_n:y^2=x^3-n^2x$. A squarefree $n$ is \emph{congruent}, the area of a right triangle with
+rational sides, exactly when $E_n(\Q)$ is infinite~\cite[p.~324]{Tun83}.
+
+\paragraph{Conventions.} Tunnell writes $a(n)=\#\{2x^2+y^2+32z^2=n\}-\frac12\#\{2x^2+y^2+8z^2=n\}$ for odd $n$
+and defines $b$ through the forms of the even case~\cite[pp.~325, 328]{Tun83}. With our names,
+\[
+  a(n)=B_n-\tfrac12A_n\quad(n\text{ odd}),\qquad b(n/2)=D_n-\tfrac12C_n\quad(n\text{ even}).
+\]
+Many statements of the criterion swap our $A_n$ and $B_n$, and our $C_n$ and $D_n$, and write $2A_n=B_n$; the
+test is the same.
+
+\begin{citedtheorem}[Tunnell~{\cite[Theorem~3]{Tun83}}]\label{cit:tunnell}
+For squarefree $n$,
+\[
+  L(E_n,1)=\frac{(A_n-2B_n)^2\,\beta}{16\sqrt n}\ \ (n\text{ odd}),\qquad
+  L(E_n,1)=\frac{(C_n-2D_n)^2\,\beta}{8\sqrt n}\ \ (n\text{ even}),
+\]
+where $\beta=\int_1^\infty dx/\sqrt{x^3-x}=2.62205\ldots$ is the real period of $E_1$ in Tunnell's
+normalisation.
+\end{citedtheorem}
+
+\noindent Tunnell states it as $L(E_d,1)=a(d)^2\beta d^{-1/2}/4$ and $L(E_{2d},1)=b(d)^2\beta(2d)^{-1/2}/2$
+for odd squarefree $d$; the display is the same formula in our names. We checked it against PARI/GP for all
+$183$ squarefree $n\le300$ (maximal absolute difference $4.3\cdot10^{-12}$).
+
+\begin{corollary}[on paper]\label{cor:lvalue}
+For squarefree $n$, the rational number $L(E_n,1)\sqrt n/\beta$ is computed in time $n^{o(1)}$, by two runs of
+the machines of \cref{thm:main}(ii).
+\end{corollary}
+
+\noindent If $n$ is not known to be squarefree, its squarefree part is found by factoring $n$, in time
+$\rate$ by~\cite{Shu26,TulFac26}; $n$ is congruent exactly when its squarefree part is.
+
+\paragraph{The congruent-number test.} The root number of $E_n$ is $+1$ for $n\equiv1,2,3\pmod8$ and $-1$
+for $n\equiv5,6,7\pmod8$ (squarefree $n$). This is consistent with Tunnell's remark that $a(n)=0$ unless
+$n\equiv1,3\pmod 8$ and $b(m)=0$ unless $m\equiv1,5\pmod8$~\cite[p.~329]{Tun83}.
+
+\begin{corollary}[on paper]\label{cor:congruent}
+Let $n$ be squarefree.
+\begin{enumerate}[label=(\alph*)]
+\item If Tunnell's test is false, then $n$ is not congruent. This is unconditional: $L(E_n,1)\neq0$ by
+\cref{cit:tunnell}, so $E_n(\Q)$ is finite by Coates and Wiles~\cite{CW77}\nr, whom Tunnell quotes for this
+step~\cite[p.~329]{Tun83}.
+\item If $n\equiv5,6,7\pmod8$, the counts vanish identically: $A_n=B_n=0$ for odd $n$ and $C_n=D_n=0$ for even
+$n$. So the test is true and carries no information.
+\item If $n\equiv1,2,3\pmod8$ and the test is true, then $L(E_n,1)=0$ with root number $+1$, so the analytic
+rank of $E_n$ is even and at least $2$. BSD then predicts rank at least $2$, and $n$ congruent. This is the only
+case in which the test's verdict ``congruent'' needs BSD.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}[Proof of (b)]
+For odd $n$ in $x^2+2y^2+8z^2=n$ or $x^2+2y^2+32z^2=n$, $x$ is odd, so $x^2\equiv1$ and the left side is $1$
+or $3$ modulo $8$. For even $n$ in $8x^2+2y^2+16z^2=n$ or $8x^2+2y^2+64z^2=n$, $n/2=4x^2+y^2+8z^2$ or
+$4x^2+y^2+32z^2$ is odd because $n$ is squarefree, so $y$ is odd and $n/2\equiv1\pmod4$, that is $n\equiv2\pmod8$. In all other
+classes the counts are $0$.
+\end{proof}
+
+\noindent For $n\equiv5,6,7\pmod8$, analytic rank $1$ already implies that $n$ is congruent, unconditionally,
+by Gross--Zagier~\cite{GZ86}\nr{} and Kolyvagin~\cite{Kol88,Kol90}\nr. But our machines do not compute
+$L'(E_n,1)$, so they decide nothing in these classes.
+
+\begin{example}[\cref{ex:three}, continued; two true tests]\label{ex:true}
+For $n=41\equiv1\pmod8$ we get $A_{41}=32$ and $B_{41}=16$, so the test is true and $L(E_{41},1)=0$. Here
+\cref{cor:congruent}(c) needs BSD; $41$ is in fact congruent, with sides $\frac{40}{3},\frac{123}{20},\frac{881}{60}$.
+For $n=34\equiv2\pmod8$ we get $C_{34}=8$ and $D_{34}=4$, and $34$ is congruent with sides
+$\frac{15}{2},\frac{136}{15},\frac{353}{30}$. We found both triangles by a short search for points on $E_n$
+and checked them exactly.
+\end{example}
+
+% =====================================================================
+\section{Central values of imaginary quadratic twists}\label{sec:twists}
+% =====================================================================
+
+In this section we fix an elliptic curve and vary the twist. Everything here is on paper. Gross~\cite{Gro87}
+proved, for prime conductor, that the central values of the imaginary quadratic twists are squares of
+coefficients of a fixed combination of ternary theta series; B\"ocherer and Schulze-Pillot~\cite{BSP90}
+extended this to squarefree level.
+
+\paragraph{Setting~\cite[\S1.4, \S3]{BSP90}.} Let $N>1$ be squarefree and let $f\in S_2(\Gamma_0(N))$ be a
+normalised newform, an eigenform of all Hecke operators, with sign $+$ in the functional equation of
+$L(f,s)$. Let $w_q$ be its Atkin--Lehner eigenvalues, $N_1=\prod_{w_q=-1}q$ and $N_2=N/N_1$. Let $\mathcal D$ be
+the definite quaternion algebra ramified exactly at the primes dividing $N_1$ and at $\infty$, let $R$ be an
+Eichler order of level $N$ in $\mathcal D$ with $h$ classes represented by $y_1,\dots,y_h$, let $R_i$ be the
+corresponding orders and $e_i=|R_i^\times|$, and let $L_i=\{x\in\Z+2R_i:\mathrm{tr}(x)=0\}$ with the norm form, a
+positive-definite ternary lattice. Let $\varphi$ be the function on the classes attached to $f$, and
+\[
+  W(\varphi)=\sum_{i=1}^h\frac{\varphi(y_i)}{e_i}\,\theta(L_i,z),\qquad
+  a(W;d)=\sum_{i=1}^h\frac{\varphi(y_i)}{e_i}\,r_{L_i}(d).
+\]
+
+\begin{citedtheorem}[{B\"ocherer and Schulze-Pillot~\cite[\S3, (3.5)]{BSP90}}]\label{cit:bsp}
+In this setting, let $-d_0<0$ be a fundamental discriminant and $N_0=N/(N,d_0)$. Then
+\[
+  c_2\,d_0^{1/2}\prod_{q\mid N_0}\bigl(1+(\tfrac{-d_0}{q})w_q\bigr)\,L(f,1)\,L\bigl(f,(\tfrac{-d_0}{\cdot}),1\bigr)
+  =c_1\,D_f^{(N)}(1)\,a(W;d_0N_0^2)^2,
+\]
+where $c_1,c_2$ are explicit constants depending only on $N$ and $D_f^{(N)}(1)$ is essentially the Petersson
+norm of $f$. If $N$ is odd, $a(W;d_0N_0^2)^2=a(W;d_0)^2$.
+\end{citedtheorem}
+
+\noindent For $N$ prime this is Gross's Proposition~13.5, which we know through the restatement
+of~\cite[(3.1)]{MRVT07}.
+
+\begin{corollary}[on paper]\label{cor:twist}
+Let $E/\Q$ have squarefree conductor $N$ and $L(E,1)\ne0$, and let $f$ be its newform. Let $-D<0$ be a
+fundamental discriminant with $(D,N)=1$ and $(\frac{-D}{q})=w_q$ for every $q\mid N$. Then
+\[
+  L(E\otimes\chi_{-D},1)=\frac{\kappa_E\,m_D^2}{\sqrt D},\qquad
+  \kappa_E=\frac{c_1D_f^{(N)}(1)}{2^{\omega(N)}c_2\,L(E,1)},\qquad
+  m_D=\sum_{i=1}^h\frac{\varphi(y_i)}{e_i}\,r_{L_i}(DN^2),
+\]
+with $\kappa_E$ independent of $D$. So $m_D$, and hence $L(E\otimes\chi_{-D},1)$ up to the fixed constant
+$\kappa_E$, is computed exactly in time $|D|^{o(1)}$ by $h=O(1)$ runs of the machine of \cref{thm:main}(i).
+\end{corollary}
+
+\begin{proof}
+$L(E,1)\neq0$ forces the sign $+$. Since $(D,N)=1$, $N_0=N$, and each factor of the product is $2$. Divide
+\cref{cit:bsp} by $2^{\omega(N)}c_2\sqrt D\,L(E,1)$. Each $r_{L_i}$ is the representation number of a fixed
+positive-definite ternary form, at the argument $DN^2$ of bit length $O(L)$; if the norm form has odd cross
+coefficients we use \cref{rem:odd}.
+\end{proof}
+
+\paragraph{The rational value.} With Pal's period relation~\cite[Main Result~1.1, Cor.~2.6]{Pal12}, for
+squarefree $d<0$ coprime to the discriminant of $E$, $\Omega(E^d)=\tilde u\,c_\infty(E^d)\,\Omega^-(E)/\sqrt{|d|}$,
+where $c_\infty$ counts real components, $\Omega^-$ is the imaginary period and $\tilde u$ is a power of $2$,
+equal to $1$ when $d\equiv1\pmod4$. So $L(E^{-D},1)/\Omega(E^{-D})$ is $m_D^2$ times a constant that depends
+only on $E$ and $\tilde u$. Since this ratio is rational for every twist\nr, the constant is rational, and
+there are finitely many of them; each can be fixed once from one $D$ with $m_D\neq0$. Pal notes that the
+formula without $\tilde u$ is misquoted in parts of the literature~\cite{Pal12}.
+
+\paragraph{Scope.} \Cref{cor:twist} covers only the $D$ that satisfy the residue conditions. Pacetti and
+Tornar\'ia describe the method of~\cite{BSP90} as covering ``only a fraction of imaginary quadratic twists
+(determined by quadratic residue conditions)'', and give the composite-level version used in
+computations~\cite{PT08}. For prime $N$, the excluded $D$ coprime to $N$ have root number $-1$ by the
+standard formula for the root number of a twist\nr, so their central values vanish. Real twists and base curves with
+$L(E,1)=0$ need the generalised theta series of~\cite{MRVT07}, with weights on residue classes; these are
+counts of representations by fixed inhomogeneous quadratic polynomials, which \cref{thm:main} does not cover as
+stated.
+
+\begin{example}[The curve $11a$]\label{ex:11a}
+For $E=11a$ ($y^2+y=x^3-x^2-10x-20$), $N=11$, $w_{11}=-1$ and $h=2$. Mao, Rodriguez-Villegas and Tornar\'ia write
+the theta series of the eigenvector as the difference of the theta series of
+\[
+  Q_1=4x_1^2+11x_2^2+12x_3^2+4x_1x_3,\qquad
+  Q_2=16x_1^2+15x_2^2+15x_3^2+14x_2x_3+28x_1x_3+16x_1x_2
+\]
+\cite[(4.1), (4.2)]{MRVT07}. Both have even cross coefficients and determinant $484$, so
+\cref{thm:main}(i) applies to them directly. With $m_D=\frac12(r_{Q_1}(D)-r_{Q_2}(D))$,
+\cref{tab:11a} shows that $L(E,1)\,L(E\otimes\chi_{-D},1)\sqrt D/m_D^2$ is the same number,
+$0.7406174494\ldots$, for every fundamental $-D$ with $D<140$, $(\frac{-D}{11})=-1$ and $m_D\ne0$; for
+$D=47,103,119$ both $m_D$ and the $L$-value vanish.
+\end{example}
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}rrrrr@{\qquad}rrrrr@{}}
+\toprule
+$D$ & $r_{Q_1}$ & $r_{Q_2}$ & $m_D$ & $L(E\otimes\chi_{-D},1)$ & $D$ & $r_{Q_1}$ & $r_{Q_2}$ & $m_D$ & $L(E\otimes\chi_{-D},1)$\\
+\midrule
+3 & 0 & 2 & $-1$ & 1.68450 & 59 & 8 & 6 & 1 & 0.37984\\
+4 & 2 & 0 & 1 & 1.45882 & 67 & 0 & 6 & $-3$ & 3.20801\\
+15 & 4 & 6 & $-1$ & 0.75333 & 71 & 16 & 18 & $-1$ & 0.34626\\
+20 & 4 & 6 & $-1$ & 0.65240 & 91 & 8 & 0 & 4 & 4.89362\\
+23 & 8 & 6 & 1 & 0.60837 & 103 & 12 & 12 & 0 & 0\\
+31 & 8 & 6 & 1 & 0.52402 & 104 & 16 & 12 & 2 & 1.14439\\
+47 & 12 & 12 & 0 & 0 & 111 & 20 & 18 & 1 & 0.27693\\
+56 & 8 & 12 & $-2$ & 1.55954 & 115 & 4 & 6 & $-1$ & 0.27207\\
+\bottomrule
+\end{tabular}
+\caption{The curve $11a$: representation numbers of the two forms of \cref{ex:11a} and the central values
+of the twists, from PARI/GP. The table stops at $D=115$; the check ran to $D<140$. $L(E,1)=0.2538418609$.}\label{tab:11a}
+\end{table}
+
+% =====================================================================
+\section{Tate--Shafarevich groups, conditionally}\label{sec:sha}
+% =====================================================================
+
+In this section we assume one unrefereed result and say what follows. Everything here is on paper.
+
+OpenAI's catalogue entry~002, ``The full BSD formula from low Selmer corank''~\cite{OAI002}, consists of
+preprints dated 6--7~October 2026. Its manuscript abstract states: ``We prove the full
+Birch--Swinnerton-Dyer leading-term formula for every elliptic curve over $\Q$ whose full $q$-power Selmer
+group has corank zero or one at some prime $q$. The analytic and Mordell--Weil ranks equal that corank, and
+the Tate--Shafarevich group is finite.'' We have not checked these preprints, and they are not refereed.
+
+If $L(E,1)\ne0$, then $E(\Q)$ and $\Sha(E)$ are finite by Kolyvagin~\cite{Kol88,Kol90}\nr, so the $q$-power
+Selmer group has corank $0$ for every $q$, and entry~002 would give the full BSD formula for $E$. The
+catalogue itself advertises only the consequence for a density-one set of twists, with entry~006~\cite{OAI006};
+the pointwise statement for analytic rank $0$ is our reading of the abstract above.
+
+\begin{proposition}[on paper; conditional on entry~002]\label{prop:sha}
+Let $n$ be squarefree and Tunnell's test false. If entry~002 is correct, then
+\[
+  |\Sha(E_n)|=\Bigl(\frac{A_n-2B_n}{2\,\tau(n)}\Bigr)^2\ \ (n\text{ odd}),\qquad
+  |\Sha(E_n)|=\Bigl(\frac{C_n-2D_n}{2\,\tau(n/2)}\Bigr)^2\ \ (n\text{ even}),
+\]
+where $\tau$ counts divisors. So $|\Sha(E_n)|$ is computed in time $n^{o(1)}$.
+\end{proposition}
+
+\begin{proof}
+In Tunnell's notation the right sides are $(a(n)/\sigma_0(n))^2$ and $(b(n/2)/\sigma_0(n/2))^2$, which is
+Tunnell's conjecture~\cite[p.~330]{Tun83}. Tunnell's remark there computes the local data of $E_n$
+($c_p=4$ for odd $p\mid n$, $c_2\in\{2,4\}$, $|E_n(\Q)_{\mathrm{tors}}|=4$) and identifies his conjecture with
+the BSD formula, given \cref{cit:tunnell}. By the paragraph above, entry~002 gives that formula. For the cost,
+$\tau(m)=\sum_{j\le m}\tau(j)-\sum_{j\le m-1}\tau(j)$ is two runs of the machine \lean{divisorSum_TM_rate} of our
+class-number note~\cite{TulCN26}, which is machine-checked; factoring~\cite{Shu26,TulFac26} gives it as well.
+\end{proof}
+
+\noindent We checked the formula against the analytic order of $\Sha$ that PARI/GP computes from
+$L(E_n,1)$, the real period, the torsion and the Tamagawa numbers, for the $73$ squarefree $n\le300$ with
+$L(E_n,1)\ne0$; all agree, and $|\Sha|>1$ occurs $27$ times (for example $|\Sha(E_{17})|=4$,
+$|\Sha(E_{113})|=16$). The odd part of Tunnell's conjecture was known before, from Rubin's work on curves with
+complex multiplication~\cite{Rub91}\nr; we did not re-check its exact scope.
+
+\begin{remark}[General twists]
+For the twists of \cref{cor:twist}, entry~002 would give $|\Sha(E^{-D})|=(L/\Omega)\,|E^{-D}(\Q)_{\mathrm{tors}}|^2/\prod_pc_p$.
+The Tamagawa numbers at $p\mid D$ need the primes dividing $D$, so factoring enters, in time $\rate$
+by~\cite{Shu26,TulFac26}. We have not worked out the local data in general, so we state no theorem.
+\end{remark}
+
+Entry~002 does not change the status of the congruent-number problem itself. In \cref{cor:congruent}(c) the
+analytic rank is at least $2$, and entry~002 assumes Selmer corank at most $1$; it says nothing there.
+
+% =====================================================================
+\section{What was already within reach}\label{sec:new}
+% =====================================================================
+
+In this section we say plainly which forms \cref{thm:main} does not make newly computable. Everything here is
+on paper, and ``within reach'' means: in time $n^{o(1)}$ given the engines and known methods.
+
+\paragraph{Binary forms.} For a fixed binary form, $r_A(n)$ is computed in time polynomial in $L$ from the
+factorisation of $n$, since the class group of the fixed discriminant is fixed and finite. Factoring takes
+$\rate$ with the engines~\cite{RR26,Shu26,TulFac26}.
+
+\paragraph{Even rank.} For $k=4$, Jacobi's formula gives $r_{x^2+y^2+z^2+w^2}(n)=8\sigma(n)$ for odd $n$, so
+\cref{thm:main}(ii) computes $\sigma(n)$. Given the factorisation, $\sigma(n)$ is easy; conversely,
+$\sigma(n)$ yields the factorisation in randomised polynomial time by Bach, Miller and Shallit~\cite{BMS86}\nr.
+So the engine is at least as strong as factoring, which is consistent with~\cite{RR26}. More generally, for even
+$k$ the theta series is an Eisenstein series, whose coefficients are twisted divisor sums and need only the
+factorisation, plus a cusp form of integral weight. For weight $2$ the cusp coefficients at primes come from point
+counts on the associated abelian varieties; for higher weight, Edixhoven, Couveignes and coauthors compute
+Ramanujan's $\tau(p)$ in probabilistic polynomial time~\cite{EC11}. So even-rank forms reduce essentially to
+factoring and known methods; for weight above $2$ this is modulo the reach of such methods, which we did not check
+for the cusp forms that occur here, and modulo their being probabilistic. Our theorem adds a deterministic route there, not new reach.
+
+\paragraph{Forms alone in their genus.} For $x^2+y^2+z^2$, Gauss's formula gives, for squarefree $n\ge5$,
+$r_3(n)=12h(-4n)$ for $n\equiv1,2,5,6\pmod8$, $24h(-n)$ for $n\equiv3\pmod8$, and $0$ for $n\equiv7\pmod8$
+(we checked it for squarefree $5\le n<800$ against counts of primitive reduced forms). So
+\cref{thm:main}(ii) with $a=(1,1,1)$ computes these class numbers in time $n^{o(1)}$. Our class-number
+note~\cite{TulCN26} already computes $h(-N)$ in the same time, through reduced forms, so the two results are
+consistent and neither adds reach to the other. For a ternary form alone in its genus, Siegel's theorem
+expresses $r_A(n)$ through the genus, whose coefficients are, up to local factors that depend on the
+factorisation of $n$, class numbers of imaginary quadratic orders, as Gauss's formula illustrates; we state this
+only as a pointer, without the exact local factors.
+
+\paragraph{Odd rank: the new part.} For a ternary form with more than one class in its genus, the theta series
+also has a cusp part of weight $3/2$. By Waldspurger's theorem\nr, of which \cref{cit:tunnell,cit:bsp} are
+explicit cases, the squares of its coefficients at squarefree $n$ are, up to fixed factors, central values of
+twisted $L$-functions. We know
+of no method that computes these in time $n^{o(1)}$ for a single $n$, even with the engines, other than the
+one presented here. This is where \cref{thm:main} adds reach; \cref{sec:tunnell,sec:twists} are examples.
+
+% =====================================================================
+\section{The Lean development}\label{sec:formal}
+% =====================================================================
+
+In this section we list the modules and state the trusted base. The development is in the public
+repository~\cite{TulsyanRepo26}: directories \texttt{lean/EthFollowup/ModP} (pure Mathlib; the files compile
+with Lean v4.33.1 and v4.34.1) and \texttt{lean-bridge-anthropic/bridge/EthFollowup/ModP} (on top of \A's
+development). \Cref{tab:modules} lists the new modules.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}p{0.20\textwidth}p{0.66\textwidth}r@{}}
+\toprule
+module & content & lines\\
+\midrule
+\lean{RepQF} & \lean{qf}, \lean{repNum}, Cauchy--Schwarz, the adjugate box, the shift, \lean{tForm}, \lean{tunnellTest} & 318\\
+\lean{SlpDesc} & straight-line-program descriptions, the canonical run, its count & 337\\
+\lean{RepDesc} & monomials, the sign split \eqref{eq:split}, the accumulators, \cref{prop:count} & 600\\
+\midrule
+\lean{CntPad} & padding of counting packages; the padded rate theorem & 244\\
+\lean{RepPoly} & polynomial time of the descriptions & 110\\
+\lean{RepPkg} & the family package, \cref{lem:pad}, query specifications, the machines & 320\\
+\lean{FinalRep} & the three final theorems & 76\\
+\midrule
+total & & 2005\\
+\bottomrule
+\end{tabular}
+\caption{The new modules, with line counts (\texttt{wc -l}). The first three are pure Mathlib. The development
+reuses, unchanged, the ArithNet, package and machine modules of~\cite{TulCN26} (\texttt{ArithDesc},
+\texttt{ArithParams}, \texttt{ArithNet}, \texttt{ArithPackage}, \texttt{CntPackage}, \texttt{GRate},
+\dots), the factoring modules of~\cite{TulFac26} and the bridge modules of~\cite{Tul26}.}\label{tab:modules}
+\end{table}
+
+\paragraph{Trusted base and axioms.} \texttt{\#print axioms} reports \lean{propext}, \lean{Classical.choice}
+and \lean{Quot.sound} for the three theorems of \cref{thm:main}; we ran it on 5~November 2026 against a build of
+the pinned development whose sources are identical to the files of \cref{tab:modules}. No new module contains
+\lean{sorry}, a new axiom or \lean{native_decide}.
+%PENDING-REPLAY
+A fresh \lean{leanchecker} replay of the dependency closure of \lean{EthFollowup.ModP.FinalRep}, the module
+holding the three final theorems, is pending at the time of writing.
+What must be trusted is the Lean kernel, the Mathlib definitions named in \cref{sec:statement}, our definitions
+quoted there, and \A's definition of \texttt{Outputs}. \A's development, Mathlib's proofs and our other modules
+are checked by the kernel; they are part of the checked closure, not of the trusted base.
+
+\paragraph{One design point.} The padding is generic: \lean{CntPackage.padded} works for any counting
+package whose rounds admit the original query words, and the rate theorem for it is proved once. Padding the
+input word, instead of enlarging the box inside the description family, leaves ArithNet and its parameter proofs
+untouched.
+
+% =====================================================================
+\section{Related work}\label{sec:related}
+% =====================================================================
+
+We organise related work by idea: computing representation numbers and Tunnell's counts, central values of
+twists, the congruent-number problem, and the counting engines with their formal proofs.
+
+\paragraph{Representation numbers and Tunnell's counts.} Tunnell noted the $O(n^{3/2})$ cost of his
+criterion~\cite[p.~325]{Tun83}. Counting representations of $n-cz^2$ by binary forms brings one $n$ to about
+$n^{1/2+o(1)}$, and Hart, Tornar\'ia and Watkins put the cost of this route up to $N$ at
+$O(N^{3/2})$~\cite[\S1.3]{HTW10}. They computed Tunnell's counts for all $n\le10^{12}$ by out-of-core FFT
+multiplication of theta series, split by residue classes following Elkies, in about $30$ hours for the classes
+$1,3\pmod8$ on a $16$-core machine~\cite{HTW10}. That is quasi-linear in the range, so $X^{o(1)}$ per coefficient
+on average, but with memory about $X$ and no gain for one $n$. In contrast, we compute one $n$ in $n^{o(1)}$, for
+every fixed positive-definite form, at the price of galactic constants.
+
+\paragraph{Central values of twists.} The approximate functional equation computes $L(E\otimes\chi_D,1)$
+numerically in time ``very roughly proportional to $|D|$''~\cite{MRVT07}. Mao, Rodriguez-Villegas and
+Tornar\'ia compute the coefficients of the theta combination for all $|D|\le x$ in about $x^{3/2}$ steps, by
+running over the lattice points of ellipsoids, and extend the method to real twists and to $L(E,1)=0$ with
+generalised theta series~\cite{MRVT07}; Pacetti and Tornar\'ia treat composite levels~\cite{PT08}. Closest to
+our work are these papers, whose formulas we use. In contrast, we evaluate one coefficient in $|D|^{o(1)}$ instead
+of enumerating the ellipsoid.
+
+\paragraph{The congruent-number problem.} Tunnell's criterion~\cite{Tun83} is unconditional in one direction by
+Coates and Wiles~\cite{CW77}\nr; Conrad gives an exposition~\cite{Con08}. For $n\equiv5,6,7\pmod8$ much is
+known unconditionally; for example, Smith proves that at least $55.9\%$ of squarefree $n\equiv5,6,7\pmod8$ are
+congruent~\cite{Smi16}. OpenAI's entries~002 and~006~\cite{OAI002,OAI006} give, if correct, the full BSD formula in
+Selmer corank at most $1$ and Goldfeld's density statements for twists; neither decides the analytic-rank-$\ge2$
+case of \cref{cor:congruent}(c). In contrast, our contribution to this problem is the speed of the test, not its
+logical status.
+
+\paragraph{Counting engines and formal proofs.} \Oa~\cite{OpenAI26} and \A~\cite{Anthropic26} claim deterministic
+subexponential $\#$SAT algorithms, with Lean developments, under review. Rudich and Rousseau~\cite{RR26} factored
+in $N^{o(1)}$ with them, Shunia~\cite{Shu26} proved the rate $\rate$ on paper, and~\cite{IF26} and our factoring
+note~\cite{TulFac26} proved it in Lean. Our earlier notes applied \A's engine to Hamiltonian cycles~\cite{Tul26},
+Eulerian circuits~\cite{TulEuler26}, class numbers and lattice-point counts~\cite{TulCN26}, and the parity of
+$\pi(x)$~\cite{TulPar26}. The closest is the class-number note, whose library we reuse; in contrast, the
+equations here have $\Theta(k^2)$ products, integer unknowns and values of $2L$ bits, which the shift, the sign
+split and the padding handle. We use Lean~4~\cite{Lean4} and Mathlib~\cite{Mathlib20}; Mathlib at the commit we use
+proves Lagrange's four-square theorem, and we found in it no representation counts and no congruent numbers.
+
+\paragraph{Novelty search.} On 5~November 2026 we grepped the titles and abstracts of all $716$ works on Hexagon
+through its public query interface for representation numbers, ternary and quadratic forms, theta series,
+congruent numbers, Tunnell, Waldspurger, BSD, central values and elliptic curves; queried arXiv's interface for the
+Exponential Time Hypothesis or $\#$SAT together with quadratic forms, congruent numbers and Tunnell; and grepped
+OpenAI's catalogue for the same terms. This complements our novelty audit of the same day~\cite{TulsyanRepo26}
+(file \texttt{research/novelty-audit-2026-11-05.md}). We found no work that computes representation numbers,
+Tunnell's counts or these $L$-values with either ETH engine. A negative search result is weak evidence.
+
+% =====================================================================
+\section{Limitations}\label{sec:limitations}
+% =====================================================================
+
+\begin{itemize}
+\item \emph{The results stand or fall with \A's development.} Every theorem rests on Anthropic's Lean development
+of its claimed refutation of the Exponential Time Hypothesis, and the labs' claims are under review. Lean checks
+that development as part of our proof, and our statements use only Mathlib, our quoted definitions and \A's
+\texttt{Outputs}. We do need the development, built from source at the pinned commit, to be sound, and the
+toolchain to be sound. The fresh kernel replay of \lean{EthFollowup.ModP.FinalRep} is pending.
+\item \emph{The consequences are on paper only.} Lean proves that the machines output counts. The link to
+congruent numbers, $L$-values and Tate--Shafarevich groups (\cref{sec:tunnell,sec:twists,sec:sha}) rests on cited
+theorems, some of which we did not re-read (marked~\nr), and is not formalised. \Cref{cor:congruent}(c) needs BSD.
+\item \emph{\Cref{sec:sha} is conditional on an unrefereed result.} OpenAI's entry~002 is a set of preprints that
+we have not checked.
+\item \emph{The twist corollary has limited scope.} It needs $L(E,1)\ne0$, squarefree conductor and the residue
+conditions of \cref{cor:twist}, and the constant $\kappa_E$ is fixed but not computed by our machines. Real twists
+need weighted counts that \cref{thm:main} does not cover.
+\item \emph{The algorithms are galactic.} \A's levels start at $K_0=2^{x_0}$ with $x_0\ge18$, the level needs
+$K^{40}\lesssim s$, and the constants are astronomical: for $k=3$ the shape constant alone is
+$64\cdot299\cdot148=2{,}832{,}128$, before the factor $2^{12}$ of the package. The machines are of no practical use and
+beat $n^{1/2}$ only for astronomically large $n$.
+\item \emph{The machines use exponential space.}
+\item \emph{No human has checked the work.} The Lean code and this text were written with AI assistance. No human
+expert has yet checked that \cref{sec:statement} lists everything a reader must trust, or the derivations on paper.
+\end{itemize}
+
+\section{Conclusion}\label{sec:conclusion}
+We have shown that a representation number of a fixed positive-definite form is one count of a straight-line
+program with nonnegative coefficients, after a shift and a sign split, and that the counting engine evaluates it in
+$n^{o(1)}$ steps once the input is padded. The arithmetic meaning is classical: Tunnell's counts give $L(E_n,1)$, and
+ternary theta combinations give central values of twists. The result is a step towards, not a practical method for,
+these computations. An interesting direction is whether the same route handles the weighted counts of
+generalised theta series, which would cover real twists and base curves of positive rank, and whether a count
+can certify $L'(E_n,1)\ne0$, which would make the test informative for $n\equiv5,6,7\pmod8$.
+
+\section*{Acknowledgements}
+This work was done with AI assistance (Claude Code, Anthropic): the constructions, the Lean development, the
+numerical checks, the literature and citation checks and the text were produced in sessions with Claude Code. The
+Lean theorems are checked by the Lean kernel; everything else awaits human expert review. Responsibility for any
+errors rests with the author. This note continues the project of~\cite{Tul26,TulFac26,TulCN26,TulPar26}.
+
+\begin{thebibliography}{99}
+
+\bibitem{Anthropic26}
+Claude (Anthropic), \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, Hexagon preprint hexagon:2610.00577v1,
+October 2026, \url{https://hexagonmath.org/abs/2610.00577v1}. Lean formalisation in the repository
+\url{https://github.com/anthropics/formal-math}, folder \texttt{eth}; we use commit
+\texttt{16a5ce41304fcdaea4e0be7c132e1c361dc26da5}.
+
+\bibitem{BMS86}
+E.~Bach, G.~Miller, and J.~Shallit, \emph{Sums of divisors, perfect numbers and factoring}, SIAM J. Comput.
+\textbf{15} (1986), 1143--1154.
+
+\bibitem{BSP90}
+S.~B\"ocherer and R.~Schulze-Pillot, \emph{On a theorem of {W}aldspurger and on {E}isenstein series of {K}lingen
+type}, Math. Ann. \textbf{288} (1990), 361--388.
+
+\bibitem{CW77}
+J.~Coates and A.~Wiles, \emph{On the conjecture of {B}irch and {S}winnerton-{D}yer}, Invent. Math. \textbf{39}
+(1977), 223--251.
+
+\bibitem{Con08}
+K.~Conrad, \emph{The congruent number problem}, Harvard College Math. Review \textbf{2} (2008).
+
+\bibitem{EC11}
+B.~Edixhoven and J.-M.~Couveignes (eds.), \emph{Computational aspects of modular forms and {G}alois
+representations}, Annals of Math. Studies, vol.~176, Princeton Univ. Press, 2011; arXiv:math/0605244.
+
+\bibitem{Gro87}
+B.~H.~Gross, \emph{Heights and the special values of {$L$}-series}, Number Theory (Montreal, 1985), CMS Conf.
+Proc., vol.~7, Amer. Math. Soc., Providence, RI, 1987, pp.~115--187.
+
+\bibitem{GZ86}
+B.~H.~Gross and D.~B.~Zagier, \emph{Heegner points and derivatives of {$L$}-series}, Invent. Math. \textbf{84}
+(1986), 225--320.
+
+\bibitem{HTW10}
+W.~Hart, G.~Tornar\'ia, and M.~Watkins, \emph{Congruent number theta coefficients to $10^{12}$}, Algorithmic
+Number Theory (ANTS~IX), Lecture Notes in Comput. Sci., vol.~6197, Springer, 2010, pp.~186--200.
+
+\bibitem{IF26}
+1337isnot1337 (GitHub user) and contributors, \emph{integer-factoring: deterministic integer factoring bounds},
+public repository \url{https://github.com/1337isnot1337/integer-factoring}; Lean formalisation in
+\texttt{formal-appendix/} (pull request \#20, merged 30~October 2026).
+
+\bibitem{Kol88}
+V.~A.~Kolyvagin, \emph{Finiteness of {$E(\mathbb Q)$} and {$\Sha(E,\mathbb Q)$} for a subclass of {W}eil curves},
+Izv. Akad. Nauk SSSR Ser. Mat. \textbf{52} (1988), no.~3, 522--540.
+
+\bibitem{Kol90}
+V.~A.~Kolyvagin, \emph{Euler systems}, The Grothendieck Festschrift, Vol.~II, Birkh\"auser, 1990.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The {L}ean 4 theorem prover and programming language}, Automated Deduction --
+CADE 28, Lecture Notes in Comput. Sci., vol. 12699, Springer, 2021, pp.~625--635.
+
+\bibitem{MRVT07}
+Z.~Mao, F.~Rodriguez-Villegas, and G.~Tornar\'ia, \emph{Computation of central value of quadratic twists of
+modular {$L$}-functions}, Ranks of Elliptic Curves and Random Matrix Theory, London Math. Soc. Lecture Note
+Ser., vol.~341, Cambridge Univ. Press, 2007, pp.~273--288; arXiv:math/0606762.
+
+\bibitem{Mathlib20}
+The mathlib Community, \emph{The {L}ean mathematical library}, Proc. 9th ACM SIGPLAN International Conference on
+Certified Programs and Proofs (CPP 2020), 2020, pp.~367--381.
+
+\bibitem{OAI002}
+OpenAI, \emph{Exact {B}irch--{S}winnerton-{D}yer formula from low {S}elmer corank}, preprint dated 7~October 2026,
+with companion preprints of 6--7~October 2026; entry~002, ``The full BSD formula from low Selmer corank'', of the
+catalogue \texttt{CONTENTS.md} in the repository \url{https://github.com/openai/math}. Not refereed.
+
+\bibitem{OAI006}
+OpenAI, entry~006, ``Goldfeld's conjecture: densities and mean analytic rank'', of the catalogue
+\texttt{CONTENTS.md} in the repository \url{https://github.com/openai/math}, 2026. Not refereed.
+
+\bibitem{OpenAI26}
+OpenAI, \emph{The {E}xponential {T}ime {H}ypothesis is false}, preprint dated 17~October 2026, revised 25~October
+2026. Paper and Lean formalisation in the repository \url{https://github.com/openai/math}.
+
+\bibitem{PT08}
+A.~Pacetti and G.~Tornar\'ia, \emph{Computing central values of twisted {$L$}-series: the case of composite
+levels}, Experiment. Math. \textbf{17} (2008), 459--472; arXiv:math/0607008.
+
+\bibitem{Pal12}
+V.~Pal, \emph{Periods of quadratic twists of elliptic curves}, with an appendix by A.~Agashe, Proc. Amer. Math.
+Soc. \textbf{140} (2012), 1513--1525; arXiv:1012.0094.
+
+\bibitem{PARI}
+The PARI~Group, \emph{PARI/GP version 2.17.2}, Univ. Bordeaux, \url{https://pari.math.u-bordeaux.fr/}.
+
+\bibitem{RR26}
+I.~Rudich and L.-M.~Rousseau, \emph{Deterministic factoring in time $N^{o(1)}$}, Hexagon preprint
+hexagon:2610.00600v1, October 2026, \url{https://hexagonmath.org/abs/2610.00600v1}.
+
+\bibitem{Rub91}
+K.~Rubin, \emph{The ``main conjectures'' of {I}wasawa theory for imaginary quadratic fields}, Invent. Math.
+\textbf{103} (1991), 25--68.
+
+\bibitem{Shu26}
+J.~Shunia, \emph{An improved subexponential bound for deterministic integer factorization}, Hexagon preprint
+hexagon:2610.00711v1, 2026, \url{https://hexagonmath.org/abs/2610.00711v1}.
+
+\bibitem{Smi16}
+A.~Smith, \emph{The congruent numbers have positive natural density}, arXiv:1603.08479, 2016.
+
+\bibitem{Tun83}
+J.~B.~Tunnell, \emph{A classical {D}iophantine problem and modular forms of weight {$3/2$}}, Invent. Math.
+\textbf{72} (1983), 323--334.
+
+\bibitem{Tul26}
+V.~Tulsyan, \emph{Counting {H}amiltonian cycles in sparse graphs in subexponential time, assuming the new
+$\#${SAT} algorithms}, Hexagon preprint hexagon:2610.00672v1, October 2026,
+\url{https://hexagonmath.org/abs/2610.00672v1}.
+
+\bibitem{TulCN26}
+V.~Tulsyan, \emph{Class numbers and lattice-point counts in time $2^{O(n/\sqrt{\log n})}$, assuming the new
+$\#${SAT} algorithms}, Hexagon preprint hexagon:2611.00115v2, November 2026,
+\url{https://hexagonmath.org/abs/2611.00115}.
+
+\bibitem{TulEuler26}
+V.~Tulsyan, \emph{Counting {E}ulerian circuits in subexponential time, assuming the new $\#${SAT} algorithms},
+Hexagon preprint hexagon:2611.00088v1, November 2026, \url{https://hexagonmath.org/abs/2611.00088v1}.
+
+\bibitem{TulFac26}
+V.~Tulsyan, \emph{An independent machine-checked proof of deterministic factoring in time
+$2^{O(n/\sqrt{\log n})}$, via the new $\#${SAT} algorithms}, preprint, November 2026; source in the directory
+\texttt{factoring-note/} of~\cite{TulsyanRepo26}.
+
+\bibitem{TulPar26}
+V.~Tulsyan, \emph{The parity of the prime-counting function in time $x^{o(1)}$, assuming the new $\#${SAT}
+algorithms}, Hexagon preprint hexagon:2611.00116v1, November 2026, \url{https://hexagonmath.org/abs/2611.00116v1}.
+
+\bibitem{TulsyanRepo26}
+V.~Tulsyan, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes}, public repository
+\url{https://github.com/xennygrimmato/eth-hamiltonicity}, 2026; Lean sources as of commit \texttt{3e181e7}.
+
+\end{thebibliography}
+
+% =====================================================================
+% CITATION CHECK (5 November 2026).
+%  Tun83   Scan read (GDZ PPN356556735_0072): Main Theorem p. 323, cost remark p. 325, Theorem 3 pp. 328-329,
+%          root-number remark p. 329, Theorem 4, Conjecture and Remark p. 330. Theorem 3 re-checked numerically
+%          against PARI for 183 squarefree n <= 300.
+%  BSP90   Scan read (GDZ PPN235181684_0288): setup sec. 1.4 p. 365, Theorem (3.5) p. 378, remarks p. 378.
+%  MRVT07  arXiv math/0606762 read: (3.1) attributing l = 1 to Gross Prop. 13.5; forms (4.1), (4.2); cost remarks.
+%  PT08    arXiv math/0607008 read: quotation on the fraction of twists covered.
+%  Pal12   arXiv:1012.0094 read: Main Result 1.1, Prop. 2.5, Cor. 2.6; remark on misquotation.
+%  HTW10   WRAP preprint read: sec. 1.3 O(N^{3/2}); 10^12 timings.
+%  Con08   Theorem 15 read.
+%  Gro87   Not obtained; used through MRVT07 (3.1).
+%  OAI002, OAI006: local copy of openai/math CONTENTS.md; manuscript abstract quoted from the entry.
+%  Smi16   arXiv abstract (55.9% density statement).
+%  EC11    arXiv math/0605244 abstract; probabilistic polynomial time.
+%  Marked \dag (not re-read for this note): CW77 (quoted by Tunnell p. 329), GZ86, Kol88, Kol90, Rub91, BMS86;
+%          rationality of L/Omega for twists.
+%  Anthropic26: Hexagon API lists hexagon:2610.00577v1 (author Anthropic, 27 Oct 2026). Shu26: API lists
+%          hexagon:2610.00711v1. Hexagon IDs of our notes from barrier-note/main.tex and the API.
+%  Novelty search (5 Nov 2026, ~20:35 UTC): Hexagon API, 716 entries, regex over titles and abstracts; arXiv API
+%          queries returned no hits; OpenAI CONTENTS.md local copy grepped: no hits.
+% =====================================================================
+
+\end{document}

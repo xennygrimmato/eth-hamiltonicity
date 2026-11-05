@@ -252,3 +252,133 @@ labels; exactly one accepting labelling per witness with Π d_i = m. Minimise U 
 * Checked with `lake env lean` under the semaphore wrapper; no `lake build` of the modules was completed
   (the exclusive lock was held by another executor's leanchecker for > 1 h), so the #print axioms
   statements are at the end of each file instead of in a separate importing file.
+
+## 8. Second pass (5 Nov 2026): checkers, residue targets, totient counts
+
+Three directions not covered by §4: (a) non-tree verification by a (de)randomised checker, (b) verifying
+only Π d_i ≡ m modulo Q ≈ x^{0.525}, (c) witness structures built on φ(m) (one multiplication). Each is
+quantified below; none gets below the tree, and (a), (c) each have a clean reason. Notation as in §4;
+"top problem" = the K := n/P ≈ n^{1/5} partial products of P bits each that survive node absorption (§4.2).
+
+### 8.1 (a) Derandomised checkers: exactness forces a modulus of ≥ n/2 bits
+
+Setting. A checker accepts (d, m) iff some predicate of the residue N mod Q_s holds, N := Π d_i − m, with
+the seed s a label and an integer weight χ_s(r) on the residue r (the engine sums over s for free; the
+weights are arbitrary since (s, r) fit in a node). The engine value is Σ_{(d,m)} F(N), F(N) :=
+Σ_s χ_s(N mod Q_s). For the count to be c·#{true witnesses} we need F(N) = c·[N = 0] for every N that a
+false witness can produce; for fixed d the label m ranges over an interval of length ≥ 2^{n−1}, so F must
+vanish on 1 ≤ N < X with X ≥ 2^{n−1}.
+ (i) Pure divisibility (χ_s = [r = 0], any sign/weight per s): Σ_{Q_s | N} χ_s = c[N = 0] for 0 < N < X
+     is a triangular system in N (N = 1 kills the modulus 1, N = Q_s kills χ_s inductively), so χ_s = 0
+     for all Q_s < X: some modulus must be ≥ X = 2^{n−1}. The check "Π d_i ≡ m mod Q" with Q ≥ 2^n is the
+     full product again (K multiplications mod Q: cut ≥ (K−1)n).
+ (ii) Arbitrary residue weights. F is a combination of the exponentials e(aN/Q_s); the number T of
+     distinct frequencies is ≤ #Farey(Q_max) ≈ (3/π²) Q_max². F satisfies a linear recurrence of order T,
+     so X − 1 ≥ T consecutive zeros force F ≡ 0, contradicting F(0) = c ≠ 0. Hence T ≥ X and
+       Q_max ≥ (π/√3)·√X ≈ 1.81·2^{(n−1)/2}:  some modulus has ≥ n/2 − 0.1 bits.
+     (Checked by exact rank computation for X ≤ 48, scratchpad iterprod/freq.py: the minimal Q_max with
+     δ_0 ∈ span{N ↦ [N ≡ r (mod b)] : b ≤ Q_max} on [0, X) matches the Farey count bound; see below.)
+     Cost of an (n/2)-bit modular check of the top problem: a chain of K−1 residue multiplications of
+     ≥ n/2 bits each (each output residue is a label), cut ≥ (K−1)n/2 ≥ n log₂ K for K ≥ 4; computing the
+     product exactly first and reducing is the tree. Mixing (exact tree up to level ℓ₀, residues above):
+     n ℓ₀ + (K/2^{ℓ₀}) n/2 ≥ n log₂ K at 2^{ℓ₀} = K/2 — exactly the tree bound, no gain.
+ (iii) Inclusion–exclusion over the number A(w) of accepting seeds (Σ_w C(A(w), j) = #{(w, j-subsets S):
+     Π d_i ≡ m mod Π_{q∈S} q}) is the special case of (i) with moduli Π_S q: [A = S] = C(A, |S|) needs the
+     full conjunction; truncating at A_max = max #{q ∈ Q : q | N} ≈ n/log q_min still needs the degree-
+     A_max term, a modulus of ≈ n bits: cut Θ(Kn) again.
+ Verdict: every residue-based checker that is exact after summing over seeds needs a modulus of ≥ n/2 bits
+ and therefore costs ≥ the tree on the top problem. Non-residue checkers (hashes h_s(d, m) of b bits) have
+ no such theorem, but the only exact one known is the verifier itself; real-logarithm checks (Σ log₂ d_i =
+ log₂ m to n + log k bits) are the discrete-log redundancy of §4.3(c) again: k logs of n bits = kn.
+ Rank check (freq.py, exact arithmetic, X = 2..48): the minimal Q_max with δ_0 ∈ span is exactly the least
+ Q with #Farey(Q) ≥ X (necessary by the recurrence argument, and sufficient on every instance tested), e.g.
+ X = 43..46 → Q_max = 12 (#Farey = 46), X = 47, 48 → 13 (58). So the bound Q_max ≈ 1.81√X is sharp.
+
+### 8.2 (b) Residue targets: Π d_i ≡ m (mod Q) changes neither the fold nor the cost
+
+* Information. #{(d, m) : m ∈ I, Σ bits(d_i) ≤ n, Π d_i ≡ m (mod Q)} = Σ over m′ ∈ (I + QZ) ∩ [1, 2^n) of a
+  fold-k weight (τ_k with the size constraint): the exact count of the same weight over another cheap set.
+  Nothing is gained by the modular target: the fold k ≈ n/log n needed to isolate ω = 1 modulo M is forced
+  by §4.5(b)/prime-finding §4 (Vandermonde + Fermat periodicity) regardless of whether the final answer is
+  wanted exactly or mod M, and the fold is what costs n log k. "Only residues are needed" was already the
+  situation in Theorem B′: the count is exact, the identity is modular.
+* Cost. The k-fold product reduced mod Q, Q ≈ x^{0.525}: residues r_j = r_{j−1} d_j mod Q are labels of
+  0.525n bits, each step a multiplication of sizes (0.525n, w) plus a division by Q: cut ≥ 0.525n per step,
+  total ≥ 0.525·n·k = Θ(n²/log n) ≫ n log k. Reducing mod Q only after the exact product is the tree plus
+  O(n). Reduction at an intermediate level ℓ₀ gives n ℓ₀ + 0.525 n k/2^{ℓ₀} ≥ n log k − O(n) (8.1(ii)).
+  On the top problem the same: K residues of 0.525n bits = 0.525 nK = Θ(n^{6/5}).
+* The one thing residues do buy is in-node reduction: a P-bit factor held by one node can emit its residue
+  mod any small Q for free (this is why 8.1 is phrased on the top problem). It does not help because 8.1(ii)
+  forces log Q ≥ n/2.
+ Verdict: (b) is (a)(i) with Q fixed in advance; dead for the same reason, with the extra observation that
+ the modular target is equivalent to an exact count over a cheap set.
+
+### 8.3 (c) Totient-type witnesses: one multiplication gives φ(m), but the engine sees a count only through its moments
+
+Cheap counts (O(1) multiplications of n-bit numbers, parsimonious witnesses) and their values on squarefree m:
+  φ(m) = #{(a,b,q) : ab = 1 + qm, a,b < m} = Π(p−1);  m, (m−1)^j, σ(m);  J_λ(m) = Π(p^λ − 1) (λ-tuples coprime
+  to m, certified by a chain of λ gcd/inverse pairs, cut Θ(λn));  s(m) = #{a : a² ≡ 1} = #{a : a² ≡ a} = 2^ω;
+  #{a : a³ ≡ a} = 3^ω for odd m (1 + gcd(2, p−1) = 3);  #{a : a² ≡ D} = Σ_{e|m}(D/e) (character twists);
+  N₀(m) = #{(a,b) ∈ [1,m−1]² : m | ab} = Σ_{d|m} dφ(m/d) − (m−1), which is 0 iff m is prime.
+  (Lean: TotientCheck.lean, #eval true: 2^ω and 3^ω counts for m ≤ 400.) A solution count mod m that is a
+  constant T for every prime p is the point count of a finite scheme with T rational points (Chebotarev), i.e.
+  m | a(a−1)⋯(a−T+1): verifying it is the ordered T-factorisation m = Π gcd(m, a−i), the tree again (n log T),
+  or T divisibilities of n bits (Tn). So beyond t ∈ {2, 3} and their products, exponential weights t^ω are
+  not cheaper this way. What is new is the polynomial-in-p family (φ, J_λ, m, σ).
+
+(i) Isolating φ(m) = m − 1 (equivalently N₀(m) = 0). This is a ∀ over a < m; the engine cannot test a count,
+  only sum functions of witnesses. The engine-accessible functionals of c(m) := m−1−φ(m) are the moments
+  Σ_{m∈I} c(m)^j W(m) = #{(m, a_1..a_j) : a_i non-units} (W any weight on ≤ P bits of m): witness ≥ jn bits,
+  so cut ≥ jn, achieved. Hence what is computable at cut Θ(Dn) is Σ_m G(φ(m), m) for polynomials G of degree D.
+  * Exact. Need G(φ(m), m) = [m prime] on I. For I = [1, x] (or any I with ≫ x^{1/2+ε}·q points per class):
+    G((q−1)(r−1), qr) must vanish for all primes q ≤ x^{1/2−ε} and all residues r = p (mod M) (p prime in
+    I/q), i.e. G vanishes on the > D distinct lines y = (1 − 1/q)(x − q); restricted to a vertical line it has
+    > D roots, so G ≡ 0, contradicting G(r−1, r) = 1. Thus D ≥ π(x^{1/2−ε}) over Z or mod any prime M: cut
+    ≥ x^{1/2−ε}·n, exponential. For a short I (|I| = H ≥ 2^P, below which brute force is x^{o(1)} anyway)
+    generic interpolation needs D ≈ √(2H): cut √(2H)·n ≫ n log n. No lower bound for short I, but no basis
+    found that beats brute force: the moment method is brute force in disguise.
+  * Mod M. G = 1 + c·H with H ≡ −c(m)^{−1} on the composite points, which (a) requires M ∤ c(m) for every
+    composite m ∈ I (false on long I: m = Mp′, p′ ≡ 2 (mod M), c(m) ≡ p′ − 2) and (b) along a fixed class
+    x ≡ r forces H(·, r) to interpolate −1/(r−1−y) at M − 1 points: degree M − 2. Cut Θ(Mn) for π mod M.
+    The fold route gives π mod M with log M ≈ T at cut n log T = n log log M. Exponentially worse in M.
+  * The Fermat polynomial 1 − c(m)^{M−1} (degree M − 1) counts #{m ∈ I : M | c(m)}, polluted by composites.
+  * Count-of-counts: "φ(m) = c" has a short certificate only through the factorisation of m (φ = Π p^{e−1}(p−1)),
+    two iterated products: circular.
+(ii) What polynomial weights can do: L-adic vanishing (new identity family). For L ≥ 2 let λ = λ(L)
+  (Carmichael) and F_a(p) := (p^λ − 1)^a ≡ 0 (mod L^a) for p ∤ L. Then Π_{p|m} F_a(p) = J_λ(m)^a ≡ 0 (mod L^{2a})
+  for squarefree m coprime to L with ω(m) ≥ 2, so with the chain weight for [sqf] mod L^{2a}:
+     Σ_{1<m∈I, sqf, (m,L)=1} J_λ(m)^a ≡ L^a · Σ_{p∈I, p∤L} ((p^λ − 1)/L)^a   (mod L^{2a}).
+  L = 2, λ = 1, J_1 = φ:  Σ_{1<m∈I odd sqf} φ(m)^a ≡ 2^a Σ_{p∈I, p≡3 (4)} ((p−1)/2)^a (mod 2^{2a})
+  (Lean-checked, I = [2, 600], a = 1..6, all true; the m = 1 term must be excluded). The inner weight
+  ((p−1)/2)^a ≡ 1 (mod 2^a) for all p ≡ 3 (4) iff a ∈ {1, 2, 4} (Lean: a = 1..8), so a = 4 gives
+  #{p ∈ I : p ≡ 3 (4)} mod 16 from four inverse pairs and the sqf chain mod 256; other a need a correcting
+  weight on p mod 2^a (free only for a ≤ P). Cost for M = L^a: a inverse-pair tuples (cut ≥ λ a n) plus
+  [sqf] mod L^{2a} (fold ≈ L^a, cut ≈ a n log L): Θ(λ(L)·a·n) = Θ(λ(L) n log M), one prime power at a time.
+  The fold route gets every q ≤ T simultaneously, log M ≈ T, at cut n log T = n log log M. The totient route
+  is exponentially worse in M and matches the fold only at M = O(1). Mechanism: a degree-δ polynomial weight
+  costs δn (its witness) and vanishes to L-adic order ≈ δ; the exponential weight T^ω costs n log T and
+  vanishes to order ≈ log_q T for all q ≤ T at once. The log k of the product tree is the price of that
+  exponential, and nothing polynomial in (p, φ(p), …) reproduces it.
+(iii) Divisor-sum identities with small divisors cannot isolate primes either: Σ_{d|m, 1<d≤√m} h(d) ≡ 0 (mod M)
+  for all composite m ∈ I forces h ≡ 0 (take m = dp, p > d prime). The chain trick of Theorem B works for
+  [sqf] because μ² is the parity of a count, not because the divisors are small.
+ Verdict: (c) fails sharply. φ is one multiplication, but "φ(m) = m − 1" is a ∀; the engine reaches a count
+ only through moments; moments isolate the maximum at degree ≥ M − 2 (mod M) or ≥ x^{1/2−ε} (exactly on [1,x]),
+ cut Θ(Mn) against the fold's Θ(n log log M). The L-adic identity (ii) is the only positive by-product.
+
+### 8.4 Verdict of the second pass, and what it adds to §6
+
+* No construction. (a) exact residue checkers need a modulus of ≥ n/2 bits (recurrence/Farey argument, sharp
+  on instances), so they cost ≥ the tree on the top problem; (b) a modular target is an exact count over a
+  cheap set and costs ≥ 0.525 nk; (c) totient moments cost Θ(Mn) for π mod M against Θ(n log log M) by the
+  fold. U = (1/5 + o(1)) n log₂ n remains the best; the barrier of prime-finding.md §4 is unchanged.
+* The pattern across §4, §4.5 and §8: every route to π mod M costs cut ≥ n·log(fold) with fold ≈ log M for
+  the exponential weights t^ω (tree, root-of-unity tuples s(m)^j, exponentiation a^T) and ≥ n·log M for
+  polynomial weights. The question Q of §6 is untouched: a verifier of the ordered T-factorisation (or of
+  m | a(a−1)⋯(a−T+1), the same witness set) with cut o(n √log n) for T ≈ n. The new no-go results narrow the
+  design space: it cannot be a residue/fingerprint checker (8.1), and no polynomial weight substitutes for
+  the exponential one (8.3(ii)).
+* Lean (lean/EthFollowup/Scratch/IterProd/TotientCheck.lean, core Lean, `lake env lean`, 2 runs — the first
+  exposed the missing m = 1 exclusion in 8.3(ii)): 2^ω / 3^ω point counts for m ≤ 400; the 2-adic φ-moment
+  congruence on [2, 600] for a = 1..6; ((p−1)/2)^a ≡ 1 (mod 2^a) exactly for a ∈ {1, 2, 4}. All #eval true.
+  Not formalised: 8.1 (recurrence argument; rank-checked in Python for X ≤ 48), 8.3(i) lines argument (prose).

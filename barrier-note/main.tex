@@ -1103,7 +1103,7 @@ problems with Lean content a paragraph each.
 problem & best known & why out of reach & proved\\
 \midrule
 dense $\#$HC, TSP & $2^nn^2$~\cite{Bellman62,HeldKarp62}; $2^nn^2/2^{\Omega(\sqrt{\log n})}$~\cite{Stoian24}; $1.657^n$ decision, randomised~\cite{Bjorklund14}; directed $\#$HC $2^{n-\Omega(\sqrt n)}$~\cite{Li26} & permutation witness; vertex-local networks have $U=\Theta(m)$; even $U=\Theta(n\log n)$ is fatal at $\rho\ge1/2$ & Lean: \cref{thm:cut,thm:tree}; paper: \cref{prop:modelV,prop:exponent}\\
-permanent, $\#$PM, hafnian & $2^nn$~\cite{Ryser63}; $2^{n-\Omega(\sqrt n)}$~\cite{Li26} & $n\log n$ bits in row-local networks; algebras of dimension $\binom n{n/2}$; $\#$SAT encodings need $n\log n$ variables; char.\ $p$ savings die at $p\approx n$ & Lean: \cref{thm:rowcut,thm:modelR,thm:algebra,thm:modp}; paper: \cref{prop:entropy,prop:general}, \cref{conj:modelV}\\
+permanent, $\#$PM, hafnian & $2^nn$~\cite{Ryser63}; $2^{n-\Omega(\sqrt n)}$~\cite{Li26}; $(2-10^{-40})^n$ over any commutative ring~\cite{Curticapean26} & $n\log n$ bits in row-local networks; algebras of dimension $\binom n{n/2}$; $\#$SAT encodings need $n\log n$ variables; char.\ $p$ savings die at $p\approx n$ & Lean: \cref{thm:rowcut,thm:modelR,thm:algebra,thm:modp}; paper: \cref{prop:entropy,prop:general}, \cref{conj:modelV}\\
 chromatic number & $2^n$~\cite{BHK09}; $k$-colouring $(2-\varepsilon_k)^n$ randomised~\cite{Zamir26,Pratt26}; $1.99982^n$ under the asymptotic rank conjecture~\cite{BCHKP25} & growing $k$ needs $n\lceil\log k\rceil$ variables; dense encodings need $P=\Theta(n\log k)$; inclusion--exclusion over $2^n$ sets is not a network & none; heuristic rank count (\repo{ambitious-targets.md} \S2.4)\\
 Subset Sum, Partition & $2^{n/2}$~\cite{HorowitzSahni74}; space $2^{n/4}$~\cite{SchroeppelShamir81}, improved~\cite{NederlofWegrzycki21} & each party's partial sum carries $b$ bits & paper: \cref{prop:subsetsum}\\
 dense Max-Cut, Max-2-SAT & $2^{\omega n/3}$~\cite{Williams05} & $\Theta(n^2)$ edge terms; the pair interaction has rank $2^{\rk E}$, so $P=\Theta(n)$ on dense graphs & none; one-line rank count\\
@@ -1450,7 +1450,9 @@ networks, not the states of a decomposition, and the bound is unconditional with
 
 \paragraph{Exact algorithms for the dense problems.} For TSP and $\#$HC: Bellman and Held--Karp~\cite{Bellman62,HeldKarp62},
 Bj\"orklund~\cite{Bjorklund14,Bjorklund16}, Bj\"orklund and Husfeldt for the parity~\cite{BjorklundHusfeldt13},
-Stoian~\cite{Stoian24}, and Li~\cite{Li26}, who also treats the hafnian. For the permanent: Ryser~\cite{Ryser63},
+Stoian~\cite{Stoian24}, and Li~\cite{Li26}, who also treats the hafnian. For the permanent: Ryser~\cite{Ryser63}, Curticapean's $(2-\varepsilon)^n$ algorithm with $\varepsilon=10^{-40}$ over every
+commutative ring (arXiv, 2~November 2026; Binet--Minc with dynamic programming)~\cite{Curticapean26}, which answers Knuth's question and is
+independent of the engines,
 Valiant's $\#$P-completeness~\cite{Valiant79b}, Barvinok for fixed rank~\cite{Barvinok96}, Bj\"orklund,
 Husfeldt and Lyckberg modulo prime powers~\cite{BHL17}, and Bj\"orklund and Williams over finite
 rings~\cite{BjorklundWilliams19}. For colouring: Bj\"orklund, Husfeldt and Koivisto~\cite{BHK09},
@@ -1751,6 +1753,9 @@ Tam{\'a}s K{\H{o}}v{\'a}ri, Vera~T. S{\'o}s, and P{\'a}l Tur{\'a}n, \emph{On a
 Jeffrey~C. Lagarias and Andrew~M. Odlyzko, \emph{Computing $\pi(x)$: an
   analytic method}, J. Algorithms \textbf{8} (1987), no.~2, 173--191,
   doi:10.1016/0196-6774(87)90037-X.
+
+\bibitem{Curticapean26}
+Radu Curticapean, \emph{Get permanent results faster by counting stars}, arXiv:2611.03636, 2~November 2026.
 
 \bibitem{Li26}
 Baitian Li, \emph{Counting perfect matchings and {H}amiltonian cycles faster},

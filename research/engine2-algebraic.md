@@ -186,13 +186,19 @@ So the query bound (K−1)/K² is the only unconditional lower bound possible wi
 up to factors growing arbitrarily slowly. Barriers have to be proved for *restricted* classes: contraction trees
 (2/9), two-grouping recursions (§4.3), and multi-grouping gadget recursions (M7 below).
 
-**6.2 A conditional cap [R].** Lemma 1 grouping of a bounded-occurrence 3-CNF (n variables, a network with
-g = Θ(n) nodes and P = O(1)) into a (K, L)-clique has K²L = O(n) and an overhead of 2^{O(n/K)} per entry. With
-K = n^{1/3} (so λ ≈ n^{1/3}), the running time is 2^{O(e_K n) + O(n^{2/3})}. Hence
+**6.2 A conditional cap [R].** (Corrected 5 Nov 2026: the first version used Lemma 1 with g = Θ(n) nodes,
+P = O(1) and K = n^{1/3}; but Lemma 1 and Lemma 8(i) of Anthropic need g = 3K⁸ nodes, and the overhead
+2^{2gP/K} is 2^{O(n/K)} only when gP = O(n), i.e. g ≤ m. With K = n^{1/3}, g = 3n^{8/3} > m and
+gP/K = Θ(n^{7/3}).) Use Lemma 8(i) with the accounting of the proof of Anthropic's Theorem A(c): for a
+bounded-occurrence 3-CNF with n variables and m = O(n) clauses take g = 3K⁸ ≤ m clusters, so P = 2k⌈m/g⌉,
+gP ≤ 2k(m + g) = O(n), U < 2km = O(n), and the (K, L)-clique has K²L ≤ U + gP/K + K² = O(n). The overhead is
+K^g · 2^{2gP/K} = 2^{O(K⁸ log K + n/K)}. With K = Θ(n^{1/9}) (any K = n^c, 0 < c ≤ 1/9, works) the overhead
+is 2^{O(n^{8/9} log n)} = 2^{o(n/log n)} and log K = Θ(log n), so the running time is
+2^{e_K·O(n) + O(n^{8/9} log n)}. Hence
 
   e_K = o(1/log K)  ⇒  #3-SAT (bounded occurrence) in 2^{o(n/log n)},
 
-and contrapositively **H_log: "#3-SAT needs 2^{Ω(n/log n)}" ⇒ e_K = Ω(1/log K), which is exactly the §4.3 cap**,
+and contrapositively **H_log: "bounded-occurrence #3-SAT needs 2^{Ω(n/log n)}" ⇒ e_K = Ω(1/log K), which is exactly the §4.3 cap**,
 now for *all* algorithms. H_log is consistent with everything known (Anthropic gives 2^{O(n/√log n)}), but it
 is not a standard hypothesis. It is the only *kind* of hypothesis that can speak to the rate, as
 clique-evaluation.md §4.5 notes, and here it is made explicit and quantitative. The converse fails: the tables are

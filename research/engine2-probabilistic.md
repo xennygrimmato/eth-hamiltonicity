@@ -26,9 +26,11 @@ exact accounting (§1–§6). Two of the kills are new theorems that go beyond w
   extends to *every* family 𝒢 of groupings of the g² grid nodes (all set partitions, chosen adaptively per
   term, randomised or not): the level saving is ρ_eff ≥ 1/2 − O(√(log|𝒢|/|R|)) − (free fraction) ≥
   1/2 − O(√(log g)/g) for |𝒢| ≤ Bell(g²). Proof: probabilistic method (random term ι, Hoeffding, union bound
-  over 𝒢) plus a counting lemma: under any grouping into blocks of size ≤ g at most a 2/g fraction of the
-  rectangles see the free cut (xv|yu). Checked exactly at g = 3 (all 12 644 partitions) and on all
-  2 627 625 balanced partitions at g = 4, where the adversary still forces exactly |R|/2 (`engine2p_covering.py`).
+  over 𝒢) plus a counting lemma: under any grouping into blocks of size ≤ g at most a 2/(g−1) fraction of
+  the rectangles have a diagonal pair inside one block. (Proof repaired on 5 Nov 2026, §7.1–7.3: the first
+  version charged every rectangle meeting ≥ 3 blocks both of its costs, which is right only when its four
+  corners lie in four distinct blocks.) Checked on all 12 644 partitions at g = 3 (where the bound is
+  vacuous) and on all 2 627 625 balanced partitions at g = 4 (`engine2p_covering.py`, repaired charges).
   Consequence: **α' ≤ 1 for every "expand into 2^{o(N)} terms, pick the best grouping" level**, randomised
   included; the ceiling 2^{O(U/log U)} of the framework is not a feature of the row/column pair.
 * **Lemma B (decomposition convexity, §1) [L].** Any algorithm that decomposes the equality tensor on edges
@@ -247,33 +249,48 @@ x=(i,j), y=(i,j'), u=(i',j), v=(i',j'), crossing tensor F = [x=v][y=u], pieces F
 A term ι ∈ I^R is evaluated as a network on the blocks of *some* partition π of the g² nodes (blocks of size
 ≤ g, so that the sub-network has ≥ g nodes and its tables are cheap). Theorem A uses the family
 𝒢₀ = {rows, columns}; here 𝒢 is **any** family, and the algorithm may pick π = π(ι) adaptively, or at random.
-π induces on q a type: `row` if x~y, u~v in two distinct blocks; `col` if x~u, y~v; `free` if x~v, y~u (F has rank 1
-there); `int` if all four corners share a block; `other` if ≥ 3 blocks are touched. One-ended cost of q in
-(ι, π): log rank of A_{ι(q)} across the induced cut when the type is row/col/free; ≥ max of the row and col
-log-ranks when `other` (the 4-party network must pay every coarsening of its partition); 0 when `int`.
+π induces on q a type (repaired classification, 5 Nov 2026):
+* `diag` if a diagonal pair, x~v or y~u, lies in one block. This covers the free cut (x,v | y,u), where F
+  has rank 1, the case of all four corners in one block, every 3+1 split (three corners always contain a
+  diagonal pair) and every 2+1+1 split whose shared pair is a diagonal. Charged ≥ 0.
+* `row` if not `diag` and x~y or u~v; `col` if not `diag` and x~u or y~v. A non-`diag` rectangle cannot be
+  both (x~y and x~u give y~u; x~y and y~v give x~v; similarly for u~v). For `row` the row cut (xy | uv),
+  restricted to the corners, is a union of blocks, so the bonds of the evaluated network crossing it carry
+  at least log rank of A_{ι(q)} across the row cut; likewise for `col`.
+* `four` if the four corners lie in four distinct blocks: every cut of the corners is a union of blocks,
+  so the cost is ≥ max of the row and col log-ranks.
+**Erratum.** The first version typed every rectangle that touches ≥ 3 blocks as `other` and charged it
+max(row, col). With three blocks, two corners share a block and only one of the row and column cuts is a
+coarsening (or neither, if the shared pair is a diagonal); the 3+1 two-block splits were not typed at all.
+The repair reclassifies these rectangles as `row`, `col` or `diag`; the bound survives because `diag`
+rectangles are few (Lemma 7.1).
 
 ### 7.2 Two counting lemmas [R]
-**Lemma 7.1 (free rectangles).** Under any partition π into blocks of size ≤ g, #free ≤ Σ_B C(|B|,2) ≤ g²(g−1)/2 ≤
-(2/g)·|R|. *Proof.* A free rectangle is determined by its two corners x, v in the same block (distinct row and
-column); each unordered pair in a block gives at most one rectangle. ∎ (Lean: the block-pair count
-`internal_pairs_le` [L]; the identification "pair ↦ rectangle" is injective by construction.)
-**Lemma 7.2 (int rectangles).** #int ≤ #free bound as well (same pairs), and both are o(|R|).
+**Lemma 7.1 (diagonal rectangles).** Under any partition π into blocks of size ≤ g,
+#diag ≤ Σ_B C(|B|,2) ≤ g·C(g,2) = g²(g−1)/2 = (2/(g−1))·|R|, with |R| = C(g,2)² = g²(g−1)²/4.
+*Proof.* A pair of nodes in one block, in different rows and different columns, is a diagonal of exactly
+one rectangle (rows and columns of the pair; the x–v diagonal if the row and column orders agree, the y–u
+diagonal otherwise); pairs in one row or column are no diagonal. So the map from `diag` rectangles to a
+diagonal pair inside a block is injective. Σ_B C(|B|,2) is convex in the block sizes and is maximised by g
+blocks of size g. ∎ (Lean, scratch: the block-pair count `internal_pairs_le`; not cited in the paper.)
+(The first version wrote (2/g)·|R|, from |R| ≈ g⁴/4; the exact fraction is 2/(g−1).)
 
 ### 7.3 Theorem A (covering bound) [R]
 Let s_r, s_c ∈ I have row rank ≥ N²/|I| and col rank ≥ N²/|I| respectively (they exist by subadditivity, since
 both flattenings of F are permutation matrices of size N² = 2^{2λ}). Let 𝒢 be any family of partitions into
 blocks of size ≤ g, M = |𝒢|. Then there is a term ι ∈ {s_r, s_c}^R with
 
-    min_{π∈𝒢} cost(ι, π) ≥ 2λ(1 − o(1))·( |R|/2 − |R|/g − √(|R| ln(2M)/2) )   (one-ended; both ends: ×2),
+    min_{π∈𝒢} cost(ι, π) ≥ 2λ(1 − o(1))·( |R|/2 − |R|/(g−1) − √(|R| ln(2M)/2) )   (one-ended; both ends: ×2),
 
-i.e. ρ_eff ≥ 1/2 − 1/g − √(ln(2M)/(2|R|)) − o(1). For 𝒢 = all partitions, ln M ≤ g² ln g², so
+i.e. ρ_eff ≥ 1/2 − 1/(g−1) − √(ln(2M)/(2|R|)) − o(1). For 𝒢 = all partitions, ln M ≤ g² ln g², so
 ρ_eff ≥ 1/2 − O(√(log g)/g).
 
-*Proof.* For the adversary's pieces, cost(ι, π) ≥ 2λ(1−o(1))·agree(ι, π) where agree counts rectangles q with
-(ι(q) = s_r and type ∈ {row, other}) or (ι(q) = s_c and type ∈ {col, other}); free and int rectangles contribute
-≥ 0 and there are ≤ 2|R|/g of them (Lemma 7.1). Draw ι uniformly from {s_r, s_c}^R. For a fixed π, every
-row/col-type rectangle agrees with probability exactly 1/2, independently, and other-type ones always; so
-agree(ι,π) ≥ Bin(|R| − 2|R|/g, 1/2) stochastically, and Hoeffding gives Pr[agree < (|R| − 2|R|/g)/2 − t] ≤ e^{−2t²/|R|}.
+*Proof (repaired 5 Nov 2026).* For the adversary's pieces, cost(ι, π) ≥ 2λ(1−o(1))·agree(ι, π) where agree
+counts rectangles q with (ι(q) = s_r and type ∈ {row, four}) or (ι(q) = s_c and type ∈ {col, four}), with the
+types of §7.1; `diag` rectangles contribute ≥ 0 and there are ≤ 2|R|/(g−1) of them (Lemma 7.1). Draw ι
+uniformly from {s_r, s_c}^R. For a fixed π, every `row` or `col` rectangle agrees with probability exactly
+1/2, independently, and every `four` rectangle always; so agree(ι,π) ≥ Bin(|R| − 2|R|/(g−1), 1/2)
+stochastically, and Hoeffding gives Pr[agree < (|R| − 2|R|/(g−1))/2 − t] ≤ e^{−2t²/|R|}.
 Union bound over the M partitions with t = √(|R| ln(2M)/2): with probability ≥ 1/2 the random ι satisfies the
 bound for all π simultaneously. The term count being 2^{o(N)}, the level cost is dominated by the worst ι. ∎
 
@@ -281,13 +298,16 @@ bound for all π simultaneously. The term count being 2^{o(N)}, the level cost i
 `rate.md` §3.4), **whatever grouping family is used, deterministically, adaptively or at random**. The
 randomised variants of mechanisms 1 and 5 ("pick a random grouping per term") are special cases.
 
-### 7.4 Exact check [N] (`engine2p_covering.py`, PASS)
-* g = 3: 9 rectangles; all 12 644 partitions into blocks ≤ 3 (and the 280 balanced ones): the adversary's
-  value is max_ι min_π agree = 4/9 (two groupings: 5/9). At g = 3 the free fraction bound 2/g = 2/3 is vacuous,
-  so the small deficit is the expected small-g artefact.
-* g = 4: 36 rectangles; **all 2 627 625 balanced partitions** into 4 blocks of 4 (average 1.42 free, 0.08 int
-  rectangles each); a local-search adversary reaches min_π agree = 18 = |R|/2, exactly the two-grouping value:
-  the full family of groupings buys nothing at g = 4.
+### 7.4 Exact check [N] (`engine2p_covering.py`, repaired charges, PASS)
+* g = 3: 9 rectangles; all 12 644 partitions into blocks ≤ 3. Some partition makes all 9 rectangles `diag`
+  (the bound 2|R|/(g−1) = 9 is attained), so the certified value is 0: the bound is vacuous at g = 3.
+* g = 4: 36 rectangles; **all 2 627 625 balanced partitions** into 4 blocks of 4 (at most 22, on average
+  12.9, `diag` rectangles each, against the bound 24); a local-search adversary reaches min_π agree = 8 ≥ 6 =
+  (1/2 − 1/(g−1))|R| under the repaired charges (two groupings: 18).
+* **Superseded.** The first version reported 4/9 at g = 3 and 18 = |R|/2 at g = 4 ("the full family of
+  groupings buys nothing at g = 4"). Those values used the flawed charge of §7.1 and are withdrawn; the
+  repaired charge is only a lower bound (a `diag` rectangle may still pay), so at g = 4 the value certified
+  by the repaired charge lies between 8 and the two-grouping value 18.
 * Lean: Hoeffding/union bound not formalised; the base case (two complementary patterns, adversary gets
   ⌈n/2⌉ and ⌊n/2⌋) is `adversary_two_groupings` [L, general n] and `adversary_two_groupings_6` [Li].
 
@@ -333,6 +353,6 @@ the cap.
 | two-grouping adversary ⌈n/2⌉/⌊n/2⌋ (§4, §7.4) | `Instances.lean: adversary_two_groupings` (+ `_6`) | Lean-proved (general); instance n = 6 by `decide` |
 | hash averaging identity E_h[E_h] = I + (J−I)/m (§1.1) | `hash_identity_m2` | Lean-checked on instance (m = 2, all maps Fin 4 → Fin 2) |
 | collision correction J_s − I_s nonsingular (§1.1) | `detJI2, detJI3, detJI4` | Lean-checked on instances s = 2,3,4 |
-| covering bound Theorem A (Hoeffding + union) (§7.3) | — | not yet formalised; Python-exact at g = 3, 4 |
+| covering bound Theorem A (Hoeffding + union) (§7.3) | — | not yet formalised; proof repaired 5 Nov 2026 (three-block rectangles reclassified); Python check of the repaired charges at g = 3, 4 |
 | Prop. 2.1, §3, §6 accounting | — | not formalised (model statements) |
 | ⊕-pieces over F₂ (§1.4) | — | open; exhaustive λ = 1 only |

@@ -44,36 +44,35 @@
 
 \begin{document}
 
-\title[Class numbers, square roots and non-residues in $2^{O(n/\sqrt{\log n})}$]{Class numbers, square roots and quadratic non-residues\\ in time $2^{O(n/\sqrt{\log n})}$, assuming the new $\#$SAT algorithms}
+\title[Class numbers and lattice-point counts in $2^{O(n/\sqrt{\log n})}$]{Class numbers and lattice-point counts\\ in time $2^{O(n/\sqrt{\log n})}$, assuming the new $\#$SAT algorithms}
 
 \author{Vaibhav Tulsyan}
 
-\date{November 2026}
+\date{November 2026 (version 2, 5 November 2026)}
 
 \subjclass[2020]{11Y16, 11Y40, 11A15, 68Q25, 03B35}
-\keywords{Class number, binary quadratic forms, quadratic non-residue, square roots modulo $m$, divisor summatory function, Gauss circle problem, exact counting, Exponential Time Hypothesis, Lean~4, formal verification}
+\keywords{Class number, binary quadratic forms, divisor summatory function, Gauss circle problem, exact counting, square roots modulo $m$, quadratic non-residue, Exponential Time Hypothesis, Lean~4, formal verification}
 
 \begin{abstract}
-Basic problems of computational number theory have proven deterministic bounds that are fixed powers of
-the input. The class number $h(D)$ of an imaginary quadratic discriminant takes $|D|^{1/2+o(1)}$ steps
-unconditionally and $|D|^{1/5+o(1)}$ under the generalised Riemann hypothesis (GRH); the least quadratic
-non-residue modulo a prime $p$ takes $p^{1/(4\sqrt e)+o(1)}$ by Burgess's 1957 bound, polynomial only
-under GRH; exact divisor sums $\sum_{m\le x}\tau(m)$ take $x^{1/3+o(1)}$. However, none of these bounds is
-of the form $X^{o(1)}$, even conditionally. We present deterministic algorithms in time
-$2^{O(n/\sqrt{\log n})}$, where $n$ is the input bit length, for six such problems: the number of reduced
-forms of discriminant $-N$, for fundamental discriminants $h(-N)$; the least square root of $a$
-modulo any $m$; the least quadratic non-residue modulo a prime; and $\sum_{m\le x}\tau(m)$,
-$\sum_{m\le x}\sigma(m)$ and the Gauss circle count. Our approach writes each answer as a count of solutions
-of equations with one or two products and evaluates it with Anthropic's counting engine through one
-network library: products by a two-dimensional Sch\"onhage--Strassen network, sums by signed carry
-chains, inequalities by comparison chains, with $O(n)$ shared bits. We prove the seven resulting theorems
-in Lean~4 (for example \texttt{hForm\_TM\_rate}; axioms \texttt{propext}, \texttt{Classical.choice},
-\texttt{Quot.sound}): a finite-alphabet Mathlib Turing machine outputs the answer within
+Basic counting problems of computational number theory have proven deterministic bounds that are fixed
+powers of the input. The class number $h(D)$ of an imaginary quadratic discriminant takes $|D|^{1/2+o(1)}$
+steps unconditionally and $|D|^{1/5+o(1)}$ under the generalised Riemann hypothesis (GRH); exact divisor
+sums $\sum_{m\le x}\tau(m)$ take $x^{1/3+o(1)}$. However, none of these bounds is of the form $X^{o(1)}$,
+even conditionally. We present deterministic algorithms in time $2^{O(n/\sqrt{\log n})}$, where $n$ is the
+input bit length, for the number of reduced forms of discriminant $-N$ (for fundamental discriminants,
+$h(-N)$) and for $\sum_{m\le x}\tau(m)$, $\sum_{m\le x}\sigma(m)$ and the Gauss circle count. Our approach
+writes each answer as a count of solutions of equations with one or two products and evaluates it with
+Anthropic's counting engine through one network library with $O(n)$ shared bits. The same library gives
+the least square root modulo any $m$ and the least quadratic non-residue modulo a prime. These are not new
+bounds (OpenAI's results on the quasi-Riemann hypothesis and on deterministic polynomial factorisation
+over $\mathbb{F}_p$ give polynomial time modulo a prime), but they are machine-checked. We prove the seven
+resulting theorems in Lean~4 (for example
+\texttt{hForm\_TM\_rate}; axioms \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}): a
+finite-alphabet Mathlib Turing machine outputs the answer within
 $\lfloor C\cdot2^{Cn/\sqrt{\log_2(n+2)}}\rfloor$ steps on every input. Lean proves the count of Gauss's
-reduced forms; its equality with the ideal class number of $\mathbb{Q}(\sqrt{-N})$ is classical and not
-formalised. The constants are astronomical, the machines use exponential space, and every result rests
-on Anthropic's Lean development of its claimed refutation of the Exponential Time Hypothesis, which is
-under review.
+reduced forms; its equality with the ideal class number is classical and not formalised. The constants
+are astronomical, the machines use exponential space, and every result rests on Anthropic's Lean development of its claimed refutation of the Exponential Time Hypothesis, which is under review.
+Version~2 corrects the claims of version~1 about non-residues and square roots.
 \end{abstract}
 
 \maketitle
@@ -89,19 +88,22 @@ so listing them takes $N^{1/2+o(1)}$ steps. To our knowledge this is still the b
 deterministic bound without hypotheses~\cite[\S5]{Len92}. Under GRH, Shanks's baby-step giant-step
 method, analysed by Lenstra~\cite{Len82} and Schoof~\cite[\S3]{Sch82}, takes $N^{1/5+o(1)}$, and the
 subexponential algorithm of Hafner and McCurley~\cite{HM89} is randomised and also rests on GRH~\cite[\S5]{Len92}.
-Two neighbouring problems have stood still for as long. The least quadratic non-residue modulo a prime
-$p$ is below $p^{1/(4\sqrt e)+\varepsilon}$ by Burgess~\cite{Bur57}, so trial search takes
-$p^{0.1517}$ steps, and this exponent has not been improved since 1957; only under GRH is the
-non-residue below $O(\log^2p)$ (Ankeny~\cite{Ank52}, Bach~\cite{Bac90}). Exact divisor sums
-$\sum_{m\le x}\tau(m)$ take $x^{1/3+o(1)}$ steps~\cite{Sla12,TCH12}.
+Exact divisor sums $\sum_{m\le x}\tau(m)$, a lattice-point count under a hyperbola, take $x^{1/3+o(1)}$
+steps~\cite{Sla12,TCH12}.
 
 In October 2026 OpenAI~\cite{OpenAI26} and Anthropic~\cite{Anthropic26} (below \Oa{} and \A) each
 claimed a deterministic algorithm that counts the satisfying assignments of a $k$-CNF in subexponential
 time, refuting the Exponential Time Hypothesis; both claims come with Lean~4 developments and are under
 review. Rudich and Rousseau~\cite{RR26} used the engines to factor in $N^{o(1)}$, Shunia~\cite{Shu26}
 proved the rate $\rate$ on paper, and our factoring note~\cite{TulFac26} proved it in Lean on \A's engine.
-However, the bounds above are all fixed powers of the input, even under GRH for $h(D)$. We are unaware of
-any derivation of them from the new counting engines; our searches are described in \cref{sec:related}.
+OpenAI's catalogue also settles two neighbouring problems. Its proof of the quasi-Riemann
+hypothesis~\cite{OAI003}
+makes the least quadratic non-residue modulo a prime polylogarithmic, so it is found in deterministic
+polynomial time, and its deterministic factorisation of polynomials over $\mathbb{F}_p$~\cite{OAI142}
+takes square roots modulo a prime in polynomial time (\cref{sec:related}).
+However, the bounds above for class numbers and divisor sums are all fixed powers of the input, even under
+GRH for $h(D)$. We are unaware of any derivation of better bounds from the new counting engines or from
+these results; our searches are described in \cref{sec:related}.
 
 \subsection{Counting problems with one or two products}
 We consider problems whose answer is, or is found from, the number of integer solutions of a fixed
@@ -154,9 +156,16 @@ $F=\sum_{m\le x}\tau(m)$, $\sum_{m\le x}\sigma(m)$, and $\#\{(u,v)\in\Z^2:u^2+v^
 \end{theorem}
 
 \noindent Since $n=\log_2N+O(1)$, the bound in (i) is $N^{O(1/\sqrt{\log\log N})}=|D|^{o(1)}$, against
-$|D|^{1/2+o(1)}$ unconditionally and $|D|^{1/5+o(1)}$ under GRH. In (iv) it is $p^{o(1)}$, against
-$p^{0.152}$; in (v) it is $x^{o(1)}$, against $x^{1/3+o(1)}$. To our knowledge, no deterministic
-algorithm with a bound of the form $X^{o(1)}$ was known for (i), (iii) or (v), even under GRH.
+$|D|^{1/2+o(1)}$ unconditionally and $|D|^{1/5+o(1)}$ under GRH. In (v) it is $x^{o(1)}$, against
+$x^{1/3+o(1)}$. To our knowledge, no deterministic algorithm with a bound of the form $X^{o(1)}$ was known
+for (i), (ii) or (v), even under GRH.
+
+Parts (iii) and (iv) are not new bounds. Modulo a prime $p$, the least non-residue and the square
+roots of $a$ are found in deterministic polynomial time, by OpenAI's proof of the quasi-Riemann
+hypothesis~\cite{OAI003} and by OpenAI's polynomial factorisation over $\mathbb{F}_p$~\cite{OAI142}. For
+composite $m$, the least root can also be found in time $\rate$ by factoring $m$ first; we derive this on
+paper in \cref{sec:related}. We keep (iii) and (iv) because they come from the same library at no extra
+cost and are machine-checked. They are an independent route, not an improvement.
 
 \subsection{Contributions}
 Our contributions are:
@@ -183,7 +192,8 @@ with the axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound} on
 Lean name we give. \emph{Proved on paper only}: the equality of the form class number with the ideal class
 number of $\mathbb{Q}(\sqrt{-N})$ (classical; Dirichlet and Dedekind, see~\cite[Thm.~7.7]{Cox13}); the
 decomposition of $\hF$ for non-fundamental discriminants in \cref{rem:nonfund}; the discussion of real
-quadratic fields; and the comparisons with earlier bounds. \emph{Assumed}: nothing beyond the three axioms;
+quadratic fields; the comparisons with earlier bounds; and the derivations from~\cite{OAI003,OAI142} and
+from factoring in \cref{sec:related}. \emph{Assumed}: nothing beyond the three axioms;
 \A's results enter as Lean theorems of its development, which the kernel checks with ours.
 \emph{Checked numerically}: the running examples and the decomposition of \cref{rem:nonfund} for $N<400$, by
 a short exact computation that is not part of the proof; some of the small values, such as the split
@@ -195,6 +205,26 @@ $2+1$ of \cref{ex:23} and $\mathrm{lqnr}(7)=3$ of \cref{ex:qnr}, are also checke
 says what the class-number theorem counts. \Cref{sec:rate,sec:statement,sec:formal} cover the exponent,
 the statements and the Lean development, and \cref{sec:related,sec:limitations} related work and
 limitations.
+
+\subsection*{Changes in v2}
+Version~1 (hexagon:2611.00115v1) said that Burgess's bound is the best unconditional bound for the least
+quadratic non-residue, that polynomial time for it needs GRH, and that no deterministic $X^{o(1)}$
+algorithm was known for square roots modulo $m$. These statements were out of date. Two entries of
+OpenAI's catalogue, which predate version~1, supersede them: entry~003, \emph{The quasi-Riemann
+hypothesis}~\cite{OAI003} (preprint dated 30~September 2026), and entry~142, \emph{Deterministic polynomial
+factorization over prime fields}~\cite{OAI142} (preprint dated 4~October 2026). The corrections below credit
+them. In version~2 we
+\begin{itemize}
+\item retitle the note, which now leads with class numbers and lattice-point counts;
+\item correct every statement about non-residues and square roots in the abstract, the introduction, the
+related work and the limitations, and present (iii) and (iv) of \cref{thm:main} as a machine-checked
+route, not as the best bounds;
+\item add a derivation on paper of the least square root modulo composite $m$ from deterministic
+factoring (\cref{sec:related});
+\item cite Frei, Sofos and Widmer~\cite{FSW26} and Vega~\cite{Vega26}, and report the repeated novelty
+search.
+\end{itemize}
+No Lean theorem, statement or proof changed. The Lean development is the one of version~1.
 
 % =====================================================================
 \section{The engine counts accepted labellings}\label{sec:engine}
@@ -620,19 +650,8 @@ and looped over them, which is exponential on adversarial contexts; the context 
 \section{Related work}\label{sec:related}
 % =====================================================================
 
-We organise related work by idea: non-residues and square roots, class numbers, lattice-point counts,
+We organise related work by idea: class numbers, lattice-point counts, non-residues and square roots,
 the counting engines applied to number theory, and formal proofs.
-
-\paragraph{Non-residues and square roots.} Burgess's bound $p^{1/(4\sqrt e)+\varepsilon}$~\cite{Bur57},
-from his character-sum method~\cite{Bur62}, is the best unconditional bound for the least non-residue.
-Under GRH it is $O(\log^2p)$ by Ankeny~\cite{Ank52}, with explicit constants by Bach~\cite{Bac90} and
-Lamzouri, Li and Soundararajan~\cite{LLS15}. Given a non-residue, square roots modulo $p$ take polynomial
-time by Tonelli~\cite{Ton91} and Shanks~\cite{Sha72}, or Cipolla~\cite{Cip03}; Schoof~\cite{Sch85}
-computes $\sqrt a\bmod p$ in polynomial time for fixed $a$. Finding a non-residue and taking square roots
-modulo $p$ are deterministic polynomial-time equivalent (folklore;~\cite{BS96}). For composite $m$, taking
-square roots is randomised-equivalent to factoring $m$~\cite{Rab79}, so the classical deterministic route
-first factors $m$, in $m^{1/5+o(1)}$~\cite{Har21}; our factoring note~\cite{TulFac26} would give a route in time $\rate$ as well, by factoring and then using~(iv), which we have not formalised. In contrast, we compute the \emph{least} root and the
-\emph{least} non-residue directly by counting, for every $m$, conditionally on \A's development.
 
 \paragraph{Class numbers.} Counting reduced forms is Gauss's method and is used to tabulate class
 numbers~\cite[\S2]{Sch82}, \cite{Bue89}; the best proven deterministic unconditional bound we know is
@@ -640,9 +659,17 @@ $|D|^{1/2+o(1)}$~\cite[\S5]{Len92}. Under GRH, Shanks's method gives $|D|^{1/5+o
 deterministically~\cite{Len82,Sch82}, \cite[\S5.4]{Coh93}, and Hafner and McCurley's Las Vegas algorithm
 runs in expected time $L(|D|)^{\sqrt2+o(1)}$, $L(x)=\exp\sqrt{\log x\log\log x}$~\cite{HM89}; its
 analysis assumes GRH~\cite[\S5]{Len92}. Mosunov and Jacobson~\cite{MJ16} tabulate all class groups with
-$|D|<2^{40}$ unconditionally, which is a different, amortised problem. In contrast, our algorithm is
-deterministic and unconditional except for \A's development, and it is $|D|^{o(1)}$; but it computes only
-the number, not the group.
+$|D|<2^{40}$ unconditionally, which is a different, amortised problem. OpenAI's zero-free
+half-plane~\cite{OAI003} covers the Dirichlet $L$-functions $L(s,\chi_D)$ and, among Hecke $L$-functions,
+those over $\mathbb{Q}(\sqrt{-3})$. Frei, Sofos and Widmer~\cite{FSW26} derive consequences of the
+quasi-Riemann hypothesis for class groups and small generators of number fields, some of them made
+unconditional by~\cite{OAI003}; they give no class-number algorithm. Some GRH-based analyses of
+class-number algorithms may become unconditional in this way, with larger exponents; we have not checked
+which, and we know of none that would give $|D|^{o(1)}$. Vega~\cite{Vega26} shows that $h(-d)$ is
+computable in deterministic polynomial time with an oracle for a language in $\Sigma_2^{\mathrm P}$. This
+is a statement of a different kind: it gives polynomial time if $\mathrm P=\mathrm{NP}$, but no time bound
+otherwise. In contrast, our algorithm is deterministic and unconditional except for \A's development, and
+it is $|D|^{o(1)}$; but it computes only the number, not the group.
 
 \paragraph{Lattice-point counts.} Sladkey~\cite{Sla12} computes $\sum_{m\le x}\tau(m)$ in $O(x^{1/3})$ steps,
 and Tao, Croot and Helfgott~\cite[\S2.1]{TCH12} sketch an $x^{1/3+o(1)}$ algorithm; Li~\cite{Li26} reports
@@ -650,17 +677,54 @@ $x^{9/28+o(1)}$ expected time. For the circle count we found no dedicated refere
 same convex-hull techniques to give $x^{1/3+o(1)}$. In contrast, we obtain $x^{o(1)}$, at the price of galactic
 constants.
 
+\paragraph{Non-residues and square roots.} Burgess's bound $p^{1/(4\sqrt e)+\varepsilon}$~\cite{Bur57},
+from his character-sum method~\cite{Bur62}, was for decades the best unconditional bound for the least
+non-residue. Under GRH it is $O(\log^2p)$ by Ankeny~\cite{Ank52}, with explicit constants by
+Bach~\cite{Bac90} and Lamzouri, Li and Soundararajan~\cite{LLS15}. OpenAI~\cite{OAI003} prove that every
+Dirichlet $L$-function is zero-free in $\Re s>7/8$, and state the consequence for non-residues as their
+Corollary~1.2: the least quadratic non-residue $n(p)$ satisfies $n(p)\le C(\log p)^A$ for absolute
+constants $A,C>0$ (for example $A=32$), via the weak-GRH bound of Bhargava, Ivanyos, Mittal and Saxena.
+This proves Vinogradov's least non-residue conjecture, and trying $2,3,\dots$ with Euler's criterion
+finds $n(p)$ in deterministic polynomial time.
+
+Given a non-residue, square roots modulo $p$ take polynomial time by Tonelli~\cite{Ton91} and
+Shanks~\cite{Sha72}, or Cipolla~\cite{Cip03}; Schoof~\cite{Sch85} computes $\sqrt a\bmod p$ in polynomial time
+for fixed $a$. Finding a non-residue and taking square roots modulo $p$ are deterministic polynomial-time
+equivalent (folklore;~\cite{BS96}). The same Corollary~1.2 of~\cite{OAI003} states the algorithm: find a
+non-residue, then run Tonelli--Shanks, all in time polynomial in $\log p$. OpenAI's second result~\cite{OAI142} gives them directly: it factors every polynomial over
+$\mathbb{F}_p$ deterministically in time polynomial in $(\deg f+1)\log p$, so it finds the roots of $y^2-a$.
+
+For composite $m$, taking square roots is randomised-equivalent to factoring $m$~\cite{Rab79}.
+Deterministic factoring takes $m^{1/5+o(1)}$ steps classically~\cite{Har21}, and $\rate$ steps assuming the
+new engines~\cite{RR26,Shu26,TulFac26}. The least square root modulo $m$ can also be derived from the
+factorisation, as follows; this is on paper only. Write $m=\prod p^e$ and $a\bmod p^e=p^ka'$ with
+$p\nmid a'$. The roots of $y^2\equiv a\pmod{p^e}$ form at most two residue classes modulo a power of $p$ for
+odd $p$, and at most four for $p=2$. If $k=0$, they are the Hensel lifts of the roots modulo $p$, which~\cite{OAI003}
+or~\cite{OAI142} gives (for $p=2$, of the roots modulo $2^{\min(e,3)}$). If $0<k<e$, there are roots only when $k$ is even,
+and they are $p^{k/2}$ times the roots of $y'^2\equiv a'\pmod{p^{e-k}}$, so they are classes modulo
+$p^{e-k/2}$. If $p^e\mid a$, they are the multiples of $p^{\lceil e/2\rceil}$. The Chinese remainder theorem
+combines these into at most $2^{\omega(m)+1}$ classes modulo one divisor $d$ of $m$, and the least root is
+the least of their representatives in $[0,d)$. Since $\omega(m)=O(n/\log n)$, this takes $2^{O(n/\log n)}$
+polynomial-time steps after factoring, so the total is $\rate$, under the same assumptions as the factoring
+algorithm. We have not formalised this route. In contrast, (iii) and (iv) compute the least root and the
+least non-residue directly by counting, without factoring and without a zero-free region, and they are
+machine-checked; but modulo a prime they are slower than the polynomial-time algorithms above.
+
 \paragraph{Counting engines applied to number theory.} Rudich and Rousseau~\cite{RR26} introduced prefix
 search by divisor counting and proved factoring in $N^{o(1)}$ in Lean; Shunia~\cite{Shu26} proved the rate
 $\rate$ on paper, and~\cite{IF26} and our factoring note~\cite{TulFac26} proved it in Lean. Closest to our
 work is the factoring note, whose multiplication network and level selection we reuse. In contrast, we
 replace its single network by a library for any few-product system and apply it to problems other than
-factoring. As of 4~November 2026 we found no derivation of the bounds of \cref{thm:main} from either ETH
-refutation. We searched the web for each problem together with ``ETH'', ``$\#$SAT'' and ``2026''; searched
-GitHub repositories for the problem names; checked the Hexagon records and repositories of the October
-and November 2026 follow-ups known to us (\cite{RR26,Shu26,IF26} and the fork
-\repo{orda-aska/integer-factoring}), which treat factoring only; and read our survey of
-targets~\cite{TulsyanRepo26}. Hexagon's listing is behind a login, so this negative is weak.
+factoring. For version~1 (4~November 2026) we searched the web for each problem together with ``ETH'',
+``$\#$SAT'' and ``2026''; searched GitHub repositories for the problem names; checked the Hexagon records
+and repositories of the October and November 2026 follow-ups known to us (\cite{RR26,Shu26,IF26} and the
+fork \repo{orda-aska/integer-factoring}), which treat factoring only; and read our survey of
+targets~\cite{TulsyanRepo26}. That search missed~\cite{OAI003,OAI142}. For version~2 (5~November 2026) we
+read OpenAI's catalogue (\texttt{CONTENTS.md} at commit \texttt{4eaee87}); grepped the titles and abstracts
+of all 716 Hexagon works through its public query interface, and the full text of the 181 works since
+26~October in cs.*, math.NT, math.CO and quant-ph; and searched arXiv for the problem names, the
+quasi-Riemann hypothesis and polynomial factorisation. This found~\cite{OAI003,OAI142,FSW26,Vega26}, and no
+derivation of (i), (ii) or (v) from either ETH refutation. A negative search result is weak evidence.
 
 \paragraph{Formal proofs.} We use Lean~4~\cite{Lean4} and Mathlib~\cite{Mathlib20}. Mathlib defines the class
 number of a number field (\lean{NumberField.classNumber}) and proves its finiteness, but has no theory of
@@ -677,9 +741,11 @@ of its claimed refutation of the Exponential Time Hypothesis, and the labs' clai
 checks that development as part of our proof, and our statements use only Mathlib, our quoted definitions
 and \A's \texttt{Outputs}. We do need the development, built from source at the pinned commit, to be a
 sound Lean development, and the toolchain to be sound.
-\item \emph{The two number-theoretic headlines share one source of strength.} Finding a non-residue and
-taking square roots modulo $p$ are classically polynomial-time equivalent~\cite{BS96}, so (iii) for prime $m$
-and (iv) do not give two independent improvements. Both, and (i) and (v), come from the same engine.
+\item \emph{Parts (iii) and (iv) are not new bounds.} Modulo a prime, the least non-residue and
+square roots take deterministic polynomial time by~\cite{OAI003,OAI142}. For composite $m$, the least root
+follows on paper from deterministic factoring in time $\rate$ as well (\cref{sec:related}). What (iii) and
+(iv) add is a machine-checked proof that does not use those results. All our results, (i) and (v) included,
+come from the same engine.
 \item \emph{The class number is the form class number.} Its equality with the ideal class number is
 classical but not formalised; for non-fundamental $D$ the theorem is about $\hF$
 (\cref{rem:nonfund}); the class group and real quadratic fields are not covered.
@@ -743,6 +809,10 @@ D.~A.~Cox, \emph{Primes of the Form $x^2+ny^2$: Fermat, Class Field Theory, and 
 D.~Harvey, \emph{An exponent one-fifth algorithm for deterministic integer factorisation}, Math. Comp.
 \textbf{90} (2021), no.~332, 2937--2950.
 
+\bibitem{FSW26}
+C.~Frei, E.~Sofos, and M.~Widmer, \emph{Some applications of the quasi-{R}iemann hypothesis to class groups
+and small generators of number fields}, arXiv:2610.18491, October 2026.
+
 \bibitem{HM89}
 J.~L.~Hafner and K.~S.~McCurley, \emph{A rigorous subexponential algorithm for computation of class
 groups}, J. Amer. Math. Soc. \textbf{2} (1989), no.~4, 837--850.
@@ -780,6 +850,16 @@ Conference on Certified Programs and Proofs (CPP 2020), 2020, pp.~367--381.
 \bibitem{MJ16}
 A.~S.~Mosunov and M.~J.~Jacobson, Jr., \emph{Unconditional class group tabulation of imaginary quadratic
 fields to $|\Delta|<2^{40}$}, Math. Comp. \textbf{85} (2016), no.~300, 1983--2009.
+
+\bibitem{OAI003}
+OpenAI, \emph{The {Q}uasi-{R}iemann {H}ypothesis: {A} {Z}ero-{F}ree {H}alf-{P}lane $\Re s>7/8$}, preprint
+dated 30~September 2026; entry~003, ``The quasi-Riemann hypothesis'', of the catalogue \texttt{CONTENTS.md}
+in the repository \url{https://github.com/openai/math}.
+
+\bibitem{OAI142}
+OpenAI, \emph{Deterministic {P}olynomial {F}actorization over {P}rime {F}ields}, preprint dated 4~October
+2026; entry~142, ``Deterministic polynomial factorization over prime fields'', of the catalogue
+\texttt{CONTENTS.md} in the repository \url{https://github.com/openai/math}.
 
 \bibitem{OpenAI26}
 OpenAI, \emph{The {E}xponential {T}ime {H}ypothesis is false}, preprint dated 17~October 2026, revised
@@ -835,6 +915,10 @@ directory \texttt{factoring-note/} of~\cite{TulsyanRepo26}.
 \bibitem{TulsyanRepo26}
 V.~Tulsyan, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes}, public repository
 \url{https://github.com/xennygrimmato/eth-hamiltonicity}, 2026; Lean sources as of commit \texttt{b9ea3f1}.
+
+\bibitem{Vega26}
+F.~Vega, \emph{Class {N}umbers of {I}maginary {Q}uadratic {O}rders in the {P}olynomial {H}ierarchy}, Hexagon
+preprint hexagon:2611.00086v1, published 4~November 2026, \url{https://hexagonmath.org/2611.00086v1}.
 
 \end{thebibliography}
 
@@ -893,6 +977,17 @@ V.~Tulsyan, \emph{eth-hamiltonicity: {L}ean 4 formalisation and research notes},
 %  Novelty searches (4 Nov 2026): web searches "class number ... 2026 ... #SAT / ETH", "least quadratic
 %         non-residue deterministic 2^{o(n)} 2026", "hexagonmath.org ... square roots / class number /
 %         divisor summatory"; gh search repos for the problem names: nothing relevant found.
+%  v2 additions (5 Nov 2026):
+%  OAI003 openai/math CONTENTS.md entry "003. The quasi-Riemann hypothesis." Preprint link
+%         preprints/The-Quasi-Riemann-Hypothesis-September-30-2026/paper.pdf, title "The Quasi-Riemann
+%         Hypothesis: A Zero-Free Half-Plane Re s > 7/8"; all Dirichlet L-functions zero-free in Re s > 7/8.
+%         Corollary 1.2 of the preprint states n(p) <= C (log p)^A (e.g. A = 32) and the poly-time sqrt algorithm.
+%  OAI142 same catalogue, entry "142. Deterministic polynomial factorization over prime fields."; preprint
+%         "Deterministic Polynomial Factorization over Prime Fields", dated October 4 2026 in its path;
+%         bit complexity polynomial in (deg f+1) log p, no GRH.
+%  FSW26  arXiv 2610.18491 (v2), Frei, Sofos, Widmer; title and abstract from the arXiv API.
+%  Vega26 hexagon:2611.00086v1, Frank Vega, published 2026-11-04 (Hexagon API); h(-d) in FP^{Sigma_2^P}.
+%  Novelty audit for v2: research/novelty-audit-2026-11-05.md.
 %  Mathlib 0df444a: NumberField.classNumber exists (Mathlib/NumberTheory/NumberField/ClassNumber.lean);
 %         no binary quadratic forms, no FundamentalDiscriminant.
 % =====================================================================

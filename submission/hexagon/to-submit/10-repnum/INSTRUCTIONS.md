@@ -10,10 +10,8 @@ Nothing to do for the upload itself. The paper cites the repository at commit `3
 modules (`lean-bridge-anthropic/bridge/EthFollowup/ModP/`: RepQF, SlpDesc, RepDesc, CntPad, RepPoly, RepPkg, FinalRep);
 they are unchanged at the current HEAD `b7b7352`.
 
-One sentence of the paper was corrected for this package and is not yet committed: the Limitations section still said
-the fresh replay of `EthFollowup.ModP.FinalRep` was pending, contradicting the formal-development section; it now says
-it passed on 5 November 2026. The ZIP and `preview.pdf` contain the corrected text; `repnum-note/main.tex` and
-`repnum-note/main.pdf` carry the same change in the working tree.
+The paper's Limitations sentence about the replay was corrected (it now says the replay passed on 5 November 2026); the
+fix is committed in `e4530e3` and is in the ZIP and `preview.pdf`.
 
 ## Steps
 

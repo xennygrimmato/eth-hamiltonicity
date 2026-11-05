@@ -1,0 +1,22 @@
+This work was produced by Vaibhav Tulsyan in sessions with Claude Code (Anthropic). The mathematical
+arguments, the Lean 4 formalisation and the text were drafted by Claude under my direction. I chose the
+problems, directed the research, and reviewed the statements of the main theorems together with the
+paper's own account of what is machine-checked, what is proved on paper, what is assumed and what is
+checked numerically. The paper cites 45 Lean 4 theorems in 16 modules of the directory
+lean/EthFollowup/Barriers of the public repository https://github.com/xennygrimmato/eth-hamiltonicity
+(commit 946c49993b78aa163fcac3f8cb78ce351dd5dcc6; the Lean files are committed and unchanged there): RankBounds.lean, RowCut.lean,
+AlgebraRank.lean, PermModP.lean, SpreadLemma.lean, DecorrelatedRank.lean, DecorrelatedGrid32.lean,
+DecorrelatedGrid33.lean, TriangularRank.lean, ColouringBarrier.lean, ColouringBarrierGraph.lean,
+KstarBasic.lean, KstarLower.lean, Derand.lean, IterProdTree.lean, IterProdCutRank.lean. The 45 theorems
+are: Decorrelated.exists_expensive, Decorrelated.rankSum_ge, EthFollowup.Barriers.AlgebraRank.algebra_rank_half, EthFollowup.Barriers.AlgebraRank.algebra_rank_sum, EthFollowup.Barriers.Colouring.colouring_barrier, EthFollowup.Barriers.Colouring.colouring_threshold_upper, EthFollowup.Barriers.ColouringGraph.colouring_barrier_graph, EthFollowup.Barriers.Derand.support_query_eq_zero, EthFollowup.Barriers.Derand.tp_le_log_of_nonempty, EthFollowup.Barriers.Derand.tq_deleted_eq_contains, EthFollowup.Barriers.PermModP.permanent_eq_zero_of_low_rank, EthFollowup.Barriers.Rank.exists_logb_rank_ge, EthFollowup.Barriers.Rank.modelR_bound, EthFollowup.Barriers.Rank.modelR_bound_nlogn, EthFollowup.Barriers.Rank.pieces_exists_large_piece, EthFollowup.Barriers.Rank.pieces_trivial_lower_bound, EthFollowup.Barriers.Rank.rank_eq_card_of_linearIndependent, EthFollowup.Barriers.Rank.rank_le_card_of_eq_sum_mul, EthFollowup.Barriers.Rank.rank_le_two_pow_of_eq_sum_mul, EthFollowup.Barriers.Rank.rank_sum_le, EthFollowup.Barriers.Rank.sum_choose_mul_choose, EthFollowup.Barriers.Rank.sum_crossing_le_total, EthFollowup.Barriers.Rank.treeSkeleton_bound, EthFollowup.Barriers.RowCut.permanent_joinMat, EthFollowup.Barriers.RowCut.rowCut_rank, EthFollowup.Barriers.RowCut.rowCut_rank_oneHot, EthFollowup.Barriers.Spread.spread_lemma, EthFollowup.Barriers.Spread.spread_slice, EthFollowup.Barriers.Spread.spread_slice_zero, EthFollowup.Barriers.Triangular.independent_sets_rank_bound, EthFollowup.Barriers.Triangular.triangular_rank_bound_hamming, EthFollowup.IterProd.BTree.cost_ge_entropy, EthFollowup.IterProd.BTree.cost_ge_equal, EthFollowup.IterProd.rank_prodMatFixed_le, EthFollowup.IterProd.rank_prodMat_pow, Grid32.H_eq_rowTwist_T0, Grid32.exists_expensive, Grid32.rankSum_ge, Grid32.rank_colFlat_T0, Grid33.exists_expensive, Grid33.rankSum_ge, Kstar.theoremL, Kstar.theoremL_log, Lossy.rank_contr_graph, Lossy.rank_contr_le. They are written on Mathlib only and do not use the Anthropic or OpenAI developments; the
+axiom audit of 5 November 2026 (#print axioms for all 251 theorem declarations of the directory, all 16
+modules imported in one file) shows only propext, Classical.choice and Quot.sound, and no module
+contains sorry or native_decide. The step from a network to a factorised matrix, the cost-to-rank step,
+the Tutte barrier, the full-level bound 3/8, the grouping and covering caps, the template corollaries
+and the meta-barrier are proved on paper only and are labelled as such. The research notes at that commit
+include the corrections made for this version: the repaired covering proof in
+research/engine2-probabilistic.md section 7, the corrected conditional cap in research/engine2-algebraic.md M6.2,
+and the re-run check research/scripts/engine2p_covering.py. Independent AI referee passes, an overlap comparison with Majdoddin
+(arXiv:2610.41622) and Dias-Lima (arXiv:2611.00517), and a citation audit were carried out. No human
+expert has yet reviewed the work. The barriers are statements about named models of computation; they
+do not depend on the claimed refutations of the Exponential Time Hypothesis being correct.

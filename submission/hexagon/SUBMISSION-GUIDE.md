@@ -258,3 +258,33 @@ not claimed: the root count and irreducibility tests are polynomial-time; degree
 p^{0.152} there). Not covered: F_q with q = p^k.
 
 **Exact steps:** as for Paper 6.
+
+## Paper 11 — Barrier note (upload `to-submit/09-barrier/hexagon-barrier-note.zip`, main file `main.tex`)
+Status: READY (5 Nov 2026). 24 pp, single `main.tex` with inlined bibliography, no long tables, compiles from a fresh unzip with
+`-halt-on-error` (0 errors, no undefined references); repository and commit `d7c4118` cited. Repositioned after Majdoddin
+(arXiv:2610.41622) and Dias–Lima (arXiv:2611.00517): the product-term caps are credited to them and to Anthropic's Appendix H; the paper's
+new content is the correlated (non-product) decompositions, the walls for the problems beyond SAT and the Lean development. The covering
+proof (`research/engine2-probabilistic.md` §7) was repaired and the conditional cap corrected to K = Θ(n^{1/9}); those research-note
+edits are not yet committed (see the folder's `INSTRUCTIONS.md`).
+
+**Form answers**
+- **Title:** What the ETH refutations do not give: barriers for the counting engines, with machine-checked lemmas
+- **Abstract:** paste `to-submit/09-barrier/abstract.txt` (1906 characters).
+- **Primary subject:** cs.CC. **Cross-lists:** cs.DS, cs.LO, math.CO.
+- **MSC2020** (all five checked against Hexagon's catalogue, 5 Nov 2026): 68Q17 (Computational difficulty of problems), 68Q25 (Analysis
+  of algorithms and problem complexity), 68W30 (Symbolic computation and algebraic computation), 15A69 (Multilinear algebra, tensor
+  calculus), 05C31 (Graph polynomials).
+- **Tags:** engine barrier problem; Exponential Time Hypothesis; #SAT; tensor networks; correlated decompositions; cut rank; flattening
+  rank; permanent; Tutte polynomial; lower bounds for restricted models; Lean 4; formal verification.
+- **Tools used:** Claude (Anthropic), via Claude Code; Lean 4 with Mathlib; TeX Live; Python (exact rank tables, integer programs, the
+  covering check).
+- **Formalizations / arXiv id:** leave empty.
+
+**What is claimed and what is not** (as the paper states): machine-checked are 45 rank and counting statements (cut lemma, permanent
+row-cut rank, algebra dimension, char-p vanishing, the rank form of rho >= 1/2 for pieces, correlated rank sums N^2, N^3, N^8, the
+triangular template bound, colouring, turn labellings, residues, product trees). On paper only: the network-to-matrix and cost-to-rank
+steps, the Tutte barrier, rho >= 3/8 on full levels, the grouping and covering caps, the template corollaries, the meta-barrier. Credited,
+not claimed: rho >= 1/2 for pieces (Anthropic App. H; Majdoddin) and the sharper product-term cap (Majdoddin Thm 4.13). No statement is
+about all algorithms.
+
+**Exact steps:** as for Paper 6 (details in `to-submit/09-barrier/INSTRUCTIONS.md`).

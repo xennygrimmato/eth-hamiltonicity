@@ -24,3 +24,8 @@ What was searched (5 Nov 2026, ~19:00 UTC):
 | Circuit note | Not a duplicate; cite. | Wu–Wang 2611.02560 (2 Nov) extends OpenAI's bound to extended gate bases. |
 | Survey note | Add citations. | Majdoddin; Dias–Lima; Szeider; MIT Hardness Group 2611.02650 (SH ⇔ Weak ETH); Wu–Wang 2611.02548 and 2611.02560; Nguyen 2611.00004; Li 2610.00613; Vega 2611.00086. |
 | Quantum, HC revision | No new overlap found. | — |
+
+## Follow-up (5 Nov, later)
+
+- **Roots.** A fresh `leanchecker --fresh EthFollowup.ModP.FinalRoots` replay exited 0. polyRoot_TM_rate and the related theorems are kernel-checked. The result is still shelved for publication because of OpenAI #142.
+- **Non-residues.** OpenAI's quasi-RH preprint (30 Sep) itself states the least non-residue bound n(p) ≤ C(log p)^A and polynomial-time square roots mod p, as its Corollary 1.2. Class-number v2 credits that corollary.

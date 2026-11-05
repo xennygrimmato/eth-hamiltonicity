@@ -56,13 +56,13 @@
 
 \author{Vaibhav Tulsyan}
 
-\date{November 2026 (5 November 2026)}
+\date{5 November 2026}
 
 \subjclass[2020]{11Y16, 11E25, 11G05, 11F67, 68Q25, 03B35}
 \keywords{Representation numbers, ternary quadratic forms, congruent numbers, Tunnell's theorem, central $L$-values, quadratic twists, exact counting, Exponential Time Hypothesis, Lean~4}
 
 \begin{abstract}
-For a fixed positive-definite integer matrix $A$, the representation number $r_A(n)=\#\{x\in\mathbb{Z}^k : x^{\top}Ax=n\}$ is a classical object. Four ternary representation numbers decide Tunnell's congruent-number test, and through Waldspurger's theorem such numbers give central values of twisted $L$-functions. However, for a general ternary form the best deterministic bound we know for a single $r_A(n)$ is $n^{1/2+o(1)}$, and we know of no bound of the form $n^{o(1)}$, even conditionally. We present a deterministic algorithm that outputs $r_A(n)$ in time $2^{O(L/\sqrt{\log L})}=n^{o(1)}$, where $L$ is the bit length of $n$, for every fixed positive-definite $A$ of any dimension. Our approach shifts $x$ into a box of naturals by an adjugate Cauchy--Schwarz bound, splits signs so that $Q(u-B)=n$ becomes an identity between two nonnegative straight-line programs, pads the input so that all values fit, and counts the solutions with Anthropic's counting engine through our earlier network library. We prove three theorems in Lean~4 (\texttt{repNum\_TM\_rate}, \texttt{diagRep\_TM\_rate}, \texttt{tunnell\_TM\_rate}; axioms \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}): a finite-alphabet Mathlib Turing machine outputs the general count, the diagonal count, and Tunnell's test bit within $\lfloor C\cdot 2^{CL/\sqrt{\log_2(L+2)}}\rfloor$ steps. On paper, Tunnell's Theorem~3 then gives $L(E_n,1)$ exactly for squarefree $n$, and a theorem of B\"ocherer and Schulze-Pillot gives central values of imaginary quadratic twists of a fixed curve of squarefree conductor, in time $n^{o(1)}$; if OpenAI's unrefereed full-BSD result holds, the counts also give the order of the Tate--Shafarevich group of $E_n$ in analytic rank~$0$. The constants are astronomical, the machines use exponential space, and everything rests on Anthropic's Lean development of its claimed refutation of the Exponential Time Hypothesis, which is under review.
+For a fixed positive-definite integer matrix $A$, the representation number $r_A(n)=\#\{x\in\mathbb{Z}^k : x^{\top}Ax=n\}$ is classical. Four ternary representation numbers decide Tunnell's congruent-number test, and through Waldspurger's theorem such numbers give central values of twisted $L$-functions. However, for a general ternary form the best deterministic bound we know for a single $r_A(n)$ is $n^{1/2+o(1)}$, and we know of no bound of the form $n^{o(1)}$, even conditionally. We present a deterministic algorithm that outputs $r_A(n)$ in time $2^{O(L/\sqrt{\log L})}=n^{o(1)}$, where $L$ is the bit length of $n$, for every fixed positive-definite $A$ of any dimension. Our approach shifts $x$ into a box of naturals by an adjugate Cauchy--Schwarz bound, splits signs so that $Q(u-B)=n$ becomes an identity between two nonnegative straight-line programs, pads the input so that all values fit, and counts the solutions with Anthropic's counting engine through our earlier network library. We prove three theorems in Lean~4 (\texttt{repNum\_TM\_rate}, \texttt{diagRep\_TM\_rate}, \texttt{tunnell\_TM\_rate}; axioms \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}): a finite-alphabet Mathlib Turing machine outputs the general count, the diagonal count, and Tunnell's test bit within $\lfloor C\cdot 2^{CL/\sqrt{\log_2(L+2)}}\rfloor$ steps. On paper, Tunnell's Theorem~3 then gives $L(E_n,1)$ exactly for squarefree $n$, and a theorem of B\"ocherer and Schulze-Pillot gives central values of imaginary quadratic twists of a fixed curve of squarefree conductor, in time $n^{o(1)}$ and $|D|^{o(1)}$ respectively; if OpenAI's unrefereed full-BSD result holds, the counts also give the order of the Tate--Shafarevich group of $E_n$ in analytic rank~$0$. The constants are astronomical, the machines use exponential space, and everything rests on Anthropic's Lean development of its claimed refutation of the Exponential Time Hypothesis, which is under review.
 \end{abstract}
 
 \maketitle
@@ -85,8 +85,8 @@ and B\"ocherer and Schulze-Pillot~\cite{BSP90} made this explicit for many curve
 
 Computing one $r_A(n)$ is not easy. Enumerating the ternary box takes $O(n^{3/2})$ steps; Tunnell wrote
 that his criterion reduces the congruent-number problem ``to an algebraic computation involving
-$O(D^{3/2})$ steps''~\cite[p.~325]{Tun83}. Fixing one variable and counting representations by binary
-forms gives about $n^{1/2+o(1)}$ steps per $n$~\cite[\S1.3]{HTW10}. Hart, Tornar\'ia and Watkins computed
+$O(D^{3/2})$ steps''~\cite[p.~325]{Tun83}. Fixing one variable and counting representations of $n-cz^2$ by binary
+forms gives about $n^{1/2+o(1)}$ steps for one $n$, and $O(N^{3/2})$ for all $n\le N$~\cite[\S1.3]{HTW10}. Hart, Tornar\'ia and Watkins computed
 Tunnell's counts for all $n\le10^{12}$ by fast multiplication of theta series~\cite{HTW10}, which is
 quasi-linear in the range but not faster for one $n$. However, for a general ternary form we know of no
 deterministic algorithm for a single $r_A(n)$ in time $n^{o(1)}$, even conditionally.
@@ -338,7 +338,7 @@ $\mathrm{nQ}=1$; the shape constant is $c_A=64\,(k+2(16k^2+3)+2)(16k^2+4)$ (\lea
 for fixed $k$.
 
 \begin{proposition}[\lean{repDesc_count}]\label{prop:count}
-Let $x_j^2\le c\,Q(x)$ for all $x$, $|A_{ij}|\le c_m$, $cn<B$, and $K=16(k^2+1)(c_m+1)$. If $n+KB^2<B_x$ and
+Let $k\ge1$, $x_j^2\le c\,Q(x)$ for all $x$, $|A_{ij}|\le c_m$, $cn<B$, and $K=16(k^2+1)(c_m+1)$. If $n+KB^2<B_x$ and
 $n+KB^2<2^{b\ell}$ (the limb capacity), then the count of the description in $[0,B_x)$ is the number of
 solutions of $Q(x)=n$ in $[-cn,cn]^k$, which is $r_A(n)$.
 \end{proposition}
@@ -574,14 +574,17 @@ $\kappa_E$, is computed exactly in time $|D|^{o(1)}$ by $h=O(1)$ runs of the mac
 \begin{proof}
 $L(E,1)\neq0$ forces the sign $+$. Since $(D,N)=1$, $N_0=N$, and each factor of the product is $2$. Divide
 \cref{cit:bsp} by $2^{\omega(N)}c_2\sqrt D\,L(E,1)$. Each $r_{L_i}$ is the representation number of a fixed
-positive-definite ternary form, at the argument $DN^2$ of bit length $O(L)$; if the norm form has odd cross
-coefficients we use \cref{rem:odd}.
+positive-definite ternary form, at the argument $DN^2$ of bit length $O(L)$. The bilinear form $-\mathrm{tr}(xy)$
+on the trace-zero part of $\mathbb{Z}+2R_i$ takes even values, so its Gram matrix is integral and
+\cref{thm:main} applies directly. Checking that $-D$ is fundamental needs the factorisation of $D$, which takes
+time $2^{O(L/\sqrt{\log L})}$~\cite{Shu26} and does not change the bound.
 \end{proof}
 
 \paragraph{The rational value.} With Pal's period relation~\cite[Main Result~1.1, Cor.~2.6]{Pal12}, for
 squarefree $d<0$ coprime to the discriminant of $E$, $\Omega(E^d)=\tilde u\,c_\infty(E^d)\,\Omega^-(E)/\sqrt{|d|}$,
 where $c_\infty$ counts real components, $\Omega^-$ is the imaginary period and $\tilde u$ is a power of $2$,
-equal to $1$ when $d\equiv1\pmod4$. So $L(E^{-D},1)/\Omega(E^{-D})$ is $m_D^2$ times a constant that depends
+equal to $1$ when $d\equiv1\pmod4$. (For $4\mid D$ we apply this to $d=-D/4$, since the twist by $-D$ is the twist by $-D/4$.) So
+$L(E^{-D},1)/\Omega(E^{-D})$ is $m_D^2$ times a constant that depends
 only on $E$ and $\tilde u$. Since this ratio is rational for every twist\nr, the constant is rational, and
 there are finitely many of them; each can be fixed once from one $D$ with $m_D\neq0$. Pal notes that the
 formula without $\tilde u$ is misquoted in parts of the literature~\cite{Pal12}.
@@ -957,7 +960,7 @@ K.~Rubin, \emph{The ``main conjectures'' of {I}wasawa theory for imaginary quadr
 
 \bibitem{Shu26}
 J.~Shunia, \emph{An improved subexponential bound for deterministic integer factorization}, Hexagon preprint
-hexagon:2610.00711v1, 2026, \url{https://hexagonmath.org/abs/2610.00711v1}.
+hexagon:2610.00711v1, November 2026, \url{https://hexagonmath.org/abs/2610.00711v1}.
 
 \bibitem{Smi16}
 A.~Smith, \emph{The congruent numbers have positive natural density}, arXiv:1603.08479, 2016.
@@ -972,9 +975,10 @@ $\#${SAT} algorithms}, Hexagon preprint hexagon:2610.00672v1, October 2026,
 \url{https://hexagonmath.org/abs/2610.00672v1}.
 
 \bibitem{TulCN26}
-V.~Tulsyan, \emph{Class numbers and lattice-point counts in time $2^{O(n/\sqrt{\log n})}$, assuming the new
-$\#${SAT} algorithms}, Hexagon preprint hexagon:2611.00115v2, November 2026,
-\url{https://hexagonmath.org/abs/2611.00115}.
+V.~Tulsyan, \emph{Class numbers, square roots and quadratic non-residues in time $2^{O(n/\sqrt{\log n})}$,
+assuming the new $\#${SAT} algorithms}, Hexagon preprint hexagon:2611.00115, November 2026,
+\url{https://hexagonmath.org/abs/2611.00115}. Version~2 is retitled \emph{Class numbers and lattice-point
+counts in time $2^{O(n/\sqrt{\log n})}$, assuming the new $\#${SAT} algorithms}.
 
 \bibitem{TulEuler26}
 V.~Tulsyan, \emph{Counting {E}ulerian circuits in subexponential time, assuming the new $\#${SAT} algorithms},

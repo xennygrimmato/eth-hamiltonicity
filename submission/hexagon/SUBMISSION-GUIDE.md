@@ -181,7 +181,8 @@ verification are new to our knowledge.
 compile preview → fill the fields above → contributor = you, Claude and Lean under tools → declarations → submit).
 
 ## Paper 8 — Class numbers, square roots, non-residues (upload `hexagon-classnumber-note.zip`, main file `main.tex`)
-Status: READY (4 Nov 2026). Fresh leanchecker replay of `EthFollowup.ModP.Final` passed (README rows N1–N3).
+Status: SUBMITTED as hexagon:2611.00115v1. A v2 correction is READY in `to-submit/01-classnumber-v2/` (see its INSTRUCTIONS.md).
+v1 status was: READY (4 Nov 2026). Fresh leanchecker replay of `EthFollowup.ModP.Final` passed (README rows N1–N3).
 Paper 11 pp in `classnumber-note/main.tex`, PDF in `docs/classnumber-note.pdf`; the ZIP compiles cleanly from a fresh unzip.
 
 **Form answers**
@@ -234,8 +235,9 @@ or the exact π(x).
 **Exact steps:** as for Paper 6.
 
 ## Paper 10 — Roots of fixed-degree polynomials modulo any integer (upload `hexagon-roots-note.zip`, main file `main.tex`)
-Status: Lean final theorems built with standard axioms (`EthFollowup.ModP.FinalRoots`); fresh leanchecker replay in progress.
-Do not upload before README row N4 exists.
+Status: SHELVED (5 Nov 2026). Do not upload. The fresh leanchecker replay passed, but OpenAI catalogue entry 142
+(deterministic polynomial factorization over F_p, 4 Oct 2026) already gives roots mod p in polynomial time; see
+`research/novelty-audit-2026-11-05.md`.
 
 **Form answers**
 - **Title:** Roots of fixed-degree polynomials modulo any integer in time $2^{O(n/\sqrt{\log n})}$, assuming the new #SAT algorithms

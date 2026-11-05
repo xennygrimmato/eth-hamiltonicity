@@ -90,4 +90,4 @@ What the ETH refutations do not give: barriers for the counting engines, with ma
 - Single `main.tex`, bibliography inlined, no `anc/`, no code, no `longtable` (all tables are `tabular`).
 - Compiles from a fresh unzip with `pdflatex -interaction=nonstopmode -halt-on-error` (3 passes): 0 errors, no undefined references, no overfull boxes, 24 pages.
 - ZIP built with `zip -X -D`, containing only `main.tex`.
-- GitHub repository https://github.com/xennygrimmato/eth-hamiltonicity cited with commit `d7c41181c625f19d4799f3bac4a068562685d7e8`; no placeholders.
+- GitHub repository https://github.com/xennygrimmato/eth-hamiltonicity cited with commit `946c49993b78aa163fcac3f8cb78ce351dd5dcc6`; no placeholders.

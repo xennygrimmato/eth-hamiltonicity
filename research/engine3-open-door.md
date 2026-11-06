@@ -38,7 +38,11 @@ there, **[S]** from `engine3-search.md`.
   (2/9 / 4/9), full parallel classes Δ_q of AG(2,q) (1/q / unknown), the prism (4/9 / 2/3), the incidence 8-cycle (0.45 / ≥ 0.65).
   **Δ_3 (9 nodes, 9 edges, 18 strings, two merges) is now the smallest open instance for ρ < 1/2**, half the size of the 3×3 level,
   and it is simultaneously the cleanest test of Majdoddin's rectangle-content conjecture (§4.4), which predicts no trade at all
-  on it (every edge is the lone diagonal of its rectangle).
+  on it (every edge is the lone diagonal of its rectangle). §1.7 (corrected): rank-one (Strassen) decompositions are not trades
+  under the D1 cost, since poly(λ) pieces made of them have full group ranks; the naming of tensored piece types is charged in
+  both directions and ν_r-fold (ν_3 = 3/2). At N₀ = 2 two- and three-piece identities on Δ_3 are refuted exactly over every field
+  (`engine3-delta3.md`: one flattening, rank 512 against 2×128) and the ρ < 1/2 criterion is unsatisfiable for every T [R, §3.2a];
+  many-piece identities are not excluded, and the flattening floor 4/9 shows no flattening argument can exclude them.
 * **Arithmetic of success (§2.6).** Theorem A gives e(K) = Θ((log K)^{−α′}), α′ = log₂(1/ρ) exactly [K, Thm A(a)]. A configuration
   family with ρ_C < 1/2 placed in a squaring level (the AG(2,q) levels with three parallel classes as merges and Δ_q classes as
   configurations do plug in, §2.7) gives α′ > 1, hence e = o(1/log K), which is all the dense wall needs (e·U = o(n) at
@@ -151,31 +155,61 @@ simulation costs (r−1)c and the cut bound gives ≥ rc/2.
 **Choice.** D1 throughout: the only cost the recursion can pay, equal to (L4) when r = 2, within a constant factor of D2. Every
 lower bound below uses only the cut bound and coarsening, so it holds for every cost ≥ D1's cut bound.
 
-### 1.7 The mixing criterion and the finite (fixed-N₀) criterion [R, formalising Prop. 4.8 and Lemma 2]
+### 1.7 The criterion for a trade, exactly [R, formalising Def. 7, Lemma 2 and Prop. 4.8; corrected 6 Nov]
 
-Let C be a configuration all of whose E edges cross every one of p merges (true for every instance below), so the raw cost of C
-is E·m under every merge. For a block identity f_C|_block = Σ_{i∈I} π_i with cost vectors c(i) = (c_1(π_i), …, c_p(π_i)), the
-adversary chooses fractions x ∈ Δ(I) of the (configuration, block) incidences, the algorithm the merge; the level pays on C
+*Whole-string form (Anthropic's Definition 7, generalised).* Let C have E edges, all crossing every merge, so the raw cost of C is
+Eλ under every merge. **Pieces with parameters (ρ, c) on C** are, for every λ, an index set I with |I| ≤ (2λ)^c and tensors A_i
+on the strings of C with Σ_{i∈I} A_i = d·f_C (d ≠ 0), whose D1 costs under the two merges satisfy
 
-  V(C) := max_{x∈Δ(I)} min_k Σ_i x_i c_k(i) = min_{q∈Δ_p} max_{i∈I} ⟨q, c(i)⟩   (von Neumann),    ρ_C := V(C)/(E·m).
+  c_1(A_i) + c_2(A_i) ≤ 2ρ·Eλ + c log₂(2λ)   for every i ∈ I        (Def. 7(b) is the case E = 2: 4ρλ + c log 2λ).
 
-So **ρ_C ≥ 1/2 iff for every weighting q of the merges some piece has ⟨q, c(i)⟩ ≥ E·m/2** (the piece may depend on q), and
-**ρ_C < 1/2 iff some q has ⟨q, c(i)⟩ < E·m/2 for every piece.** For p = 2 and uniform q: ρ_C < 1/2 iff every piece has
-c_1 + c_2 < E·m, i.e. the sum of a piece's two costs is below the raw cost of *one* merge (eight-square on a 3-bit rectangle:
-3 + 6 = 9 against E·m = 6: ρ = 3/4 before naming bits; ideal: 0 + 6 = 6: exactly 1/2). The pigeonhole gives, for each k, a piece
-with c_k ≥ E·m − o(m) (§2.3 makes this precise with the quantum functional), so at uniform q that piece needs Σ_{k′≠k} c_{k′} <
-(p/2 − 1)E·m: impossible for p = 2 (Prop. 4.8), and for p = 3 it asks for c_{k′} + c_{k″} < E·m/2.
+A term chooses one piece per configuration and is evaluated under the cheaper merge, so it pays at most ½Σ_C(c_1 + c_2) ≤
+ρ·(raw) + o(λ)·#C: this ρ is the ρ of Theorem A, and |I|^{#C} is the polynomial factor (t+1)^{|R|} of Prop. 3. Hence, for two merges,
 
-*Fixed alphabet.* A block identity at a fixed alphabet N₀ = 2^{m₀} with T pieces does not satisfy (L2) by itself (T^{#blocks}
-terms); Anthropic's grouping by type (Lemma 2, eq. (20), the t naming bits) turns it into poly(λ) pieces at the price of
-log₂ T bits per block in **every** direction. The exact finite criterion, in bits per block of m₀ bits, is
+  **ρ < 1/2 on C  ⟺  poly(λ) pieces, every one with c_1(A_i) + c_2(A_i) < Eλ − o(λ);   any trade (ρ < 1)  ⟺  every one with
+  c_1 + c_2 < 2Eλ − o(λ).**   (Flattening ranks give lower bounds on the c_k; network costs are the c_k.)
 
-  min_q max_i ⟨q, c(i)⟩ + log₂ T  <  E·m₀/2   (for ρ < 1/2),   resp.  < E·m₀  (for any trade, ρ < 1),
+The piece costs include everything: there is no separate charge for "naming" terms, because a piece *is* the sum of whatever
+terms it groups, and its D1 cost is bounded below by its group-flattening ranks (cut bound, §1.6). This is what disqualifies
+rank-one (Strassen-type) decompositions: a piece that is a sum of M rank-one products over the nodes has every group-flattening
+rank ≤ M and, for generic terms, = min(M, N^{L_G}) (L_G strings in the group); splitting the N^{3ω+o(1)} rank-one terms of
+Δ_3 = ⟨N,N,N⟩^{⊗3} (or the N^{ω+o(1)} terms of one triangle) into poly(λ) pieces leaves ≥ N^{3ω−o(1)} ≥ N⁶ terms per piece, so
+every piece has full group ranks N⁶ and costs the raw 9λ under both merges: no trade at all. (Under the hyperedge cost D2 one
+would charge log₂ M ≈ 3ωλ < 9λ per merge instead, i.e. Strassen on one triangle 2·ωλ ≈ 5.62λ against Eλ = 3λ for ρ < 1/2 —
+still no ρ < 1/2, but an apparent ρ_Δ ≤ ω/3 < 1 "trade"; this is fast matrix multiplication in disguise and the reason D1 is
+the cost of this note, §1.6. `engine3-delta3.md` §0 records the D2 reading.) With p merges the exact level value is the game
 
-with c the D1 costs at alphabet N₀. Sufficient, not necessary (App. H: "the count is not tight"). Check: eight-square, N₀ = 8,
-T = 2, costs (3,6), (6,3): 4.5 + 1 = 5.5 of 6, ρ = 11/12. At N₀ = 2 the rectangle has the ideal two-piece identity [x=v][y=u] =
-[x=u][y=v] − [x≠y](−1)^x[u≠v](−1)^u (App. H) with costs (0,2),(2,0): 1 + 1 = 2 of 2, no gain: the naming bits are why small
-alphabets never show a gain, and why a fixed-N₀ identity is informative only through its cost vectors.
+  V(C) := max_{x∈Δ(I)} min_k Σ_i x_i c_k(A_i) = min_{q∈Δ_p} max_i ⟨q, c(A_i)⟩   (von Neumann),   ρ_C := V(C)/(Eλ),
+
+so ρ_C ≥ 1/2 iff for every weighting q some piece has ⟨q, c(i)⟩ ≥ Eλ/2 (the piece may depend on q); for p = 2 and uniform q this
+is the Def. 7 form, and V ≤ max_i (c_1 + c_2)/2 always. The pigeonhole gives, for each k, a piece with c_k ≥ Eλ − o(λ) (§2.3 makes
+this precise), so at uniform q that piece needs Σ_{k′≠k} c_{k′} < (p/2 − 1)Eλ: impossible for p = 2 (Prop. 4.8), for p = 3 it asks
+for c_{k′} + c_{k″} < Eλ/2.
+
+*Fixed alphabet: piece types (Lemma 2's construction).* A **piece type** at alphabet N₀ = 2^{m₀} is a tensor τ on the strings of
+one block of C with cost vector c(τ) = (c_1(τ), c_2(τ)). Given T types with Σ_j τ_j = d·f_C|_block, tensor over t = λ/m₀ blocks
+and group the T^t products by their type-count vector n = (n_1, …, n_T): the poly(t) grouped pieces A_n = Σ_{arrangements with
+counts n} ⊗_s τ_{j_s} are pieces in the sense above (Lemma 2 has T = 2, A_i = Σ_{|Q|=i}). Their cost: under merge k the
+arrangement index (≤ T^t values) must reach the r_k groups that C meets, as **one hyperedge of the merged instance**, so
+
+  c_k(A_n) ≤ Σ_s c_k(τ_{j_s}) + ν_{r_k}·t·log₂T,   ν_2 = 1 (one bond: Lemma 2's "one more bit for each block in each direction"),
+  ν_3 = 3/2 (the diagonal tensor on M values is a restriction of ⟨d,d,d⟩ with d² ≈ 4M/3, Strassen's subrank, §1.6; the cut bound
+  shows ν_3 ≥ 3/2 is best possible for a hyperedge),   r/2 ≤ ν_r ≤ r − 1 in general (path simulation).
+
+Per block each type therefore costs c_k(τ) + ν_{r_k} log₂T under merge k, and the asymptotic ρ of the tensored family is
+
+  ρ(τ_1, …, τ_T) = [ max_x min_k ( Σ_j x_j c_k(τ_j) + ν_{r_k} log₂T ) ] / (E m₀)  ≤  [ max_j (c_1(τ_j) + c_2(τ_j))/2 + ν log₂T ] / (E m₀)
+  (two merges, r_1 = r_2 = r, uniform q),
+
+so **ρ < 1/2 holds if every type has c_1 + c_2 + 2ν_r log₂T < E m₀, and any trade if < 2E m₀.** Sufficient, not necessary (App. H:
+"the count is not tight"; the true rank of A_n may be smaller). Checks: eight-square, N₀ = 8, T = 2, costs (3,6), (6,3), r = 2:
+9 + 2 = 11 < 12, ρ = 11/12 ✓. App. H single-bit identity [x=v][y=u] = [x=u][y=v] − [x≠y](−1)^x[u≠v](−1)^u, N₀ = 2: (0,2), (2,0):
+2 + 2 = 4 = 2E m₀: no trade ("single bits: no gain") ✓. A rank-one decomposition of the crossing (T = N₀² cost-0 types): 0 +
+2·2m₀ = 2E m₀: ρ = 1 ✓. Strassen on one triangle (E = 3, r = 3, N₀ = 2, T = 7 cost-0 types): 0 + 3·log₂7 = 8.42 > 2E m₀ = 6: no
+trade ✓; on Δ_3 (T = 343): 25.3 > 18 ✓. **Erratum:** the first version of this note charged ν = 1 for every r; for r = 3 that
+undercharges by ½log₂T per direction, and the places that used it are corrected below (prism §3.3, Δ_3 §3.2, 8-cycle §5.5). A
+fixed-N₀ identity is informative only through its cost vectors, and small alphabets cannot show a gain: at N₀ = 2 with r = 3,
+ρ < 1/2 needs c_1 + c_2 < E − 3 log₂T, which §3.2a shows is unsatisfiable on Δ_3.
 
 ### 1.8 Why polynomial decay needs constant growth of K [K, Majdoddin Prop. 4.1, §4.1]
 
@@ -243,8 +277,8 @@ of parameter ρ_x on the three merge-1 crossings, ρ_C ≤ ρ_x + 1/4 (0.957 wit
 
 ### 2.2 The target on C, exactly
 
-By §1.7 with E = 6: ρ_C < 1/2 iff there are an identity Σ_i π_i = d·f_C|_block, |I| = 2^{o(m)}, and q ∈ Δ_3 with ⟨q, c(i)⟩ < 3m − o(m)
-for every piece. The "floor 1/3" of §4.8 would need cost vectors (6m,0,0) and permutations, impossible: a piece free under two
+By §1.7 with E = 6: ρ_C < 1/2 iff there are an identity Σ_i π_i = d·f_C|_block with poly(λ) pieces (2^{o(m)} per block) and a
+weighting q ∈ Δ_3 with ⟨q, c(i)⟩ < 3m − o(m) for every piece, the c(i) being D1 costs (naming included). The "floor 1/3" of §4.8 would need cost vectors (6m,0,0) and permutations, impossible: a piece free under two
 merges is a product over the atoms of the two partitions, which are the single nodes (`engine2-algebraic.md` Lemma 7.2), hence
 free under all three. A product over the groups of merge 2 has cost vector (R, R, 0), R = Σ_j log₂ rank(h_j) (both other merges
 see the same three ranks), so product pieces give ρ_C ≥ 2/3, worse than the rectangle; only non-product pieces could do better.
@@ -314,7 +348,7 @@ every configuration edge:
 
 | configuration | nodes / edges / strings | merges | core | flattening | upper | remarks |
 |---|---|---|---|---|---|---|
-| **Δ_3**: the three anti-diagonal triangles of the 3×3 grid (one line class of AG(2,3)) | 9 / 9 / 18 | rows, cols (+ diagonals) | 1/3 | **4/9** [N exhaustive, both with 2 and with 3 merges, `flatcert4.out`] | 1 | every edge is the lone diagonal of its rectangle; the rectangle-content conjecture (§4.4) predicts no trade; smallest open instance for ρ < 1/2 |
+| **Δ_3**: the three anti-diagonal triangles of the 3×3 grid (one line class of AG(2,3)) | 9 / 9 / 18 | rows, cols (+ diagonals) | 1/3 | **4/9** [N exhaustive, both with 2 and with 3 merges, `flatcert4.out`; reproduced in `engine3-delta3.md`] | 1 (D1) | every edge is the lone diagonal of its rectangle; the rectangle-content conjecture (§4.4) predicts no trade (rank-one decompositions do not count, §1.7); 2- and 3-piece identities refuted exactly at N₀ = 2 [`engine3-delta3.md`]; smallest open instance for ρ < 1/2 |
 | 3×3 level K_3×K_3 = Δ_3^{anti} ∪ Δ_3^{diag} | 9 / 18 / 36 | rows, cols | 2/9 | 4/9 (exact ILP, §8.2) | 11/12 (eight-square) | Conjecture 8.1; hub profile §8.6 |
 | Δ_q: one full class of AG(2,q), q ≥ 4 | q² / qC(q,2) / q²(q−1) | 3 (or more) other classes | 1/q | not computed (needs the ILP of §8.2 with q groups and 3 merges) | 1 | plugs into squaring, ρ_level → ρ_Δ (§2.7) |
 | prism (6-cycle incidence) | 6 / 9 / 18 | two matchings | 4/9 | **2/3** [N] | 1 | constant-growth probe, all edges three-cell |
@@ -410,13 +444,46 @@ so Δ_3 was not among the configurations shown to reach ρ ≥ 1/2. Three things
 (iii) **It is the rectangle-content test:** Majdoddin's conjecture (§4.4, "only min(d,a) bits of a four-cell configuration can be
 traded") predicts, extended to hyperedge configurations, no trade at all on Δ_3 (d = 1, a = 0 for every rectangle). Any identity
 with ρ_Δ < 1 refutes that extension; the proved floor is 4/9, so the window [4/9, 1] is wide open.
-*Finite problem.* ρ_Δ < 1/2 ⟺ pieces with c_row + c_col < 9 log₂ N₀ (uniform q), e.g. (3, 5) bits at N₀ = 2 — note that the
-generic cost of a tensor on Δ_3 under the other merge is 2·6 log N₀ = 12 log N₀ > 9 log N₀, so a piece must be *simultaneously*
-a cheap row network and a below-raw column network. Search: f_Δ = R + C with R a row network of bonds (2,2,2) whose column
-flattening ranks are ≤ 16, 16, 4 (bonds (4,4,2)), and C its image under the transpose (r,c) ↦ (c,r), which maps Δ^{anti} to itself
-and rows to columns; alternating least squares with rank projections, N₀ = 2. Any trade at all (ρ_Δ < 1) needs only c_row +
-c_col < 18 log₂ N₀: f_Δ = R + C with R row bonds (2,2,2) and C column bonds (2,2,2) (then (3 + 12)/2 + 1 = 8.5 < 9) — the direct
-analogue of the prism search of §3.3, not yet run on Δ_3.
+*Finite problem (corrected, §1.7).* Whole-string: ρ_Δ < 1/2 ⟺ poly(λ) pieces with c_row + c_col < 9λ − o(λ); any trade ⟺ < 18λ.
+With T piece types at N₀ (r = 3, ν_3 = 3/2): ρ < 1/2 if every type has c_1 + c_2 + 3 log₂T < 9 m₀, any trade if < 18 m₀. The
+generic cost of a tensor on Δ_3 under the other merge is 2·6 m₀ = 12 m₀ > 9 m₀, so a useful piece type must be *simultaneously*
+a cheap row network and a below-raw column network. **Facts from `engine3-delta3.md` [C, exact over every field]:** f_Δ = R + C
+with R a row network of bonds (2,2,2) and C a column network of bonds (2,2,2) is impossible; so are (2,2,4)+(2,2,4) in all
+placements, R+C+R, R+C+C with bonds (2,2,2) or (2,2,4), R+C+D with a diagonal-merge network, and every two-term R + C with
+max(c_R, c_C) < 4.755 over bond dimensions {1,2,3,4,6,8}. The certificate is one flattening: at the orientation
+(1,1,1,1,1,−1,1,1,−1) (all nine edges split) f_Δ has rank 512, every row or column network with bonds (2,2,2) has rank ≤ 128
+(network min-cut, attained), and 2·128 < 512, 3·128 < 512; the obstruction is already present on two triangles (64 against 2·16).
+ALS agrees (residual √(31/32) = 0.984 for R + τR). Flattenings certify 4/9 (two or three merges) and the core floor 1/3, so
+**no flattening argument can prove ρ_Δ ≥ 1/2, and many-piece identities (T ≥ 4 types, or poly(λ) whole-string pieces) are not
+excluded.** The upper bound is the raw ρ_Δ ≤ 1 (under D1; Strassen's rank-one terms give no trade, §1.7).
+
+### 3.2a What a proof of ρ_Δ ≥ 1/2 would have to use, and the smallest meaningful search [R]
+
+*Proof side.* The whole flattening world certifies exactly 4 of 9 on Δ_3 (exhaustive, with the tailored fake profile of §8.2
+passing every single-flattening inequality), the core floor gives 3 of 9, and the straddling-leg analysis of §8.3 transfers
+(every column functional on a row-full piece meets straddlers, since the complement of a row is not a union of columns). So a
+proof of Conjecture-8.1-type on Δ_3 cannot be a subadditive functional of node-locally processed tensors; it has to use that a
+row network's three cuts come from **one bond triple** (d_12, d_13, d_23): e.g. the (row 1 | rows 2,3) column space lies in
+im W_1 of dimension ≤ d_12 d_13 while the (row 2 | rows 1,3) column space lies in im W_2 of dimension ≤ d_12 d_23 with the *same*
+d_12 — information that no rank of a single flattening retains (§8.7). The exact refutations of §3.2 are of a different kind:
+with only 2 or 3 pieces, one flattening suffices by pigeonhole (512 > 3·128); that argument dies at T = 4 pieces of bonds
+(2,2,2), and asymptotically at any poly(λ) number of pieces, which is why the flattening floor is 4/9 and not 1/2.
+
+*Search side.* At N₀ = 2 (m₀ = 1) the ρ < 1/2 criterion with T types needs c_1 + c_2 < 9 − 3 log₂T for every type. By
+pigeonhole on the row-group rank 64 = 2⁶ of f_Δ some type has c_1 ≥ 6 − log₂T, so it needs c_2 < 3 − 2 log₂T, i.e. c_2 = 0 and
+T = 2; symmetrically the other type is a row product with c_1 = 0; so f_Δ = (row-full column product) + (column-full row product),
+a special case of the refuted R(2,2,2) + C(2,2,2). **At N₀ = 2 the ρ < 1/2 criterion is unsatisfiable on Δ_3 for every T [R].**
+Any trade at N₀ = 2 needs c_1 + c_2 < 18 − 3 log₂T: T = 2 (< 15) and T = 3 (< 13.25) are covered by the refutations above as far
+as they go (the two-type case needs an R with c_R ≤ 3 and a C with c_C ≤ 3, refuted); the smallest meaningful searches are:
+(a) **N₀ = 2, T = 4 types for any trade:** four tensors, each a row network with bonds (2,2,2) *or* a column network with bonds
+(2,2,2) and with the other-merge group flattening ranks ≤ 2⁸ in product (e.g. ≤ 16, 16, 1), summing to f_Δ; criterion
+3 + 8 + 6 = 17 < 18. Feasible by ALS with rank projections on 2¹⁸ entries; a solution would be the first non-rectangle trade and
+would refute the hyperedge rectangle-content conjecture. (b) **N₀ = 4, T = 2 types for ρ < 1/2:** two types with c_1 + c_2 < 18 − 3
+= 15 bits, e.g. a row network with bonds (4,4,4) (6 bits) whose column flattening ranks are ≤ 2⁸ in product, plus its transpose
+image; this is the smallest alphabet at which ρ < 1/2 can show by the count, and its tensors have 4¹⁸ = 2³⁶ entries, out of reach
+for dense methods — it needs the Z_3 × Z_3 (shift) symmetry or a structured ansatz (hub type, §8.6) to be computable. Writing
+N₀ = 4 as two 1-bit blocks with k 1-bit types is *not* the same problem: tensoring types over blocks and grouping by type is
+exactly the construction of §1.7, so it adds no freedom beyond (a); correlated two-block pieces are genuinely N₀ = 4 pieces.
 
 ### 3.3 The prism: the smallest instance of the constant-growth door [R + N]
 
@@ -430,9 +497,11 @@ search reproduces 6]; core floor 4/9; single edges as configurations give ρ = 1
 `als_d{2,4,8}.out`]: f_P = R + C with R a row network and C a column network, both with bonds (d,d,d), alternating least squares,
 validated on the rectangle (finds the App. H identity exactly, 48 of 50 restarts, `rect_als_control.py`) and on the prism itself
 at d = 8 (= N³, where R alone represents f_P: residual 7·10⁻¹¹ at the first restart). Results: **d = 2: 40 restarts × 60 sweeps,
-minimal relative residual 0.988 (all 40 at 0.99); d = 4: 20 restarts, minimal 0.927 (18 at 0.93, 2 at 0.94).** A solution at
-d = 2 would have given per-block cost (3 + 12)/2 + 1 = 8.5 < 9 and a constant-growth trade; R + C captures 1–7% of f_P. Weak
-evidence (ALS, N = 2, one bond pattern) for ρ_P = 1, consistent with the rectangle-content picture.
+minimal relative residual 0.988 (all 40 at 0.99); d = 4: 20 restarts, minimal 0.927 (18 at 0.93, 2 at 0.94).** R + C captures
+1–7% of f_P. (Correction to the first version: by §1.7 with ν_3 = 3/2 a solution at d = 2 with generic other-direction cost 12
+would give (3 + 12)/2 + 3/2 = 9 = raw, no gain by the count; a trade needs c_col(R) < 12 as well, so the search is a structural
+probe — does a cheap row network with any below-generic column cost exist in a two-term identity — and the answer at N = 2 is
+no, even approximately.) Weak evidence (ALS, N = 2, one bond pattern) for ρ_P = 1, consistent with the rectangle-content picture.
 
 ### 3.4 The incidence 8-cycle: the smallest instance with two-cell edges [R + N]
 
@@ -492,8 +561,8 @@ ideal pieces (`pieces.md` (2.2)); App. B already gives s = N^{√2+o(1)} < Hrube
 squares literature. *Three groupings:* on C a "three-order" identity cannot beat 1/2 (Cor. 2.3.1); on Δ_3 or Δ_q the analogue
 of (74) is a sum of networks cheap under rows plus networks cheap under columns, and §3.2 states the exact finite target. A
 structural observation that constrains all symmetric two-piece ansätze [R]: with R a row network of cost a and the generic
-other-direction cost 2L log N₀ (L strings per group), the type-grouped count is (a + 2L log N₀)/2 + 1 < E log N₀/2 ⟺ a <
-(E − 2L) log N₀ − 2, and E ≤ 2L on every configuration here (rectangle: E = 2, L = 2; Δ_3: 9, 6; 3×3 level: 18, 9; prism: 9, 6), so
+other-direction cost 2L log N₀ (L strings per group), the type-grouped count is (a + 2L log N₀)/2 + ν_r < E log N₀/2 ⟺ a <
+(E − 2L) log N₀ − 2ν_r, and E ≤ 2L on every configuration here (rectangle: E = 2, L = 2; Δ_3: 9, 6; 3×3 level: 18, 9; prism: 9, 6), so
 **a two-piece identity shows ρ < 1/2 by the simple count only if the pieces are below raw in the other direction too**; the gain
 must come from double-cheap pieces or from App. B-type many-piece families with correlated types.
 
@@ -528,8 +597,9 @@ computational content of this item: negative at N = 2 for bonds 2 and 4.
 (a) The exact flattening certificate D₈ (the search gives ≥ 13 of 20): generalise `diff.py` to two merges with 4 groups (3²⁰
 orientations are too many for brute force; a MILP over orientations with the 4-group LP's dual vertices as a disjunction). If
 D₈ = 20, flattenings would prove "no two-cell trade" on this instance, the first non-counting obstruction to polynomial decay.
-(b) An identity search on the 12 two-cell edges alone (24 strings, 2²⁴ entries at N = 2, ALS with bonds 2): success = any
-identity with min_q max_i⟨q,c(i)⟩ + log₂ T < 12 — the first trade not routed through a rectangle. (c) The conceptual step: a
+(b) An identity search on the 12 two-cell edges alone (24 strings, 2²⁴ entries at N = 2, ALS with bonds 2): success = T piece
+types with c_1 + c_2 + 2ν_4 log₂T < 24 for every type (any trade; r = 4 groups, 2 ≤ ν_4 ≤ 3), or poly(λ) whole-string pieces with
+c_1 + c_2 < 24λ — the first trade not routed through a rectangle. (c) The conceptual step: a
 Lemma 4.11-type theorem "an edge whose four groups are pairwise non-incident pays m under both merges in every identity"; with
 §1.9–1.10 it would close the polynomial-decay door for rewrite-and-merge with constant-size groups. §8.3 shows what such a proof
 cannot be (node-locally processed flattenings, m-party functionals with straddlers).
@@ -542,7 +612,7 @@ cannot be (node-locally processed flattenings, m-party functionals with straddle
 | C = two lines of AG(2,3) | 6 / 6 / 12 | 3 | 2 of 6 (exhaustive 3⁶) | **3 of 6** | ρ ≥ 1/2 by Cor. 2.3.1 / Rem. 2.4 |
 | two lines of AG(2,4) | 8 / 12 / 24 | 3 | 6 of 12 (exhaustive 3¹²) | 6 of 12 | |
 | T4 translation matching | 16 / 8 / 16 | 3 and 4 | 4 of 8 (exhaustive 3⁸) | 2 of 8 | |
-| Δ_3 (three transversal triangles) | 9 / 9 / 18 | 2 and 3 | **4 of 9** (exhaustive 3⁹) | 3 of 9 | smallest open instance |
+| Δ_3 (three transversal triangles) | 9 / 9 / 18 | 2 and 3 | **4 of 9** (exhaustive 3⁹) | 3 of 9 | smallest open instance; 2-/3-piece identities at N₀ = 2 refuted exactly, ρ < 1/2 criterion unsatisfiable at N₀ = 2 (§3.2a) |
 | prism | 6 / 9 / 18 | 2 | 6 of 9 (exhaustive 3⁹) | 4 of 9 | ALS N = 2: d = 2 residual 0.988 (40 restarts), d = 4 0.927 (20), d = 8 exact |
 | incidence 8-cycle | 8 / 20 / 40 | 2 | ≥ 13 of 20 (search) | 9 of 20 | two-cell edges only ≥ 9 of 12; three-cell only ≥ 4 of 8 |
 | 3×3 level (comparison) | 9 / 18 / 36 | 2 | 8 of 18 (exact ILP, §8.2) | 4 of 18 | Conjecture 8.1 |
@@ -557,8 +627,10 @@ subsets H with the join computed by union-find (`flatcert4.py`).
 
 1. **For α′ > 1 (the dense wall):** the open configurations are Δ_3 (window [4/9, 1], 18 strings), the 3×3 level ([4/9, 11/12])
    and the Δ_q classes (core 1/q); C, T4 and all two-lines configurations are closed at 1/2. Three merges did not help on any
-   small instance. The finite problem is the Δ_3 search of §3.2 (any trade at all refutes the hyperedge rectangle-content
-   conjecture; c_row + c_col < 9 log N₀ gives α′ > 1 through the AG(2,q) levels), and a proof must use bond-triple information.
+   small instance. The finite problem is the many-piece Δ_3 search of §3.2a (two- and three-piece identities are refuted exactly at
+   N₀ = 2 and ρ < 1/2 cannot show at N₀ = 2 for any number of types; any trade under D1 refutes the hyperedge rectangle-content
+   conjecture; poly(λ) pieces with c_row + c_col < 9λ give α′ > 1 through the AG(2,q) levels), and a proof must use bond-triple
+   information, not flattenings (floor 4/9) or straddling functionals.
 2. **For polynomial decay:** configurations of Ω(log K/log g) nodes are forced (Prop. 1.10) and the trade must be on two-cell
    edges routed along the incidence graph; the smallest instance is the 8-cycle (§3.4, §5.5); the prism (three-cell) shows no
    identity at N = 2 and is certified at 2/3.

@@ -1,0 +1,32 @@
+built 405 pieces 17s; sum == f: True
+
+partition by degree: T = 2 blocks, 3/2 log2 T = 1.50
+  deg 1                  |B|= 54 D=  54 3log2D= 17.26 | rows [24, 24, 24] cols [18, 18, 18] nodes min/max 2/4 | c_row>=6.88 c_col>=6.25
+  deg 2                  |B|=351 D= 702 3log2D= 28.37 | rows [64, 64, 64] cols [64, 64, 64] nodes min/max 4/4 | c_row>=9.00 c_col>=9.00
+  worst block c_row+c_col >= 18.00; criterion for any trade at N0=2 needs (c_row+c_col)/2 + 1.5 log2 T < 9: 10.50
+
+partition deg-1 + deg-2 by alpha mod 3: T = 4 blocks, 3/2 log2 T = 3.00
+  deg 1                  |B|= 54 D=  54 3log2D= 17.26 | rows [24, 24, 24] cols [18, 18, 18] nodes min/max 2/4 | c_row>=6.88 c_col>=6.25
+  deg2 alpha%3=0         |B|=126 D= 252 3log2D= 23.93 | rows [64, 64, 48] cols [60, 64, 60] nodes min/max 4/4 | c_row>=8.79 c_col>=8.91
+  deg2 alpha%3=1         |B|=117 D= 234 3log2D= 23.61 | rows [64, 64, 48] cols [60, 64, 60] nodes min/max 4/4 | c_row>=8.79 c_col>=8.91
+  deg2 alpha%3=2         |B|=108 D= 216 3log2D= 23.26 | rows [64, 64, 48] cols [60, 64, 60] nodes min/max 4/4 | c_row>=8.79 c_col>=8.91
+  worst block c_row+c_col >= 17.70; criterion for any trade at N0=2 needs (c_row+c_col)/2 + 1.5 log2 T < 9: 11.85
+
+partition random T=4: T = 4 blocks, 3/2 log2 T = 3.00
+  rand0                  |B|= 99 D= 187 3log2D= 22.64 | rows [64, 64, 64] cols [64, 64, 64] nodes min/max 4/4 | c_row>=9.00 c_col>=9.00
+  rand1                  |B|= 90 D= 166 3log2D= 22.13 | rows [64, 64, 64] cols [64, 64, 64] nodes min/max 4/4 | c_row>=9.00 c_col>=9.00
+  rand2                  |B|=105 D= 198 3log2D= 22.89 | rows [64, 64, 64] cols [64, 64, 64] nodes min/max 4/4 | c_row>=9.00 c_col>=9.00
+  rand3                  |B|=111 D= 205 3log2D= 23.04 | rows [64, 64, 64] cols [64, 64, 64] nodes min/max 4/4 | c_row>=9.00 c_col>=9.00
+  worst block c_row+c_col >= 18.00; criterion for any trade at N0=2 needs (c_row+c_col)/2 + 1.5 log2 T < 9: 12.00
+
+partition random T=8: T = 8 blocks, 3/2 log2 T = 4.50
+  rand0                  |B|= 41 D=  76 3log2D= 18.74 | rows [64, 64, 64] cols [64, 64, 64] nodes min/max 4/4 | c_row>=9.00 c_col>=9.00
+  rand1                  |B|= 60 D= 113 3log2D= 20.46 | rows [64, 64, 64] cols [64, 64, 64] nodes min/max 4/4 | c_row>=9.00 c_col>=9.00
+  rand2                  |B|= 53 D=  99 3log2D= 19.89 | rows [64, 64, 64] cols [64, 64, 64] nodes min/max 4/4 | c_row>=9.00 c_col>=9.00
+  rand3                  |B|= 45 D=  84 3log2D= 19.18 | rows [64, 64, 64] cols [64, 64, 64] nodes min/max 4/4 | c_row>=9.00 c_col>=9.00
+  rand4                  |B|= 40 D=  74 3log2D= 18.63 | rows [64, 64, 64] cols [64, 64, 64] nodes min/max 4/4 | c_row>=9.00 c_col>=9.00
+  rand5                  |B|= 47 D=  88 3log2D= 19.38 | rows [64, 64, 64] cols [64, 64, 64] nodes min/max 4/4 | c_row>=9.00 c_col>=9.00
+  rand6                  |B|= 70 D= 128 3log2D= 21.00 | rows [64, 64, 64] cols [64, 64, 64] nodes min/max 4/4 | c_row>=9.00 c_col>=9.00
+  rand7                  |B|= 49 D=  94 3log2D= 19.66 | rows [64, 64, 64] cols [64, 64, 64] nodes min/max 4/4 | c_row>=9.00 c_col>=9.00
+  worst block c_row+c_col >= 18.00; criterion for any trade at N0=2 needs (c_row+c_col)/2 + 1.5 log2 T < 9: 13.50
+done 118s

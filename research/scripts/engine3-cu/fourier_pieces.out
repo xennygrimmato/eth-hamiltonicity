@@ -1,0 +1,56 @@
+  f_Delta                      rows [64, 64, 64] cols [64, 64, 64] nodes [4, 4, 4, 4, 4, 4, 4, 4, 4]  cut: c_row>=9.00 c_col>=9.00 
+f_Delta: {'rows': [64, 64, 64], 'cols': [64, 64, 64], 'nodes': [4, 4, 4, 4, 4, 4, 4, 4, 4]}
+
+(P) product group S_3^3, coordinatewise identification; TPP of S_3 via order-2 subgroups
+  one triangle: sum of 3 Fourier pieces == <2,2,2>: True
+  ('triv', 'triv', 'triv')     rows [1, 1, 1] cols [1, 1, 1] nodes [1, 1, 1, 1, 1, 1, 1, 1, 1]  cut: c_row>=0.00 c_col>=0.00 network bound 3log2 d = 0
+  ('std', 'triv', 'triv')      rows [4, 4, 4] cols [4, 4, 4] nodes [4, 1, 1, 4, 1, 1, 4, 1, 1]  cut: c_row>=3.00 c_col>=3.00 network bound 3log2 d = 3
+  ('std', 'std', 'triv')       rows [16, 16, 16] cols [16, 16, 16] nodes [4, 4, 1, 4, 4, 1, 4, 4, 1]  cut: c_row>=6.00 c_col>=6.00 network bound 3log2 d = 6
+  ('std', 'std', 'std')        rows [64, 64, 64] cols [64, 64, 64] nodes [4, 4, 4, 4, 4, 4, 4, 4, 4]  cut: c_row>=9.00 c_col>=9.00 network bound 3log2 d = 9
+  sum of 27 product pieces == f_Delta: True
+  non-product blocks B_m = sum of pieces with m std factors (construction bound 3 log2 D(B_m)):
+  B_0 (8 pieces)               rows [8, 8, 8] cols [8, 8, 8] nodes [2, 2, 2, 2, 2, 2, 2, 2, 2]  cut: c_row>=4.50 c_col>=4.50 D=8, 3log2 D=9.00
+  B_1 (12 pieces)              rows [32, 32, 32] cols [32, 32, 32] nodes [4, 4, 4, 4, 4, 4, 4, 4, 4]  cut: c_row>=7.50 c_col>=7.50 D=24, 3log2 D=13.75
+  B_2 (6 pieces)               rows [56, 56, 56] cols [56, 56, 56] nodes [4, 4, 4, 4, 4, 4, 4, 4, 4]  cut: c_row>=8.71 c_col>=8.71 D=24, 3log2 D=13.75
+  B_3 (1 pieces)               rows [64, 64, 64] cols [64, 64, 64] nodes [4, 4, 4, 4, 4, 4, 4, 4, 4]  cut: c_row>=9.00 c_col>=9.00 D=8, 3log2 D=9.00
+
+(C) single group G = (Cyc_3^3)^2 x| Cyc_2, |G| = 1458, realising <8,8,8> under the ROW structure
+  mult table built 29.3s
+  TPP of the three 8-subsets: True  (12-subsets: True )
+  [coordinatewise] sum of 405 pieces == f_Delta: True
+    degree 1: 54 nonzero pieces (of 54);  network bound c_row <= 0
+      row ranks: min 1 max 1 | col ranks: min 1 max 1 hist {np.int64(1): np.int64(162)} | node ranks min 1 max 1
+      cut bounds: c_row>= in [0.00,0.00]  c_col>= in [0.00,0.00]  c_row+c_col >= max 0.00, min 0.00
+    degree 2: 351 nonzero pieces (of 351);  network bound c_row <= 3
+      row ranks: min 4 max 4 | col ranks: min 4 max 16 hist {np.int64(4): np.int64(81), np.int64(16): np.int64(972)} | node ranks min 1 max 4
+      cut bounds: c_row>= in [3.00,3.00]  c_col>= in [5.00,6.00]  c_row+c_col >= max 9.00, min 8.00
+    (469s)
+  [random#0] sum of 405 pieces == f_Delta: True
+    degree 1: 54 nonzero pieces (of 54);  network bound c_row <= 0
+      row ranks: min 1 max 1 | col ranks: min 1 max 64 hist {np.int64(1): np.int64(3), np.int64(2): np.int64(4), np.int64(4): np.int64(2), np.int64(8): np.int64(2), np.int64(16): np.int64(33), np.int64(32): np.int64(20), np.int64(64): np.int64(98)} | node ranks min 1 max 4
+      cut bounds: c_row>= in [0.00,0.00]  c_col>= in [0.00,9.00]  c_row+c_col >= max 9.00, min 0.00
+    degree 2: 351 nonzero pieces (of 351);  network bound c_row <= 3
+      row ranks: min 4 max 4 | col ranks: min 16 max 64 hist {np.int64(16): np.int64(3), np.int64(20): np.int64(4), np.int64(28): np.int64(1), np.int64(32): np.int64(68), np.int64(40): np.int64(3), np.int64(42): np.int64(2), np.int64(48): np.int64(2), np.int64(56): np.int64(6), np.int64(64): np.int64(964)} | node ranks min 2 max 4
+      cut bounds: c_row>= in [3.00,3.00]  c_col>= in [6.73,9.00]  c_row+c_col >= max 12.00, min 9.73
+    (566s)
+  [random#1] sum of 405 pieces == f_Delta: True
+    degree 1: 54 nonzero pieces (of 54);  network bound c_row <= 0
+      row ranks: min 1 max 1 | col ranks: min 1 max 64 hist {np.int64(1): np.int64(3), np.int64(4): np.int64(3), np.int64(8): np.int64(4), np.int64(16): np.int64(26), np.int64(32): np.int64(56), np.int64(64): np.int64(70)} | node ranks min 1 max 4
+      cut bounds: c_row>= in [0.00,0.00]  c_col>= in [0.00,9.00]  c_row+c_col >= max 9.00, min 0.00
+    degree 2: 351 nonzero pieces (of 351);  network bound c_row <= 3
+      row ranks: min 4 max 4 | col ranks: min 32 max 64 hist {np.int64(32): np.int64(18), np.int64(40): np.int64(2), np.int64(48): np.int64(22), np.int64(64): np.int64(1011)} | node ranks min 2 max 4
+      cut bounds: c_row>= in [3.00,3.00]  c_col>= in [7.50,9.00]  c_row+c_col >= max 12.00, min 10.50
+    (719s)
+  [random#2] sum of 405 pieces == f_Delta: True
+    degree 1: 54 nonzero pieces (of 54);  network bound c_row <= 0
+      row ranks: min 1 max 1 | col ranks: min 1 max 64 hist {np.int64(1): np.int64(3), np.int64(4): np.int64(14), np.int64(8): np.int64(4), np.int64(16): np.int64(73), np.int64(32): np.int64(44), np.int64(64): np.int64(24)} | node ranks min 1 max 4
+      cut bounds: c_row>= in [0.00,0.00]  c_col>= in [0.00,8.00]  c_row+c_col >= max 8.00, min 0.00
+    degree 2: 351 nonzero pieces (of 351);  network bound c_row <= 3
+      row ranks: min 4 max 4 | col ranks: min 16 max 64 hist {np.int64(16): np.int64(3), np.int64(23): np.int64(1), np.int64(24): np.int64(2), np.int64(30): np.int64(1), np.int64(32): np.int64(2), np.int64(36): np.int64(6), np.int64(48): np.int64(210), np.int64(56): np.int64(48), np.int64(62): np.int64(16), np.int64(64): np.int64(764)} | node ranks min 2 max 4
+      cut bounds: c_row>= in [3.00,3.00]  c_col>= in [6.72,9.00]  c_row+c_col >= max 12.00, min 9.72
+    (812s)
+
+control: f_Delta under random invertible row-local maps (64x64 per row): column ranks
+  generic row-local #0         rows [64, 64, 64] cols [64, 64, 64] nodes [4, 4, 4, 4, 4, 4, 4, 4, 4]  cut: c_row>=9.00 c_col>=9.00 
+  generic row-local #1         rows [64, 64, 64] cols [64, 64, 64] nodes [4, 4, 4, 4, 4, 4, 4, 4, 4]  cut: c_row>=9.00 c_col>=9.00 
+done 812s

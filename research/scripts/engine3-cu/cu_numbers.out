@@ -1,0 +1,22 @@
+== per-triangle TPP realisations <N,N,N> (product route (P)); the single-group route (R) uses G^3 or any G with <N^3,N^3,N^3>
+
+S_3 (CU03 Sec.3)                   N=2      lambda=  1.00 |G|=6            k(G)=3         d_max=2      Sigma=4            | per-triangle raw 3lam=  3.00; heaviest-block cost 3log2(Sigma/T): T=2   3.00  T=16  -6.00  T=1000 -23.90; 3log2 d_max=  3.00; Delta_3 product route: sum_B D = Sigma^3 = N^6.00, trade needs every D<N^3, rho<1/2 every D<N^1.5
+CKSU Sec.2 (Cyc_3^3)^2 x| Cyc_2    N=12     lambda=  3.58 |G|=1.46e+03     k(G)=405       d_max=2      Sigma=756          | per-triangle raw 3lam= 10.75; heaviest-block cost 3log2(Sigma/T): T=2  25.69  T=16  16.69  T=1000  -1.21; 3log2 d_max=  3.00; Delta_3 product route: sum_B D = Sigma^3 = N^8.00, trade needs every D<N^3, rho<1/2 every D<N^1.5
+CKSU Sec.2 (Cyc_5^3)^2 x| Cyc_2    N=40     lambda=  5.32 |G|=3.12e+04     k(G)=8000      d_max=2      Sigma=1.58e+04     | per-triangle raw 3lam= 15.97; heaviest-block cost 3log2(Sigma/T): T=2  38.83  T=16  29.83  T=1000  11.93; 3log2 d_max=  3.00; Delta_3 product route: sum_B D = Sigma^3 = N^7.86, trade needs every D<N^3, rho<1/2 every D<N^1.5
+CKSU Sec.2 (Cyc_9^3)^2 x| Cyc_2    N=144    lambda=  7.17 |G|=1.06e+06     k(G)=266814    d_max=2      Sigma=5.32e+05     | per-triangle raw 3lam= 21.51; heaviest-block cost 3log2(Sigma/T): T=2  54.06  T=16  45.06  T=1000  27.17; 3log2 d_max=  3.00; Delta_3 product route: sum_B D = Sigma^3 = N^7.96, trade needs every D<N^3, rho<1/2 every D<N^1.5
+CKSU Sec.2 (Cyc_17^3)^2 x| Cyc_2   N=544    lambda=  9.09 |G|=4.83e+07     k(G)=12076154  d_max=2      Sigma=2.41e+07     | per-triangle raw 3lam= 27.26; heaviest-block cost 3log2(Sigma/T): T=2  70.58  T=16  61.58  T=1000  43.68; 3log2 d_max=  3.00; Delta_3 product route: sum_B D = Sigma^3 = N^8.10, trade needs every D<N^3, rho<1/2 every D<N^1.5
+Sym(Delta_2) = S_3 (CKSU Thm 1.7)  N=2      lambda=  1.00 |G|=6            k(G)=3         d_max=2      Sigma=4            | per-triangle raw 3lam=  3.00; heaviest-block cost 3log2(Sigma/T): T=2   3.00  T=16  -6.00  T=1000 -23.90; 3log2 d_max=  3.00; Delta_3 product route: sum_B D = Sigma^3 = N^6.00, trade needs every D<N^3, rho<1/2 every D<N^1.5
+Sym(Delta_3) = S_6 (CKSU Thm 1.7)  N=12     lambda=  3.58 |G|=720          k(G)=11        d_max=16     Sigma=76           | per-triangle raw 3lam= 10.75; heaviest-block cost 3log2(Sigma/T): T=2  15.74  T=16   6.74  T=1000 -11.15; 3log2 d_max= 12.00; Delta_3 product route: sum_B D = Sigma^3 = N^5.23, trade needs every D<N^3, rho<1/2 every D<N^1.5
+Sym(Delta_4) = S_10 (CKSU Thm 1.7) N=288    lambda=  8.17 |G|=3.63e+06     k(G)=42        d_max=768    Sigma=9.5e+03      | per-triangle raw 3lam= 24.51; heaviest-block cost 3log2(Sigma/T): T=2  36.64  T=16  27.64  T=1000   9.74; 3log2 d_max= 28.75; Delta_3 product route: sum_B D = Sigma^3 = N^4.85, trade needs every D<N^3, rho<1/2 every D<N^1.5
+Sym(Delta_5) = S_15 (CKSU Thm 1.7) N=34560  lambda= 15.08 |G|=1.31e+12     k(G)=176       d_max=292864 Sigma=1.03e+07     | per-triangle raw 3lam= 45.23; heaviest-block cost 3log2(Sigma/T): T=2  66.91  T=16  57.91  T=1000  40.01; 3log2 d_max= 54.48; Delta_3 product route: sum_B D = Sigma^3 = N^4.64, trade needs every D<N^3, rho<1/2 every D<N^1.5
+
+== the naming charge of a Fourier type family (fixed-alphabet view, Sec. 1.7 of engine3-open-door.md):
+   T = k(G) >= |G|/d_max^2 >= N^6/d_max^2 for a TPP <N^3,N^3,N^3>  =>  1.5 log2 T + 3 log2 d_max >= 9 lambda = raw.
+   S_3^3                                       : k(G)=  27, 1.5 log2 k =   7.13, 3 log2 d_max =  9.00, sum =  16.13 vs raw 9 (trade needs game value + 1.5 log2 T < 9)
+   (Cyc_3^3)^2x|Cyc_2 (<12,12,12> >= <8,8,8>)  : k(G)= 405, 1.5 log2 k =  12.99, 3 log2 d_max =  3.00, sum =  15.99 vs raw 9 (trade needs game value + 1.5 log2 T < 9)
+   S_6 (<12,12,12> >= <8,8,8>)                 : k(G)=  11, 1.5 log2 k =   5.19, 3 log2 d_max = 12.00, sum =  17.19 vs raw 9 (trade needs game value + 1.5 log2 T < 9)
+
+== network vs rank for one block <d,d,d>: network 3 log2 d; rank-one terms via nu_3: 1.5 log2 R(<d,d,d>) (R >= d^2, border/asymptotic ~ d^omega)
+   d=2: network 3.00 bits; rank-one with R=7 (known rank / best known): 4.21 bits
+   d=3: network 4.75 bits; rank-one with R=23 (known rank / best known): 6.79 bits
+   d=4: network 6.00 bits; rank-one with R=49 (known rank / best known): 8.42 bits

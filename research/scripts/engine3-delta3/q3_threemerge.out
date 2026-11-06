@@ -1,0 +1,7 @@
+merges ('rows', 'cols'): flattening certificate D = 4.0 of 9 (rho >= 0.4444); attained at o = (0, 0, 1, 1, 1, 1, -1, 1, 0); histogram {0.0: 1574, 1.0: 7416, 2.0: 7560, 3.0: 2862, 4.0: 270}
+merges ('rows', 'cols', 'diags'): flattening certificate D = 4.0 of 9 (rho >= 0.4444); attained at o = (1, 1, 1, 1, 1, -1, 1, -1, 1); histogram {0.0: 2258, 1.0: 9612, 2.0: 6876, 3.0: 900, 4.0: 36}
+finite test R+C (2,2,2): worst slack -256 (rank 512, sum of bounds 256, o = (1, 1, 1, 1, 1, -1, 1, 1, -1)) -> REFUTED
+finite test R+C+D (2,2,2): worst slack -128 (rank 512, sum of bounds 384, o = (1, 1, 1, 1, 1, -1, 1, -1, 1)) -> REFUTED
+finite test R+D (2,2,2): worst slack -256 (rank 512, sum of bounds 256, o = (1, 1, 1, 1, 1, -1, 1, -1, 1)) -> REFUTED
+finite test R+C+D+R (2,2,2): worst slack 0 (rank 512, sum of bounds 512, o = (1, 1, 1, 1, 1, -1, 1, -1, 1)) -> passes
+finite test R+C+D (2,2,4): worst slack 0 (rank 512, sum of bounds 512, o = (1, 1, 1, 1, 1, -1, 1, -1, 1)) -> passes

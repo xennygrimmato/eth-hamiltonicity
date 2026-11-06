@@ -1,0 +1,3 @@
+two triangles, R(2,2,2)+C(2,2,2): worst slack -32 (rank 64, bounds 32, o = (1, 1, 1, 1, 1, -1)) -> REFUTED
+two triangles, R+C+R (2,2,2): worst slack -16 (rank 64, bounds 48, o = (1, 1, 1, 1, 1, -1)) -> REFUTED
+two triangles, R(4,4,4) alone (= f: must pass): worst slack 0 (rank 2, bounds 2, o = (0, 0, 0, 0, 0, 1)) -> passes

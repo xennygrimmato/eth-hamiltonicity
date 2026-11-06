@@ -1,0 +1,9 @@
+restart 0: residual ||f - R - tauR||/||f|| = 0.984272, mismatch ||R - S||/||R|| = 0.0045
+restart 1: residual ||f - R - tauR||/||f|| = 0.988307, mismatch ||R - S||/||R|| = 0.1950
+restart 2: residual ||f - R - tauR||/||f|| = 0.984260, mismatch ||R - S||/||R|| = 0.0031
+restart 3: residual ||f - R - tauR||/||f|| = 0.984258, mismatch ||R - S||/||R|| = 0.0021
+restart 4: residual ||f - R - tauR||/||f|| = 0.984294, mismatch ||R - S||/||R|| = 0.0060
+restart 5: residual ||f - R - tauR||/||f|| = 0.984618, mismatch ||R - S||/||R|| = 0.0188
+restart 6: residual ||f - R - tauR||/||f|| = 0.984255, mismatch ||R - S||/||R|| = 0.0069
+restart 7: residual ||f - R - tauR||/||f|| = 0.984269, mismatch ||R - S||/||R|| = 0.0052
+Q2 pc=(8, 2, 2): 8 restarts x 60 sweeps: min residual 0.984255, min max(res, mismatch) 0.984255

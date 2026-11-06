@@ -1,0 +1,11 @@
+Delta_3: strings 18 norm^2 512.0 row ranks [np.int64(64), np.int64(64), np.int64(64)] col ranks [np.int64(64), np.int64(64), np.int64(64)]
+transpose invariant: True
+f alone as row net (8,8,8): residual 3.13e-10
+f alone as row net (4,8,8): residual 0.7071
+f alone as col net (8,8,8): residual 2.46e-10
+f alone as col net (4,8,8): residual 0.7071
+planted R0+C0 (2,2,2)+(2,2,2), trial 0: restarts used 1, residuals ['1.6e-10']
+planted R0+C0 (2,2,2)+(2,2,2), trial 1: restarts used 2, residuals ['3.1e-01', '1.9e-10']
+planted R0+C0 (2,2,2)+(2,2,2), trial 2: restarts used 1, residuals ['1.7e-10']
+planted R0+C0 (2,2,2)+(2,2,2), trial 3: restarts used 2, residuals ['3.1e-01', '2.3e-10']
+planted R0+C0 (2,2,2)+(2,2,2), trial 4: restarts used 2, residuals ['3.1e-01', '4.5e-10']

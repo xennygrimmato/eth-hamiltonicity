@@ -1,0 +1,4 @@
+rectangle, P + A: worst slack 0 -> passes
+rectangle, P alone: worst slack -3 -> refuted
+rectangle, A alone: worst slack -3 -> refuted
+3x3 level, 512 product pieces, 4000 random orientations: worst slack 96576 -> passes

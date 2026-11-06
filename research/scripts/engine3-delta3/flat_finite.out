@@ -1,0 +1,11 @@
+R(2,2,2)+C(2,2,2): worst slack -256 (rank f = 512, sum of bounds = 256) at orientation (1, 1, 1, 1, 1, -1, 1, 1, -1)  -> EXACT REFUTATION
+R(2,2,2) alone (control: must refute): worst slack -480 (rank f = 512, sum of bounds = 32) at orientation (1, 1, 1, 1, 1, 1, 1, 1, 1)  -> EXACT REFUTATION
+R(8,8,8) alone (control: f itself, must pass): worst slack 0 (rank f = 512, sum of bounds = 512) at orientation (1, 1, 1, 1, 1, 1, 1, 1, 1)  -> no flattening obstruction
+R(2,2,4)+C(2,2,4): worst slack -256 (rank f = 512, sum of bounds = 256) at orientation (1, 1, 1, 1, 1, -1, 1, -1, 1)  -> EXACT REFUTATION
+R+C+R (2,2,2): worst slack -128 (rank f = 512, sum of bounds = 384) at orientation (1, 1, 1, 1, 1, -1, 1, 1, -1)  -> EXACT REFUTATION
+1 x R(2,2,2) + 1 x C(2,2,2): worst slack -256 (rank f = 512, sum of bounds = 256) at orientation (1, 1, 1, 1, 1, -1, 1, 1, -1)  -> EXACT REFUTATION
+2 x R(2,2,2) + 2 x C(2,2,2): worst slack 0 (rank f = 512, sum of bounds = 512) at orientation (1, 1, 1, 1, 1, -1, 1, 1, -1)  -> no flattening obstruction
+3 x R(2,2,2) + 3 x C(2,2,2): worst slack 10 (rank f = 2, sum of bounds = 12) at orientation (0, 0, 0, 0, 0, 0, 0, 0, 1)  -> no flattening obstruction
+4 x R(2,2,2) + 4 x C(2,2,2): worst slack 14 (rank f = 2, sum of bounds = 16) at orientation (0, 0, 0, 0, 0, 0, 0, 0, 1)  -> no flattening obstruction
+6 x R(2,2,2) + 6 x C(2,2,2): worst slack 22 (rank f = 2, sum of bounds = 24) at orientation (0, 0, 0, 0, 0, 0, 0, 0, 1)  -> no flattening obstruction
+8 x R(2,2,2) + 8 x C(2,2,2): worst slack 30 (rank f = 2, sum of bounds = 32) at orientation (0, 0, 0, 0, 0, 0, 0, 0, 1)  -> no flattening obstruction

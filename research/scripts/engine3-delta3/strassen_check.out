@@ -1,0 +1,4 @@
+Strassen trace identity for the triangle tensor (exact over Z): True
+f_Delta = sum of 343 product terms (each a product over all 9 nodes): exact over Z: True  max err 0.0
+finite criterion value: 0 + log2(343) = 8.4221 < 9  -> rho_Delta <= 0.9358 by the criterion as stated
+per triangle alone: log2 7 = 2.8074 < 3; asymptotically (pieces = rank-one terms of <N,N,N>): rho <= omega/3 < 0.7909

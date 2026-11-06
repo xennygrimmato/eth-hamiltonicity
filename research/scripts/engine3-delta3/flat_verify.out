@@ -1,0 +1,5 @@
+X strings [0, 1, 2, 3, 4, 12, 7, 9, 15] Y strings [10, 14, 6, 16, 8, 5, 17, 13, 11]
+rank of f_Delta across X|Y: (f is a permutation-type 0/1 matrix) rank over Q = 512 , mod 32749 = 512
+random integer R, C (bonds 2,2,2), trial 0: rank R = 128, rank C = 128, rank R+C = 256  (mod 32749; bound 128/128/256)
+random integer R, C (bonds 2,2,2), trial 1: rank R = 128, rank C = 128, rank R+C = 256  (mod 32749; bound 128/128/256)
+random integer R, C (bonds 2,2,2), trial 2: rank R = 128, rank C = 128, rank R+C = 256  (mod 32749; bound 128/128/256)

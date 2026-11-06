@@ -1,0 +1,9 @@
+App. H rectangle identity F = P - A: exact over Z
+factor ranks (across its two rows, across its two columns): {'P': (np.int64(4), np.int64(1)), 'A': (np.int64(1), np.int64(4))}  F: (np.int64(4), np.int64(4))
+rectangles 9, crossing edges 18, strings 36 (each string in exactly one rectangle: True)
+terms 512; max_t min(c_row, c_col) = 8; network cost = c_flat for every term: True
+histogram of min cost: {0.0: 2, 2.0: 18, 4.0: 72, 6.0: 168, 8.0: 252}
+rank sum sum_t 2^{min cost} = 76490  (Theorem 1 floor N^8 = 256; N^9 = 512)
+a worst term: (np.float64(8.0), np.float64(10.0), np.float64(8.0), np.float64(10.0), np.float64(8.0), ('P', 'P', 'P', 'P', 'P', 'A', 'A', 'A', 'A'))
+Delta_3 comparison: each rectangle holds ONE anti-diagonal edge, which crosses both rows and columns, so a product of
+per-edge pieces costs 1 per edge under both merges (the identity edge is rank 2 across rows and across columns): no product trade.

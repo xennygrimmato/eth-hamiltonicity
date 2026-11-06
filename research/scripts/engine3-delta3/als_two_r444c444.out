@@ -1,0 +1,2 @@
+two r444+c444: 5 restarts x <= 600 sweeps (seed 9, 14s): min residual 0.000078, median 0.000569, max 0.754933; min captured norm^2 fraction 1-res^2 = 1.000000
+  histogram (4 d.p.): {0.0001: 1, 0.0005: 1, 0.0006: 2, 0.7549: 1}

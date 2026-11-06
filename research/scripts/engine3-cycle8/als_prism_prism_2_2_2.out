@@ -1,0 +1,7 @@
+prism_2_2_2 restart 0: residual 9.824e-01 after 150 sweeps (42s)
+prism_2_2_2 restart 1: residual 9.802e-01 after 150 sweeps (82s)
+prism_2_2_2 restart 2: residual 9.835e-01 after 150 sweeps (124s)
+prism_2_2_2 restart 3: residual 9.805e-01 after 150 sweeps (158s)
+prism_2_2_2 restart 4: residual 9.813e-01 after 150 sweeps (180s)
+prism_2_2_2 restart 5: residual 9.878e-01 after 150 sweeps (200s)
+SUMMARY prism_2_2_2: 6 restarts x <= 150 sweeps: min 0.980211, median 0.981824, max 0.987796, #exact(<1e-8) 0

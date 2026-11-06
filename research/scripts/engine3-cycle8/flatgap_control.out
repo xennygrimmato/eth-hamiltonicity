@@ -1,0 +1,3 @@
+tworect bonds 2^2 on (3,4): excluded = False
+tworect bonds 2^1 on (3,4): excluded = True
+rectangle bonds 1 (App. H): excluded = False

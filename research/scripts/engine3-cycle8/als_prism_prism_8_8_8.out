@@ -1,0 +1,3 @@
+prism_8_8_8 restart 0: residual 4.739e-03 after 150 sweeps (283s)
+prism_8_8_8 restart 1: residual 7.498e-03 after 150 sweeps (451s)
+(stopped after 2 restarts)

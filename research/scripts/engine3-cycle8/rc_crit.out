@@ -1,0 +1,4 @@
+prism: R+C with raw cross costs, best over the real-dimension GH frontier: criterion 9.2323 at (a,b)=(7.322,7.585) (trade iff < 9)
+8-cycle two-cell: R+C with raw cross costs, best over the real-dimension GH frontier: criterion 12.3220 at (a,b)=(10.644,10.644) (trade iff < 12)
+prism, powers of 2: criterion 9.3333 at (7, 8)
+8-cycle two-cell, powers of 2: criterion 12.3333 at (10, 11)

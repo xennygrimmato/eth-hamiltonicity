@@ -1,0 +1,24 @@
+== 8-cycle, 12 two-cell edges: raw G-bonds = adjacent pairs 1 bit, diagonals 4 bits (total 12) ==
+reachable states: 75425
+ sanity raw G-network alone excluded? False ; bonds-0 alone excluded? True
+ R+C, both K4 bonds adj=1 diag=(1,1) [cost 6, criterion (cost+12)/2+1 = 10.0]: excluded=True (min sum 2^-gap = 0.0625);  R+C+R': excluded=True (0.0938)
+ R+C, both K4 bonds adj=1 diag=(1,2) [cost 7, criterion (cost+12)/2+1 = 10.5]: excluded=True (min sum 2^-gap = 0.1250);  R+C+R': excluded=True (0.1875)
+ R+C, both K4 bonds adj=1 diag=(2,2) [cost 8, criterion (cost+12)/2+1 = 11.0]: excluded=True (min sum 2^-gap = 0.2500);  R+C+R': excluded=True (0.3750)
+ R+C, both K4 bonds adj=1 diag=(1,3) [cost 8, criterion (cost+12)/2+1 = 11.0]: excluded=True (min sum 2^-gap = 0.1875);  R+C+R': excluded=True (0.2500)
+ R+C, both K4 bonds adj=1 diag=(2,3) [cost 9, criterion (cost+12)/2+1 = 11.5]: excluded=True (min sum 2^-gap = 0.3750);  R+C+R': excluded=True (0.5000)
+ R+C, both K4 bonds adj=1 diag=(1,4) [cost 9, criterion (cost+12)/2+1 = 11.5]: excluded=True (min sum 2^-gap = 0.2500);  R+C+R': excluded=True (0.3750)
+ R+C, both K4 bonds adj=1 diag=(3,3) [cost 10, criterion (cost+12)/2+1 = 12.0]: excluded=True (min sum 2^-gap = 0.7500);  R+C+R': excluded=False (1.0000)
+ R+C, both K4 bonds adj=1 diag=(2,4) [cost 10, criterion (cost+12)/2+1 = 12.0]: excluded=True (min sum 2^-gap = 0.5000);  R+C+R': excluded=True (0.7500)
+ R+C, both K4 bonds adj=1 diag=(3,4) [cost 11, criterion (cost+12)/2+1 = 12.5]: excluded=False (min sum 2^-gap = 1.0000);  R+C+R': excluded=False (1.5000)
+ R+C, both K4 bonds adj=1 diag=(4,4) [cost 12, criterion (cost+12)/2+1 = 13.0]: excluded=False (min sum 2^-gap = 2.0000);  R+C+R': excluded=False (3.0000)
+ bonds 2 on every K4 edge but adjacent 0 (i.e. R has only diagonals) : (np.True_, np.float64(0.015625))
+== 8-cycle, all 20 edges: raw G-bonds adj 1+2 ... computed below ==
+reachable states: 2192865
+== prism (9 edges), raw K3 bonds 3,3,3 ==
+ prism R+C bonds 2^(1, 1, 1): excluded=True (0.1250);  R+C+R': excluded=True (0.1875)
+ prism R+C bonds 2^(2, 2, 2): excluded=True (0.5000);  R+C+R': excluded=True (0.7500)
+ prism R+C bonds 2^(1, 1, 2): excluded=True (0.1875);  R+C+R': excluded=True (0.2500)
+ prism R+C bonds 2^(1, 2, 2): excluded=True (0.2500);  R+C+R': excluded=True (0.3750)
+ prism R+C bonds 2^(2, 2, 3): excluded=True (0.7500);  R+C+R': excluded=False (1.0000)
+ prism R+C bonds 2^(1, 2, 3): excluded=True (0.3750);  R+C+R': excluded=True (0.6250)
+ prism R+C bonds 2^(3, 3, 3): excluded=False (2.0000);  R+C+R': excluded=False (3.0000)

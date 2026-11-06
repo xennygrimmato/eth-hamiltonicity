@@ -1,0 +1,3 @@
+SUMMARY rect: 50 restarts x <= 200 sweeps: min 0.000000, median 0.000000, max 0.000000, #exact(<1e-8) 50
+SUMMARY tworect: 20 restarts x <= 300 sweeps: min 0.000000, median 0.000000, max 0.866025, #exact(<1e-8) 8
+SUMMARY tworect-tight(bond 2 instead of 4): 10 restarts x <= 300 sweeps: min 0.707107, median 0.786566, max 0.866025, #exact(<1e-8) 0

@@ -1,0 +1,12 @@
+[prism] raw 9
+   frontier piece1 under G, piece2 under G: [(0, 9), (8, 8), (9, 0)]
+   frontier piece1 under G, piece2 under H: [(0, 9), (7, 8), (8, 7), (9, 0)]
+   frontier piece1 under H, piece2 under G: [(0, 9), (7, 8), (8, 7), (9, 0)]
+   frontier piece1 under H, piece2 under H: [(0, 9), (8, 8), (9, 0)]
+[prism] minimal fixed-N0 criterion over all cost vectors consistent with every flattening test: 9.0000 at ((7, 8), (9, 8))  -> no two-term trade (power-of-2 bonds)
+[8-cycle two-cell] raw 12
+   frontier piece1 under G, piece2 under G: [(0, 12), (11, 11), (12, 0)]
+   frontier piece1 under G, piece2 under H: [(0, 12), (10, 11), (11, 10), (12, 0)]
+   frontier piece1 under H, piece2 under G: [(0, 12), (10, 11), (11, 10), (12, 0)]
+   frontier piece1 under H, piece2 under H: [(0, 12), (11, 11), (12, 0)]
+[8-cycle two-cell] minimal fixed-N0 criterion over all cost vectors consistent with every flattening test: 12.0000 at ((10, 11), (12, 11))  -> no two-term trade (power-of-2 bonds)

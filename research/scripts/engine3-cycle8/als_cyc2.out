@@ -1,0 +1,5 @@
+cyc2 restart 0: residual 9.843e-01 after 60 sweeps (461s)
+cyc2 restart 1: residual 9.843e-01 after 60 sweeps (849s)
+cyc2 restart 2: residual 9.843e-01 after 60 sweeps (1056s)
+cyc2 restart 3: residual 9.843e-01 after 60 sweeps (1320s)
+SUMMARY cyc2: 4 restarts x <= 60 sweeps: min 0.984258, median 0.984262, max 0.984280, #exact(<1e-8) 0

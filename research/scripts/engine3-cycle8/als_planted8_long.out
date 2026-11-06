@@ -1,0 +1,2 @@
+planted8 restart 0: residual 2.238e-10 after 44 sweeps (198s)
+SUMMARY planted8: 1 restarts x <= 400 sweeps: min 0.000000, median 0.000000, max 0.000000, #exact(<1e-8) 1

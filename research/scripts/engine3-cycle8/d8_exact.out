@@ -1,0 +1,15 @@
+closed form of the 4-group LP agrees with linprog on 2000 random n
+== 8-cycle, all 20 edges (E = 20) ==
+  multiplicity k=1: reachable states 2192865; max_M min(d_G,d_H) = 13 -> per unit 13 = 13.0000 of 20; n^G=(-10, -3, 8, 5) n^H=(-8, 3, 10, -5); witness o=[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, 1, 1]
+  fractional (o in [-1,1]^E, exact asymptotic flattening value): 13.000000 of 20  [64 linear pieces, 64 LPs]
+     maximiser o = [np.float64(1.0), np.float64(1.0), np.float64(1.0), np.float64(1.0), np.float64(1.0), np.float64(1.0), np.float64(1.0), np.float64(1.0), np.float64(1.0), np.float64(-1.0), np.float64(1.0), np.float64(1.0), np.float64(-0.0), np.float64(-1.0), np.float64(-1.0), np.float64(-1.0), np.float64(-1.0), np.float64(-1.0), np.float64(-1.0), np.float64(-1.0)]
+== 8-cycle, 12 two-cell edges (E = 12) ==
+  multiplicity k=1: reachable states 75425; max_M min(d_G,d_H) = 9 -> per unit 9 = 9.0000 of 12; n^G=(-6, -3, 6, 3) n^H=(-6, 3, 6, -3); witness o=[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 1]
+  multiplicity k=2: reachable states 3564881; max_M min(d_G,d_H) = 18 -> per unit 9 = 9.0000 of 12; n^G=(-12, -6, 12, 6) n^H=(-12, 6, 12, -6); witness o=[-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 0, 2]
+  fractional (o in [-1,1]^E, exact asymptotic flattening value): 9.000000 of 12  [64 linear pieces, 64 LPs]
+     maximiser o = [np.float64(1.0), np.float64(1.0), np.float64(1.0), np.float64(1.0), np.float64(1.0), np.float64(1.0), np.float64(1.0), np.float64(-0.0), np.float64(-1.0), np.float64(-1.0), np.float64(-1.0), np.float64(-1.0)]
+== 8-cycle, 8 three-cell edges (E = 8) ==
+  multiplicity k=1: reachable states 4225; max_M min(d_G,d_H) = 4 -> per unit 4 = 4.0000 of 8; n^G=(-4, 0, 2, 2) n^H=(-2, 0, 4, -2); witness o=[-1, -1, -1, -1, -1, -1, -1, 1]
+  multiplicity k=2: reachable states 136161; max_M min(d_G,d_H) = 8 -> per unit 4 = 4.0000 of 8; n^G=(-8, 0, 4, 4) n^H=(-4, 0, 8, -4); witness o=[-2, -2, -2, -2, -2, -2, -2, 2]
+  fractional (o in [-1,1]^E, exact asymptotic flattening value): 4.000000 of 8  [64 linear pieces, 144 LPs]
+     maximiser o = [np.float64(-1.0), np.float64(-1.0), np.float64(1.0), np.float64(1.0), np.float64(-1.0), np.float64(-1.0), np.float64(1.0), np.float64(1.0)]

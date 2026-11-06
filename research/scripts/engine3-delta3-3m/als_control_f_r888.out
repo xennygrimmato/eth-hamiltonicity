@@ -1,0 +1,3 @@
+restart 0: score 0.000000 residual 0.000000 mismatch 0.000000 (sweep 40)
+restart 1: score 0.000000 residual 0.000000 mismatch 0.000000 (sweep 53)
+SUMMARY r888 mu_max=0.0 mode=f_Delta: 2 restarts x 100 sweeps (30s): min score 0.000000, median 0.000000; min residual 0.000000

@@ -1,0 +1,17 @@
+GHZ on each column (one leg): Q* viol -2.820, Q** viol -8.820, N1 viol -1.820;  rows [3. 3. 3.] cols [0. 0. 0.] diags [3. 3. 3.]
+GHZ on each diagonal: Q* viol -2.820, Q** viol -8.820, N1 viol -1.820;  rows [3. 3. 3.] cols [3. 3. 3.] diags [0. 0. 0.]
+GHZ on each row: Q* viol -18.000, Q** viol -36.000, N1 viol -5.000;  rows [0. 0. 0.] cols [3. 3. 3.] diags [3. 3. 3.]
+GHZ on each triangle: Q* viol -11.820, Q** viol -26.820, N1 viol -4.820;  rows [3. 3. 3.] cols [3. 3. 3.] diags [3. 3. 3.]
+trial 0 (objective Q*): best violation -11.820  [1s]
+trial 1 (objective N1): best violation -4.820  [3s]
+trial 2 (objective Q*): best violation -11.820  [4s]
+trial 3 (objective Q*): best violation -11.820  [5s]
+trial 4 (objective Q*): best violation -11.820  [7s]
+trial 5 (objective N1): best violation -4.820  [8s]
+trial 6 (objective N1): best violation -4.820  [10s]
+trial 7 (objective Q**): best violation -26.820  [11s]
+trial 8 (objective Q*): best violation -11.820  [12s]
+trial 9 (objective Q**): best violation -26.435  [14s]
+
+overall best:
+best (objective N1): Q* viol -10.289, Q** viol -23.840, N1 viol -3.481;  rows [2.81 2.32 3.  ] cols [2.32 2.81 2.81] diags [3.   2.32 2.81]

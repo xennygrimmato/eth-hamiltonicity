@@ -1,0 +1,15 @@
+
+N0 = 2: 15124 distinct orientation keys; rho<1/2 needs V_tot < 4.5, any trade < 9
+  1x(R+C+D), own log-bonds (1, 1, 1) (cost 3.000), other merges free: best placement slack -0.4150 (log2) REFUTED (all placements)
+  1x(R+C+D), own log-bonds (1, 1, 2) (cost 4.000), other merges free: best placement slack +0.0000 (log2) PASSES; least symmetric other-merge cap b = 4.907 -> V_tot (uniform q) >= 6.982 [rho<1/2 refuted, trade open]
+  1x(R+C+D), own log-bonds (1, 2, 2) (cost 5.000), other merges free: best placement slack +0.5850 (log2) PASSES; least symmetric other-merge cap b = 4.808 -> V_tot (uniform q) >= 7.249 [rho<1/2 refuted, trade open]
+  1x(R+C+D), own log-bonds (2, 2, 2) (cost 6.000), other merges free: best placement slack +1.1699 (log2) PASSES; least symmetric other-merge cap b = 4.585 -> V_tot (uniform q) >= 7.434 [rho<1/2 refuted, trade open]
+  1x(R+C+D), own log-bonds (1.585, 1.585, 1.585) (cost 4.755), other merges free: best placement slack +0.7550 (log2) PASSES; least symmetric other-merge cap b = 4.782 -> V_tot (uniform q) >= 7.150 [rho<1/2 refuted, trade open]
+  1x(R+C+D), own log-bonds (1, 1, 3) (cost 5.000), other merges free: best placement slack +0.5850 (log2) PASSES; least symmetric other-merge cap b = 4.907 -> V_tot (uniform q) >= 7.316 [rho<1/2 refuted, trade open]
+  1x(R+C+D), own log-bonds (1, 2, 3) (cost 6.000), other merges free: best placement slack +1.0000 (log2) PASSES; least symmetric other-merge cap b = 4.808 -> V_tot (uniform q) >= 7.583 [rho<1/2 refuted, trade open]
+  2x(R+C+D), own log-bonds (1, 1, 1) (cost 3.000), other merges free: best placement slack +0.5850 (log2) PASSES; least symmetric other-merge cap b = 3.808 -> V_tot (uniform q) >= 7.416 [rho<1/2 refuted, trade open]
+  2x(R+C+D), own log-bonds (1, 1, 2) (cost 4.000), other merges free: best placement slack +1.0000 (log2) PASSES; least symmetric other-merge cap b = 3.808 -> V_tot (uniform q) >= 7.749 [rho<1/2 refuted, trade open]
+  2x(R+C+D), own log-bonds (1, 2, 2) (cost 5.000), other merges free: best placement slack +1.5850 (log2) PASSES; least symmetric other-merge cap b = 3.585 -> V_tot (uniform q) >= 7.934 [rho<1/2 refuted, trade open]
+  2x(R+C+D), own log-bonds (2, 2, 2) (cost 6.000), other merges free: best placement slack +2.1699 (log2) PASSES; least symmetric other-merge cap b = 3.000 -> V_tot (uniform q) >= 7.877 [rho<1/2 refuted, trade open]
+  2x(R+C+D), own log-bonds (1.585, 1.585, 1.585) (cost 4.755), other merges free: best placement slack +1.7550 (log2) PASSES; least symmetric other-merge cap b = 3.524 -> V_tot (uniform q) >= 7.812 [rho<1/2 refuted, trade open]
+  2x(R+C+D), own log-bonds (1, 1, 3) (cost 5.000), other merges free: best placement slack +1.5850 (log2) PASSES; least symmetric other-merge cap b = 3.808 -> V_tot (uniform q) >= 8.083 [rho<1/2 refuted, trade open]

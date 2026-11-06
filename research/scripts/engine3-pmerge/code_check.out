@@ -1,0 +1,2 @@
+random GF(2) codes (20000): min [sum_c h(col) + sum_d h(diag) - 2 h(R_0)] = 0  (Q* holds iff >= 0)
+  codes with all three row cuts full: 2201; min sum_c h(col) + sum_d h(diag) among them = 27  (>= 18 <=> c_c + c_d >= 9)

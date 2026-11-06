@@ -1,0 +1,19 @@
+f_Delta: {'row': ([64, 64, 64], np.float64(9.0)), 'col': ([64, 64, 64], np.float64(9.0)), 'diag': ([64, 64, 64], np.float64(9.0))}
+
+straighten the col-pair (0, 1) edges [1, 2, 7]:
+  R          row: ranks [16, 16, 16] cut>= 6.000  col: ranks [64, 64, 64] cut>= 9.000  diag: ranks [64, 64, 64] cut>= 9.000
+  C = f - R  row: ranks [64, 64, 64] cut>= 9.000  col: ranks [32, 32, 64] cut>= 8.000  diag: ranks [48, 48, 48] cut>= 8.377
+  game value with cut lower bounds: 8.2500 at q = [0.25 0.75 0.  ];  V_tot (T = 2) >= 9.7500  (trade needs < 9)
+  cost-vector sums: R 24.000, C 25.377  (uniform-q rho<1/2 needs every sum < 13.5 - 4.5 log2 T)
+
+straighten the row-pair (0, 1) edges [0, 2, 4]:
+  R          row: ranks [64, 64, 64] cut>= 9.000  col: ranks [16, 16, 16] cut>= 6.000  diag: ranks [64, 64, 64] cut>= 9.000
+  C = f - R  row: ranks [32, 32, 64] cut>= 8.000  col: ranks [64, 64, 64] cut>= 9.000  diag: ranks [48, 48, 48] cut>= 8.377
+  game value with cut lower bounds: 8.2500 at q = [0.75 0.25 0.  ];  V_tot (T = 2) >= 9.7500  (trade needs < 9)
+  cost-vector sums: R 24.000, C 25.377  (uniform-q rho<1/2 needs every sum < 13.5 - 4.5 log2 T)
+
+straighten the diag-pair (0, 1) edges [1, 4, 6]:
+  R          row: ranks [16, 16, 16] cut>= 6.000  col: ranks [64, 64, 64] cut>= 9.000  diag: ranks [64, 64, 64] cut>= 9.000
+  C = f - R  row: ranks [64, 64, 64] cut>= 9.000  col: ranks [48, 48, 48] cut>= 8.377  diag: ranks [32, 32, 64] cut>= 8.000
+  game value with cut lower bounds: 8.2500 at q = [0.25 0.   0.75];  V_tot (T = 2) >= 9.7500  (trade needs < 9)
+  cost-vector sums: R 24.000, C 25.377  (uniform-q rho<1/2 needs every sum < 13.5 - 4.5 log2 T)

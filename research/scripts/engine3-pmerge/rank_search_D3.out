@@ -1,0 +1,4 @@
+GHZ on each column (one leg): Q* viol -4.470, Q** viol -13.979, N1 viol -2.885;  rows [4.75 4.75 4.75] cols [0. 0. 0.] diags [4.75 4.75 4.75]
+GHZ on each diagonal: Q* viol -4.470, Q** viol -13.979, N1 viol -2.885;  rows [4.75 4.75 4.75] cols [4.75 4.75 4.75] diags [0. 0. 0.]
+GHZ on each row: Q* viol -28.529, Q** viol -57.059, N1 viol -7.925;  rows [0. 0. 0.] cols [4.75 4.75 4.75] diags [4.75 4.75 4.75]
+GHZ on each triangle: Q* viol -18.734, Q** viol -42.509, N1 viol -7.640;  rows [4.75 4.75 4.75] cols [4.75 4.75 4.75] diags [4.75 4.75 4.75]

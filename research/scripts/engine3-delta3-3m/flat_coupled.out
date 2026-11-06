@@ -1,0 +1,14 @@
+T=3  R+C+D own (2, 2, 4) others (4, 4, 8): V_tot(uniform q) = 8.377; best slack -0.6781 over 19683 placement combos -> REFUTED exactly
+T=3  R+C+D own (2, 2, 4) others (4, 4, 4): V_tot(uniform q) = 7.711; per-piece-best-placement relaxation slack -0.6781 -> REFUTED exactly (all placements)
+T=3  R+C+D own (2, 2, 4) others (2, 4, 8): V_tot(uniform q) = 7.711; per-piece-best-placement relaxation slack -0.6781 -> REFUTED exactly (all placements)
+T=3  R+C+D own (2, 2, 4) others (4, 8, 8): V_tot(uniform q) = 9.044; best slack +0.0000 over 1 placement combos -> PASSES (go to ALS)
+T=3  R+C+D own (4, 4, 4) others (4, 4, 4): V_tot(uniform q) = 8.377; per-piece-best-placement relaxation slack -0.4150 -> REFUTED exactly (all placements)
+T=3  R+C+D own (4, 4, 4) others (4, 4, 8): V_tot(uniform q) = 9.044; best slack -0.4150 over 729 placement combos -> REFUTED exactly
+T=3  R+C+D own (2, 4, 4) others (4, 4, 4): V_tot(uniform q) = 8.044; per-piece-best-placement relaxation slack -0.6781 -> REFUTED exactly (all placements)
+T=3  R+C+D own (2, 4, 4) others (4, 4, 8): V_tot(uniform q) = 8.711; best slack -0.6781 over 19683 placement combos -> REFUTED exactly
+T=3  R+C+D own (2, 2, 2) others (8, 8, 8): V_tot(uniform q) = 9.377; per-piece-best-placement relaxation slack -0.4150 -> REFUTED exactly (all placements)
+T=3  R+C+D own (2, 2, 4) others (8, 8, 8): V_tot(uniform q) = 9.711; best slack +0.0000 over 1 placement combos -> PASSES (go to ALS)
+T=6  2x(R+C+D) own (2, 2, 2) others (4, 4, 4): V_tot(uniform q) = 8.877; best slack +0.1699 over 1 placement combos -> PASSES (go to ALS)
+T=6  2x(R+C+D) own (2, 2, 2) others (2, 4, 4): V_tot(uniform q) = 8.211; per-piece-best-placement relaxation slack -0.6781 -> REFUTED exactly (all placements)
+T=6  2x(R+C+D) own (2, 2, 2) others (4, 4, 8): V_tot(uniform q) = 9.544; per-piece-best-placement relaxation slack +0.5850 -> relaxation passes (531441 combos, not enumerated)
+T=6  2x(R+C+D) own (2, 2, 2) others (2, 4, 8): V_tot(uniform q) = 8.877; per-piece-best-placement relaxation slack +0.1699 -> relaxation passes (2176782336 combos, not enumerated)

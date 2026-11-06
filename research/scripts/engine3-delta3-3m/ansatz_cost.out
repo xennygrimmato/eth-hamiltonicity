@@ -1,0 +1,11 @@
+
+N0 = 2: 7096 distinct orientation keys; grid step 0.25; thresholds rho<1/2 4.5, trade 9
+  R+C+D own-cost only (other merges unconstrained): passes first at own cost a = 2.5 (refuted for every shape with all three own costs < 2.5)
+  F3 (orbit of one type, T = 3): least passing a+b+e = 10.75 at (np.float64(2.5), np.float64(2.5), np.float64(5.75)) -> game 3.5833, V_tot >= 5.9608: rho<1/2 REFUTED; any trade OPEN (any trade needs a+b+e < 19.868; rho<1/2 needs < 6.368)
+    own cost 3: least passing b+e = 8.25 at (np.float64(2.5), np.float64(5.75)) -> V_tot >= 6.1274
+  F6 (orbit of one type, T = 6): least passing a+b+e = 7.75 at (np.float64(1.5), np.float64(1.5), np.float64(4.75)) -> game 2.5833, V_tot >= 6.4608: rho<1/2 REFUTED; any trade OPEN (any trade needs a+b+e < 15.368; rho<1/2 needs < 1.868)
+    own cost 3: least passing b+e = 6.0 at (np.float64(1.5), np.float64(4.5)) -> V_tot >= 6.8774
+
+N0 = 4: 668618 distinct orientation keys; grid step 0.5; thresholds rho<1/2 9.0, trade 18
+  R+C+D own-cost only (other merges unconstrained): passes first at own cost a = 6.5 (refuted for every shape with all three own costs < 6.5)
+[run stopped here: the N0=4 F3/F6 grid search over 668618 orientation keys was not completed (not needed: rho<1/2 at N0=4 is refuted for every T by floor_assign.py / floor_finite.py)]

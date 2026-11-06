@@ -1,0 +1,5 @@
+restart 0: score 0.211469 residual 0.211469 mismatch 0.000000 (sweep 399)
+restart 1: score 0.309656 residual 0.309656 mismatch 0.000000 (sweep 399)
+restart 2: score 0.223958 residual 0.223958 mismatch 0.000000 (sweep 399)
+restart 3: score 0.225038 residual 0.225038 mismatch 0.000000 (sweep 399)
+SUMMARY r224+c224+d224 mu_max=0.0 mode=planted: 4 restarts x 400 sweeps (103s): min score 0.211469, median 0.224498; min residual 0.211469

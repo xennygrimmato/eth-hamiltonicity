@@ -1,0 +1,11 @@
+restart 0: score 0.939734 residual 0.939734 mismatch 0.000000 (sweep 399)
+restart 1: score 0.935856 residual 0.935856 mismatch 0.000000 (sweep 399)
+restart 2: score 0.949881 residual 0.949881 mismatch 0.000000 (sweep 399)
+restart 3: score 0.941772 residual 0.941772 mismatch 0.000000 (sweep 399)
+restart 4: score 0.937233 residual 0.937233 mismatch 0.000000 (sweep 399)
+restart 5: score 0.959179 residual 0.959179 mismatch 0.000000 (sweep 399)
+restart 6: score 0.940330 residual 0.940330 mismatch 0.000000 (sweep 399)
+restart 7: score 0.939870 residual 0.939870 mismatch 0.000000 (sweep 399)
+restart 8: score 0.947908 residual 0.947908 mismatch 0.000000 (sweep 399)
+restart 9: score 0.943593 residual 0.943593 mismatch 0.000000 (sweep 399)
+SUMMARY r242+c242+d242 mu_max=0.0 mode=f_Delta: 10 restarts x 400 sweeps (273s): min score 0.935856, median 0.941051; min residual 0.935856

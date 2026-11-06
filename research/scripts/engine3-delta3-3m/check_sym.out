@@ -1,0 +1,10 @@
+order 3: True
+triangle class fixed setwise (each triangle r+c=t maps to itself): True
+sigma maps row groups onto col groups: True
+sigma maps col groups onto diag groups: True
+sigma maps diag groups onto row groups: True
+f invariant under sigma: True
+transpose preserves triangles: True  maps diag classes to diag classes: True
+row: edges crossing = 9 of 9; flattening ranks of f: [np.int64(64), np.int64(64), np.int64(64)]
+col: edges crossing = 9 of 9; flattening ranks of f: [np.int64(64), np.int64(64), np.int64(64)]
+diag: edges crossing = 9 of 9; flattening ranks of f: [np.int64(64), np.int64(64), np.int64(64)]

@@ -1,0 +1,4 @@
+restart 0: score 0.009238 residual 0.009238 mismatch 0.001504 (sweep 399)
+restart 1: score 0.005712 residual 0.005712 mismatch 0.001830 (sweep 399)
+restart 2: score 0.025301 residual 0.025301 mismatch 0.009356 (sweep 399)
+SUMMARY r222/c444/d444+c222/r444/d444+d222/r444/c444+r222/c444/d444+c222/r444/d444+d222/r444/c444 mu_max=10.0 mode=plantedgen: 3 restarts x 400 sweeps (759s): min score 0.005712, median 0.009238; min residual 0.005712

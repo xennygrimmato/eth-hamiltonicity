@@ -1,0 +1,12 @@
+swap two col-pair (0, 1) edges (1, 2):
+  R          row: ranks [16, 64, 64] cut>= 8.000  col: ranks [64, 64, 64] cut>= 9.000  diag: ranks [64, 16, 64] cut>= 8.000
+  C = f - R  row: ranks [64, 64, 64] cut>= 9.000  col: ranks [16, 16, 64] cut>= 7.000  diag: ranks [64, 64, 64] cut>= 9.000
+  game value (cut lower bounds) 8.3333 at q = [0.667 0.333 0.   ]; V_tot (T = 2) >= 9.8333 (trade needs < 9)
+swap two row-pair (0, 1) edges (0, 2):
+  R          row: ranks [64, 64, 64] cut>= 9.000  col: ranks [16, 64, 64] cut>= 8.000  diag: ranks [64, 64, 16] cut>= 8.000
+  C = f - R  row: ranks [16, 16, 64] cut>= 7.000  col: ranks [64, 64, 64] cut>= 9.000  diag: ranks [64, 64, 64] cut>= 9.000
+  game value (cut lower bounds) 8.3333 at q = [0.333 0.667 0.   ]; V_tot (T = 2) >= 9.8333 (trade needs < 9)
+swap two diag-pair (0, 1) edges (1, 4):
+  R          row: ranks [16, 64, 64] cut>= 8.000  col: ranks [64, 16, 64] cut>= 8.000  diag: ranks [64, 64, 64] cut>= 9.000
+  C = f - R  row: ranks [64, 64, 64] cut>= 9.000  col: ranks [64, 64, 64] cut>= 9.000  diag: ranks [16, 16, 64] cut>= 7.000
+  game value (cut lower bounds) 8.3333 at q = [0.667 0.    0.333]; V_tot (T = 2) >= 9.8333 (trade needs < 9)

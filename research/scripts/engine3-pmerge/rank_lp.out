@@ -1,0 +1,26 @@
+/home/user/eth-hamiltonicity/research/scripts/engine3-pmerge/rank_lp.py:5: SyntaxWarning: invalid escape sequence '\S'
+  Variables h(S) = log2 rank(A; S | V\S) / lambda for all S subset of the 9 nodes.  The CVZ-selected row-full piece has
+
+=== inequalities: subadditivity + complement symmetry + leg bounds; 9338 inequalities
+row-full piece (h(R_r) >= 6, r=0,1,2): min c_c + c_d = 0.0000  (c_c = 0.0000, c_d = 0.0000)
+   column cuts [np.float64(-0.0), np.float64(-0.0), np.float64(-0.0)]  diagonal cuts [np.float64(-0.0), np.float64(-0.0), np.float64(-0.0)]  triangle cuts [np.float64(-0.0), np.float64(-0.0), np.float64(-0.0)]  node cuts [np.float64(2.0), np.float64(2.0), np.float64(2.0), np.float64(2.0), np.float64(2.0), np.float64(2.0), np.float64(2.0), np.float64(2.0), np.float64(2.0)]
+two-merge sanity (row-full, minimise c_c alone): 0.0000  [Example 4.10 predicts 0]
+   c_c, c_d <= 0.0: max h(R_0) = 6.0000
+   c_c, c_d <= 0.5: max h(R_0) = 6.0000
+   c_c, c_d <= 1.0: max h(R_0) = 6.0000
+   c_c, c_d <= 1.5: max h(R_0) = 6.0000
+   c_c, c_d <= 2.0: max h(R_0) = 6.0000
+   c_c, c_d <= 2.25: max h(R_0) = 6.0000
+   c_c, c_d <= 3.0: max h(R_0) = 6.0000
+
+=== inequalities: subadditivity + complement symmetry + leg bounds + SCSH (4-party); 111653 inequalities
+row-full piece (h(R_r) >= 6, r=0,1,2): min c_c + c_d = 3.0000  (c_c = 1.5000, c_d = 1.5000)
+   column cuts [np.float64(1.0), np.float64(1.0), np.float64(1.0)]  diagonal cuts [np.float64(1.0), np.float64(1.0), np.float64(1.0)]  triangle cuts [np.float64(3.0), np.float64(3.0), np.float64(3.0)]  node cuts [np.float64(2.0), np.float64(2.0), np.float64(2.0), np.float64(2.0), np.float64(2.0), np.float64(2.0), np.float64(2.0), np.float64(2.0), np.float64(2.0)]
+two-merge sanity (row-full, minimise c_c alone): 0.0000  [Example 4.10 predicts 0]
+   c_c, c_d <= 0.0: max h(R_0) = 4.0000
+   c_c, c_d <= 0.5: max h(R_0) = 4.6667
+   c_c, c_d <= 1.0: max h(R_0) = 5.3333
+   c_c, c_d <= 1.5: max h(R_0) = 6.0000
+   c_c, c_d <= 2.0: max h(R_0) = 6.0000
+   c_c, c_d <= 2.25: max h(R_0) = 6.0000
+   c_c, c_d <= 3.0: max h(R_0) = 6.0000

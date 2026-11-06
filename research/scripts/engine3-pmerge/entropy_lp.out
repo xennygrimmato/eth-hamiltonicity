@@ -1,0 +1,13 @@
+(1) max [2 I(R_0:rest) - sum_c I(col_c) - sum_d I(diag_d)] over Shannon cone = -0.000000   (0 <=> Q* is a Shannon inequality)
+(2) row-full (I(R_r) >= 6, r = 0,1,2): min c_c + c_d = 9.0000 (c_c = -0.0000, c_d = 9.0000); column MIs [np.float64(0.0), np.float64(-0.0), np.float64(-0.0)] diagonal MIs [np.float64(6.0), np.float64(6.0), np.float64(6.0)]
+(3) two-merge sanity: row-full, min c_c alone = 0.0000  [expect 0: column 3-cycles]
+(4) c_c + c_d <= 0: max I(R_0 : rest) = -0.0000
+(4) c_c + c_d <= 1: max I(R_0 : rest) = 1.0000
+(4) c_c + c_d <= 2: max I(R_0 : rest) = 2.0000
+(4) c_c + c_d <= 3: max I(R_0 : rest) = 3.0000
+(4) c_c + c_d <= 4: max I(R_0 : rest) = 4.0000
+(4) c_c + c_d <= 4.5: max I(R_0 : rest) = 4.5000
+(4) c_c + c_d <= 6: max I(R_0 : rest) = 6.0000
+(5) row-full: min 0.5 c_c + 0.5 c_d = 4.5000
+(5) row-full: min 1 c_c + 0 c_d = 0.0000
+(5) row-full: min 0.75 c_c + 0.25 c_d = 2.2500

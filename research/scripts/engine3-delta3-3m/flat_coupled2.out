@@ -1,0 +1,11 @@
+T=6  2x(R+C+D), every piece (2,2,2) under ALL three merges: V_tot(uniform q) = 6.877; per-piece-best-placement relaxation slack -1.4150 -> REFUTED exactly (all placements)
+T=9  3x(R+C+D), every piece (2,2,2) under ALL three merges: V_tot(uniform q) = 7.755; per-piece-best-placement relaxation slack -0.8301 -> REFUTED exactly (all placements)
+T=12  4x(R+C+D), every piece (2,2,2) under ALL three merges: V_tot(uniform q) = 8.377; per-piece-best-placement relaxation slack -0.4150 -> REFUTED exactly (all placements)
+T=15  5x(R+C+D), every piece (2,2,2) under ALL three merges: V_tot(uniform q) = 8.860; per-piece-best-placement relaxation slack -0.0931 -> REFUTED exactly (all placements)
+T=9  3x(R+C+D) own (2,2,2) others (2,2,4): V_tot(uniform q) = 8.422; per-piece-best-placement relaxation slack -0.0931 -> REFUTED exactly (all placements)
+T=9  3x(R+C+D) own (2,2,2) others (2,4,4): V_tot(uniform q) = 9.088; per-piece-best-placement relaxation slack -0.0931 -> REFUTED exactly (all placements)
+T=12 4x(R+C+D) own (2,2,2) others (2,2,4): V_tot(uniform q) = 9.044; per-piece-best-placement relaxation slack +0.3219 -> relaxation passes (282429536481 combos, not enumerated)
+T=6  2x(R+C+D) own (2,2,2) others (1,8,8): V_tot(uniform q) = 8.877; per-piece-best-placement relaxation slack -0.6781 -> REFUTED exactly (all placements)
+T=6  2x(R+C+D) own (2,2,2) others (2,2,16): V_tot(uniform q) = 8.877; per-piece-best-placement relaxation slack +0.5850 -> relaxation passes (531441 combos, not enumerated)
+T=6  2x(R+C+D) own (2,2,1) others (4,4,4): V_tot(uniform q) = 8.544; best slack -0.1926 over 729 placement combos -> REFUTED exactly
+T=6  R+C+D own (2,2,2) others (4,4,4) + R+C+D all (2,2,2): V_tot(uniform q) = 8.877; per-piece-best-placement relaxation slack -0.4150 -> REFUTED exactly (all placements)

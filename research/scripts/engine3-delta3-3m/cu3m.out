@@ -1,0 +1,10 @@
+f_Delta three-merge ranks: [[64, 64, 64], [64, 64, 64], [64, 64, 64]]
+
+(P) S_3^3 product pieces (one TPP <2,2,2> per triangle):
+  ('triv', 'triv', 'triv')     ranks r/c/d [[1, 1, 1], [1, 1, 1], [1, 1, 1]]  cut bounds [np.float64(0.0), np.float64(0.0), np.float64(0.0)]
+  ('std', 'triv', 'triv')      ranks r/c/d [[4, 4, 4], [4, 4, 4], [4, 4, 4]]  cut bounds [np.float64(3.0), np.float64(3.0), np.float64(3.0)]
+  ('std', 'std', 'triv')       ranks r/c/d [[16, 16, 16], [16, 16, 16], [16, 16, 16]]  cut bounds [np.float64(6.0), np.float64(6.0), np.float64(6.0)]
+  ('std', 'std', 'std')        ranks r/c/d [[64, 64, 64], [64, 64, 64], [64, 64, 64]]  cut bounds [np.float64(9.0), np.float64(9.0), np.float64(9.0)]
+  27 product pieces: game value (cut bounds) 9.0000 at q [1. 0. 0.]; V_tot >= 16.132 (trade needs < 9)
+
+(C) CKSU G = (Cyc_3^3)^2 x| Cyc_2, coordinatewise identification, 405 Fourier pieces (row networks of cost <= 3 log2 d):

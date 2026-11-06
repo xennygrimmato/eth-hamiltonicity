@@ -1,0 +1,35 @@
+bit-level orientations: 10077696
+o* (both bits of every edge split as in the N0=2 certificate): rank f = 2^18;  row legs per side s: [18, 14, 14, 10, 26, 22, 22, 18]
+o* (both bits of every edge split as in the N0=2 certificate): rank f = 2^18;  col legs per side s: [18, 10, 22, 14, 22, 14, 26, 18]
+  R(4,4,4): log2 rank bound at o* = 14
+  C(4,4,4): log2 rank bound at o* = 14
+  R(8,8,8): log2 rank bound at o* = 16
+  R(64,64,64)=f: log2 rank bound at o* = 18
+R(4,4,4)+C(4,4,4), all 10077696 bit orientations: worst slack -229376 (rank f = 2^18, states [(2, 0), (2, 0), (2, 0), (2, 0), (2, 0), (0, 2), (2, 0), (2, 0), (0, 2)])  -> EXACT REFUTATION
+R+R+C (4,4,4): worst slack -212992
+Phi_o*(a) = max log2 rank at o* of a row network of total log-bond a (LP over real bonds):
+   a =     0: row 10.0000 (x = [-0.0, 0.0, 0.0]),  col 10.0000
+   a =     3: row 13.0000 (x = [0.0, 3.0, 0.0]),  col 13.0000
+   a =     6: row 16.0000 (x = [2.0, 4.0, 0.0]),  col 16.0000
+   a =     7: row 17.0000 (x = [3.0, 4.0, 0.0]),  col 17.0000
+   a =   7.5: row 17.5000 (x = [3.5, 4.0, 0.0]),  col 17.5000
+   a =     8: row 18.0000 (x = [4.0, 4.0, 0.0]),  col 18.0000
+   a =     9: row 18.0000 (x = [4.0, 5.0, 0.0]),  col 18.0000
+   a =    10: row 18.0000 (x = [4.0, 6.0, 0.0]),  col 18.0000
+   a =    11: row 18.0000 (x = [4.0, 7.0, 0.0]),  col 18.0000
+   a =    12: row 18.0000 (x = [4.0, 8.0, 0.0]),  col 18.0000
+   a =    14: row 18.0000 (x = [4.0, 10.0, 0.0]),  col 18.0000
+   a =    18: row 18.0000 (x = [4.0, 14.0, 0.0]),  col 18.0000
+  check at o*: min row cost for log rank 14: closed form 4.0000
+  check at o*: min row cost for log rank 16: closed form 6.0000
+  check at o*: min row cost for log rank 17: closed form 7.0000
+  check at o*: min row cost for log rank 17.5: closed form 7.5000
+  check at o*: min row cost for log rank 18: closed form 8.0000
+  T = 2: forced type has min(c_row, c_col) >= 7.0000 (states [(0, 0), (0, 0), (2, 0), (2, 0), (2, 0), (2, 0), (0, 2), (2, 0), (0, 0)], rank 2^12); + 1.5 log2 T = 8.5000 vs 9  -> not refuted by one-orientation pigeonhole
+  T = 3: forced type has min(c_row, c_col) >= 6.4150 (states [(2, 0), (2, 0), (2, 0), (2, 0), (2, 0), (0, 2), (2, 0), (2, 0), (0, 2)], rank 2^18); + 1.5 log2 T = 8.7925 vs 9  -> not refuted by one-orientation pigeonhole
+  T = 4: forced type has min(c_row, c_col) >= 6.0000 (states [(0, 0), (0, 0), (2, 0), (2, 0), (2, 0), (2, 0), (0, 2), (2, 0), (0, 0)], rank 2^12); + 1.5 log2 T = 9.0000 vs 9  -> REFUTED (every T-type family)
+  T = 6: forced type has min(c_row, c_col) >= 5.4150 (states [(0, 0), (0, 0), (2, 0), (2, 0), (2, 0), (2, 0), (0, 2), (2, 0), (0, 0)], rank 2^12); + 1.5 log2 T = 9.2925 vs 9  -> REFUTED (every T-type family)
+  T = 8: forced type has min(c_row, c_col) >= 5.0000 (states [(0, 0), (0, 0), (2, 0), (2, 0), (2, 0), (2, 0), (0, 2), (2, 0), (0, 0)], rank 2^12); + 1.5 log2 T = 9.5000 vs 9  -> REFUTED (every T-type family)
+  T = 16: forced type has min(c_row, c_col) >= 4.0000 (states [(0, 0), (0, 0), (2, 0), (2, 0), (2, 0), (2, 0), (0, 2), (2, 0), (0, 0)], rank 2^12); + 1.5 log2 T = 10.0000 vs 9  -> REFUTED (every T-type family)
+  T = 64: forced type has min(c_row, c_col) >= 2.0000 (states [(0, 0), (0, 0), (2, 0), (2, 0), (2, 0), (2, 0), (0, 2), (2, 0), (0, 0)], rank 2^12); + 1.5 log2 T = 11.0000 vs 9  -> REFUTED (every T-type family)
+flatcert floor at N0 = 4 (bit orientations): D = 4.0 of 9 (in units log2 N0 = 2 bits); histogram (bits): {np.int8(0): np.int64(343044), np.int8(1): np.int64(1848276), np.int8(2): np.int64(2799612), np.int8(3): np.int64(2525508), np.int8(4): np.int64(1603962), np.int8(5): np.int64(713628), np.int8(6): np.int64(209304), np.int8(7): np.int64(32688), np.int8(8): np.int64(1674)}

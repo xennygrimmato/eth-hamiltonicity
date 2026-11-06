@@ -1,0 +1,11 @@
+R: row(2,2,2) & col(6, 6, 6); C: col(2,2,2) & row(6, 6, 6):  worst flattening slack 0 (passes); U = 4.755, V = 4.755, game criterion for any trade met
+R: row(2,2,2) & col(8, 8, 7); C: col(2,2,2) & row(8, 8, 7):  worst flattening slack 0 (passes); U = 5.807, V = 5.807, game criterion for any trade met
+R: row(2,2,2) & col(5, 6, 6); C: col(2,2,2) & row(5, 6, 6):  worst flattening slack 0 (passes); U = 4.492, V = 4.492, game criterion for any trade met
+R: row(2,2,2) & col(7, 8, 8); C: col(2,2,2) & row(7, 8, 8):  worst flattening slack 0 (passes); U = 5.807, V = 5.807, game criterion for any trade met
+R: row(2,2,2) & col(8, 7, 8); C: col(2,2,2) & row(8, 7, 8):  worst flattening slack 0 (passes); U = 5.807, V = 5.807, game criterion for any trade met
+R: row(2,2,2) & col(4, 4, 3); C: col(2,2,2) & rowNone:  worst flattening slack -256 (REFUTED); U = 2.585, V = inf, game criterion for any trade met
+R: row(2,2,2) & col(4, 4, 2); C: col(2,2,2) & rowNone:  worst flattening slack -320 (REFUTED); U = 2.000, V = inf, game criterion for any trade met
+R: row(2,2,2) & col(3, 3, 3); C: col(2,2,2) & rowNone:  worst flattening slack -304 (REFUTED); U = 1.755, V = inf, game criterion for any trade met
+R: row(2,2,2) & col(4, 4, 4); C: col(2,2,2) & row(4, 4, 4):  worst flattening slack -192 (REFUTED); U = 3.000, V = 3.000, game criterion for any trade met
+R: row(2,2,2) & col(2, 2, 2); C: col(2,2,2) & row(2, 2, 2):  worst flattening slack -384 (REFUTED); U = 0.000, V = 0.000, game criterion for any trade met
+R: row(2,2,2) & col(16, 16, 1); C: col(2,2,2) & row(16, 16, 1):  worst flattening slack -192 (REFUTED); U = 5.000, V = 5.000, game criterion for any trade met

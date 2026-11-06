@@ -1,0 +1,7 @@
+|Z| = 270 slack-0 orientations; ranks there: [64, 128, 256, 512]
+row piece R(2,2,2): min column cost over all column triangle networks passing Z: c*_col = 3.000000 at log-bonds y = [1.0, 1.0, 1.0]
+  (attained by y = (1,1,1), i.e. column bonds (2,2,2): the slack-0 set alone forces nothing beyond cost 3)
+column piece C(2,2,2): min row cost c*_row = 3.000000 at [1.0, 1.0, 1.0]
+lower bounds from Z: u_i >= 0.0000, v_j >= 0.0000  -> Z alone does not constrain the game (see flat_a_shapes.py for the joint test)
+integer column triples with product <= 511: 12544; passing Z: 8487; min product among them: 8
+  cheapest: [((2, 2, 2), 3.0), ((2, 2, 3), 3.585), ((2, 3, 2), 3.585), ((3, 2, 2), 3.585), ((1, 4, 4), 4.0), ((2, 2, 4), 4.0), ((2, 4, 2), 4.0), ((4, 1, 4), 4.0), ((4, 2, 2), 4.0), ((4, 4, 1), 4.0)]

@@ -1,0 +1,40 @@
+orientations: 19682
+2R(2,2,2)+2C(2,2,2), no other-merge constraint: worst slack 0; #orientations with slack 0: 270
+shape-relaxed, other-merge cost <= 9.0: worst slack 0.000 (LP-exact at that o: 0.000), rank f = 64, o = (0, 0, 1, 1, 1, 1, -1, 1, 0)  -> passes
+shape-relaxed, other-merge cost <= 8.0: worst slack 0.000 (LP-exact at that o: 0.000), rank f = 64, o = (0, 0, 1, 1, 1, 1, -1, 1, 0)  -> passes
+shape-relaxed, other-merge cost <= 7.0: worst slack 0.000 (LP-exact at that o: 0.000), rank f = 64, o = (0, 0, 1, 1, 1, 1, -1, 1, 0)  -> passes
+shape-relaxed, other-merge cost <= 6.0: worst slack 0.000 (LP-exact at that o: 0.000), rank f = 64, o = (0, 0, 1, 1, 1, 1, -1, 1, 0)  -> passes
+shape-relaxed, other-merge cost <= 5.0: worst slack 0.000 (LP-exact at that o: 0.000), rank f = 64, o = (0, 0, 1, 1, 1, 1, -1, 1, 0)  -> passes
+shape-relaxed, other-merge cost <= 4.0: worst slack -192.000 (LP-exact at that o: -192.000), rank f = 512, o = (1, 1, 1, 1, 1, 1, 1, 1, 1)  -> REFUTED
+shape-relaxed, other-merge cost <= 3.0: worst slack -320.000 (LP-exact at that o: -320.000), rank f = 512, o = (1, 1, 1, 1, 1, 1, 1, 1, 1)  -> REFUTED
+shape-exact hub types: row pieces = R(2,2,2) with column hub (hub group h, ranks to the other two r1, r2); column pieces = transposed shape (row hub)
+  hub group 0, ranks (16,16) [cost 8.000], 2R+2C: worst slack -192 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 0, ranks (16,31) [cost 8.954], 2R+2C: worst slack -192 (rank 512, o=(1, 1, 1, 1, 1, 1, -1, -1, -1))  REFUTED
+  hub group 0, ranks (8,63) [cost 8.977], 2R+2C: worst slack -320 (rank 512, o=(1, 1, 1, 1, 1, 1, -1, -1, -1))  REFUTED
+  hub group 0, ranks (4,64) [cost 8.000], 2R+2C: worst slack -384 (rank 512, o=(1, 1, 1, 1, 1, 1, -1, -1, -1))  REFUTED
+  hub group 0, ranks (32,15) [cost 8.907], 2R+2C: worst slack -208 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 0, ranks (2,64) [cost 7.000], 2R+2C: worst slack -416 (rank 512, o=(1, 1, 1, 1, 1, 1, -1, -1, -1))  REFUTED
+  hub group 0, ranks (64,1) [cost 6.000], 2R+2C: worst slack -432 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 0, ranks (8,8) [cost 6.000], 2R+2C: worst slack -320 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 0, ranks (4,4) [cost 4.000], 2R+2C: worst slack -384 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 1, ranks (16,16) [cost 8.000], 2R+2C: worst slack -192 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 1, ranks (16,31) [cost 8.954], 2R+2C: worst slack -192 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 1, ranks (8,63) [cost 8.977], 2R+2C: worst slack -320 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 1, ranks (4,64) [cost 8.000], 2R+2C: worst slack -384 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 1, ranks (32,15) [cost 8.907], 2R+2C: worst slack -208 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 1, ranks (2,64) [cost 7.000], 2R+2C: worst slack -416 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 1, ranks (64,1) [cost 6.000], 2R+2C: worst slack -432 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 1, ranks (8,8) [cost 6.000], 2R+2C: worst slack -320 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 1, ranks (4,4) [cost 4.000], 2R+2C: worst slack -384 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 2, ranks (16,16) [cost 8.000], 2R+2C: worst slack -192 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 2, ranks (16,31) [cost 8.954], 2R+2C: worst slack -192 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 2, ranks (8,63) [cost 8.977], 2R+2C: worst slack -320 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 2, ranks (4,64) [cost 8.000], 2R+2C: worst slack -384 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 2, ranks (32,15) [cost 8.907], 2R+2C: worst slack -208 (rank 512, o=(1, 1, 1, 1, 1, 1, -1, -1, -1))  REFUTED
+  hub group 2, ranks (2,64) [cost 7.000], 2R+2C: worst slack -416 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 2, ranks (64,1) [cost 6.000], 2R+2C: worst slack -432 (rank 512, o=(1, 1, 1, 1, 1, 1, -1, -1, -1))  REFUTED
+  hub group 2, ranks (8,8) [cost 6.000], 2R+2C: worst slack -320 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+  hub group 2, ranks (4,4) [cost 4.000], 2R+2C: worst slack -384 (rank 512, o=(1, 1, 1, 1, 1, 1, 1, 1, 1))  REFUTED
+mixed hub groups (ranks 16,16), 2R + 2C:
+  36 combinations; min worst slack -192, max worst slack -192; refuted: 36
+  passing combinations: []

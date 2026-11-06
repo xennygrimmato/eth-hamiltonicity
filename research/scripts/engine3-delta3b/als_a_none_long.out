@@ -1,0 +1,7 @@
+restart 0: residual 0.952188, mismatch 0.000000, both-sides residual 0.952188 (sweep 1499)
+restart 1: residual 0.972267, mismatch 0.000000, both-sides residual 0.972267 (sweep 1499)
+restart 2: residual 0.996982, mismatch 0.000000, both-sides residual 0.996982 (sweep 1499)
+restart 3: residual 0.952993, mismatch 0.000000, both-sides residual 0.952993 (sweep 1499)
+restart 4: residual 0.961217, mismatch 0.000000, both-sides residual 0.961217 (sweep 1499)
+restart 5: residual 0.996965, mismatch 0.000000, both-sides residual 0.996965 (sweep 1499)
+SUMMARY eR=None eC=None mu_max=0.0 planted=False: 6 restarts x 1500 sweeps; min max(res,mis,resQ) = 0.952188, median 0.966742; min residual 0.952188

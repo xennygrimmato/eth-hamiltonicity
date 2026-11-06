@@ -1,0 +1,5 @@
+integer triples with product <= 511: 12544, maximal: 369
+(1) symmetric families: 102 of 369 maximal shapes pass (cost < 9 by construction)
+    all triples passing (symmetric family): 455; cheapest: [((5, 6, 6), 7.492), ((6, 5, 6), 7.492), ((6, 6, 5), 7.492), ((5, 6, 7), 7.714), ((5, 7, 6), 7.714), ((6, 5, 7), 7.714), ((6, 7, 5), 7.714), ((7, 5, 6), 7.714), ((7, 6, 5), 7.714), ((6, 6, 6), 7.755), ((5, 6, 8), 7.907), ((5, 8, 6), 7.907)]
+    cheapest symmetric passing family: column shape (5, 6, 6), piece costs (3, 7.492); game value V = 3 + (c-3)/2 + 3 = 8.246 vs E m0 = 9
+(2) unordered pairs {t1,t2} of maximal shapes (transpose-closed families): 16392 pass

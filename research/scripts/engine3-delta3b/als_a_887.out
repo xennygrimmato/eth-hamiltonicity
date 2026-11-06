@@ -1,0 +1,9 @@
+restart 0: residual 0.968190, mismatch 0.010240, both-sides residual 0.968197 (sweep 199)
+restart 1: residual 0.976279, mismatch 0.016818, both-sides residual 0.976363 (sweep 199)
+restart 2: residual 0.998385, mismatch 0.006684, both-sides residual 1.000912 (sweep 199)
+restart 3: residual 0.968263, mismatch 0.008250, both-sides residual 0.968272 (sweep 199)
+restart 4: residual 0.969310, mismatch 0.014660, both-sides residual 0.969344 (sweep 199)
+restart 5: residual 0.999202, mismatch 0.007519, both-sides residual 1.004453 (sweep 199)
+restart 6: residual 0.966783, mismatch 0.007548, both-sides residual 0.966787 (sweep 199)
+restart 7: residual 0.970128, mismatch 0.010197, both-sides residual 0.970167 (sweep 199)
+SUMMARY eR=(8, 8, 7) eC=(8, 8, 7) mu_max=10.0 planted=False: 8 restarts x 200 sweeps; min max(res,mis,resQ) = 0.966787, median 0.969755; min residual 0.966783

@@ -1,0 +1,2 @@
+random integer row (2,2,2) network 0: column-group flattening ranks (float) [np.int64(64), np.int64(64), np.int64(64)], mod 32749 [64, 64, 64]
+random integer row (2,2,2) network 1: column-group flattening ranks (float) [np.int64(64), np.int64(64), np.int64(64)], mod 32749 [64, 64, 64]

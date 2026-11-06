@@ -1,0 +1,5 @@
+grid points (h = 0.25): 11417641; satisfying the relaxed V < 9 condition: 6578355
+  iter 1: added orientation rank 2^12 states [(0, 0), (2, 0), (0, 0), (2, 0), (0, 0), (2, 0), (2, 0), (2, 0), (2, 0)]; survivors 2226295
+  iter 2: added orientation rank 2^12 states [(0, 0), (2, 0), (0, 2), (0, 2), (2, 0), (0, 0), (0, 0), (0, 2), (2, 0)]; survivors 34791
+  iter 3: added orientation rank 2^12 states [(0, 0), (0, 0), (2, 0), (2, 0), (2, 0), (2, 0), (0, 2), (2, 0), (0, 0)]; survivors 0
+no grid point survives after 3 orientations -> Case C refuted EXACTLY

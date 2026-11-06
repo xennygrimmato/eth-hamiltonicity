@@ -1,0 +1,4 @@
+restart 0: residual 0.007378, mismatch 0.002624, both-sides residual 0.007639 (sweep 299)
+restart 1: residual 0.086883, mismatch 0.007324, both-sides residual 0.086924 (sweep 299)
+restart 2: residual 0.234250, mismatch 0.009924, both-sides residual 0.234341 (sweep 299)
+SUMMARY eR=(8, 8, 7) eC=(8, 8, 7) mu_max=10.0 planted=True: 3 restarts x 300 sweeps; min max(res,mis,resQ) = 0.007639, median 0.086924; min residual 0.007378

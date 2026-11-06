@@ -1,0 +1,5 @@
+theta = 6.622556; grid points: 1239112
+  added orientation rank 2^12 [(0, 0), (2, 0), (0, 0), (2, 0), (0, 0), (2, 0), (2, 0), (2, 0), (2, 0)]; survivors 693448
+  added orientation rank 2^14 [(0, 0), (0, 0), (2, 0), (2, 0), (0, 2), (2, 0), (2, 0), (2, 0), (2, 0)]; survivors 99430
+  added orientation rank 2^12 [(0, 0), (2, 0), (0, 2), (0, 2), (2, 0), (0, 0), (0, 0), (0, 2), (2, 0)]; survivors 0
+no grid point survives after 3 orientations -> T = 3 (2 row-cheap + 1 column-cheap) refuted EXACTLY

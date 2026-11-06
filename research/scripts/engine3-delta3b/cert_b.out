@@ -1,0 +1,7 @@
+orientation: rank f = 2^12; split edges (both bits; u->v: string at u on side X): ['(0, 0)->(2, 1)', '(0, 1)->(2, 2)', '(0, 2)->(2, 0)', '(1, 0)->(2, 2)', '(1, 1)->(2, 0)', '(1, 2)->(2, 1)']
+   Phi_row(a) - rank = min(0, -12 + a, -8.0000 + 2a/3);  Phi_col(a) - rank = min(0, 0 + a, 0.0000 + 2a/3)
+orientation: rank f = 2^12; split edges (both bits; u->v: string at u on side X): ['(0, 0)->(2, 1)', '(0, 1)<-(1, 0)', '(0, 1)<-(2, 2)', '(0, 2)->(1, 1)', '(1, 1)<-(2, 0)', '(1, 2)->(2, 1)']
+   Phi_row(a) - rank = min(0, 0 + a, 0.0000 + 2a/3);  Phi_col(a) - rank = min(0, -12 + a, -8.0000 + 2a/3)
+orientation: rank f = 2^12; split edges (both bits; u->v: string at u on side X): ['(0, 1)->(1, 0)', '(0, 1)->(2, 2)', '(0, 2)->(1, 1)', '(0, 2)->(2, 0)', '(1, 0)<-(2, 2)', '(1, 1)->(2, 0)']
+   Phi_row(a) - rank = min(0, -8 + a, -5.3333 + 2a/3);  Phi_col(a) - rank = min(0, -8 + a, -5.3333 + 2a/3)
+fine grid h = 1/16 with the 3 orientations: surviving grid points = 0  -> Case C refuted exactly

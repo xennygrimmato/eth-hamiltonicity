@@ -1,0 +1,4 @@
+closed form of Phi validated against the LP on 200 random orientations x 3 costs
+Case A: row-group flattening rank of f = 2^12;  two row networks of cost < 7.5: rank < 2 * 2^7.5 = 2^8.5 < 2^12  -> impossible
+Case C at cost 7.5: min over 10077696 bit orientations of (2^Phi_row + 2^Phi_col) / rank f = 1.044194 at rank 2^12, states [(0, 0), (2, 0), (0, 0), (2, 0), (0, 0), (2, 0), (2, 0), (2, 0), (2, 0)]; Phi_row = 7.5, Phi_col = 12.0  -> not refuted
+largest A with Case C refuted (row-cheap cost < A, column-cheap cost < A): A* = 7.000000  (needed: 7.5)

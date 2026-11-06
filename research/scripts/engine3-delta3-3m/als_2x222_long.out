@@ -2,3 +2,6 @@ restart 0: score 0.924574 residual 0.924574 mismatch 0.000000 (sweep 1499)
 restart 1: score 0.941137 residual 0.941137 mismatch 0.000000 (sweep 1499)
 restart 2: score 0.994770 residual 0.994770 mismatch 0.000000 (sweep 1499)
 restart 3: score 0.926391 residual 0.926391 mismatch 0.000000 (sweep 1499)
+restart 4: score 0.941265 residual 0.941265 mismatch 0.000000 (sweep 1499)
+restart 5: score 0.994792 residual 0.994792 mismatch 0.000000 (sweep 1499)
+SUMMARY r222+c222+d222+r222+c222+d222 mu_max=0.0 mode=f_Delta: 6 restarts x 1500 sweeps (1105s): min score 0.924574, median 0.941201; min residual 0.924574

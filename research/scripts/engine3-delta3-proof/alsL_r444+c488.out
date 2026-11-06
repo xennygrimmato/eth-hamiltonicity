@@ -1,0 +1,6 @@
+restart 1: EXACT candidate residual 4.37e-10
+restart 2: EXACT candidate residual 7.57e-10
+restart 3: EXACT candidate residual 4.10e-10
+restart 4: EXACT candidate residual 4.80e-10
+delta3 r444+c488: 6 restarts x <= 1500 sweeps (seed 11, 126s): min residual 0.000000, median 0.000000, max 0.333087; min captured norm^2 fraction 1-res^2 = 1.000000
+  histogram (4 d.p.): {0.0: 4, 0.2561: 1, 0.3331: 1}

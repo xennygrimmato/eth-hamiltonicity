@@ -1,0 +1,2 @@
+delta3 r288+c288: 8 restarts x <= 300 sweeps (seed 7, 42s): min residual 0.637455, median 0.707107, max 0.909172; min captured norm^2 fraction 1-res^2 = 0.593651
+  histogram (4 d.p.): {0.6375: 1, 0.7071: 5, 0.819: 1, 0.9092: 1}

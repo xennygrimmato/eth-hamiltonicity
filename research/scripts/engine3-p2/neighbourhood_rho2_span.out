@@ -1,0 +1,1 @@
+{"file": "s1_L3_n16_Q8_rho2_r4_s1.pkl", "base": [1, 32], "improve": 0, "tie": 700, "worse": 19268, "tested": 19968, "ties_with_nonsingleton_row": 560, "ties_nonsingleton_new_space": 48, "examples_new_space": "[(0, 1, 1, {1: 1, 12: -2}), (0, 1, 1, {1: 1, 12: -1}), (0, 1, 1, {1: 1, 12: 1}), (0, 1, 1, {1: 1, 12: 2})]", "best": [[1, 32], "None"], "secs": 1256}

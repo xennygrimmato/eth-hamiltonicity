@@ -1,0 +1,54 @@
+{"fam": "L3", "n": 16, "Q": 4, "rho": 0, "r": 4, "status": 0, "msg": "Optimization terminated successfully. (HiGHS Status 7: Optim", "R_best": 2.0, "dual_bound": 2.0, "M": 48, "vars": 961, "cons": 1232}
+{"fam": "L3", "n": 16, "Q": 4, "rho": 1, "r": 4, "status": 0, "msg": "Optimization terminated successfully. (HiGHS Status 7: Optim", "R_best": 1.0, "dual_bound": 1.0, "M": 48, "vars": 961, "cons": 1232}
+{"fam": "L3", "n": 16, "Q": 4, "rho": 2, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 1.0, "dual_bound": 0.0, "M": 48, "vars": 961, "cons": 1232}
+{"fam": "L3", "n": 16, "Q": 6, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 3.0, "dual_bound": 2.0, "M": 48, "vars": 1441, "cons": 1824}
+{"fam": "L3", "n": 16, "Q": 6, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 0.0, "M": 48, "vars": 1441, "cons": 1824}
+{"fam": "L3", "n": 16, "Q": 6, "rho": 2, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 1.0, "dual_bound": 0.0, "M": 48, "vars": 1441, "cons": 1824}
+{"fam": "L3", "n": 16, "Q": 8, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 5.0, "dual_bound": 2.0, "M": 48, "vars": 1921, "cons": 2416}
+{"fam": "L3", "n": 16, "Q": 8, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 3.0, "dual_bound": 0.0, "M": 48, "vars": 1921, "cons": 2416}
+{"fam": "L3", "n": 16, "Q": 8, "rho": 2, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 1.0, "dual_bound": 0.0, "M": 48, "vars": 1921, "cons": 2416}
+{"fam": "L3", "n": 20, "Q": 4, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 1.0, "M": 60, "vars": 1201, "cons": 1532}
+{"fam": "L3", "n": 20, "Q": 4, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 0.0, "M": 60, "vars": 1201, "cons": 1532}
+{"fam": "L3", "n": 20, "Q": 4, "rho": 2, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 1.0, "dual_bound": 0.0, "M": 60, "vars": 1201, "cons": 1532}
+{"fam": "L3", "n": 20, "Q": 6, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 3.0, "dual_bound": 2.0, "M": 60, "vars": 1801, "cons": 2268}
+{"fam": "L3", "n": 20, "Q": 6, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 0.0, "M": 60, "vars": 1801, "cons": 2268}
+{"fam": "L3", "n": 20, "Q": 6, "rho": 2, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 1.0, "dual_bound": 0.0, "M": 60, "vars": 1801, "cons": 2268}
+{"fam": "L3", "n": 20, "Q": 8, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 4.0, "dual_bound": 2.0, "M": 60, "vars": 2401, "cons": 3004}
+{"fam": "L3", "n": 20, "Q": 8, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 4.0, "dual_bound": 0.0, "M": 60, "vars": 2401, "cons": 3004}
+{"fam": "L3", "n": 20, "Q": 8, "rho": 2, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 0.0, "M": 60, "vars": 2401, "cons": 3004}
+{"fam": "L3", "n": 24, "Q": 4, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 1.0, "M": 72, "vars": 1441, "cons": 1832}
+{"fam": "L3", "n": 24, "Q": 4, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 0.0, "M": 72, "vars": 1441, "cons": 1832}
+{"fam": "L3", "n": 24, "Q": 4, "rho": 2, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 1.0, "dual_bound": 0.0, "M": 72, "vars": 1441, "cons": 1832}
+{"fam": "L3", "n": 24, "Q": 6, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 4.0, "dual_bound": 1.0, "M": 72, "vars": 2161, "cons": 2712}
+{"fam": "L3", "n": 24, "Q": 6, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 4.0, "dual_bound": 0.0, "M": 72, "vars": 2161, "cons": 2712}
+{"fam": "L3", "n": 24, "Q": 6, "rho": 2, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 0.0, "M": 72, "vars": 2161, "cons": 2712}
+{"fam": "L3", "n": 24, "Q": 8, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 5.0, "dual_bound": 2.0, "M": 72, "vars": 2881, "cons": 3592}
+{"fam": "L3", "n": 24, "Q": 8, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 7.0, "dual_bound": 0.0, "M": 72, "vars": 2881, "cons": 3592}
+{"fam": "L3", "n": 24, "Q": 8, "rho": 2, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 4.0, "dual_bound": 0.0, "M": 72, "vars": 2881, "cons": 3592}
+{"fam": "G3", "n": 16, "Q": 4, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 1.0, "M": 48, "vars": 1089, "cons": 1264}
+{"fam": "G3", "n": 16, "Q": 4, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 1.0, "dual_bound": 0.0, "M": 48, "vars": 1089, "cons": 1264}
+{"fam": "G3", "n": 16, "Q": 4, "rho": 2, "r": 4, "status": 0, "msg": "Optimization terminated successfully. (HiGHS Status 7: Optim", "R_best": 0.0, "dual_bound": 0.0, "M": 48, "vars": 1089, "cons": 1264}
+{"fam": "G3", "n": 16, "Q": 6, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 1.0, "M": 48, "vars": 1633, "cons": 1872}
+{"fam": "G3", "n": 16, "Q": 6, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 0.0, "M": 48, "vars": 1633, "cons": 1872}
+{"fam": "G3", "n": 16, "Q": 6, "rho": 2, "r": 4, "status": 0, "msg": "Optimization terminated successfully. (HiGHS Status 7: Optim", "R_best": 0.0, "dual_bound": 0.0, "M": 48, "vars": 1633, "cons": 1872}
+{"fam": "G3", "n": 16, "Q": 8, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 3.0, "dual_bound": 2.0, "M": 48, "vars": 2177, "cons": 2480}
+{"fam": "G3", "n": 16, "Q": 8, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 0.0, "M": 48, "vars": 2177, "cons": 2480}
+{"fam": "G3", "n": 16, "Q": 8, "rho": 2, "r": 4, "status": 0, "msg": "Optimization terminated successfully. (HiGHS Status 7: Optim", "R_best": 0.0, "dual_bound": 0.0, "M": 48, "vars": 2177, "cons": 2480}
+{"fam": "G3", "n": 20, "Q": 4, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 1.0, "M": 60, "vars": 1361, "cons": 1572}
+{"fam": "G3", "n": 20, "Q": 4, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 1.0, "dual_bound": 0.0, "M": 60, "vars": 1361, "cons": 1572}
+{"fam": "G3", "n": 20, "Q": 4, "rho": 2, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 1.0, "dual_bound": 0.0, "M": 60, "vars": 1361, "cons": 1572}
+{"fam": "G3", "n": 20, "Q": 6, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 1.0, "M": 60, "vars": 2041, "cons": 2328}
+{"fam": "G3", "n": 20, "Q": 6, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 3.0, "dual_bound": 0.0, "M": 60, "vars": 2041, "cons": 2328}
+{"fam": "G3", "n": 20, "Q": 6, "rho": 2, "r": 4, "status": 0, "msg": "Optimization terminated successfully. (HiGHS Status 7: Optim", "R_best": 0.0, "dual_bound": 0.0, "M": 60, "vars": 2041, "cons": 2328}
+{"fam": "G3", "n": 20, "Q": 8, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 4.0, "dual_bound": 1.0, "M": 60, "vars": 2721, "cons": 3084}
+{"fam": "G3", "n": 20, "Q": 8, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 3.0, "dual_bound": 0.0, "M": 60, "vars": 2721, "cons": 3084}
+{"fam": "G3", "n": 20, "Q": 8, "rho": 2, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 1.0, "dual_bound": 0.0, "M": 60, "vars": 2721, "cons": 3084}
+{"fam": "G3", "n": 24, "Q": 4, "rho": 0, "r": 4, "status": 0, "msg": "Optimization terminated successfully. (HiGHS Status 7: Optim", "R_best": 1.0, "dual_bound": 1.0, "M": 72, "vars": 1633, "cons": 1880}
+{"fam": "G3", "n": 24, "Q": 4, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 1.0, "dual_bound": 0.0, "M": 72, "vars": 1633, "cons": 1880}
+{"fam": "G3", "n": 24, "Q": 4, "rho": 2, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 1.0, "dual_bound": 0.0, "M": 72, "vars": 1633, "cons": 1880}
+{"fam": "G3", "n": 24, "Q": 6, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 1.0, "M": 72, "vars": 2449, "cons": 2784}
+{"fam": "G3", "n": 24, "Q": 6, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 5.0, "dual_bound": 0.0, "M": 72, "vars": 2449, "cons": 2784}
+{"fam": "G3", "n": 24, "Q": 6, "rho": 2, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 0.0, "M": 72, "vars": 2449, "cons": 2784}
+{"fam": "G3", "n": 24, "Q": 8, "rho": 0, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 5.0, "dual_bound": 1.0, "M": 72, "vars": 3265, "cons": 3688}
+{"fam": "G3", "n": 24, "Q": 8, "rho": 1, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 7.0, "dual_bound": 0.0, "M": 72, "vars": 3265, "cons": 3688}
+{"fam": "G3", "n": 24, "Q": 8, "rho": 2, "r": 4, "status": 1, "msg": "Time limit reached. (HiGHS Status 13: Time limit reached)", "R_best": 2.0, "dual_bound": 0.0, "M": 72, "vars": 3265, "cons": 3688}

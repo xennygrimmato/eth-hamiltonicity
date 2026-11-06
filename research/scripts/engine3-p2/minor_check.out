@@ -1,0 +1,8 @@
+{"file": "s1_G3_n16_Q8_rho1_r4_s1.s2dense3.pkl", "rho_used": 1, "max_dim": 1, "R": 5, "tuples_coabsorbed": 134, "violations": 0, "max_count_over_sumR": 0.667, "averaged_bound_R>=": 0.0634}
+{"file": "s1_L3_n16_Q4_rho1_r4_s1.s2dense3.pkl", "rho_used": 1, "max_dim": 1, "R": 3, "tuples_coabsorbed": 117, "violations": 0, "max_count_over_sumR": 1.0, "averaged_bound_R>=": 0.0565}
+{"file": "s1_L3_n16_Q8_rho1_r4_s3.s2dense3.pkl", "rho_used": 1, "max_dim": 1, "R": 5, "tuples_coabsorbed": 206, "violations": 0, "max_count_over_sumR": 0.4, "averaged_bound_R>=": 0.1032}
+{"file": "s1_L3_n16_Q8_rho2_r4_s1.s2dense3.pkl", "rho_used": 2, "max_dim": 2, "R": 4, "tuples_coabsorbed": 246, "violations": 0, "max_count_over_sumR": 0.333, "averaged_bound_R>=": 0.0055}
+{"file": "s1_G4_n16_Q8_rho1_r4_s1.s2mixedrand2.pkl", "rho_used": 1, "max_dim": 1, "R": 2, "tuples_coabsorbed": 284, "violations": 0, "max_count_over_sumR": 1.0, "averaged_bound_R>=": 0.0789}
+{"file": "s1_L3_n16_Q10_rho1_r4_s2.s2mixedrand2.pkl", "rho_used": 1, "max_dim": 1, "R": 3, "tuples_coabsorbed": 302, "violations": 0, "max_count_over_sumR": 0.75, "averaged_bound_R>=": 0.156}
+{"file": "s1_L3_n16_Q8_rho1_r4_s3.s2mixedrand2.pkl", "rho_used": 1, "max_dim": 1, "R": 3, "tuples_coabsorbed": 214, "violations": 0, "max_count_over_sumR": 0.667, "averaged_bound_R>=": 0.1083}
+{"file": "s1_L3_n24_Q8_rho1_r4_s1.s2mixedrand2.pkl", "rho_used": 1, "max_dim": 1, "R": 3, "tuples_coabsorbed": 434, "violations": 0, "max_count_over_sumR": 1.0, "averaged_bound_R>=": 0.094}

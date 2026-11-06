@@ -1,0 +1,44 @@
+r=2 Q=4 D=256 window I=[0, 1] (deg 1)
+measured eigenvectors c_B = 67  = D*Pr[W notin I] = 67.0
+rank(I - M0) = 67  (expected c_B = 67)
+(T2) support violations: 0
+Theorem 1 triangular lower bound (best of 2^Q signed phi) = 37 <= rank 67: True
+rows per (t,h): [[57, 57], [57, 57], [57, 57], [57, 57]]
+orbit representatives (k = #positions with a != d): {0: 0, 1: 8, 2: 12, 3: 14, 4: 15}
+ k=0: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 0 (exact Q-rank check feasible=True, deg-1 feasible=None); template-subclass min deg = 0; #foreign pts of own coord = 0
+ k=1: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 1 (exact Q-rank check feasible=True, deg-1 feasible=None); template-subclass min deg = 1; #foreign pts of own coord = 1
+ k=2: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 1 (exact Q-rank check feasible=True, deg-1 feasible=False); template-subclass min deg = 1; #foreign pts of own coord = 2
+ k=3: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 1 (exact Q-rank check feasible=True, deg-1 feasible=False); template-subclass min deg = 1; #foreign pts of own coord = 3
+ k=4: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 1 (exact Q-rank check feasible=True, deg-1 feasible=False); template-subclass min deg = 1; #foreign pts of own coord = 4
+
+real	0m26.631s
+user	0m26.234s
+sys	0m0.104s
+r=2 Q=4 D=256 window I=[1, 2] (deg 1)
+measured eigenvectors c_B = 94  = D*Pr[W notin I] = 94.0
+rank(I - M0) = 94  (expected c_B = 94)
+(T2) support violations: 0
+Theorem 1 triangular lower bound (best of 2^Q signed phi) = 37 <= rank 94: True
+rows per (t,h): [[66, 66], [66, 66], [66, 66], [66, 66]]
+orbit representatives (k = #positions with a != d): {0: 0, 1: 8, 2: 12, 3: 14, 4: 15}
+ k=0: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 0 (exact Q-rank check feasible=True, deg-1 feasible=None); template-subclass min deg = 0; #foreign pts of own coord = 0
+ k=1: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 0 (exact Q-rank check feasible=True, deg-1 feasible=None); template-subclass min deg = 0; #foreign pts of own coord = 1
+ k=2: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 1 (exact Q-rank check feasible=True, deg-1 feasible=False); template-subclass min deg = 1; #foreign pts of own coord = 2
+ k=3: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 1 (exact Q-rank check feasible=True, deg-1 feasible=False); template-subclass min deg = 1; #foreign pts of own coord = 3
+ k=4: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 1 (exact Q-rank check feasible=True, deg-1 feasible=False); template-subclass min deg = 1; #foreign pts of own coord = 4
+
+real	0m27.454s
+user	0m27.116s
+sys	0m0.175s
+r=2 Q=4 D=256 window I=[0, 1, 2] (deg 2)
+measured eigenvectors c_B = 13  = D*Pr[W notin I] = 13.0
+rank(I - M0) = 13  (expected c_B = 13)
+(T2) support violations: 0
+Theorem 1 triangular lower bound (best of 2^Q signed phi) = 9 <= rank 13: True
+rows per (t,h): [[12, 12], [12, 12], [12, 12], [12, 12]]
+orbit representatives (k = #positions with a != d): {0: 0, 1: 8, 2: 12, 3: 14, 4: 15}
+ k=0: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 0 (exact Q-rank check feasible=True, deg-1 feasible=None); template-subclass min deg = 0; #foreign pts of own coord = 0
+ k=1: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 1 (exact Q-rank check feasible=True, deg-1 feasible=None); template-subclass min deg = 1; #foreign pts of own coord = 1
+ k=2: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 2 (exact Q-rank check feasible=True, deg-1 feasible=None); template-subclass min deg = 2; #foreign pts of own coord = 2
+ k=3: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 2 (exact Q-rank check feasible=True, deg-1 feasible=False); template-subclass min deg = 2; #foreign pts of own coord = 3
+ k=4: explicit OAI rows satisfy constraints exactly: True; general-interface min deg = 2 (exact Q-rank check feasible=True, deg-1 feasible=False); template-subclass min deg = 2; #foreign pts of own coord = 4

@@ -1,0 +1,14 @@
+python3 stage2_general.py designs/s1_L3_n16_Q8_rho1_r4_s3.pkl 4000 2 mixedrand >> stage2_rand.out
+python3 stage2_general.py designs/s1_G4_n16_Q8_rho1_r4_s1.pkl 4000 2 mixedrand >> stage2_rand.out
+python3 stage2_general.py designs/s1_L3_n24_Q8_rho1_r4_s1.pkl 4000 2 mixedrand >> stage2_rand.out
+python3 stage2_general.py designs/s1_L3_n16_Q10_rho1_r4_s2.pkl 4000 2 mixedrand >> stage2_rand.out
+python3 stage2_general.py designs/s1_L3_n16_Q4_rho1_r4_s1.pkl 150 3 dense >> stage2_dense.out
+python3 stage2_general.py designs/s1_L3_n16_Q8_rho1_r4_s3.pkl 150 3 dense >> stage2_dense.out
+python3 stage2_general.py designs/s1_G3_n16_Q8_rho1_r4_s1.pkl 150 3 dense >> stage2_dense.out
+python3 stage2_general.py designs/s1_L3_n16_Q8_rho2_r4_s1.pkl 150 3 dense >> stage2_dense.out
+python3 neighbourhood.py designs/s1_L3_n16_Q8_rho1_r4_s3.pkl >> neighbourhood.out
+python3 neighbourhood.py designs/s1_L3_n16_Q10_rho1_r4_s2.pkl >> neighbourhood.out
+python3 neighbourhood.py designs/s1_G4_n16_Q8_rho1_r4_s1.pkl >> neighbourhood.out
+python3 neighbourhood.py designs/s1_G4_n16_Q10_rho1_r4_s1.pkl >> neighbourhood.out
+python3 neighbourhood.py designs/s1_L3_n20_Q8_rho1_r4_s1.pkl 3 >> neighbourhood.out
+python3 neighbourhood.py designs/s1_L3_n24_Q8_rho1_r4_s1.pkl 3 >> neighbourhood.out

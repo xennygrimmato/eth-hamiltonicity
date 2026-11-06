@@ -1,0 +1,9 @@
+L3 16 clauses 16 M 48 tw_ub 8
+L3 20 clauses 20 M 60 tw_ub 10
+L3 24 clauses 24 M 72 tw_ub 10
+G3 16 clauses 24 M 48 tw_ub 5
+G3 20 clauses 30 M 60 tw_ub 5
+G3 24 clauses 36 M 72 tw_ub 6
+G4 16 clauses 32 M 64 tw_ub 6
+G4 20 clauses 40 M 80 tw_ub 8
+G4 24 clauses 48 M 96 tw_ub 8

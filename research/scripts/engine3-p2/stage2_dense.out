@@ -1,0 +1,4 @@
+{"file": "s1_L3_n16_Q4_rho1_r4_s1.pkl", "mode": "dense", "seed": 3, "iters": 150, "start": [3, 69], "best": [3, 65], "exact_verified": true, "nonsingleton_rows": 12, "max_row_l1": 5, "max_system_entries": 2736, "secs": 18.8}
+{"file": "s1_L3_n16_Q8_rho1_r4_s3.pkl", "mode": "dense", "seed": 3, "iters": 150, "start": [5, 145], "best": [5, 145], "exact_verified": true, "nonsingleton_rows": 32, "max_row_l1": 8, "max_system_entries": 9984, "secs": 70.4}
+{"file": "s1_G3_n16_Q8_rho1_r4_s1.pkl", "mode": "dense", "seed": 3, "iters": 150, "start": [5, 101], "best": [5, 95], "exact_verified": true, "nonsingleton_rows": 21, "max_row_l1": 6, "max_system_entries": 9984, "secs": 47.9}
+{"file": "s1_L3_n16_Q8_rho2_r4_s1.pkl", "mode": "dense", "seed": 3, "iters": 150, "start": [4, 152], "best": [4, 122], "exact_verified": true, "nonsingleton_rows": 54, "max_row_l1": 8, "max_system_entries": 10752, "secs": 90.8}

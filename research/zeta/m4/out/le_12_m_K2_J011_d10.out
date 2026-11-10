@@ -1,0 +1,25 @@
+mollifier K=2: RH Cauchy-Schwarz bound 0.4885
+N=12 unc WT=m J=0..11 SIDE=le YMAX=3.0: TW targets [73.876  5.209  6.788  8.615  4.805  2.33   1.34   1.8    3.738  7.005
+ 11.879 18.136] (max rel MC se 0.0191)
+it   0 E[s1]/N 0.89556 slack 0.0e+00 ncols 1800 newneg 5 best -1.0e-01
+it   1 E[s1]/N 0.81099 slack 0.0e+00 ncols 1805 newneg 4 best -6.5e-02
+it   2 E[s1]/N 0.76352 slack 0.0e+00 ncols 1809 newneg 4 best -9.4e-02
+it   3 E[s1]/N 0.75290 slack 0.0e+00 ncols 1813 newneg 3 best -3.7e-02
+it   4 E[s1]/N 0.74370 slack 0.0e+00 ncols 1816 newneg 8 best -9.9e-02
+it   5 E[s1]/N 0.73424 slack 0.0e+00 ncols 1824 newneg 5 best -5.8e-02
+it   6 E[s1]/N 0.72126 slack 0.0e+00 ncols 1829 newneg 4 best -3.9e-02
+it   7 E[s1]/N 0.71492 slack 0.0e+00 ncols 1833 newneg 5 best -1.9e-02
+it   8 E[s1]/N 0.71120 slack 0.0e+00 ncols 1838 newneg 5 best -1.8e-02
+it   9 E[s1]/N 0.71005 slack 0.0e+00 ncols 1843 newneg 5 best -1.2e-02
+it  10 E[s1]/N 0.70840 slack 0.0e+00 ncols 1848 newneg 5 best -2.7e-02
+it  11 E[s1]/N 0.69470 slack 0.0e+00 ncols 1853 newneg 6 best -1.2e-02
+it  12 E[s1]/N 0.69370 slack 0.0e+00 ncols 1859 newneg 3 best -2.0e-02
+it  13 E[s1]/N 0.69259 slack 0.0e+00 ncols 1862 newneg 6 best -8.9e-03
+it  14 E[s1]/N 0.69148 slack 0.0e+00 ncols 1868 newneg 4 best -5.1e-03
+it  15 E[s1]/N 0.69099 slack 0.0e+00 ncols 1872 newneg 3 best -4.8e-03
+it  16 E[s1]/N 0.69073 slack 0.0e+00 ncols 1875 newneg 3 best -2.0e-03
+it  17 E[s1]/N 0.69044 slack 0.0e+00 ncols 1878 newneg 3 best -2.5e-03
+it  18 E[s1]/N 0.69031 slack 0.0e+00 ncols 1881 newneg 1 best -3.9e-04
+it  19 E[s1]/N 0.69028 slack 0.0e+00 ncols 1882 newneg 3 best -1.7e-03
+it  20 E[s1]/N 0.68990 slack 0.0e+00 ncols 1885 newneg 0 best 0.0e+00
+RESULT N=12 unc WT=m J=0..11 SIDE=le DELTA=0.1 YMAX=3.0: value 0.68990 slack 0.0e+00 | mass on doubles 0.435, pairs 0.654; pair depths in support [0.0, 0.001, 0.002, 0.003, 0.006, 0.007]

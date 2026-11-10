@@ -1,0 +1,32 @@
+it   0 obj 0.847083 slack 0.0e+00 ncols 3400 newneg 17 best -2.0e-01
+it   1 obj 0.745996 slack 0.0e+00 ncols 3417 newneg 21 best -9.0e-02
+it   2 obj 0.722620 slack 0.0e+00 ncols 3438 newneg 4 best -3.6e-02
+it   3 obj 0.717340 slack 0.0e+00 ncols 3442 newneg 15 best -3.6e-02
+it   4 obj 0.708257 slack 0.0e+00 ncols 3457 newneg 1 best -1.4e-02
+it   5 obj 0.707506 slack 0.0e+00 ncols 3458 newneg 6 best -7.1e-02
+it   6 obj 0.697830 slack 0.0e+00 ncols 3464 newneg 5 best -1.4e-02
+it   7 obj 0.697432 slack 0.0e+00 ncols 3469 newneg 3 best -6.2e-03
+it   8 obj 0.694887 slack 0.0e+00 ncols 3472 newneg 6 best -2.1e-03
+it   9 obj 0.694618 slack 0.0e+00 ncols 3478 newneg 3 best -8.4e-03
+it  10 obj 0.692332 slack 0.0e+00 ncols 3481 newneg 5 best -8.0e-03
+it  11 obj 0.690527 slack 0.0e+00 ncols 3486 newneg 2 best -1.1e-02
+it  12 obj 0.689675 slack 0.0e+00 ncols 3488 newneg 4 best -4.6e-03
+it  13 obj 0.689595 slack 0.0e+00 ncols 3492 newneg 2 best -1.9e-03
+it  14 obj 0.689521 slack 0.0e+00 ncols 3494 newneg 7 best -3.6e-03
+it  15 obj 0.689153 slack 0.0e+00 ncols 3501 newneg 2 best -1.6e-03
+it  16 obj 0.689046 slack 0.0e+00 ncols 3503 newneg 1 best -6.6e-04
+it  17 obj 0.688909 slack 0.0e+00 ncols 3504 newneg 3 best -1.0e-03
+it  18 obj 0.688793 slack 0.0e+00 ncols 3507 newneg 2 best -3.3e-04
+it  19 obj 0.688660 slack 0.0e+00 ncols 3509 newneg 2 best -3.6e-04
+it  20 obj 0.688653 slack 0.0e+00 ncols 3511 newneg 4 best -6.1e-04
+it  21 obj 0.688626 slack 0.0e+00 ncols 3515 newneg 4 best -5.2e-04
+it  22 obj 0.688565 slack 0.0e+00 ncols 3519 newneg 1 best -8.2e-05
+it  23 obj 0.688561 slack 0.0e+00 ncols 3520 newneg 1 best -2.9e-06
+it  24 obj 0.688561 slack 0.0e+00 ncols 3521 newneg 0 best 0.0e+00
+support columns with pairs (mass weight w = x/s, scaled weight x, info):
+   mass 1.573e-89 scaled 5.864e-01 cost*N 0 (np.int64(0), 0, np.int64(4), 19.99, [6.7, 7.01, 7.21, 7.27], [19.99, 19.99, 0.0, 6.72])
+   mass 2.206e-02 scaled 3.530e-01 cost*N 0 (np.int64(0), np.int64(2), np.int64(2), 0.0, [1.96, 3.96, 5.96, 7.96], [0.0, 0.0, 0.0, 0.0])
+   mass 1.170e-89 scaled 7.706e-02 cost*N 0 (np.int64(0), np.int64(0), np.int64(4), 19.86, [1.26, 2.88, 5.17, 6.88], [0.86, 3.15, 19.86, 19.86])
+   mass 3.824e-87 scaled 6.852e-02 cost*N 0 (np.int64(0), np.int64(0), np.int64(4), 19.1, [0.49, 0.72, 5.77, 6.79], [19.1, 0.39, 18.97, 19.05])
+total mass on pair configs 2.2061e-02
+RESULT N=8 level=3 SMIN=2 SMAX=7 YMAX=20.0: value 0.688561 slack 0.0e+00

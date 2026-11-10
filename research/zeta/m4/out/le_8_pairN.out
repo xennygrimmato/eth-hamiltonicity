@@ -1,0 +1,20 @@
+it   0 E[s1]/N 0.81919 slack 0.0e+00 ncols 1800 newneg 8 best -5.5e-02
+it   1 E[s1]/N 0.77152 slack 0.0e+00 ncols 1808 newneg 5 best -7.7e-03
+it   2 E[s1]/N 0.77035 slack 0.0e+00 ncols 1813 newneg 4 best -4.2e-03
+it   3 E[s1]/N 0.76975 slack 0.0e+00 ncols 1817 newneg 2 best -8.3e-04
+it   4 E[s1]/N 0.76969 slack 0.0e+00 ncols 1819 newneg 5 best -6.1e-03
+it   5 E[s1]/N 0.76654 slack 0.0e+00 ncols 1824 newneg 4 best -9.7e-03
+it   6 E[s1]/N 0.76539 slack 0.0e+00 ncols 1828 newneg 4 best -6.3e-03
+it   7 E[s1]/N 0.76271 slack 0.0e+00 ncols 1832 newneg 1 best -8.2e-05
+it   8 E[s1]/N 0.76270 slack 0.0e+00 ncols 1833 newneg 3 best -6.7e-07
+it   9 E[s1]/N 0.76270 slack 0.0e+00 ncols 1836 newneg 1 best -1.5e-03
+it  10 E[s1]/N 0.76215 slack 0.0e+00 ncols 1837 newneg 4 best -5.1e-03
+it  11 E[s1]/N 0.75852 slack 0.0e+00 ncols 1841 newneg 3 best -2.9e-03
+it  12 E[s1]/N 0.75850 slack 0.0e+00 ncols 1844 newneg 1 best -1.5e-03
+it  13 E[s1]/N 0.75844 slack 0.0e+00 ncols 1845 newneg 2 best -2.0e-03
+it  14 E[s1]/N 0.75839 slack 0.0e+00 ncols 1847 newneg 2 best -5.8e-04
+it  15 E[s1]/N 0.75827 slack 0.0e+00 ncols 1849 newneg 1 best -9.5e-05
+it  16 E[s1]/N 0.75826 slack 0.0e+00 ncols 1850 newneg 2 best -4.7e-05
+it  17 E[s1]/N 0.75825 slack 0.0e+00 ncols 1852 newneg 1 best -1.4e-03
+it  18 E[s1]/N 0.75787 slack 0.0e+00 ncols 1853 newneg 0 best 0.0e+00
+RESULT N=8 unc WT=none J=0..8 SIDE=le DELTA=0.0 YMAX=3.0: value 0.75787 slack 0.0e+00 | mass on doubles 0.504, pairs 0.416; pair depths in support [0.0, 0.0, 0.0]

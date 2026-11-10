@@ -1,0 +1,30 @@
+mollifier K=1: RH Cauchy-Schwarz bound 0.4931
+N=8 unc WT=m J=0..3 SIDE=le YMAX=3.0: TW targets [33.931  3.879  5.597  2.126] (max rel MC se 0.0095)
+it   0 E[s1]/N 0.83125 slack 0.0e+00 ncols 1800 newneg 10 best -7.9e-02
+it   1 E[s1]/N 0.80108 slack 0.0e+00 ncols 1810 newneg 9 best -2.1e-02
+it   2 E[s1]/N 0.78400 slack 0.0e+00 ncols 1819 newneg 5 best -2.2e-02
+it   3 E[s1]/N 0.78239 slack 0.0e+00 ncols 1824 newneg 3 best -5.0e-02
+it   4 E[s1]/N 0.77211 slack 0.0e+00 ncols 1827 newneg 8 best -4.0e-02
+it   5 E[s1]/N 0.76160 slack 0.0e+00 ncols 1835 newneg 4 best -4.9e-02
+it   6 E[s1]/N 0.73078 slack 0.0e+00 ncols 1839 newneg 4 best -5.6e-02
+it   7 E[s1]/N 0.71798 slack 0.0e+00 ncols 1843 newneg 1 best -5.6e-02
+it   8 E[s1]/N 0.71744 slack 0.0e+00 ncols 1844 newneg 5 best -3.7e-02
+it   9 E[s1]/N 0.70800 slack 0.0e+00 ncols 1849 newneg 5 best -1.8e-02
+it  10 E[s1]/N 0.70475 slack 0.0e+00 ncols 1854 newneg 7 best -3.7e-02
+it  11 E[s1]/N 0.70364 slack 0.0e+00 ncols 1861 newneg 5 best -2.7e-03
+it  12 E[s1]/N 0.70310 slack 0.0e+00 ncols 1866 newneg 1 best -2.2e-03
+it  13 E[s1]/N 0.70278 slack 0.0e+00 ncols 1867 newneg 3 best -2.5e-03
+it  14 E[s1]/N 0.70190 slack 0.0e+00 ncols 1870 newneg 2 best -3.7e-03
+it  15 E[s1]/N 0.70119 slack 0.0e+00 ncols 1872 newneg 3 best -2.2e-03
+it  16 E[s1]/N 0.70110 slack 0.0e+00 ncols 1875 newneg 3 best -1.2e-02
+it  17 E[s1]/N 0.70050 slack 0.0e+00 ncols 1878 newneg 3 best -6.8e-04
+it  18 E[s1]/N 0.70029 slack 0.0e+00 ncols 1881 newneg 3 best -8.9e-04
+it  19 E[s1]/N 0.70022 slack 0.0e+00 ncols 1884 newneg 3 best -2.0e-02
+it  20 E[s1]/N 0.69160 slack 0.0e+00 ncols 1887 newneg 2 best -2.9e-03
+it  21 E[s1]/N 0.69146 slack 0.0e+00 ncols 1889 newneg 2 best -5.6e-03
+it  22 E[s1]/N 0.69118 slack 0.0e+00 ncols 1891 newneg 4 best -1.2e-02
+it  23 E[s1]/N 0.69064 slack 0.0e+00 ncols 1895 newneg 1 best -1.0e-03
+it  24 E[s1]/N 0.69056 slack 0.0e+00 ncols 1896 newneg 4 best -1.7e-03
+it  25 E[s1]/N 0.69029 slack 0.0e+00 ncols 1900 newneg 2 best -7.9e-04
+it  26 E[s1]/N 0.69022 slack 0.0e+00 ncols 1902 newneg 0 best 0.0e+00
+RESULT N=8 unc WT=m J=0..3 SIDE=le DELTA=0.0 YMAX=3.0: value 0.69022 slack 0.0e+00 | mass on doubles 0.164, pairs 0.687; pair depths in support [0.0, 0.0, 0.0, 0.0, 0.001, 0.001]

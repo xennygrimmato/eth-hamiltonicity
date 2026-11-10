@@ -1,0 +1,49 @@
+it   0 obj 0.799211 slack 0.0e+00 ncols 3400 newneg 37 best -1.5e-01
+it   1 obj 0.726872 slack 0.0e+00 ncols 3437 newneg 28 best -9.5e-02
+it   2 obj 0.708243 slack 0.0e+00 ncols 3465 newneg 22 best -5.3e-02
+it   3 obj 0.702217 slack 0.0e+00 ncols 3487 newneg 21 best -3.7e-02
+it   4 obj 0.695591 slack 0.0e+00 ncols 3508 newneg 23 best -2.0e-02
+it   5 obj 0.693037 slack 0.0e+00 ncols 3531 newneg 30 best -1.3e-02
+it   6 obj 0.689711 slack 0.0e+00 ncols 3561 newneg 20 best -2.7e-03
+it   7 obj 0.688892 slack 0.0e+00 ncols 3581 newneg 28 best -3.4e-03
+it   8 obj 0.687750 slack 0.0e+00 ncols 3609 newneg 16 best -4.1e-03
+it   9 obj 0.687229 slack 0.0e+00 ncols 3625 newneg 15 best -3.0e-03
+it  10 obj 0.686973 slack 0.0e+00 ncols 3640 newneg 8 best -1.9e-03
+it  11 obj 0.686810 slack 0.0e+00 ncols 3648 newneg 8 best -1.3e-03
+it  12 obj 0.686319 slack 0.0e+00 ncols 3656 newneg 6 best -9.2e-04
+it  13 obj 0.686193 slack 0.0e+00 ncols 3662 newneg 10 best -1.4e-03
+it  14 obj 0.685923 slack 0.0e+00 ncols 3672 newneg 5 best -1.7e-03
+it  15 obj 0.685525 slack 0.0e+00 ncols 3677 newneg 16 best -2.0e-04
+it  16 obj 0.685492 slack 0.0e+00 ncols 3693 newneg 9 best -1.2e-03
+it  17 obj 0.685399 slack 0.0e+00 ncols 3702 newneg 6 best -1.2e-04
+it  18 obj 0.685390 slack 0.0e+00 ncols 3708 newneg 10 best -1.4e-03
+it  19 obj 0.685076 slack 0.0e+00 ncols 3718 newneg 16 best -5.3e-04
+it  20 obj 0.684959 slack 0.0e+00 ncols 3734 newneg 5 best -5.0e-04
+it  21 obj 0.684919 slack 0.0e+00 ncols 3739 newneg 9 best -1.6e-04
+it  22 obj 0.684905 slack 0.0e+00 ncols 3748 newneg 6 best -2.8e-04
+it  23 obj 0.684882 slack 0.0e+00 ncols 3754 newneg 8 best -1.0e-04
+it  24 obj 0.684879 slack 0.0e+00 ncols 3762 newneg 7 best -7.9e-05
+it  25 obj 0.684870 slack 0.0e+00 ncols 3769 newneg 3 best -4.8e-06
+it  26 obj 0.684870 slack 0.0e+00 ncols 3772 newneg 5 best -6.0e-05
+it  27 obj 0.684867 slack 0.0e+00 ncols 3777 newneg 0 best 0.0e+00
+support columns with pairs (mass weight w = x/s, scaled weight x, info):
+   mass 5.066e-01 scaled 5.066e-01 cost*N 10 (np.int64(10), 0, np.int64(1), 0.0, [0.63, 1.64, 2.65, 3.65, 4.66, 5.66, 6.67, 7.67, 8.75, 10.57, 11.61], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 1.622e-01 scaled 4.079e-01 cost*N 8 (np.int64(8), 0, np.int64(2), 0.0, [0.66, 1.73, 3.59, 4.63, 5.65, 6.65, 7.71, 8.8, 10.59, 11.63], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 2.718e-02 scaled 3.538e-01 cost*N 10 (np.int64(10), np.int64(0), np.int64(1), 0.0, [0.05, 1.12, 2.21, 3.3, 4.4, 5.51, 6.61, 7.7, 8.79, 9.86, 10.95], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 2.701e-02 scaled 2.290e-01 cost*N 8 (np.int64(8), np.int64(1), np.int64(1), 0.0, [0.83, 1.9, 4.52, 5.58, 6.6, 7.66, 8.71, 9.7, 10.76, 11.81], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 9.135e-03 scaled 2.192e-01 cost*N 0 (np.int64(0), np.int64(3), np.int64(3), 0.0, [1.95, 3.95, 5.95, 7.95, 9.95, 11.95], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 8.574e-02 scaled 2.098e-01 cost*N 6 (np.int64(6), np.int64(0), np.int64(3), 0.0, [0.97, 2.87, 3.89, 4.96, 6.03, 7.06, 8.88, 9.98, 11.85], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 3.519e-02 scaled 1.790e-01 cost*N 6 (np.int64(6), np.int64(0), np.int64(3), 0.0, [1.63, 2.67, 3.72, 5.58, 6.6, 7.67, 9.62, 10.72, 11.78], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 3.085e-02 scaled 1.472e-01 cost*N 4 (np.int64(4), np.int64(3), np.int64(1), 0.0, [0.46, 1.52, 2.58, 3.68, 5.48, 6.52, 7.6, 10.53], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 1.430e-02 scaled 1.216e-01 cost*N 4 (np.int64(4), 0, np.int64(4), 0.0, [1.4, 2.43, 3.49, 6.36, 7.47, 9.39, 10.42, 11.48], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 1.599e-02 scaled 1.055e-01 cost*N 2 (np.int64(2), np.int64(2), np.int64(3), 0.0, [0.87, 1.95, 3.87, 5.86, 7.81, 10.74, 11.81], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 1.866e-02 scaled 6.155e-02 cost*N 4 (np.int64(4), 0, np.int64(4), 0.0, [0.18, 1.22, 3.07, 4.12, 6.04, 7.15, 9.14, 11.11], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 4.830e-03 scaled 4.723e-02 cost*N 2 (np.int64(2), np.int64(3), np.int64(2), 0.0, [0.33, 1.41, 3.34, 5.31, 6.45, 8.42, 10.37], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 5.521e-03 scaled 4.544e-02 cost*N 2 (np.int64(2), 0, np.int64(5), 0.0, [0.46, 1.5, 2.56, 4.5, 7.49, 9.44, 11.36], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 2.580e-03 scaled 2.787e-02 cost*N 6 (np.int64(6), np.int64(0), np.int64(3), 0.0, [0.99, 2.04, 3.03, 4.09, 5.19, 8.79, 9.89, 10.95, 11.94], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 8.354e-03 scaled 2.433e-02 cost*N 8 (np.int64(8), np.int64(1), np.int64(1), 0.0, [0.2, 1.24, 2.29, 4.06, 5.15, 6.22, 7.22, 8.3, 9.39, 11.15], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 1.691e-03 scaled 7.133e-03 cost*N 4 (np.int64(4), np.int64(2), np.int64(2), 0.0, [1.57, 2.63, 4.52, 5.62, 7.58, 9.53, 10.64, 11.7], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 1.620e-04 scaled 1.248e-03 cost*N 6 (np.int64(6), 0, np.int64(3), 0.0, [0.82, 1.87, 2.91, 3.92, 4.93, 6.01, 9.65, 10.74, 11.81], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 1.347e-04 scaled 1.006e-03 cost*N 6 (np.int64(6), 0, np.int64(3), 0.0, [0.76, 1.85, 3.76, 5.62, 6.69, 7.78, 8.83, 9.86, 11.67], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+total mass on pair configs 9.5612e-01
+RESULT N=12 level=3 SMIN=2 SMAX=6 YMAX=1e-09: value 0.684867 slack 0.0e+00

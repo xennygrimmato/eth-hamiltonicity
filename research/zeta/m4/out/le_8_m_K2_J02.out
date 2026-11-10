@@ -1,0 +1,27 @@
+mollifier K=2: RH Cauchy-Schwarz bound 0.6192
+N=8 unc WT=m J=0..2 SIDE=le YMAX=3.0: TW targets [41.45   1.924  2.085] (max rel MC se 0.0076)
+it   0 E[s1]/N 0.82736 slack 0.0e+00 ncols 1800 newneg 9 best -6.1e-02
+it   1 E[s1]/N 0.77099 slack 0.0e+00 ncols 1809 newneg 4 best -4.9e-02
+it   2 E[s1]/N 0.75927 slack 0.0e+00 ncols 1813 newneg 7 best -2.8e-02
+it   3 E[s1]/N 0.75307 slack 0.0e+00 ncols 1820 newneg 3 best -4.8e-02
+it   4 E[s1]/N 0.72649 slack 0.0e+00 ncols 1823 newneg 6 best -7.4e-02
+it   5 E[s1]/N 0.71901 slack 0.0e+00 ncols 1829 newneg 3 best -4.2e-02
+it   6 E[s1]/N 0.70599 slack 0.0e+00 ncols 1832 newneg 3 best -1.8e-02
+it   7 E[s1]/N 0.69779 slack 0.0e+00 ncols 1835 newneg 2 best -1.7e-03
+it   8 E[s1]/N 0.69770 slack 0.0e+00 ncols 1837 newneg 2 best -6.0e-03
+it   9 E[s1]/N 0.69730 slack 0.0e+00 ncols 1839 newneg 2 best -7.5e-03
+it  10 E[s1]/N 0.69655 slack 0.0e+00 ncols 1841 newneg 5 best -6.0e-03
+it  11 E[s1]/N 0.69619 slack 0.0e+00 ncols 1846 newneg 4 best -4.0e-03
+it  12 E[s1]/N 0.69452 slack 0.0e+00 ncols 1850 newneg 1 best -4.2e-03
+it  13 E[s1]/N 0.69436 slack 0.0e+00 ncols 1851 newneg 2 best -1.7e-03
+it  14 E[s1]/N 0.69352 slack 0.0e+00 ncols 1853 newneg 2 best -2.9e-04
+it  15 E[s1]/N 0.69345 slack 0.0e+00 ncols 1855 newneg 3 best -1.1e-02
+it  16 E[s1]/N 0.68957 slack 0.0e+00 ncols 1858 newneg 4 best -1.0e-03
+it  17 E[s1]/N 0.68952 slack 0.0e+00 ncols 1862 newneg 1 best -2.1e-03
+it  18 E[s1]/N 0.68893 slack 0.0e+00 ncols 1863 newneg 4 best -8.1e-04
+it  19 E[s1]/N 0.68865 slack 0.0e+00 ncols 1867 newneg 1 best -2.9e-04
+it  20 E[s1]/N 0.68864 slack 0.0e+00 ncols 1868 newneg 2 best -7.0e-04
+it  21 E[s1]/N 0.68842 slack 0.0e+00 ncols 1870 newneg 1 best -5.5e-04
+it  22 E[s1]/N 0.68831 slack 0.0e+00 ncols 1871 newneg 2 best -4.7e-06
+it  23 E[s1]/N 0.68831 slack 0.0e+00 ncols 1873 newneg 0 best 0.0e+00
+RESULT N=8 unc WT=m J=0..2 SIDE=le DELTA=0.0 YMAX=3.0: value 0.68831 slack 0.0e+00 | mass on doubles 0.156, pairs 0.525; pair depths in support [0.0, 0.0, 0.0, 0.0, 0.0, 0.002]

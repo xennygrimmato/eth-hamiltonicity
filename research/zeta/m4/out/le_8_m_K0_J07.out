@@ -1,0 +1,27 @@
+mollifier K=0: RH Cauchy-Schwarz bound 0.3001
+N=8 unc WT=m J=0..7 SIDE=le YMAX=3.0: TW targets [22.315 12.769  5.857  1.787  0.446  1.787  5.857 12.769] (max rel MC se 0.0099)
+it   0 E[s1]/N 0.80225 slack 0.0e+00 ncols 1800 newneg 9 best -1.0e-01
+it   1 E[s1]/N 0.76658 slack 0.0e+00 ncols 1809 newneg 10 best -2.2e-02
+it   2 E[s1]/N 0.75857 slack 0.0e+00 ncols 1819 newneg 3 best -1.3e-02
+it   3 E[s1]/N 0.75726 slack 0.0e+00 ncols 1822 newneg 2 best -1.7e-02
+it   4 E[s1]/N 0.75149 slack 0.0e+00 ncols 1824 newneg 5 best -4.5e-02
+it   5 E[s1]/N 0.72503 slack 0.0e+00 ncols 1829 newneg 3 best -2.4e-02
+it   6 E[s1]/N 0.70147 slack 0.0e+00 ncols 1832 newneg 5 best -2.3e-02
+it   7 E[s1]/N 0.69470 slack 0.0e+00 ncols 1837 newneg 5 best -7.4e-03
+it   8 E[s1]/N 0.69435 slack 0.0e+00 ncols 1842 newneg 2 best -2.8e-03
+it   9 E[s1]/N 0.69326 slack 0.0e+00 ncols 1844 newneg 2 best -8.4e-03
+it  10 E[s1]/N 0.69247 slack 0.0e+00 ncols 1846 newneg 4 best -9.5e-04
+it  11 E[s1]/N 0.69238 slack 0.0e+00 ncols 1850 newneg 4 best -1.7e-03
+it  12 E[s1]/N 0.69150 slack 0.0e+00 ncols 1854 newneg 2 best -1.7e-03
+it  13 E[s1]/N 0.69141 slack 0.0e+00 ncols 1856 newneg 4 best -6.3e-03
+it  14 E[s1]/N 0.69005 slack 0.0e+00 ncols 1860 newneg 4 best -1.1e-02
+it  15 E[s1]/N 0.68859 slack 0.0e+00 ncols 1864 newneg 1 best -3.5e-04
+it  16 E[s1]/N 0.68852 slack 0.0e+00 ncols 1865 newneg 4 best -1.3e-03
+it  17 E[s1]/N 0.68850 slack 0.0e+00 ncols 1869 newneg 1 best -6.4e-05
+it  18 E[s1]/N 0.68850 slack 0.0e+00 ncols 1870 newneg 3 best -3.2e-05
+it  19 E[s1]/N 0.68850 slack 0.0e+00 ncols 1873 newneg 1 best -1.4e-03
+it  20 E[s1]/N 0.68837 slack 0.0e+00 ncols 1874 newneg 3 best -4.9e-06
+it  21 E[s1]/N 0.68837 slack 0.0e+00 ncols 1877 newneg 1 best -7.8e-04
+it  22 E[s1]/N 0.68822 slack 0.0e+00 ncols 1878 newneg 1 best -1.5e-05
+it  23 E[s1]/N 0.68822 slack 0.0e+00 ncols 1879 newneg 0 best 0.0e+00
+RESULT N=8 unc WT=m J=0..7 SIDE=le DELTA=0.0 YMAX=3.0: value 0.68822 slack 0.0e+00 | mass on doubles 0.362, pairs 0.377; pair depths in support [0.0, 0.0, 0.0, 0.001]

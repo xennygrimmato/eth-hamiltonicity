@@ -1,0 +1,9 @@
+mollifier K=3: RH Cauchy-Schwarz bound 0.7068
+N=8 unc WT=m J=0..1 SIDE=le YMAX=3.0: TW targets [46.632  1.278] (max rel MC se 0.0081)
+it   0 E[s1]/N 0.77636 slack 0.0e+00 ncols 1800 newneg 9 best -6.3e-02
+it   1 E[s1]/N 0.70194 slack 0.0e+00 ncols 1809 newneg 3 best -1.5e-02
+it   2 E[s1]/N 0.69831 slack 0.0e+00 ncols 1812 newneg 5 best -2.3e-02
+it   3 E[s1]/N 0.69431 slack 0.0e+00 ncols 1817 newneg 4 best -8.5e-03
+it   4 E[s1]/N 0.69384 slack 0.0e+00 ncols 1821 newneg 4 best -1.0e-02
+it   5 E[s1]/N 0.69315 slack 0.0e+00 ncols 1825 newneg 0 best 0.0e+00
+RESULT N=8 unc WT=m J=0..1 SIDE=le DELTA=0.0 YMAX=3.0: value 0.69315 slack 0.0e+00 | mass on doubles 0.345, pairs 0.242; pair depths in support [0.0, 0.0, 0.0, 0.0, 0.01]

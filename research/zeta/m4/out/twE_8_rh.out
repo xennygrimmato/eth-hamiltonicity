@@ -1,0 +1,29 @@
+N=8 mode=rh rows=all: CUE targets: G1=0.5626-0.0005j (se 0.0009), V_l=[22.329 12.664  5.838  1.792  0.441  1.792  5.838 12.664 22.329] rel se max 0.0083; U2 rel se 0.0014
+it   0 E[s1]/N 0.82712 slack 0.00e+00 ncols 1800 newneg 12 best -5.40e-01
+it   1 E[s1]/N 0.78682 slack 0.00e+00 ncols 1812 newneg 12 best -4.70e-01
+it   2 E[s1]/N 0.75723 slack 0.00e+00 ncols 1824 newneg 7 best -3.91e-01
+it   3 E[s1]/N 0.74048 slack 0.00e+00 ncols 1831 newneg 12 best -3.37e-01
+it   4 E[s1]/N 0.73608 slack 0.00e+00 ncols 1843 newneg 11 best -3.90e-01
+it   5 E[s1]/N 0.73110 slack 0.00e+00 ncols 1854 newneg 10 best -8.01e-02
+it   6 E[s1]/N 0.72272 slack 0.00e+00 ncols 1864 newneg 9 best -1.17e-01
+it   7 E[s1]/N 0.71300 slack 0.00e+00 ncols 1873 newneg 5 best -6.55e-02
+it   8 E[s1]/N 0.70524 slack 0.00e+00 ncols 1878 newneg 9 best -3.70e-02
+it   9 E[s1]/N 0.70043 slack 0.00e+00 ncols 1887 newneg 10 best -2.65e-02
+it  10 E[s1]/N 0.69904 slack 0.00e+00 ncols 1897 newneg 9 best -2.02e-02
+it  11 E[s1]/N 0.69744 slack 0.00e+00 ncols 1906 newneg 7 best -9.55e-03
+it  12 E[s1]/N 0.69707 slack 0.00e+00 ncols 1913 newneg 6 best -2.47e-02
+it  13 E[s1]/N 0.69676 slack 0.00e+00 ncols 1919 newneg 7 best -1.20e-02
+it  14 E[s1]/N 0.69573 slack 0.00e+00 ncols 1926 newneg 7 best -1.84e-03
+it  15 E[s1]/N 0.69545 slack 0.00e+00 ncols 1933 newneg 7 best -2.86e-03
+it  16 E[s1]/N 0.69520 slack 0.00e+00 ncols 1940 newneg 3 best -1.24e-03
+it  17 E[s1]/N 0.69496 slack 0.00e+00 ncols 1943 newneg 3 best -1.64e-03
+it  18 E[s1]/N 0.69478 slack 0.00e+00 ncols 1946 newneg 3 best -1.51e-03
+it  19 E[s1]/N 0.69464 slack 0.00e+00 ncols 1949 newneg 2 best -6.55e-04
+it  20 E[s1]/N 0.69446 slack 0.00e+00 ncols 1951 newneg 2 best -1.76e-03
+it  21 E[s1]/N 0.69443 slack 0.00e+00 ncols 1953 newneg 5 best -8.85e-04
+it  22 E[s1]/N 0.69438 slack 0.00e+00 ncols 1958 newneg 5 best -5.40e-04
+it  23 E[s1]/N 0.69438 slack 0.00e+00 ncols 1963 newneg 2 best -6.88e-06
+it  24 E[s1]/N 0.69438 slack 0.00e+00 ncols 1965 newneg 4 best -1.50e-03
+it  25 E[s1]/N 0.69433 slack 0.00e+00 ncols 1969 newneg 6 best -1.12e-03
+it  26 E[s1]/N 0.69431 slack 0.00e+00 ncols 1975 newneg 0 best 0.00e+00
+RESULT N=8 mode=rh rows=all: ceiling estimate E[s1]/N = 0.69431 (slack 0.0e+00); law weight on configs with doubles 1.000, with pairs 0.000; top support [(np.float64(0.3533794088237416), (6, 1, 0, 0.0)), (np.float64(0.15308014217005542), (6, 1, 0, 0.0)), (np.float64(0.1527282938619234), (6, 1, 0, 0.0)), (np.float64(0.08264691402275588), (4, 2, 0, 0.0)), (np.float64(0.08258224276665767), (6, 1, 0, 0.0)), (np.float64(0.044154865415074095), (4, 2, 0, 0.0))]

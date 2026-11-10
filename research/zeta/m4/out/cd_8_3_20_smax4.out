@@ -1,0 +1,18 @@
+it   0 obj 0.738050 slack 0.0e+00 ncols 3400 newneg 37 best -8.5e-02
+it   1 obj 0.701525 slack 0.0e+00 ncols 3437 newneg 5 best -1.9e-02
+it   2 obj 0.697452 slack 0.0e+00 ncols 3442 newneg 2 best -3.1e-03
+it   3 obj 0.696823 slack 0.0e+00 ncols 3444 newneg 2 best -9.7e-03
+it   4 obj 0.693444 slack 0.0e+00 ncols 3446 newneg 3 best -4.8e-03
+it   5 obj 0.689950 slack 0.0e+00 ncols 3449 newneg 4 best -1.1e-02
+it   6 obj 0.689600 slack 0.0e+00 ncols 3453 newneg 2 best -2.4e-03
+it   7 obj 0.689540 slack 0.0e+00 ncols 3455 newneg 2 best -3.4e-03
+it   8 obj 0.688948 slack 0.0e+00 ncols 3457 newneg 4 best -3.0e-03
+it   9 obj 0.688567 slack 0.0e+00 ncols 3461 newneg 2 best -4.2e-03
+it  10 obj 0.688340 slack 0.0e+00 ncols 3463 newneg 2 best -1.6e-03
+it  11 obj 0.688270 slack 0.0e+00 ncols 3465 newneg 2 best -7.7e-03
+it  12 obj 0.687727 slack 0.0e+00 ncols 3467 newneg 3 best -1.1e-03
+it  13 obj 0.687606 slack 0.0e+00 ncols 3470 newneg 0 best 0.0e+00
+support columns with pairs (mass weight w = x/s, scaled weight x, info):
+   mass 5.117e-01 scaled 7.330e-01 cost*N 6 (np.int64(6), np.int64(0), np.int64(1), 0.0, [0.14, 1.14, 2.15, 3.17, 4.2, 5.98, 7.07], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+total mass on pair configs 5.1170e-01
+RESULT N=8 level=3 SMIN=2 SMAX=4 YMAX=20.0: value 0.687606 slack 0.0e+00

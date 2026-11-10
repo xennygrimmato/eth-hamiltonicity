@@ -1,0 +1,24 @@
+N=8 unc K=3 J=0..8 DELTA=0.0 M2=False YMAX=3.0: M1=6.7212 (RH C-S bound 0.7059); W targets [46.584  1.274  1.192  1.292  1.825  1.994  3.609  6.729 11.462]
+it   0 E[s1]/N 1.00000 slack 0.0e+00 ncols 1500 newneg 11 best -2.8e-01
+it   1 E[s1]/N 0.96982 slack 0.0e+00 ncols 1511 newneg 12 best -6.0e-02
+it   2 E[s1]/N 0.92618 slack 0.0e+00 ncols 1523 newneg 9 best -7.2e-02
+it   3 E[s1]/N 0.88143 slack 0.0e+00 ncols 1532 newneg 8 best -8.9e-02
+it   4 E[s1]/N 0.85838 slack 0.0e+00 ncols 1540 newneg 4 best -5.7e-02
+it   5 E[s1]/N 0.84388 slack 0.0e+00 ncols 1544 newneg 5 best -4.5e-02
+it   6 E[s1]/N 0.82911 slack 0.0e+00 ncols 1549 newneg 4 best -3.3e-02
+it   7 E[s1]/N 0.82101 slack 0.0e+00 ncols 1553 newneg 6 best -5.1e-02
+it   8 E[s1]/N 0.80468 slack 0.0e+00 ncols 1559 newneg 6 best -1.2e-02
+it   9 E[s1]/N 0.80271 slack 0.0e+00 ncols 1565 newneg 8 best -6.9e-02
+it  10 E[s1]/N 0.77614 slack 0.0e+00 ncols 1573 newneg 3 best -1.1e-02
+it  11 E[s1]/N 0.77544 slack 0.0e+00 ncols 1576 newneg 2 best -1.0e-03
+it  12 E[s1]/N 0.77543 slack 0.0e+00 ncols 1578 newneg 4 best -1.1e-02
+it  13 E[s1]/N 0.77240 slack 0.0e+00 ncols 1582 newneg 6 best -4.1e-02
+it  14 E[s1]/N 0.76626 slack 0.0e+00 ncols 1588 newneg 1 best -9.8e-03
+it  15 E[s1]/N 0.76347 slack 0.0e+00 ncols 1589 newneg 7 best -8.5e-02
+it  16 E[s1]/N 0.75806 slack 0.0e+00 ncols 1596 newneg 4 best -1.4e-02
+it  17 E[s1]/N 0.75684 slack 0.0e+00 ncols 1600 newneg 3 best -4.6e-02
+it  18 E[s1]/N 0.75153 slack 0.0e+00 ncols 1603 newneg 1 best -1.6e-02
+it  19 E[s1]/N 0.74878 slack 0.0e+00 ncols 1604 newneg 6 best -5.2e-02
+it  20 E[s1]/N 0.74031 slack 0.0e+00 ncols 1610 newneg 1 best -2.3e-03
+it  21 E[s1]/N 0.74028 slack 0.0e+00 ncols 1611 newneg 0 best 0.0e+00
+RESULT N=8 unc free-f K=3 J=0..8 DELTA=0.0 M2=False YMAX=3.0: value 0.74028 slack 0.0e+00 | mass doubles 0.336, pairs 0.361; depths [0.0, 0.001, 0.001, 0.009, 0.014, 0.13]

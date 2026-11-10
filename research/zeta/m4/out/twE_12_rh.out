@@ -1,0 +1,13 @@
+N=12 mode=rh rows=all: CUE targets: G1=0.5424+0.0001j (se 0.0009), V_l=[36.089 25.033 16.153  9.395  4.568  1.69   0.715  1.69   4.568  9.395
+ 16.153 25.033 36.089] rel se max 0.0095; U2 rel se 0.0022
+it   0 E[s1]/N 0.88109 slack 0.00e+00 ncols 1800 newneg 12 best -1.00e+00
+it   1 E[s1]/N 0.84334 slack 0.00e+00 ncols 1812 newneg 12 best -7.62e-01
+it   2 E[s1]/N 0.81353 slack 0.00e+00 ncols 1824 newneg 12 best -2.17e+00
+it   3 E[s1]/N 0.79064 slack 0.00e+00 ncols 1836 newneg 12 best -3.68e-01
+it   4 E[s1]/N 0.76800 slack 0.00e+00 ncols 1848 newneg 11 best -6.57e-01
+it   5 E[s1]/N 0.76258 slack 0.00e+00 ncols 1859 newneg 10 best -3.28e-01
+it   6 E[s1]/N 0.75539 slack 0.00e+00 ncols 1869 newneg 12 best -1.16e-01
+it   7 E[s1]/N 0.71062 slack 0.00e+00 ncols 1881 newneg 11 best -6.49e-01
+it   8 E[s1]/N 0.70564 slack 0.00e+00 ncols 1892 newneg 11 best -2.44e-01
+it   9 E[s1]/N 0.70133 slack 0.00e+00 ncols 1903 newneg 10 best -6.03e-02
+it  10 E[s1]/N 0.69941 slack 0.00e+00 ncols 1913 newneg 7 best -1.06e-01

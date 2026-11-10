@@ -1,4 +1,4 @@
-# Tracker (h2): work and discussion on "beyond 2/3" for zeta zeros — last refresh 10 Nov 2026
+# Tracker (h2): work and discussion on "beyond 2/3" for zeta zeros — last refresh 10 Nov 2026 (two passes)
 
 Companion to `h2/novelty.md` (full tables, citations, theorem numbers). Tags: **FACT** = read in the primary source
 today; **CLAIM** = stated by its author, unrefereed, not checked by us; **SPEC** = speculation (theirs or mine).
@@ -73,6 +73,30 @@ searched, **unverified**). The technical hunches are in papers and repositories:
   to 12/7 or 20/11, giving 0.9117 / 0.9226; the density hypothesis for the family gives bandwidth 2. Assessment:
   this is the one place where zero-density technology (Guth-Maynard-type large-value estimates in hybrid form)
   feeds a proportion; OpenAI's 7/8 half-plane does not give such a hybrid density estimate.
+
+## 3c. Refresh 10 Nov (second pass: other routes to forum discussion)
+Routes tried: MathOverflow via api.stackexchange.com (worked); Tao's blog RSS and Mathstodon RSS (worked: nothing
+technical on this theorem; recent posts are about AI and the profession); Calegari's blog RSS (worked: no post on
+this theorem; an 8 Oct post digests OpenAI results); Lean Zulip (API needs login; the public archive page is the
+old static site, no relevant stream found); Nitter/X mirrors (not accessible from this environment; **X remains
+unsearched**).
+
+MathOverflow items since Aug 2026 (FACT = read via API today):
+| date | id | who | content | relevance |
+|---|---|---|---|---|
+| 20 Oct | 516206 | question quoting Arias de Reyna; answers T. Chow, P. Hajlasz | Arias de Reyna's exposition says of the Anthropic paper: "As it's written, [1] DOESN'T WORK, but I don't think the necessary modifications deserves more than a note" — the natural-language proof has errors although the Lean theorem stands. | FACT. **Do not rely on the paper's intermediate statements; use the Lean statements or Arias de Reyna / Lamzouri.** Arias de Reyna (arXiv:2610.24612 §1.1, read) does not list the false statements in one place; the only explicit pointer found by grep is footnote 1, p. 15–16: 'In [1] U is taken equal to √T. Their bound is of the order of N and it is not sufficient' (edge-zone/tail estimate: the buffer length U around T and 2T must be chosen smaller). He says it took him a month to be convinced and that the paper is 'filled with bad notations, wrong assertions and unneeded statements'. |
+| 17 Sep | 515310 | Pierre-Aubry Simon | Asks whether a non-trivial inequality α₀ ≥ f(α₁) exists between the critical-line proportions of ζ and of ξ' (notes Levinson-type bounds move together). No answer. | Same question as my H11; open on MO. SPEC. |
+| 17 Sep | 515314 | P.-A. Simon; answer A. Sahay; comment D. Farmer | Mollifier length: θ = 4/7 (Conrey, via Deshouillers–Iwaniec); Farmer's θ = ∞ conjecture ⇒ 100% on the line (Farmer), and ⇒ RH (Bettin–Gonek). What Kloosterman bound gives θ = 1 is left unanswered. | FACT. Confirms the mollifier route is stuck at θ = 4/7 for an arithmetic reason unrelated to zero-free regions. |
+| 12 Oct | 515968 | Pace Nielsen; 9 answers (Durkan, Bloom, GH from MO, Wojowu, Grechuk, Agol, ...) | "Consequences of quasi-RH": character sums, Pólya–Vinogradov with log log q, least nonresidue, Artin's conjecture, Linnik. | FACT: **no answer mentions proportions of zeros on the line, simple zeros, pair correlation or mollifiers** (grep) — independent support for novelty.md §3. |
+| 25 Aug | 514655 | answer Stopple | multiplicity m(ρ) < 10 log T unconditionally via Jensen. | background |
+| 18 Sep | 515349 | Luigi A.; comments Sahay | RH-conditional discrete mean square of prime-supported polynomials over zeros at length T with error O(T log²T loglog T) (Landau–Gonek). | Possibly useful to h4 (discrete moments at zeros); conditional. |
+
+New hunches from this pass:
+| # | who / where | idea | assessment |
+|---|---|---|---|
+| H13 | D'Souza family paper §8.2 | In families the bandwidth α₀ is set by the *bulk hybrid zero-density exponent* (5/3 from Montgomery's 3/(2−σ) on [3/4,4/5]; 12/7 and 20/11 with better exponents; 2 under the density hypothesis). | CLAIM. The only place where density technology converts into a proportion; Guth–Maynard-type hybrid estimates would feed it. Not for ζ. |
+| H14 | A–F Remark 7.2, reconstructed in h2/priorart_T3.md | Their 0.811 equals kernel 1.263·|α| on 1 < |α| ≤ 3/2 with the window cos(u/√2); the optimal window would give 0.834 (0.849 at λ → 2). 1.263 is near (6/π²)/𝔖 = 1.2688. | SPEC (numerical match, not unique). If their weighted large sieve is true, 0.849 density-free is available; it is unproved and D'Souza's analysis suggests major arcs obstruct it. |
+| H15 | h4 on the board (h4/T2 §4.2) | Aryan's imaginary-part identity is a linear statistic of support [−1,1]; all two-point averages reduce to the form factor. | Team result [R per h4]; downgrades H2. |
 
 ## 4. To refresh
 - X/Twitter and Lean Zulip (not reachable with current tools); talks (AIM, Oberwolfach, MSRI abstracts) not found.

@@ -1,0 +1,20 @@
+Y=[0.06,0.063] ratio<=0.90876 ok xboxes=15906 pieces=15 tail/D=6.47e-02 split=0 t=45s
+Y=[0.063,0.06615] ratio<=0.91022 ok xboxes=15580 pieces=15 tail/D=6.46e-02 split=0 t=81s
+Y=[0.06615,0.0694575] ratio<=0.91157 ok xboxes=15482 pieces=16 tail/D=6.46e-02 split=0 t=128s
+Y=[0.0694575,0.072930375] ratio<=0.90614 ok xboxes=15526 pieces=15 tail/D=6.46e-02 split=0 t=179s
+Y=[0.072930375,0.076576894] ratio<=0.91659 ok xboxes=15258 pieces=15 tail/D=6.46e-02 split=0 t=234s
+Y=[0.076576894,0.080405739] ratio<=0.91710 ok xboxes=14830 pieces=15 tail/D=6.46e-02 split=0 t=277s
+Y=[0.080405739,0.084426026] ratio<=0.91742 ok xboxes=14348 pieces=15 tail/D=6.45e-02 split=0 t=327s
+Y=[0.084426026,0.088647327] ratio<=0.91754 ok xboxes=14002 pieces=15 tail/D=6.45e-02 split=0 t=368s
+Y=[0.088647327,0.093079693] ratio<=0.92008 ok xboxes=13758 pieces=15 tail/D=6.45e-02 split=0 t=408s
+Y=[0.093079693,0.097733678] ratio<=0.92320 ok xboxes=13632 pieces=15 tail/D=6.44e-02 split=0 t=447s
+Y=[0.097733678,0.102620362] ratio<=0.92833 ok xboxes=13574 pieces=15 tail/D=6.44e-02 split=0 t=477s
+Y=[0.102620362,0.10775138] ratio<=0.92989 ok xboxes=13530 pieces=15 tail/D=6.44e-02 split=0 t=493s
+Y=[0.10775138,0.113138949] ratio<=0.93216 ok xboxes=13224 pieces=15 tail/D=6.43e-02 split=0 t=509s
+Y=[0.113138949,0.118795896] ratio<=0.93219 ok xboxes=12902 pieces=15 tail/D=6.43e-02 split=0 t=524s
+Y=[0.118795896,0.124735691] ratio<=0.93800 ok xboxes=12624 pieces=15 tail/D=6.42e-02 split=0 t=539s
+Y=[0.124735691,0.130972476] ratio<=0.94385 ok xboxes=12240 pieces=15 tail/D=6.42e-02 split=0 t=554s
+Y=[0.130972476,0.1375211] ratio<=0.94695 ok xboxes=11876 pieces=15 tail/D=6.41e-02 split=0 t=568s
+Y=[0.1375211,0.144397155] ratio<=0.94936 ok xboxes=11434 pieces=15 tail/D=6.40e-02 split=0 t=581s
+Y=[0.144397155,0.15] ratio<=0.93867 ok xboxes=8288 pieces=15 tail/D=6.24e-02 split=0 t=592s
+PASS grid [0.06,0.15]: 19 y-boxes, worst certified ratio 0.94936

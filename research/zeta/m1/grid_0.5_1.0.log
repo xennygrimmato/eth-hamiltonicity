@@ -1,0 +1,16 @@
+Y=[0.5,0.525] ratio<=0.86456 ok xboxes=10560 pieces=16 tail/D=4.64e-02 split=0 t=35s
+Y=[0.525,0.55125] ratio<=0.86853 ok xboxes=10750 pieces=17 tail/D=4.33e-02 split=0 t=64s
+Y=[0.55125,0.5788125] ratio<=0.85700 ok xboxes=10910 pieces=17 tail/D=4.03e-02 split=0 t=95s
+Y=[0.5788125,0.607753125] ratio<=0.83205 ok xboxes=11064 pieces=16 tail/D=3.74e-02 split=0 t=130s
+Y=[0.607753125,0.638140781] ratio<=0.80553 ok xboxes=11170 pieces=16 tail/D=3.45e-02 split=0 t=168s
+Y=[0.638140781,0.67004782] ratio<=0.78786 ok xboxes=11240 pieces=19 tail/D=3.17e-02 split=0 t=211s
+Y=[0.67004782,0.703550211] ratio<=0.75962 ok xboxes=11282 pieces=17 tail/D=2.90e-02 split=0 t=250s
+Y=[0.703550211,0.738727722] ratio<=0.72975 ok xboxes=11264 pieces=17 tail/D=2.63e-02 split=0 t=283s
+Y=[0.738727722,0.775664108] ratio<=0.69734 ok xboxes=11180 pieces=17 tail/D=2.37e-02 split=0 t=323s
+Y=[0.775664108,0.814447313] ratio<=0.65913 ok xboxes=11080 pieces=18 tail/D=2.11e-02 split=0 t=358s
+Y=[0.814447313,0.855169679] ratio<=0.63086 ok xboxes=10952 pieces=18 tail/D=1.87e-02 split=0 t=388s
+Y=[0.855169679,0.897928163] ratio<=0.59846 ok xboxes=10688 pieces=18 tail/D=1.64e-02 split=0 t=419s
+Y=[0.897928163,0.942824571] ratio<=0.56794 ok xboxes=10410 pieces=21 tail/D=1.42e-02 split=0 t=451s
+Y=[0.942824571,0.9899658] ratio<=0.53851 ok xboxes=10056 pieces=20 tail/D=1.22e-02 split=0 t=473s
+Y=[0.9899658,1] ratio<=0.49595 ok xboxes=2656 pieces=22 tail/D=8.04e-03 split=0 t=478s
+PASS grid [0.5,1.0]: 15 y-boxes, worst certified ratio 0.86853

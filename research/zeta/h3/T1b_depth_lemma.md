@@ -119,3 +119,106 @@ be done in position space.
    so this is where a proof can fail for bad kernels.
 I have no proof of D_CGdL. What is rigorous: the §1 identity and criterion, and the elementary sufficient condition. What is
 numerical: §2 and §3.
+
+---------------------------------------------------------------------------------------------------------------
+# Round 2: toward D_CGdL in the continuum (after the lead's second message)
+
+New scripts: `t1b_kernel_study.py` (continuum-like CGdL kernel from the periodic LP at N = 64, M = 256), `t1b_onebody.py`,
+`t1b_onebody2.py`, `t1b_onebody3.py` (one-body minimisation over free real backgrounds in R), `t1b_lattice_bg.py`, `t1b_cell_criterion.py`,
+`t1b_cell_R3.py`, `t1b_cell_R4.py` (sufficient cell criteria), `t1b_robust_cgdl.py` (pointwise-robust LP), `t1b_cluster_test.py`, `t1b_adjacent_deep.py`.
+
+## 6. [R] Lemma T (tail cancellation) and reconciliation with h4 Prop 2
+Let r be CGdL-admissible, K = r̂ ≥ 0, r₁ = r·1_{[−1,1]}, r₂ = −r·1_{|α|>1} ≥ 0, so that K₁ = r̂₁ = K + r̂₂. Let X be any finite
+conjugation-symmetric configuration (complex points z, multiplicities m), and S_X(α) = Σ_z m e^{2πiαz}. Symmetry gives
+S_X(−α) = conj S_X(α). Hence, exactly,
+
+  Σ_{z,z'} m m' K₁(z − z') = Σ_{z,z'} m m' K(z − z') + ∫_{|α|>1} r₂(α) |S_X(α)|² dα.        (T)
+
+**h4 Prop 2** says K(2iy) → −∞, so Σ K ≥ K(0)·N* (the CGdL *intermediate* inequality) fails for one deep pair. That is correct and it
+does apply to Σ K. **It does not apply to Σ K₁** (the CGdL *final*, data-form inequality). The second term of (T) contains, for
+the pair's own block, ∫ r₂ · 4cosh²(2παy) dα, which is exactly −2·(negative tail part of K(2iy)) + 2∫r₂. The pair's self-block in
+Σ K₁ is 2K₁(0) + 2K₁(2iy) with K₁(2iy) = ∫_{−1}^{1} r(α)cosh(4παy)dα ≥ K₁(0) > 0, because r ≥ 0 on [−1,1].
+So the only correct unconditional target is Σ K₁ ≥ N*. Its single-pair form is the exact identity of §4b.
+
+## 7. [R] Lemma C (comparison with doubles) and the one-body inequality (*)
+Write G_η(x) := Re K₁(x + iη) − K₁(x) + K(x) = K(x) + β_η(x). For X = B ∪ {t ± iy}, with B on-line and X₀ the configuration where the pair
+is replaced by a double at t:
+ Σ_X K₁ − N*_X ≥ LHS(B,y) := 2(K₁(2iy) − K₁(0)) + 4Σ_b m_b G_y(t − t_b) + Σ_{b≠b'} m_b m_b' K(t_b − t_b').        (*)
+*Proof.* Σ_X K₁ = Σ_{X₀} K₁ + [2(K₁(2iy) − K₁(0)) + 4Σ m_b β_y]. Then Σ_{X₀}K₁ = Σ_{X₀}K + T(X₀) ≥ N*_{X₀} + (off-diagonal K-energy of X₀),
+with N*_{X₀} = N*_X and K(0) = 1. The double–background part of that energy is 4Σ m_b K(t − t_b). ∎
+So **single-pair D_CGdL ⟸ LHS(B,y) ≥ 0 for every real background B (masses ≤ 2, any positions) and every y ≥ 0.** This is a
+statement about one real line and two explicit kernels.
+Multi-pair version, also [R] by the same computation: add Σ_{p≠q, ordered} 2[G_{y_p+y_q} + G_{|y_p−y_q|}](t_p − t_q) and one self-term per pair.
+
+## 8. [N] Kernel facts (near-continuum CGdL, N = 64; value 0.679358)
+- r(α) at α = 0, .1, …, 1 is 1.004, .972, .877, .764, .620, .499, .382, .250, .148, .054, 0. It is ≥ 0 on [−1,1] and ≤ 0 beyond (−0.020 at
+  α = 1.1), with τ = ∫_{|α|>1}|r| = 0.0141.
+- min_R K₁ = −0.0048 (K₁ is not ≥ 0; K is ≥ 0 by the LP). K has (near-)zeros at x ≈ 1.048, 1.935, 2.082, 2.65, 2.93, 3.02, 3.19, …
+  There K₁''(x)/|K₁''(0)| = +0.312, +0.051, +0.048, −0.018, +0.016, +0.018, +0.008, … (K₁''(0) = −5.846).
+- min_x Re K₁(x+iη): −0.0049 (η = .02), −0.010 (.1), −0.040 (.2), −0.113 (.3), −0.49 (.5), −6.9 (1.0), attained near x ≈ 1 → 0.63.
+  Relative to the self term K₁(2iη) this ratio is −0.5% to −4.6%.
+
+## 9. [N] One-body inequality (*) holds in the near-continuum, with margin
+- **Free-background minimisation** (`t1b_onebody2.py`, `t1b_onebody3.py`, up to 24 points of mass 1 or 2 in [−15,15], multistart Adam).
+  min LHS/self(y) is 0.30 (y = .005–.02), 0.28 (.05), 0.23 (.1), 0.21 (.15), 0.20 (.2), 0.25 (.3), 0.49 (.5), 0.76 (.8), 0.96 (1.2, 8 points).
+  The minimisers are doubles placed at the near-zeros of K (±1.04, ±2.08, ±3.1, ±4.1, …). That is exactly the "stiff well" mechanism,
+  and it never reaches 0.
+- **Lattice-of-doubles family**: much costlier (ratio ≥ 0.36), because the mutual K-energy is not zero.
+- **Rigorous-style sufficient criterion R4** (`t1b_cell_R4.py`). Cover {G_y < 0} ∩ [−15.5, 15.5] by its connected components C
+  (diameter ≤ 0.68, so K is decreasing on [0, diam]). In C, with worst depth g_C and κ_C = K(diam C), any mass M ≤ 2 contributes ≥ −8g_C,
+  and M ≥ 2 contributes ≥ κ_C(M² − 2M) − 4g_C M ([R] packing lemma: Σ m² ≤ 2M). Everything else is ≥ 0. Hence (*) holds at depth y
+  if R4(y) := Σ_C h_C / self(y) < 1.
+  Computed: R4 = 0.975 (y=.01), .842 (.02), .837 (.05), .850 (.1), .850 (.2), .794 (.3), .684 (.4), .728 (.5), .813 (.6), .866 (.7), .879 (.8),
+  .773 (1.0), .625 (1.2), .404 (1.5), .050 (2.0), .0033 (2.5), .0002 (3.0). **So R4 < 1 on [0.01, 3]**, and large y is
+  asymptotically safe: the cluster gain is ~e^{4πy}y^{−2k−2}, against a self term ~e^{4πy}y^{−k−1}.
+  For y < 0.01, R4 → ≈1.1–1.3, because the crude bound lets every near-zero of K hold a free double. Restoring the inter-cell
+  K-energy (R2, `t1b_cell_criterion.py`) gives 0.70 at y = .005 and 0.65 at y = .01. In the limit y → 0 the criterion becomes a
+  finite difference-set problem: max Σ_{j∈S} K₁''(x_j)_+ over sets S of zeros of K with S − S ⊂ Z(K) ∪ {0}, which must be < |K₁''(0)|.
+  Numerically it is ≈ 0.70|K₁''(0)| (S = {±1.048}, plus small additions).
+- **Pointwise route is dead**: requiring G_η ≥ 0 for all x (`t1b_robust_cgdl.py`) costs the value: 0.6795 → 0.597 (Y = 0.1) → 0.268 (Y = 0.25).
+  Packing/charging is necessary.
+
+## 10. [N] Several pairs, deep pairs, clusters: no violation found
+- Periodic N = 32, depths forced ≥ 0.3 (≤ 3): min reduced cost +0.066 (worst: one pair at the minimal depth). N = 16, depths ≥ 0.5: +0.457.
+- Explicit adjacent-deep family (`t1b_adjacent_deep.py`, N = 32): k = 1…8 pairs at common depth y ∈ [0.2, 2] and spacing
+  d ∈ {½, ¾, 1, 3/2} (d = ½ cancels the α = 1 edge term), with simple points elsewhere, then local optimisation.
+  **Every run flowed to all depths 0**; worst +6.8e−4 > 0.
+- Deep pair plus clustered on-line background (`t1b_cluster_test.py`, N = 32, y ∈ [0.8, 2.5], clusters up to mass 16 at the best
+  distance ≈ 0.6–0.72): reduced cost +7.9, +565, +4.7e4, +4.3e6, +1.4e9. The self term wins.
+So the §2 counterexample mechanism (stiff well, D₂ < 0) does **not** occur for the CGdL kernel at the adversary's optimum.
+The relevant stiffness sup is the y → 0 difference-set quantity max_S Σ_{j∈S} K₁''(x_j)_+ ≈ 0.70|K₁''(0)|. The threshold is |K₁''(0)|.
+I therefore did not need to compute a "constrained" unconditional CGdL optimum: the unconstrained one passes.
+
+## 11. ζ-side statement (what replaces rank–trace) and the prime side
+**Zero-side lemma needed (Lemma Z) [C].** Let Ω be holomorphic in |Im| ≤ ½ (raw units), with Ω(z̄) = conj Ω(z) and Ω ≥ 0 on R.
+Take Montgomery's Ω_t(γ) = 2/(1 + (t − γ)²), so that ∫Ω_t(γ)Ω_t(γ')dt ∝ w(γ − γ') = 4/(4 + (γ − γ')²). For every finite
+conjugation-symmetric multiset Z,
+  Σ_{ρ,ρ'∈Z} m m' Ω(γ_ρ)Ω(γ_ρ') K₁((γ_ρ − γ_ρ')L/2π) ≥ Σ_{on-line, distinct} m²Ω² + Σ_{pairs} 4|Ω(γ)|² − o(Σ m|Ω|²).
+Apply it to Z(T) = {0 < Re γ ≤ T}, which is conjugation-symmetric, with Ω = Ω_t, and integrate over t ∈ R. The left side becomes
+(T log T/2π)∫ r₁(α)F_T(α)dα, where F_T is Montgomery's form factor over **all complex zeros**. The right side becomes the
+w-weighted N*, with w(0) per on-line point and ∫|Ω_t(γ)|²dt ≥ w(0) per off-line point.
+- **Prime side**: BGST24 Thm 1 gives F_T(α) = (1+o(1))T^{−2|α|}log T + |α| + o(1) uniformly on [−1,1] for complex zeros, and F_T ≥ 0.
+  Because r₁ is continuous on [−1,1] with r₁(±1) = 0, ∫ r₁F_T = r₁(0) + ∫|α|r₁ + o(1), by uniform convergence plus the δ-like
+  peak. No windows or Gram matrices are needed, so linearity is trivial in this formulation.
+  The A–F Thm HS route (windows ψ*ψ) would need r₁ approximated by window differences in sup norm, which is also fine but unnecessary.
+  Status [K]: this rests on the uniformity in BGST Thm 1 up to |α| = 1. I did not check that uniformity from the paper.
+- **Edge buffer**: Arias de Reyna 2610.24612 footnote 1 (on his p. 15) says the paper's choice U = √T for the buffer I' makes the
+  boundary-zero contribution U√T log T ≍ N, too large; he takes U = T^θ, θ < ½. That issue belongs to the Gram-grid tail lemma
+  (e^{L/2} = √T amplification of off-line zeros near the window edge). **In the Montgomery-weight formulation above there is no
+  grid and no buffer.** The sum is over the sharply truncated, symmetric Z(T), and positivity of the tail term in (T) survives truncation
+  because (T) holds for any finite symmetric configuration. What needs care instead is Lemma Z's error term for raw-deep zeros
+  (|β − ½| ≫ 1/L), where Ω_t(γ) and Ω_t(γ̄) differ by O(1) relatively. There the margins are exponential (§9 at y ≥ 2), so a crude bound
+  should do. Not written.
+- **Lean**: replace `LinAlg` Lemma R, `ZeroSide/RankTraceMult` and the seam inequality by Lemma Z. `count_certificate` is reusable with
+  κ = r₁(0) + ∫|α|r₁. The prime-side package changes from `TracesBoundsD` to a BGST-type form-factor statement, which is not in the
+  repository as far as h5's map shows.
+
+## 12. Status and split
+Proved [R]: Lemma T, Lemma C (one pair and several pairs), the packing lemma, the local criterion (§1), and the counterexample
+mechanism (§2). Numerical [N], with floating-point kernels from a periodic N = 64 LP: (*) holds for all real backgrounds at sampled
+y ∈ [0.005, 3], via a free search and via the sufficient criteria R4 (y ≥ 0.01) and R2 (y ≤ 0.01). No violation of the full
+certificate with any number of pairs or clusters. Not done: rigorous kernel (continuum r with interval bounds), continuity in y,
+the tail |x| > 15.5, the y → 0 difference-set lemma, the multi-pair proof, and Lemma Z's weight errors.
+Proposed board subtasks: T1c (rigorous continuum CGdL kernel: r, K, K₁, zeros of K, interval bounds), T1d (single-pair proof:
+R4 on [0.01, 3] with interval arithmetic and y-Lipschitz bounds, the small-y difference-set lemma, y > 3 asymptotics), T1e (multi-pair:
+extend R4 to pair–pair terms G_{y_p ± y_q}), T1f (ζ write-up of Lemma Z plus BGST uniformity check).

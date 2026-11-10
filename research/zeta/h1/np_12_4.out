@@ -113,3 +113,5 @@ it 111 obj 0.718661 slack 0.00e+00 ncols 7175 newneg 16 best -1.28e-01
 it 112 obj 0.718583 slack 0.00e+00 ncols 7191 newneg 21 best -6.16e-02
 it 113 obj 0.718522 slack 0.00e+00 ncols 7212 newneg 15 best -5.71e-02
 it 114 obj 0.718427 slack 0.00e+00 ncols 7227 newneg 11 best -3.59e-02
+it 115 obj 0.718337 slack 0.00e+00 ncols 7238 newneg 15 best -4.29e-02
+it 116 obj 0.718264 slack 0.00e+00 ncols 7253 newneg 20 best -5.51e-02

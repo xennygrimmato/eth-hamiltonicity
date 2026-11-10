@@ -1,0 +1,21 @@
+N=8 mode=rh rows=U2G1: CUE targets: G1=0.5626-0.0005j (se 0.0009), V_l=[ 0.441  1.792  5.838 12.664 22.329  4.887  6.138  6.966  7.505  7.777
+  7.885  7.978  8.022] rel se max 0.0083; U2 rel se 0.0014
+it   0 E[s1]/N 0.78880 slack 0.00e+00 ncols 1800 newneg 14 best -5.14e-01
+it   1 E[s1]/N 0.75352 slack 0.00e+00 ncols 1814 newneg 14 best -2.89e-01
+it   2 E[s1]/N 0.71758 slack 0.00e+00 ncols 1828 newneg 14 best -1.01e+00
+it   3 E[s1]/N 0.70052 slack 0.00e+00 ncols 1842 newneg 10 best -7.36e-02
+it   4 E[s1]/N 0.68876 slack 0.00e+00 ncols 1852 newneg 8 best -1.81e-02
+it   5 E[s1]/N 0.68714 slack 0.00e+00 ncols 1860 newneg 12 best -6.81e-03
+it   6 E[s1]/N 0.68681 slack 0.00e+00 ncols 1872 newneg 7 best -1.70e-03
+it   7 E[s1]/N 0.68663 slack 0.00e+00 ncols 1879 newneg 5 best -2.62e-03
+it   8 E[s1]/N 0.68649 slack 0.00e+00 ncols 1884 newneg 3 best -3.84e-04
+it   9 E[s1]/N 0.68647 slack 0.00e+00 ncols 1887 newneg 4 best -1.02e-03
+it  10 E[s1]/N 0.68635 slack 0.00e+00 ncols 1891 newneg 5 best -7.04e-04
+it  11 E[s1]/N 0.68628 slack 0.00e+00 ncols 1896 newneg 5 best -3.85e-04
+it  12 E[s1]/N 0.68617 slack 0.00e+00 ncols 1901 newneg 6 best -3.13e-04
+it  13 E[s1]/N 0.68615 slack 0.00e+00 ncols 1907 newneg 3 best -1.68e-04
+it  14 E[s1]/N 0.68615 slack 0.00e+00 ncols 1910 newneg 4 best -1.60e-04
+it  15 E[s1]/N 0.68615 slack 0.00e+00 ncols 1914 newneg 2 best -2.34e-05
+it  16 E[s1]/N 0.68614 slack 0.00e+00 ncols 1916 newneg 2 best -2.33e-05
+it  17 E[s1]/N 0.68614 slack 0.00e+00 ncols 1918 newneg 0 best 0.00e+00
+RESULT N=8 mode=rh rows=U2G1: ceiling estimate E[s1]/N = 0.68614 (slack 0.0e+00); law weight on configs with doubles 1.000, with pairs 0.000; top support [(np.float64(0.1789144457215979), (6, 1, 0, 0.0)), (np.float64(0.17650956988912633), (6, 1, 0, 0.0)), (np.float64(0.17073796862233698), (6, 1, 0, 0.0)), (np.float64(0.12581740327331403), (6, 1, 0, 0.0)), (np.float64(0.09079145541399182), (4, 2, 0, 0.0)), (np.float64(0.08748876305258264), (6, 1, 0, 0.0))]

@@ -1,0 +1,26 @@
+  mollifier length K=0: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.3005
+  mollifier length K=1: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.4929
+  mollifier length K=2: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.6188
+  mollifier length K=3: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.7067
+N=8 K=3 mode=rh: optimal mollifier c=[0.133+6.024e-05j 0.112+1.680e-04j 0.083+1.062e-04j 0.046+2.705e-06j]  E M1=6.7254-0.0000j  E M2=8.0  RH C-S bound 0.7067
+it   0 E[s1]/N 0.76325 slack 0.00e+00 ncols 1800 newneg 9 best -7.52e-01
+it   1 E[s1]/N 0.75596 slack 0.00e+00 ncols 1809 newneg 9 best -3.63e-01
+it   2 E[s1]/N 0.74403 slack 0.00e+00 ncols 1818 newneg 9 best -4.51e-01
+it   3 E[s1]/N 0.71712 slack 0.00e+00 ncols 1827 newneg 6 best -1.16e-01
+it   4 E[s1]/N 0.71637 slack 0.00e+00 ncols 1833 newneg 6 best -7.56e-02
+it   5 E[s1]/N 0.71270 slack 0.00e+00 ncols 1839 newneg 6 best -3.47e-02
+it   6 E[s1]/N 0.71086 slack 0.00e+00 ncols 1845 newneg 8 best -5.62e-02
+it   7 E[s1]/N 0.70085 slack 0.00e+00 ncols 1853 newneg 1 best -7.73e-03
+it   8 E[s1]/N 0.70068 slack 0.00e+00 ncols 1854 newneg 5 best -2.64e-02
+it   9 E[s1]/N 0.69864 slack 0.00e+00 ncols 1859 newneg 5 best -1.23e-02
+it  10 E[s1]/N 0.69839 slack 0.00e+00 ncols 1864 newneg 3 best -5.44e-03
+it  11 E[s1]/N 0.69819 slack 0.00e+00 ncols 1867 newneg 3 best -4.85e-03
+it  12 E[s1]/N 0.69769 slack 0.00e+00 ncols 1870 newneg 3 best -1.86e-02
+it  13 E[s1]/N 0.69670 slack 0.00e+00 ncols 1873 newneg 6 best -9.98e-03
+it  14 E[s1]/N 0.69591 slack 0.00e+00 ncols 1879 newneg 7 best -6.88e-03
+it  15 E[s1]/N 0.69554 slack 0.00e+00 ncols 1886 newneg 4 best -1.56e-03
+it  16 E[s1]/N 0.69545 slack 0.00e+00 ncols 1890 newneg 2 best -1.88e-04
+it  17 E[s1]/N 0.69544 slack 0.00e+00 ncols 1892 newneg 2 best -2.79e-04
+it  18 E[s1]/N 0.69544 slack 0.00e+00 ncols 1894 newneg 2 best -1.45e-04
+it  19 E[s1]/N 0.69540 slack 0.00e+00 ncols 1896 newneg 0 best 0.00e+00
+RESULT N=8 K=3 mode=rh: ceiling estimate E[s1]/N = 0.69540 (slack 0.0e+00); weight on configs with doubles 0.826, with pairs 0.000; pair depths in support: []

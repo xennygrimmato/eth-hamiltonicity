@@ -1,0 +1,28 @@
+  mollifier length K=0: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.3005
+  mollifier length K=1: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.4929
+  mollifier length K=2: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.6188
+  mollifier length K=3: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.7067
+N=8 K=3 mode=unc: optimal mollifier c=[0.133+6.024e-05j 0.112+1.680e-04j 0.083+1.062e-04j 0.046+2.705e-06j]  E M1=6.7254-0.0000j  E M2=8.0  RH C-S bound 0.7067
+two-point mollified targets W_j, j=0..JMAX: [46.667]
+it   0 E[s1]/N 0.83845 slack 0.00e+00 ncols 1800 newneg 12 best -5.88e-01
+it   1 E[s1]/N 0.79950 slack 0.00e+00 ncols 1812 newneg 11 best -3.36e-01
+it   2 E[s1]/N 0.76046 slack 0.00e+00 ncols 1823 newneg 11 best -5.36e-01
+it   3 E[s1]/N 0.73691 slack 0.00e+00 ncols 1834 newneg 14 best -3.97e+00
+it   4 E[s1]/N 0.71476 slack 0.00e+00 ncols 1848 newneg 11 best -7.49e-02
+it   5 E[s1]/N 0.70302 slack 0.00e+00 ncols 1859 newneg 8 best -1.23e-01
+it   6 E[s1]/N 0.70072 slack 0.00e+00 ncols 1867 newneg 11 best -2.97e-02
+it   7 E[s1]/N 0.69888 slack 0.00e+00 ncols 1878 newneg 9 best -1.92e-01
+it   8 E[s1]/N 0.69737 slack 0.00e+00 ncols 1887 newneg 6 best -8.86e-03
+it   9 E[s1]/N 0.69664 slack 0.00e+00 ncols 1893 newneg 6 best -1.07e-02
+it  10 E[s1]/N 0.69579 slack 0.00e+00 ncols 1899 newneg 5 best -1.01e-01
+it  11 E[s1]/N 0.69494 slack 0.00e+00 ncols 1904 newneg 2 best -2.14e-03
+it  12 E[s1]/N 0.69484 slack 0.00e+00 ncols 1906 newneg 6 best -8.63e-03
+it  13 E[s1]/N 0.69399 slack 0.00e+00 ncols 1912 newneg 2 best -8.18e-04
+it  14 E[s1]/N 0.69398 slack 0.00e+00 ncols 1914 newneg 3 best -1.31e-03
+it  15 E[s1]/N 0.69382 slack 0.00e+00 ncols 1917 newneg 1 best -5.51e-03
+it  16 E[s1]/N 0.69379 slack 0.00e+00 ncols 1918 newneg 3 best -1.40e-02
+it  17 E[s1]/N 0.69324 slack 0.00e+00 ncols 1921 newneg 6 best -9.73e-04
+it  18 E[s1]/N 0.69317 slack 0.00e+00 ncols 1927 newneg 2 best -5.66e-04
+it  19 E[s1]/N 0.69316 slack 0.00e+00 ncols 1929 newneg 4 best -1.13e-04
+it  20 E[s1]/N 0.69311 slack 0.00e+00 ncols 1933 newneg 0 best 0.00e+00
+RESULT N=8 K=3 mode=unc: ceiling estimate E[s1]/N = 0.69311 (slack 0.0e+00); weight on configs with doubles 0.619, with pairs 0.259; pair depths in support: [0.    0.    0.224 0.   ]

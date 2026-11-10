@@ -1,0 +1,19 @@
+  mollifier length K=0: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.3005
+  mollifier length K=1: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.4929
+  mollifier length K=2: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.6188
+  mollifier length K=3: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.7067
+N=8 K=3 mode=unc: optimal mollifier c=[0.133+6.024e-05j 0.112+1.680e-04j 0.083+1.062e-04j 0.046+2.705e-06j]  E M1=6.7254-0.0000j  E M2=8.0  RH C-S bound 0.7067
+two-point mollified targets W_j, j=0..JMAX: [46.667  1.283  1.186  1.294  1.842  1.954  3.583  6.83  11.545 -0.203
+ -0.352 -0.369 -0.154  1.805  3.866  6.195  8.594]
+it   0 E[s1]/N 0.87491 slack 0.00e+00 ncols 1800 newneg 14 best -8.21e-01
+it   1 E[s1]/N 0.85836 slack 0.00e+00 ncols 1814 newneg 12 best -7.85e+00
+it   2 E[s1]/N 0.84648 slack 0.00e+00 ncols 1826 newneg 12 best -2.81e-01
+it   3 E[s1]/N 0.83978 slack 0.00e+00 ncols 1838 newneg 10 best -1.40e-01
+it   4 E[s1]/N 0.83516 slack 0.00e+00 ncols 1848 newneg 12 best -2.55e-01
+it   5 E[s1]/N 0.82659 slack 0.00e+00 ncols 1860 newneg 8 best -1.57e-01
+it   6 E[s1]/N 0.82368 slack 0.00e+00 ncols 1868 newneg 8 best -1.10e-01
+it   7 E[s1]/N 0.82311 slack 0.00e+00 ncols 1876 newneg 8 best -9.71e-02
+it   8 E[s1]/N 0.81578 slack 0.00e+00 ncols 1884 newneg 3 best -4.97e-02
+it   9 E[s1]/N 0.81474 slack 0.00e+00 ncols 1887 newneg 5 best -1.14e-01
+it  10 E[s1]/N 0.81398 slack 0.00e+00 ncols 1892 newneg 5 best -5.06e-02
+it  11 E[s1]/N 0.81067 slack 0.00e+00 ncols 1897 newneg 9 best -3.53e-02

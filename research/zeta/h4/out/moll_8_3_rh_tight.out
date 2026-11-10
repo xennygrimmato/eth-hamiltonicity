@@ -1,0 +1,23 @@
+  mollifier length K=0: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.3005
+  mollifier length K=1: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.4929
+  mollifier length K=2: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.6188
+  mollifier length K=3: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.7067
+N=8 K=3 mode=rh: optimal mollifier c=[0.133+6.024e-05j 0.112+1.680e-04j 0.083+1.062e-04j 0.046+2.705e-06j]  E M1=6.7254-0.0000j  E M2=8.0  RH C-S bound 0.7067
+it   0 E[s1]/N 0.77337 slack 0.00e+00 ncols 1800 newneg 10 best -4.84e-01
+it   1 E[s1]/N 0.76512 slack 0.00e+00 ncols 1810 newneg 12 best -1.94e-01
+it   2 E[s1]/N 0.73793 slack 0.00e+00 ncols 1822 newneg 8 best -1.77e-01
+it   3 E[s1]/N 0.72998 slack 0.00e+00 ncols 1830 newneg 8 best -9.71e-02
+it   4 E[s1]/N 0.72719 slack 0.00e+00 ncols 1838 newneg 7 best -9.73e-02
+it   5 E[s1]/N 0.72299 slack 0.00e+00 ncols 1845 newneg 7 best -4.61e-02
+it   6 E[s1]/N 0.72074 slack 0.00e+00 ncols 1852 newneg 8 best -6.08e-03
+it   7 E[s1]/N 0.71983 slack 0.00e+00 ncols 1860 newneg 6 best -1.41e-02
+it   8 E[s1]/N 0.71905 slack 0.00e+00 ncols 1866 newneg 7 best -6.30e-02
+it   9 E[s1]/N 0.71735 slack 0.00e+00 ncols 1873 newneg 4 best -2.55e-02
+it  10 E[s1]/N 0.71633 slack 0.00e+00 ncols 1877 newneg 7 best -9.48e-03
+it  11 E[s1]/N 0.71501 slack 0.00e+00 ncols 1884 newneg 6 best -1.91e-02
+it  12 E[s1]/N 0.71374 slack 0.00e+00 ncols 1890 newneg 7 best -2.70e-02
+it  13 E[s1]/N 0.71330 slack 0.00e+00 ncols 1897 newneg 5 best -2.28e-03
+it  14 E[s1]/N 0.71319 slack 0.00e+00 ncols 1902 newneg 3 best -6.59e-04
+it  15 E[s1]/N 0.71316 slack 0.00e+00 ncols 1905 newneg 1 best -4.62e-05
+it  16 E[s1]/N 0.71316 slack 0.00e+00 ncols 1906 newneg 0 best 0.00e+00
+RESULT N=8 K=3 mode=rh: ceiling estimate E[s1]/N = 0.71316 (slack 0.0e+00); weight on configs with doubles 0.894, with pairs 0.000; pair depths in support: []

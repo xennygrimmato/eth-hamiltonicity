@@ -1,0 +1,25 @@
+N=8 mode=unc rows=U2: CUE targets: G1=0.5626-0.0005j (se 0.0009), V_l=[ 0.441  1.792  5.838 12.664 22.329  4.887  6.138  6.966  7.505  7.777
+  7.885  7.978  8.022] rel se max 0.0083; U2 rel se 0.0014
+it   0 E[s1]/N 0.75811 slack 0.00e+00 ncols 1800 newneg 14 best -3.48e-01
+it   1 E[s1]/N 0.71079 slack 0.00e+00 ncols 1814 newneg 14 best -2.57e-01
+it   2 E[s1]/N 0.69928 slack 0.00e+00 ncols 1828 newneg 11 best -3.63e-02
+it   3 E[s1]/N 0.69249 slack 0.00e+00 ncols 1839 newneg 13 best -8.00e-02
+it   4 E[s1]/N 0.69024 slack 0.00e+00 ncols 1852 newneg 11 best -2.67e-02
+it   5 E[s1]/N 0.68784 slack 0.00e+00 ncols 1863 newneg 7 best -3.77e-03
+it   6 E[s1]/N 0.68666 slack 0.00e+00 ncols 1870 newneg 10 best -2.07e-02
+it   7 E[s1]/N 0.68637 slack 0.00e+00 ncols 1880 newneg 4 best -3.53e-04
+it   8 E[s1]/N 0.68636 slack 0.00e+00 ncols 1884 newneg 3 best -7.51e-04
+it   9 E[s1]/N 0.68635 slack 0.00e+00 ncols 1887 newneg 4 best -1.06e-04
+it  10 E[s1]/N 0.68632 slack 0.00e+00 ncols 1891 newneg 3 best -9.96e-04
+it  11 E[s1]/N 0.68623 slack 0.00e+00 ncols 1894 newneg 3 best -2.81e-04
+it  12 E[s1]/N 0.68621 slack 0.00e+00 ncols 1897 newneg 1 best -9.77e-04
+it  13 E[s1]/N 0.68621 slack 0.00e+00 ncols 1898 newneg 4 best -8.64e-04
+it  14 E[s1]/N 0.68616 slack 0.00e+00 ncols 1902 newneg 2 best -6.20e-04
+it  15 E[s1]/N 0.68613 slack 0.00e+00 ncols 1904 newneg 1 best -1.11e-05
+it  16 E[s1]/N 0.68613 slack 0.00e+00 ncols 1905 newneg 1 best -1.49e-05
+it  17 E[s1]/N 0.68613 slack 0.00e+00 ncols 1906 newneg 1 best -4.97e-05
+it  18 E[s1]/N 0.68613 slack 0.00e+00 ncols 1907 newneg 2 best -1.18e-03
+it  19 E[s1]/N 0.68613 slack 0.00e+00 ncols 1909 newneg 1 best -3.29e-05
+it  20 E[s1]/N 0.68612 slack 0.00e+00 ncols 1910 newneg 1 best -3.74e-05
+it  21 E[s1]/N 0.68612 slack 0.00e+00 ncols 1911 newneg 0 best 0.00e+00
+RESULT N=8 mode=unc rows=U2: ceiling estimate E[s1]/N = 0.68612 (slack 0.0e+00); law weight on configs with doubles 0.214, with pairs 0.826; top support [(np.float64(0.38979839990408877), (6, 0, 1, 0.0)), (np.float64(0.35498015396813043), (6, 0, 1, 0.0)), (np.float64(0.13073852329016028), (4, 2, 0, 0.0)), (np.float64(0.04022939592434883), (4, 1, 1, 0.0)), (np.float64(0.03668098267997523), (4, 2, 0, 0.0)), (np.float64(0.03566219285771936), (4, 0, 2, 0.0))]

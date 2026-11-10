@@ -1,0 +1,43 @@
+  mollifier length K=0: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.2142
+  mollifier length K=1: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.3718
+  mollifier length K=2: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.4899
+  mollifier length K=3: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.5803
+  mollifier length K=4: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.6499
+  mollifier length K=5: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.7050
+N=12 K=5 mode=unc: optimal mollifier c=[0.089+1.778e-05j 0.08 -2.822e-05j 0.069-1.095e-04j 0.055-1.288e-05j
+ 0.039+3.637e-05j 0.021+9.324e-05j]  E M1=10.0754-0.0000j  E M2=12.0  RH C-S bound 0.7050
+two-point mollified targets W_j, j=0..JMAX: [103.484   2.018   1.922   1.861   1.944   2.223   2.814   2.745   3.527
+   5.441   8.322  12.238  17.312]
+it   0 E[s1]/N 0.92908 slack 0.00e+00 ncols 1800 newneg 12 best -1.01e+05
+it   1 E[s1]/N 0.89102 slack 0.00e+00 ncols 1812 newneg 12 best -1.92e+04
+it   2 E[s1]/N 0.87457 slack 0.00e+00 ncols 1824 newneg 12 best -3.82e+05
+it   3 E[s1]/N 0.87068 slack 0.00e+00 ncols 1836 newneg 11 best -2.76e+04
+it   4 E[s1]/N 0.85170 slack 0.00e+00 ncols 1847 newneg 10 best -3.15e-01
+it   5 E[s1]/N 0.82780 slack 0.00e+00 ncols 1857 newneg 10 best -3.10e-01
+it   6 E[s1]/N 0.81848 slack 0.00e+00 ncols 1867 newneg 7 best -6.99e+03
+it   7 E[s1]/N 0.81712 slack 0.00e+00 ncols 1874 newneg 6 best -1.43e-01
+it   8 E[s1]/N 0.81433 slack 0.00e+00 ncols 1880 newneg 9 best -2.27e+00
+it   9 E[s1]/N 0.81104 slack 0.00e+00 ncols 1889 newneg 9 best -2.21e-01
+it  10 E[s1]/N 0.80410 slack 0.00e+00 ncols 1898 newneg 7 best -1.10e-01
+it  11 E[s1]/N 0.79976 slack 0.00e+00 ncols 1905 newneg 8 best -8.18e-02
+it  12 E[s1]/N 0.79452 slack 0.00e+00 ncols 1913 newneg 6 best -1.01e-01
+it  13 E[s1]/N 0.79139 slack 0.00e+00 ncols 1919 newneg 7 best -1.43e-01
+it  14 E[s1]/N 0.78912 slack 0.00e+00 ncols 1926 newneg 4 best -1.62e+03
+it  15 E[s1]/N 0.78855 slack 0.00e+00 ncols 1930 newneg 2 best -7.65e-02
+it  16 E[s1]/N 0.78637 slack 0.00e+00 ncols 1932 newneg 3 best -8.68e-02
+it  17 E[s1]/N 0.78269 slack 0.00e+00 ncols 1935 newneg 2 best -9.86e-02
+it  18 E[s1]/N 0.78115 slack 0.00e+00 ncols 1937 newneg 3 best -7.43e-02
+it  19 E[s1]/N 0.77900 slack 0.00e+00 ncols 1940 newneg 5 best -1.17e-01
+it  20 E[s1]/N 0.77838 slack 0.00e+00 ncols 1945 newneg 3 best -8.77e-02
+it  21 E[s1]/N 0.77591 slack 0.00e+00 ncols 1948 newneg 2 best -2.89e-02
+it  22 E[s1]/N 0.77569 slack 0.00e+00 ncols 1950 newneg 5 best -8.86e-02
+it  23 E[s1]/N 0.77455 slack 0.00e+00 ncols 1955 newneg 6 best -7.56e-02
+it  24 E[s1]/N 0.77316 slack 0.00e+00 ncols 1961 newneg 7 best -4.96e-02
+it  25 E[s1]/N 0.77066 slack 0.00e+00 ncols 1968 newneg 3 best -5.30e-02
+it  26 E[s1]/N 0.76938 slack 0.00e+00 ncols 1971 newneg 4 best -3.90e-02
+it  27 E[s1]/N 0.76867 slack 0.00e+00 ncols 1975 newneg 4 best -3.86e-02
+it  28 E[s1]/N 0.76755 slack 0.00e+00 ncols 1979 newneg 5 best -5.80e-02
+it  29 E[s1]/N 0.76533 slack 0.00e+00 ncols 1984 newneg 4 best -4.61e-02
+it  30 E[s1]/N 0.76412 slack 0.00e+00 ncols 1988 newneg 6 best -3.80e-02
+it  31 E[s1]/N 0.76293 slack 0.00e+00 ncols 1994 newneg 6 best -4.42e-02
+it  32 E[s1]/N 0.76099 slack 0.00e+00 ncols 2000 newneg 5 best -2.38e-02

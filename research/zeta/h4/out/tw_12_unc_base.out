@@ -1,0 +1,21 @@
+N=12 mode=unc rows=base: CUE targets: G1=0.5424+0.0001j (se 0.0009), V_l=[ 0.715  1.69   4.568  9.395 16.153 25.033 36.089  6.987  8.363  9.43
+ 10.293 10.943 11.32  11.541 11.846 11.955 12.093 11.995 11.983] rel se max 0.0095; U2 rel se 0.0022
+it   0 E[s1]/N 0.82219 slack 0.00e+00 ncols 1800 newneg 12 best -3.55e+01
+it   1 E[s1]/N 0.80281 slack 0.00e+00 ncols 1812 newneg 12 best -5.38e-01
+it   2 E[s1]/N 0.78182 slack 0.00e+00 ncols 1824 newneg 12 best -2.82e-01
+it   3 E[s1]/N 0.70986 slack 0.00e+00 ncols 1836 newneg 12 best -1.44e+03
+it   4 E[s1]/N 0.70299 slack 0.00e+00 ncols 1848 newneg 11 best -1.83e-01
+it   5 E[s1]/N 0.69675 slack 0.00e+00 ncols 1859 newneg 11 best -4.15e-02
+it   6 E[s1]/N 0.69099 slack 0.00e+00 ncols 1870 newneg 8 best -7.53e-02
+it   7 E[s1]/N 0.68885 slack 0.00e+00 ncols 1878 newneg 9 best -6.12e-02
+it   8 E[s1]/N 0.68791 slack 0.00e+00 ncols 1887 newneg 11 best -5.13e-02
+it   9 E[s1]/N 0.68566 slack 0.00e+00 ncols 1898 newneg 7 best -9.47e-03
+it  10 E[s1]/N 0.68512 slack 0.00e+00 ncols 1905 newneg 7 best -1.24e-02
+it  11 E[s1]/N 0.68510 slack 0.00e+00 ncols 1912 newneg 3 best -3.91e-04
+it  12 E[s1]/N 0.68500 slack 0.00e+00 ncols 1915 newneg 3 best -7.79e-03
+it  13 E[s1]/N 0.68485 slack 0.00e+00 ncols 1918 newneg 2 best -2.55e-04
+it  14 E[s1]/N 0.68485 slack 0.00e+00 ncols 1920 newneg 3 best -2.49e-03
+it  15 E[s1]/N 0.68462 slack 0.00e+00 ncols 1923 newneg 2 best -4.12e-04
+it  16 E[s1]/N 0.68452 slack 0.00e+00 ncols 1925 newneg 2 best -1.62e-03
+it  17 E[s1]/N 0.68451 slack 0.00e+00 ncols 1927 newneg 0 best 0.00e+00
+RESULT N=12 mode=unc rows=base: ceiling estimate E[s1]/N = 0.68451 (slack 0.0e+00); law weight on configs with doubles 0.916, with pairs 0.522; top support [(np.float64(0.26517842107730133), (10, 1, 0, 0.0)), (np.float64(0.21073260663961926), (8, 1, 1, 0.0)), (np.float64(0.18199056993777915), (8, 2, 0, 0.0)), (np.float64(0.1326056979142279), (6, 2, 1, 0.0)), (np.float64(0.08437099163050842), (8, 0, 2, 0.0)), (np.float64(0.07599635148030379), (8, 1, 1, 0.0))]

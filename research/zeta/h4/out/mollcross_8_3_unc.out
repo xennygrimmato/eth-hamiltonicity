@@ -1,0 +1,67 @@
+  mollifier length K=0: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.3005
+  mollifier length K=1: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.4929
+  mollifier length K=2: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.6188
+  mollifier length K=3: RH Cauchy-Schwarz bound (E M1)^2/(N E M2) = 0.7067
+N=8 K=3 mode=unc: optimal mollifier c=[0.133+6.024e-05j 0.112+1.680e-04j 0.083+1.062e-04j 0.046+2.705e-06j]  E M1=6.7254-0.0000j  E M2=8.0  RH C-S bound 0.7067
+two-point mollified targets W_j, j=0..JMAX: [-0.203 -0.352 -0.369 -0.154  1.805  3.866  6.195  8.594]
+it   0 E[s1]/N 0.82717 slack 0.00e+00 ncols 1800 newneg 13 best -1.07e+03
+it   1 E[s1]/N 0.79028 slack 0.00e+00 ncols 1813 newneg 13 best -2.07e+01
+it   2 E[s1]/N 0.76731 slack 0.00e+00 ncols 1826 newneg 13 best -5.86e-01
+it   3 E[s1]/N 0.76055 slack 0.00e+00 ncols 1839 newneg 10 best -1.14e+04
+it   4 E[s1]/N 0.75495 slack 0.00e+00 ncols 1849 newneg 9 best -8.16e-02
+it   5 E[s1]/N 0.74988 slack 0.00e+00 ncols 1858 newneg 12 best -8.76e+01
+it   6 E[s1]/N 0.74792 slack 0.00e+00 ncols 1870 newneg 8 best -2.85e-02
+it   7 E[s1]/N 0.74755 slack 0.00e+00 ncols 1878 newneg 9 best -1.12e-02
+it   8 E[s1]/N 0.74460 slack 0.00e+00 ncols 1887 newneg 9 best -7.91e-03
+it   9 E[s1]/N 0.74410 slack 0.00e+00 ncols 1896 newneg 6 best -2.52e-03
+it  10 E[s1]/N 0.74393 slack 0.00e+00 ncols 1902 newneg 7 best -5.26e+02
+it  11 E[s1]/N 0.74324 slack 0.00e+00 ncols 1909 newneg 6 best -5.19e-03
+it  12 E[s1]/N 0.74301 slack 0.00e+00 ncols 1915 newneg 8 best -5.68e-03
+it  13 E[s1]/N 0.74297 slack 0.00e+00 ncols 1923 newneg 3 best -5.00e-03
+it  14 E[s1]/N 0.74281 slack 0.00e+00 ncols 1926 newneg 7 best -1.52e-03
+it  15 E[s1]/N 0.74278 slack 0.00e+00 ncols 1933 newneg 5 best -2.19e-03
+it  16 E[s1]/N 0.74277 slack 0.00e+00 ncols 1938 newneg 3 best -6.20e-06
+it  17 E[s1]/N 0.74277 slack 0.00e+00 ncols 1941 newneg 6 best -1.64e-03
+it  18 E[s1]/N 0.74275 slack 0.00e+00 ncols 1947 newneg 3 best -2.28e-03
+it  19 E[s1]/N 0.74270 slack 0.00e+00 ncols 1950 newneg 3 best -1.37e-03
+it  20 E[s1]/N 0.74269 slack 0.00e+00 ncols 1953 newneg 6 best -1.38e-03
+it  21 E[s1]/N 0.74254 slack 0.00e+00 ncols 1959 newneg 6 best -6.70e-04
+it  22 E[s1]/N 0.74254 slack 0.00e+00 ncols 1965 newneg 1 best -5.55e-06
+it  23 E[s1]/N 0.74254 slack 0.00e+00 ncols 1966 newneg 6 best -1.03e-04
+it  24 E[s1]/N 0.74254 slack 0.00e+00 ncols 1972 newneg 2 best -5.79e-07
+it  25 E[s1]/N 0.74254 slack 0.00e+00 ncols 1974 newneg 3 best -4.17e-03
+it  26 E[s1]/N 0.74249 slack 0.00e+00 ncols 1977 newneg 1 best -1.66e-04
+it  27 E[s1]/N 0.74248 slack 0.00e+00 ncols 1978 newneg 4 best -9.50e-05
+it  28 E[s1]/N 0.74247 slack 0.00e+00 ncols 1982 newneg 4 best -1.85e-05
+it  29 E[s1]/N 0.74247 slack 0.00e+00 ncols 1986 newneg 2 best -2.06e-05
+it  30 E[s1]/N 0.74246 slack 0.00e+00 ncols 1988 newneg 1 best -1.43e-05
+it  31 E[s1]/N 0.74246 slack 0.00e+00 ncols 1989 newneg 1 best -3.25e-06
+it  32 E[s1]/N 0.74246 slack 0.00e+00 ncols 1990 newneg 2 best -2.44e-04
+it  33 E[s1]/N 0.74245 slack 0.00e+00 ncols 1992 newneg 3 best -5.65e-04
+it  34 E[s1]/N 0.74244 slack 0.00e+00 ncols 1995 newneg 2 best -2.78e-05
+it  35 E[s1]/N 0.74244 slack 0.00e+00 ncols 1997 newneg 1 best -1.21e-05
+it  36 E[s1]/N 0.74244 slack 0.00e+00 ncols 1998 newneg 3 best -3.63e-03
+it  37 E[s1]/N 0.74240 slack 0.00e+00 ncols 2001 newneg 5 best -4.51e-04
+it  38 E[s1]/N 0.74240 slack 0.00e+00 ncols 2006 newneg 6 best -5.59e-05
+it  39 E[s1]/N 0.74240 slack 0.00e+00 ncols 2012 newneg 3 best -1.13e-05
+it  40 E[s1]/N 0.74240 slack 0.00e+00 ncols 2015 newneg 1 best -1.35e-03
+it  41 E[s1]/N 0.74240 slack 0.00e+00 ncols 2016 newneg 1 best -8.44e-07
+it  42 E[s1]/N 0.74240 slack 0.00e+00 ncols 2017 newneg 2 best -3.96e-06
+it  43 E[s1]/N 0.74240 slack 0.00e+00 ncols 2019 newneg 4 best -6.61e-04
+it  44 E[s1]/N 0.74239 slack 0.00e+00 ncols 2023 newneg 2 best -9.24e+02
+it  45 E[s1]/N 0.74210 slack 0.00e+00 ncols 2025 newneg 3 best -6.18e-04
+it  46 E[s1]/N 0.74207 slack 0.00e+00 ncols 2028 newneg 3 best -1.98e-04
+it  47 E[s1]/N 0.74207 slack 0.00e+00 ncols 2031 newneg 2 best -3.52e-05
+it  48 E[s1]/N 0.74207 slack 0.00e+00 ncols 2033 newneg 4 best -1.34e-02
+it  49 E[s1]/N 0.74206 slack 0.00e+00 ncols 2037 newneg 3 best -9.28e-05
+it  50 E[s1]/N 0.74205 slack 0.00e+00 ncols 2040 newneg 4 best -3.46e-04
+it  51 E[s1]/N 0.74205 slack 0.00e+00 ncols 2044 newneg 3 best -1.82e-05
+it  52 E[s1]/N 0.74205 slack 0.00e+00 ncols 2047 newneg 5 best -6.04e-03
+it  53 E[s1]/N 0.74204 slack 0.00e+00 ncols 2052 newneg 4 best -1.28e-05
+it  54 E[s1]/N 0.74204 slack 0.00e+00 ncols 2056 newneg 4 best -8.13e-03
+it  55 E[s1]/N 0.74200 slack 0.00e+00 ncols 2060 newneg 5 best -6.96e-04
+it  56 E[s1]/N 0.74197 slack 0.00e+00 ncols 2065 newneg 1 best -3.83e-04
+it  57 E[s1]/N 0.74197 slack 0.00e+00 ncols 2066 newneg 2 best -9.32e-06
+it  58 E[s1]/N 0.74197 slack 0.00e+00 ncols 2068 newneg 2 best -1.53e-05
+it  59 E[s1]/N 0.74196 slack 0.00e+00 ncols 2070 newneg 7 best -5.95e-05
+RESULT N=8 K=3 mode=unc: ceiling estimate E[s1]/N = 0.74196 (slack 0.0e+00); weight on configs with doubles 0.355, with pairs 0.289; pair depths in support: [0. 0. 0. 0. 0. 0. 0. 0. 1.]

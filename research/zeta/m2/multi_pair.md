@@ -33,6 +33,7 @@ Notation is Fabbian's (Zenodo 23198632, §2). Z is a finite conjugation-invarian
    - equal-depth pair-only configurations satisfy (C) for every CGdL-admissible kernel;
    - every periodic configuration of period ≤ 2 satisfies (C) in the limit;
    - two-object domination;
+   - (round 2) periods ≤ 3 except two cell types [R/R*], and Conjecture P disproved (§6);
    - the exact periodic-cell formula, under which (C) is equivalent to Ψ ≥ 0 for all cells.
 4. **No complete proof of (C) or of D_τ for several deep pairs.** §5 states exactly what remains, and why the routes are not
    in Fabbian's excluded classes.
@@ -124,9 +125,10 @@ By the packing lemma (h3 T1f §4), ℰ(F) ≥ −Σ_{cells of {F<0}} h_C(F), whi
 - **Comb check.** For the infinite comb, Σ_k G_y(x − k) = r(0) + 2Σ_{n≥2} r(n)cos(2πnx) by Poisson (the n = ±1 term carries
   g(1) = 0). So the superposed field of a comb has no wells deeper than 2Σ_{n≥2}|r(n)|. The comb's tightness costs nothing
   in (MP).
-- **[N] Δ_P ≥ 0 numerically** (`deltaP.py`, 3–8 pairs, depths ≤ 2, 200 starts): min Δ_P / Σ_p self_p = +7e−5. The near-zeros are
-  deep pairs at spacing ≈ 0.53, i.e. edge cancellation. **[C] Conjecture P (pair-only depth monotonicity):** Δ_P ≥ 0 for every
-  finite set of pairs. It is [R] for equal depths (§3b) and for two pairs (§3c).
+- ~~Conjecture P (Δ_P ≥ 0)~~ is **false**; see §6.1. Random searches (`deltaP.py`) had suggested it, but they missed
+  stacked shallow pairs. The correct pair-only statement is **P′**: Δ_P + 4Σ_{p≠q} r̂(x_p − x_q) ≥ 0, i.e. Φ(pairs only) ≥ OB(P⁰).
+  P′ already contains the one-pair one-body problem with a background of doubles, since near-real pairs act as doubles. So
+  splitting off the pairs gives no simplification: (MP) must be treated as one inequality.
 
 ## 5. What remains, and why these routes are not in Fabbian's excluded classes
 **(i) Statement.** Numerically, (C)[K5] itself holds; τ = 0. The binding families are:
@@ -141,11 +143,12 @@ everywhere it matters.
 **A pointwise route to τ is excluded.** h5 §1 notes that r_C ≥ ρ ∈ conv{ψ⋆ψ/(∫ψ)²} on [−1,1] would cap the value at
 0.6725. So D_τ cannot come from kernel domination; it must be configuration-wise.
 
-**(ii) The exact remaining inequality** (if Conjecture P is granted, everything else in §4 is exact or [R]):
+**(ii) The exact remaining inequality** (everything else in §4 is exact or [R]; Conjecture P is false, see §6.1, so this
+must be proved as a whole):
   for every finite set of pairs, Δ_P + 4Σ_{p≠q} r̂(x_p − x_q) ≥ Σ_{C} h_C(Σ_p G_{y_p}(· − x_p)),
 with the cell charges of the packing lemma, or ℰ in place of −Σh_C. For one pair this is h3's R4 < 1, numerically true at all
 sampled depths for K5. For several pairs the field superposes linearly. The h_C grow quadratically in the well depth g ~ e^{2πy}y^{−2}, so a cluster gain is ~ g² ~ e^{4πy}y^{−4}; the self term of
-a deep pair is ~ e^{4πy}y^{−2}, so isolated deep wells are paid with room (h3's asymptotics). Δ_P is small only when the pairs
+a deep pair is ~ e^{4πy}y^{−2}, so isolated deep wells are paid with room (h3's asymptotics). Δ_P + 4Σr̂ is small only when the pairs
 cancel at the edge (comb-like). Then their superposed field is also small, because its β-part Σ_p β_{y_p}(x − x_p) = Re∫g·conj(C − E)(a)e(xa)da is the Fourier
 transform of g·(C − E). Turning this last remark into an inequality is the open step. A Cauchy–Schwarz version loses a factor
 √(number of background points).
@@ -163,10 +166,53 @@ transform of g·(C − E). Turning this last remark into an inequality is the op
 **(iv) The planned edge/bulk split (h3 T1f §6) in its fixed-charge form is excluded** (Fabbian Thm 4.5 / Evidence 4.9; m3).
 I did not pursue it. §4 is the configuration-dependent replacement.
 
-## 6. Next steps
-1. Prove Conjecture P (Δ_P ≥ 0). It is a statement about sums of exponentials with weights c_{y_p}(a) ≥ 1, pairs only. A natural
-   attempt: write c_pc_q − 1 = u_pu_q + u_p + u_q and show that ∫g(|U|² + 2Re U Ē) ≥ 0 using the monotonicity of u_p in a and
-   r̂ ≥ 0.
-2. Settle the d ∈ (2,3] periodic cells (finite list, two frequencies), which extends §3(d).
-3. Turn (MP) into a certified computation for the superposed field at bounded depth, in Fabbian's style, but with the field
-   recomputed per configuration rather than with fixed charges.
+## 6. Round 2 (after the advisor's follow-up)
+
+### 6.1 Conjecture P is false; the mechanism is [R], the instance is [N] (`Pcounter.py`)
+Take one pair at 0 of depth y₀. Add n pairs at x* + jη of depth η, for j < n, and let η → 0. Then u_j → 0 for the added pairs,
+and by continuity
+  Δ_P → 4∫g(u₀² + 2u₀) + 8n β_{y₀}(x*),  β_y(x) = ∫g(c_y − 1)cos(2πxa).
+This is linear in n. So Δ_P < 0 for large n as soon as β_{y₀}(x*) < 0. For K5, β_{0.3}(0.764) = −0.176, and n = 4 already gives
+Δ_P = −2.36.
+**The same holds for every g ≥ 0 on [−1,1]** with β_{y₀} negative somewhere. That is always the case for a nonzero continuous
+g with g(1) = 0 and y₀ large: β_y(x) ≈ e^{2πy}·(edge term)·cos(2πx). So P has no kernel-free proof; it is simply false.
+**What survives.** On the same configurations, P′ = Δ_P + 4Σ_{p≠q}r̂ is +49 (n = 4) and +223 (n = 8). The mutual K-energy of
+the stacked pairs is quadratic in n. So P′ is the right pair-only statement. My earlier pair-only searches (attack2 kind 5,
+`deltaP.py` with P′ added) found no violation of P′.
+
+### 6.2 Periodic cells with period d ∈ (2,3]
+The in-band frequencies are 0, α₁ = 1/d ∈ [1/3, ½) and α₂ = 2/d ∈ [2/3, 1). Then
+Ψ = [r(0)M² + 2r(α₁)|A₁|² + 2r(α₂)|A₂|²]/d − T, and for a pair c_{y}(α₂) = 2c_y(α₁)² − 1 (cosh 2x = 2cosh²x − 1).
+- **[R] General domination lemma.** For |u| = 1, m ≥ 1, c ≥ 1 and any complex v with |v| ≤ m,
+  |mcu + v|² − |mu + v|² = m²(c² − 1) + 2m(c − 1)Re(ūv) ≥ m(c − 1)(m(c + 1) − 2|v|) ≥ 0.
+  So a pair of multiplicity m whose companions contribute |v| ≤ m at every in-band frequency is dominated by the real
+  m-fold double at the same place. That real cell has the same mass and target, and Ψ ≥ 0 for it by W1.
+- **[R] Settled for d ∈ (2,3]:**
+  - every cell of mass M ≥ 6 (r(0)M²/d ≥ M²/3 ≥ 2M ≥ T);
+  - every cell containing a pair with M ≤ 4, by domination or two-object domination;
+  - {P,1,1,1} (25r(0)/d ≥ 8.33 > 7);
+  - pair-multiplicity-2 cells.
+- **{P,3} [R*]** (proof modulo double-precision evaluation of the explicit closed-form r at grid points, with a Lipschitz
+  bound 4.37; weakest margin 20%). Write c = c_y(α₁) ≥ 1 and φ for the phase.
+  - If d ≤ 2.5: 25r(0)/d ≥ 10 = T.
+  - Otherwise we need (2/d)(r₁|A₁|² + r₂|A₂|²) ≥ 10 − 25/d, with |A₁|² = 4c² + 9 + 12c cos 2πφ and |A₂|² = 4c₂² + 9 + 12c₂ cos 4πφ.
+  - If cos 4πφ ≥ 0, then |A₂|² ≥ 13.
+  - If cos 4πφ < 0, then |cos 2πφ| < 1/√2 and |A₁|² ≥ min_c (4c² − 8.485c + 9) = 4.5.
+  - On d ∈ [2.5, 2.75] (r₁ ≥ 0.620, r₂ ≥ 0.147): LHS ≥ min(1.39, 2.03) > 0.909 ≥ RHS.
+  - On [2.75, 3] (r₁ ≥ 0.667, r₂ ≥ 0.227): LHS ≥ min(1.967, 2.001) > 1.667 ≥ RHS. ∎
+- **{P,2,1} and {P,P,1} [N]** (`cells23.py`, 400 Nelder–Mead starts each): min Ψ = +0.0474, attained at depth 0, i.e. at the
+  real cell (d = 3). Crude case bounds do not suffice here, because the real cells themselves have margin only 0.047. A
+  certified grid in (d, c, phases), 4–5 parameters, would finish it.
+- So: **[R] every periodic configuration with period ≤ 3 satisfies (C)[K5]**, except possibly cells of types {P,2,1} and
+  {P,P,1}, which are [N].
+
+### 6.3 Status of (MP) beyond one pair
+No proof. 6.1 shows that the pair-only part cannot be separated with a sign, so (MP) has to be attacked as a whole. Numerics
+(§1) support it. The natural next certified step is the bounded-depth, finite-range version done as Fabbian does, but with the
+superposed field recomputed per configuration.
+
+## 7. Next steps
+1. Certified grid for the {P,2,1} and {P,P,1} cells (closes all periods ≤ 3), then d ∈ (3,4] (cells with M ≤ 7).
+2. P′ for one deep pair plus near-real pairs. This is exactly h3/m1's one-pair one-body inequality with a double background,
+   so it should be merged with m1's single-pair certificate.
+3. (MP) as a whole at bounded depth: a certified computation.

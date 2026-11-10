@@ -1,0 +1,4 @@
+N=16 c0=0.999113 cert value=0.682867  on-line min rc=-2.941e-08 comp=(14, 1)
+  pair conversions tried: 1904
+  min local criterion D2 over near-extremal (rc<2e-3) on-line doubles: (0.42785603775454967, (14, 1), np.float64(0.0005740745250340656))
+  BEST with pairs: rc=-2.941e-08 comp(k1,k2,k3)=(14, 0, 1) depths=[0.] (start rc -2.941e-08)

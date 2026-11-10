@@ -1,0 +1,20 @@
+it   0 obj 0.840069 slack 0.00e+00 ncols 4400 newneg 53 best -8.87e+12
+it   1 obj 0.758624 slack 0.00e+00 ncols 4440 newneg 57 best -4.63e+11
+it   2 obj 0.711075 slack 0.00e+00 ncols 4480 newneg 59 best -1.59e-01
+it   3 obj 0.717719 slack 0.00e+00 ncols 4520 newneg 47 best -3.30e-01
+it   4 obj 0.706559 slack 0.00e+00 ncols 4560 newneg 39 best -1.04e-01
+it   5 obj 0.697714 slack 0.00e+00 ncols 4599 newneg 32 best -3.56e-02
+it   6 obj 0.695254 slack 0.00e+00 ncols 4631 newneg 32 best -1.25e-02
+it   7 obj 0.694456 slack 0.00e+00 ncols 4663 newneg 31 best -3.07e-02
+it   8 obj 0.690355 slack 0.00e+00 ncols 4694 newneg 27 best -2.22e-02
+it   9 obj 0.692983 slack 0.00e+00 ncols 4721 newneg 15 best -5.74e-03
+it  10 obj 0.692634 slack 0.00e+00 ncols 4736 newneg 8 best -2.65e-03
+it  11 obj 0.692556 slack 0.00e+00 ncols 4744 newneg 17 best -1.98e-03
+Traceback (most recent call last):
+  File "/home/user/eth-hamiltonicity/research/zeta/h1/ceiling_npoint.py", line 89, in <module>
+    run(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]),int(sys.argv[4]))
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eth-hamiltonicity/research/zeta/h1/ceiling_npoint.py", line 61, in run
+    c0,lam=res.eqlin.marginals[0],res.eqlin.marginals[1:]; slack=res.x[mcol:].sum()
+           ~~~~~~~~~~~~~~~~~~~^^^
+TypeError: 'NoneType' object is not subscriptable

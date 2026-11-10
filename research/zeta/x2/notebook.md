@@ -302,3 +302,58 @@ The only distinct-gap result I found is BGMM Thm 2 (RH): mu_d <= 0.991, via the 
 sum_gamma Z'(gamma) Z(gamma + 2 pi a/log T) |M(rho + i eta)|^2 < 0 (non-pair input: discrete mollified moments of
 zeta' at zeros, Conrey–Ghosh–Gonek / Heap–Li–Zhao), giving >> T^{1-eps} gaps, NOT a positive proportion, and
 pairs (simple, odd multiplicity), not (simple, simple).
+
+## L3. What can be proved — my assessment
+(a) **Pair-only methods: provably useless** for this (L2): DNN-consistent laws with no distinct pair below 1-eps.
+(b) **BGMM's sign test** (RH): X_gamma = Z'(gamma) Z(gamma + 2 pi a/log T) |M|^2 is >= 0 at every simple on-line gamma whose
+next odd-order zero is beyond a, so sum X < 0 certifies a distinct pair within a.  *Positive proportion* would
+follow by Cauchy–Schwarz,  #{gamma : X_gamma < 0} >= (sum X)^2 / sum X^2,  provided
+sum_gamma |zeta'(rho) zeta(rho + i a') M(...)|^2 |M(...)|^2 << T log T * (typical size)^2  — a mollified discrete moment of
+degree 4 in zeta; an upper bound of the right order (not an asymptotic) is what is needed, and Harper / Kirila-type
+sharp conditional upper bounds make this plausible under RH.  [C]  **But** the first-moment sign test only works where
+the weighted mean of X changes sign, which with mollifiers of length T^theta, theta < 1/2, is a ~ 0.991 (BGMM):
+the weight is smooth on the scale 1/(theta log T) ~ 2/theta mean spacings and cannot single out close pairs.  At
+lambda ~ 1 the coupling gain is c * kappa_MT(1)^2 ~ 0.002c: useless.  Getting lambda <= 0.7 would need a
+*local* detector (resonators give only sparse sets; ratio-type objects zeta(rho+ia)/zeta'(rho) are ratios-conjecture
+territory).  The test also yields (simple, odd) pairs, and Theorem A.1 below needs (simple, simple).
+(c) **Selberg-type sign changes in short intervals** (two sign changes of Z in a window of length lambda < 1): requires
+P(B opposite to both A and C) > 0 for A,B,C = mollified Z at t, t+lambda/2, t+lambda.  Second moments (shifted mollified
+moments, unconditional for theta < 4/7) cannot force that (degenerate laws match any covariance); fourth moments are
+known only with very short mollifiers (theta ~ 1/4).  [C]: no positive proportion at lambda < 1 from this route as it stands.
+(d) **Unconditional version**: any sign test reads Z' only at on-line zeros; off-line zeros have to be controlled as a
+secondary term, exactly as Lamzouri does for isolated zeros (Conrey's mollified second moment + Littlewood's lemma).
+So unconditional = RH version + an off-line term of the Lamzouri type; this part looks routine.  [C]
+**Verdict:** the statement is the right target (it is exactly what the crystal lacks and it couples rigorously, L4),
+but nothing in the current literature, or in the obvious adaptations, reaches lambda < 0.9 with a positive proportion.
+
+## L4. Rigorous coupling for zeta (not only in the model)
+**Conditional theorem [R, given h1's Theorem A.1 (h1/method.md §3, [R] modulo the routine edge estimate)].**
+Hypothesis H(c, lambda): for large T there are at least (c/2 - o(1)) N(T,2T) pairwise disjoint pairs {rho, rho'} of
+SIMPLE zeros on the critical line with gamma, gamma' in [T,2T] and 0 < |gamma - gamma'| <= 2 pi lambda/log T
+(e.g. a proportion c of consecutive gaps between simple on-line zeros are <= lambda).  Then, for every admissible
+even window psi >= 0 on [-1/2,1/2] and lambda <= 1,
+    N_0^s(T,2T) >= (2 - R(psi) + c kappa_psi(lambda)^2 - o(1)) N(T,2T),
+    N_d(T,2T)   >= (1/2)(3 - R(psi) + c kappa_psi(lambda)^2 - o(1)) N(T,2T),
+kappa_psi(d) = int psi(u) cos(2 pi d u) du / int psi.
+*Proof.* Theorem A.1: N_0^s >= (2-R)N + sum_{l in spec Gamma} phi(l-1) - o(N), Gamma = (kappa(gamma_rho - gamma_rho'))
+over simple on-line zeros (PSD, unit diagonal), phi(a)=a^2 (a<=1), 2a-1 (a>1).  A -> tr phi(A - I) is a convex trace
+function, so by pinching (Lemma A.2) it does not increase when Gamma is replaced by its block-diagonal part for the
+partition into the given pairs and singletons.  Singletons give phi(0)=0.  A pair block [[1,k],[k,1]], k = kappa(gamma-gamma'),
+has eigenvalues 1 +- k, |k| <= 1, so contributes phi(k) + phi(-k) = 2k^2.  For d <= 1 and |u| <= 1/2, cos(2 pi d u) is
+decreasing in d, hence kappa is decreasing on [0,1] and k^2 >= kappa(lambda)^2 when kappa(lambda) >= 0.  Summing over
+>= (c/2)N pairs gives >= c kappa(lambda)^2 N.  The distinct-zero line is identical with the factor 1/2.  QED
+With psi_MT = cos(sqrt2 u) (2-R = 0.672501): kappa^2 = 0.754, 0.437, 0.166, 0.026 at lambda = 0.3, 0.5, 0.7, 0.9
+(pinch_gain.py; optimising psi jointly changes the 4th decimal at most).
+
+| lambda | c=1% | 2% | 5% | 10% | c to beat record 0.67364 | c to beat ceiling 0.68185 |
+|---|---|---|---|---|---|---|
+| 0.3 | 0.6800 | 0.6876 | 0.7102 | 0.7479 | 0.15% | 1.24% |
+| 0.5 | 0.6769 | 0.6812 | 0.6943 | 0.7162 | 0.26% | 2.14% |
+| 0.7 | 0.6742 | 0.6758 | 0.6808 | 0.6891 | 0.69% | 5.6% |
+| 0.9 | 0.6728 | 0.6730 | 0.6738 | 0.6751 | 4.5% | 37% |
+If the GUE values held (fraction of consecutive gaps < lambda ~ 0.096 at 0.5, 0.24 at 0.7), the bound would be
+~0.714-0.716; the pinching certificate is within ~20% of the LP slopes in the Montgomery class (L1), so little is
+lost by using only disjoint pairs.
+Caveats: (i) the pairs must be simple–simple and on the line; sign-change (odd–odd) pairs would need an extra
+count of triple+ zeros; (ii) the gain is on top of the Alpoge–Furman base 0.6725, not necessarily on top of the other
+refinements behind the record 0.6735.

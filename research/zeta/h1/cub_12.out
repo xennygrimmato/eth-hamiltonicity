@@ -1,0 +1,7 @@
+N=12 a=1.6: m2=1.32587 m3=1.96462 certificate value 0.68739; f coeffs [ 4.0193  2.1082 -1.0359] t=0.0000 c'=4.0918
+  try 0: min defect 0.09087 (per N: 0.00757) comp (k1,k2,k3pairs,k4triples,depths)=(np.int64(2), np.int64(5), np.int64(0), 0, array([], dtype=float64))
+  try 4: min defect 0.07939 (per N: 0.00662) comp (k1,k2,k3pairs,k4triples,depths)=(np.int64(0), np.int64(0), np.int64(6), 0, array([0., 0., 0., 0., 0., 0.]))
+  try 13: min defect 0.07350 (per N: 0.00612) comp (k1,k2,k3pairs,k4triples,depths)=(np.int64(0), np.int64(6), np.int64(0), 0, array([], dtype=float64))
+  try 128: min defect 0.06723 (per N: 0.00560) comp (k1,k2,k3pairs,k4triples,depths)=(np.int64(0), np.int64(3), np.int64(3), 0, array([0., 0., 0.]))
+  try 376: min defect 0.06723 (per N: 0.00560) comp (k1,k2,k3pairs,k4triples,depths)=(np.int64(0), np.int64(6), np.int64(0), np.int64(0), array([], dtype=float64))
+RESULT worst defect per N: 0.005602442660923875 (np.int64(0), np.int64(6), np.int64(0), np.int64(0), array([], dtype=float64))

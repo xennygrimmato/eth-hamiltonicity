@@ -1,0 +1,25 @@
+it   0 obj 0.721189 slack 0.00e+00 ncols 4400 newneg 60 best -9.44e-02
+it   1 obj 0.712585 slack 0.00e+00 ncols 4440 newneg 50 best -1.18e-01
+it   2 obj 0.691854 slack 0.00e+00 ncols 4480 newneg 26 best -2.84e-02
+it   3 obj 0.687540 slack 0.00e+00 ncols 4506 newneg 16 best -1.04e-02
+it   4 obj 0.686558 slack 0.00e+00 ncols 4522 newneg 6 best -2.02e-03
+it   5 obj 0.686304 slack 0.00e+00 ncols 4528 newneg 5 best -3.22e-03
+it   6 obj 0.686181 slack 0.00e+00 ncols 4533 newneg 3 best -6.12e-04
+it   7 obj 0.686106 slack 0.00e+00 ncols 4536 newneg 7 best -8.78e-04
+it   8 obj 0.686090 slack 0.00e+00 ncols 4543 newneg 4 best -6.39e-04
+it   9 obj 0.686061 slack 0.00e+00 ncols 4547 newneg 6 best -1.65e-04
+it  10 obj 0.686009 slack 0.00e+00 ncols 4553 newneg 4 best -3.78e-05
+it  11 obj 0.686004 slack 0.00e+00 ncols 4557 newneg 7 best -3.07e-05
+it  12 obj 0.686001 slack 0.00e+00 ncols 4564 newneg 5 best -2.40e-05
+it  13 obj 0.686000 slack 0.00e+00 ncols 4569 newneg 1 best -3.43e-06
+it  14 obj 0.686000 slack 0.00e+00 ncols 4570 newneg 2 best -5.91e-06
+it  15 obj 0.685999 slack 0.00e+00 ncols 4572 newneg 2 best -2.39e-06
+it  16 obj 0.685998 slack 0.00e+00 ncols 4574 newneg 6 best -1.84e-06
+it  17 obj 0.685998 slack 0.00e+00 ncols 4580 newneg 3 best -7.33e-07
+it  18 obj 0.685998 slack 0.00e+00 ncols 4583 newneg 6 best -6.73e-07
+it  19 obj 0.685997 slack 0.00e+00 ncols 4589 newneg 2 best -2.22e-07
+it  20 obj 0.685997 slack 0.00e+00 ncols 4591 newneg 2 best -4.75e-05
+it  21 obj 0.685996 slack 0.00e+00 ncols 4593 newneg 0 best 0.00e+00
+law weight by (k1,k2[,pairs,maxdepth]): {'(np.int64(4), np.int64(0), np.int64(2), 0.0)': np.float64(0.1222), '(np.int64(4), np.int64(1), np.int64(1), 0.0)': np.float64(0.0233), '(np.int64(4), np.int64(2), np.int64(0), 0.0)': np.float64(0.1105), '(np.int64(6), np.int64(0), np.int64(1), 0.0)': np.float64(0.3656), '(np.int64(6), np.int64(1), np.int64(0), 0.0)': np.float64(0.3784)}
+weight on pair configs: 0.5111015905422911
+RESULT N=8 level=2: value 0.685996 slack 0.0e+00 rows 7

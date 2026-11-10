@@ -1,0 +1,18 @@
+0 simple=1.00000 art=0.0e+00 cols=1512 added=12 bestred=1.00e+01 t=1s
+1 simple=0.86495 art=0.0e+00 cols=1524 added=12 bestred=1.31e+01 t=15s
+2 simple=0.85785 art=0.0e+00 cols=1536 added=12 bestred=1.08e+01 t=23s
+3 simple=0.83658 art=0.0e+00 cols=1548 added=12 bestred=9.42e+00 t=32s
+4 simple=0.82233 art=0.0e+00 cols=1560 added=12 bestred=5.89e+00 t=39s
+5 simple=0.79943 art=0.0e+00 cols=1572 added=12 bestred=2.11e+00 t=43s
+6 simple=0.77921 art=0.0e+00 cols=1584 added=12 bestred=7.00e+00 t=51s
+7 simple=0.76658 art=0.0e+00 cols=1596 added=12 bestred=5.00e+00 t=59s
+8 simple=0.74562 art=0.0e+00 cols=1608 added=12 bestred=2.07e+00 t=70s
+9 simple=0.74207 art=0.0e+00 cols=1620 added=12 bestred=1.66e+00 t=75s
+10 simple=0.73822 art=0.0e+00 cols=1632 added=12 bestred=1.78e+00 t=82s
+11 simple=0.73086 art=0.0e+00 cols=1644 added=12 bestred=6.45e-01 t=90s
+12 simple=0.72789 art=0.0e+00 cols=1656 added=12 bestred=3.69e-01 t=100s
+13 simple=0.72730 art=0.0e+00 cols=1667 added=11 bestred=2.15e-01 t=112s
+14 simple=0.72518 art=0.0e+00 cols=1679 added=12 bestred=2.19e-01 t=124s
+15 simple=0.72489 art=0.0e+00 cols=1679 added=0 bestred=1.06e-10 t=136s
+RESULT N=16 simple=0.72489 art=0.0e+00  (#configs 17)
+max rel. error 4-level E|pa|^2|pb|^2/CUE-1 = 4.049 ; max |3-level|/sqrt(ab(a+b)) = 0.967

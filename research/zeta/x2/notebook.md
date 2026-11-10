@@ -357,3 +357,16 @@ lost by using only disjoint pairs.
 Caveats: (i) the pairs must be simple–simple and on the line; sign-change (odd–odd) pairs would need an extra
 count of triple+ zeros; (ii) the gain is on top of the Alpoge–Furman base 0.6725, not necessarily on top of the other
 refinements behind the record 0.6735.
+
+## L5. Realizable check and the variants [N]
+real_gap.py, N=8, lambda=0.5, row "ordered close pairs >= 0.05 N" (smoothed from below, width 0.03, so the
+ensembles found are feasible for the sharp row): realizable minimum simple fraction
+  any distinct pair: 0.77921 | simple–simple pairs (= sign changes of Z, odd marks): 0.77923 | consecutive
+  distinct gaps (row = 2 #gaps): 0.77924;   base (no row) 0.75706;  DNN(8) with the row 0.77544 (base 0.75489).
+So (i) realizable gain +0.022 = DNN gain +0.021 (same 0.004 finite-size offset as before); (ii) the three variants
+give the SAME bound: the adversary meets the row with consecutive simple–simple close pairs, so "sign changes
+within lambda", "distinct zeros anywhere within lambda" and "consecutive distinct gaps < lambda" are
+interchangeable as hypotheses (normalised as ordered pair counts) — the cheapest to prove is the right target.
+Gaps below the crystal spacing 0.9: worth little (Montgomery slope 0.049 per unit c, i.e. 0.098 per unit
+fraction g of consecutive gaps): breaking the ceiling needs g ~ 10% (LP) / 37% (pinching certificate);
+beating the record needs g ~ 1.2% (LP) / 4.5% (pinching).  hardcore.py N=80: lambda* = 0.9999 confirms L2.

@@ -1,0 +1,3 @@
+N=80 lambda*=0.9999
+ hard core 0.50: feasible=True min simple=0.6891
+ hard core 0.70: feasible=True min simple=0.6891

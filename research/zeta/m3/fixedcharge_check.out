@@ -1,0 +1,14 @@
+== MT eps_c=0.0245
+  y=0.1: best t=0.0: (4.1) ratio sum max(s,u)/self = 0.889  comb row lhs = +0.0001 (needs <= eps_c=0.0245)
+  y=0.165: best t=0.0: (4.1) ratio sum max(s,u)/self = 1.058  comb row lhs = +0.0829 (needs <= eps_c=0.0245)
+  y=0.2: best t=0.0: (4.1) ratio sum max(s,u)/self = 1.173  comb row lhs = +0.2547 (needs <= eps_c=0.0245)
+  y=0.24: best t=0.0: (4.1) ratio sum max(s,u)/self = 1.317  comb row lhs = +0.6630 (needs <= eps_c=0.0245)
+  y=0.27: best t=0.0: (4.1) ratio sum max(s,u)/self = 1.432  comb row lhs = +1.2005 (needs <= eps_c=0.0245)
+  y=0.3: best t=0.0: (4.1) ratio sum max(s,u)/self = 1.552  comb row lhs = +2.0337 (needs <= eps_c=0.0245)
+  y=0.5: best t=0.0: (4.1) ratio sum max(s,u)/self = 2.447  comb row lhs = +32.8658 (needs <= eps_c=0.0245)
+== k5 eps_c=0.0241
+  y=0.1: best t=1.6: (4.1) ratio sum max(s,u)/self = 0.807  comb row lhs = +0.0056 (needs <= eps_c=0.0241)
+  y=0.165: best t=0.6: (4.1) ratio sum max(s,u)/self = 0.971  comb row lhs = +0.0856 (needs <= eps_c=0.0241)
+  y=0.2: best t=0.0: (4.1) ratio sum max(s,u)/self = 1.075  comb row lhs = +0.2101 (needs <= eps_c=0.0241)
+
+[killed]

@@ -1,0 +1,3 @@
+N=16 c0=0.996262 certificate value c0 - sum a_l*l = 0.680239; ymin=0.0 ymax=1.0
+  on-line+any  : min RC +1.364e-03 at comp (8, 4, 0) depths []
+  with pairs   : min RC +9.411e-04 at comp (8, 3, 1) depths [0.]

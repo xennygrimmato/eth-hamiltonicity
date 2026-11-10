@@ -1,0 +1,17 @@
+trial 0 kind 0: m_on 0.002269 (np.float64(0.0), np.int64(4), np.int64(0))  m_pair 0.002269 (np.float64(0.0), np.int64(0), np.int64(4)) depths [0. 0. 0. 0.]  diff +0.00e+00
+trial 1 kind 1: m_on 0.553157 (np.float64(0.0), np.int64(4), np.int64(0))  m_pair 0.553157 (np.float64(0.0), np.int64(3), np.int64(1)) depths [0.]  diff +3.33e-16
+trial 2 kind 2: m_on 0.000000 (np.float64(0.0), np.int64(4), np.int64(0))  m_pair 0.000000 (np.float64(0.0), np.int64(1), np.int64(3)) depths [0.114 0.389 0.394]  diff +1.68e-25
+trial 3 kind 0: m_on 0.093660 (np.float64(0.0), np.int64(4), np.int64(0))  m_pair 0.093660 (np.float64(0.0), np.int64(3), np.int64(1)) depths [0.]  diff +1.39e-17
+trial 4 kind 1: m_on 0.225257 (np.float64(0.0), np.int64(4), np.int64(0))  m_pair 0.225257 (np.float64(0.0), np.int64(2), np.int64(2)) depths [0. 0.]  diff +0.00e+00
+trial 5 kind 2: m_on 0.000000 (np.float64(0.0), np.int64(4), np.int64(0))  m_pair 0.000000 (np.float64(0.0), np.int64(3), np.int64(1)) depths [0.]  diff +1.48e-24
+   deep on-line recheck: 0.071528
+trial 6 kind 0: m_on 0.071528 (np.float64(0.0), np.int64(4), np.int64(0))  m_pair 0.071124 (np.float64(0.0), np.int64(0), np.int64(4)) depths [0.099 0.    0.    0.099]  diff -4.04e-04
+trial 7 kind 1: m_on 0.483459 (np.float64(0.0), np.int64(4), np.int64(0))  m_pair 0.483459 (np.float64(0.0), np.int64(1), np.int64(3)) depths [0. 0. 0.]  diff +0.00e+00
+trial 8 kind 2: m_on 0.000000 (np.float64(0.0), np.int64(4), np.int64(0))  m_pair 0.000000 (np.float64(0.0), np.int64(3), np.int64(1)) depths [0.]  diff +1.86e-23
+trial 9 kind 0: m_on 0.167950 (np.float64(0.0), np.int64(4), np.int64(0))  m_pair 0.167950 (np.float64(0.0), np.int64(3), np.int64(1)) depths [0.]  diff -5.55e-17
+trial 10 kind 1: m_on 0.461152 (np.float64(0.0), np.int64(4), np.int64(0))  m_pair 0.461152 (np.float64(0.0), np.int64(0), np.int64(4)) depths [0. 0. 0. 0.]  diff -1.67e-16
+trial 11 kind 2: m_on 0.000000 (np.float64(0.0), np.int64(4), np.int64(0))  m_pair 0.000000 (np.float64(0.0), np.int64(1), np.int64(3)) depths [0. 0. 0.]  diff -3.83e-26
+trial 12 kind 0: m_on 0.246199 (np.float64(0.0), np.int64(4), np.int64(0))  m_pair 0.246199 (np.float64(0.0), np.int64(0), np.int64(4)) depths [0. 0. 0. 0.]  diff +0.00e+00
+trial 13 kind 1: m_on 0.982148 (np.float64(6.0), np.int64(1), np.int64(0))  m_pair 0.982148 (np.float64(6.0), np.int64(0), np.int64(1)) depths [0.]  diff +1.11e-16
+trial 14 kind 2: m_on 0.000000 (np.float64(0.0), np.int64(4), np.int64(0))  m_pair 0.000000 (np.float64(0.0), np.int64(0), np.int64(4)) depths [0. 0. 0. 0.]  diff -1.43e-24
+most negative m_pair - m_on: -0.00040372323045616276

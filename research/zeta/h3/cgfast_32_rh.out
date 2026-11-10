@@ -1,0 +1,5 @@
+it   0 slack 7.2e+01 obj 23.1542331 minRC -2.97e+02 added 24 ncols 625 min(a) -2.72e-01
+it   1 slack 5.1e+01 obj 16.6151036 minRC -2.73e+02 added 24 ncols 649 min(a) -1.98e-01
+it   2 slack 4.5e+01 obj 15.0214219 minRC -2.66e+02 added 24 ncols 673 min(a) -2.07e-01
+it   3 slack 3.2e+01 obj 10.7888854 minRC -2.08e+02 added 24 ncols 697 min(a) -2.18e-01
+it   4 slack 1.8e+01 obj 6.5178718 minRC -2.32e+02 added 24 ncols 721 min(a) -1.81e-01

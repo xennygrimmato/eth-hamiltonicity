@@ -1,0 +1,9 @@
+lam=0.0 ymin=0.0 ntr=300
+Phi_C=+0.02995 Phi_MT=+0.00931 kind=6 n_on=2 pairs=1 m=[1 1] y=[0.]
+Phi_C=+0.04487 Phi_MT=-0.00000 kind=5 n_on=0 pairs=1 m=[] y=[0.]
+Phi_C=+0.04487 Phi_MT=-0.00000 kind=5 n_on=0 pairs=1 m=[] y=[0.]
+Phi_C=+0.04487 Phi_MT=-0.00000 kind=7 n_on=0 pairs=1 m=[] y=[0.]
+Phi_C=+0.04487 Phi_MT=-0.00000 kind=7 n_on=0 pairs=1 m=[] y=[0.]
+Phi_C=+0.04487 Phi_MT=-0.00000 kind=4 n_on=0 pairs=1 m=[] y=[0.]
+Phi_C=+0.04502 Phi_MT=+0.03623 kind=6 n_on=3 pairs=2 m=[1 1 1] y=[0. 0.]
+Phi_C=+0.05691 Phi_MT=+0.00034 kind=6 n_on=2 pairs=1 m=[1 1] y=[0.]

@@ -1,0 +1,7 @@
+P=8 min Delta_P/sum self = +3.3749e-03 y=[1.798 1.602 0.004 1.538 0.05  1.966 0.272 2.   ] t=[0.113 0.364 2.15  3.894 4.469 5.817 7.297 7.36 ]
+P=6 min Delta_P/sum self = +1.4538e-04 y=[1.446 0.    2.    1.802 1.999 1.797] t=[0.264 1.3   1.829 2.37  2.946 3.811]
+P=7 min Delta_P/sum self = +8.2391e-05 y=[0.    1.793 1.993 0.238 0.    1.991 1.798] t=[0.076 0.607 0.869 1.138 1.673 2.578 9.131]
+P=5 min Delta_P/sum self = +7.4241e-05 y=[2.    0.191 1.802 1.805 1.999] t=[2.165 2.699 3.23  3.763 4.019]
+P=7 min Delta_P/sum self = +4.7966e-05 y=[1.985 1.775 1.821 0.068 1.222 2.    0.55 ] t=[1.774 2.315 2.858 3.41  3.653 4.201 5.311]
+/home/user/eth-hamiltonicity/research/zeta/m2/deltaP.py:14: RuntimeWarning: invalid value encountered in scalar divide
+  return v/selfs

@@ -1,0 +1,11 @@
+ymin=0.1 ntr=150: best per pair
+PsiC=+0.02405 PsiMT=+0.02451 perpair=+0.02405 d=1.0000 P=1 on=() y=[0.102]
+PsiC=+0.12028 PsiMT=+0.12259 perpair=+0.02406 d=5.0000 P=5 on=() y=[0.104 0.106 0.104 0.106 0.103]
+PsiC=+0.14930 PsiMT=+0.15202 perpair=+0.02986 d=6.0000 P=5 on=(np.int64(2),) y=[0.101 0.101 0.1   0.1   0.1  ]
+PsiC=+0.25442 PsiMT=+0.25507 perpair=+0.05088 d=6.0000 P=5 on=(np.int64(1),) y=[0.1 0.1 0.1 0.1 0.1]
+PsiC=+0.28300 PsiMT=+0.32121 perpair=+0.05660 d=8.0000 P=5 on=(np.int64(2), np.int64(2)) y=[0.1 0.1 0.1 0.1 0.1]
+PsiC=+0.33518 PsiMT=+0.34985 perpair=+0.06704 d=9.0000 P=5 on=(np.int64(1), np.int64(1), np.int64(2), np.int64(2)) y=[0.1 0.1 0.1 0.1 0.1]
+PsiC=+0.33593 PsiMT=+0.33745 perpair=+0.08398 d=5.0000 P=4 on=() y=[0.1 0.1 0.1 0.1]
+PsiC=+0.34221 PsiMT=+0.36511 perpair=+0.08555 d=7.0000 P=4 on=(np.int64(2), np.int64(2)) y=[0.1 0.1 0.1 0.1]
+PsiC=+0.47436 PsiMT=+0.50246 perpair=+0.09487 d=9.0000 P=5 on=(np.int64(1), np.int64(1), np.int64(2)) y=[0.1 0.1 0.1 0.1 0.1]
+PsiC=+0.40678 PsiMT=+0.46189 perpair=+0.10169 d=12.0000 P=4 on=(np.int64(2), np.int64(1), np.int64(1), np.int64(1)) y=[0.1 0.1 0.1 0.1]

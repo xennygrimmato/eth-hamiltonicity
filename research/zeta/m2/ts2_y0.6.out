@@ -1,0 +1,11 @@
+lam=0.0 ymin=0.6 ntr=200; min Phi_C/pair, then min ratio Phi_C/Phi_MT
+Phi_C=+14.79257 Phi_MT=+14.39982 kind=4 n_on=3 pairs=9 m=[2 2 1] y=[0.6   0.724 0.8   0.799 0.778 0.6   0.753 0.753 0.78 ]
+Phi_C=+13.75570 Phi_MT=+13.35041 kind=0 n_on=1 pairs=8 m=[2] y=[0.6   0.779 0.869 0.912 0.919 0.888 0.799 0.6  ]
+Phi_C=+10.22509 Phi_MT=+9.97789 kind=0 n_on=2 pairs=5 m=[2 2] y=[0.6   0.753 0.796 0.754 0.6  ]
+Phi_C=+10.22509 Phi_MT=+9.97784 kind=0 n_on=2 pairs=5 m=[2 2] y=[0.6   0.754 0.796 0.753 0.6  ]
+Phi_C=+16.83162 Phi_MT=+16.38761 kind=4 n_on=0 pairs=8 m=[] y=[0.906 0.947 0.6   0.906 0.807 0.947 0.807 0.6  ]
+Phi_C=+32.08522 Phi_MT=+36.61162 kind=2 n_on=4 pairs=1 m=[2 2 2 2] y=[0.6]
+Phi_C=+32.08522 Phi_MT=+36.61162 kind=2 n_on=4 pairs=1 m=[2 2 2 2] y=[0.6]
+Phi_C=+32.08522 Phi_MT=+36.61161 kind=2 n_on=4 pairs=1 m=[2 2 2 2] y=[0.6]
+Phi_C=+32.08522 Phi_MT=+36.61161 kind=2 n_on=4 pairs=1 m=[2 2 2 2] y=[0.6]
+Phi_C=+32.08522 Phi_MT=+36.61161 kind=2 n_on=4 pairs=1 m=[2 2 2 2] y=[0.6]

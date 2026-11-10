@@ -294,3 +294,9 @@ it 292 obj 0.705055 slack 0.00e+00 ncols 7358 newneg 9 best -9.29e-04
 it 293 obj 0.705054 slack 0.00e+00 ncols 7367 newneg 6 best -2.67e-05
 it 294 obj 0.705052 slack 0.00e+00 ncols 7373 newneg 5 best -2.48e-06
 it 295 obj 0.705052 slack 0.00e+00 ncols 7378 newneg 11 best -1.65e-06
+it 296 obj 0.705052 slack 0.00e+00 ncols 7389 newneg 8 best -7.07e-07
+it 297 obj 0.705052 slack 0.00e+00 ncols 7397 newneg 8 best -2.51e-05
+it 298 obj 0.705051 slack 0.00e+00 ncols 7405 newneg 10 best -2.15e-05
+it 299 obj 0.705051 slack 0.00e+00 ncols 7415 newneg 10 best -1.28e-05
+law weight by (k1,k2): {(np.int64(0), np.int64(6)): np.float64(0.03), (np.int64(2), np.int64(5)): np.float64(0.0603), (np.int64(4), np.int64(4)): np.float64(0.1009), (np.int64(6), np.int64(3)): np.float64(0.0491), (np.int64(8), np.int64(2)): np.float64(0.2517), (np.int64(10), np.int64(1)): np.float64(0.2342), (12, 0): np.float64(0.2738)}
+RESULT N=12 level=3: value 0.705051 slack 0.0e+00 rows 41

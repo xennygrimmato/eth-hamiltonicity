@@ -189,3 +189,7 @@ it 187 obj 0.706428 slack 0.00e+00 ncols 7433 newneg 11 best -2.94e-03
 it 188 obj 0.706407 slack 0.00e+00 ncols 7444 newneg 8 best -3.13e-05
 it 189 obj 0.706406 slack 0.00e+00 ncols 7452 newneg 9 best -2.71e-05
 it 190 obj 0.706406 slack 0.00e+00 ncols 7461 newneg 14 best -1.43e-02
+it 191 obj 0.706361 slack 0.00e+00 ncols 7475 newneg 10 best -6.00e-04
+it 192 obj 0.706357 slack 0.00e+00 ncols 7485 newneg 18 best -7.47e-04
+it 193 obj 0.706352 slack 0.00e+00 ncols 7503 newneg 7 best -3.41e-03
+it 194 obj 0.706349 slack 0.00e+00 ncols 7510 newneg 7 best -4.24e-03

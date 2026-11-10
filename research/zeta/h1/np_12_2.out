@@ -1,0 +1,35 @@
+it   0 obj 0.781869 slack 0.00e+00 ncols 4400 newneg 30 best -6.96e-01
+it   1 obj 0.732134 slack 0.00e+00 ncols 4430 newneg 18 best -7.02e-01
+it   2 obj 0.704327 slack 0.00e+00 ncols 4448 newneg 24 best -2.20e-01
+it   3 obj 0.699620 slack 0.00e+00 ncols 4472 newneg 15 best -4.72e-01
+it   4 obj 0.696416 slack 0.00e+00 ncols 4487 newneg 18 best -5.86e-02
+it   5 obj 0.685512 slack 0.00e+00 ncols 4505 newneg 9 best -1.08e-02
+it   6 obj 0.685331 slack 0.00e+00 ncols 4514 newneg 6 best -6.05e-03
+it   7 obj 0.685259 slack 0.00e+00 ncols 4520 newneg 10 best -2.75e-03
+it   8 obj 0.684840 slack 0.00e+00 ncols 4530 newneg 4 best -2.42e-03
+it   9 obj 0.684664 slack 0.00e+00 ncols 4534 newneg 4 best -2.40e-03
+it  10 obj 0.684524 slack 0.00e+00 ncols 4538 newneg 4 best -2.07e-03
+it  11 obj 0.684436 slack 0.00e+00 ncols 4542 newneg 4 best -8.07e-05
+it  12 obj 0.684433 slack 0.00e+00 ncols 4546 newneg 1 best -2.35e-05
+it  13 obj 0.684433 slack 0.00e+00 ncols 4547 newneg 3 best -7.48e-04
+it  14 obj 0.684377 slack 0.00e+00 ncols 4550 newneg 2 best -7.28e-04
+it  15 obj 0.684358 slack 0.00e+00 ncols 4552 newneg 1 best -8.85e-06
+it  16 obj 0.684358 slack 0.00e+00 ncols 4553 newneg 3 best -1.11e-03
+it  17 obj 0.684308 slack 0.00e+00 ncols 4556 newneg 2 best -7.04e-04
+it  18 obj 0.684137 slack 0.00e+00 ncols 4558 newneg 4 best -6.68e-04
+it  19 obj 0.684046 slack 0.00e+00 ncols 4562 newneg 4 best -5.28e-04
+it  20 obj 0.684017 slack 0.00e+00 ncols 4566 newneg 1 best -3.59e-04
+it  21 obj 0.683984 slack 0.00e+00 ncols 4567 newneg 2 best -2.75e-04
+it  22 obj 0.683973 slack 0.00e+00 ncols 4569 newneg 4 best -1.65e-04
+it  23 obj 0.683966 slack 0.00e+00 ncols 4573 newneg 2 best -1.49e-06
+it  24 obj 0.683966 slack 0.00e+00 ncols 4575 newneg 1 best -3.60e-06
+it  25 obj 0.683966 slack 0.00e+00 ncols 4576 newneg 1 best -1.10e-04
+it  26 obj 0.683964 slack 0.00e+00 ncols 4577 newneg 4 best -7.32e-04
+it  27 obj 0.683959 slack 0.00e+00 ncols 4581 newneg 3 best -1.59e-04
+it  28 obj 0.683950 slack 0.00e+00 ncols 4584 newneg 5 best -2.63e-05
+it  29 obj 0.683948 slack 0.00e+00 ncols 4589 newneg 1 best -4.56e-04
+it  30 obj 0.683940 slack 0.00e+00 ncols 4590 newneg 1 best -3.59e-04
+it  31 obj 0.683939 slack 0.00e+00 ncols 4591 newneg 3 best -9.26e-04
+it  32 obj 0.683875 slack 0.00e+00 ncols 4594 newneg 0 best 0.00e+00
+law weight by (k1,k2): {(np.int64(0), np.int64(6)): np.float64(0.0006), (np.int64(6), np.int64(3)): np.float64(0.1119), (np.int64(8), np.int64(2)): np.float64(0.6701), (np.int64(10), np.int64(1)): np.float64(0.2174)}
+RESULT N=12 level=2: value 0.683875 slack 0.0e+00 rows 11

@@ -1,0 +1,18 @@
+N=8 c0=0.998590 dual value c0+sum lam*l = 0.685996
+  comp (8, 0, 0): min reduced cost +0.001410
+  comp (6, 0, 1): min reduced cost -0.000000
+  comp (4, 0, 2): min reduced cost -0.000000
+  comp (2, 0, 3): min reduced cost +0.000573
+  comp (0, 0, 4): min reduced cost +0.006697
+  comp (6, 1, 0): min reduced cost -0.000000
+  comp (4, 1, 1): min reduced cost -0.000000
+  comp (2, 1, 2): min reduced cost +0.000371
+  comp (0, 1, 3): min reduced cost +0.001416
+  comp (4, 2, 0): min reduced cost -0.000000
+  comp (2, 2, 1): min reduced cost +0.000371
+  comp (0, 2, 2): min reduced cost +0.001416
+  comp (2, 3, 0): min reduced cost +0.000573
+  comp (0, 3, 1): min reduced cost +0.001416
+  comp (0, 4, 0): min reduced cost +0.001416
+WORST on-line : (np.float64(-2.550491357000695e-08), (4, 2, 0))
+WORST with off-line pairs: (np.float64(-2.5517942592312437e-08), (4, 1, 1), array([0.]))

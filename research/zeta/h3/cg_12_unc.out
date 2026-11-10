@@ -1,0 +1,65 @@
+N=12 mode=unc  rank-trace (MT-type) certificate lower bound p_MT(N) = 0.674624
+it   0  obj 18.948648  slack 1.81e+00  ncols 201  dual-bound 18.948648  newneg 8
+it   1  obj 8.152534  slack 7.33e-01  ncols 209  dual-bound 8.152534  newneg 8
+it   2  obj 0.792023  slack 0.00e+00  ncols 217  dual-bound 0.792023  newneg 8
+it   3  obj 0.758526  slack 0.00e+00  ncols 225  dual-bound 0.758526  newneg 8
+it   4  obj 0.742383  slack 0.00e+00  ncols 233  dual-bound 0.742383  newneg 8
+it   5  obj 0.740462  slack 0.00e+00  ncols 241  dual-bound 0.740462  newneg 8
+it   6  obj 0.734950  slack 0.00e+00  ncols 249  dual-bound 0.734950  newneg 8
+it   7  obj 0.727896  slack 0.00e+00  ncols 257  dual-bound 0.727896  newneg 8
+it   8  obj 0.718621  slack 0.00e+00  ncols 265  dual-bound 0.718621  newneg 8
+it   9  obj 0.710536  slack 0.00e+00  ncols 273  dual-bound 0.710536  newneg 8
+it  10  obj 0.708826  slack 0.00e+00  ncols 281  dual-bound 0.708826  newneg 8
+it  11  obj 0.697021  slack 0.00e+00  ncols 289  dual-bound 0.697021  newneg 8
+it  12  obj 0.691179  slack 0.00e+00  ncols 297  dual-bound 0.691179  newneg 8
+it  13  obj 0.690174  slack 0.00e+00  ncols 305  dual-bound 0.690174  newneg 8
+it  14  obj 0.687354  slack 0.00e+00  ncols 313  dual-bound 0.687354  newneg 7
+it  15  obj 0.686268  slack 0.00e+00  ncols 320  dual-bound 0.686268  newneg 4
+it  16  obj 0.685474  slack 0.00e+00  ncols 324  dual-bound 0.685474  newneg 6
+it  17  obj 0.685028  slack 0.00e+00  ncols 330  dual-bound 0.685028  newneg 6
+it  18  obj 0.684932  slack 0.00e+00  ncols 336  dual-bound 0.684932  newneg 3
+it  19  obj 0.684835  slack 0.00e+00  ncols 339  dual-bound 0.684835  newneg 4
+it  20  obj 0.684810  slack 0.00e+00  ncols 343  dual-bound 0.684810  newneg 2
+it  21  obj 0.684784  slack 0.00e+00  ncols 345  dual-bound 0.684784  newneg 1
+it  22  obj 0.684781  slack 0.00e+00  ncols 346  dual-bound 0.684781  newneg 1
+it  23  obj 0.684772  slack 0.00e+00  ncols 347  dual-bound 0.684772  newneg 2
+it  24  obj 0.684637  slack 0.00e+00  ncols 349  dual-bound 0.684637  newneg 6
+it  25  obj 0.684530  slack 0.00e+00  ncols 355  dual-bound 0.684530  newneg 0
+it  26  obj 0.684216  slack 0.00e+00  ncols 363  dual-bound 0.684216  newneg 1
+it  27  obj 0.684205  slack 0.00e+00  ncols 364  dual-bound 0.684205  newneg 0
+it  28  obj 0.684116  slack 0.00e+00  ncols 371  dual-bound 0.684116  newneg 0
+it  29  obj 0.684071  slack 0.00e+00  ncols 379  dual-bound 0.684071  newneg 3
+it  30  obj 0.684068  slack 0.00e+00  ncols 382  dual-bound 0.684068  newneg 0
+it  31  obj 0.683920  slack 0.00e+00  ncols 388  dual-bound 0.683920  newneg 0
+it  32  obj 0.683904  slack 0.00e+00  ncols 395  dual-bound 0.683904  newneg 0
+it  33  obj 0.683819  slack 0.00e+00  ncols 402  dual-bound 0.683819  newneg 0
+it  34  obj 0.683804  slack 0.00e+00  ncols 410  dual-bound 0.683804  newneg 1
+it  35  obj 0.683804  slack 0.00e+00  ncols 411  dual-bound 0.683804  newneg 0
+it  36  obj 0.683775  slack 0.00e+00  ncols 417  dual-bound 0.683775  newneg 1
+it  37  obj 0.683774  slack 0.00e+00  ncols 418  dual-bound 0.683774  newneg 2
+it  38  obj 0.683769  slack 0.00e+00  ncols 420  dual-bound 0.683769  newneg 2
+it  39  obj 0.683769  slack 0.00e+00  ncols 422  dual-bound 0.683769  newneg 0
+it  40  obj 0.683743  slack 0.00e+00  ncols 424  dual-bound 0.683743  newneg 0
+it  41  obj 0.683743  slack 0.00e+00  ncols 426  dual-bound 0.683743  newneg 1
+it  42  obj 0.683743  slack 0.00e+00  ncols 427  dual-bound 0.683743  newneg 0
+it  43  obj 0.683735  slack 0.00e+00  ncols 432  dual-bound 0.683735  newneg 0
+it  44  obj 0.683735  slack 0.00e+00  ncols 435  dual-bound 0.683735  newneg 0
+it  45  obj 0.683734  slack 0.00e+00  ncols 440  dual-bound 0.683734  newneg 2
+it  46  obj 0.683733  slack 0.00e+00  ncols 442  dual-bound 0.683733  newneg 0
+it  47  obj 0.683733  slack 0.00e+00  ncols 444  dual-bound 0.683733  newneg 0
+law support (weight, (k1,k2,k3,maxdepth)):
+   0.23758  (np.int64(8), 2, 0, 0.0)
+   0.15921  (np.int64(8), 0, 2, 0.0)
+   0.12640  (np.int64(8), 1, 1, 0.0)
+   0.11631  (np.int64(8), 2, 0, 0.0)
+   0.08808  (np.int64(8), 1, 1, 0.0)
+   0.07079  (np.int64(8), 2, 0, 0.0)
+   0.06257  (np.int64(10), 1, 0, 0.0)
+   0.05656  (np.int64(8), 2, 0, 0.0)
+   0.03982  (np.int64(10), 0, 1, 0.0)
+   0.03117  (np.int64(8), 2, 0, 0.0)
+   0.00810  (np.int64(8), 2, 0, 0.0)
+   0.00339  (np.int64(8), 1, 1, 0.0)
+total weight on configurations containing off-line pairs: 0.41692
+RESULT N=12 mode=unc: law value (upper bound on ceiling) = 0.683733, slack=0.0e+00, support size 12
+dual lambda_l: [-0.0141 -0.013  -0.0116 -0.0101 -0.0086 -0.007  -0.0054 -0.004  -0.0027 -0.0015 -0.0006]

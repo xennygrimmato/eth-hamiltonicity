@@ -258,3 +258,47 @@ int Z(t)Z(t+h)|M|^2 differs from int Z^2|M|^2 only at order h^2).  Recorded as a
 Gains are N-independent while the base value drifts to 0.6820; so in the limit: F <= 2 on (1,1.05] -> ~0.710,
 distinct-small-gap(0.5, 5%) -> ~0.712, GUE knowledge on (1,1.25] -> ~0.80.
 Final 3-point runs (killed when converging slowly): N=6: 0.7983 (+0.020), N=8: 0.7779 (+0.021, red 2e-2).
+
+---------------------------------------------------------------------------------------------------------
+# Lead task (after hand-back): "a positive proportion of zeros have a DISTINCT zero within lambda"
+
+## L1. Trade-off tables [N]
+Row added to the finite model: (1/N) E #{ordered pairs of distinct points with 0 < |x - x'| < lambda} >= c
+(implied by "a proportion c of the zeros, with multiplicity, have a distinct zero within lambda";
+a proportion g of consecutive distinct gaps < lambda gives the row with c = 2g).  Gains are linear in c and
+N-independent (N=40 vs 80), so I quote gain = slope*c.  Scripts gap_table.py (DNN), gap_table_M.py
+("Montgomery class": certificates r >= 0 with r^ supported in [-1,1], i.e. the A–F window class; primal drops
+S >= 0 beyond 1), logs gap_table_N*.log, gapM_N*.log.
+
+| lambda | DNN slope (N=80) | Montgomery-class slope (N=80) | GUE fraction of gaps < lambda |
+|---|---|---|---|
+| 0.3 | 0.85 | 0.82 | ~0.01 |
+| 0.5 | 0.61 | 0.56 | 0.096 (data, t~1e5) |
+| 0.7 | 0.22 | 0.19 | ~0.24 |
+| 0.9 | 0.056 | 0.049 | 0.436 (data) |
+Full table (N=80, value / gain), DNN base 0.6901 (-> 0.6820 as N->inf), Montgomery base 0.6843 (-> ~0.673):
+DNN  lam=0.3: c=.01 .6986(+.0085) .02 .7070(+.0169) .05 .7325(+.0423) .10 .7750(+.0849)
+     lam=0.5: .6962(+.0060) .7022(+.0121) .7205(+.0304) .7513(+.0611)
+     lam=0.7: .6923(+.0022) .6945(+.0044) .7011(+.0110) .7121(+.0220)
+     lam=0.9: .6907(+.0006) .6913(+.0011) .6929(+.0028) .6957(+.0056)
+Mont lam=0.3: +.0082 +.0164 +.0409 +.0819 ; lam=0.5: +.0056 +.0112 +.0281 +.0562 ;
+     lam=0.7: +.0019 +.0038 +.0096 +.0191 ; lam=0.9: +.0005 +.0010 +.0024 +.0049
+Reading: in the DNN class every c > 0 breaks 0.68185 (base = ceiling), but that class is not provable; in the
+provable (Montgomery/A–F window) class, base 0.6725, breaking 0.68185 needs c > 1.2% (0.3), 1.7% (0.5),
+4.9% (0.7), ~19% (0.9); beating the record 0.6736 needs c > 0.14%, 0.2%, 0.6%, 2.3%.  Small lambda is far more
+valuable: the crystal has nothing below 0.9, and the window kernel decorrelates beyond ~0.7.
+
+## L2. Pair data cannot produce distinct close pairs at all [N]
+hardcore.py: the DNN with R2 = 0 on (0, lambda) is feasible for every lambda < 1 (bisection at N=40:
+lambda* = 0.9999, i.e. up to the grid), and imposing a hard core up to 0.9 does not even change the optimum
+(0.6973 at N=40).  So pair-correlation data at bandwidth 1 are consistent with NO two distinct zeros closer than
+(1-eps) mean spacings.  This is the precise model form of the suspicion of Bui–Goldston–Milinovich–Montgomery
+(arXiv:2208.02359, after Thm 2) that the pair-correlation, Montgomery–Odlyzko and Selberg methods "are incapable
+of proving mu_d < 1": every published small-gap result (MO, CGGGH 0.77, Soundararajan 0.6876, Wu 0.6653,
+BGMM Thm 1 0.6039, Inoue, Bondarenko–Heap / Durkan–Pearce-Crump 1/2 (2610.26038, 2610.28527)) counts gaps
+with multiplicity, and the crystal realises all of them with double zeros.  Lamzouri 2610.26841 (13/20
+c-isolated, unconditional) goes in the opposite direction (isolated zeros = few close pairs).
+The only distinct-gap result I found is BGMM Thm 2 (RH): mu_d <= 0.991, via the sign test
+sum_gamma Z'(gamma) Z(gamma + 2 pi a/log T) |M(rho + i eta)|^2 < 0 (non-pair input: discrete mollified moments of
+zeta' at zeros, Conrey–Ghosh–Gonek / Heap–Li–Zhao), giving >> T^{1-eps} gaps, NOT a positive proportion, and
+pairs (simple, odd multiplicity), not (simple, simple).

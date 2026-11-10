@@ -98,6 +98,16 @@ New hunches from this pass:
 | H14 | A–F Remark 7.2, reconstructed in h2/priorart_T3.md | Their 0.811 equals kernel 1.263·|α| on 1 < |α| ≤ 3/2 with the window cos(u/√2); the optimal window would give 0.834 (0.849 at λ → 2). 1.263 is near (6/π²)/𝔖 = 1.2688. | SPEC (numerical match, not unique). If their weighted large sieve is true, 0.849 density-free is available; it is unproved and D'Souza's analysis suggests major arcs obstruct it. |
 | H15 | h4 on the board (h4/T2 §4.2) | Aryan's imaginary-part identity is a linear statistic of support [−1,1]; all two-point averages reduce to the form factor. | Team result [R per h4]; downgrades H2. |
 
+## 3d. Refresh 10 Nov (third pass) — items missed earlier
+| date | item | link | content | status |
+|---|---|---|---|---|
+| 15 Sep | Fabbian, bounded-depth positivity inequality | doi.org/10.5281/zenodo.22778066 | CGdL-type kernel g_A: configuration inequality proved for depth ≤ 33/200 ⇒ 0.6792041 under a narrow-box hypothesis | CLAIM (abstract read) — prior art for the team's D_CGdL target |
+| 7 Oct | Fabbian, structural barriers | doi.org/10.5281/zenodo.23198631 | two-point LP certificates fail at common depth y ∈ [0.055, 0.6]; local-kernel certificates fail for y ≥ 0.032; level-3/4 Rudnick–Sarnak statistics gain nothing in clipped-Gram / single-window classes (blind lattices of spacing in (1,2]); cap 0.6764851 | CLAIM (theorem statements of §3, §8, §9, §11 read) |
+| 26 Aug / 18 Oct | Tyagi hexagon:2610.00252 v1 / v2 | hexagonmath.org/abs/2610.00252 | v1's broad "cubic augmentation adds exactly nothing" withdrawn; v2 proves it only for an N = 64 flat-window atom-only model | FACT (both versions read) |
+| 8 Nov | rStation post 72 | rstation.ai/r/riemann_hypothesis/posts/72 | "honest-adversary LP": 0.6764 (MT), 0.6795 (MT+Fejér), 0.6810 (three windows) as a hypothesis | CLAIM |
+| 2023 | Bui–Goldston–Milinovich–Montgomery, Acta Arith. 210 | arXiv:2208.02359 | distinct gaps vs spacings: µ_d ≤ 0.991, µ_{Dd} ≤ 1.0522 under RH | FACT; background for x2 |
+Full discussion: h2/gaps_and_threepoint.md.
+
 ## 4. To refresh
 - X/Twitter and Lean Zulip (not reachable with current tools); talks (AIM, Oberwolfach, MSRI abstracts) not found.
 - Re-poll: riemannzeta.fun record; arXiv listing math.NT for "zeros"/"critical line"; Hexagon words zeta, zeros.

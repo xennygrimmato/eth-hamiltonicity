@@ -12,3 +12,24 @@ it  10 obj 0.688744 slack 0.0e+00 ncols 3641 newneg 4 best -9.4e-04
 it  11 obj 0.688638 slack 0.0e+00 ncols 3645 newneg 7 best -1.2e-03
 it  12 obj 0.688486 slack 0.0e+00 ncols 3652 newneg 4 best -4.6e-04
 it  13 obj 0.688300 slack 0.0e+00 ncols 3656 newneg 4 best -3.1e-03
+it  14 obj 0.688282 slack 0.0e+00 ncols 3660 newneg 8 best -1.2e-03
+it  15 obj 0.688233 slack 0.0e+00 ncols 3668 newneg 3 best -5.2e-05
+it  16 obj 0.688231 slack 0.0e+00 ncols 3671 newneg 1 best -2.0e-07
+it  17 obj 0.688231 slack 0.0e+00 ncols 3672 newneg 3 best -7.8e-05
+it  18 obj 0.688213 slack 0.0e+00 ncols 3675 newneg 3 best -8.0e-04
+it  19 obj 0.688179 slack 0.0e+00 ncols 3678 newneg 4 best -1.8e-04
+it  20 obj 0.688170 slack 0.0e+00 ncols 3682 newneg 6 best -9.9e-05
+it  21 obj 0.688162 slack 0.0e+00 ncols 3688 newneg 2 best -2.6e-04
+it  22 obj 0.688131 slack 0.0e+00 ncols 3690 newneg 2 best -1.1e-05
+it  23 obj 0.688130 slack 0.0e+00 ncols 3692 newneg 1 best -1.6e-05
+it  24 obj 0.688130 slack 0.0e+00 ncols 3693 newneg 0 best 0.0e+00
+support columns with pairs (mass weight w = x/s, scaled weight x, info):
+   mass 4.315e-02 scaled 6.903e-01 cost*N 0 (np.int64(0), np.int64(2), np.int64(2), 0.0, [1.96, 3.96, 5.96, 7.96], [0.0, 0.0, 0.0, 0.0])
+   mass 2.811e-12 scaled 2.250e-01 cost*N 0 (np.int64(0), 0, np.int64(4), 3.0, [4.32, 4.88, 5.03, 5.59], [3.0, 3.0, 3.0, 3.0])
+   mass 4.207e-02 scaled 2.142e-01 cost*N 4 (np.int64(4), np.int64(0), np.int64(2), 0.0, [0.74, 1.76, 2.82, 5.51, 6.6, 7.67], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 7.732e-14 scaled 1.123e-01 cost*N 0 (np.int64(0), np.int64(0), np.int64(4), 3.0, [1.38, 1.9, 2.22, 6.38], [3.0, 2.83, 2.96, 2.73])
+   mass 2.075e-02 scaled 1.107e-01 cost*N 2 (np.int64(2), np.int64(1), np.int64(2), 0.0, [0.72, 2.63, 3.8, 5.7, 7.59], [0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 2.634e-13 scaled 5.195e-02 cost*N 0 (np.int64(0), 0, np.int64(4), 2.99, [0.43, 1.04, 1.11, 1.7], [2.99, 2.91, 2.96, 2.97])
+   mass 1.493e-02 scaled 2.209e-02 cost*N 6 (np.int64(6), 0, np.int64(1), 0.0, [1.21, 2.25, 3.26, 4.27, 5.27, 6.33, 7.42], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+total mass on pair configs 1.2090e-01
+RESULT N=8 level=3 YMAX=3.0: value 0.688130 slack 0.0e+00

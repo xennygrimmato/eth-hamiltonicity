@@ -16,3 +16,20 @@ it  14 obj 0.690324 slack 0.0e+00 ncols 3616 newneg 9 best -1.4e-03
 it  15 obj 0.690129 slack 0.0e+00 ncols 3625 newneg 7 best -7.2e-04
 it  16 obj 0.690085 slack 0.0e+00 ncols 3632 newneg 4 best -2.0e-06
 it  17 obj 0.690085 slack 0.0e+00 ncols 3636 newneg 2 best -1.2e-03
+it  18 obj 0.690054 slack 0.0e+00 ncols 3638 newneg 7 best -5.9e-04
+it  19 obj 0.689928 slack 0.0e+00 ncols 3645 newneg 3 best -4.9e-05
+it  20 obj 0.689926 slack 0.0e+00 ncols 3648 newneg 2 best -2.9e-04
+it  21 obj 0.689879 slack 0.0e+00 ncols 3650 newneg 4 best -8.4e-04
+it  22 obj 0.689627 slack 0.0e+00 ncols 3654 newneg 5 best -3.3e-04
+it  23 obj 0.689587 slack 0.0e+00 ncols 3659 newneg 0 best 0.0e+00
+support columns with pairs (mass weight w = x/s, scaled weight x, info):
+   mass 2.774e-01 scaled 4.026e-01 cost*N 6 (np.int64(6), 0, np.int64(1), 0.0, [0.1, 1.14, 2.14, 3.15, 4.15, 5.22, 6.33], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 8.885e-07 scaled 2.637e-01 cost*N 0 (np.int64(0), np.int64(0), np.int64(4), 1.5, [1.97, 2.68, 4.7, 5.4], [1.45, 1.45, 1.5, 1.5])
+   mass 4.841e-02 scaled 1.906e-01 cost*N 4 (np.int64(4), np.int64(1), np.int64(1), 0.0, [0.09, 2.87, 3.97, 4.98, 5.98, 6.99], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 5.933e-02 scaled 1.663e-01 cost*N 6 (np.int64(6), 0, np.int64(1), 0.0, [0.27, 1.27, 2.33, 4.07, 5.13, 6.13, 7.2], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 4.453e-07 scaled 1.610e-01 cost*N 0 (np.int64(0), 0, np.int64(4), 1.5, [2.66, 3.37, 6.66, 7.37], [1.5, 1.5, 1.5, 1.5])
+   mass 2.545e-02 scaled 1.459e-01 cost*N 2 (np.int64(2), np.int64(2), np.int64(1), 0.0, [1.09, 2.89, 4.02, 6.02, 7.16], [0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 1.958e-02 scaled 1.399e-01 cost*N 2 (np.int64(2), np.int64(1), np.int64(2), 0.0, [0.48, 1.6, 4.38, 5.51, 6.63], [0.0, 0.0, 0.0, 0.0, 0.0])
+   mass 3.266e-07 scaled 1.189e-01 cost*N 0 (np.int64(0), 0, np.int64(4), 1.5, [1.66, 2.36, 4.33, 5.02], [1.43, 1.5, 1.43, 1.5])
+total mass on pair configs 4.3019e-01
+RESULT N=8 level=3 YMAX=1.5: value 0.689587 slack 0.0e+00

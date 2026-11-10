@@ -1,0 +1,15 @@
+Q=400 Q0=66
+  a=0.50 t=    0.0 block [20,25] (1 primes)  rho=0.9545   MV bound=3.750   K=1.5/S=3.131  H/(S(Q-Q0))=1.001
+  a=0.50 t=  271.4 block [20,25] (1 primes)  rho=0.9545   MV bound=3.750   K=1.5/S=3.131  H/(S(Q-Q0))=1.001
+  a=0.80 t=    0.0 block [120,150] (5 primes)  rho=0.9982   MV bound=3.761   K=1.5/S=3.131  H/(S(Q-Q0))=1.001
+  a=0.80 t=  350.1 block [120,150] (5 primes)  rho=0.9938   MV bound=3.761   K=1.5/S=3.131  H/(S(Q-Q0))=1.001
+  a=0.95 t=    0.0 block [296,370] (11 primes)  rho=0.9836   MV bound=3.782   K=1.5/S=3.131  H/(S(Q-Q0))=1.001
+  a=0.95 t=  205.4 block [296,370] (11 primes)  rho=0.9979   MV bound=3.782   K=1.5/S=3.131  H/(S(Q-Q0))=1.001
+  a=1.10 t=    0.0 block [728,910] (26 primes)  rho=0.8956   MV bound=3.833   K=1.5/S=3.131  H/(S(Q-Q0))=1.001
+  a=1.10 t=  349.8 block [728,910] (26 primes)  rho=1.0023   MV bound=3.833   K=1.5/S=3.131  H/(S(Q-Q0))=1.001
+  a=1.30 t=    0.0 block [2413,3017] (74 primes)  rho=0.7069   MV bound=4.033   K=1.5/S=3.131  H/(S(Q-Q0))=1.001
+  a=1.30 t=  235.5 block [2413,3017] (74 primes)  rho=1.0242   MV bound=4.033   K=1.5/S=3.131  H/(S(Q-Q0))=1.001
+  a=1.50 t=    0.0 block [8000,10000] (222 primes)  rho=0.5914   MV bound=4.694   K=1.5/S=3.131  H/(S(Q-Q0))=1.001
+  a=1.50 t=  255.5 block [8000,10000] (222 primes)  rho=1.0561   MV bound=4.694   K=1.5/S=3.131  H/(S(Q-Q0))=1.001
+  a=1.70 t=    0.0 block [26515,33144] (639 primes)  rho=0.5335   MV bound=6.884   K=1.5/S=3.131  H/(S(Q-Q0))=1.001
+  a=1.70 t=  328.1 block [26515,33144] (639 primes)  rho=1.0041   MV bound=6.884   K=1.5/S=3.131  H/(S(Q-Q0))=1.001

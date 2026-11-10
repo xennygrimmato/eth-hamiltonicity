@@ -1,0 +1,6 @@
+eps=0.95 tau=0.053 value(N=64)=0.679019 continuum~0.67887:  sup R4 = 1.4827 at y=0.0003;  sup over y<=0.03: 1.4827
+eps=0.90 tau=0.111 value(N=64)=0.678680 continuum~0.67853:  sup R4 = 1.2934 at y=0.0003;  sup over y<=0.03: 1.2934
+eps=0.80 tau=0.250 value(N=64)=0.678001 continuum~0.67786:  sup R4 = 1.1154 at y=0.0003;  sup over y<=0.03: 1.1154
+eps=0.70 tau=0.429 value(N=64)=0.677323 continuum~0.67719:  sup R4 = 0.9680 at y=0.0003;  sup over y<=0.03: 0.9680
+eps=0.50 tau=1.000 value(N=64)=0.675967 continuum~0.67585:  sup R4 = 0.9269 at y=0.7250;  sup over y<=0.03: 0.8049
+eps=0.30 tau=2.333 value(N=64)=0.674610 continuum~0.67451:  sup R4 = 0.9503 at y=0.7500;  sup over y<=0.03: 0.7999

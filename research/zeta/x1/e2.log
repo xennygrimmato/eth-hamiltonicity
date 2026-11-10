@@ -1,0 +1,12 @@
+window[1500.0,3000.0] H=15.0 theta=0.6 U=3.528 X=e^U=34 primes<= 60  M=1123  Nw=1399.36 Nhard=1566
+max|k_zero-k_prime| = 0.000386829039794646   k(0)= 1399.35694646479
+   normalised moments m2,m3,m4 = [1.8083, 3.5197, 7.2146]
+zeros: n_+=924 n_-=0 min ev=-3.902e-10 max=3.192e+03  rank-trace (tr)^2/HS=773.9 (0.5530 Nw)  => simple-on-line >= 2n_+-N = 282 (0.1801),  CS version -0.0117
+   normalised moments m2,m3,m4 = [1.8083, 3.5197, 7.2146]
+primes: n_+=924 n_-=0 min ev=-1.324e-10 max=3.192e+03  rank-trace (tr)^2/HS=773.9 (0.5530 Nw)  => simple-on-line >= 2n_+-N = 282 (0.1801),  CS version -0.0117
+window[1500.0,3000.0] H=15.0 theta=1.0 U=5.881 X=e^U=358 primes<= 612  M=1872  Nw=1399.36 Nhard=1566
+max|k_zero-k_prime| = 0.0004621422266844251   k(0)= 1399.35694646479
+   normalised moments m2,m3,m4 = [1.2798, 1.8376, 2.8453]
+zeros: n_+=1508 n_-=0 min ev=-1.080e-09 max=4.361e+03  rank-trace (tr)^2/HS=1093.4 (0.7814 Nw)  => simple-on-line >= 2n_+-N = 1450 (0.9259),  CS version 0.3965
+window[1500.0,3000.0] H=15.0 theta=1.15 U=6.763 X=e^U=865 primes<= 1476  M=2153  Nw=1399.36 Nhard=1566
+max|k_zero-k_prime| = 0.0005384659485260742   k(0)= 1399.35694646479

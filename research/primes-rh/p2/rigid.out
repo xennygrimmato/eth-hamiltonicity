@@ -1,0 +1,6 @@
+N in [10,4000]: identity holds for all; P(window odd)=0.495, P(T odd)=0.500, P(contamination odd)=0.495, P(window parity = rigid bit T)=0.505
+   contaminating primes in (2000,4000]: 44
+   contaminating primes in (1000,2000]: 27
+   contaminating primes in (250,1000]: 30
+   contaminating primes in (89,250]: 7
+   contaminating primes in (0,89]: 6

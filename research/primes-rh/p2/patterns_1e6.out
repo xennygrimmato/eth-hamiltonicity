@@ -1,0 +1,9 @@
+twin (p,p+2): 200 random intervals, mismatches 0
+cousin (p,p+4): 200 random intervals, mismatches 0
+triple (p,p+2,p+6): 200 random intervals, mismatches 0
+quadruple (p,p+2,p+6,p+8): 200 random intervals, mismatches 0
+Sophie Germain (p,2p+1): 200 random intervals, mismatches 0
+Chen-free: (p, 6p+1): 200 random intervals, mismatches 0
+Goldbach G(2n) mod 2 (unordered, p<=n): 10299 values of n, mismatches 0
+#{a in [a1,a2]: a^2+1 prime} mod 2: 300 tests, mismatches 0
+pi_2(10^k) for k=3..6 and parity: [(1000, 35), (10000, 205), (100000, 1224), (1000000, 8169)]

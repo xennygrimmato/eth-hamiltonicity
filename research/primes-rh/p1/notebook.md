@@ -113,3 +113,53 @@ not scale-localised.
   I have not found Theorem 2 stated in this form; novelty claimed only modestly (it is a short Davenport-constant argument).
 * Kalai (2015, Polymath4 comment) asks for special sequences a_n with [a_n,2a_n] provably odd — exactly the "rigid
   theorem" Theorem 2 says is necessary. R1 (Legendre/n!) gives provably odd cheap sets, but not inside one dyadic range.
+
+## 7. Escape (A): exact nonlinear counts (lead request, round 2)
+
+**Model (formalised).** The engine returns EXACTLY E_f(J) = Σ_{m∈J} f(m) for J an interval/cheap set and f ∈ 𝓕_K, where
+f(m) = Σ_{(a_1..a_k): Πa_i = m, a_i ∈ A_i} Π_{small i} g_i(a_i): a k-fold (k ≤ K₀ = 2^{o(√log n)}) Dirichlet convolution of
+cheap sets A_i (intervals, APs, bit patterns, polytime predicates on one variable), with arbitrary integer weights g_i
+allowed only on variables that fit one node (a_i ≤ x^{1/K_e^7}). I.e. counts of solutions of unique-witness constraint
+systems whose witness is a factorisation tuple. Mod M it also returns the chain-weighted counts (π(J) mod M).
+Why primality is not in 𝓕: [m prime] = [no a∈(1,√m] divides m] is a ∀ (a de-duplication of compositeness
+witnesses); inside 𝓕 the only de-duplications are Möbius weights, i.e. μ on LARGE variables, which 𝓕 lacks.
+
+**Lemma 4 [R] (decomposition).** For f ∈ 𝓕 and J ⊂ [N,2N]:
+  E_f(J) = Σ_{p∈P∩J} c_f(p) + Σ_{m∈J composite} f(m),  c_f(p) = Σ_i [p∈A_i]·g_i(p)·Π_{j≠i} [1∈A_j]g_j(1),
+(primes have only the factorisations with one nontrivial slot). So an exact count reveals an EXACT linear functional
+of the primes plus a composite term Σ_{comp} f that is not itself an engine count (it would need the ∀). If the
+composite term were known, c_f = 1 gives exact π(J) and the problem is solved by bisection; so exact counts help only
+as far as their composite terms can be pinned down.
+
+**V1 [N] (`exp3.py`): exact Type-I data predicts nothing about local prime counts.** Windows J of length h in
+[10^8, 1.1·10^8]; features = exact D_y(J) = #{(d,e): de∈J, 2≤d≤y, d≤e} for y ∈ {2,3,5,10,30,100,300,1000,3000,√}
+and Σ_J τ. Least-squares fit of π(J) on even windows, residual on odd windows:
+| h | windows | mean π | sd(π) | held-out residual sd |
+|---|---|---|---|---|
+| 200 | 50,000 | 10.8 | 2.628 | 2.623 |
+| 2000 | 5,000 | 108.4 | 7.424 | 7.467 |
+| 20000 | 500 | 1083.7 | 20.12 | 19.94 |
+Zero explained variance: the composite terms of Lemma 4 fluctuate independently of, and more than, π(J). This is the
+sieve parity phenomenon (Selberg; Friedlander–Iwaniec, Opera de Cribro ch. 16) seen in exact data. So "approximate π(J)
+to within M/2 from exact counts, then fix it with π(J) mod M (CRT trick)" fails: the error is ≍ √π(J), and M = x^{o(1)}
+only helps when π(J) < M, i.e. |J| < H₀, which we already have. Also Σ_J(τ−2) = 0 ⇔ J all prime holds only for |J| ≤ 2
+in [N,2N] (no window had it).
+
+**V2 [R] (exact ψ via Heath-Brown, and why it hits the same wall).** For z^K > x, HB's identity
+μ(n) = Σ_{j=1}^{K} (−1)^{j−1} C(K,j) (μ_{≤z}^{*j} * 1^{*(j−1)})(n) (n ≤ x) is a 𝓕-count with ≤ 2K−1 factors and
+μ-weights on j variables ≤ z (sieve table cost z). Weight log m by the cheap integer weight ⌊B log m⌋, B = x²
+(predicate j < B log m is polytime; total rounding error ≤ Σ_J τ < B), so ψ(J) = round(E/B) EXACTLY. Then ψ > 0 on
+[N,2N]; bisection on exact ψ (subtracting proper prime powers recursively at scale √) finds a prime in n steps.
+Requirement: weighted nodes of n/K bits AND K-fold products with K = 2^{o(√log n)} (so z = x^{1/K} is x^{o(1)} and
+cut n log K stays o(n√log n)). With the stated engine (weights only on n/K_e^7 = n^{33/40} bits) HB needs K = n^{7/40}
+and cut Θ(n log n) — precisely the iterated-product barrier of prime-finding.md §4 ("top n^{1/5} leaves give
+(1/5) n log n"). So V2 is not a new escape, but it converts the barrier into a concrete engine question:
+**can a node carry an arbitrary weight on n/K bits, K = 2^{o(√log n)}, at cost x^{o(1)}?** If yes: exact ψ(J) and
+deterministic prime finding in x^{o(1)} (unconditionally — RH not even needed). Asked p2 on the board.
+
+**Extended barrier status.** Theorem 2 does not extend verbatim: exact counts are arithmetic truths, so no "fake prime
+set" world exists for them (a deleted prime still has no factorisation). The correct extension is Lemma 4 + V1: exact
+counts give exact linear functionals of P only modulo composite terms; any escape must evaluate a composite term
+exactly, which is equivalent (via c_f = 1) to exact π(J). [C] Conjecture: for K-fold 𝓕 with node weights ≤ x^{1/K_e^7},
+no combination of x^{o(1)} exact counts and mod-M queries determines an odd/nonzero set unless the iterated-product
+network of §4 exists. (Evidence: V1, and HB being the only known exact identity, needing exactly that network.)

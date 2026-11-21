@@ -107,3 +107,42 @@ found the k² vs log k discrepancy, fixed partially with sopfr trick; 4. linear 
 Next: (a) prove S(k) = (log k)^{O(1)} unconditionally (needs y-smooth c ≡ −1 mod k² with y = polylog k — this is
 a smooth-numbers-in-APs statement; under GRH(now RH for Dirichlet L? only ζ is claimed) it might follow); (b) a
 Lean description `apDescL` reusing PrimeDesc proofs (~100 lines).
+
+## 5. Follow-up from lead (after first hand-back)
+
+### 5.1 Prime patterns: twin primes, k-tuples, Sophie Germain, Goldbach, a²+1  [R on paper, N]
+Conjoin j disjoint copies of primeDescL, copy i on variable m_i with the level-0 chain m_i·1 = a_i·m + b_i
+(m_i·1 = m·a_i + b_i). Solutions = tuples of witness tuples, so count = Σ_m Π_i τ^<(m_i)C_L(m_i), and
+parity is multiplicative: ≡ #{m ∈ I : all a_i m + b_i prime} (mod 2). Cut j·U + O(jn): same rate for fixed j,
+x^{o(1)} for j = o(√log n). Instances: twins (1,0),(1,2); any admissible k-tuple; Sophie Germain (1,0),(2,1);
+Goldbach G(2n) = #{p ≤ n : 2n−p prime} mod 2 (chain m + m' = 2n, comparison m ≤ n; the ordered count is ≡ [n prime]
+by symmetry, so only the unordered one is informative); #{a ∈ [a1,a2] : a²+1 prime} mod 2 (m = a·a + 1, unique
+witness a). patterns.py, X = 10^6: 200 random intervals per pattern, all 2n ≤ 2·10^4 plus 300 random Goldbach
+values, 300 a²+1 ranges: 0 mismatches (patterns_1e6.out).
+Novelty: TCH (arXiv 1009.3956 §1.1) treat π and π(x;a,q) mod 2 for q = O(N^{c/10}) — so small-q AP parity is
+prior art in spirit; nothing on twins/Goldbach/tuples. Web searches for parity algorithms for twin-prime or
+Goldbach counts found nothing (weak negative). TCH's 2^ω identity does not extend to products, so the statement
+"parity of the twin-prime count in any interval in x^{o(1)}" looks new — but it is a one-line corollary.
+
+### 5.2 Escape (B): rigid identities localised to [N,2N]  — verdict: dead as stated, collapses into (C)
+* **Binomial / Legendre with a character.** Unique factorisation gives, for χ = (·/q) and any multiset S of
+  integers with computable Π_{m∈S} χ(m/q^{v_q}): Σ_{p≠q, χ(p)=−1} h_S(p) ≡ [χ(Π S') = −1] (mod 2),
+  h_S(p) = Σ_{m∈S} v_p(m). C(2N,N) (S = [1,2N] − 2·[1,N]) has h = 1 on (N,2N], but also h odd on
+  (N/2,2N/3], (N/3,2N/5], … and on small primes: h(p) = ⌊2N/p⌋ − 2⌊N/p⌋ is 1-periodic in t = N/p, so every factorial
+  ratio Π (α_i N)!^{c_i} repeats the window pattern at all scales. rigid.py (q=3, N ≤ 4000): identity holds always,
+  but window parity equals the rigid bit only 50.5% of the time; contamination is spread over all scales
+  (N=4000: 44/27/30/7/6 contaminating primes in (N/2,N],(N/4,N/2],(N/16,N/4],(√2N,N/16],(0,√2N]).
+* **Why this is general.** Any such identity is linear in the prime indicator with a KNOWN value (that is what
+  beats the deletion adversary: deleting primes breaks factorisation). It forces an odd window only if the
+  non-window coefficients h_S(p) are all even — i.e. S is a multiplicative relation whose product is a square
+  outside the window and carries an odd χ-weighted exponent on window primes. Exhibiting such S means exhibiting
+  integers whose factorisation contains a window prime. With deterministic x^{o(1)} factoring, a single explicit
+  integer of size x^{O(1)} (or bit length o(n√log n)) with a prime factor in [N,2N] already finishes. So (B) adds
+  nothing to Polymath4 Problem 1 (factoring oracle + RH) = escape (C).
+  Cancelling contamination by XOR-ing factorial "square waves" ⌊α t⌋ mod 2 appears to need as many waves as there
+  are scales of t = N/p (up to N/2) — heuristic, not proved.
+* **Zagier involution** (x²+4yz = n): gives #{x²+4y² = n} ≡ #{d | n : d ≡ n/d (4), …} (mod 2) — an identity between
+  two cheap counts whose prime contribution is the same on both sides; forces no oddness. Dead.
+* **Wilson** [(m−1)! ≡ −1 mod m]: (m−1)! mod m is not a cheap count (m-fold product). Dead on cost.
+* **Kalai's question** (a_n with π([a_n,2a_n]) provably odd): no candidate; equivalent to p3's Conjecture PR type
+  statements.

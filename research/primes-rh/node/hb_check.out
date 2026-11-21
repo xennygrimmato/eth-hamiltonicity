@@ -1,0 +1,9 @@
+[N] mu-identity HB K=2 on n<=100000: z=318 (mu-variable bits 9 of n=17), mismatches=0
+[N] mu-identity HB K=3 on n<=100000: z=48 (mu-variable bits 6 of n=17), mismatches=0
+[N] mu-identity HB K=4 on n<=100000: z=19 (mu-variable bits 5 of n=17), mismatches=0
+[N] mu-identity HB K=2 on n<=1000000: z=1001 (mu-variable bits 10 of n=20), mismatches=0
+[N] mu-identity HB K=3 on n<=1000000: z=101 (mu-variable bits 7 of n=20), mismatches=0
+[N] mini-engine J=(1000, 1100) K=2: tuples=6388, value/B=112.016594215, round=112.016594, psi=112.016598729, |diff|=4.51e-06, z=35
+[N] mini-engine J=(1000, 1100) K=3: tuples=40582, value/B=112.016594215, round=112.016594, psi=112.016598729, |diff|=4.51e-06, z=12
+[N] mini-engine J=(5000, 5060) K=3: tuples=56732, value/B=72.443250754, round=72.443251, psi=72.443250842, |diff|=8.83e-08, z=19
+[N] mini-engine J=(20000, 20030) K=4: tuples=213315, value/B=39.618147813, round=39.618148, psi=39.618147797, |diff|=1.61e-08, z=13

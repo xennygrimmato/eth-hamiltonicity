@@ -84,6 +84,13 @@ Doubling strategy: P(first odd j = log₂log N + t) ≈ 2^{−t}, mean 4.7, max 
 
 **Conjecture PR [C].** For every N, some j ≤ C (log log N)² has π([N, N + 2^j)) odd. A weaker version suffices: one of N^{o(1)} prescribed starting points y ∈ [N, 2N] works.
 
+> **Erratum (r1, 21 Nov) [N].** PR as stated, with a single starting point and doubling, is FALSE.
+> - Exhaustive search below 2^30 finds 124 values of N with π([N, N+2^j)) even for EVERY j ≤ log₂ N. Two examples: N = 1229830 and N = 1014257268; the lead re-checked both with sympy.
+> - The Cramér model predicts about 121.5 such N, so these failures should never stop.
+> - Replacement **PR\*** [C], with n = log₂ N: among n² disjoint blocks of length n³ starting at N, at least one has an odd prime count. This is Borel–Cantelli-safe and gives a prime in [N, N+n⁵) in N^{o(1)}. No failures for N < 2^28 were found with 2·log₂ N blocks of length 256.
+> - The "prescribed starting points" weak form above is essentially PR\*.
+> - See r1/notebook.md.
+
 PR together with Theorem B gives deterministic prime finding in x^{o(1)} = 2^{O(n/√log n)}: O(log N) parity queries plus bisection. PR is the precise missing lemma, and it is at least as hard as parity-equidistribution of π. The proportion of n with π(n) even is only known to be bounded below, by a sieve, in Integers n79 (2013) and in "On the parity of the prime-counting function and related problems" (2015). Full equidistribution is conjectural.
 
 ## 5. Subtask 5: alternative targets, ranked (achievable × value)

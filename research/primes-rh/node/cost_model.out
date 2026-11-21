@@ -1,0 +1,4 @@
+[N] e_K = 60/sqrt(log2 K): min exponent/n = 178.958 at log2 K = 1, P/n = 3.54e-01, e_K = 60.000; lower bound e_K*log2 K = 60.000; beats sqrt(N)? False
+[N] e_K = 1/sqrt(log2 K): min exponent/n = 3.560 at log2 K = 1, P/n = 2.50e-01, e_K = 1.000; lower bound e_K*log2 K = 1.000; beats sqrt(N)? False
+[N] e_K = 0.1/sqrt(log2 K): min exponent/n = 0.430 at log2 K = 5, P/n = 3.28e-03, e_K = 0.045; lower bound e_K*log2 K = 0.224; beats sqrt(N)? True
+[N] e_K = 0.01/sqrt(log2 K): min exponent/n = 0.048 at log2 K = 9, P/n = 1.45e-04, e_K = 0.003; lower bound e_K*log2 K = 0.030; beats sqrt(N)? True

@@ -191,3 +191,111 @@ P^+(m) ≥ u.
 * Check whether the engine can compute an *integer-weighted smooth approximation* Σ_p w(p) with w a step function of
   x^{o(1)} steps exactly, not mod M. If exact counts on long intervals were possible, the LO window could be closed.
   prime-finding.md §4 says this needs k-fold products, so I expect no.
+
+## 7. Session 2 (new p4): counting + factoring, the Chebyshev–Selberg certificate
+
+### 7.0 What the two unexplained scripts do
+* `graham_check.py` checks Graham's identity (JNT 10, 1978):
+  Σ_{n≤N} Λ_z(n)² = N log z + O(N), where Λ_z(n) = Σ_{d|n, d≤z} μ(d) log(z/d).
+  At N = 2·10⁶ the measured O(N) term is −0.49N, −0.59N, −0.60N for z = 10, 100, 1000 [N].
+  The constant is negative, which helps the certificate below.
+* `cheb_bisect.py` is a brute-force simulation of a **Chebyshev certificate** for a prime > u.
+  * It sets w(n) = L₁²·Σ_{p^k|n, p≤R} ⌈log₂p⌉ + Σ_{R<d≤u} Λ_R(d)²⌈log₂d⌉·#{k : d^k | n}.
+  * Since Λ_R(p^j) = log R for p > R, we get w(n) ≥ L₁²·log₂(u-smooth part of n). Also w ≥ 0.
+  * So F(n) = L₁²⌊log₂n⌋ − w(n) > 0 implies P⁺(n) > u.
+  * F is additive, so the script bisects from [x, 2x) and then factors the n it lands on.
+  * It sums w directly over d ≤ u, which costs u. That is no better than scanning.
+  * The previous p4 did not record it. §7.2 puts it in query form.
+
+### 7.1 Prior art (Q1) [K]
+* **With a factoring oracle.**
+  * Polymath4 Thread III, Problem 1: find a prime ≥ n in o(√n) time, assuming RH and a factoring oracle. Open.
+  * Problem 2 asks for n^{1/2+o(1)} unconditionally, also with the oracle. LO answers it without any oracle.
+  * Strategy B: an interval [n, n+a] with a = o(√u) cannot consist entirely of u-smooth numbers.
+  * Strategy C: integers with a divisor near u. Distance bounds u/2; n/u; √u for n ~ u²; u^{0.4} conditionally.
+  * Best known unconditional result via short-interval large prime factors: ≈ u^{0.53} (§5). All of these are ≥ √u.
+  * The paper (TCH, Math. Comp. 2012) states no factoring-oracle theorem. Its §1 says the problem stays open even with
+    the oracle and GRH.
+* **With a π(x) oracle.** Exact π gives a prime in [N, 2N] in O(log N) queries by bisection. This is Thread IV's
+  "finding reduces to counting". The N^{1/2+o(1)} figure is the cost of *implementing* the oracle (LO; HKM elementary),
+  not a property of the oracle model.
+* **With a parity oracle.** TCH Thm 1.2 computes π mod 2 on intervals of length ≤ N^{1/2+c} in N^{1/2−c}. They state they
+  cannot locate an odd interval, so a parity oracle gives no finding theorem (literature.md §1). Our barrier theorems
+  (p1/p2/p3/w2) make this rigorous for any linear-query use.
+
+### 7.2 New primitive and theorem (Q2) [R] (simulated end to end [N])
+**Primitive.** Q_k(J; m, a, b) = #{(t, q) : a ≤ mt ≤ b, (mt)^k q ∈ J}.
+* This counts lattice points under a steep hyperbola. It is a unique-witness system with one k-fold product, k ≤ A/ρ = O(1).
+* So it is one engine count, x^{o(1)}.
+* Classically, for b ≤ x^{1/3} the boundary has second derivative > 1, so the convex-hull trick fails. No o(b/m) method
+  is known [C].
+* A factoring oracle cannot supply this count, because it handles one integer at a time. A counting oracle can.
+
+**Theorem 7.1.** Fix ρ ∈ (0, 1) and A > (1+ρ²)/(2ρ). Using the engine's Q_k counts and factoring, plus a sieve of μ up to
+R = u^ρ, one deterministically finds a prime p ∈ (u, 2u^A]. The cost is O(R²·log³u) counts, i.e. u^{2ρ+o(1)} time.
+No RH is needed. Hence a prime > u can be found in u^ε for every ε > 0. Balancing ρ ≍ (log log u)^{−1/4} against the
+engine's 2^{O(n/√log n)} gives u^{o(1)}.
+
+*Proof.*
+1. Λ_R(d)² = Σ_{e₁,e₂≤R} μμ L L·[lcm(e₁,e₂) | d]. So Σ_{n∈J} w(n) = Σ_m b(m)·Σ_blocks c·Q_k(J; m, block). There are
+   ≤ R² values of m, O(log u) dyadic blocks for ⌈log₂d⌉, and k ≤ A/ρ.
+2. Σ_J L₁²⌊log₂n⌋ has a closed form, so F(J) is exact for every J.
+3. Positivity of the top interval: on J = [x, 2x),
+   Σ_J w = x·Σ_d W(d)/d + O(u·L₁²·log u)
+   with mean Σ_{R<d≤u} Λ_R(d)² log d/d = L₁²·log u·(1−ρ²)/(2ρ) + O(L₁²) (Graham plus partial summation), plus
+   ρ log u from p ≤ R. So F(J)/x ≥ L₁²·log u·(A − (1+ρ²)/(2ρ) − o(1)) > 0.
+4. Bisection keeps a positive half for log₂x steps and ends at n ∈ [x, 2x) with F(n) > 0, so P⁺(n) > u.
+5. Factor n. Since n < 2x, its largest prime factor p satisfies u < p ≤ 2u^A. ∎
+
+**Run (`chebq.py`, oracle simulated by floor sums, every query counted, n factored with sympy).**
+
+| u | R | A | F/(xL₁²) | asymptotic prediction | queries | n | p > u |
+|---|---|---|---|---|---|---|---|
+| 10³ | 32 | 2.0 | 8.14 | 7.47 | 18,303 | 1,000,001 | 9901 ✓ |
+| 10⁴ | 10 | 2.0 | 2.34 | −1.66 | 12,284 | 100,000,023 | 14537 ✓ |
+| 10⁴ | 10 | 1.7 | −1.65 | −5.65 | 369 | — (top F < 0) | — |
+| 10⁴ | 10 | 3.0 | 15.6 | 11.6 | 28,502 | 10¹²+3 | 1,152,763 ✓ |
+| 10⁵ | 10 | 2.6 | 6.79 | 0.00 | 38,205 | 10¹³+36 | 2.5·10¹² ✓ |
+| 10⁶ | 16 | 2.7 | 9.31 | 1.99 | 130,082 | 1.58·10¹⁶ | 3.05·10¹⁴ ✓ |
+
+* The query count is R²·polylog. The simulated oracle costs ≤ u/m per query; that is the cost the engine removes.
+* The measured margin beats the asymptotic prediction by 4–7 bits, because Graham's O(N) constant is negative (≈ −0.6).
+* The pointwise certificate (u-smooth part < n) was re-checked by brute force at each output.
+
+**Catches checked.**
+* (a) It is the WEAK goal. The output p can sit anywhere in (u, 2u^A]; in the runs it ranged from just above u to ≈ x/4.
+* (b) All the power comes from the engine computing Q_k. With only a factoring oracle, the same certificate costs u.
+* (c) Correctness needs only W ≥ 0 and W(p^j) ≥ L₁² for R < p ≤ u. Both hold exactly, with no error terms. Only
+  positivity of the top interval uses analysis, and it holds for any fixed A above threshold.
+* (d) Prior art: Polymath lists Strategy B (smooth intervals) and C, but never a bisection over a long interval, which
+  needs counts. Web search found no counting-oracle version (weak negative).
+* (e) Consequence for the strong problem. It gives a prime in [N, N^c] in N^{2ρ} with c = (1+ρ²)/(2ρ). That is below √N
+  only for c > 2.125. It is not a prime in [N, 2N].
+
+### 7.3 Obstruction for [N, 2N] by this route [R] for Λ_R², [C] for general Type-I
+* To force a prime factor in T = [N, 2N], the certificate's budget is the harmonic Λ-mass of T, Σ_{p∈T} log p/p = log 2.
+  The majorant W ≥ Λ off T must have harmonic excess < log 2.
+* For Selberg weights of level R the excess is ∫ (log t/log R − 1) d log t over t ∈ (R, N) = log N·(1−ρ)²/(2ρ). This is
+  < log 2 only if R ≥ N^{1−O(1/√log N)}. The cost is then min(u, R²) ≥ N^{1−o(1)}.
+* General Type-I majorants W(d) = Σ_{e|d, e≤D} λ_e: Selberg's parity example (Liouville; Bombieri–Vinogradov for λ makes
+  Σ W λ negligible when D ≤ t^{1/2−ε}) forces mass ≥ 2× truth on every dyadic scale t ≥ D^{2+ε}. So the excess is
+  ≳ log(N/D^{2+ε}), which forces D ≥ N^{1/2−o(1)}.
+* **Verdict:** Type-I certificates reproduce the √N wall exactly. To go further one needs a bilinear (Type-II) or μ-type
+  cheap weight, which is node's Heath-Brown route.
+
+### 7.4 The w1 lead (Q3): no
+* I1 needs Σ_J R_z(1 − s_z) with exact z-roughness at z = x^{1/5.5}.
+* Factoring is pointwise and cannot produce an aggregate. Engine counts give positive witnesses, never "no divisor < z".
+* Replacing R_z with sieve weights ρ⁻ ≤ R_z ≤ ρ⁺ of level D = z^s needs f(s)/F(s) > (Σ_rough s_z)/(#rough).
+  Using w1's exact x = 10¹² totals and Buchstab ω:
+
+  | u | f/F must exceed | s needed | D needed |
+  |---|---|---|---|
+  | 3 | 0.41 | 2.5 | x^{0.83} |
+  | 4 | 0.68 | ≈ 3.0 | x^{0.75} |
+  | 5 | 0.95 | ≥ 3.6 | ≳ x^{0.72} |
+
+  These figures use f/F = log(s−1) and are optimistic for s > 3. [C]
+* Never below x^{0.7}, so this is dead. And the exact R_z is a Legendre φ(J, z) sum, which no known method computes
+  below x^{1/2}.
+* So nothing at N^{1/5.5}. I agree the record for [N, 2N] is N^{1/2+o(1)} (LO/HKM, or Cramér under RH).

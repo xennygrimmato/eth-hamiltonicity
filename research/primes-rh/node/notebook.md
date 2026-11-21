@@ -39,7 +39,7 @@ So the exponent is
   E = e_K·(U + 2ζgP) + 2gP/K + g log₂K + O(K² log(nB)) + log₂τ.
 
 **What one big node costs [R], by reading off the theorem.**
-- In case (i), 2ζgP + 2gP/K·(1/e) ≥ 3K⁷P(1 + 2/e_K). A node of P bits therefore needs P = o(n/K⁷). This is the
+- In case (i), the node terms are e_K·2ζgP + 2gP/K = (3e_K + 6)·K⁷P. A node of P bits therefore needs P = o(n/K⁷). This is the
   team's "P ≤ n/K⁷"; precisely, it is P ≤ n/(K⁷√log n) up to constants.
 - In case (ii), 2ζgP ≥ K·ln(2gK)·P/ζ ≥ 2K ln K·P. Nodes of P = n/(K^{1+o(1)}) bits are allowed, but no larger.
 - In every case g ≥ K, and the exponent pays at least e_K·K·ln K·P for node size P.
@@ -80,7 +80,7 @@ numerics (`cost_model.out`) minimise the full exponent over K and P:
 | 1/√log₂K (constant 1) | 3.56 | 1 | no |
 | 0.1/√log₂K (hypothetical) | 0.43 | 5 | yes, but only N^{0.43} at a fixed K |
 
-As K → ∞ the bound grows like √log K. So no constant improvement can ever give N^{o(1)**}: x^{o(1)} via HB holds iff
+As K → ∞ the bound grows like √log K. So no constant improvement can ever give N^{o(1)}: x^{o(1)} via HB holds iff
 e_K·log K → 0.
 
 **Answer to (a).** No. A node carrying a weight on n/h bits with h = 2^{o(√log n)} is forbidden:

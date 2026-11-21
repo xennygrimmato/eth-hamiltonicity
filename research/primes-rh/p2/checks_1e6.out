@@ -1,0 +1,23 @@
+[base] term_zmod: tau^<(m)C_L(m) odd <=> m prime, all m<=1000000: True
+(i) AP parity, q up to 300007 incl. 2^j, 720 random (q,r,[a,b]): mismatches 0
+    pi([500000,1000000]) = 36960 (parity 0)
+    q=3: parities of first 3 classes in [N,2N]: 000
+    q=4: parities of first 4 classes in [N,2N]: 0000
+    q=8: parities of first 8 classes in [N,2N]: 00010001
+    q=1009: parities of first 50 classes in [N,2N]: 01001000010100110101001010110000111001011011000011
+(ii) #{p in I: (p/q)=1} mod 2 via canonical-sqrt witness, 240 tests: mismatches 0
+(ii') cubic-residue classes, raw witness count 3 (odd): 120 tests, mismatches 0
+(ii'') Jacobi (p/q)=+1, q=q1q2, branch-bit witness: 90 tests, mismatches 0
+(iii) unions of k disjoint intervals (k=2,5,20), XOR of k counts: 90 tests, mismatches 0
+(v) XOR of all primes in I from 20 bit-pattern queries: 40 tests, mismatches 0
+(iv) k=2: c=3 (=-1 mod 4, sopfr 3 vs naive k^2-1=3); sum_(m<=x) g(m)W(m) = 1 + k*pi(x) mod k^2 for all x<=1000000: True
+(iv) k=3: c=8 (=-1 mod 9, sopfr 6 vs naive k^2-1=8); sum_(m<=x) g(m)W(m) = 1 + k*pi(x) mod k^2 for all x<=1000000: True
+(iv) k=4: c=15 (=-1 mod 16, sopfr 8 vs naive k^2-1=15); sum_(m<=x) g(m)W(m) = 1 + k*pi(x) mod k^2 for all x<=1000000: True
+(iv) k=5: c=24 (=-1 mod 25, sopfr 9 vs naive k^2-1=24); sum_(m<=x) g(m)W(m) = 1 + k*pi(x) mod k^2 for all x<=1000000: True
+(iv) k=6: c=35 (=-1 mod 36, sopfr 12 vs naive k^2-1=35); sum_(m<=x) g(m)W(m) = 1 + k*pi(x) mod k^2 for all x<=1000000: True
+(iv) k=8: c=63 (=-1 mod 64, sopfr 13 vs naive k^2-1=63); sum_(m<=x) g(m)W(m) = 1 + k*pi(x) mod k^2 for all x<=1000000: True
+(v') sum_(p in I) (p mod 5) mod 3 via mod-9 count with witness weight: 40 tests, mismatches 0
+
+real	0m22.544s
+user	0m22.265s
+sys	0m0.278s

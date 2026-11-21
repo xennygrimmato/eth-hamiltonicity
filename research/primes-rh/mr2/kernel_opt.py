@@ -32,7 +32,7 @@ def Cmat(knots,taus):
 def run(h,tl=-14,tr=5,dt=0.25,init=None,quiet=False):
     knots=setup(tl,tr,dt); n=len(knots)
     wP,wQ=PQ_weights(knots)
-    taus=np.concatenate([np.arange(0.005,60,0.01)]); dtau=0.01
+    taus=np.arange(0.01,50,0.02); dtau=0.02
     E=Cmat(knots,taus)
     D=np.zeros((n,n))  # slope change operator, with g=0 outside
     for j in range(n):
@@ -40,21 +40,25 @@ def run(h,tl=-14,tr=5,dt=0.25,init=None,quiet=False):
         if j>0: D[j,j-1]=1/dt
         if j<n-1: D[j,j+1]=1/dt
     M=-(E@D)/(taus[:,None]**2)   # ghat = M g
+    wN=(h-1)*wP-wQ if h<1e8 else wP
+    Mr=M.real.copy(); Mi=M.imag.copy()
     def obj(v):
         g=v*v
-        gh=M@g
-        a=np.abs(gh)+1e-300
-        S1=np.sum(np.abs(D@g))
-        C=(2*np.sum(a)*dtau + 2*S1/60.0)/(2*np.pi)   # tail bound: int_{60}^inf S1/tau^2 = S1/60 (both sides)
-        num=(h-1)*(wP@g)-(wQ@g) if h<1e8 else wP@g
-        return -num/C
+        ghr=Mr@g; ghi=Mi@g
+        a=np.sqrt(ghr*ghr+ghi*ghi)+1e-300
+        C=(2*np.sum(a)*dtau)/(2*np.pi)   # (tail beyond TMAX ignored in optimisation; certified separately)
+        dC=(2*dtau/(2*np.pi))*((ghr/a)@Mr+(ghi/a)@Mi)
+        num=wN@g
+        f=-num/C
+        dg=-(wN/C)+num*dC/C**2
+        return f,dg*2*v
     if init is None:
         lam=1.8
         g0=np.exp(knots/2-lam*np.exp(knots)); g0[0]=0; g0[-1]=0
     else: g0=init
     v0=np.sqrt(g0)+1e-3
     best=None
-    res=minimize(obj,v0,method='L-BFGS-B',options={'maxiter':4000,'maxfun':400000})
+    res=minimize(obj,v0,jac=True,method='L-BFGS-B',options={'maxiter':20000,'maxfun':40000})
     g=res.x**2
     if not quiet: print('h=',h,'R_h=',-res.fun, 'const ((h-1)/R)^2=',((h-1)/(-res.fun))**2 if h<1e8 else (1/(-res.fun))**2)
     return knots,g,-res.fun

@@ -1,0 +1,16 @@
+plain K= 2 feat 10 max resid 6.53e-01
+plain K= 3 feat 30 max resid 5.22e-01
+plain K= 4 feat 51 max resid 5.40e-01
+plain K= 5 feat 68 max resid 5.84e-01
+plain K= 6 feat 79 max resid 5.84e-01
+plain K= 7 feat 86 max resid 3.47e-01
+plain K= 8 feat 90 max resid 2.98e-01
+plain K= 9 feat 92 max resid 7.37e-13
+small K= 2 feat 15 max resid 5.40e-01
+small K= 3 feat 79 max resid 8.09e-01
+small K= 4 feat 235 max resid 6.42e-01
+small K= 5 feat 512 max resid 2.13e-01
+small K= 6 feat 899 max resid 1.04e-13
+any K= 2 feat 29 max resid 1.55e-01
+any K= 3 feat 182 max resid 5.97e-02
+any K= 4 feat 546 max resid 4.19e-14

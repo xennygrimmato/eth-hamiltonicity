@@ -103,3 +103,46 @@ PR together with Theorem B gives deterministic prime finding in x^{o(1)} = 2^{O(
 
 ## 7. Cross-references (board, 23:14)
 p1 (Thm 2, deletion-only fooling set, a subset of the real primes) and p2 (note 7, family-independent syndrome adversary) proved the same barrier independently. Mine adds three things: (a) the pivot lemma, which gives tight constants (k ≥ min(G, E) − O(log N)) and a fooling set that satisfies the density and gap constraints with arbitrary edits; (b) the threshold M* = N^{1/2±o(1)} for every family; (c) Conjecture PR with numerics. p2 corrects the engine's modulus range to M ≤ exp(o(√log log x)) rigorously. This does not change any bound here, since all M = x^{o(1)} behave the same.
+
+## 8. Escape (A)/(C): exact NONLINEAR counts (lead request, 23:15)
+
+Scripts: `nonlin_span.py`, `nonlin_K.py` (outputs nk10.out, nk11.out), `trade_modulus.py`.
+
+**8.1 Why Theorem 1′ does not transfer directly, and what replaces it.** An exact count Q(I, φ) = Σ_{m∈I} W_φ(m) is still LINEAR, but in the *profile* vector w(m) = (W_φ(m))_φ of each m, not in 1_P. Here W_φ(m) = #{z : Πz_i = m, z ∈ box_φ, congruences on the z_i}, the K-fold counts of the lead's list. An adversary can no longer delete primes. It can, however, *trade profiles*. Call the trade lattice
+ L_Φ = { Σ_i c_i 1_P(m_i) : Σ_i c_i w_Φ(m_i) = 0 }.
+It equals d_Φ·Z, where d_Φ is the largest d with 1_P ≡ Σ_φ λ_φ W_φ (mod d) on [N,2N]. If 1_P is in the Q-span of the features, then d_Φ = ∞.
+
+The "fake multiplicative world" relabels which integer each factor tuple multiplies to (σ∘mult), inside one segment between queried endpoints. Replacing a multiset of profiles in a segment by another multiset with the same Φ-sums leaves every answer unchanged. It shifts the segment's prime count by a multiple of d_Φ.
+
+[C/sketch] **Theorem 4 (profile-trade barrier).** Assume each trade can be realized locally: profiles of the required shapes occur in every window of length ≪ G. That is true for coarse (dyadic) boxes, and under RH for shapes such as p, 2p, 3p. Then exact Φ-counts reveal π(segment) mod d_Φ and nothing finer about where the primes are. So Theorem 2 applies with M = d_Φ: a prime finder needs ≳ G/(d_Φ log d_Φ log N) queries.
+
+Dichotomy:
+- **(i) d_Φ < ∞.** This covers Theorem B (d = 2) and B′ (d = k). The √N barrier holds.
+- **(ii) d_Φ = ∞.** Exact prime counts are available and bisection wins in O(log N) queries. But (ii) needs fold K ≥ K*, which grows with log N (8.2). That is the iterated-product cut Θ(n log n) (iterated-product.md), so each query costs 2^{Θ(n√log n)} ≫ x.
+
+A fake world is a Beurling-type relabeling at the level of profiles. This is the precise sense in which nonlinear exact counts "pin down" a prime: only when they span 1_P.
+
+**8.2 Numerics [N]** (rows m ∈ [N,2N), proper prime powers dropped; features are ordered K-fold factorization counts with dyadic boxes on the factors, z=1 allowed).
+
+| N | plain features, exact over Q first at | max Ω of rows |
+|---|---|---|
+| 2^9 | K = 8 | 9 |
+| 2^10 | K = 9 | 10 |
+
+So K* = Ω_max − 1 and grows like log₂N. At 2^11 (nonlin_span), the relative L² residual is still 0.48 at K ≤ 5.
+
+**Mod p:** for p ∈ {2,3,5,7}, 1_P is NOT in the span mod p for any K ≤ 8, so d_Φ = 1 for these small primes. The Q-exactness uses Linnik-type denominators 1/k. Plain products do not even give parity; Theorem B needs the squarefree chain C_L.
+
+**8.3 Möbius-signed weights.** The engine can carry μ(z) only for z inside one node (z ≤ y = x^{o(1)}, factored inside the node).
+- With μ on factors ≤ 8: exact at K = 5 for N = 2^9; for N = 2^10 exact first at K = 6 (nk10.out). The needed fold grows with N.
+- Asymptotically the needed fold is about the number of prime factors > y, up to log x/log y = K_eng^7 → ∞. So the cut is still Θ(n log n). **The barrier survives.**
+- μ on arbitrary O(log x)-bit factors (exact at K = 4 for both N = 2^9 and 2^10) is NOT an engine primitive. A unique witness for μ(d) needs d's certified factorization, which is the iterated product again. Assuming it would already give Σ_{m∈I} μ(m) exactly, i.e. Mertens on intervals, which is equivalent in difficulty to exact π.
+
+**8.4 Polymath4 Problem 1 with a counting oracle.** "Count m ∈ [N,2N] with no divisor in [2, √2N]" = π([N,2N]) is a ∀-count. Its unique-witness forms all go through roughness:
+- the Buchstab tree #{lpf = p} = Φ(I/p, p), depth Ω;
+- the Legendre sum Σ_{d|P(y)} μ(d)⌊·⌋ with d smooth, needing factorizations of d;
+- canonical Pratt certificates, of size Θ(n²) with n modular squarings, so cut ≥ n²: much worse.
+
+A factoring oracle (lpf of one number) is a singleton query and cannot help select x (Theorem 1′ still applies to how x is chosen). Combining exact τ-type counts near √(2N) and N with parities: the profile-trade lattice for {τ-features, chain features} has d = 2 (Theorem B), and adding plain K-fold counts with K < K* does not raise d at p ≤ 7 (8.2). So that route does not isolate an odd window beyond what parity already gives.
+
+**Verdict on escape (A)/(C):** no barrier break. The obstruction for nonlinear exact counts is the pair (d_Φ, fold): either finite detection modulus (√N barrier via Theorem 2) or fold ≥ K* ≍ log N (iterated-product barrier). The genuinely open item is the same as before: a parsimonious iterated-product network with cut o(n√log n), or a rigid scale-local identity (escape B).

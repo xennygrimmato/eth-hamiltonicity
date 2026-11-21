@@ -19,7 +19,12 @@ divs=[[] for _ in range(M+1)]
 for d in range(1,M+1):
     for m in range(d,M+1,d): divs[m].append(d)
 box=lambda z: 0 if z==1 else z.bit_length()
-y=np.array([1.0 if spf[m]==m else 0.0 for m in range(N,M)])
+def ppow(m):
+    p=spf[m]
+    while m%p==0: m//=p
+    return m==1
+keep=np.array([not(ppow(m) and spf[m]!=m) for m in range(N,M)])  # drop proper prime powers p^e, e>=2
+y=np.array([1.0 if spf[m]==m else 0.0 for m in range(N,M)])[keep]
 def feats(K,mode):
     cols=defaultdict(lambda: np.zeros(N))
     def rec(m,k,acc,w):
@@ -34,10 +39,10 @@ def feats(K,mode):
             yield from rec(m//d,k-1,acc+((box(d),),),w)
     for i,m in enumerate(range(N,M)):
         for key,w in rec(m,K,(),1): cols[key][i]+=w
-    return np.array([c for c in cols.values() if c.any()]).T
+    return np.array([c[keep] for c in cols.values() if c[keep].any()]).T
 for mode in ['plain','small','any']:
     for K in range(2,b+2):
         A=feats(K,mode)
         x,*_=np.linalg.lstsq(A,y,rcond=None); r=np.abs(y-A@x).max()
         print(mode,'K=',K,'feat',A.shape[1],'max resid %.2e'%r, flush=True)
-        if r<1e-6 or A.shape[1]>2500: break
+        if r<1e-6 or A.shape[1]>1200: break

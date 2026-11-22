@@ -13,7 +13,7 @@ Notation: n odd composite, w(n) = least a >= 2 such that n is NOT a strong proba
 | Lamzouri-Li-Soundararajan, "Conditional bounds for the least quadratic non-residue and related problems", Math. Comp. 84 (2015) 2391-2412; corrected arXiv:1309.3595v3 (Dec 2016) | **Thm 1.1** (GRH, q >= 3000, H proper subgroup of (Z/q)^*): least prime l not dividing q, l not in H, satisfies l <= (log q + B(q))^2, B(q) = max(0, 2 loglog q + 3 + 2 w(q)(loglog q)^2/log q - 2A(q)), A(q) = max(0, 2 loglog q - 8/5 - sum_{p|q} log p/(p-1)); and if q has no prime factor below log^2 q then l <= log^2 q. **Cor 1.1**: least quadratic non-residue mod prime q >= 5 is < log^2 q. **Thm 1.2** (asymptotic): l < (alpha(h)+o(1)) log^2 q, h = [G:H], alpha(2)=0.8 (0.794 in Sec. 6.3), alpha(3)=0.7, alpha(h)=0.66 for h>3. **Thm 1.3** (h large): l < (1/4+o(1)) (1-1/h)^2 (log 2h/(log 2h - 4))^2 log^2 q. **Sec. 6.1**: their Prop. 6.1 cannot give better than (1/4+o(1)) log^2 q. | [K], PDF read (v3). NOTE: v1/v2 and the journal version claimed smaller constants (0.42 type); these were withdrawn in v3 (error in Lemma 6.1 found by Carneiro-Milinovich). |
 | LLS and Miller-Rabin | The paper **never mentions** Miller-Rabin / witnesses / pseudoprimes (grep of the full text: only the title of Bach's paper). | [K] checked |
 | Immediate corollary (not stated in LLS; folklore) | GRH => w(n) <= log^2 n for n >= 3000: strong liars lie in a proper subgroup H of (Z/n)^*; a prime factor of n below log^2 n is itself a witness; otherwise LLS Thm 1.1(2). For n < 3000 by table (our leastwit run). Asymptotically w(n) <= (0.794+o(1)) log^2 n from Thm 1.2. | [K]+[N] trivial corollary |
-| Later | I found no paper improving the *Miller-Rabin* constant below what LLS implies (two web searches Nov 2026; weak negative). Carneiro-Milinovich-Quesada-Herrera-Ramos (2021-22, "Exponential sums, twisted multiplicativity and moments" / Fourier optimisation papers on least quadratic non-residue / least character non-residue, arXiv:2001.xxxxx) refine the LLS framework by Fourier-optimisation; exact constants NOT verified here -> treat as "possibly sharper alpha(h) exists". | [K?] unverified |
+| Later | I found no paper improving the *Miller-Rabin* constant below what LLS implies (three web searches, Nov 2026; weak negative). I recall follow-up work in the Carneiro-Milinovich circle applying Fourier optimisation to LLS-type problems, but I could not locate or verify a statement with sharper alpha(h); treat sharper alpha(h) as possible prior art for the *subgroup* problem (it would only improve our constants further, see notebook). | unverified |
 
 ## 2. Lower bounds / heuristics
 - Alford-Granville-Pomerance, "On the difficulty of finding reliable witnesses", ANTS-I (LNCS 877, 1994): w(n) > (log n)^{1/(3 logloglog n)} for infinitely many n. [K]
@@ -28,8 +28,8 @@ Notation: n odd composite, w(n) = least a >= 2 such that n is NOT a strong proba
   psi_9=psi_10=psi_11=3825123056546413051 (Jiang-Deng 2014); psi_12=318665857834031151167461,
   psi_13=3317044064679887385961981 (Sorenson-Webster, Math. Comp. 86 (2017), arXiv:1509.00864). [K]
 - Hence the record ratios w/ln^2 n at the psi's: 3/ln^2(2047)=0.0516, 5/..=0.0250, 7/..=0.0241, 11/..=0.0230,
-  13/ln^2(psi_5)=0.0161, 17/ln^2(psi_6)=0.0204, 23/ln^2(psi_8)=0.0205, 37/ln^2(psi_11)=0.0206,
-  41/ln^2(psi_12)=0.0143, 43/ln^2(psi_13)=0.0135. All far below any GRH bound; consistent with log n loglog n.
+  13/ln^2(psi_5)=0.0161, 17/ln^2(psi_6)=0.0204, 23/ln^2(psi_8)=0.0205, 37/ln^2(psi_11)=0.0202,
+  41/ln^2(psi_12)=0.0140, 43/ln^2(psi_13)=0.0135. All far below any GRH bound; consistent with log n loglog n.
 - Our own exhaustive run to 10^10 (leastwit.c) reproduces psi_1..psi_4 and the count 3291 of spsp(2) below 10^10. [N]
 
 ## 4. Fewer bases / faster GRH tests (for Task 3)

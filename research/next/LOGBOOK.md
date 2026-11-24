@@ -123,6 +123,23 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   kill the 1/√3 target there (not the 1/√2 prize) and leave K₄ as the only live three-merge instance.
 - Lead's question back to w1: which bounds hold for the engine's actual (possibly non-uniform) accounting.
 
+### pc1 status note (restricted-machine separations) [R claimed, unreviewed, notebook not yet on disk]
+- Theorem A (elementary, no border bound): a polynomial with τ distinct powers of y is divisible by y − g_E for at
+  most 2τ − 2 Ryser roots (Descartes' rule at a real specialisation). With the reduction L1: any tree deciding A_g
+  whose generic-path tests have ≤ τ distinct y-powers needs ≥ (2^n − 1)/(2τ − 2) tests. Covers bounded y-degree and
+  y-lacunary tests of any degree. So polynomial time forces tests with ≥ 2^n/poly distinct y-powers.
+- Theorem B (uses the border bound): if Q = c(x)·N_g·H and H has at most h distinct y-roots, then
+  L̄(per_n) ≤ O((h+1)·n³·L(Q)). So an easy multiple needs a cofactor with superpolynomially many distinct roots
+  ("few false alarms" is impossible).
+- Caveat pc1 could not remove: Ryser roots caught with non-uniform multiplicity give a weighted sum Σ μ_E g_E.
+- Unified statement: for every easy multiple, the "trace germ" of the cofactor is border-hard.
+- Referee's test case Φ = ∏(x_i + T^{2^{i−1}}): undecided. All low power sums of its roots are easy, so the border
+  bound is blind to it. A sibling with matching-encoding weights has a hard cyclic norm.
+- Lead's input on the caveat: with Glynn's form the weighted sum equals μ̂(0)·per + Σ_{a≠0} μ̂(a)·F_a, and
+  μ̂(0) = Σ μ > 0 always, so per never cancels; the question is the contamination. Suggested a clean target that
+  sidesteps it: no UNAMBIGUOUS polynomial-time BSS machine (each branch caught once) decides A_g.
+- H5 status: looks true. Awaiting the notebook, then a referee.
+
 ### Running (as of this entry)
 - `review-link.md` (Opus referee): Findings 2 and 3.
 - `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.

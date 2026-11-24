@@ -1,1 +1,10 @@
 constraints 156960 vars 255
+('star', 0) q = [0 1 1] value 4.5 t = [9.   2.25 2.25] h(groups m1) = [np.float64(4.5), np.float64(4.5), np.float64(4.5)] h(groups m2) = [np.float64(1.5), np.float64(1.5), np.float64(1.5)] (11s)
+('star', 0) q = [0.333 0.333 0.333] value 4.5 t = [9.     2.3382 2.1618] h(groups m1) = [np.float64(4.5), np.float64(4.5), np.float64(4.5)] h(groups m2) = [np.float64(1.489), np.float64(1.497), np.float64(1.691)] (16s)
+('star', 0) q = [1 0 0] value 9.0 t = [9.    3.375 3.375] h(groups m1) = [np.float64(4.5), np.float64(4.5), np.float64(4.5)] h(groups m2) = [np.float64(2.25), np.float64(2.25), np.float64(2.25)] (9s)
+('star', 0) q = [0 1 0] value 0.0 t = [9.  0.  4.5] h(groups m1) = [np.float64(4.5), np.float64(4.5), np.float64(4.5)] h(groups m2) = [np.float64(-0.0), np.float64(-0.0), np.float64(-0.0)] (9s)
+('star', 0) q = [0.5 0.5 0. ] value 4.5 t = [9.  0.  4.5] h(groups m1) = [np.float64(4.5), np.float64(4.5), np.float64(4.5)] h(groups m2) = [np.float64(-0.0), np.float64(-0.0), np.float64(-0.0)] (9s)
+('star', 0) q = [0.  0.5 0.5] value 2.25 t = [9.   2.25 2.25] h(groups m1) = [np.float64(4.5), np.float64(4.5), np.float64(4.5)] h(groups m2) = [np.float64(1.5), np.float64(1.5), np.float64(1.5)] (12s)
+('flat', 7) q = [0.333 0.333 0.333] value 4.0 t = [ 6. -0.  6.] h(groups m1) = [np.float64(6.0), np.float64(-0.0), np.float64(6.0)] h(groups m2) = [np.float64(-0.0), np.float64(-0.0), np.float64(-0.0)] (10s)
+('flat', 7) q = [0.  0.5 0.5] value 3.0 t = [6.3096 2.7765 3.2235] h(groups m1) = [np.float64(6.0), np.float64(2.929), np.float64(3.69)] h(groups m2) = [np.float64(1.787), np.float64(2.114), np.float64(1.651)] (12s)
+('flat', 1) q = [0.333 0.333 0.333] value 1.25 t = [1.25 1.25 1.25] h(groups m1) = [np.float64(1.0), np.float64(0.597), np.float64(0.903)] h(groups m2) = [np.float64(1.0), np.float64(0.943), np.float64(0.557)] (15s)

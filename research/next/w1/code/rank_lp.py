@@ -131,6 +131,21 @@ for k in range(3):
             f.append(({hv(i): 1, hv(j): 1}, Ek))
     forcings[('star', k)] = f
 
+import time
+if n > 4:
+    jobs = [(('star', 0), (0, 1, 1)), (('star', 0), (1/3, 1/3, 1/3)), (('star', 0), (1, 0, 0)), (('star', 0), (0, 1, 0)),
+            (('star', 0), (0.5, 0.5, 0)), (('star', 0), (0, 0.5, 0.5)),
+            (('flat', canon(sum(1 << i for i in merges[0][0]))), (1/3, 1/3, 1/3)),
+            (('flat', canon(sum(1 << i for i in merges[0][0]))), (0, 0.5, 0.5)),
+            (('flat', canon(1)), (1/3, 1/3, 1/3))]
+    for key, q in jobs:
+        t0 = time.time()
+        val, x = solve(np.array(q), forcings[key])
+        print(key, 'q =', np.round(q, 3), 'value', round(val, 4), 't =', np.round(x[nh:], 4),
+              'h(groups m1) =', [round(x[hv(sum(1 << i for i in G))], 3) for G in merges[0]],
+              'h(groups m2) =', [round(x[hv(sum(1 << i for i in G))], 3) for G in merges[1]],
+              '(%.0fs)' % (time.time() - t0), flush=True)
+    sys.exit()
 grid = 12 if n <= 4 else 6
 qs = [(a / grid, b / grid, (grid - a - b) / grid) for a in range(grid + 1) for b in range(grid + 1 - a)]
 # value table

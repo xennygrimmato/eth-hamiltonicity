@@ -19,6 +19,8 @@ from scipy.optimize import linprog
 from scipy.sparse import coo_matrix
 
 which = sys.argv[1]
+TYPES = sys.argv[2] if len(sys.argv) > 2 else 'S12H'   # S=subadd, 1=CHLW1, 2=CHLW2, H=SCSH
+MODE = sys.argv[3] if len(sys.argv) > 3 else 'jobs'
 if which == 'k4':
     n = 4
     # merges = pairings ab|cd, ac|bd, ad|bc ; nodes 0..3 = a,b,c,d
@@ -63,12 +65,12 @@ for assign in itertools.product(range(4), repeat=n):
     C = sum(1 << i for i in range(n) if assign[i] == 2)
     if A == 0:
         continue
-    if B:
+    if B and 'S' in TYPES:
         add([(1, A | B), (-1, A), (-1, B)])
     if B and C:
-        add([(1, A), (-1, A | B), (-1, A | C)])
-        add([(2, A), (-1, A | B), (-1, A | C), (-1, B | C)])
-        add([(1, B | C), (-1, A | B), (-1, A | C)])
+        if '1' in TYPES: add([(1, A), (-1, A | B), (-1, A | C)])
+        if '2' in TYPES: add([(2, A), (-1, A | B), (-1, A | C), (-1, B | C)])
+        if 'H' in TYPES: add([(1, B | C), (-1, A | B), (-1, A | C)])
 print('constraints', len(rows), 'vars', nh, flush=True)
 
 # t variables after h
@@ -132,6 +134,22 @@ for k in range(3):
     forcings[('star', k)] = f
 
 import time
+if n > 4 and MODE == 'grid':
+    G = 6
+    out = {}
+    for a in range(G + 1):
+        for b in range(G + 1 - a):
+            q = np.array([a / G, b / G, (G - a - b) / G])
+            out[(a, b, G - a - b)] = solve(q, forcings[('star', 0)])[0]
+            print('f_star0', (a, b, G - a - b), round(out[(a, b, G - a - b)], 4), flush=True)
+    # V >= min_q max_k f_star_k(q), f_star_k(q) = f_star0(q permuted so that merge k -> merge 0)
+    best = None
+    for (a, b, c) in out:
+        v = max(out[(a, b, c)], out[(b, a, c)], out[(c, b, a)])
+        if best is None or v < best[0]:
+            best = (v, (a, b, c))
+    print('TYPES', TYPES, ': min_q max_k f_star_k(q) =', best[0], 'at q*6 =', best[1])
+    sys.exit()
 if n > 4:
     jobs = [(('star', 0), (0, 1, 1)), (('star', 0), (1/3, 1/3, 1/3)), (('star', 0), (1, 0, 0)), (('star', 0), (0, 1, 0)),
             (('star', 0), (0.5, 0.5, 0)), (('star', 0), (0, 0.5, 0.5)),

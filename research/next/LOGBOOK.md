@@ -157,6 +157,22 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - New hypothesis H7 [C]: valuation (tropical) invariants are the right tool for restricted-model separations because
   they ignore both the cofactor and multiplicities; the obstacle is cancellation at high alternation depth.
 
+### w1 interim 2 (three-merge line) [R/N, unreviewed]
+- Fields: CHLW Thm 1 holds over every field (pure linear algebra). Song et al. Thm 9 is proved over ℂ only;
+  180,913 tests over GF(2)/GF(3) found no violation [N].
+- Accounting: the engine's real accounting is general weights q. On K₄ the rank LP then gives only ρ ≥ 1/3; the 4/9
+  was a symmetric sub-class statement. The escaping vectors (4,4,0) are not realisable as a family (z1), so K₄
+  remains open exactly at z1's "three-rank object".
+- Δ₃: rank LP with all 156,960 four-party inequalities improves x7's factor 4 to 2. With uniform q: ρ ≥ 1/2 on Δ₃
+  (flattening gave 4/9). General q running; expected 1/2 by symmetry. If confirmed, first unconditional three-merge
+  floor at 1/2 on Δ₃ (over ℂ; field-free version being tested).
+- SU(2) recoupling pieces on K₄: dead [X]. Channel projectors are related by Racah polynomials, giving a polynomial
+  uncertainty principle (small support in one channel forces near-full rank in the other two).
+- Lead's reading: both dead K₄ families (Weyl, SU(2)) are compact-group constructions killed by uncertainty
+  principles. Appendix B is su(1,1) (non-compact; Meixner = its Clebsch–Gordan coefficients).
+- H8 [C]: if three-wire fusion exists it comes from coupling three su(1,1) discrete-series representations
+  (Tratnik-type multivariate Meixner). Passed to w1 as the first thing to test for Task 2.
+
 ### Running (as of this entry)
 - `review-link.md` (Opus referee): Findings 2 and 3.
 - `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.

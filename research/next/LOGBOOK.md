@@ -140,6 +140,23 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   sidesteps it: no UNAMBIGUOUS polynomial-time BSS machine (each branch caught once) decides A_g.
 - H5 status: looks true. Awaiting the notebook, then a referee.
 
+### Idea agent status note (Newton-polygon route) [R claimed, unreviewed, file not yet on disk]
+- Theorem (no border bound, every characteristic): in the "ΠΣ-sparse" model (each test a product of ≤ m powers of
+  t-sparse polynomials, any degree), a tree deciding A_g has T·m·(t−1) ≥ 2^n − 1 tests on its generic path.
+  Idea: weight the variables by powers of a parameter τ; root valuations of N_g·H contain those of N_g for every
+  cofactor H, so the cofactor cannot help; the 2^n − 1 Ryser branches get distinct valuations; a sparse polynomial
+  has few slopes. Multiplicity-blind.
+- Extension claimed for cancellation-free tests of bounded alternation depth.
+- Tightness gadget: a size-O(n) positive circuit with 2^n distinct root valuations, so no slope bound for general
+  circuits; a depth hierarchy.
+- Span Conjecture: false in every positive characteristic; in characteristic 0 it would imply the ℂ-Knapsack norm
+  has no easy multiple. Confirms the referee: drop it. [X]
+- Test case Φ: undecided; guess hard. Same facts as pc1.
+- Lead's action: relayed the theorem to pc1 to verify and merge with Theorem A; asked whether the tropical argument
+  can replace the trace in Theorem B and so remove the multiplicity caveat.
+- New hypothesis H7 [C]: valuation (tropical) invariants are the right tool for restricted-model separations because
+  they ignore both the cofactor and multiplicities; the obstacle is cancellation at high alternation depth.
+
 ### Running (as of this entry)
 - `review-link.md` (Opus referee): Findings 2 and 3.
 - `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.

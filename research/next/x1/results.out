@@ -10,3 +10,12 @@ twin counts: 1999 values, rounding failures 0, max |error| = 2.598e-21 (2^-68.4)
 gold counts: 999 values, rounding failures 0, max |error| = 4.392e-21 (2^-67.6), budget bound 1.875e-01
 [sg] N=1000 X=2001 D=74 (needed 74) M=401 p=89 t=84 time 251s
 sg counts: 999 values, rounding failures 0, max |error| = 1.024e-21 (2^-69.7), budget bound 1.880e-01
+[mertens] N=3000 D=26 M=185 p=41 t=36 time 873s
+M~(x), x<=N: 3000 values, rounding failures 0, max |error| = 1.198e-05 (2^-16.3), budget bound 1.341e-01
+   max_n |mu~(n) - mu(n)| = 1.384e-08
+[stress] N=300 X=302 D=48 (needed 64) M=284 p=63 t=58 time 20s
+stress counts: 299 values, rounding failures 0, max |error| = 3.632e-15 (2^-48.0), budget bound 6.861e+02
+[stress] N=300 X=302 D=32 (needed 64) M=212 p=47 t=42 time 15s
+stress counts: 299 values, rounding failures 0, max |error| = 1.253e-10 (2^-32.9), budget bound 4.497e+07
+[stress] N=300 X=302 D=24 (needed 64) M=176 p=38 t=34 time 16s
+stress counts: 299 values, rounding failures 0, max |error| = 1.132e-08 (2^-26.4), budget bound 1.151e+10

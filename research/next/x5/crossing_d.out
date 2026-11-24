@@ -31,3 +31,25 @@ N= 20  rk(ad|bc)=  16  rk(ab|cd)=   3
 N= 22  rk(ad|bc)=  16  rk(ab|cd)=   2
 N= 24  rk(ad|bc)=  16  rk(ab|cd)=   1
 d=2 e1=8 e2=8 n=1 |S1|=10 |S2|=10 Theta=32
+degree violations: 0
+values on matching: {1}  nonzero off matching: 0
+N=  0  rk(ad|bc)=   1  rk(ab|cd)= 100
+N=  2  rk(ad|bc)=   2  rk(ab|cd)= 100
+N=  4  rk(ad|bc)=   4  rk(ab|cd)= 100
+N=  6  rk(ad|bc)=   9  rk(ab|cd)= 100
+N=  8  rk(ad|bc)=  24  rk(ab|cd)= 100
+N= 10  rk(ad|bc)=  48  rk(ab|cd)= 100
+N= 12  rk(ad|bc)=  72  rk(ab|cd)= 100
+N= 14  rk(ad|bc)=  72  rk(ab|cd)=  96
+N= 16  rk(ad|bc)=  87  rk(ab|cd)=  79
+N= 18  rk(ad|bc)= 100  rk(ab|cd)=  72
+N= 20  rk(ad|bc)= 100  rk(ab|cd)=  72
+N= 22  rk(ad|bc)= 100  rk(ab|cd)=  50
+N= 24  rk(ad|bc)= 100  rk(ab|cd)=  23
+N= 26  rk(ad|bc)= 100  rk(ab|cd)=   9
+N= 28  rk(ad|bc)= 100  rk(ab|cd)=   4
+N= 30  rk(ad|bc)= 100  rk(ab|cd)=   2
+N= 32  rk(ad|bc)= 100  rk(ab|cd)=   1
+d=3 e1=9 e2=9 n=1 |S1|=0 |S2|=0 Theta=36
+degree violations: 0
+values on matching: set()  nonzero off matching: 0

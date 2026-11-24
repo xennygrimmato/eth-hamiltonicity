@@ -14,3 +14,4 @@ network 0S,AD,CD                     M5-length 4.2426  best explicit point 3.414
 network 0S,AD,CD,AC                  M5-length 5.2426  best explicit point 4.0000  ratio 0.7630
 network square 0ASD sides+diags      M5-length 6.8284  best explicit point 6.0000  ratio 0.8787
 network diagonals 0S,AD              M5-length 2.8284  best explicit point 2.0000  ratio 0.7071
+worst ratio explicit/M5 over random weightings: 0.7107 w = [1.   0.   0.   0.   0.   0.   0.   0.79 0.   0.23] pairs ['0S', '0A', '0D', '0C', 'SA', 'SD', 'SC', 'AD', 'AC', 'DC']

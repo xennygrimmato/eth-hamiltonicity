@@ -1,0 +1,14 @@
+g=2 p=2 E=6: b_k/E = [0.56904 0.56904]  closed/E = 0.56904  cross-term(random hubs) = 0.00e+00
+g=2 p=3 E=6: b_k/E = [0.4714 0.4714 0.4714]  closed/E = 0.47140  cross-term(random hubs) = 0.00e+00
+g=3 p=2 E=36: b_k/E = [0.60355 0.60355]  closed/E = 0.60355  cross-term(random hubs) = 8.88e-16
+g=3 p=3 E=36: b_k/E = [0.49789 0.49789 0.49789]  closed/E = 0.49789  cross-term(random hubs) = 8.88e-16
+g=3 p=4 E=36: b_k/E = [0.43301 0.43301 0.43301 0.43301]  closed/E = 0.43301  cross-term(random hubs) = 8.88e-16
+g=4 p=2 E=120: b_k/E = [0.62426 0.62426]  closed/E = 0.62426  cross-term(random hubs) = 2.66e-15
+g=4 p=3 E=120: b_k/E = [0.51378 0.51378 0.51378]  closed/E = 0.51378  cross-term(random hubs) = 2.66e-15
+g=4 p=4 E=120: b_k/E = [0.44641 0.44641 0.44641 0.44641]  closed/E = 0.44641  cross-term(random hubs) = 2.66e-15
+g=4 p=5 E=120: b_k/E = [0.4 0.4 0.4 0.4 0.4]  closed/E = 0.40000  cross-term(random hubs) = 2.66e-15
+g=5 p=2 E=300: b_k/E = [0.63807 0.63807]  closed/E = 0.63807  cross-term(random hubs) = -8.72e-15
+g=5 p=3 E=300: b_k/E = [0.52438 0.52438 0.52438]  closed/E = 0.52438  cross-term(random hubs) = -8.72e-15
+g=5 p=4 E=300: b_k/E = [0.45534 0.45534 0.45534 0.45534]  closed/E = 0.45534  cross-term(random hubs) = -8.72e-15
+g=5 p=5 E=300: b_k/E = [0.40787 0.40787 0.40787 0.40787 0.40787]  closed/E = 0.40787  cross-term(random hubs) = -8.72e-15
+g=5 p=6 E=300: b_k/E = [0.37268 0.37268 0.37268 0.37268 0.37268 0.37268]  closed/E = 0.37268  cross-term(random hubs) = -8.72e-15

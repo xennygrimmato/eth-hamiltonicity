@@ -84,6 +84,12 @@ SWAP = R + L, opSR(R) ≤ Σ r_a, rank(L) ≤ Σ s_a.
 y⊗x = R(x⊗y) = Σ_b X_b x ⊗ Y_b y ∈ span{X_b x} ⊗ ℂⁿ, so Y_x ⊆ span{X_b x}: n − s ≤ r. ∎ Corollary: for any identity
 I = Σ_a N_a, Σ_a min(r_a, s_a) ≥ n.
 
+**Lemma′ (E⊗F version) [R].** If E ⊗ F ⊆ ker L then R restricted to E⊗F is the swap E⊗F → F⊗E, whose operator-Schmidt rank is
+dim E·dim F; restriction does not raise opSR, so r ≥ dim E·dim F. Taking dim F = f and E = ∩_c (W_c F)^⊥ (W_c spanning (ker L)^⊥ as
+bilinear forms) gives **r ≥ max_f f(n − s f) ≥ n²/(4s)**, and by realignment duality s ≥ n²/(4r). In particular s = 1 forces
+r ≥ n²/4. Balanced, this still only gives max(r,s) ≥ n/2, i.e. log ≥ m − 1, whereas a shortening needs ≤ (√2 − δ)m and the
+numerics say ≈ 2m − 2. The window β = log r/m ∈ [1, √2) is the unproven part.
+
 **Kauffman (n = 2) [R, exact, code/verify_kauffman.py]:** SWAP = I⊗I − 2ψ⁻ψ⁻ᵀ, i.e. C_{2,1} = (crossed pairing) + (ε⊗ε),
 both terms of cost 2√2. Exact over ℤ, so over every field. σ = 1.17.
 

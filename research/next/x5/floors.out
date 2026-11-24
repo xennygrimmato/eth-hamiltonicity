@@ -1,5 +1,4 @@
-Traceback (most recent call last):
-  File "/home/user/eth-hamiltonicity/research/next/x5/code/floors.py", line 102, in <module>
-    print(f"{nm:40s} F_rho3 = {fr:.4f}   F_E = {fe:.4f}   ratio {fr/fe:.4f}", flush=True)
-                                                                 ~~^~~
-ZeroDivisionError: division by zero
+crossing 0S,AD (calib)                   F_rho3 = 2.0000   F_E = 2.8169   ratio 0.7100
+two squares, 4 cuts                      F_rho3 = 6.0000   F_E = 7.3276   ratio 0.8188
+0S,AD,CD rows/cols with C,A split        F_rho3 = 8.0000   F_E = 8.0011   ratio 0.9999
+0S,AD,CD,AC 3 cuts                       F_rho3 = 3.0000   F_E = 5.3993   ratio 0.5556

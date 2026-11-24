@@ -1,0 +1,14 @@
+--- lac4
+  E=  16 alpha=0.763 flat=1.211 cert=0.8631 opt=0.6708 Tmin/E=2.62
+  E=  32 alpha=0.513 flat=0.995 cert=0.7163 opt=0.7236 Tmin/E=4.06
+  E=  64 alpha=0.479 flat=0.962 cert=0.6993 opt=0.7289 Tmin/E=4.39
+  E= 128 alpha=0.465 flat=0.910 cert=0.6910 opt=0.7616 Tmin/E=5.04
+  E= 256 alpha=0.400 flat=0.877 cert=0.6600 opt=0.7536 Tmin/E=5.52
+  E= 400 alpha=0.400 flat=0.877 cert=0.6600 opt=nan Tmin/E=nan
+--- lac2
+  E=  16 alpha=0.617 flat=1.117 cert=0.7684 opt=0.6798 Tmin/E=3.25
+  E=  32 alpha=0.542 flat=1.025 cert=0.7285 opt=0.7106 Tmin/E=3.81
+  E=  64 alpha=0.493 flat=0.965 cert=0.7040 opt=0.7318 Tmin/E=4.34
+  E= 128 alpha=0.456 flat=0.921 cert=0.6857 opt=0.7488 Tmin/E=4.90
+  E= 256 alpha=0.425 flat=0.887 cert=0.6714 opt=0.7608 Tmin/E=5.43
+  E= 400 alpha=0.410 flat=0.871 cert=0.6642 opt=nan Tmin/E=nan

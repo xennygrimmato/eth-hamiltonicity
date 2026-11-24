@@ -1,0 +1,12 @@
+--- boson lin
+  E=  25 alpha=0.732 flat=1.295 cert=0.8308 opt=0.6398 Tmin/E=2.72
+  E=  50 alpha=0.640 flat=1.184 cert=0.7793 opt=0.6560 Tmin/E=3.04
+  E= 100 alpha=0.604 flat=1.134 cert=0.7599 opt=0.6681 Tmin/E=3.22
+--- boson quad
+  E=  25 alpha=0.631 flat=1.124 cert=0.7745 opt=0.6816 Tmin/E=3.20
+  E=  50 alpha=0.538 flat=1.022 cert=0.7258 opt=0.7107 Tmin/E=3.84
+  E= 100 alpha=0.494 flat=0.968 cert=0.7042 opt=nan Tmin/E=nan
+--- boson osc2
+  E=  25 alpha=0.910 flat=1.628 cert=0.9397 opt=0.5557 Tmin/E=2.16
+  E=  50 alpha=0.793 flat=1.459 cert=0.8664 opt=0.5875 Tmin/E=2.44
+  E= 100 alpha=0.752 flat=1.391 cert=0.8420 opt=0.6000 Tmin/E=2.54

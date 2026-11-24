@@ -69,7 +69,7 @@
 
 \author{Vaibhav Tulsyan}
 
-\date{November 2026}
+\date{November 2026; version~2, 24~November 2026 (\cref{sec:v2})}
 
 \subjclass[2020]{68Q17, 68Q25, 68W30, 15A69, 05C31}
 \keywords{Exponential Time Hypothesis, counting algorithms, tensor networks, cut rank, permanent, Tutte polynomial, lower bounds for restricted models, Lean~4, formal verification}
@@ -94,7 +94,10 @@ Tutte polynomial off the integer hyperbolas, and $\rho\ge3/8$ for correlated dec
 grid levels. We cite $45$ Lean theorems, with standard axioms only. Every barrier is about a named
 model: in Anthropic's general model no unconditional bound on $U$ exists without separating $\mathrm
 P$ from $\mathrm P^{\#\mathrm P}$, and an unconditional cap on oblivious algebraic algorithms would
-separate $\mathrm{VP}$ from $\mathrm{VNP}$.
+imply $\mathrm{VP}\ne\mathrm{VNP}$. Version~2: $\mathrm{VP}\ne\mathrm{VNP}$ has since been claimed
+(unrefereed); it does not give the cap, but in one of its two cases (which one holds is unknown) it
+gives $e_K\ge1/(16\sqrt K)$ for our clique polynomial. Exact $\pi(x)$ and prime finding in $x^{o(1)}$
+have been announced by a route outside our models, overtaking two rows of our map if confirmed.
 \end{abstract}
 
 \maketitle
@@ -129,7 +132,8 @@ is known''~\cite[\S4.8]{Maj26}. Neither paper treats a counting problem other th
 of an account of which counting problems beyond SAT the engines cannot be expected to reach, by which
 mechanism, and what would have to change. This matters because the engines are new, and the obvious
 targets after sparse \#HC (the permanent, dense \#HC and TSP, the chromatic number, the Tutte
-polynomial, Subset Sum, exact $\pi(x)$) are exactly the ones they seem to miss.
+polynomial, Subset Sum, exact $\pi(x)$) are exactly the ones they seem to miss. (For exact $\pi(x)$
+and prime finding see \cref{sec:v2}: a route outside our models has since been announced.)
 
 \subsection{The problem and the running example}
 We consider the \emph{engine barrier problem}. For a counting problem $P$ and a stated class of
@@ -268,7 +272,9 @@ $n\log n$ wall for shared bits, \cref{sec:rate} the caps on the rate and \cref{s
 tightness of \Oa's template. \Cref{sec:encodings} treats our own encodings, \cref{sec:map} the nine
 problems and \cref{sec:change} what would have to change. \Cref{sec:lean} describes the Lean
 development, and \cref{sec:related,sec:limitations,sec:conclusion} cover related work, limitations
-and conclusions.
+and conclusions. \Cref{sec:v2}, added in version~2, records two claims announced since version~1 that
+bear on \cref{tab:map} and \cref{prop:meta}; the rest of the text is as in version~1 except where it
+points there.
 
 % =====================================================================
 \section{The engines and their two numbers}\label{sec:engines}
@@ -1108,18 +1114,21 @@ chromatic number & $2^n$~\cite{BHK09}; $k$-colouring $(2-\varepsilon_k)^n$ rando
 Subset Sum, Partition & $2^{n/2}$~\cite{HorowitzSahni74}; space $2^{n/4}$~\cite{SchroeppelShamir81}, improved~\cite{NederlofWegrzycki21} & each party's partial sum carries $b$ bits & paper: \cref{prop:subsetsum}\\
 dense Max-Cut, Max-2-SAT & $2^{\omega n/3}$~\cite{Williams05} & $\Theta(n^2)$ edge terms; the pair interaction has rank $2^{\rk E}$, so $P=\Theta(n)$ on dense graphs & none; one-line rank count\\
 directed HC, dense & $2^n$; $2^{n-\Omega(\sqrt n)}$ counting~\cite{Li26} & as dense $\#$HC; sparse digraphs are done (\texttt{theoremDHC}) & as dense $\#$HC\\
-prime finding & $x^{1/2+o(1)}$~\cite{LO87}; parity on short intervals $x^{1/2-c}$~\cite{TCH12} & residues of cheap counts can all vanish; exact isolation needs $k$-fold products, $k=\Theta(n/\log n)$ & Lean: \cref{thm:prodtree,thm:prodrank}; paper: \cref{prop:adversary,prop:circuit}\\
-exact $\pi(x)$ & $x^{1/2+o(1)}$~\cite{LO87}; $x^{2/3}/\log^2x$~\cite{DR96} & product-tree verifiers have $U=\Theta(n\log n)$, giving $2^{\Theta(n\sqrt{\log n})}$ & as prime finding; \cref{q:product}\\
+prime finding$^{\dagger}$ & $x^{1/2+o(1)}$~\cite{LO87}; parity on short intervals $x^{1/2-c}$~\cite{TCH12} & residues of cheap counts can all vanish; exact isolation needs $k$-fold products, $k=\Theta(n/\log n)$ & Lean: \cref{thm:prodtree,thm:prodrank}; paper: \cref{prop:adversary,prop:circuit}\\
+exact $\pi(x)^{\dagger}$ & $x^{1/2+o(1)}$~\cite{LO87}; $x^{2/3}/\log^2x$~\cite{DR96} & product-tree verifiers have $U=\Theta(n\log n)$, giving $2^{\Theta(n\sqrt{\log n})}$ & as prime finding; \cref{q:product}\\
 Tutte off $\mathcal H\cup\mathcal L$ & $2^n$~\cite{BHKK08Tutte} & boundary states are all set partitions, rank $\Bell(b)$; interpolation needs $\Theta(n)$ hyperbolas & paper: \cref{prop:tutte}; \cref{rem:tutteranks}\\
 \bottomrule
 \end{tabular}
 \caption{Nine problems out of reach of the engines' guarantees. ``Lean'' cites machine-checked steps;
 the step from a network to a matrix is on paper throughout. Best known bounds are deterministic
-unless marked.}\label{tab:map}
+unless marked. $^{\dagger}$Added in version~2: overtaken by~\cite{Ni26}, if confirmed, which announces
+both in $x^{o(1)}$ (unrefereed). The ``why'' and ``proved'' entries of these rows stay true but are
+route-specific: they concern product-tree verifiers, integer divisor networks and residue queries, and
+\cite{Ni26} uses none of these (\cref{sec:v2}).}\label{tab:map}
 \end{table}
 
 \paragraph{The iterated product.} Exact $\pi(x)$, and a deterministic prime finder by this route, need
-to isolate $\omega(m)=1$, and the only identities we know do so through a $k$-fold product
+to isolate $\omega(m)=1$, and the only identities we knew when writing version~1 do so through a $k$-fold product
 $m=d_1\cdots d_k$ with $k=\Theta(n/\log n)$ (\repo{prime-finding.md} \S4, on paper). In the parity
 note~\cite{TulPar26} we proved \cref{thm:prodtree} and the first statement of \cref{thm:prodrank}
 (\lean{rank_prodMat_pow}); we restate them here. The second statement of \cref{thm:prodrank}
@@ -1141,7 +1150,11 @@ columns has rank at most $\tau(m)$.
 
 \noindent So in a tree verifier the cut above a node $v$ carries at least $\mathrm{wt}(v)$ bits
 (\cref{thm:cut,thm:prodrank}, the link on paper), $U\ge\mathrm{cost}(T)\ge n\log_2k$, and no tree shape
-helps. A bound for all verifiers is a different matter.
+helps. A bound for all verifiers is a different matter. (Version~2: the iterated product is not
+necessary. Ni~\cite{Ni26} announces a route that computes $\mu$ through Ramanujan sums and the
+weights $e(\cdot)$, $\log$ and $1/\log$ through short quadratures, and rounds an approximate count
+once at the end; \cref{thm:prodtree,thm:prodrank,prop:circuit,prop:adversary} do not apply to it.
+See \cref{sec:v2}.)
 
 \begin{proposition}[on paper; \repo{iterated-product.md} \S5]\label{prop:circuit}
 \A's engine simulates every Boolean circuit of size at most $Kn$ by a parsimonious label system with
@@ -1185,13 +1198,16 @@ sum-of-squares formulas of nearly linear size.
 \item An algorithm for $(K,\lambda)$-cliques that is not a sum of $2^{o(N)}$ clique-type
 sub-instances, for example one that eliminates variables or adapts to the tables.
 \item For prime counting, a parsimonious verifier of a $k$-fold product with $o(n\sqrt{\log n})$ shared
-bits (\cref{q:product}).
+bits (\cref{q:product}). (Version~2: \cite{Ni26} announces a different change, real analytic weights
+rounded at the end, that avoids the $k$-fold product altogether; \cref{sec:v2}.)
 \item For the Tutte polynomial, a sum of networks over many different clusterings, or skeletons that
 depend on private edges.
 \end{enumerate}
 
 \paragraph{The meta-barrier.} For (iii) the obstacle to an unconditional negative answer is the
-following. We call an algorithm for the $(K,\lambda)$-clique \emph{oblivious algebraic} if it is a
+following. (Version~2: \cref{prop:meta} is unchanged, but its reading below is qualified by a
+claimed proof of $\mathrm{VP}\ne\mathrm{VNP}$~\cite{AnthropicVP26}; see the paragraph after the
+proposition and \cref{sec:v2}.) We call an algorithm for the $(K,\lambda)$-clique \emph{oblivious algebraic} if it is a
 straight-line program over $\Q$ in the table entries, that is, an arithmetic circuit whose sequence of
 operations is fixed in advance and does not depend on the entries; its size is its number of
 operations. Let $D=2^\lambda$ and $P_K(T)=\sum_X\prod_{a\in[K]}T_a(X|_{\delta(a)})$, the value of the
@@ -1223,10 +1239,22 @@ today only from diagonalisation.
 \end{enumerate}
 \end{proposition}
 
-\noindent This is not a theorem about any existing algorithm. It says that the query bound
-$(K-1)/K^2$ is the only unconditional lower bound on $e_K$ available without a breakthrough in
-algebraic or Boolean circuit complexity, so barriers must be proved for restricted classes, as in
-\cref{sec:rate}. \A's recursion is an oblivious algebraic algorithm in this sense: each modified table
+\noindent This is not a theorem about any existing algorithm. In version~1 we read it as saying that
+the query bound $(K-1)/K^2$ is the only unconditional lower bound on $e_K$ available without a
+breakthrough in algebraic or Boolean circuit complexity, so barriers must be proved for restricted
+classes, as in \cref{sec:rate}. \emph{Version~2.} The algebraic half of that reading is overtaken, if
+the claim holds: \cite{AnthropicVP26} claims $\mathrm{VP}\ne\mathrm{VNP}$ over every field, so
+$\mathrm{VP}\ne\mathrm{VNP}$ can no longer be offered as a reason why the cap is out of reach.
+Nor does that claim give the cap: \cref{prop:meta}(ii) is an implication from the cap to
+$\mathrm{VP}\ne\mathrm{VNP}$, not conversely, and a superpolynomial bound for the permanent does
+not by itself bound $e_K$ at the scale $c/\log K$. What it does give is, in its ``flat case'', a bound for
+exactly our polynomial ($P_K=f_{K,\lambda}$ in~\cite[\S2.3]{AnthropicVP26}): every arithmetic circuit
+for it has $\log_2(\text{size})\ge\lambda K^{3/2}/16$ for $\lambda\ge100\sqrt K$, that is
+$e_K\ge1/(16\sqrt K)$, which is above the query bound but far below the engine's $c/\log K$; it does
+not show that $c/\log K$ is optimal. It is not unconditional for $P_K$, because that paper proves
+that one of two cases holds without knowing which. Subject to these qualifications it is, to our
+knowledge, the first bound beyond the query bound in this model. The Boolean half of the reading,
+\cref{prop:meta}(iii), is unaffected. \A's recursion is an oblivious algebraic algorithm in this sense: each modified table
 is a polynomial in the tables of the nodes it absorbs, with coefficients independent of the entries;
 its products are over disjoint node sets; its sums are over index sets fixed in advance; and the
 groupings it searches for depend only on the skeleton, not on the entries. Majdoddin makes the
@@ -1260,6 +1288,8 @@ rejects its own labels, and exactly one accepting labelling exists per witness w
 none otherwise. What is the least total $U$ of label bits? Known:
 $\Omega(n)\le U\le(1/5+o(1))\,n\log_2n$; tree verifiers have $U\ge n\log_2k$ (\cref{thm:prodtree}).
 $U=o(n\sqrt{\log n})$ would give exact $\pi(x)$ and deterministic prime finding in $x^{o(1)}$.
+(Version~2: if~\cite{Ni26} is confirmed, both follow without an answer to this question, which then
+remains of interest only for product verification itself.)
 \end{question}
 
 \begin{question}[the pieces constant; \repo{rho-lower-bound.md} \S7]\label{q:rho}
@@ -1503,8 +1533,8 @@ pieces with certified costs, min-over-groupings recursions with $2^{o(\lambda)}$
 network decompositions, \Oa's $M_0$-template, tree verifiers, clustered partial-sum networks,
 substitution algebras and plain $\#$SAT encodings. None is about all algorithms.
 \item \emph{The general model admits no unconditional barrier} (\cref{prop:general}), and an
-unconditional cap on oblivious algorithms would separate $\mathrm{VP}$ from $\mathrm{VNP}$
-(\cref{prop:meta}).
+unconditional cap on oblivious algorithms would imply $\mathrm{VP}\ne\mathrm{VNP}$
+(\cref{prop:meta}), which is now claimed but does not by itself give the cap (\cref{sec:v2}).
 \item \emph{The Tutte barrier has two loopholes}: sums over different clusterings, and skeletons that
 depend on private edges (\cref{q:tutte}).
 \item \emph{Much is on paper.} \Cref{prop:fulllevel,prop:limit}, the covering bound
@@ -1534,12 +1564,64 @@ recursion converts shared bits into time at a rate no better than $1/\log K$ (\c
 sharper~\cite[Theorem~4.13]{Maj26}), while correlated decompositions of full grid levels do no better
 than $(\log K)^{-1.415}$ (\cref{prop:fulllevel}). The paper is a step towards, not a
 proof of, the statement that the engines do not reach dense counting; a proof of that statement even
-for oblivious algebraic algorithms would separate $\mathrm{VP}$ from $\mathrm{VNP}$ (\cref{prop:meta}). One instance is open and small: the
+for oblivious algebraic algorithms would imply $\mathrm{VP}\ne\mathrm{VNP}$ (\cref{prop:meta}),
+which has since been claimed~\cite{AnthropicVP26} but does not give such a proof (\cref{sec:v2}). One instance is open and small: the
 $3\times3$ grid level, where $N^8$ is proved and $N^9$ is conjectured, a case of the ``open door''
 of~\cite[\S4.8]{Maj26}. The cheapest experiment that could
 change the picture is a decomposition of that level with maximum cost at most $(9-\varepsilon)\lambda$. An
 interesting direction on the number-theoretic side is the $g$-party verification of a product
-(\cref{q:product}), whose answer would decide whether exact $\pi(x)$ is within the engines' reach.
+(\cref{q:product}). In version~1 we wrote that its answer would decide whether exact $\pi(x)$ is
+within the engines' reach; if~\cite{Ni26} is confirmed, exact $\pi(x)$ is within reach by another
+route, and the question no longer decides it.
+
+% =====================================================================
+\section{Developments since version~1 (added 24~November 2026)}\label{sec:v2}
+% =====================================================================
+
+Two claims announced after version~1 bear on this paper. Neither is refereed, and we have not
+reproduced either; we report what they claim and what changes here if they hold. Every Lean theorem
+of \cref{sec:lean} is unaffected: none is about all algorithms.
+
+\paragraph{Exact $\pi(x)$ and prime finding~\cite{Ni26}.} J.~Ni announces (15~November 2026) that the
+sum $S(N)$ of the primes up to $N$, $\pi(N)$, and a prime in $(N,2N]$ can each be computed
+deterministically in time $2^{O(b/\sqrt{\log b})}=N^{o(1)}$, where $b=\log_2N$. A Lean proof is
+reported by the author. As we read the announcement, the method writes the prime indicator through
+$\mu$ and $\Lambda$, obtains $\mu(d)=\sum_{0\le x<d,\,(x,d)=1}e(x/d)$ from Ramanujan sums, certifies
+coprimality by a unique bounded B\'ezout witness, replaces $e(\cdot)$, $\log$ and $1/\log$ at rational
+points by Cauchy-kernel (trapezoidal) quadratures with $O(b)$ nodes whose values are integer
+quotients entering as multiplicities, and keeps the total error below $1/2$, so that rounding once at
+the end gives the exact count. It cites this paper and~\cite{TulPar26} and builds on our Lean
+library. If the claim holds:
+\begin{itemize}
+\item the rows ``prime finding'' and ``exact $\pi(x)$'' of \cref{tab:map} are overtaken (marked
+$\dagger$ there), and so is the phrase ``out of reach'' for them;
+\item \cref{thm:prodtree,thm:prodrank} remain true, and so do \cref{prop:circuit,prop:adversary}, but they
+concern product-tree verifiers, integer divisor networks and residue queries; a route with real analytic
+weights rounded at the end was never covered by our models, and the suggestion, in the
+iterated-product paragraph and in the ``why'' column of \cref{tab:map}, that exact isolation needs a
+$k$-fold product was too wide;
+\item \cref{q:product} no longer decides whether exact $\pi(x)$ is within the engines' reach, and
+change~(iv) of \cref{sec:change} is not the only change that would bring prime counting into reach.
+\end{itemize}
+
+\paragraph{$\mathrm{VP}\ne\mathrm{VNP}$~\cite{AnthropicVP26}.} Anthropic claims (24~November 2026),
+with a Lean formalisation whose README states that no human mathematician has checked it, that
+arithmetic circuits for $\mathrm{PERM}_m$ (characteristic $\ne2$) and for $\mathrm{HC}_m$ (every
+field) need more than $m^{c(\log m)^{1/3}}$ gates, also for approximating circuits. The proof splits
+into a ``flat'' and a ``contracting'' case and shows that at least one holds, without knowing which.
+In the flat case it bounds the polynomial $f_{k,\ell}$ of its \S2.3, which is our $(K,\lambda)$-clique
+polynomial $P_K$ of \cref{sec:change}, by $\log_2L\ge\ell k^{3/2}/16$ for $\ell\ge100\sqrt k$; in our
+normalisation $e_K\ge1/(16\sqrt K)$. If the claim holds:
+\begin{itemize}
+\item \cref{prop:meta} stays true, but $\mathrm{VP}\ne\mathrm{VNP}$ can no longer be cited as the
+reason an unconditional cap is out of reach; the cap ($e_K\ge c/\log K$ for all oblivious algebraic
+algorithms) is not implied by $\mathrm{VP}\ne\mathrm{VNP}$ and remains open;
+\item the flat-case bound is the first bound on $e_K$ in this model above the query bound
+$(K-1)/K^2$, but it is conditional on the flat case, it is a factor of order $\sqrt K/\log K$ below
+the engine's rate, and it does not show that $c/\log K$ is optimal;
+\item the Boolean statement \cref{prop:meta}(iii) and the general-model statement
+\cref{prop:general} are unaffected.
+\end{itemize}
 
 \section*{Acknowledgements}
 This work was done with AI assistance (Claude Code, Anthropic): the research notes, the Lean
@@ -1667,6 +1749,12 @@ Julia Chuzhoy and Rachit Nimavat, \emph{Large minors in expanders},
   \url{https://github.com/anthropics/formal-math}, folder \texttt{eth}; we use
   commit \texttt{16a5ce41304fcdaea4e0be7c132e1c361dc26da5}, 2026.
 
+\bibitem{AnthropicVP26}
+{Claude (Anthropic)}, \emph{{VP} $\ne$ {VNP} over every field}, Preprint dated
+  24~November 2026, unrefereed; Lean formalisation in the repository
+  \url{https://github.com/anthropics/formal-math}, folder \texttt{vp-vnp}; the
+  README states that no human mathematician has checked it, 2026.
+
 \bibitem{CLN18}
 Radu Curticapean, Nathan Lindzey, and Jesper Nederlof, \emph{A tight lower
   bound for counting {H}amiltonian cycles via matrix rank}, Proc. 29th ACM-SIAM
@@ -1792,6 +1880,14 @@ Jesper Nederlof and Karol W{\k{e}}grzycki, \emph{Improving {S}chroeppel and
 Troy~Tri Nguyen, \emph{A sublinear treewidth exponent for binary constraint
   satisfaction}, Hexagon preprint hexagon:2611.00004v1, 2~November 2026,
   \url{https://hexagonmath.org/abs/2611.00004}, 2026.
+
+\bibitem{Ni26}
+J.~Ni, \emph{Exact prime counting and deterministic prime finding in time
+  {$N^{o(1)}$}}, Announcement dated 15~November 2026, alphaXiv listing
+  \texttt{2611.sublinear-prime-counting-deterministic-finding}, unrefereed; code
+  and Lean proof (per the author) at
+  \url{https://github.com/6teamFurina/prime-algorithm}, tag
+  \texttt{v0.1-verified}, 2026.
 
 \bibitem{Nisan91}
 Noam Nisan, \emph{Lower bounds for non-commutative computation}, Proc. 23rd

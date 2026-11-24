@@ -9,6 +9,7 @@ Sources: `next/ideas-3sat.md` (Routes 2, 4), `engine3-STATUS.md`, `engine3-open-
 ## Log
 - 0:00 read sources; set up folder.
 - 0:20 wrote `ag_floor.py` (table), `check_orth.py` (independent finite-M checker). 0:45 table g = 2..5 (g = 5 still running).
+- 1:00–2:00 Route 4 (eight-square, Fock mod q, N₀ = 2 exhaustive). 2:00–2:50 K₄ test, Weyl brainstorm, notebook.
 
 ## 1. Route 2, step 1: the floor table [first version, 0:50]
 
@@ -107,8 +108,8 @@ small partial-transpose rank and small realignment rank). Open; I found no inequ
 constructing it.
 
 **Exact small test (N₀ = 2) [N, `k4_als.py`].** Two-type identity f = A + B with A a product across S3 and B a
-product across S1 (the only two-type shape that could give value + naming < 3 at N₀ = 2, by the case analysis in
-the script header); result below in §2.1.
+product across S1 (the two-type shape that would give value + naming ≈ 2.95 < 3 at N₀ = 2: A = (log 15, ·, 0), B = (0, ·, log 15),
+mixture ½–½); result in §2.1.
 
 ## 3. Route 4: the engine in positive characteristic
 
@@ -147,7 +148,8 @@ has (64,64) over ℚ, GF(3), GF(2), `f2_pieces.out`). All field dependence is in
 3. **Exhaustive N₀ = 2 search (one bit per leg), all T [N, `f2_pieces.out`].** For ρ < 1 every piece must have
    rank 1 in one flattening (else its pure strategy costs ≥ 1 bit and naming adds ≥ 1); T ≥ 4 is excluded by naming
    alone. Over GF(2): best T = 2 family ρ = 1 (App. H profile (1,4)/(4,1)), best T = 3 family ρ = 1.12. GF(3):
-   see §3.1. So at the smallest block F₂ shows no gain.
+   identical optima (T = 2: ρ = 1; T = 3: ρ = 1.12). **F₂ and GF(3) are equal at N₀ = 2: the Route-4 first
+   experiment fails.**
 
 **Reading.** Over F₂ the engine loses *both* known crossing constructions (d = 2 and d = h! vanish), so the
 characteristic-2 engine currently has no trade at all (ρ = 1 at every computed size); Theorem 1's 1/2 still bounds
@@ -171,3 +173,24 @@ H ≤ Z_N², and for Weyl balls, N = 2…5, ranks (row, col, third) by SVD:
 - Conclusion [N, small N]: subgroup/ball partial sums give no 2^{o(λ)}-piece family; any useful family must group
   exponentially many cosets into one piece *with rank cancellation*, which is what App. B's Fock grading does in two
   directions. The three-rank object of §2 is not produced by Weyl partial sums.
+
+### 2.1 Result of the two-type K₄ test [R + N]
+- ALS (`k4_als.out`, one restart, 20 sweeps): residual 0.92 — nowhere near an identity.
+- **Exact impossibility, every N [R].** Suppose f = α_{ad}⊗β_{bc} + γ_{ab}⊗δ_{cd}. Fix all legs of d (and the
+  legs of a, b, c toward d to the matching values): f becomes the triangle tensor ⟨N,N,N⟩ on a, b, c, the first term
+  becomes (vector on a)⊗(matrix on b,c), the second (matrix on a,b)⊗(vector δ on c). Contract the c-party with any w
+  in the hyperplane w ⊥ δ: the second term dies, so the slice T(w) (an a|b matrix) has rank ≤ 1. But every non-zero
+  slice of ⟨N,N,N⟩ has rank N·rank(W) ≥ N ≥ 2. Contradiction. So no two-type family of this shape exists at any
+  block size; at N₀ = 2 with T = 2 nothing below the trivial value is possible on K₄ with three merges.
+- Asymptotic K₄ question (2^{o(λ)} pieces, value < 2√2λ·… ) remains open; it is the three-rank object of §2.
+
+## 5. Final summary (2:55)
+- Route 2 table complete (g = 5, p = 6 last row in `ag_floor_45.out`). Floors with internal edges drop like 1/√p;
+  internal edges are a lower-order effect; door open in the flat case; unconditional line prices also ∝ 1/√p.
+  Reduction: Route 2 = "is 1/√p attainable for p ≥ 3" (Route 1's question). p = g+1 tower would be flat-optimal
+  (e(K) ≈ K^{−1/2}, b1's order).
+- Smallest test instance: K₄ with three matchings, ρ_flat = √2/3; needed object: crossing pieces with sphere-law
+  costs in two directions and 2^{o(λ)} cost in the third. Exact negatives: t = 0 impossible; two-type shape impossible.
+- Route 4: F₂ kills both known identities (d = 2, d = h!); no F₂ trade at N₀ = 2 (equal to GF(3)); a genuine
+  characteristic-3 gain for eight-square pieces (11/12 → 0.9006), not an end-to-end improvement.
+- No claimed improvement over 2^{O(n/√log n)}.

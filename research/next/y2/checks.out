@@ -1,0 +1,3 @@
+
+n=2: D=4, dim span{g_e} = 3  (Lemma 2 checks pass)
+   Lemma 3 (one exact division, border limit) recovers S exactly: pass

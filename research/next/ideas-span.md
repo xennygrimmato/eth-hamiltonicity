@@ -25,6 +25,10 @@ bound for per.
 3b. **Barrier [P, N] (§7):** under pc1's substitution, and under every integral monomial substitution, an O(n)-size positive
    polynomial (the gadget with ε_k = 2^{n−1−k}·c, G_0 = y^{2c}) has a slope set containing that of N_g; also for polynomially
    many substitutions at once. Single valuations cannot prove Gap G. All weights at once (tropical containment) is open.
+3c. **All valuations at once (§8):** literally positive tests are trivially too weak (sign obstruction), which makes
+   Theorem S′ vacuous as stated; restated for Newton-faithful circuits. For those, an easy multiple is equivalent tropically to
+   a fan refinement (Problem TC), which reduces to covering the resonance arrangement {θ = a(S)} by a small (min,+) circuit
+   (Problem R). Proved: r(n) ≥ (1−o(1))n² only. Neither a superpolynomial bound nor a universal barrier found.
 4. **Referee's test case** Φ = ∏_i (x_i + T^{2^{i−1}}): undecided; my guess is that its cyclic norm has no easy multiple (§1.5).
 5. **Is the original problem within reach?** No. See §5.
 
@@ -171,7 +175,9 @@ closed field of any characteristic. (iv) The same proof gives the bound 2^n for 
 (v) pc1's Descartes bound (a polynomial with τ distinct powers of y contains ≤ 2τ − 2 Ryser branches) counts powers of y
 only, with arbitrary coefficients; S2 has the same feature: "t-sparse" may be read as "≤ t distinct powers of y".
 
-**Theorem S' (cancellation-free tests of alternation depth Δ) [P].** Call a circuit *cancellation-free* if it uses +, × and
+**Theorem S' (cancellation-free tests of alternation depth Δ) [P; CORRECTION in §8.1–8.2: as stated, with positive constants, the
+hypothesis is never satisfied for A_g (a positive polynomial is not divisible by y − g_E when g_E has positive coefficients),
+so read "cancellation-free" as "Newton-faithful" (§8.2); the proof is unchanged].** Call a circuit *cancellation-free* if it uses +, × and
 positive real constants only. Let C be a cancellation-free circuit in (X, y) with unbounded fan-in gates arranged in Δ
 alternating layers of sums and products (a product gate may raise its inputs to arbitrary powers), with s wires in total,
 whose inputs are variables and constants. Then sl(σC) ≤ (s/Δ)^Δ. Consequently a tree deciding A_g whose generic path
@@ -461,3 +467,153 @@ polynomial depending on w (7.4a). Polynomially many at once: barrier (7.4b). All
 variety: open, equivalent to a tropical containment problem; not a barrier yet and not a proof method yet.
 Theorems S, S′, 2T are unaffected: they bound the slope count of *restricted* tests, and 7.3 only says that the
 restriction cannot be removed.
+
+## 8. All valuations at once: cancellation-free tests of any depth (lead's assignment)
+
+Outcome in one paragraph. **(i) holds only in a trivial sense, (ii) is not found, (iii) is delivered.** Literally positive
+tests cannot decide A_g at any size, for a sign reason that has nothing to do with complexity (8.1); this also makes
+Theorem S′ as I stated it vacuous, and it must be restated for *Newton-faithful* circuits (8.2). For that model the
+question becomes a clean polyhedral problem (8.3), which reduces to covering the resonance arrangement {θ = a(S)} by the
+corner locus of a small (min,+) circuit, and equivalently to a decision-boundary problem for ReLU networks (8.5). I could
+prove only a quadratic lower bound (8.4) and I show why counting, extension complexity and the known monotone bounds
+cannot do better (8.6). No script was run for this section; everything is [P] with short proofs, or [C]/[K] as marked.
+
+### 8.1 Correction: positive tests are trivially too weak [P]
+
+**Proposition 8.1.** Let P ∈ ℝ[X, y] have non-negative coefficients, P ≠ 0, and let g ∈ ℝ[X] have non-negative
+coefficients. Then y − g does not divide P. *Proof.* P(X, g(X)) is a non-zero polynomial with non-negative coefficients
+(evaluate at X = (1, …, 1): every monomial of P contributes a positive number). ∎
+For Ryser g, g_E = (−1)^{n+|E|} ∏_i Σ_{j∈E} X_ij has non-negative coefficients for half of the sets E. So **no tree whose
+generic-path tests are computed with +, × and positive constants decides A_g, whatever its size or depth.** The same holds
+after any fixed sign change of the inputs (inputs ±X_ij, ±y): one of the two parities of |E| stays positive.
+Consequences.
+- This is deliverable (i) in the literal sense, and it is worthless: it is a sign obstruction.
+- **Theorem S′ in Idea 1 is vacuous as stated** (it assumes such a tree exists). Its proof uses only that the Newton
+  polytope is computed gate by gate, so it should be stated as in 8.2. Theorems S, 2T, G and §7 are unaffected (S and 2T
+  never assumed positivity; G and §7 construct positive polynomials, which is legitimate for a barrier).
+
+### 8.2 The right model: Newton-faithful circuits [P]
+
+**Definition.** A circuit over ℂ (gates +, ×, arbitrary constants, inputs X_ij, y) is *Newton-faithful* if at every sum
+gate Newt(f + g) = conv(Newt f ∪ Newt g), i.e. no vertex of the hull of the union cancels. (Newt(fg) = Newt f + Newt g
+always.) Positive circuits are Newton-faithful; so are y^D − x^D, every ΠΣ-sparse test, and the product formula for N_g
+itself. So the model contains (exponential-size) tests that are multiples of N_g, and the question is meaningful.
+**Lemma 8.2.** For a Newton-faithful circuit C, Newt(C) is computed by the same circuit over polytopes (sum gate ↦ convex
+hull of the union, product gate ↦ Minkowski sum), and its support function F_C(ω) = min_{α ∈ Newt C} ⟨ω, α⟩,
+ω = (w, θ) ∈ ℝ^{n²+1}, by the same circuit over (min, +). For every weight w, the Newton polygon of σ_w C in y is the image of
+Newt(C) under (α, k) ↦ (k, ⟨w, α⟩). ∎
+**Theorem S′ (restated) [P].** Theorem S′ of Idea 1 holds with "cancellation-free" replaced by "Newton-faithful": tests of
+alternation depth Δ and s wires need T·(s/Δ)^Δ ≥ 2^n − 1. The proof is unchanged (it only uses Lemma 8.2).
+
+### 8.3 What a Newton-faithful easy multiple gives tropically [P]
+
+Let Π_n := Newt(N_g) = Σ_{E≠∅} conv(e_y, P_E) + e_y, P_E = Newt g_E = Σ_i conv{e_ij : j ∈ E}. Its support function is
+Σ_E min(θ, h_E(w)) + θ with h_E(w) = Σ_i min_{j∈E} w_ij.
+
+**Proposition 8.3.** If Q = N_g·H is computed by a Newton-faithful circuit of size s, then there is a (min,+) circuit of
+size s, with inputs the coordinates w_ij, θ and 0, computing a concave piecewise-linear function F on ℝ^{n²+1} such that
+(a) F = Σ_E min(θ, h_E(w)) + θ + C for a concave piecewise-linear C (the support function of Newt H);
+(b) equivalently, Π_n is a Minkowski summand of the polytope P computed by the circuit;
+(c) equivalently up to scaling, the normal fan of P refines the normal fan of Π_n; in particular the corner locus of F
+contains every graph {θ = h_E(w)}, for all w simultaneously.
+Conversely, (c) implies that Π_n is a summand of λP for some integer λ, and λP costs O(log λ) more gates (repeated
+squaring). So lengths are free and **the tropical content of "N_g has a Newton-faithful easy multiple" is exactly
+fan refinement.**
+*Proof.* Newt(N_g H) = Newt N_g + Newt H and Lemma 8.2 give (a), (b). (b) ⇒ (c) is the common-refinement property of
+Minkowski sums; (c) ⇒ summand of λP is the standard criterion (a polytope whose fan is coarser is a summand of a
+dilate). ∎
+
+**Problem TC (tropical cofactor problem).** Least size tc(n) of a polytope circuit (inputs: the points e_ij, e_y, 0; gates:
+convex hull of union, Minkowski sum) producing a polytope whose normal fan refines that of Π_n.
+tc(n) > n^{O(1)} ⇒ no polynomial-size Newton-faithful test family decides A_g at any depth. tc(n) = n^{O(1)} ⇒ a universal
+barrier: valuation/tropical data, for all weights at once, cannot prove Gap G even for Newton-faithful multiples.
+
+### 8.4 What I can prove: reductions, a quadratic bound, a structural lemma [P]
+
+**Reduction to the resonance arrangement.** Substitute X_ii ↦ 1, X_ij ↦ x_i (j ≠ i). Then h_E(w) becomes Σ_{i∉E} a_i on the
+orthant a > 0 (a_i the weight of x_i). So from a circuit for Problem TC one gets, at no cost, a (min,+) circuit
+F'(a, θ) in n + 1 variables whose corner locus contains {θ = a(S)} ∩ {a > 0} for every S ⊊ [n].
+**Problem R (resonance covering).** Least size r(n) of a (min,+) circuit in (a, θ) whose corner locus contains every
+hyperplane θ = a(S), S ⊆ [n], over the orthant a > 0. Then **tc(n) ≥ r(n)**. Polytope form: the fan must refine (over that
+orthant) the fan of the zonotope Σ_S [e_y, 1_S] = Newt ∏_S (y + x^S), the Newton polytope of the multiplicative Knapsack
+norm. In the other direction, Trop(N_g) ⊆ Trop(M_n) for M_n = ∏_{j∈[n]^n}(y − ∏_i X_{i j_i}), so tc(n) ≤ the covering number of
+the "n-ary" arrangement {θ = Σ_i w_{i j_i}}; both are sumset-covering problems.
+
+**Lemma 8.4 (cells are cut out by the min gates).** Let P_tot := Σ_gates P_g. Its normal fan is the common refinement of the
+fans of all gates, it refines fan(P), and each of its maximal cones is {ω : ℓ_{σ(g)}(ω) ≤ ℓ_{σ'(g)}(ω) for all min gates g}
+for a selection σ (which input wins at each min gate), where ℓ are the linear functions determined by σ. Hence fan(P_tot) has
+≤ 2^m maximal cones and each has ≤ m facets, m the number of min gates. *Proof.* Induction along the circuit: on the set
+defined by these inequalities every gate takes the linear value prescribed by σ. ∎
+
+**Proposition 8.5 (quadratic bound).** Any circuit for Problem R has m ≥ log₂ c(n) min gates, where c(n) is the number of
+chambers of {θ = a(S)} in the orthant, i.e. the number of threshold functions on {0,1}^n with positive weights. With the
+classical count 2^{n²(1−o(1))} of threshold functions [K, Zuev; the positive-weight count loses at most a factor 2^n·n!],
+**r(n) ≥ (1 − o(1)) n²**, hence tc(n) ≥ (1 − o(1)) n². *Proof.* Refinement gives at least c(n) maximal cones; Lemma 8.4. ∎
+This is quadratic in the number of variables of Problem R and only linear in the n² variables of Ryser. **No counting
+argument can do better:** an arrangement of K hyperplanes in ℝ^d has ≤ K^d cells, here 2^{poly(n)}, and a circuit with m min
+gates may have 2^m cells.
+
+### 8.5 The barrier side: what small circuits can do
+
+**Lemma 8.6 (fractions give tropical rational functions) [P].** For every (min, +, −) circuit δ of size s there are positive
+polynomials G, H of size O(s) with trop G − trop H = δ: represent each gate by a pair, δ_1 + δ_2 ↦ (G_1G_2, H_1H_2),
+−δ ↦ (H, G), min(δ_1, δ_2) ↦ (G_1H_2 + G_2H_1, H_1H_2), kδ ↦ (G^k, H^k). The corner locus of trop(G + H) = min(g, h) contains
+every point where δ changes sign. Conversely the corner locus of any (min,+) circuit lies in ∪_{min gates} {δ_gate = 0}.
+So, up to the difference between "zero" and "sign change", **Problem TC asks for a small integer-weight ReLU network
+δ(w, θ) (functions built from +, −, min; depth unbounded) whose decision boundary contains the 2^n − 1 graphs θ = h_E(w)**;
+Problem R asks the same for the hyperplanes θ = a(S). The gadget of §2 is the sawtooth composition known from depth
+separations for ReLU networks (Telgarsky [K]).
+What this buys on the barrier side:
+- piecewise-linear preprocessing of the weights is free: |a_i|, sorting (max = a + b − min), differences, Euclid steps
+  (a, b) ↦ (min(a, b), |a − b|). So a universal construction need not be one formula per chamber, and my remark in §7
+  ("one polynomial per chamber") undersells what is possible;
+- with it, the fold works for all a in the union of the cones where the *sorted absolute values* are superdecreasing, and
+  the hierarchical sumset gadget for the cones c ≫ b_1 ≫ b_2 ≫ … of nearly equal a_i (a(S) = |S|c + Σ_i b_i |S ∩ [i]|);
+- for two generators and the grid {k_1 a_1 + k_2 a_2 : 0 ≤ k_i < K} I expect a universal circuit of size O(log² K): run the
+  Euclidean algorithm on (a_1, a_2) inside the circuit and use Ostrowski digits level by level [C; the nesting is borderline
+  by a factor 2 at cluster ends and I only checked the even-partial-quotient case by hand].
+What it does not give: for n generators with comparable sizes, a(S) has no hierarchical representation with small digits
+(a unimodular hierarchical basis would force all 2^n subset sums to be near multiples of one number). A δ whose zero set is
+*exactly* the arrangement decides Subset-Sum, so it cannot be small unless NP ⊆ P/poly; with extra zeros allowed there is no
+such obstruction. **I found neither a universal barrier nor a reason there is none.**
+
+### 8.6 Why the known lower-bound methods do not apply (question 2)
+
+- **Jerrum–Snir, Schnorr, Jukna [K; statements as in Jukna, "Lower bounds for tropical circuits and dynamic programs"
+  (2014) and "Tropical complexity, Sidon sets, and dynamic programming" (2016), abstracts read].** These bound circuits
+  that *compute* a given polynomial or tropical function; all of them are bounds on the Minkowski complexity of the exact
+  set of exponent vectors. Here the function is known only up to an arbitrary concave summand. In polytope terms the
+  cofactor may add arbitrary vertices, so no statement about "the set of monomials produced" survives.
+- **No tropical permanent is forced.** The sum over E of g_E is the permanent, but tropically Σ becomes min and
+  min_E h_E(w) = Σ_i min_j w_ij is trivial; the multiple contains each branch separately. I see no slope or coefficient
+  pattern of F that equals min_σ Σ_i w_{iσ(i)}.
+- **Extension complexity is not inherited by Minkowski summands.** The permutohedron is Newt ∏_{i<j}(x_i + x_j), a positive
+  polynomial of size O(n²), and every generalized permutohedron is a summand of a dilate, including all matroid base
+  polytopes, most of which have exponential extension complexity (Rothvoss [K]). So "small circuit ⇒ small extension ⇒
+  summand small" is false at the last step, and the polytope Π_n being complicated proves nothing by itself.
+- **Shadows (Hrubeš–Yehudayoff, "Shadows of Newton polytopes", CCC 2021 [K, abstract read]).** Their lower bound is for
+  transparent polynomials (all monomials are vertices of one planar projection). A multiple of N_g is not transparent and
+  the gadget of §2 is a monotone circuit of size O(n) with a planar shadow of 2^n vertices, so shadow complexity cannot
+  bound general monotone circuits either. (Whether that example is in their paper I have not checked.)
+- **Counting cells, VC-type sign-pattern bounds:** capped at polynomial by 8.4; sign patterns are useless because the
+  extra zeros of δ are unconstrained.
+- **Restricting to a line or a plane in w-space (question 3):** on a line this is the one-valuation problem, exponential by
+  the gadget. On a 2-plane the corner locus must contain 2^n complete planes through the origin of ℝ³ (a great-circle
+  arrangement). Pencils (normals in one 2-plane) are easy by the gadget. For planes in general position every construction
+  I have covers only pieces, cone by cone.
+  **Conjecture H [C].** A (min,+) circuit of size s in three homogeneous variables contains at most s^{O(1)} complete
+  planes no three of which share a line. If true with n variables replaced by 3, restricting Problem R to a generic 2-plane
+  gives r(n) ≥ 2^{Ω(n)}. This is the smallest case where the invariant is genuinely multi-parameter; it is a statement about
+  ReLU networks ℝ² → ℝ whose decision boundary contains many complete lines in general position.
+
+### 8.7 Deliverable and next step
+
+**Reduction (iii), precisely.** No polynomial-size Newton-faithful test family decides A_g, at any depth, **if**
+r(n) is superpolynomial, where r(n) is the least size of a (min,+) circuit in n + 1 variables whose corner locus contains
+all hyperplanes θ = a(S) over a > 0 (Problem R); and r(n) ≥ (1 − o(1))n² is all that is proved. A superpolynomial bound
+for r(n) would also give the first separation here that tolerates an arbitrary cofactor. A polynomial upper bound for the
+n-ary version would be a universal tropical barrier.
+**First steps (≤ 3 h each).** (1) Exhaustive search for n = 2, 3 of the smallest (min,+) circuits solving Problem R, to see
+whether anything beats the product ∏_S (y + x^S). (2) Conjecture H for s ≤ 6 by enumeration; or a proof for circuits of
+alternation depth 2. (3) Write the two-generator Ostrowski construction in full and test it tropically; if it works, try
+three generators with a Brun-type algorithm, which is where I expect it to break.

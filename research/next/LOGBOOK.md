@@ -287,6 +287,23 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   optimal) is the working belief; proving it unconditionally = proving the flat case, which the toolkit cannot do (c1).
 - Next for target 1 (proposal): referee w1; then write the paper "The ETH engine and the VP ≠ VNP dichotomy".
 
+### Idea agent §8: the cancellation-free case — no theorem, one correction, one reduction [R claimed, no scripts]
+- CORRECTION: Theorem S′ as stated ("+, × and positive constants") is vacuous. A positive polynomial is never
+  divisible by y − g for positive g, and half the Ryser branches are positive; no positive test family decides A_g at
+  any size, for a sign reason. Fix: state S′ for Newton-faithful circuits (no vertex of the Newton polytope cancels at
+  a sum gate). Bound unchanged. Theorems S, 2T, G and the §7 barrier unaffected. Referee informed.
+- H10 as posed is therefore trivially true and uninteresting. The real question (Newton-faithful tests, any depth)
+  reduces to a tropical covering problem: a (min,+) circuit whose corner locus contains all hyperplanes θ = a(S)
+  (the resonance arrangement). Proved lower bound only (1−o(1))·n² min gates.
+- Why known monotone/tropical lower bounds do not apply: they bound circuits computing an exact support, while the
+  cofactor adds arbitrary vertices; extension complexity is not inherited by Minkowski summands.
+- Equivalent form: a small integer-weight ReLU network whose decision boundary contains all 2^n graphs.
+- Conjecture H (smallest multi-parameter case): a size-s (min,+) circuit in three homogeneous variables contains at
+  most poly(s) complete planes, no three sharing a line. Would give an exponential bound.
+- Lead's assessment: the P_ℂ line has reached its frontier for this round. Deliverables pending the referee:
+  merged Theorem A, Theorem B/B′, the two-term cancellation bound, the depth hierarchy (corrected model), the
+  valuation barrier. Open: O1–O3, Problem TC, Conjecture H.
+
 ### Running (as of this entry)
 - `review-link.md` (Opus referee): Findings 2 and 3.
 - `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.

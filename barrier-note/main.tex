@@ -1250,7 +1250,7 @@ $\mathrm{VP}\ne\mathrm{VNP}$, not conversely, and a superpolynomial bound for th
 not by itself bound $e_K$ at the scale $c/\log K$. What it does give is, in its ``flat case'', a bound for
 exactly our polynomial ($P_K=f_{K,\lambda}$ in~\cite[\S2.3]{AnthropicVP26}): every arithmetic circuit
 for it has $\log_2(\text{size})\ge\lambda K^{3/2}/16$ for $\lambda\ge100\sqrt K$, that is
-$e_K\ge1/(16\sqrt K)$, which is above the query bound but far below the engine's $c/\log K$; it does
+$e_K\ge1/(16\sqrt K)$, which is above the query bound but far below both the engine's proven rate $\Theta(1/\sqrt{\log K})$ and the cap $c/\log K$; it does
 not show that $c/\log K$ is optimal. It is not unconditional for $P_K$, because that paper proves
 that one of two cases holds without knowing which. Subject to these qualifications it is, to our
 knowledge, the first bound beyond the query bound in this model. The Boolean half of the reading,
@@ -1618,7 +1618,7 @@ reason an unconditional cap is out of reach; the cap ($e_K\ge c/\log K$ for all 
 algorithms) is not implied by $\mathrm{VP}\ne\mathrm{VNP}$ and remains open;
 \item the flat-case bound is the first bound on $e_K$ in this model above the query bound
 $(K-1)/K^2$, but it is conditional on the flat case, it is a factor of order $\sqrt K/\log K$ below
-the engine's rate, and it does not show that $c/\log K$ is optimal;
+the cap $c/\log K$ (and further below the engine's proven rate $\Theta(1/\sqrt{\log K})$), and it does not show that $c/\log K$ is optimal;
 \item the Boolean statement \cref{prop:meta}(iii) and the general-model statement
 \cref{prop:general} are unaffected.
 \end{itemize}

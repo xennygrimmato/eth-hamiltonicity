@@ -252,6 +252,24 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   reduction to a named open problem.
 - H10 [C]: no polynomial-size family of positive tests of any depth decides A_g (a "monotone" BSS separation).
 
+### w1 verdict on the 0.693 candidate: DEAD [X] (H9 half right)
+- It does not exist. In the single-denominator (Tratnik/GVZ) multivariate-Meixner class every pole wire is
+  effectively one-dimensional: the pole condition forces a matrix of rank ≤ 1. So a bond with 2D wires cannot be
+  built there. w1 withdrew the number.
+- The degree budget would NOT have killed it (lead's guess H9 was wrong about the mechanism). The balanced formula is
+  ρ = p^{α−1} (p wires fused per bond, α the level-count exponent); three merges beat 1/√2 iff α < 0.685. A genuine
+  2D three-wire bond (α = 2/3) would give 0.693. What forbids it is the local bond algebra.
+- The d = 2 bond with 1D wires passes the pole conditions but its shells are full rank: it loses for large energy.
+- Conclusion for the line: within generating-function (hypergeometric, single-denominator) families no three-wire bond
+  beats 1/√2.
+- Remaining open door, stated precisely: a bond whose Gram identity has a pole of order ≥ 2 at X = 1 on wire spaces
+  of dimension ≥ 2 — matrix-valued poles (determinantal generating functions) or non-Möbius families.
+- Lead's last constructive suggestion (45-minute time-box): determinantal generating functions are the reproducing
+  kernels of holomorphic discrete series of U(p,q) (matrix-argument Meixner/Laguerre; Howe duality). Asked w1 to redo
+  the pole computation for the rank-2 case, then write the final report.
+- H1 (the flat case holds; the engine's pieces are optimal) gains weight: every constructive family tried is dead for
+  a structural reason.
+
 ### Running (as of this entry)
 - `review-link.md` (Opus referee): Findings 2 and 3.
 - `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.

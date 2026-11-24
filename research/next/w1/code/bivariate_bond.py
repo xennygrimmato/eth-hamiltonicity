@@ -1,4 +1,5 @@
-"""Three wires on one d=2 multinomial (SO(2,1)-type) Meixner bond, 1D wires.
+"""(diagonality needs <a,a'> = <a,al'><al,a'>; parameters chosen accordingly)
+Three wires on one d=2 multinomial (SO(2,1)-type) Meixner bond, 1D wires.
 Pairing generating function for wires u,v:
   G_uv(t,s) = 1/[(1+b_u t)(1+b'_v s) - y * sum_m (al_um + a_um t)(al'_vm + a'_vm s)]
 (times (y-1) if v is a pole wire). Checks: G_uu diagonal = c*(q y ts)^i; G_uv (u!=v) polynomial in y; vanishing at y=1
@@ -8,8 +9,8 @@ y, t, s, c = sp.symbols('y t s c')
 def V(*a): return sp.Matrix(a)
 W = {  # wire: (alpha, a, alpha', a', pole)
  1: (V(0, 0), V(1, 0), V(0, 0), V(1, 0), False),
- 2: (V(1, 0), V(1, c), V(1, 0), V(0, 1 / c), True),
- 3: (V(0, 1), V(c, 1), V(0, 1), V(1 / c, 0), True)}
+ 2: (V(1, 0), V(1, c), V(1, 0), V(1, 0), True),
+ 3: (V(0, 1), V(c, 1), V(0, 1), V(0, 1), True)}
 def b(u):  # b_u = y <a_u, al'_u>, b'_u = y <al_u, a'_u>
     al, a, alp, ap, _ = W[u]
     return y * (a.T * alp)[0], y * (al.T * ap)[0]

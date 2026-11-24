@@ -3,13 +3,13 @@ J_11: polynomial in y: True, zero at y=1: False
 J_12: polynomial in y: True, zero at y=1: True
 J_13: polynomial in y: True, zero at y=1: True
 J_21: polynomial in y: True, zero at y=1: False
-J_22: polynomial in y: False, zero at y=1: False
-   diagonal entries: [-1, y/(y - 1), -y**2/(y - 1)**2, y**3/(y - 1)**3]  offdiag zero: True
+J_22: polynomial in y: True, zero at y=1: False
+   diagonal entries: [-1, -y, -y**2, -y**3]  offdiag zero: True
 J_23: polynomial in y: True, zero at y=1: True
 J_31: polynomial in y: True, zero at y=1: False
 J_32: polynomial in y: True, zero at y=1: True
-J_33: polynomial in y: False, zero at y=1: False
-   diagonal entries: [-1, y/(y - 1), -y**2/(y - 1)**2, y**3/(y - 1)**3]  offdiag zero: True
+J_33: polynomial in y: True, zero at y=1: False
+   diagonal entries: [-1, -y, -y**2, -y**3]  offdiag zero: True
 shell 1 rank of Phi_2 block = 2 of 2
 shell 2 rank of Phi_2 block = 3 of 3
 shell 3 rank of Phi_2 block = 4 of 4

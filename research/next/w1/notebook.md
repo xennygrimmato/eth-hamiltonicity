@@ -3,7 +3,23 @@
 24 Nov 2026. Executor w1. Tags: [R] proved, [K] known (cited), [N] computed (script in code/), [C] conjecture.
 Inputs read: x7 (all), z1 §2, x4 §1–5, x6, b2.
 
-## 0. Status (early stub; updated at end)
+## 0. Status (final, 18:30)
+
+| # | result | tag |
+|---|---|---|
+| 1 | L1 = Cadney–Huber–Linden–Winter 2014, Thm 1; holds **over every field** (direct proof is pure linear algebra) | [K] + [R] |
+| 1 | L2 = CHLW Hypothesis 1, **proved by Song–Chen–Sun–Hu (IEEE TIT 2023, Thm 9) over ℂ**, so over every char-0 field; finite fields untested in the literature, no violation in 180k tests over GF(2), GF(3) | [K], [N] |
+| 1 | complete four-party list: SA, CHLW1, CHLW2, L2 (+ permutations and coarse-grainings) | [K] |
+| 1 | K₄: projection onto the pairing costs is exactly the triangle cone; general-q rank floor 1/3 (= line price), uniform-q 4/9; nothing reaches √2/3 | [R] |
+| 1 | **Δ₃: 2h(R) ≤ Σh(C_g) + Σh(D_g); c_k ≤ 2(c_k'+c_k''); ρ_Δ₃ ≥ 1/2 for every family and every q (char 0)**; tight for the known inequalities | [R] (exact LP certificate + hand proof) |
+| 1 | Δ₃: the single-tensor c_1 ≤ c_2 + c_3 (would give 2/3 at uniform q and cap spherical families at 1/√2) cannot come from 4-party rank inequalities | [C] |
+| 2 | three-wire fusion: transition-matrix form of the requirement; infinite ladder + pole is necessary | [R] |
+| 2 | multivariate (Tratnik/GVZ, SO(d,1)) generalised Meixner: pole matrix rank ≤ d, ≤ d+1 wires per bond; pole wires are 1D; d = 2 three-wire bond exists at the constant-term level but has 2D shells (no gain) or is flavour-separated (ρ ≈ 0.80) | [R]-sketch + [N] |
+| 3b | SU(2) recoupling (6j) pieces: Racah-polynomial uncertainty, rk_ab ≥ (n − (rk_ac−1)/2)²: dead | [R] + [N] |
+| 3a | Z₃ two-variable interpolation = A₂ sphere law; on K₄ L2 + flattening force radius² ≥ 24, balanced point = flat floor exactly; useless on Δ₃ (x7) | [R] |
+| 4 | no construction; no exponent improvement over 2^{O(n/√log n)} | — |
+
+Log:
 - 0:00 read inputs. Starting Task 1 (rank lemma L1 / literature).
 - 0:25 Task 1 literature found (see §1): L1 = Cadney–Huber–Linden–Winter Thm 1; x7's L2 = their Hypothesis 1, proved by
   Song–Chen–Sun–Hu (IEEE TIT 2023). Now computing the rank-LP consequences on K4 and Δ3.
@@ -218,7 +234,44 @@ Consequences:
     energies (15.6e; 5.5e; 5.5e) summed per merge, total 26.6e. So exponent 2/3 is *more* forgiving at the corners
     than ½ (x7 §3.2).
 
+### 2.2′ Correction (18:20): the 2D-wire variant is impossible, and the 1D-wire variant loses [R + N]
+- **Pole wires are one-dimensional [R].** Take a pole wire u whose level space has dimension w (t ∈ ℂ^w), with rows
+  a_m of A. Then Q_uu = (1+⟨b,t⟩)(1+⟨b',s⟩) − yΣ_m(α_m+⟨a_m,t⟩)(α'_m+⟨a'_m,s⟩).
+  - Killing the linear terms forces b = yAᵀα' and b' = yA'ᵀα.
+  - Then Q = (1−y) + tᵀB(y)s with B(y) = −yAᵀA' + y²Aᵀα'αᵀA'.
+  - For (y−1)^β·Q^{-β} to be the wire propagator (diagonal, full rank on the wire levels, no pole), B must vanish at
+    y = 1. That gives AᵀA' = Aᵀα'αᵀA', which has rank ≤ 1.
+  - So B = −y(1−y)AᵀA' has rank ≤ 1, and **w = 1 effectively, for every d and β.**
+  - **The 2D-wire bond of §2.2 (naive ρ ≈ 0.693) does not exist in the single-denominator class. Withdrawn.**
+- **The d = 2 bond with three 1D wires exists at the constant-term level [N].** `code/bivariate_bond.py`, exact sympy
+  to order 4 in t and s. Parameters:
+  - wire 1 standard: α = 0, a = a' = (1,0);
+  - wire 2: α = α' = a' = (1,0), a = (1,c);
+  - wire 3: α = α' = a' = (0,1), a = (c,1).
+  
+  Results: all nine blocks J_uv are polynomial in y, and the diagonal ones are ±diag(y^i). J_12, J_13, J_23, J_32
+  vanish at y = 1, while J_21 and J_31 do not. So the block-triangular order 1 < {2,3} works. (Diagonality needs
+  ⟨a,a'⟩ = ⟨a,α'⟩⟨α,a'⟩.)
+- **But the bond is 2-dimensional [N].** With mode mixing (c ≠ 0), wire 2's Φ alone has full rank m+1 on every energy
+  shell m (checked m ≤ 5). The certified level-set count is therefore the 2D oscillator's, log ∝ N^{2/3}. A fused bond
+  of energy 3e then costs ∝ (3e)^{2/3}, which beats neither 3κ√e (raw) nor κ√(3e) for large e. Without mixing (c = 0)
+  the modes separate into flavours: ladder 1 carries {1,2} as in App. B and ladder 2 carries {3}, for a cost of
+  κ(√(2e)+√e) ≈ 2.41λ per bond, ρ ≈ 0.80 on Δ₃.
+- **Why the exponent formula still matters.** At the balanced point, the fused accounting gives ρ = p^{α−1}, with p
+  wires per bond (bond energy p·e) and log-count ∝ E^α. For p = 2 this is x6's class-T value (α = ½ gives 1/√2;
+  α = 2/3 gives 0.794); the degree budget Θ = 4E *is* p = 2 fusion. For p = 3, ρ < 1/√2 iff α < 1 − log₃√2 ≈ 0.685.
+  The corner/flattening constraint at Θ = 27e holds for α = 2/3. So a degree-budget argument does *not* exclude a
+  three-wire bond with α ≤ 0.685. What excludes it in the hypergeometric class is the local diagonality above, plus the
+  shell-rank count.
+
 ### 2.3 The precise open case [C]
+**Superseded in part.** The (F₃, d = 2, 2D wires) case below is excluded by §2.2′. The remaining open case is:
+> a one-bond family whose u = v Gram identity has a pole of order w ≥ 2 at X = 1 (matrix-valued poles, e.g. determinant
+> denominators det(I − yα'αᵀ) with rank-w α and Γ ∝ (y−1)^w), or a non-hypergeometric (non-Möbius) family such as an
+> Aomoto–Gelfand system, carrying three wires whose effective bond spectrum has log-count exponent α ≤ 0.685. For
+> 1/√3 one needs single-flavour fusion (α = ½).
+
+Original text, kept for the record:
 **(F₃, d = 2, 2D wires).** Find Tratnik/GVZ bivariate Meixner families (SO(2,1)-type, multinomial weights) on a bond
 whose single-particle space is the 2D oscillator, carrying three wires whose own level spaces are 2D oscillators,
 with:

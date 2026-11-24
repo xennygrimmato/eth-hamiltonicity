@@ -1,0 +1,4 @@
+integer rank col 64  row 8
+det(col flattening) = {2: 64, 3: 8}
+rank mod 3 (sympy DomainMatrix over GF(3)): 56
+rank mod 2: 8

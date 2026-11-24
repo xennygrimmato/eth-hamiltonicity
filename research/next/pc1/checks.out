@@ -1,1 +1,8 @@
 (1) trace identity Sigma(Q)=per+sum w*rho: OK
+(2) perturbed chord iteration, max coefficient error at eps=1e-3, 1e-6: [0.0012973299252394754, 1.2985812804959043e-06] -> O(eps): True
+(3) rank of (g_E^beta_j) on 2tau-1 roots = tau (60 trials, exact): True
+(4) test-case power sums p_k via carry DP (k<=5, n=3): True
+    numeric power sums agree: True
+(5i) subcube e_0=1: True
+(5ii) subcube e_0=0: True
+(6) trace of weighted cyclic family = M*per_2: True

@@ -359,7 +359,9 @@ exponential span, multiples conjecturally hard", but that is a conjecture.
 
 ## 8. Files
 
-- `checks.py` / `checks.out`: (1) trace identity for Q = c·N_g·H, n = 2, exact; (2) perturbed chord iteration recovers a
-  triple root's Taylor coefficients as ε → 0, exact; (3) rank of generalized Vandermonde on 2τ−1 Ryser roots, numeric;
-  (4) carry-DP power sums for the test case, n = 3, k ≤ 5, exact + numeric; (5) subcube projections onto per_2, n = 3,
-  exact; (6) weighted cyclic family has trace M·per_2, exact.
+- `checks.py` / `checks.out` (all pass; run `python3 -I checks.py`, about a minute): (1) trace identity for
+  Q = c·N_g·H with a triple quadratic factor and a doubled Ryser root, n = 2, exact; (2) perturbed chord iteration on a
+  triple root with exact rational ε = 10⁻³, 10⁻⁶: coefficient error 1.3·10⁻³, 1.3·10⁻⁶, i.e. O(ε) (this checks the algebra
+  of Lemma B.2, not the proof); (3) Lemma A.1: rank of (g_E^{β_j}) on 2τ−1 Ryser roots at a rational point is τ, 60 random
+  exponent sets, exact; (4) carry-DP power sums for the test case, n = 3, k ≤ 5, exact and numeric; (5) subcube
+  projections onto per_2, n = 3, exact; (6) weighted cyclic family has trace M·per_2, exact.

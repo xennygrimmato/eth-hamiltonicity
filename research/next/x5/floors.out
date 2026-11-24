@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/user/eth-hamiltonicity/research/next/x5/code/floors.py", line 102, in <module>
+    print(f"{nm:40s} F_rho3 = {fr:.4f}   F_E = {fe:.4f}   ratio {fr/fe:.4f}", flush=True)
+                                                                 ~~^~~
+ZeroDivisionError: division by zero

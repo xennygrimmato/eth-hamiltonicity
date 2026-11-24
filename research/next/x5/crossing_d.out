@@ -1,0 +1,33 @@
+d=1 e1=6 e2=6 n=1 |S1|=3 |S2|=3 Theta=24
+degree violations: 0
+values on matching: {1}  nonzero off matching: 0
+N=  0  rk(ad|bc)=   1  rk(ab|cd)=   9
+N=  2  rk(ad|bc)=   3  rk(ab|cd)=   9
+N=  4  rk(ad|bc)=   7  rk(ab|cd)=   9
+N=  6  rk(ad|bc)=   9  rk(ab|cd)=   9
+N=  8  rk(ad|bc)=   9  rk(ab|cd)=   9
+N= 10  rk(ad|bc)=   9  rk(ab|cd)=   9
+N= 12  rk(ad|bc)=   9  rk(ab|cd)=   9
+N= 14  rk(ad|bc)=   9  rk(ab|cd)=   9
+N= 16  rk(ad|bc)=   9  rk(ab|cd)=   9
+N= 18  rk(ad|bc)=   9  rk(ab|cd)=   9
+N= 20  rk(ad|bc)=   9  rk(ab|cd)=   7
+N= 22  rk(ad|bc)=   9  rk(ab|cd)=   3
+N= 24  rk(ad|bc)=   9  rk(ab|cd)=   1
+d=2 e1=6 e2=6 n=1 |S1|=4 |S2|=4 Theta=24
+degree violations: 0
+values on matching: {1}  nonzero off matching: 0
+N=  0  rk(ad|bc)=   1  rk(ab|cd)=  16
+N=  2  rk(ad|bc)=   2  rk(ab|cd)=  16
+N=  4  rk(ad|bc)=   3  rk(ab|cd)=  16
+N=  6  rk(ad|bc)=   6  rk(ab|cd)=  16
+N=  8  rk(ad|bc)=  14  rk(ab|cd)=  16
+N= 10  rk(ad|bc)=  14  rk(ab|cd)=  14
+N= 12  rk(ad|bc)=  16  rk(ab|cd)=  14
+N= 14  rk(ad|bc)=  15  rk(ab|cd)=  14
+N= 16  rk(ad|bc)=  16  rk(ab|cd)=  14
+N= 18  rk(ad|bc)=  16  rk(ab|cd)=   8
+N= 20  rk(ad|bc)=  16  rk(ab|cd)=   3
+N= 22  rk(ad|bc)=  16  rk(ab|cd)=   2
+N= 24  rk(ad|bc)=  16  rk(ab|cd)=   1
+d=2 e1=8 e2=8 n=1 |S1|=10 |S2|=10 Theta=32

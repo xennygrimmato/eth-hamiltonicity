@@ -3,7 +3,6 @@ Maximise |b|^2, b_k = sum_e <u_e, Delta^k_e>, |u_e| = 1, hub distances <= 1 with
 Compare with the Pythagorean-sphere radius^2 E^2."""
 import sys, itertools, numpy as np
 from scipy.optimize import minimize
-exec(open(__file__.replace('euclid_sphere.py','lineprice_sphere.py')).read().split('def run')[0])
 def confs():
     B3 = [((0,0,0),(1,1,1)), ((1,0,0),(0,1,1)), ((0,1,0),(1,0,1))]
     D3 = []

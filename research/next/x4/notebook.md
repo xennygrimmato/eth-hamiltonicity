@@ -78,3 +78,90 @@ Flat floor per bond: (edges on bond)·λ/√p; in Fock units (cost κ√energy, 
 energy 2h = x and y fused) is (edges)·e. They agree iff edges-per-bond = p: **rectangle (2 = 2) and Δ₃ with three
 merges (3 = 3)**. So Δ₃ is the exact three-merge analogue of the crossing, and the floor-matching target is
 "every bond of every merge carries one Fock space of energy 3e" — a three-cut version of App. B.
+
+## 4. Where a third merge breaks: the sphere law is refuted on the three-wire cube [R + N]
+
+**The two-merge law.** App. B's pieces have cut energies (N, Θ−N), so every piece satisfies
+c_row² + c_col² ≤ κ²Θ = 2(λ₁² + λ₂²) (+o), a *single quadratic conservation law* ("sphere law"). For λ₁ = λ₂ = λ the
+circle has radius 2λ = Eλ. Ideas-dichotomy Idea 5 and ideas-3sat Route 1 propose the p = 3 analogue: three gradings
+(an A₂ charge) with c₁² + c₂² + c₃² ≤ (Eλ)², whose balanced piece costs Eλ/√3 per merge (the flat floor).
+
+**Test of the law against unconditional prices.** A segment (1D) price is a price over every field (b2 §3(ii)). In the
+far-leg limit it yields a vector b with: *every identity has a piece with c_k ≥ λb_k − o(λ) for all k at once*. A
+family obeying the sphere law needs |b|² ≤ E² for every such b. Script `lineprice_sphere.py` enumerates all 1D far-leg
+prices (hubs at vertices of [0,1], all edge orientations) [N, exhaustive]:
+
+| configuration | E | p | max \|b\|² (1D prices) | sphere E² | verdict |
+|---|---|---|---|---|---|
+| rectangle (App. B) | 2 | 2 | 4, at b = (0,2) | 4 | touches the circle: consistent |
+| **B3 = three of the four long diagonals of the cube, plane merges** | 3 | 3 | **11, at b = (1,1,3)** | 9 | **sphere law refuted** |
+| box (all four long diagonals) | 4 | 3 | 16 at (0,0,4); max Σb = 6 at (2,2,2) | 16 | touches |
+| Δ₃ (rows, cols, diags) | 9 | 3 | 48 at (4,4,4) (the flattening floor) | 81 | not refuted |
+
+**Proposition 4.1 [R, from b2's segment prices].** For B3 (wires 000–111, 100–011, 010–101; merges = the three
+coordinate cuts) every identity has a piece with cost vector ≥ (λ, λ, 3λ) − o(λ) up to permuting merges; hence no family
+of pieces has all cost vectors in the ball c₁² + c₂² + c₃² ≤ (3λ)² + o(λ²). In particular no "three-flavour" grading with
+a single quadratic conservation law (Idea 5 / Route 1 as literally stated) exists on B3, over any field.
+*Hand check.* Hubs of every merge at 0 (side containing 000) and 1; orient all three wires from the 000-side end. The
+displacements are (1,1,1), (−1,1,1), (1,−1,1); with u_e = +1, b = (1,1,3). ∎
+The bound is attained [N]: at N₀ = 2 the alternating-projection search (`ap_search.py b3 2 '8,2,2;2,8,2;2,2,8'`) finds
+three pieces with cut ranks (8,2,2), (2,8,2), (2,2,8), i.e. bit costs (3,1,1) and rotations — exactly b. (Also two
+pieces of ranks (4,4,4) each exist.) Neither trades after naming (ρ ≥ 1 with ν log T), as expected at N₀ = 2.
+Also unconditional for B3: mixing the three rotations of b gives **ρ_B3 ≥ 5/9 > 1/2** (and ≥ 1/√3 under FH).
+
+**What exactly fails.** In two dimensions the cut-metric (flattening) vector (0, 2) lies *on* the Pythagorean circle;
+this is the precise sense in which "one charge" suffices: the flattening corner and the Fock rotation agree. With three
+cuts the flattening corner (1,1,3) lies *outside* the sphere |c| = Eλ (11 > 9). So a three-merge family cannot be
+spherical; at best its cost surface is a non-quadratic surface through (√3,√3,√3)λ that also dominates the corners
+(1,1,3)λ. A grading by a single A₂ charge with energy additivity w₁ + w₂ + w₃ = const produces a sphere, hence is
+impossible on B3. This is a statement about cost vectors, independent of the algebra used.
+
+**Δ₃ escapes this test.** On Δ₃ the corners are (4,4,4) (segment prices, |b|² = 48) and (9,0,0) (star price,
+Theorem 1; |b|² = 81, on the sphere). So the A₂ sphere law c_r² + c_c² + c_d² ≤ (9λ)² is *not* refuted by any
+unconditional price I know; Δ₃ (three bonds per merge) behaves like the rectangle, B3 (one bond per merge) does not.
+Euclidean prices: see §5.
+
+**A second, independent obstruction for "charge sectors" [R, = STATUS Theorem 2].** If the pieces are sub-sums of the
+expansion of the wire product in a product basis (f = Σ_μ Π_w e_{μ_w}(x_w)e*_{μ_w}(x_w′), e.g. occupation-number or
+Fourier/character bases, grouped by a charge), then for any cut that separates the two ends of every wire the side
+restrictions of distinct terms are linearly independent, so every cut rank equals the number of terms: no trade at
+all (ρ = 1). App. B's A_s are *not* sectors of f: they are coefficients of an interpolating determinant
+(Ψ(1) = f, Ψ_N ≠ f|_sector). So Route 1's "charge-s sector of the wire product" cannot even reproduce the
+calibration; the charge must live on the interpolation variable (X in Prop. B.2), not on the basis.
+
+## 5. Euclidean prices and the sphere on Δ₃ [N, heuristic optimisation]
+
+`euclid_sphere.py` / `euclid_sphere_d3.py`: SLSQP over far-leg Euclidean prices in ℝ^m (hub distances ≤ 1 per merge,
+u_e unit, b ≥ 0), maximising |b|². Results are filled in below when the runs finish. Reference points: b2's planar
+equilateral price gives b = (3√3,3√3,3√3), |b|² = 81 = E²: **the extremal price lies exactly on the A₂ sphere**, as on
+the rectangle (App. B's worst piece (√2,√2)λ and the flattening corner (0,2)λ are both on the circle).
+
+RESULTS_PLACEHOLDER
+
+## 6. Task 3: ALS / feasibility searches [N]
+
+- Δ₃ at N₀ = 4 has 4¹⁸ ≈ 6.9·10¹⁰ entries (N₀ = 8: 8¹⁸): dense ALS as in `engine3-delta3-3m/als3.py` is impossible;
+  only N₀ = 2 (done before, residuals ≥ 0.63) is feasible. I did not rerun it.
+- B3 (6 strings) is the smallest three-cut crossing and is searchable: `ap_search.py` (alternating projections onto
+  "Σ = f" and onto cut-rank sets). Calibration: rectangle N₀ = 2 App. H profile (4,1),(1,4) found to 10⁻¹³; rectangle
+  N₀ = 4 (tensor square of App. H, profile (16,1),(4,4),(4,4),(1,16)) **not** found (best residual 0.11 after
+  8×4000 sweeps). So the solver is unreliable from N₀ = 4 on, and I did not report N₀ = 4, 8 searches for B3 as
+  evidence. At N₀ = 2: (8,2,2)+rotations found (= the segment-price corner, so optimal for that shape); (4,4,4)×2 found;
+  (8,1,1)+rotations not found (residual 0.71; it is excluded by Prop. 4.1, consistent).
+- Seeding by "the two-merge construction" is not meaningful at fixed N₀: App. B is not a tensor power of fixed types
+  (its pieces need P(N) ~ 2^{κ√N} with N → ∞), and at N₀ ≤ 8 Fock spaces have dimension ≤ 7 per weight. The
+  fixed-N₀ accounting (naming ν log T per block) cannot exhibit any Fock gain at these sizes.
+
+## 7. Task 4: what any ρ would give end to end [R, from K]
+
+- Level: AG(2,q), merges rows/cols/diagonals, β = 2 (K → K², open-door §2.7). α′ = log₂(1/ρ_level), and
+  ρ_level → ρ_C if every non-merge parallel class is covered by configurations with parameter ρ_C. Δ₃ covers only
+  one class, and only for q = 3^k (direction (1,−1); the copies are the subgrids {r+ia}×{c+ja}, i,j ∈ Z₃, whose
+  anti-diagonal triangles are cosets of {0,a,2a}(1,−1), which needs 3a = 0; they partition that class); the other q − 3 classes need Δ_q (or other) pieces with the same ρ, or they drag ρ_level up.
+- #3-SAT time from Theorem A's arithmetic: 2^{O(n/(log n)^{α′})}. ρ = 1/√2 → α′ = 1/2 (both labs' current record);
+  ρ = 1/√3 → α′ = 0.792; any ρ < 1/√2 strictly improves. Overheads: the D1 triangle-network cost and the hyperedge
+  naming ν₃ = 3/2 enter only as o(λ) for poly(λ) pieces, so a Fock-type family (poly(λ) pieces) would plug in with the
+  same overheads as App. B; a fixed-N₀ type family pays ν₃ log T per block (open-door §1.7).
+- **Achieved here: nothing below 1/√2.** So no new exponent. The grid results of §2 show that changing the level
+  geometry instead (3D grids, plane or line merges) cannot help either: α′ ≤ 1 always, and = 1/2 at the flat floor for
+  plane merges.

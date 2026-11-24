@@ -1,3 +1,6 @@
 [pi ni] N=2000 M=570 p=109 t=102 time 224s
 pi~(N'), N'<= 2000: 1999 values, rounding failures 0, max |error| = 2.032e-26 (2^-85.3), budget bound 5.000e-01
    max_n |1~_prime(n) - 1_prime(n)| = 1.512e-28
+[pi ours] N=2000 M=266 p=59 t=54 time 80s
+pi~(N'), N'<= 2000: 1999 values, rounding failures 0, max |error| = 1.056e-11 (2^-36.5), budget bound 2.139e-01
+   max_n |1~_prime(n) - 1_prime(n)| = 7.616e-14

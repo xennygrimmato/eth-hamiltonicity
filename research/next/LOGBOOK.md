@@ -202,6 +202,23 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - H7 refined [C]: valuations settle restricted models but probably cannot settle the full gap (pending the gadget
   answer). H5 confirmed pending referee.
 
+### pc1 final report (`pc1/notebook.md`, checks pass) [R claimed; with referee]
+- Theorem A as in note 2; contains the idea agent's Theorem S with the same constant. Lemma A.1 (Descartes) kept for
+  Knapsack.
+- Theorem B: if Q has the Ryser roots with multiplicities μ_E and ≤ h other distinct y-roots, then
+  L̄(Σ μ_E g_E) ≤ C(h+1)n³(L(Q)+n²). B′: no polynomial-time tree with polynomially many false alarms and uniform hit
+  multiplicity off polynomially many branches. Mixed Theorem AB.
+- Prop. σ: for every easy multiple, the degree-n germ of the cofactor's trace is border-hard (contains L3 and B).
+- Partial norms: subcubes of dimension ≥ n^ε are border-hard (they project onto a smaller permanent). Arbitrary large
+  subsets open.
+- Test case Φ: undecided; the border bound is blind to it; a sibling with subset-sum weights is a border-hard
+  cyclic norm.
+- Failed: removing multiplicity weights (every method costs 2^n); tropical proof of B; root counting with y inside
+  the base polynomials; implicit products; constant-free machines.
+- Open statements carried forward: O1 (is every positively weighted Ryser sum border-hard?), O2 (what a
+  polynomial-time machine must look like: a test that is not a short product of y-sparse polynomials,
+  superpolynomially many spurious roots, a border-hard spurious-root trace), O3 (the test-case norm).
+
 ### Running (as of this entry)
 - `review-link.md` (Opus referee): Findings 2 and 3.
 - `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.

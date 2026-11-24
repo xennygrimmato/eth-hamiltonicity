@@ -194,3 +194,4 @@ H ≤ Z_N², and for Weyl balls, N = 2…5, ranks (row, col, third) by SVD:
 - Route 4: F₂ kills both known identities (d = 2, d = h!); no F₂ trade at N₀ = 2 (equal to GF(3)); a genuine
   characteristic-3 gain for eight-square pieces (11/12 → 0.9006), not an end-to-end improvement.
 - No claimed improvement over 2^{O(n/√log n)}.
+- g=5,p=6 final row [N]: 5 6 300  0.3727      0.3727          0.3693     0.2333(ls400)  0.1389  0.8333  0.4082  1.424

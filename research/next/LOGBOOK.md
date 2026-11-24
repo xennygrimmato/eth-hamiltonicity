@@ -270,6 +270,23 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - H1 (the flat case holds; the engine's pieces are optimal) gains weight: every constructive family tried is dead for
   a structural reason.
 
+### w1 final report (`w1/notebook.md`) [R claimed, unreviewed]
+- No construction; no improvement on 2^{O(n/√log n)}.
+- Theorem: ρ_Δ₃ ≥ 1/2 for every family and every q over characteristic-0 fields. Needs both CHLW Thm 2 and Song et
+  al.'s inequality; field-free only 4/9. Factor 2 is the limit of four-party rank inequalities; c₁ ≤ c₂ + c₃ stays [C]
+  (it would cap every spherical family at exactly 1/√2).
+- K₄ under the real accounting: known rank inequalities give only 1/3; flat floor √2/3 unreached. Still open.
+- Dead, with reasons: Weyl (Donoho–Stark); SU(2) and su(1,1) recoupling projectors (Racah-polynomial uncertainty);
+  Z₃ interpolation (sphere law pinned at the flat floor on K₄); Tratnik/GVZ multivariate Meixner (pole wires are
+  one-dimensional, Prop. A); determinantal / Hermitian-symmetric class (dimension ≥ 3 gives α ≥ 3/4, ρ ≥ 0.76;
+  sketch only, matrix-pole algebra not checked symbolically).
+- Remaining open case: a non-Möbius, non-determinantal bond family with a pole of order ≥ 2 and level-count exponent
+  ≤ 0.685; on K₄, a sphere-law family avoiding the three corners.
+- Lead's assessment of target 1: constructive side exhausted for every family anyone on the team can name. Outputs
+  worth keeping: the Δ₃ ≥ 1/2 theorem, the refereed win-win link, the catalogue of no-gos. H1 (engine pieces
+  optimal) is the working belief; proving it unconditionally = proving the flat case, which the toolkit cannot do (c1).
+- Next for target 1 (proposal): referee w1; then write the paper "The ETH engine and the VP ≠ VNP dichotomy".
+
 ### Running (as of this entry)
 - `review-link.md` (Opus referee): Findings 2 and 3.
 - `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.

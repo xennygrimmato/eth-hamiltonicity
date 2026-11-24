@@ -1,0 +1,5 @@
+k=10 c_k=10.954 simplex dev=4.3e-14 optimised field: min over sampled S=9.222 (ratio 0.842)
+k=20 c_k=30.166 simplex dev=4.5e-13 optimised field: min over sampled S=26.766 (ratio 0.887)
+k=30 c_k=54.772 simplex dev=1.8e-12 optimised field: min over sampled S=48.464 (ratio 0.885)
+k=40 c_k=85.323 simplex dev=1.0e-11 optimised field: min over sampled S=75.460 (ratio 0.884)
+k=50 c_k=118.427 simplex dev=2.4e-11 optimised field: min over sampled S=103.331 (ratio 0.873)

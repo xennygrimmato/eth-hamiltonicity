@@ -1,0 +1,4 @@
+k=7 restart=0 t=6.4027 trueR=6.4027 viol=1.7e-10 hubsep[min,max]=[0.01,0.01] status=3
+k=7 restart=1 t=7.4144 trueR=4.3735 viol=1.1e-01 hubsep[min,max]=[0.0115,0.0979] status=3
+k=7 restart=2 t=7.6719 trueR=4.8844 viol=2.1e-01 hubsep[min,max]=[0.0124,0.082] status=3
+RESULT k=7 d=7 eps=0.01 best R=6.4027 c_k=6.4807 trivial C_min=12

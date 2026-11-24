@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="350" viewBox="0 0 1000 350">
+<rect width="1000" height="350" fill="#fff"/>
+<g fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="10" y="10" width="235" height="330"/><rect x="255" y="10" width="235" height="330"/>
+<rect x="500" y="10" width="235" height="330"/><rect x="745" y="10" width="245" height="330"/>
+<!-- figure helper: head + body -->
+<circle cx="70" cy="200" r="14"/><path d="M70 214 L70 270 M70 230 L50 250 M70 230 L95 215 M70 270 L55 310 M70 270 L85 310"/>
+<path d="M150 260 L150 150 M120 210 L180 210 M127 180 L173 240 M127 240 L173 180"/>
+<circle cx="150" cy="210" r="4" fill="#000"/>
+<circle cx="320" cy="200" r="14"/><path d="M320 214 L320 270 M320 230 L300 250 M320 230 L345 245 M320 270 L305 310 M320 270 L335 310"/>
+<path d="M370 280 L470 280 M375 280 L380 270 M395 280 L405 255 M420 280 L430 240 M445 280 L455 225"/>
+<circle cx="565" cy="200" r="14"/><path d="M565 214 L565 270 M565 230 L545 210 M565 230 L585 210 M565 270 L550 310 M565 270 L580 310"/>
+<path d="M620 240 L700 240 M630 230 L640 250 M655 230 L665 250 M680 230 L690 250"/>
+<circle cx="810" cy="200" r="14"/><path d="M810 214 L810 270 M810 230 L790 250 M810 230 L835 250 M810 270 L795 310 M810 270 L825 310"/>
+<circle cx="920" cy="200" r="14"/><path d="M920 214 L920 270 M920 230 L900 250 M920 230 L945 250 M920 270 L905 310 M920 270 L935 310"/>
+</g>
+<g font-family="Comic Sans MS, Comic Neue, cursive, sans-serif" font-size="14" fill="#000">
+<text x="22" y="35">"All wires through one point,</text><text x="22" y="53">hubs a hair apart.</text><text x="22" y="71">Saving: k^(3/2). Want k^2."</text>
+<text x="267" y="35">Me: the projections are only</text><text x="267" y="53">~1/sqrt(k). Discrepancy!</text><text x="267" y="71">Best possible: k^(3/2)/3,</text><text x="267" y="89">and THEIR picture attains it.</text>
+<text x="512" y="35">"Fine, let the hubs wander</text><text x="512" y="53">off-center. Nonlinear!"</text><text x="512" y="71">Optimiser, k=4,5,6:</text><text x="512" y="89">hubs crawl back together.</text>
+<text x="757" y="35">Lead: so is 1/log K optimal?</text><text x="757" y="53">Me: the engine is a circuit:</text><text x="757" y="71">2^(lk^2/sqrt(log k)).</text><text x="757" y="89">Our tool tops out at lk^(3/2).</text>
+<text x="757" y="140">"So the gap is..."</text><text x="850" y="165">"...exactly where</text><text x="850" y="183">we left it."</text>
+</g>
+</svg>

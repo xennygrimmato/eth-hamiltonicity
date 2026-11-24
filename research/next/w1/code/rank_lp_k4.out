@@ -1,0 +1,15 @@
+constraints 44 vars 7
+min_q max_forcing q.t = 2.0 at q = (0.0, 0.5, 0.5)
+uniform q value 2.6666666666666665
+  uniform: forcing ('star', 2) value 2.6667
+  uniform: forcing ('star', 1) value 2.6667
+  uniform: forcing ('star', 0) value 2.6667
+  uniform: forcing ('flat', 6) value 2.6667
+  uniform: forcing ('flat', 5) value 2.6667
+  uniform: forcing ('flat', 3) value 2.6667
+star ('star', 0) uniform value 2.6667 t = [ 4.  4. -0.]
+   min of other two t sum = 4.0  t = [ 4.  4. -0.]
+star ('star', 1) uniform value 2.6667 t = [-0.  4.  4.]
+   min of other two t sum = 4.0  t = [ 4.  4. -0.]
+star ('star', 2) uniform value 2.6667 t = [-0.  4.  4.]
+   min of other two t sum = 4.0  t = [-0.  4.  4.]

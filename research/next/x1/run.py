@@ -182,6 +182,24 @@ def main():
                     vals[n2] = acc; truth[n2] = c
             report(f"{task} counts", vals, truth, den, budget)
         return
+    if task == 'pattern':   # general j-copy pattern n+h_1,...,n+h_j, its own budget
+        N = int(sys.argv[2]); hs = [int(v) for v in sys.argv[3].split(',')]; j = len(hs)
+        X = N + max(hs); b = blen(X)
+        D = (2 * j + 1) * b + math.ceil(j * math.log2(9.8 * (b + 1)) + math.log2(2 * 4 * j)) + 1
+        M, p, t = params_for(D, b)
+        T0 = time.time(); P, A = tables(M, p, t, X); Pt = prime_tilde(P, A, X)
+        den = P.S ** (4 * j); pr = sieve(X)
+        vals, truth = {}, {}; acc = (0, 0); c = 0
+        for n in range(2, N + 1):
+            v = (P.S ** 4, 0)
+            for h in hs: v = gmul(v, Pt[n + h]) if n + h >= 2 else (0, 0)
+            v = (v[0] // P.S ** 4, v[1] // P.S ** 4)   # exact: first factor was S^4
+            acc = gadd(acc, v); c += all(pr[n + h] for h in hs)
+            vals[n] = acc; truth[n] = c
+        print(f"[pattern {hs}] N={N} X={X} D={D} M={M} p={p} t={t} time {time.time()-T0:.0f}s; final true count {c}")
+        report(f"pattern {hs} counts", vals, truth, den,
+               2 * X ** (2 * j + 1) * 4 * j * (9.8 * (b + 1)) ** j * 2.0 ** -D / 2)
+        return
     if task == 'factors':   # per-factor errors vs the target 2^-D
         X, D = int(sys.argv[2]), int(sys.argv[3]); b = blen(X)
         M, p, t = params_for(D, b); P = Pipeline(M, p, t, b); S = P.S
@@ -194,7 +212,8 @@ def main():
               f" log 2^{float(mp.log(el, 2)):.1f}, 1/log 2^{float(mp.log(ei, 2)):.1f}  (target 2^-{D})")
         return
     if task == 'mertens':
-        N = int(sys.argv[2]); b = blen(N); D = D_needed('mertens', N)
+        N = int(sys.argv[2]); b = blen(N)
+        D = D_needed('mertens', N) + (int(sys.argv[3]) if len(sys.argv) > 3 else 0)   # optional margin
         M, p, t = params_for(D, b)
         T0 = time.time(); P, A = tables(M, p, t, N); mu = mobius(N)
         acc = (0, 0); c = 0; vals, truth = {}, {}

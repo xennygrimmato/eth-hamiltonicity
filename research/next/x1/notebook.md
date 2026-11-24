@@ -101,13 +101,129 @@ M⁸·2¹⁶·β⁴ = β^{O(1)} queries, each count < (N+2)⁵·2^{8t+24} = 2^{O
 computed outside the engine. [N] `run.py nodes 8 3`: 6576 (node, part, sign) classes for π at N = 8, M = 3. The
 integer combination of the class counts equals the literal tuple sum **bit for bit**.
 
-## 3. Engine accounting  [R as a count, plus one lemma not written in Lean]
+## 3. Engine accounting and the doubled-system network lemma
 
-Ni's π/S system has 72 variables, 33 equations and 132 product slots. Every variable has O(β) bits and every
-auxiliary variable is uniquely determined. The twin system is two copies plus n₂ = n + 2, with n shared: about
-144 variables, 67 equations and 264 product slots. Each variable still has O(β) bits, but β grows to O(p + t) =
-O(β) with constant about 6 instead of about 7. **Shared bits (the network parameter U) stay ≤ c₀′(b+2) with
-c₀′ ≈ 2c₀.** Other requirements of `CntPackage`:
+### 3.1 One copy, written out  [R, elementary]
+
+Ni does not list his 72 variables, 33 equations or 132 slots; his slot count probably uses the network's own
+granularity. So I give my own explicit system and count it. A reader can check every line, and it can be compared
+with his.
+
+**Query data** (computed outside, written in the query word): for each of the four factors f ∈ {e₁ = e(x/d),
+e₂ = e(x′/n), L = log m, I = 1/log n} the query fixes:
+- a node index ℓ_f and its rounded node integers U_f, V_f (p + 2 bits each);
+- a part π_f ∈ {re, im} and a sign branch σ_f ∈ {+, −};
+- the dyadic scales j_m and j_n (j_m = ⌊log₂ m⌋, j_n = ⌊log₂ n⌋).
+The constants 2^p, 2^{t+p}, 2^{j_m}, 2^{j_n} and N are also in the query. The boundary sub-queries (d = 1 with
+x = 0, where e₁ ≡ 1 is exact and the e₁ kernel is dropped) are separate queries with that block deleted. So is
+m = 1, which is not queried at all.
+
+**Variables of copy(n)**:
+- Data (5): n, d, m, x, x′.
+- Bézout witnesses (4): u₁, v₁ for (x, d) and u₂, v₂ for (x′, n).
+- One kernel block per factor f, 10 variables each, so 40 in all: a_f, X_f, Y_f, XX_f, YY_f, D_f, P_f, q_f,
+  r_f, w_f.
+- Total: **49 variables.**
+
+**Kernel block for f, at y_f = a_f / s_f.** The pairs (a_f, s_f) are:
+- e₁: (d + x, d);
+- e₂: (n + x′, n);
+- L: (m, 2^{j_m});
+- I: (n, 2^{j_n}).
+
+| # | constraint | kind |
+|---|---|---|
+| K1 | a_f = (its linear form) | linear |
+| K2 | X_f = U_f·s_f − 2^p·a_f (σ_f fixes the sign: σ_f X_f ≥ 0, with X_f stored as |X_f|) | product by a query constant (a shift for L and I) |
+| K3 | Y_f = V_f·s_f (σ for Y is fixed by the sign of V_f, known outside) | product by a query constant |
+| K4 | XX_f = X_f·X_f | product |
+| K5 | YY_f = Y_f·Y_f | product |
+| K6 | D_f = XX_f + YY_f | linear |
+| K7 | P_f = s_f·|X_f| (π = re) or s_f·|Y_f| (π = im) | product (a shift for L and I) |
+| K8 | 2^{t+p}·P_f = q_f·D_f + r_f | product q·D |
+| C1 | r_f < D_f | comparison |
+| C2 | w_f < q_f | comparison (the multiplicity) |
+
+**Data constraints.**
+
+| # | constraint | kind |
+|---|---|---|
+| E1 | d·m = n | product |
+| E2 | x·u₁ = 1 + d·v₁ | 2 products |
+| E3 | x′·u₂ = 1 + n·v₂ | 2 products |
+| C3 | 1 ≤ x < d, u₁ < d, v₁ < x | comparisons |
+| C4 | 1 ≤ x′ < n, u₂ < n, v₂ < x′ | comparisons |
+| C5 | 2^{j_m} ≤ m < 2^{j_m+1}, 2^{j_n} ≤ n < 2^{j_n+1}, 2 ≤ n ≤ N, m ≥ 2 | comparisons |
+
+**Count for one copy:**
+- Equations: 3 (E1–E3) + 4 × 8 (K1–K8) = **35**.
+- Variable × variable products: 5 (E1–E3) + 4 × 3 (K4, K5, K8) + 2 (K7 for e₁, e₂) = **19**.
+- Variable × query-constant products: 4 (K2, K3 for e₁, e₂). L and I use only shifts.
+- Comparisons: about 20.
+
+Ni's numbers are 72 / 33 / 132. My 35 equations match his 33 up to bookkeeping (e.g. folding K1 and K6). His
+larger variable and slot counts presumably come from binary splitting of the products in the network
+representation.
+
+**Bit sizes** (β = b(N), y ∈ [1, 2), |z̃ − y| ≥ 1/4):
+
+| variable | bits |
+|---|---|
+| a | ≤ β + 1 |
+| X | ≤ p + β + 3 |
+| Y | ≤ p + β + 2 |
+| XX, YY, D, r | ≤ 2p + 2β + 7 |
+| P | ≤ p + 2β + 3 |
+| q, w | ≤ t + 3, since q = ⌊2^t·|Re or Im 1/(z̃ − y)|⌋ ≤ 4.1·2^t |
+| data and Bézout | ≤ β + 1 each |
+
+The total is ≤ 4(9p + 13β + 2t + 40) + 9(β + 1) bits per copy. With p, t = D + O(log β), this is O(β).
+
+**Unique determination** (so that #solutions = Σ_{data} Π_f q_f exactly):
+1. Given n, d, x, x′, the witnesses (u₁, v₁) and (u₂, v₂) exist and are unique iff the gcds are 1. This is Ni's
+   Bézout lemma; [N] it is checked for d ≤ 200 (`run.py bezout`).
+2. a, X, Y, XX, YY, D and P are given by equations.
+3. D > 0 because |z̃ − y| ≥ 1/4.
+4. (q, r) is the unique quotient and remainder with 0 ≤ r < D.
+5. The sign branch is fixed by the query and checked by a comparison, so each data tuple lies in exactly one
+   σ-branch.
+6. The only free variables are the w_f < q_f, which give the multiplicity Π q_f.
+7. m and x are determined by (n, d) and the data, and j_m, j_n are fixed by the query, so no tuple is counted
+   twice.
+
+### 3.2 The doubled system for π₂  [R]
+
+The variables are copy(n) on (n, d, m, x, x′, …) and copy(n₂) on fresh variables (n₂, d′, m′, y, y′, …), plus one
+linear equation n₂ = n + 2. **The only variable that occurs in constraints of both copies is n**, through
+n₂ = n + 2. Every other constraint mentions variables of one copy only.
+
+Hence the solution set is the fibre product over n:
+
+  #sol = Σ_{n} [Σ_{data of copy(n)} Π_{f∈copy 1} q_f] · [Σ_{data of copy(n+2)} Π_{f∈copy 2} q_f],
+
+which is the term that Σ_n P̃(n)P̃(n+2) needs for the chosen (node, part, sign, scale) query.
+
+**Count:**
+- Variables: 49 + 49 = **98** (n₂ is copy 2's "n").
+- Equations: 35 + 35 + 1 = **71**.
+- Variable × variable products: **38**, plus 8 by-constant products.
+- Bits: twice one copy, at the twin precision D ≈ 5β.
+
+For Goldbach, replace the link by m₂ = 2n_input − m with m ≤ n. For Sophie Germain, use n₂ = 2n + 1. For a k-tuple
+there are k copies linked by n_i = n + h_i, so 49k variables and 35k + k − 1 equations.
+
+**Network lemma (what must be proved to apply Prop. 4).** For each query π, this system must be realised as a
+`Net` inside one `CntPackage c₀′`:
+- U ≤ c₀′(|w| + 2);
+- P, B, τ and S bounds as in `CntPackage.lean`;
+- value equal to the count above.
+Because the system has a constant number of variables, each of O(|w|) bits after linear padding, the shared-bit
+bound holds with c₀′ = O(1) (about 2× Ni's constant per copy, times the precision ratio 5/3 relative to his π).
+**Status:** the arithmetic content (this section) is [R]. The Lean/`Net` realisation is not written by us or by Ni
+(his Remark 8). It should be the same proof as Ni's network with the block duplicated. This is the main formal
+gap, so **Theorem A is conditional on it.**
+
+### 3.3 Remaining CntPackage requirements
 - Query length ≤ R(w) ≤ |w|. A query carries 8 nodes (U_ℓ, V_ℓ) of p bits each, the scales j, and the
   part/sign bits, which is about 16p = O(β) bits. As in Ni, w is padded linearly (his factor is 2049; ours is
   about 2×). Linear padding is allowed by `machine_TM_linear_input` (premise `hhi`).

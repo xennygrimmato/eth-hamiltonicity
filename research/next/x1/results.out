@@ -4,3 +4,9 @@ pi~(N'), N'<= 2000: 1999 values, rounding failures 0, max |error| = 2.032e-26 (2
 [pi ours] N=2000 M=266 p=59 t=54 time 80s
 pi~(N'), N'<= 2000: 1999 values, rounding failures 0, max |error| = 1.056e-11 (2^-36.5), budget bound 2.139e-01
    max_n |1~_prime(n) - 1_prime(n)| = 7.616e-14
+[twin] N=2000 X=2002 D=74 (needed 74) M=401 p=89 t=84 time 137s
+twin counts: 1999 values, rounding failures 0, max |error| = 2.598e-21 (2^-68.4), budget bound 1.885e-01
+[gold] N=2000 X=2000 D=74 (needed 74) M=401 p=89 t=84 time 142s
+gold counts: 999 values, rounding failures 0, max |error| = 4.392e-21 (2^-67.6), budget bound 1.875e-01
+[sg] N=1000 X=2001 D=74 (needed 74) M=401 p=89 t=84 time 251s
+sg counts: 999 values, rounding failures 0, max |error| = 1.024e-21 (2^-69.7), budget bound 1.880e-01

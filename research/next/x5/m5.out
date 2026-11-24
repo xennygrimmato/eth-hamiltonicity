@@ -1,0 +1,16 @@
+M5 squared distances:
+0 [0, 2, 1, 1, 1]
+S [2, 0, 1, 1, 1]
+A [1, 1, 0, 2, 1]
+D [1, 1, 2, 0, 2]
+C [1, 1, 1, 2, 0]
+Gram (based at 0): [[2, 1, 1, 1], [1, 1, 0, 1/2], [1, 0, 1, 0], [1, 1/2, 0, 1]]  eigenvalues: [1/2, 3/2 + 13/(12*(1/2 + sqrt(5295)*I/72)**(1/3)) + (1/2 + sqrt(5295)*I/72)**(1/3), 3/2 + 13/(12*(-1/2 + sqrt(3)*I/2)*(1/2 + sqrt(5295)*I/72)**(1/3)) + (-1/2 + sqrt(3)*I/2)*(1/2 + sqrt(5295)*I/72)**(1/3), 3/2 + (-1/2 - sqrt(3)*I/2)*(1/2 + sqrt(5295)*I/72)**(1/3) + 13/(12*(-1/2 - sqrt(3)*I/2)*(1/2 + sqrt(5295)*I/72)**(1/3))]
+det Gram = -1/4  (negative => not Euclidean)
+non-Euclidean 4-subsets: 0  5-subsets: 960 of 4368
+orbits of non-Euclidean 5-subsets: [(576, [1, 1, 1, 1, 1, 1, 1, 2, 2, 2]), (288, [1, 1, 1, 1, 1, 2, 2, 2, 2, 2]), (96, [1, 1, 1, 1, 1, 1, 2, 2, 2, 2])]
+M5 in cut cone (l1-embeddable): True
+network all 10 pairs                 M5-length 11.2426  best explicit point 10.0000  ratio 0.8895
+network 0S,AD,CD                     M5-length 4.2426  best explicit point 3.4142  ratio 0.8047
+network 0S,AD,CD,AC                  M5-length 5.2426  best explicit point 4.0000  ratio 0.7630
+network square 0ASD sides+diags      M5-length 6.8284  best explicit point 6.0000  ratio 0.8787
+network diagonals 0S,AD              M5-length 2.8284  best explicit point 2.0000  ratio 0.7071

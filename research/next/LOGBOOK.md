@@ -112,6 +112,17 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - Open test case suggested by the referee: is the cyclic norm of Φ = ∏_i (x_i + T^{2^{i−1}}) easy? Its roots span 2^n
   dimensions. Passed to pc1.
 
+### w1 interim 1 (rank inequalities) [K + R, unreviewed]
+- H3 confirmed: x7's lemma L1, rk(A|BCD) ≤ rk(AB|CD)·rk(AC|BD), is Cadney–Huber–Linden–Winter 2014, Thm 1
+  (arXiv:1308.0539). x7's L2, rk(AD|BC) ≤ rk(AB|CD)·rk(AC|BD), was their open Hypothesis 1, proved by
+  Song–Chen–Sun–Hu 2023 (arXiv:2105.07679, Thm 9). Both stated over ℂ; other fields being checked.
+- The complete list of four-party linear rank inequalities is known (same papers).
+- On K₄ they reduce to the triangle inequality c_k ≤ c_k′ + c_k″. With uniform weights every family has ρ ≥ 4/9,
+  below the target √2/3 = 0.471, so K₄ is NOT excluded. With general weights only 1/3.
+- Open: does c₁ ≤ c₂ + c₃ hold for single tensors on Δ₃? If so, ρ ≥ 2/3 on Δ₃ with uniform weights, which would
+  kill the 1/√3 target there (not the 1/√2 prize) and leave K₄ as the only live three-merge instance.
+- Lead's question back to w1: which bounds hold for the engine's actual (possibly non-uniform) accounting.
+
 ### Running (as of this entry)
 - `review-link.md` (Opus referee): Findings 2 and 3.
 - `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.

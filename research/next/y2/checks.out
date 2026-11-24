@@ -1,3 +1,9 @@
 
 n=2: D=4, dim span{g_e} = 3  (Lemma 2 checks pass)
    Lemma 3 (one exact division, border limit) recovers S exactly: pass
+
+n=3: D=8, dim span{g_e} = 7  (Lemma 2 checks pass)
+char 2: Knapsack norm (n=3) divides the Moore polynomial of span(x1,x2,x3); equal: True
+char 3: Knapsack norm (n=3) divides the Moore polynomial of span(x1,x2,x3); equal: False
+cyclic norm M=8, d=2: product = +-Res = +-lc^M det(C^M - I) (3 squarings of a 2x2 matrix): pass; its polynomial roots span <= d+1 = 3 dims
+all checks passed

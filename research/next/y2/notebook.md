@@ -244,7 +244,8 @@ which is not contradictory by itself: X^D − 1 = (hard)·(hard) shows hard·har
 ## 8. Files
 
 - `checks.py`: exact sympy checks of Lemma 2(a)(b)(c) for n = 2, 3; Lemma 3 for n = 2 (one exact division, then the border
-  limit δ → 0; the Strassen truncation step is the standard theorem and is not re-run); span dimensions; the Moore divisibility in char 2 and 3; the cyclic norm via companion powering.
+  limit δ → 0; the Strassen truncation step is the standard theorem and is not re-run); span dimensions; the Moore divisibility in char 2 and 3; the cyclic norm via companion powering. Output in `checks.out` (all pass; runtime is a few minutes, n = 3 dominates).
+  Recorded: dim span{g_e} = 2^n − 1 for n = 2, 3.
 
 ## 9. Lead's brainstorm (1)–(5)
 

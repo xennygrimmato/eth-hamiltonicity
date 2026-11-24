@@ -1,0 +1,4 @@
+[pattern [0, 1]] N=1000 X=1001 D=69 M=379 p=84 t=79 time 207s; final true count 1
+pattern [0, 1] counts: 999 values, rounding failures 0, max |error| = 3.173e-23 (2^-74.7), budget bound 1.583e-01
+[pattern [0, 2, 4]] N=600 X=604 D=96 M=500 p=111 t=106 time 104s; final true count 1
+pattern [0, 2, 4] counts: 599 values, rounding failures 0, max |error| = 3.295e-31 (2^-101.3), budget bound 5.564e-03

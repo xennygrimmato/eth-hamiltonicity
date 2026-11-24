@@ -5,7 +5,18 @@ Inputs: `engine3-STATUS.md`, `engine3-open-door.md` §1.6–1.7, 2.3–2.7, `vpv
 ETH paper App. B (Fock/Heisenberg form), VP≠VNP paper App. B (free-fermion determinant form, Prop. B.2),
 `next/ideas-dichotomy.md` Ideas 1 and 5.
 
-## 0. Status (early report, updated at the end)
+## 0. Status (final)
+
+**Bottom line.** No three-merge family with ρ < 1/√2 was constructed; no exponent improvement. Findings:
+(i) [R] coordinate grids cannot help (α′ ≤ 1 always; 1/2 at the flat floor for plane merges), §2;
+(ii) [R] the "sphere law" (single A₂/three-flavour quadratic conservation, Idea 5 / Route 1 as stated) is refuted
+unconditionally on the three-wire cube B3 by a segment price b = (1,1,3), |b|² = 11 > 9, §4;
+(iii) [N/C] on Δ₃ every price found (segment, star, Euclidean m ≤ 4) lies inside or *on* the sphere c_r²+c_c²+c_d² = (9λ)²,
+so Δ₃ remains the right target and Route 1's surface is consistent there, §5;
+(iv) the step of App. B that does not extend: the determinant/Schur-complement gives only bipartition ranks; a
+three-group merge needs a triangle (trace) factorization, §8; (v) "charge sectors" of a product basis never trade.
+
+## 0′. Early status
 
 - Two-merge mechanism understood and restated as one principle (§1): **one grading X, two cuts, complementary
   by reflection X ↦ 1/X**; the √ comes from ln P(E) ~ κ√E with additive energy.
@@ -107,7 +118,7 @@ displacements are (1,1,1), (−1,1,1), (1,−1,1); with u_e = +1, b = (1,1,3). �
 The bound is attained [N]: at N₀ = 2 the alternating-projection search (`ap_search.py b3 2 '8,2,2;2,8,2;2,2,8'`) finds
 three pieces with cut ranks (8,2,2), (2,8,2), (2,2,8), i.e. bit costs (3,1,1) and rotations — exactly b. (Also two
 pieces of ranks (4,4,4) each exist.) Neither trades after naming (ρ ≥ 1 with ν log T), as expected at N₀ = 2.
-Also unconditional for B3: mixing the three rotations of b gives **ρ_B3 ≥ 5/9 > 1/2** (and ≥ 1/√3 under FH).
+Also unconditional for B3: mixing the three rotations of b gives **ρ_B3 ≥ 5/9 > 1/2** (and ≥ 2/3 under PH, §5).
 
 **What exactly fails.** In two dimensions the cut-metric (flattening) vector (0, 2) lies *on* the Pythagorean circle;
 this is the precise sense in which "one charge" suffices: the flattening corner and the Fock rotation agree. With three
@@ -136,7 +147,17 @@ u_e unit, b ≥ 0), maximising |b|². Results are filled in below when the runs 
 equilateral price gives b = (3√3,3√3,3√3), |b|² = 81 = E²: **the extremal price lies exactly on the A₂ sphere**, as on
 the rectangle (App. B's worst piece (√2,√2)λ and the flattening corner (0,2)λ are both on the circle).
 
-RESULTS_PLACEHOLDER
+**Δ₃ [N]** (`euclid_d3.out`, 12 SLSQP restarts each): max |b|² = 81.000 for m = 2, 3, 4, attained at (0,0,9), (0,9,0)
+and at the non-corner point (0.450, 0.481, 8.976) (|b|² = 81.00). Every local optimum lands **on** the sphere |b| = 9,
+none outside. Together with §4: segment prices inside (48), star prices on (81), Euclidean prices on (81).
+**[C] On Δ₃ the Euclidean price envelope is exactly the A₂ sphere c_r² + c_c² + c_d² = (9λ)²**, as the circle is for
+the rectangle. So Route 1's target surface is consistent with every price known, conditional or not, and b2's floor
+1/√3 is the balanced point of that sphere. Δ₃ is the right instance; B3 is not (§4).
+
+**B3 [N]** (`euclid_b3.out`, m = 2, 4, 6): max |b|² = 12 at b = (2,2,2) (planar already). So on B3 even the *sum*
+Σ_k b_k = 6 exceeds the Theorem-3 value 3√3 ≈ 5.196: **ρ_B3 ≥ 2/3 under PH**, b2's orthogonal construction is not
+optimal there, and B3 is far from the sphere (12 > 9 and the unconditional 11 > 9). Contrast Δ₃, where b2's 9√3 and
+the sphere both survive every search.
 
 ## 6. Task 3: ALS / feasibility searches [N]
 
@@ -165,3 +186,29 @@ RESULTS_PLACEHOLDER
 - **Achieved here: nothing below 1/√2.** So no new exponent. The grid results of §2 show that changing the level
   geometry instead (3D grids, plane or line merges) cannot help either: α′ ≤ 1 always, and = 1/2 at the flat floor for
   plane merges.
+
+## 8. The construction attempt for Δ₃, written as requirements (Task 1) [R for the reductions, C for existence]
+
+What Prop. B.2's proof uses, and what a three-merge version must supply:
+1. **Interpolation.** A matrix M over Laurent polynomials in (X₁, X₂, X₃), X₁X₂X₃ = 1, with det M = f at X = (1,1,1).
+   (B.2: X = 1 kills the (y − 1) entries and leaves a block-triangular matrix.)
+2. **One frame per merge.** For each k a monomial gauge after which M is a polynomial in X_k (other variables as
+   bounded-support Laurent coefficients) and every block between parties in different k-groups is ≡ F·D(X_k)·G mod
+   X_k^{2R} with D = diag(X_k^{2r+1}). Then the Schur-complement expansion bounds the coefficient of X^N by
+   poly·P(N_k) across each bipartition (k-group | rest); the extra splits of the other exponents cost only poly(λ)
+   because the support is bounded. (I checked this step: it goes through verbatim with spectator variables.)
+3. **Complementarity.** In B.2, frame 2 is frame 1 composed with X ↦ 1/X (the involution b ↔ d), so N_col = Θ − N_row
+   comes for free. For Δ₃ one needs the cyclic symmetry (α,β,γ) ↦ (β,γ,α) of §3 to act by X_k ↦ X_{k+1}, giving
+   N₁ + N₂ + N₃ = Θ′ with Θ′ = 27e (bond energy 3e each, §3). This is exactly the A₂ grading of Route 1.
+4. **Three groups per merge.** Step 2 controls only the three bipartition ranks rk(R_g | rest). The D1 cost needs a
+   triangle network; ½Σ_g log rk(R_g | rest) is a lower bound for it, not an upper bound. A three-group version of the
+   Schur complement (eliminate the R_g blocks one at a time, each step factoring through D(X_k)) would give a path
+   network R₀–R₁–R₂, whose bond (R₀R₁) carries the levels of 6 strings, not 3. Accounting: if such a path piece carried
+   only the fused energy 6e per bond it would cost 2κ√(6e) = 2√6λ ≈ 4.90λ < 3√3λ, below the flat floor, so under FH a
+   path version must carry more energy than fused; the triangle network with bond energies 3e each is what the floor
+   requires. **This is the step I could not extend**: the determinant gives two-sided factorizations (bipartitions),
+   and a triangle network needs three pairwise propagators D(X_k) between the three groups with the cyclic
+   consistency Tr(D₀₁D₁₂D₂₀) — a "torus" (trace) version of the expansion, not a Schur complement.
+5. **Precise obstructions recorded.** (a) Sphere law impossible on B3 (Prop. 4.1, unconditional). (b) Charge sectors
+   of a product basis never trade (STATUS Thm 2). (c) Bipartition-only control is insufficient for r = 3 groups
+   (step 4). None of these excludes Δ₃: its price envelope is the sphere (§5).

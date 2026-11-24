@@ -1,0 +1,8 @@
+eight-square at N0 = 8 (costs = log2 rank)
+  entries of C in [-1, 0, 1]
+  R Q: row 8 col 64 -> (3.00,6.00) | GF(3): row 8 col 56 -> (3.00,5.81) | GF(2): row 8 col 8 -> (3.00,3.00)
+  C Q: row 64 col 8 -> (6.00,3.00) | GF(3): row 56 col 8 -> (5.81,3.00) | GF(2): row 8 col 8 -> (3.00,3.00)
+  f Q: row 64 col 64 -> (6.00,6.00) | GF(3): row 64 col 64 -> (6.00,6.00) | GF(2): row 64 col 64 -> (6.00,6.00)
+  identity R + C = d f with d = 2: over GF(2) it reads R + C = 0 (no identity).
+  C mod 2 == R mod 2: True
+N0 = 2, GF(2): |R1| = 369; best rho T=2: (np.float64(1.0), ((1, 4), (4, 1)))  T=3: (np.float64(1.122481250360578), ((1, 2), (1, 2), (4, 1)))

@@ -1,0 +1,4 @@
+TYPES S12H q [0.5, 0.5, 0.0] LP value 4.5
+nonzero multipliers: 1
+  0.5000 t1>=9 
+exact certificate: reduced costs all >= 0: True  certified lower bound = 9/2

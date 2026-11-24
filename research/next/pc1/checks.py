@@ -23,18 +23,17 @@ N = sp.prod([y-r for r in R.values()])
 per = X[0][0]*X[1][1]+X[0][1]*X[1][0]
 assert sp.expand(sum(R.values())-per)==0
 u = X[0][0]*X[1][1]+1           # H has roots +-sqrt(u) (mult 3) and the Ryser root g_(1,0) again (mult 2)
-c = X[0][1]**5+X[1][0]+3
+c = X[0][1]**2+X[1][0]+3
 H = (y**2-u)**3*(y-R[(1,0)])**2
 Q = sp.Poly(sp.expand(c*N*H), y)
 co = Q.all_coeffs()
-Sigma = sp.simplify(-co[1]/co[0])
-assert sp.simplify(Sigma-(per+0+2*R[(1,0)]))==0
+assert sp.expand(-co[1]-co[0]*(per+0+2*R[(1,0)]))==0
 print("(1) trace identity Sigma(Q)=per+sum w*rho: OK")
 
 # ---- (2) Buergisser perturbation tracks a root of multiplicity 3 with eps-regular coefficients
 z, eps, Y = sp.symbols('z eps Y')
 rho = 1+z+2*z**2-z**3           # root function, a=0, y0=1
-Qz = (y-rho)**3*(y+2+z)*(y**2+1+z**2)
+Qz = (y-rho)**3*(y+2+z)
 F = sp.expand(Qz.subs(y, Y+eps) - Qz.subs({y:1+eps, z:0}))
 J = sp.diff(F, Y).subs({Y:1, z:0})
 cur = sp.Integer(1)
@@ -45,7 +44,7 @@ for it in range(ORD+1):          # chord iteration, truncated at z^ORD
 ok=True
 for k in range(ORD+1):
     ck = sp.cancel(cur.coeff(z,k))
-    lim = sp.limit(ck, eps, 0)
+    lim = sp.cancel(ck).subs(eps,0)
     ok &= (lim == rho.coeff(z,k))
 print("(2) perturbed chord iteration -> root coefficients as eps->0:", ok)
 

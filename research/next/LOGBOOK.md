@@ -173,6 +173,18 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - H8 [C]: if three-wire fusion exists it comes from coupling three su(1,1) discrete-series representations
   (Tratnik-type multivariate Meixner). Passed to w1 as the first thing to test for Task 2.
 
+### Idea agent, second note: `ideas-span.md` on disk with proofs [R claimed; referee launched]
+- Theorem S: generic-path product = product of ≤ R polynomials with ≤ t monomials ⇒ R(t−1) ≥ 2^n − 1.
+  Distinctness of the 2^n − 1 valuations now proved (base-n digits).
+- Theorem 2T: first cancellation case. For a difference of two products of powers of sparse polynomials, the number
+  of distinct root valuations is bounded independently of the exponents (non-archimedean Rolle lemma, residue
+  characteristic 0). k terms: sketched, tower-type bound; conjectured polynomial.
+- Theorems S′ and G: depth hierarchy for cancellation-free tests. Lower bound 2^{Ω(n/Δ)} at alternation depth Δ;
+  exponential up to Δ = n^{1−ε}; the method provably stops at Δ = Θ(n/log n).
+- Open (its Idea 7): does A_g have small cancellation-free tests at depth ≥ n/log n? ("tropical cofactor problem")
+- Lead's action: launched an Opus referee (`review-sparse.md`) on Theorems S, 2T, S′, G and on pc1's A and B, with a
+  prior-art search (Ben-Or, Meyer auf der Heide, Grigoriev–Vorobjov, Koiran et al., Cucker–Shub, Meer).
+
 ### Running (as of this entry)
 - `review-link.md` (Opus referee): Findings 2 and 3.
 - `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.

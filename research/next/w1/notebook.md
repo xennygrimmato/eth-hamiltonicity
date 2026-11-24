@@ -95,3 +95,138 @@ Forcings: "star k" means a piece with c_k ≥ 9λ (pigeonhole, Theorem 1), hence
   whose balanced point is 9/√2 per merge, i.e. exactly ρ = 1/√2. **The four-party rank inequalities cannot prove
   this**: the LP optimum (9, 2.25, 2.25) satisfies all of them. A proof would need genuinely network-level
   (non-bipartition) information, e.g. Strassen support functionals or quantum functionals on 3-group merges.
+
+## 3. Task 3b: SU(2) recoupling pieces on K₄ are dead (a Racah-polynomial uncertainty principle) [R + N]
+
+**Setting.**
+- Four parties a,b,c,d, each holding V_j, with n = 2j+1. Pieces are SU(2)-invariant four-valent tensors.
+- Invariant tensors form an n-dimensional space with three channel bases |J⟩_{(ab)(cd)}, |J'⟩_{(ac)(bd)}, |J''⟩_{(ad)(bc)},
+  J = 0..2j.
+- The projector P_J onto total spin J of V_a⊗V_b, read as a 4-party tensor, is |J⟩_{(ab)(cd)}.
+- Σ_J P_J = Id = wires a–c, b–d. This is z1's crossing X_2, with merges 1 = ab|cd and 3 = ad|bc crossing, and merge
+  2 = ac|bd internal.
+
+**Ranks.** For v = Σ_J x_J|J⟩_{12} = Σ_{J'} y_{J'}|J'⟩_{13}:
+- rk_{ab|cd}(v) = Σ_{J: x_J≠0}(2J+1), because |J⟩_{12} has Schmidt rank 2J+1 and different J sit in orthogonal
+  sectors;
+- similarly rk_{ac|bd}(v) = Σ_{J': y_{J'}≠0}(2J'+1);
+- x = U y with U[J,J'] = ±√((2J+1)(2J'+1)) {j j J; j j J'}, an orthogonal matrix.
+
+**Fact [K].** {j j J; j j J'}, as a function of J, is √(weight(J)) times a Racah polynomial of degree J' in λ(J) = J(J+1)
+(Wilson 1980; Koekoek–Lesky–Swarttouw §9.2). [N] `code/su2_recoupling.py` checks, for every j ≤ 6, that
+U[·,J']/U[·,0] is a polynomial of degree exactly J' in J(J+1), and that U is orthogonal.
+
+**Proposition 3.1 (polynomial uncertainty) [R].**
+- If the ac-support of v is contained in [0, J0], then x_J = √w(J)·p(λ(J)) with deg p ≤ J0. Since the λ(J) are
+  distinct, at most J0 of the x_J vanish.
+- Hence rk_{ab|cd}(v) ≥ Σ_{J<n−J0}(2J+1) = (n − J0)².
+- With 2J0 + 1 ≤ rk_{ac|bd}(v): **rk_ab(v) ≥ (n − (rk_ac(v) − 1)/2)²**, and likewise rk_ad(v) ≥ (n − (rk_ac − 1)/2)².
+- In costs: **t ≤ (1−δ)λ forces c_ab, c_ad ≥ 2λ − O_δ(1)**, and t ≤ λ still forces c_ab, c_ad ≥ 2λ − 2. z1 needs
+  t < 0.17λ with c_ab, c_ad ≈ √2λ. **No family of SU(2)-invariant pieces can do this, whatever the grouping.** ∎
+- [N] Brute-force ranks of the P_J for j ≤ 3: (2J+1, n², n²), apart from Regge-type zeros at j = 2 (18, 22 instead
+  of 25). No interval sum lowers the ac rank below n². Random supports in [0,J0] respect the bound n − J0 in all
+  trials (j ≤ 6).
+
+**Remark (where not to look).** Both dead K₄ families die to an uncertainty principle between Fourier-dual channel
+bases of a multiplicity-free decomposition under a compact or finite group: Weyl pieces by Donoho–Stark (x7 §1), SU(2)
+invariants by Racah polynomials (here).
+- The same argument applies shell by shell to su(1,1) *recoupling*. For D⁺_{k1}⊗D⁺_{k2}⊗D⁺_{k3}, each total-energy
+  shell is finite-dimensional, and the (12)3 ↔ 1(23) recoupling inside it is a finite Racah matrix (Van der Jeugt;
+  Groenevelt–Koelink). So "projectors onto an intermediate su(1,1) weight, energy by energy" die too.
+- App. B escapes because its pieces are not channel projectors at all. They are X-coefficients of an interpolation
+  whose ingredient, the Meixner matrix B, is a *group element* (discrete-series boost matrix elements, not energy
+  diagonal). Its Gram identity has a pole at X = 1, and ranks are measured by energy truncation, not by support size.
+  A degree-d Meixner combination has ≤ d zeros on an *infinite* lattice, so no support bound follows.
+- **Reading:** a useful three-merge mechanism must be "group-element-like", with an infinite ladder and a pole, not
+  "projector-like".
+
+## 4. Task 3a: two interpolation variables with Z₃ symmetry X → Y → 1/(XY) [R]
+
+- Put Z_1 = X, Z_2 = Y, Z_3 = 1/(XY). Then Z_1Z_2Z_3 = 1, and a Z₃-covariant Ψ (with the merge rotation) certifies
+  piece (N_1,N_2,N_3), ΣN = Θ, at c_k ≤ F(N_k). This is exactly the A₂ (one variable per merge) form.
+- **On Δ₃** it is useless as it stands, by x7 §2.3: the three bonds of a merge share one variable, and the balanced
+  certified cost is 9λ.
+- **On K₄** each merge is one bond, so the A₂ form is a sphere law for F = κ√·. Then:
+  - flattening needs a piece with c_k ≥ 4λ;
+  - L2 (Song et al.) needs that piece to have c_k' + c_k'' ≥ 4λ, so a support containing the corner (Θ,0,0) is
+    *impossible*;
+  - the support must lie in {√N_k ≤ √N_k' + √N_k''} and Θ ≥ 24e;
+  - the balanced piece then costs 2√2λ per merge, **exactly the flat floor √2/3, never below it** (§1.3).
+- So the Z₃ ansatz can at best *reach* the K₄ flat floor (0.471, better than the two-merge 0.569 at g = 2). To do so
+  it needs a Laurent polynomial in two variables whose coefficient support avoids the three corners, with the
+  pairing-k rank of coefficient (N_1,N_2,N_3) at most P(N_k).
+- No candidate found. The obvious one, Ψ⁽¹⁾(X)Ψ⁽²⁾(Y)Ψ⁽³⁾(1/(XY)) with App. B factors for the three crossings, has
+  coefficients Σ_c Ψ⁽¹⁾_{a+c}Ψ⁽²⁾_{b+c}Ψ⁽³⁾_c. These are sums over a whole line, and each App. B factor costs t = 2λ in
+  its own merge (x5), so it fails.
+- Under the referee's sharp trigger (every piece has min_k c_k below the flat floor) a sphere family would need
+  min_k c_k < 2√2λ for all pieces. On the sphere of radius √24 this means avoiding a small cap around the balanced
+  point. That is not excluded by anything above.
+
+## 2. Task 2: three-wire fusion. The precise requirement, a multivariate no-go, and the open case
+
+### 2.1 The requirement, in transition-matrix form [R]
+This restates x7 §4 so that families can be checked mechanically.
+- One fermion bond: a single graded single-particle space with propagator D = diag(X^{ε(r)}).
+- Wire u (u = 1..m on the bond) gives a pair Φ_u, Γ_u (wire levels → bond levels). Put Γ_u := D^{-1}Φ_u^{-T}D, which
+  is forced by the diagonal condition Φ_uᵀDΓ_u = D.
+- The cross blocks are then J_{uv} = Φ_uᵀDΓ_v = Ω_{uv}·D with Ω_{uv} := (Φ_v^{-1}Φ_u)ᵀ. These obey the cocycle
+  Ω_{uw} = Ω_{uv}Ω_{vw} and Ω_{vu} = Ω_{uv}^{-1}.
+- **Requirement (F_m):**
+  1. every J_{uv} has entries in ℤ[X] (or is congruent mod X^{2R} to such a matrix, uniformly in R);
+  2. for some order of the wires, J_{uv}(X=1) = 0 for u < v (block-triangular evaluation, so det M(1) is the crossing);
+  3. the bond spectrum gives a single-flavour count, log #{level sets of energy ≤ N} = κ√N(1+o(1)).
+- **Necessity of an infinite ladder with a pole [R].** If the bond space were finite-dimensional, then
+  det J_{uv}·det J_{vu} = det D² is a monomial, so J_{uv}(1) would be invertible. That contradicts (2). The same
+  holds blockwise for any finite graded truncation that is invariant under Ω. This is x6's "Gram pole".
+- **Cost target.** On Δ₃ at the balanced point, a bond fusing 3 wires of energy e has energy 3e. A bond spectrum with
+  log-count ∝ E^α gives ρ ≈ 3^α/3: α = ½ gives 1/√3, and α < 1 − log₃√2 ≈ 0.685 already gives ρ < 1/√2 (ignoring
+  corner overheads).
+
+### 2.2 Proposition 2.1 (multivariate generalised-Meixner ansatz: ≤ d+1 wires per bond) [R, sketch]
+**Ansatz.** Bond levels r ∈ ℕ^d (d modes), weight y^{|r|} times either product weights or multinomial/Pochhammer
+weights (β)_{|r|}/r! (the Tratnik / Genest–Vinet–Zhedanov SO(d,1) multivariate Meixner class). Generating vectors:
+  Σ_i Φ_u(r,i)t^i = Π_m (α_{u,m} + a_{u,m}t)^{r_m} / (1 + b_u t)^{|r|+β}.
+Then Σ_r (weight) Φ_u(r,·)Γ_v(r,·) has generating function
+- [(1+b_u t)(1+b'_v s) − yΣ_m(α_{u,m}+a_{u,m}t)(α'_{v,m}+a'_{v,m}s)]^{-β} (multinomial), or
+- a product over m of one-mode factors (product weights).
+
+Its t⁰s⁰ coefficient is
+- (1 − y⟨α_u, α'_v⟩)^{-β} (multinomial), or
+- Π_m (1 − yα_{u,m}α'_{v,m})^{-β} (product).
+
+Consequences:
+- Polynomiality for u ≠ v forces ⟨α_u, α'_v⟩ = 0 (resp. α_{u,m}α'_{v,m} = 0 for every m), whenever β ∉ −ℕ.
+- The pole at y = 1 that a non-standard wire needs (u = v, the (y−1) in Γ_u) forces ⟨α_u, α'_u⟩ = 1.
+- So **P := (⟨α_u, α'_v⟩)_{uv} = diag(ε_u), ε_u ∈ {0,1}, and rank P ≤ d.** Hence at most d "pole" (Meixner-type) wires
+  share a bond.
+- x7's argument (two standard families have non-vanishing junk in both directions at X = 1) allows at most one
+  standard wire.
+- **So a bond carries at most d+1 wires.** d = 1 is exactly App. B: one standard and one Meixner wire. Three wires
+  need d ≥ 2.
+- β = −m (finite Krawtchouk / SU(2)-type families) is excluded by the finiteness argument of §2.1.
+- Two pole wires u ≠ v have junk with the factor (y−1) from Γ_v in *both* directions. So the triangularity condition
+  (2) holds automatically among the pole wires and only matters against the standard wire. **For d = 2, three wires
+  pass conditions (1)–(2) at the level of constant terms.** Full sufficiency was not checked.
+- **Cost for d ≥ 2.**
+  - Product weights make each mode private to one pole wire. That is plain flavours: for example, ladder A carries
+    {standard, pole} as in App. B and ladder B carries one pole wire. The bond then costs κ(√(2e) + √e) = 2.41λ instead
+    of √3λ, which gives ρ ≈ 0.80 on Δ₃. Useless.
+  - Multinomial weights give a d-dimensional oscillator bond spectrum, with log-count ∝ E^{d/(d+1)}. With 1D wires
+    (λ ∝ √e) this loses outright for large e (E^{2/3} ≫ E^{1/2}). With 2D wires too (all level spaces 2D, λ ∝ e^{2/3}),
+    the naive fused cost is 3^{2/3}λ per bond, **ρ ≈ 3^{-1/3} ≈ 0.693 < 1/√2, α′ ≈ 0.53**.
+  - The corner check (with even the strong form c_1 ≤ c_2 + c_3) still fits in Θ = 27e: the corner piece needs bond
+    energies (15.6e; 5.5e; 5.5e) summed per merge, total 26.6e. So exponent 2/3 is *more* forgiving at the corners
+    than ½ (x7 §3.2).
+
+### 2.3 The precise open case [C]
+**(F₃, d = 2, 2D wires).** Find Tratnik/GVZ bivariate Meixner families (SO(2,1)-type, multinomial weights) on a bond
+whose single-particle space is the 2D oscillator, carrying three wires whose own level spaces are 2D oscillators,
+with:
+- (i) Φ_uᵀDΓ_u = D for each wire, which needs a 2×2-matrix version of x7's b_u = yα'_u a_u conditions;
+- (ii) ⟨α_u, α'_v⟩ = δ_{uv}ε_u with ε = (0,1,1);
+- (iii) the global triangle network on Δ₃ assembled by Lemma T.
+
+If it exists, the naive exponent is ρ ≈ 0.693, a sliver below 1/√2. It is not 1/√3: **single-flavour three-wire fusion
+(1/√3) is impossible in every multivariate generalised-Meixner ansatz**, because rank P ≤ d. This also answers the lead's
+question on Tratnik families: they fall *inside* the ansatz (their generating functions are the multinomial form
+above), and their only escape is the extra modes, which cost spectrum.

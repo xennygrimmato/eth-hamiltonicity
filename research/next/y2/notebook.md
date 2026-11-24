@@ -245,3 +245,81 @@ which is not contradictory by itself: X^D − 1 = (hard)·(hard) shows hard·har
 
 - `checks.py`: exact sympy checks of Lemma 2(a)(b)(c) for n = 2, 3; Lemma 3 for n = 2 (one division plus truncation
   around a random point); span dimensions; the Moore divisibility in char 2 and 3; the cyclic norm via companion powering.
+
+## 9. Lead's brainstorm (1)–(5)
+
+**(1) Calibrating the Span Conjecture [R].** Trivially dim span Roots_d(Q) ≤ dim ℂ[x]_{≤d} = C(m+d, d). For Ryser g
+(m = n², d = n) this is n^{Θ(n)}, so for fixed d the conjecture holds with p = m^d, and all its content is at growing d.
+
+*Weakest sufficient growth.* The proof of Lemma 6 gives L(per_n) ≤ r·(L(g)+2), with r ≤ p(s', n), s' = s + O(n²),
+L(g) = O(n²). [T26] (exact form suffices) gives L(per_n) > n^{c(log n)^{1/3}}. So a contradiction for s = n^{k} follows from
+p(n^{k}, n) ≤ n^{c(log n)^{1/3} − 3}. For example p(s,d) ≤ 2^{ε (log s)^{4/3}} · poly(d) works for every fixed k, once
+ε < c/k^{4/3}. More cleanly, **p(s,d) = s^{o((log s)^{1/3})} · d^{O(1)} is enough**, so polynomial is not needed. A bound
+of the form d^{o(d)} or m^{o(d)}, of shape like the trivial one, is **not** enough: with d = n, m = n², even
+m^{(log n)^{1/3}} = n^{2(log n)^{1/3}} would be enough, but only for constant c > 2. The d-dependence must therefore be
+sub-(log d)^{1/3}-in-the-exponent, i.e. barely above polynomial. Exponentially large spans (Moore-type, ≥ 2^{Ω(s)}) are the
+thing to exclude.
+
+**(2) Degenerations [R; one citation from memory].** Facts:
+- (i) For any family Q_ε ∈ ℂ[ε][x,y], the lowest ε-order term is multiplicative, since ℂ[x,y][ε] is a domain:
+  lt(Q_ε) = lt(N_ε)·lt(H_ε).
+- (ii) In the border model, lt(Q∘A_ε) for a substitution A_ε (linear in (x,y) with entries in ℂ[ε^{±1}], or a torus
+  weight) costs L(Q) + O((m+1)²), whatever the degree: ε^{−k}·Q(A_ε(x,y)) with the constant ε^{−k}.
+
+So "N_g has a border-easy multiple" is preserved under every such degeneration, as the lead says. Also:
+- (2a) **WLOG Q and H are multi-homogeneous** for every grading under which N_g is homogeneous. For Ryser g: one grading
+  per row of X (y has weight 1 in each), plus the weighted grading (x:1, y:d). Take in_w for a generic weight. Column
+  scalings do *not* stabilise Z(N_g), because row sums mix columns. So H may be assumed a semi-invariant of the
+  (n+1)-dim torus. Semi-invariants of a torus are just multi-homogeneous polynomials, so this constrains almost nothing.
+- (2b) **No degeneration produces a hard low-degree factor [R mod K].** By (i), lt(N_g∘A_ε) = ∏_e lt((y − g_e)∘A_ε).
+  Each factor ℓ_e⁰ := lt((y−g_e)∘A_ε) has degree ≤ d (≥1) and L̄(ℓ_e⁰) ≤ L(g) + O(m²). By the closure of border-VP
+  under factors of polynomial degree (Bürgisser, FoCM 2004, approximative version of Kaltofen; *from memory, to be
+  checked*), every irreducible factor of the degenerate norm is border-easy. The degenerate hypersurface may stop being
+  a union of graphs (an ℓ_e⁰ may lose y, or become non-reduced when branches merge). But its equation is still a product
+  of 2^n limits of individually easy low-degree polynomials. **So the "merge branches into a hard irreducible limit"
+  lever is closed**, for torus *and* non-torus one-parameter families: limits of products are products of limits. The
+  only effect of a degeneration is to replace g_e by ℓ_e⁰. Simplest target: with the weight that keeps only one entry per
+  row… every in_w(g_e) is a product of initial forms of row sums. Choosing w to single out column j_i(E) in row i gives
+  ±∏_i X_{i,max(E)} = ±m_E, which is monomial-type. The norm then degenerates to products of (y ∓ monomial) factors with
+  huge multiplicities. Its S is computable from the degeneration of per, which is a monomial/easy. *The degeneration
+  kills the hardness of S along with everything else.* A degeneration in_w(N_g) whose S_{in_w g} is still hard (this
+  needs in_w(per) hard) keeps Gap G for the degenerate g. No simplification was found that keeps S hard and makes the
+  root set structured (e.g. ℂ-Knapsack needs S = linear, which is easy).
+
+**(3) Symmetrisation [R, negative].** The stabiliser of Z(N_g) for Ryser g contains S_n (rows) × S_n (columns, acting on e)
+× the row torus. Torus isotypic projection = initial forms is free in border (2a). Finite-group projections
+Σ_σ χ(σ)σQ cost |G| = (n!)² gates: **not free**. In general they need not even be nonzero for a given χ. So invariant
+theory can only use the torus, and torus semi-invariants are all multi-homogeneous H. **H = N_g^k·(monomial) cannot be
+forced.** The "power" version of L3 does hold and needs only L(Q) [R]: if Q = c·x^β y^a N_g^k, then
+(−δ)^{Dk+a}Q(x,−1/δ) = c x^β (1+δS+…)^k, so S ≈ ((…)/(c x^β) − 1)/(kδ). Division by the monomial is removed by Strassen
+at a point with x ≠ 0, so L̄(S) ≤ O(d²)(L(Q)+m). It is useless unless the cofactor is forced to be of this shape.
+
+**(4) Restricted models / function fields [C, partial].**
+- *Curves kill the lever [R].* After x = γ(t), roots live in ℂ[t]_{≤d·deg γ}, which has span ≤ d·deg γ + 1. per∘γ is a
+  univariate polynomial of polynomial degree with free constants, so it has L ≤ O(n deg γ). Restricting to curves
+  destroys both the span and the hardness.
+- *Restricted model where the Span route closes the loop.* Let SPARSE-BSS be the BSS machines whose **test polynomials**
+  (as functions of the input) are t-sparse in (x,y) for t = poly, with arbitrary (exponential) exponents. In Lemma 1,
+  P = ∏ tests and Roots(∏ f_i) = ∪ Roots(f_i), so span Roots_d(P) ≤ Σ_i span Roots_d(f_i). Hence:
+  **sparse Span bound ⇒ A_g ∉ SPARSE-BSS-P for Ryser g (unconditional given [T26]), while A_g ∈ NP_ℂ.** The needed bound
+  is: a t-sparse Q has dim span Roots_d(Q) ≤ (t d m)^{o((log)^{1/3})}.
+- *Why counting fails and spans are needed:* y^D − x_1^D is 2-sparse with D roots ζ^j x_1, all of span 1.
+- *Proof attempt via Brownawell–Masser (function-field S-unit equation, genus 0, over k(x_1) with
+  k = closure of ℂ(x_2..x_m)).* For a root r, split Σ_k c_k x^{α_k} r^{a_k} = 0 into minimal vanishing blocks. B–M bounds
+  the projective height of each block by C(t)·(|S|−2), with |S| ≤ deg r + #(zeros of the coefficients) + 1 ≤ d + O(t)
+  for monomial coefficients. So each ratio u_k/u_l is an S-unit of height ≤ C(t)(d+t). Unique factorisation then gives:
+  if a_k − a_l > C(t)(d+t), then r = λ·x^γ is a *monomial* with λ^{a_k−a_l} fixed, hence one ℂ-line per γ.
+  Low-spread blocks give polynomials in y of degree ≤ C(t)(d+t), each with that many roots, over ≤ 2^t blocks.
+  **Obstacle:** the number of admissible γ (|γ| ≤ d) is bounded only by the number of S-units of bounded height, i.e.
+  by C(m+d,d)-type counts. Also λ ∈ k may depend on x_2..x_m, which is only controlled up to roots of unity. So the
+  sketch gives span ≤ 2^t·C(t)(d+t) + #{monomial classes}. The second term needs an extra argument: each monomial class is
+  determined by the pair (k,l) and the bounded-height exponent of the ratio, so plausibly ≤ t²·(C(t)(d+t))^{O(1)}. I did
+  not close this within the time-box. **[C]: the sparse Span bound is true with p = 2^{O(t)}·poly(d); proving it would
+  give the unconditional SPARSE-BSS separation above.** The 2^{O(t)} is fine only for t = O(log n). For t = poly one needs
+  the Wronskian-type polynomial-in-t versions (Koiran–Portier–Tavenas style; not checked here).
+
+**(5) §7 negative, updated.** (2b) cannot produce a family with all factors easy and all multiples hard, since
+degenerations preserve "all irreducible factors border-easy". So the honest frontier statement stands: **no explicit
+family is known (even given [T26]) whose irreducible factors are all border-easy and whose nonzero multiples are all
+superpolynomially hard.** Gap G for Ryser g is exactly such a statement. The Span Conjecture is a sufficient structural
+reason, verified on every known easy-multiple mechanism.

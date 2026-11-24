@@ -182,6 +182,17 @@ def main():
                     vals[n2] = acc; truth[n2] = c
             report(f"{task} counts", vals, truth, den, budget)
         return
+    if task == 'factors':   # per-factor errors vs the target 2^-D
+        X, D = int(sys.argv[2]), int(sys.argv[3]); b = blen(X)
+        M, p, t = params_for(D, b); P = Pipeline(M, p, t, b); S = P.S
+        mp.mp.prec = 200
+        def err(v, true): return abs(mp.mpc(mp.mpf(v[0]) / S, mp.mpf(v[1]) / S) - true)
+        ee = max(err(P.Fe(x, d), mp.expjpi(mp.mpf(2 * x) / d)) for d in range(2, 60) for x in range(1, d))
+        el = max(err(P.Flog(m), mp.log(m)) for m in range(2, X + 1, max(1, X // 400)))
+        ei = max(err(P.Finv(m), 1 / mp.log(m)) for m in range(2, X + 1, max(1, X // 400)))
+        print(f"[factors] X={X} D={D} M={M} p={p} t={t}: max err phase 2^{float(mp.log(ee, 2)):.1f},"
+              f" log 2^{float(mp.log(el, 2)):.1f}, 1/log 2^{float(mp.log(ei, 2)):.1f}  (target 2^-{D})")
+        return
     if task == 'mertens':
         N = int(sys.argv[2]); b = blen(N); D = D_needed('mertens', N)
         M, p, t = params_for(D, b)

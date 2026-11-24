@@ -1,0 +1,11 @@
+k=5 restart=0 t=3.8425 trueR=3.8425 viol=3.6e-14 hubsep[min,max]=[0.01,0.01] status=0
+k=5 restart=1 t=3.8425 trueR=3.8425 viol=1.0e-12 hubsep[min,max]=[0.01,0.01] status=0
+k=5 restart=2 t=3.8556 trueR=3.7485 viol=1.1e-03 hubsep[min,max]=[0.01,0.0103] status=3
+k=5 restart=3 t=3.8425 trueR=3.8425 viol=1.7e-12 hubsep[min,max]=[0.01,0.01] status=0
+k=5 restart=4 t=3.8973 trueR=3.2821 viol=7.8e-03 hubsep[min,max]=[0.01,0.0127] status=3
+RESULT k=5 d=6 eps=0.01 best R=3.8425 c_k=3.8730 trivial C_min=6
+k=6 restart=0 t=4.8545 trueR=4.8545 viol=9.1e-12 hubsep[min,max]=[0.01,0.0165] status=0
+k=6 restart=1 t=5.0315 trueR=4.6474 viol=5.8e-03 hubsep[min,max]=[0.01,0.0345] status=3
+k=6 restart=2 t=4.9088 trueR=4.3082 viol=7.3e-03 hubsep[min,max]=[0.01,0.053] status=3
+k=6 restart=3 t=4.9069 trueR=4.7600 viol=1.7e-03 hubsep[min,max]=[0.01,0.0475] status=3
+RESULT k=6 d=6 eps=0.01 best R=4.8545 c_k=4.8990 trivial C_min=8

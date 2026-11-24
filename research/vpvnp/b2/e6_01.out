@@ -1,0 +1,25 @@
+/home/user/eth-hamiltonicity/research/vpvnp/b2/euclid_opt.py:34: RuntimeWarning: overflow encountered in exp
+  dmax = tau * np.log(np.exp(dd / tau).sum())  # soft max
+0 11.9119 [np.float64(6.28), np.float64(5.632)]
+/usr/local/lib/python3.13/dist-packages/numpy/_core/_methods.py:49: RuntimeWarning: overflow encountered in reduce
+  return umr_sum(a, axis, dtype, out, keepdims, initial, where)
+1 11.9119 [np.float64(5.785), np.float64(6.127)]
+2 12.5324 [np.float64(6.353), np.float64(6.18)]
+3 11.9251 [np.float64(5.841), np.float64(6.084)]
+4 12.3298 [np.float64(6.123), np.float64(6.206)]
+5 11.7203 [np.float64(6.74), np.float64(4.98)]
+6 11.9631 [np.float64(6.064), np.float64(5.899)]
+7 11.6618 [np.float64(5.334), np.float64(6.328)]
+8 11.7263 [np.float64(5.694), np.float64(6.032)]
+9 12.303 [np.float64(6.404), np.float64(5.899)]
+10 12.1227 [np.float64(6.012), np.float64(6.111)]
+11 12.163 [np.float64(6.121), np.float64(6.042)]
+12 11.5301 [np.float64(6.354), np.float64(5.177)]
+13 11.7203 [np.float64(6.651), np.float64(5.069)]
+14 11.3869 [np.float64(5.896), np.float64(5.491)]
+15 11.9673 [np.float64(5.801), np.float64(6.166)]
+16 12.0323 [np.float64(5.705), np.float64(6.327)]
+17 11.8681 [np.float64(5.68), np.float64(6.188)]
+18 12.0014 [np.float64(6.125), np.float64(5.876)]
+19 11.8206 [np.float64(5.887), np.float64(5.933)]
+BEST 12.53236209137167 [np.float64(6.352514802078261), np.float64(6.179847289293408)]

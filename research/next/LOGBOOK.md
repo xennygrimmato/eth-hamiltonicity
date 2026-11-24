@@ -304,6 +304,32 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   merged Theorem A, Theorem B/B′, the two-term cancellation bound, the depth hierarchy (corrected model), the
   valuation barrier. Open: O1–O3, Problem TC, Conjecture H.
 
+### Referee report on the P_ℂ restricted-machine results (`review-sparse.md`) — nothing broken [V]
+- pc1's Theorem A: CORRECT, and the statement for a paper. Form: if every generic-path test can be written F_i/G_i
+  with F_i a product of ≤ m polynomials each with ≤ τ powers of y, then T·m·(τ−1) ≥ 2^n − 1. Every characteristic.
+  (The idea agent's Theorem S needed a "catching lemma" fix; A contains it.) Descartes version also correct.
+- Non-archimedean Rolle lemma: correct (complete algebraically closed field, residue characteristic 0).
+- Theorem 2T (two-term cancellation): correct with fixes; corrected bound ≤ 2m·t^{2m} + 4m(t−1) + 1. The k-term
+  version is an unverified sketch and must not be claimed.
+- Theorem S′ / Theorem G / hierarchy: correct with fixes (layering). NOTE: this verdict predates the idea agent's own
+  correction that S′ is vacuous for literally positive tests on A_g; the referee has been sent the correction and
+  resumed. Treat S′ as unsettled until its addendum arrives.
+- §7 valuation barrier: correct. Precisely: rules out proofs using only y-Newton polygons of a multiple under
+  polynomially many integral weightings. Does NOT rule out all-weights-at-once arguments, residue data of roots, or
+  trace arguments. pc1's "B cannot be re-proved tropically" is a heuristic, not a theorem.
+- pc1's Theorems B, B1, AB, Prop. σ: correct. Theorem B′: needs a fix — "unambiguous ⇒ multiplicity 1" fails when
+  divisors vanish on branches; holds for division-free trees with each branch a simple zero of exactly one test.
+- PRIOR ART: the gadget (r = 2) is Hrubeš–Yehudayoff, "Shadows of Newton polytopes" (CCC 2021) Thm 5.1, and the core
+  of S′ is their Thm 5.4. Two-term valuation counts: Koiran–Portier–Rojas (arXiv:1309.0486) under a genericity
+  condition; 2T is a residue-characteristic-0 analogue without it. Sparse-test separations over ℂ: no published
+  statement found, but elementary.
+- SIGNIFICANCE (referee): correct and unconditional, but the models are much weaker than P_ℂ, the cores of S′ and G
+  are known, and only Theorem B/B′ uses the permanent bound. Suitable for a short note on restricted separations
+  plus the barrier. Not progress on P_ℂ vs NP_ℂ itself, and a paper must say so.
+- Lead's conclusion for target 2: frontier reached for this round. Reviewed deliverables: P_ℂ ≠ PAR_ℂ (Bürgisser +
+  border bound), Lemma L (defect ≤ 1), cofactor-hardness and trace-germ statements, Theorem A, Theorem B (with the
+  corrected B′), Theorem 2T, the valuation barrier.
+
 ### Running (as of this entry)
 - `review-link.md` (Opus referee): Findings 2 and 3.
 - `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.

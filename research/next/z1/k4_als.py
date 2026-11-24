@@ -60,4 +60,4 @@ def als_two(trials=30, iters=3000):
         print('trial', t, 'residual', round(r, 6), flush=True)
     return best
 if __name__ == '__main__':
-    print('best residual f = (rank1 across S3) + (rank1 across S1):', als_two(int(sys.argv[1]) if len(sys.argv) > 1 else 8, 300))
+    print('best residual f = (rank1 across S3) + (rank1 across S1):', als_two(int(sys.argv[1]) if len(sys.argv) > 1 else 8, int(sys.argv[2]) if len(sys.argv) > 2 else 300))

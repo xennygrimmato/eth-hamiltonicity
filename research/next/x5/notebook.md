@@ -199,6 +199,89 @@ So explicit points leave a window of 20–30%. A cheap cover must land in it, an
 - See the table in §4 for the other problems. A problem with F_ρ3 > F_E would define a window where a piece family proves
   contracting while staying consistent with FH.
 
+Results (30 hill-climbing restarts for ρ, 10 optimiser restarts for E):
+
+| problem (wires; cuts) | F_ρ3 | F_E | ratio |
+|---|---|---|---|
+| crossing 0S, AD; {0A}, {0D} (calibration) | 2.000 | 2.817 (→ 2√2) | 0.71 |
+| 0S, AD, CD; {0A}, {0D}, {0C}, {0D} (the {0D} cut is listed twice: an input typo) | 6.000 | 7.328 | 0.82 |
+| 0S, AD, CD; {0AC}, {0D}, {0A}, {0C} | 8.000 | 8.001 | 1.00 (tie) |
+| 0S, AD, CD, AC; {0A}, {0C}, {0D} | 3.000 | 5.399 | 0.56 |
+| 0S, AD, CD; {0A}, {0C}, {0D} | 4.000 | 5.192 | 0.77 |
+
+- **No window.** In every problem F_ρ3 ≤ F_E. Hubs restricted to rank-metric vertices are too coarse to beat the Euclidean
+  floors, and the far-leg supremum is not available in a bounded discrete space.
+- The one tie, {0AC}, {0D}, {0A}, {0C}, equals the trivial "all wires full" value 8.
+- So the (★) method with hubs in Mat_3 gives no target where ρ_μ demands more than FH does. A real target would need hubs at
+  CAT(0) geodesic points of a price extension, whose distances are known only as comparison upper bounds. That is not done.
+
+## 3b. Follow-up after the lead's message
+
+**(3) Exact region for the power-law Fock framework [R].**
+- *Setting.* Write per-wire λ = κE^α and total degree Θ = βE (equal wires). Flattening requires β^α ≥ 2.
+- *Bound.* The certified exponent satisfies ρ_cert ≥ max(2^{−α}, (β/2)^α/2).
+- *Region.* ρ_cert < 1/√2 is possible iff **α > 1/2 and 2^{1/α} ≤ β < 2^{1+1/(2α)}**. The interval is nonempty exactly when
+  α > 1/2.
+- *Best point.* At β = 2^{1/α} (flattening tight) the bound is ρ = 2^{−α}. For example:
+  - α = 2/3 (2D oscillator counting): β ∈ [2.83, 3.36), ρ down to 0.63;
+  - α = 1: β ∈ [2, 2.83), ρ down to 1/2.
+- *Paper.* The paper sits at the corner (α, β) = (1/2, 4).
+- *No emptiness theorem.* The region is nonempty, and flattening alone does not exclude it. Only PH (b2) does. So there is no
+  structural emptiness theorem at the level of rank counting; deciding it is equivalent to the open problem.
+- **One-line target:** a graded identity Σ_N Ψ_N = crossing with rk_{ad|bc}Ψ_N ≤ e^{κN^α + o}, rk_{ab|cd}Ψ_N ≤ e^{κ(Θ−N)^α + o},
+  and Θ < 2^{1+1/(2α)}·E, where the wires have ln Q = κE^α and α > 1/2.
+
+**(1) What forces "degree = total energy" [R for the paper's mechanism, C beyond].**
+- *The degree comes from the reflection.* Its multipliers are the party energies: X^{e1} at a and at c, X^{e2 ∓ 2n2} at d and
+  at b.
+- *The bond needs capacity for two parties.* In the Schur-complement proof, the bond across ad|bc has the *same*
+  single-particle spectrum as one party. Its sectors T must encode the pair (s_a, s_d) at the top.
+  - For the linear spectrum the cheapest injective encoding is Lemma B.1's interleaving, which costs energy (√e_a + √e_d)².
+  - That equals e_a + e_c + e_b + e_d at equal wires. So in d = 1, "degree = total energy" and "flattening-tight" coincide,
+    and β = 4 is forced twice.
+- *In d dimensions the bound is loose.* For a d-dimensional spectrum the encoding needs only (e_a^α + e_d^α)^{1/α} = 2^{1/α}E,
+  but the paper-type reflection still charges 4E. My d = 2 family is wasteful in exactly this sense.
+- *What a β < 4 construction requires.* A kernel B on the d-dimensional levels with:
+  - (B.1) for the weight X^{ε(r)} (needed for (b));
+  - a reflection C(r,n) = X^{h(n)}·B(r,n)|_{X→1/X} whose degrees satisfy Σ h ≤ (β/4)·Σ ε.
+
+  For α = 2/3 that means h ≤ 0.84·ε on average. With product kernels h = ε exactly. Whether a non-product kernel exists
+  (e.g. one adapted to SU(1,1)^d ⊂ Sp(2d), or a Pfaffian whose rows are shared by a and d) is the open step [C].
+
+**(2) Characteristic p [N] (`code/charp.py`, `charp.out`).**
+- *Setup.* The pieces are integral and Σ_N Ψ_N = crossing holds mod p, so the same Ψ_N form an identity over F_p.
+- *Ranks drop strongly mod p, and differently for each p.* Class (1,10)², Q = 5:
+  - ab|cd rank of Ψ_0 is 25 over ℚ but 4 over F₂ and 1 over F₃;
+  - middle pieces drop to 13–23.
+- *Finite-size exponent* max_N ln(r_N r′_N)/ln Q⁴: ℚ 1.00, F₂ 0.96, F₃ 0.97, F₅ 0.89. Class (2,12)²: F₂ is markedly lower
+  (most pieces have rank 8–12 of 25).
+- *Caveat.* These are finite sizes, and the selector penalty 2·log₂(Θ+1) is ignored, so this is not evidence for the
+  asymptotic exponent. It is consistent with a field-dependent exponent, and ties to z1/Idea 3. For the α/β bookkeeping: over
+  F_p, the "degree" relevant to ranks is the rank profile, not the polynomial degree, so the region of (3) may be reachable
+  without β < 4 polynomially [C].
+
 ## 4. Honest table
 
-(Filled at the end of the run; see below.)
+| # | tried | numbers | status |
+|---|---|---|---|
+| 1 | exact Prop. B.2, all claims | 6 class pairs, all asserts pass | [N] done |
+| 1 | calibration of 1/√2 | ρ(E) = 0.801 → 0.717 at E = 4000, excess ∝ E^{−1/2} | [N] reproduced |
+| 1 | finite-D=2 certificate (two-proofs Prop. 1) | g(ℓ) = ℓ + √(4m²−ℓ²); the paper sits on g = 2√2·m | [R], left to x3 |
+| I1 | sparser spectra (α < 1/2) | i², i³, lacunary: flat = 0.75–0.88 < 1 | **excluded** [R]: flattening |
+| I1 | denser spectra with β = 4 | d = 2 oscillator: valid identity [N], ρ = 2^{−1/3} | excluded (worse) |
+| I1 | bosonic modes | same exponents as fermions | no effect [N] |
+| I1 | (α, β) region | ρ < 1/√2 iff α > 1/2 and 2^{1/α} ≤ β < 2^{1+1/(2α)} | [R] target, open |
+| I1 | ALS profile search | not run: finite sizes saturate (pieces full rank at Q ≤ 5), so no calibrated target | skipped, with reason |
+| I2 | M5 non-Euclidean, 4-sets Euclidean | det Gram = −1/4; 0 bad 4-sets; 960 bad 5-sets in 3 orbits | [N] verified |
+| I2 | M5 ℓ1 / cut cone | feasible | [N] |
+| I2 | violated inequality | negative type, v = (−2,−2,1,2,1), excess = \|AC\|² | [N] exact |
+| I2 | explicit spectral points vs M5 length | ratio 0.71–0.89; worst ≈ 0.707 (crossing) | [N] |
+| I2 | composed crossings (step (c)) | cannot beat any B.3 space | **excluded** [R] |
+| I2 | (★) floors, hubs in Mat_3 vs ℝ⁵ | F_ρ ≤ F_E in all 5 problems | no window [N] |
+| I2 | cheaper cover of an M5 network | none found | not proved |
+| I3 | char-p ranks of the paper's pieces | finite-size exponent 1.00 (ℚ), 0.96 (F₂), 0.89 (F₅) | [N] lead, finite size only |
+
+Nothing here proves contracting. The two clean outputs:
+- the (α, β) theorem and target (Prop. 1 plus §3b), which says why 1/√2 is rigid;
+- the exclusion of compositions for M5 (Prop. 2), together with the explicit (E5) negative-type inequality that a new
+  5-party identity would have to prove.

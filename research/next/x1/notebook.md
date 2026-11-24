@@ -294,7 +294,41 @@ Gaussian-integer coefficients from mpmath. All sums are done in exact integer ar
 tuple sum is factored by distributivity, which is an exact identity on the approximate values:
 Σ_n −A(n)F_inv(n)Σ_{dm=n} A(d)F_log(m), with A(d) = Σ_{(x,d)=1} F_e(x/d). Twins use P̃(n)P̃(n+2) in the same way.
 
-RESULTS_PLACEHOLDER
+"Rounding OK" means that ⌊Re S̃ + 1/2⌋ equals the true value for **every** prefix N′ ≤ N (or every 2n ≤ N).
+Truth comes from a sieve. Raw output is in `results.out` and `results2.out`.
+
+| run | parameters (M, p, t) | values checked | rounding failures | max \|S̃ − S\| | budget bound |
+|---|---|---|---|---|---|
+| fully literal (n,d,m,x,x′) loop, π, N = 40 (`tuple`) | Ni: 395, 74, 67 | 1 | 0 | ~1e−20 | 1/2 |
+| literal loop == factored sum, bit for bit | N = 12 and N = 40 | ✓ | | | |
+| node/part/sign expansion == literal sum (`nodes 8 3`) | M = 3, p = t = 12 | 6576 classes | ✓ bit for bit | | |
+| π(N′), N′ ≤ 2000, Ni's table | 570, 109, 102 | 1999 | 0 | 2^−85.3 | 1/2 |
+| π(N′), N′ ≤ 2000, our budget (D = 41) | 266, 59, 54 | 1999 | 0 | 2^−36.5 | 0.21 |
+| π₂(N′), N′ ≤ 2000 (D = 74) | 401, 89, 84 | 1999 | 0 | 2^−68.4 | 0.19 |
+| G(2n), 2n ≤ 2000 (D = 74) | 401, 89, 84 | 999 | 0 | 2^−67.6 | 0.19 |
+| Sophie Germain, N′ ≤ 1000 (X = 2001) | 401, 89, 84 | 999 | 0 | 2^−69.7 | 0.19 |
+| M(x), x ≤ 3000 (D = 2β + 2 = 26) | 185, 41, 36 | 3000 | 0 | 2^−16.3 | 0.13 |
+
+Per-indicator accuracy: max_n |P̃(n) − 1_prime(n)| = 1.5e−28 (Ni's table) and 7.6e−14 (D = 41). For Mertens,
+max_n |μ̃(n) − μ(n)| = 1.4e−8.
+
+**Stress test (twins, N = 300; the budget asks for D = 64).** The table below lowers D:
+
+| D | 48 | 32 | 24 | 16 | 12 | 10 | 8 | 6 |
+|---|---|---|---|---|---|---|---|---|
+| max error | 2^−48 | 2^−33 | 2^−26 | 2^−15 | 2^−12 | 2^−10 | 2^−7 | 2^−3.7 |
+| failures | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+(The D = 4 run was cut off by the time limit.)
+
+So the worst-case budget is very conservative for products: about 58 bits of slack at N = 300. The reasons:
+- per-factor errors are ~2^{−(D+8)};
+- the tuple count T ≈ N⁵ is an absolute-value bound;
+- the errors do not align.
+The observed error scales like 2^{−D}·poly(N), not N⁵·2^{−D}. This is not used anywhere; the theorem uses the
+rigorous budget.
+
+PATTERNS_PLACEHOLDER
 
 ## 6. Mertens details
 M(x) is the special case k = 1 of Theorem D: the only factor is the Ramanujan phase. The budget is D = 2β + 2,

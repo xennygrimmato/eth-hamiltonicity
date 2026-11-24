@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="350" viewBox="0 0 1000 350" font-family="Comic Sans MS, Comic Neue, cursive, sans-serif" font-size="14">
+<rect width="1000" height="350" fill="#fff"/>
+<g fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round">
+<rect x="8" y="8" width="235" height="334"/><rect x="255" y="8" width="235" height="334"/>
+<rect x="502" y="8" width="235" height="334"/><rect x="749" y="8" width="243" height="334"/>
+<!-- p1 figure + LP -->
+<circle cx="60" cy="210" r="14"/><path d="M60 224v55M60 279l-15 40M60 279l15 40M60 240l30-20M60 240l-25 15"/>
+<rect x="110" y="170" width="110" height="70"/><path d="M120 225l20-30 20 15 20-35 20 20"/>
+<!-- p2 two figures -->
+<circle cx="300" cy="210" r="14"/><path d="M300 224v55M300 279l-15 40M300 279l15 40M300 240l25-10M300 240l-20 15"/>
+<circle cx="440" cy="210" r="14"/><path d="M440 224v55M440 279l-15 40M440 279l15 40M440 240l-25-10M440 240l20 15"/>
+<path d="M350 190h40M350 190l8-6M350 190l8 6"/>
+<!-- p3 figure with far legs -->
+<circle cx="560" cy="230" r="14"/><path d="M560 244v45M560 289l-12 30M560 289l12 30M560 258l-20 10M560 258l20-25"/>
+<path d="M600 250L725 140M600 250L725 320" stroke-dasharray="6 5"/><circle cx="620" cy="250" r="4"/>
+<!-- p4 figure shrugging -->
+<circle cx="870" cy="210" r="14"/><path d="M870 224v55M870 279l-15 40M870 279l15 40M870 240l-25-20M870 240l25-20"/>
+</g>
+<g fill="#000">
+<text x="20" y="35">Q: can prices prove</text><text x="20" y="55">rho &gt;= 1/2 on Delta_3?</text>
+<text x="20" y="85">Step 1: LP over ALL</text><text x="20" y="105">metrics says: rho = 1.</text>
+<text x="20" y="130">"No trade at all!"</text>
+<text x="112" y="262" font-size="12">(it isn't CAT(0))</text>
+
+<text x="267" y="35">Geodesics are unique,</text><text x="267" y="55">so every hub collapses</text>
+<text x="267" y="75">into one point.</text>
+<text x="267" y="110">Dead end #1.</text>
+<text x="330" y="170" font-size="12">delta = 0</text>
+
+<text x="514" y="35">Flat case: send legs</text><text x="514" y="55">to infinity, Euclidean.</text>
+<text x="514" y="80">rho &gt;= 1/sqrt3 = 0.577</text><text x="514" y="100">on Delta_3. And the</text>
+<text x="514" y="120">crossing gets EXACTLY</text><text x="514" y="140">App. B's 1/sqrt2.</text>
+
+<text x="761" y="35">Contracting case:</text><text x="761" y="55">nobody knows which</text>
+<text x="761" y="75">case we're in.</text>
+<text x="761" y="110">So: "proved, assuming</text><text x="761" y="130">the universe is flat."</text>
+<text x="761" y="160" font-size="12">(physicists do it all the time)</text>
+</g>
+</svg>

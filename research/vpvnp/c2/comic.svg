@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="350" viewBox="0 0 1000 350" font-family="'Comic Sans MS','Comic Neue','Chalkboard',cursive,sans-serif">
+<rect width="1000" height="350" fill="#fff"/>
+<g fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<!-- frames -->
+<path d="M12 14 L240 12 L242 336 L10 338 Z"/>
+<path d="M260 13 L488 14 L487 337 L259 336 Z"/>
+<path d="M508 12 L738 14 L739 338 L507 336 Z"/>
+<path d="M758 14 L988 12 L989 337 L757 338 Z"/>
+<!-- panel 1: figure at laptop -->
+<circle cx="80" cy="200" r="16"/>
+<path d="M80 216 L80 270 M80 230 L112 246 M80 230 L104 256 M80 270 L64 318 M80 270 L96 318"/>
+<path d="M110 250 L170 250 L182 222 L128 222 Z"/>
+<!-- panel 2: figure and a huge tower of exponents -->
+<circle cx="310" cy="220" r="16"/>
+<path d="M310 236 L310 288 M310 250 L340 232 M310 250 L286 268 M310 288 L296 326 M310 288 L324 326"/>
+<!-- panel 3: two figures, one shrugging -->
+<circle cx="570" cy="220" r="16"/>
+<path d="M570 236 L570 288 M570 252 L548 236 M570 252 L592 236 M570 288 L556 326 M570 288 L584 326"/>
+<circle cx="680" cy="220" r="16"/>
+<path d="M680 236 L680 288 M680 252 L656 270 M680 252 L704 270 M680 288 L666 326 M680 288 L694 326"/>
+<!-- panel 4: figure with sign -->
+<circle cx="830" cy="226" r="16"/>
+<path d="M830 242 L830 292 M830 256 L862 236 M830 256 L800 274 M830 292 L816 328 M830 292 L844 328"/>
+<path d="M862 236 L862 170 M850 120 L975 118 L977 172 L848 174 Z"/>
+</g>
+<g fill="#000" font-size="15">
+<text x="22" y="40">PAPER: "we have not worked</text>
+<text x="22" y="58">out what our bound gives</text>
+<text x="22" y="76">for PIT." ME: on it.</text>
+<text x="22" y="110" font-size="13">(searches arXiv, ECCC, blogs:</text>
+<text x="22" y="126" font-size="13">nobody else has, yet. 3 news</text>
+<text x="22" y="142" font-size="13">sites, one rival VP≠VNP.)</text>
+
+<text x="270" y="40">Kabanets-Impagliazzo +</text>
+<text x="270" y="58">Newton iteration gives a</text>
+<text x="270" y="76">hitting set of size</text>
+<text x="268" y="120" font-size="17">2^2^(10763·(log s)^¾)</text>
+<text x="270" y="160" font-size="13">"beats brute force once</text>
+<text x="270" y="176" font-size="13">log s &gt; 3·10^16."</text>
+
+<text x="518" y="40">SMALL CHARACTERISTIC:</text>
+<text x="518" y="58">root extraction hands back</text>
+<text x="518" y="76">PERM^(p^k), not PERM.</text>
+<text x="518" y="112" font-size="13">"Can you take p-th roots</text>
+<text x="518" y="128" font-size="13">of circuits?" "Open since</text>
+<text x="518" y="144" font-size="13">Andrews 2020." (shrug)</text>
+<text x="518" y="176" font-size="13">Workaround: individual degree &lt; p.</text>
+
+<text x="768" y="40">Also: dc(PERM) is</text>
+<text x="768" y="58">quasi-polynomial! For</text>
+<text x="768" y="76">all m ≥ m0 ...</text>
+<text x="768" y="96" font-size="13">... and m0 is ineffective.</text>
+<text x="856" y="142" font-size="14">BEST KNOWN</text>
+<text x="856" y="162" font-size="14">AT m=10: m²</text>
+</g>
+</svg>

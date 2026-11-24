@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="350" viewBox="0 0 1000 350">
+<rect width="1000" height="350" fill="#fff"/>
+<style>t{font-family:'Comic Sans MS','Comic Neue',cursive,sans-serif;font-size:13px;fill:#000}.s{stroke:#000;stroke-width:2.5;fill:none;stroke-linecap:round}</style>
+<g class="s"><rect x="8" y="8" width="235" height="334"/><rect x="257" y="8" width="235" height="334"/><rect x="506" y="8" width="235" height="334"/><rect x="755" y="8" width="237" height="334"/></g>
+<!-- panel 1 -->
+<text x="20" y="30">"Flat or contracting? Easy,</text><text x="20" y="47">I'll just compute it."</text>
+<g class="s"><circle cx="70" cy="190" r="16"/><path d="M70 206v60M70 225l-22 20M70 225l25-28M70 266l-18 40M70 266l18 40"/>
+<rect x="130" y="150" width="90" height="70"/><path d="M140 205l15-25 15 15 15-30 20 10"/></g>
+<text x="135" y="240" style="font-size:11px">Mat_μ(F₂)</text>
+<text x="20" y="330" style="font-size:12px">(reads Step 7 of thm_alt)</text>
+<!-- panel 2 -->
+<text x="268" y="30">It all reduces to ONE metric:</text><text x="300" y="52" style="font-size:16px">ρ(a,b)=√rk(a−b)</text>
+<g class="s"><circle cx="320" cy="190" r="16"/><path d="M320 206v60M320 225l-25 -25M320 225l25 -25M320 266l-18 40M320 266l18 40"/></g>
+<text x="360" y="150">"Is it a price?</text><text x="360" y="168">Then we're done!"</text>
+<text x="268" y="330" style="font-size:12px">(it is a finite question. sort of.)</text>
+<!-- panel 3 -->
+<text x="518" y="30">Turns out ρ lives in a</text><text x="518" y="47">Bruhat–Tits building.</text>
+<g class="s"><path d="M560 240l40-60 40 60 40-60M560 240h120M600 180h80M580 210l40 0" /><circle cx="560" cy="120" r="14"/><path d="M560 134v50M560 150l-20 18M560 150l20 18"/></g>
+<text x="520" y="290">CAT(0)? yes. Crossing ineq.?</text><text x="520" y="307">yes. 10⁶ hubs tried: 0 violations.</text>
+<text x="518" y="330" style="font-size:12px">every test passes. that's the problem.</text>
+<!-- panel 4 -->
+<text x="766" y="30">Verdict:</text>
+<g class="s"><circle cx="830" cy="190" r="16"/><path d="M830 206v60M830 225l-20 25M830 225l20 25M830 266l-18 40M830 266l18 40"/><circle cx="930" cy="190" r="16"/><path d="M930 206v60M930 225l-20 25M930 225l20 25M930 266l-18 40M930 266l18 40"/></g>
+<text x="770" y="70">"The paper's axioms have a</text><text x="770" y="87">model where both cases hold..."</text>
+<text x="850" y="130">"...so you decided</text><text x="850" y="147">it?"</text>
+<text x="766" y="330" style="font-size:12px">I decided it can't be decided. by them.</text>
+</svg>

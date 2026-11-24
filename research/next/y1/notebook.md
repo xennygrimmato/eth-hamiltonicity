@@ -322,9 +322,12 @@ coNP_ℂ ≠ PAR_ℂ (complements). I believe it, but this notebook contains no 
 ### 4.6 Sanity check (det)
 A = Z(det_N) is in NP_ℂ via the verifier "∃w : Xw = 0, c·w = 1". It is reduced: the w-Jacobian [X; cᵀ] has rank N at a
 generic corank-1 matrix, so κ = 0.
-- Script `lemmaL_det_check.py` (N = 3, d = 3, random rational A, B, c) runs the chord iteration of §4.2 over
-  ℚ̄[u][T]/T⁴ and compares det(B)·∏(−t_j) with det(A + TU).
-- [Result recorded at the end of this file when the run finishes.]
+- Script `lemmaL_det_check.py` (numpy; N = 4, d = 4; random complex A, B and direction U; random real c) runs the
+  chord iteration of §4.2 (d + 1 steps, constant J_j^{−1}) for each of the d branches in ℂ[[T]]/T^{d+1}. It compares
+  det(B)·∏(−t_j) with det(A + TU).
+- **Result: max |coefficient difference| = 1.0e−10, for coefficients of size about 38.** The reduced-case construction
+  works as claimed on det. This is a numerical check of the algebra, not a proof. Since the identity is polynomial in U, a
+  random U tests it generically.
 
 ---------------------------------------------------------------------------------------------------------------------
 
@@ -380,4 +383,8 @@ The obstruction is multiplicities divisible by p, where (Y − ϕ)^{p^a} = Y^{p^
 ---------------------------------------------------------------------------------------------------------------------
 
 ## 7. Run log
-- §4.6 script: see bottom.
+- §4.6 script: `python3 -I research/next/y1/lemmaL_det_check.py` gives "max |coef diff| = 1.014e-10 (coef sizes ~ 3.8e+01)".
+- Web searches (24 Nov 2026): no posting of the unconditional P_ℂ ≠ PAR_ℂ / P_ℝ ≠ PAR_ℝ corollary was found, and no claim
+  of graph(per) ∉ NP_ℂ was found. The arXiv abstract pages of [B04], [B26], [B24] and [KP07] were read in full text.
+- Not verified first-hand: the CKKLW theorem statement (abstract only); BCSS's proof of NP_ℂ ⊆ PAR_ℂ (cited through [KP07]);
+  the proof of [B04] Lemma 1.1 (statement only).

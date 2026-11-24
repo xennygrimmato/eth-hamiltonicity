@@ -1,0 +1,31 @@
+ranks of Omega across the cuts: [16, 16, 16]
+two cuts:
+  total 7
+    ranks (4, 3) residual 7.88e-02
+    ranks (5, 2) residual 3.23e-01
+    ranks (6, 1) residual 4.72e-11
+    ranks (7, 0) residual 7.50e-01
+  -> [(6, 1)]
+  total 6
+    ranks (3, 3) residual 1.38e-01
+    ranks (4, 2) residual 4.52e-01
+    ranks (5, 1) residual 4.34e-01
+    ranks (6, 0) residual 7.91e-01
+  -> []
+three cuts:
+  total 6
+    ranks (2, 2, 2) residual 1.24e-01
+    ranks (3, 2, 1) residual 7.76e-02
+    ranks (3, 3, 0) residual 1.38e-01
+    ranks (4, 1, 1) residual 9.97e-12
+    ranks (4, 2, 0) residual 4.52e-01
+    ranks (5, 1, 0) residual 4.34e-01
+    ranks (6, 0, 0) residual 7.91e-01
+  -> [(4, 1, 1)]
+  total 5
+    ranks (2, 2, 1) residual 2.07e-01
+    ranks (3, 1, 1) residual 9.52e-02
+    ranks (3, 2, 0) residual 5.59e-01
+    ranks (4, 1, 0) residual 5.68e-01
+    ranks (5, 0, 0) residual 8.29e-01
+  -> []

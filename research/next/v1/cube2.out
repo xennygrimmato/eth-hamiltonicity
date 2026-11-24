@@ -1,0 +1,5 @@
+crossing N=2, antisymmetriser: E = 1.8745 (trivial 2)
+two cuts (6,1) residual 9.9e-13  rank matrix rows=cuts (bit0,bit1,bit2), cols=pieces: [[6, 16], [16, 1], [16, 16]]
+   power exponent using its own cuts: 3.7835   using all three cuts: 3.7835  (trivial 4)
+three cuts (4,1,1) residual 9.8e-13  rank matrix rows=cuts (bit0,bit1,bit2), cols=pieces: [[4, 16, 9], [16, 1, 16], [10, 16, 1]]
+   power exponent using its own cuts: 4.3195   using all three cuts: 4.3195  (trivial 4)

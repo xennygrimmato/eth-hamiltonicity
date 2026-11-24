@@ -1,0 +1,10 @@
+[4, 1, 1] exact solutions in 60 seeds: 9
+[5, 1, 1] exact solutions in 60 seeds: 1
+[4, 2, 1] exact solutions in 60 seeds: 2
+[3, 3, 1] exact solutions in 60 seeds: 0
+[3, 2, 2] exact solutions in 60 seeds: 0
+[2, 2, 2] exact solutions in 60 seeds: 0
+(4, 1, 1) x7 rank matrix ((4, 16, 9), (16, 1, 16), (10, 16, 1)) E = 4.3195
+(4, 1, 1) x2 rank matrix ((4, 9, 16), (10, 1, 16), (16, 16, 1)) E = 4.3195
+(5, 1, 1) x1 rank matrix ((4, 16, 9), (16, 1, 16), (10, 16, 1)) E = 4.3195
+(4, 2, 1) x2 rank matrix ((4, 7, 16), (8, 2, 16), (16, 16, 1)) E = 4.3398

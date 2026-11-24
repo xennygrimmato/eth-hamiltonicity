@@ -352,3 +352,26 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 
 ### Running (as of this entry)
 - none
+
+## 24 Nov 2026, late: three probes (`v1/notebook.md`) [unreviewed]
+
+Asked by the user: push on the Satisfiability Hypothesis and on Orthogonal Vectors, and find an adjacent problem.
+
+- Orthogonal Vectors [R]: certificate (cover) algorithms need (4/3)^{d/2} per vector, by a factorisation-norm bound
+  that multiplies over coordinates. This equals the known algorithm (Dürr et al., Alman–Li), so that family is
+  finished. The bound also covers exact decompositions with bounded coefficients. It does not cover GF(2) or
+  large-coefficient decompositions whose terms cancel on intersecting pairs. Literature check for novelty pending.
+- Small GF(2) gadgets [N]: exhaustive on two coordinates, annealing on three; no gain over the 2^{d/3} product
+  baseline in a crude model. Weak negative.
+- Three-way law [N]: cube instance at bond dimension 2 has two-cut splitting number 7 and three-cut 6 (exact identity
+  found); K₄ has 8 and nothing better with three cuts. Under tensor powering every three-cut identity found is
+  useless (4.32 against trivial 4; two-cut 3.75). The obstruction is the rank of a piece across the cuts it is not
+  assigned to. Not decisive for the law.
+- Contracting case, Boolean reading [R from the paper's K.2 and K.6; C until checked against the Lean]: no circuit of
+  formal degree ≤ n^{1+γ} and quasi-polynomial size agrees with the universal run-sum on 0/1 inputs; hence no counting
+  branching program of length n^{1+γ}. With Theorem D.2: flat, or this lower bound.
+- H11 [C]: the dichotomy has a Boolean side, and machine-checking it on Anthropic's Lean is the best next adjacent
+  problem. Alternatives listed in `v1/notebook.md` §4.
+
+### Running (as of this entry)
+- none

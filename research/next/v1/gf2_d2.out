@@ -1,0 +1,5 @@
+valid profiles: 9734 time 0.3
+Pareto-minimal profiles: 123
+((2, 2, 1, 1), (2, 1, 2, 1))
+...
+tau* with d0<=2 GF(2) gadgets: (np.float64(0.3325), (np.float64(0.335), np.float64(0.335)))

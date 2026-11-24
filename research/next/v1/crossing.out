@@ -1,0 +1,8 @@
+N = 2  trivial 4  antisym 2  N^sqrt2 = 2.67
+   total 2 -> EXACT at (p,q)=(1, 1)
+N = 3  trivial 9  antisym 4  N^sqrt2 = 4.73
+   total 4 -> EXACT at (p,q)=(3, 1)
+   total 3 -> no exact splitting found
+N = 4  trivial 16  antisym 7  N^sqrt2 = 7.10
+   total 7 -> EXACT at (p,q)=(6, 1)
+   total 6 -> no exact splitting found

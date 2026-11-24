@@ -1,0 +1,26 @@
+cut ranks: [np.int64(16), np.int64(16), np.int64(16)]
+two cuts
+  total 8
+    ranks (4, 4) residual 9.9e-12
+    ranks (5, 3) residual 4.3e-01
+    ranks (6, 2) residual 5.6e-01
+    ranks (7, 1) residual 6.6e-01
+    ranks (8, 0) residual 7.1e-01
+  -> [(4, 4)]
+  total 7
+    ranks (4, 3) residual 4.5e-01
+    ranks (5, 2) residual 5.9e-01
+    ranks (6, 1) residual 6.9e-01
+    ranks (7, 0) residual 7.5e-01
+  -> []
+three cuts
+  total 7
+    ranks (3, 2, 2) residual 6.6e-01
+    ranks (3, 3, 1) residual 5.5e-01
+    ranks (4, 2, 1) residual 5.8e-01
+    ranks (4, 3, 0) residual 4.5e-01
+    ranks (5, 1, 1) residual 6.8e-01
+    ranks (5, 2, 0) residual 5.9e-01
+    ranks (6, 1, 0) residual 6.9e-01
+    ranks (7, 0, 0) residual 7.5e-01
+  -> []

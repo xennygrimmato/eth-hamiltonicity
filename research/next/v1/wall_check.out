@@ -1,0 +1,6 @@
+trace norm of M = 1.1547005383792515  2/sqrt3 = 1.1547005383792517  polar factor W = [[0.5774, 0.8165], [0.8165, -0.5774]]
+witness entries on support: 0.38490017945975047 0.3849001794597506 0.38490017945975064
+d=2  witness positive on support: True   <Q,R> = 1.333333   (2/sqrt3)^d = 1.333333   <Q,S> = 3.4312 >= bound: True
+d=3  witness positive on support: True   <Q,R> = 1.539601   (2/sqrt3)^d = 1.539601   <Q,S> = 3.9028 >= bound: True
+d=4  witness positive on support: True   <Q,R> = 1.777778   (2/sqrt3)^d = 1.777778   <Q,S> = 4.7333 >= bound: True
+d=5  witness positive on support: True   <Q,R> = 2.052801   (2/sqrt3)^d = 2.052801   <Q,S> = 5.1028 >= bound: True

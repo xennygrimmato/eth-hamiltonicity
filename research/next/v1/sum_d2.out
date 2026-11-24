@@ -1,0 +1,3 @@
+no-cancellation profiles: 105 Pareto: 14
+tau* no cancellation, d0<=2: (np.float64(0.3331683125), (np.float64(0.3185), np.float64(0.3185)))
+GF(2) Pareto profiles not available without cancellation: 109 of 123

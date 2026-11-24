@@ -1,0 +1,6 @@
+round 0 library 249 tau* = 0.33027 ridge points 27 t=0
+   ridge mean 0.32490 -> 0.32490 with gadget [1, 2, 4, 8, 16, 32, 64, 128] ([1, 1, 1, 1, 1, 1, 1, 1], [8, 4, 4, 2, 4, 2, 2, 1])
+   no improving gadget found this round
+... 26 rounds, none found an improving gadget ...
+   no improving gadget found this round
+round 26 library 249 tau* = 0.33027 ridge points 27 t=325

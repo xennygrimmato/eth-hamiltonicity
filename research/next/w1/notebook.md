@@ -67,3 +67,31 @@ Notation: |ψ⟩ ∈ A⊗B⊗C⊗D a four-party tensor (equivalently a mixed ρ_
 - **Sphere law on K₄ [R].** If every piece satisfies Σ_k c_k² ≤ R², then the forced piece (c_k ≥ 4, c_k'+c_k'' ≥ 4) needs
   R² ≥ 16 + 8 = 24λ². The balanced point of that sphere is R/√3 = √8λ = 2√2λ per merge, **exactly the flat floor
   √2/3.** So a spherical (A₂-graded) family on K₄ can reach the flat floor at best, and L2 does not stop it from doing so.
+
+### 1.4 Consequences on Δ₃ [R over ℂ, computer-assisted LP; N for the numbers]
+`code/rank_lp.py d3` builds 255 log-rank variables h(S), S ⊂ 9 nodes, modulo complement. Constraints:
+- all 156,960 distinct instances of the four inequality types on every coarse-graining (A,B,C,D = rest) of the
+  nodes into four parties;
+- the triangle-network relations c_k ≥ max_g h(G^k_g) and c_k ≥ ½Σ_g h(G^k_g) (lower bounds);
+- c_k ≤ h(G^k_i) + h(G^k_j) for all pairs (path network; used only to turn "c_1 ≥ 9" into rank constraints).
+
+Forcings: "star k" means a piece with c_k ≥ 9λ (pigeonhole, Theorem 1), hence h(G^k_i) + h(G^k_j) ≥ 9 for all i ≠ j.
+"flat S" means a piece with h(S) ≥ cross(S). Output: `rank_lp_d3.out`.
+
+| forcing | q | min ⟨q, c⟩ | optimal c | reading |
+|---|---|---|---|---|
+| star 1 | (0,1,1) | **4.5** | (9, 2.25, 2.25) | **c_1 ≤ 2(c_2 + c_3)** is the best the rank inequalities give; x7 had factor 4 |
+| star 1 | uniform | **4.5** | (9, 2.34, 2.16) | uniform-q value V ≥ 4.5λ: **ρ_Δ₃ ≥ 1/2 at uniform q** |
+| star 1 | (0,½,½) | 2.25 | (9, 2.25, 2.25) | |
+| star 1 | (½,½,0) | 4.5 | (9, 0, 4.5) | |
+| flat (group of merge 1) | uniform | 4.0 | (6, 0, 6) | the old flattening value 4/9 |
+| flat (one node) | uniform | 1.25 | | |
+
+- Optimal ranks at the star optimum: merge-1 groups h = 4.5 each, merge-2 groups h = 1.5 each.
+- The full min over q (all three star forcings, S₃ symmetry) is in §1.5.
+- **Δ₃ and the exact relation c_1 ≤ c_2 + c_3 [C].** For graph and hyperedge (GHZ-on-lines) tensors, c_1 = c_2 + c_3
+  exactly when the edges are internal to merges 2 and 3. If c_1 ≤ c_2 + c_3 held for every tensor, the star piece
+  would force V ≥ 6λ at uniform q (ρ ≥ 2/3). Any spherical family would then need radius² ≥ 81 + 2·4.5² = 121.5,
+  whose balanced point is 9/√2 per merge, i.e. exactly ρ = 1/√2. **The four-party rank inequalities cannot prove
+  this**: the LP optimum (9, 2.25, 2.25) satisfies all of them. A proof would need genuinely network-level
+  (non-bipartition) information, e.g. Strassen support functionals or quantum functionals on 3-group merges.

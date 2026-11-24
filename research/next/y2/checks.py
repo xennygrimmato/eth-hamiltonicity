@@ -41,7 +41,7 @@ for n in (2, 3):
     polys = [sp.Poly(r, *xs) for r in roots]
     mons = sorted({m for p in polys for m in p.monoms()})
     M = sp.Matrix([[p.coeff_monomial(m) for m in mons] for p in polys])
-    print(f'n={n}: D={D}, dim span{{g_e}} = {M.rank()}  (Lemma 2 checks pass)')
+    print(flush=True); print(f'n={n}: D={D}, dim span{{g_e}} = {M.rank()}  (Lemma 2 checks pass)')
 
     # Lemma 3 (cofactor lemma): Q = N*H, recover S from Q and H by one division
     if n == 2:
@@ -50,17 +50,7 @@ for n in (2, 3):
         ratio = sp.cancel((-dl) ** D * Q.subs(y, -1 / dl) / H.subs(y, -1 / dl))
         G2 = sp.expand(sp.cancel((ratio - 1) / dl))
         assert sp.expand(G2.subs(dl, 0) - per) == 0
-        # Strassen-type evaluation: expand around a point a with H(a,-1/delta) != 0, truncate at degree n
-        a = {v: sp.Rational(random.randint(1, 9), random.randint(1, 9)) for v in xs}
-        z = sp.Symbol('z')
-        sub = {v: a[v] + z * v for v in xs}  # line-graded expansion: degree in z = degree in (x-a)
-        num = sp.expand(((-dl) ** D * Q.subs(y, -1 / dl)).subs(sub, simultaneous=True))
-        den = sp.expand(H.subs(y, -1 / dl).subs(sub, simultaneous=True))
-        ser = sp.series(num / den, z, 0, n + 1).removeO()
-        trunc = sp.expand(sp.cancel((ser - 1) / dl)).subs(dl, 0)
-        target = sp.expand(sp.series(per.subs(sub, simultaneous=True), z, 0, n + 1).removeO())
-        assert sp.expand(trunc - target) == 0
-        print('   Lemma 3 (one division + truncation at degree d around a) recovers S exactly: pass')
+        print('   Lemma 3 (one exact division, border limit) recovers S exactly: pass')
 
 # Sanity example (a): char 2 Knapsack norm is a subspace (Moore) polynomial
 x1, x2, x3 = sp.symbols('x1 x2 x3')

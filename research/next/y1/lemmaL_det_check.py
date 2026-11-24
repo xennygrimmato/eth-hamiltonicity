@@ -1,29 +1,35 @@
-# Sanity check of Lemma L (reduced case) on the hypersurface {det X = 0}, n=3 (9 variables),
-# NP-verifier: exists w with X w = 0 and c.w = 1. Newton (chord) tracking of the d=3 branches
-# t_j(A+TU) of det(A+TU+tB)=0 over C[U][[T]]/T^{d+1}, then det(A+TU) = det(B)*prod(-t_j) mod T^{d+1}.
-import sympy as sp, random
-random.seed(1)
-N=3; d=N
-U=sp.Matrix(N,N,lambda i,j: sp.Symbol(f'u{i}{j}')); T=sp.Symbol('T')
-rnd=lambda: sp.Rational(random.randint(-9,9),random.randint(1,5))
-A=sp.Matrix(N,N,lambda i,j:rnd()); B=sp.Matrix(N,N,lambda i,j:rnd()); c=sp.Matrix([rnd() for _ in range(N)])
-def trunc(e): 
-    e=sp.expand(e); return sum(e.coeff(T,k)*T**k for k in range(d+1))
-# roots of det(A+tB) in t (numeric, high precision)
-t=sp.Symbol('t'); roots=sp.Poly((A+t*B).det(),t).nroots(n=40)
-prod=sp.Integer(1)
-for tj in roots:
-    M=(A+tj*B); w0=M.nullspace(simplify=True) if False else None
-    # kernel vector numerically: solve M[0:N-1] w = 0 with c.w=1
-    Msys=sp.Matrix.vstack(M[0:N-1,:],c.T); rhs=sp.Matrix([0]*(N-1)+[1]); w=Msys.LUsolve(rhs)
-    z0=sp.Matrix([tj]+list(w))                      # unknowns (t,w)
-    def G(z,X):
-        tt=z[0]; ww=sp.Matrix(z[1:]); return sp.Matrix.vstack((X+tt*B)*ww, sp.Matrix([ (c.T*ww)[0]-1 ]))
-    zs=sp.Matrix(sp.symbols('z0:%d'%(N+1))); J0=G(zs,A).jacobian(zs).subs(dict(zip(zs,z0))); J0i=J0.inv()
-    z=z0; X=A+T*U
+# Sanity check of Lemma L (reduced case, Sec. 4.2 of notebook.md) on Z(det_N).
+# NP-verifier: exists w with X w = 0, c.w = 1 (generically reduced, defect 0).
+# Chord-Newton tracking of the d=N branches t_j(A+T*U) of det(A+T*U+t*B)=0 in C[[T]]/T^{d+1}
+# (U a random numeric direction; identity is polynomial in U so this tests it), then compare
+# det(B)*prod_j(-t_j) with det(A+T*U) mod T^{d+1}. Truncated power series = numpy arrays of length d+1.
+import numpy as np
+rng=np.random.default_rng(1); N=4; d=N
+A,B,U=(rng.standard_normal((N,N))+1j*rng.standard_normal((N,N)) for _ in range(3)); c=rng.standard_normal(N)
+def mul(a,b): return np.convolve(a,b)[:d+1]
+def ser(const,lin=None):
+    s=np.zeros(d+1,complex); s[0]=const
+    if lin is not None: s[1]=lin
+    return s
+X=[[ser(A[i,j],U[i,j]) for j in range(N)] for i in range(N)]
+def G(z):  # z = list of series [t, w_1..w_N]
+    t=z[0]; w=z[1:]; out=[]
+    for i in range(N):
+        acc=ser(0)
+        for j in range(N): acc=acc+mul(X[i][j]+t*B[i,j],w[j])
+        out.append(acc)
+    out.append(sum(c[j]*w[j] for j in range(N))-ser(1)); return out
+# base points: roots of det(A+tB)=0 <=> eigenvalues of -B^{-1}A
+ts=np.linalg.eigvals(-np.linalg.solve(B,A)); prod=ser(1)
+for tj in ts:
+    M=A+tj*B; w=np.linalg.solve(np.vstack([M[:N-1],c]),np.r_[np.zeros(N-1),1])
+    J=np.zeros((N+1,N+1),complex); J[:N,0]=B@w; J[:N,1:]=M; J[N,1:]=c; Ji=np.linalg.inv(J)
+    z=[ser(tj)]+[ser(x) for x in w]
     for _ in range(d+1):
-        z=(z-J0i*G(z,X)).applyfunc(trunc)
-    prod=trunc(prod*(-z[0]))
-lhs=trunc((B.det()*prod)); rhs_=trunc((A+T*U).det())
-diff=sp.expand(lhs-rhs_)
-print('max |coeff| of difference:', max([abs(sp.N(co)) for co in sp.Poly(diff,*(list(U)+[T])).coeffs()] or [0]))
+        g=G(z); z=[z[k]-sum(Ji[k,l]*g[l] for l in range(N+1)) for k in range(N+1)]
+    prod=mul(prod,-z[0])
+lhs=np.linalg.det(B)*prod
+# exact det(A+T U) coefficients via interpolation in T (degree N)
+pts=np.exp(2j*np.pi*np.arange(N+1)/(N+1)); vals=[np.linalg.det(A+p*U) for p in pts]
+rhs=np.fft.fft(vals)[::1]/(N+1); rhs=np.array([np.mean([v*p**(-k) for v,p in zip(vals,pts)]) for k in range(N+1)])
+print('Lemma L det check, N=%d: max |coef diff| = %.3e (coef sizes ~ %.1e)'%(N,np.max(np.abs(lhs-rhs)),np.max(np.abs(rhs))))

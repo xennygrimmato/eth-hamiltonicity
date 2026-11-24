@@ -21,8 +21,8 @@ constructions). Outputs: `e6_012.out`, `e6_01.out`.
 2. **Q2: yes in the flat case, and it is much stronger than ρ ≥ 1/2.** The main result is the *flat floor* (Theorem 3 below).
    - **Statement [R|FH].** Take a configuration with E edges, each crossing every one of p merges. Every identity
      Σ_{i≤T} A_i = d·f_C with T = 2^{o(λ)} has a piece with c_k(A_i) ≥ Eλ/√p − o(λ) for every merge k at once.
-   - **Δ₃ with three merges [R|PH].** Every family has V ≥ 3√3·λ, so ρ ≥ 1/√3 ≈ 0.577 > 1/2. Under FH a single piece costs
-     ≥ 3√3λ under all three merges at once.
+   - **Δ₃ with three merges [R|PH].** Every family has a single piece costing ≥ 3√3λ − o(λ) under all three merges at once.
+     So V ≥ 3√3·λ and ρ ≥ 1/√3 ≈ 0.577 > 1/2.
    - **Δ₃ with two merges [R|FH].** Some piece has min(c_row, c_col) ≥ (9/√2)λ ≈ 6.36λ. The best previous floor was 4λ (the
      flattening floor). This also gives φ ≥ 6.36, i.e. it settles the min-floor part of (A) in the flat case.
    - **The rectangle crossing F_{n1,n2} [R|PH].** Every family has max_i (c_row + c_col) ≥ 2√(λ1² + λ2²) − o(λ). That is *exactly*
@@ -131,7 +131,7 @@ every pair. So **star metrics are prices over every field.**
 p = 3 gives 5.19615 three times, which is 3√3.
 
 **Corollaries.**
-- (a) Δ₃ with three merges: ρ ≥ 1/√3 [R|FH]. With the planar configuration below it is [R|PH] for the game value.
+- (a) Δ₃ with three merges: ρ ≥ 1/√3 [R|FH]. The planar configuration below gives the same bound, single piece included, under PH.
 - (b) Δ₃ with two merges: min-floor φ ≥ 9/√2 ≈ 6.364 [R|FH]. The previous bound was 4, the flattening floor; the known upper
   bound is 9 − 0.585, from the straightened-edge family. Consistency: for the straightened family f = R + C, the selected piece
   must be C. That is fine, because Theorem 1 already forces C to be row-full.
@@ -157,8 +157,9 @@ p = 3 gives 5.19615 three times, which is 3√3.
   - columns ↦ B, A, C;
   - diagonals (r − c) ↦ A, C, B.
 - *Per edge.* Each edge's three hub displacements are two equal unit sides plus one other. Their sum has length √3.
-- *Conclusion.* So Σ_k b_k = 9√3. The S₃ symmetrisation of §1 gives V ≥ 3√3λ, i.e. ρ ≥ 1/√3. This configuration is in the plane,
-  so it needs only PH (one piece is no longer full in all three merges at once; that version needs ℝ⁶).
+- *Conclusion.* Exact evaluation gives b = (3√3, 3√3, 3√3), so Σ_k b_k = 9√3 [N, closed form]. One piece therefore has every
+  c_k ≥ 3√3λ − o(λ), and no symmetrisation is needed: V ≥ 3√3λ, i.e. ρ ≥ 1/√3. This configuration lies in the plane, so it needs
+  only PH.
 - *Two merges in ℝ².* The value is 12, i.e. ρ ≥ 2/3; ℝ⁴ is needed for 9√2.
 
 **Optimality of the orthogonal construction [N].**
@@ -181,9 +182,9 @@ p = 3 gives 5.19615 three times, which is 3√3.
   ρ ≥ **4/9**, the known flattening floor. On spider (tree) prices a local search also stops at 12 [N, heuristic].
 - So the unconditional price method on Δ₃ lands exactly on the flattening floor 4/9. Every gain above it comes from a
   2-dimensional flat. The obstruction is concrete: an edge direction must see the row, column and diagonal displacements at
-  cosine 1/√3 each, which needs Pythagoras. On a line or a tree, Σ_e |Σ_k Δ^k_e| ≤ 12. The reason is that a Z₃-labelling has no
-  nonzero homomorphism Z₃ → ℝ, so the three displacements cannot be aligned on all edges; this was checked as an exact
-  impossibility in the computation of §3 scratch.
+  cosine 1/√3 each, which needs Pythagoras. On a line or a tree the computed optimum is 12 [N, not proved]. The relevant
+  fact is proved: perfect alignment of the three displacements on all nine edges would need a nonzero homomorphism Z₃ → ℝᵐ,
+  and there is none [R].
 
 **The contracting case.** In it, Euclidean prices may fail to exist (Theorem D.2 proves only the disjunction). Its tools
 (Poincaré inequality, laws, trees, cutting) are duality statements: they *produce* covers and identities (Theorem A.6). In our

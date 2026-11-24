@@ -26,7 +26,7 @@ I also searched the literature (§9).
 | Theorem 2T | CORRECT WITH FIXES: the bound as written assumes non-negative exponents; edge cases P ≡ 0; the field must be fixed |
 | Special case a^D − c·b^D, sl ≤ (t+1)(2t−1) | CORRECT |
 | Theorem kT | UNVERIFIED SKETCH. Not refereed as a theorem; must not be stated as proved. |
-| Theorem S′ | CORRECT WITH FIXES: the path bound ∏_ℓ s_ℓ needs strict layering, else it is ∏(s_ℓ+1) ≤ (1+s/Δ)^Δ. Its core is a known lemma of Hrubeš–Yehudayoff. |
+| Theorem S′ | **VACUOUS for A_g as originally stated** (positive tests can never catch half of the Ryser branches; see Addendum §12, which I missed in the first pass). CORRECT once restated for Newton-faithful circuits. In both forms the path bound ∏_ℓ s_ℓ needs strict layering; otherwise it is ∏(s_ℓ+1) ≤ (1+s/Δ)^Δ. Its core is a known lemma of Hrubeš–Yehudayoff. The positive form stays meaningful for the Z(Q_{2,n}) hierarchy. |
 | Theorem G | CORRECT (re-verified). For r = 2 it is a known construction (Hrubeš–Yehudayoff CCC 2021, Thm 5.1). |
 | Depth-hierarchy ranges (2^{Ω(n/Δ)}; exponential to Δ = n^{1−ε}; superpolynomial for Δ = o(n/log n)) | CORRECT for T = 2^{o(n)} tests. The "method stops at Θ(n/log n)" claim is upgraded below to a true barrier for A_g itself (base-r version of §7). |
 | Hierarchy for sets in P_ℂ (Z(Q_{2,n})) | CORRECT; the parenthetical caveat is unnecessary (radical argument) |
@@ -246,6 +246,11 @@ Theorem 2T is the residue-characteristic-0 analogue: t-sparse factors, *no gener
 > If a tree (Definition M) decides A_g and every generic-path tested value is F_i/G_i with F_i computed by such a circuit
 > (size ≤ s, depth ≤ Δ), then **T·(1 + s/Δ)^Δ ≥ 2^n − 1**, i.e. s ≥ Δ·(((2^n − 1)/T)^{1/Δ} − 1).
 
+**WARNING (added after the idea agent's correction; see §12).** With positive circuits the hypothesis of the second
+sentence is never satisfied: no such tree exists at any size. The first sentence (slope bound) is fine. For A_g, use
+the Newton-faithful version in §12.2: same statement, with "circuit over ℝ_{≥0}" replaced by "Newton-faithful circuit
+over ℂ".
+
 **Ranges (checked).** For T = 2^{o(n)}:
 - size is 2^{Ω(n/Δ)}, i.e. 2^{n^{Ω(1)}} up to Δ = n^{1−ε};
 - the bound is superpolynomial iff Δ = o(n/log n), given T = poly(n);
@@ -403,7 +408,7 @@ Use Definition M and the Catching lemma of §1 throughout. K denotes the complet
 1. **Theorem A** (y-sparse tests): as boxed in §2.2. Valid over every algebraically closed field.
 2. **Theorem A′** (real families, Descartes): for any family of pairwise distinct real polynomials ρ_k (Ryser, additive Knapsack), a polynomial with τ powers of y over ℂ[x] is divisible by y − ρ_k for at most 2τ − 2 indices. Hence T·m·(2τ − 2) ≥ #family.
 3. **Theorem 2T** (two terms, cancellation, residue characteristic 0, k = ℂ): as in §3.2, with the machine corollary T·(2m t^{2m} + 4m(t − 1) + 1) ≥ 2^n − 1 for tests whose numerators have 2T shape, with y-sparsity t.
-4. **Theorem S′** (monotone tests): as boxed in §4.1.
+4. **Theorem S′** (Newton-faithful tests): as boxed in §12.2. Do *not* state it for positive tests deciding A_g; that is vacuous by §12.1.
 5. **Theorem G + barrier.**
    - For r ≥ 2 and L ≥ 1 there is a positive polynomial of depth 2L and size O(rL) with exactly r^L root valuations, forming an arithmetic progression.
    - Consequently, for the pc1 substitution, there is a positive polynomial in (X_12, y) of size poly(n) and depth O(n/log n) whose root valuations contain those of N_g.
@@ -477,3 +482,142 @@ Scratchpad `ref/` (not part of the repository):
 - `chk2.py`: base-r gadget; counts and arithmetic-progression property.
 - `chk3.py`: 2T random sanity tests.
 - `chk4.py`: char-2 span count.
+
+## 12. Addendum: the idea agent's correction (§8.1–8.2) and §8 (Problem TC)
+
+This section was added after the lead relayed the correction. No scripts were run for §8; I checked every proof by hand.
+
+### 12.1 The correction (Prop. 8.1): CORRECT, and it applies to my first pass too
+
+**Proof of Prop. 8.1.** Let P ≠ 0 have non-negative coefficients and let g ≠ 0 have non-negative coefficients.
+- Then P(X, g(X)) is a polynomial with non-negative coefficients.
+- At X = 1, each monomial c·X^α y^b contributes c·g(1)^b > 0, because g(1) > 0.
+- So y − g ∤ P. (For g = 0 the claim can fail; that is the excluded branch g_∅.)
+
+**Consequence for Ryser.** g_E = (−1)^{n+|E|}·(positive polynomial). For the 2^{n−1} or so sets with |E| ≡ n (mod 2), no positive test catches the branch. So no tree whose generic-path tests are positive decides A_g, at any size.
+
+- Theorem S′ as stated for A_g is therefore **vacuous**. My first-pass verdict ("correct with fixes") missed this; corrected above.
+- The slope bound itself, and the hierarchy for Z(Q_{2,n}) (§4.3), are **unaffected**. Q_{2,n} is a positive test that does decide Z(Q_{2,n}), and its roots are not non-negative polynomials.
+
+**One overstatement.** "The same holds after any fixed sign change of the inputs" is true for sign changes that are constant on each row of X (and on y).
+- With row-constant signs, g_E(εX) = (∏ε_i)·g_E(X), so one parity of |E| stays positive.
+- For entrywise signs ε_ij it is false as stated: ℓ_{i,E}(εX) has mixed signs once E meets columns of both signs.
+- In that case only the sets E on which every row's signs agree are forced to be positive. Since singletons have this property, the obstruction survives in weakened form.
+- It is irrelevant once the model is Newton-faithful.
+
+**Does anything else rely on the vacuous form?**
+- pc1: no. pc1 does not use S′ ("not refereed"). Theorems A, B, B′, AB and σ assume no positivity.
+- Theorems S and 2T: no positivity.
+- Theorem G and §7: they *construct* positive polynomials as barriers. B need not decide anything, so this is legitimate.
+- My barrier wording (§5.3, "even against monotone circuits") is still correct. It says w-saturation does not force hardness even for monotone circuits. Note that monotone circuits can never compute a *multiple* of N_g (Prop. 8.1); that is consistent, since B is not a multiple.
+
+### 12.2 The Newton-faithful model: well defined, non-trivial, S′ holds
+
+**Definition.** A circuit over ℂ (gates +, × with powers, constants in ℂ^×) is Newton-faithful if no gate computes 0 and at every sum gate Newt(f_1 + … + f_r) = conv(∪ Newt f_i).
+- This is a semantic condition on the polynomials at the gates. It is well defined, and checkable in principle.
+- Subtraction is a sum after multiplying by the constant −1, and is covered.
+- Products always satisfy Newt(fg) = Newt f + Newt g, since ℂ[X, y] is a domain.
+
+**Lemma 8.2: correct.**
+- Newt(C) is computed by the polytope circuit, so its support function is computed by the (min,+) circuit.
+- With u indeterminate, the y-Newton polygon of σ_w C is the lower hull of the image of Newt(C) under (α, k) ↦ (k, ⟨w, α⟩). Projection commutes with convex hull, and leading coefficients in u are distinct monomials.
+
+**Non-triviality: confirmed.** The product formula N_g = ∏_E (y − g_E), with g_E = ±∏_i Σ_{j∈E} X_ij, is Newton-faithful:
+- Σ_{j∈E} X_ij is a sum of distinct variables;
+- y − g_E is a sum of a pure y monomial and a y-free polynomial, so supports are disjoint and nothing cancels;
+- the rest are products.
+
+It has depth 4 and ≈ n²·2^n wires. This matches the bound at Δ = 4, which gives s ≳ 2^{n/4}. The model also contains every sparse test, written as a sum of its monomials, and y^D − x^D.
+
+> **Theorem S′ (paper form).** Let a tree (Definition M) decide A_g, and let every generic-path tested value be F_i/G_i
+> with F_i computed by a Newton-faithful circuit of alternation depth Δ and s wires. Then T·(1 + s/Δ)^Δ ≥ 2^n − 1
+> ((s/Δ)^Δ if strictly layered). The ranges of §4.1 are unchanged, and the base-r barrier of §5.2(b) shows the threshold
+> Δ = Θ(n/log n) is tight. Positive circuits are Newton-faithful, so Theorem G is a construction inside the model.
+
+### 12.3 §8.3: Prop. 8.3 and Problem TC
+
+**Support function, checked.** Newt(y − g_E) = conv(e_y ∪ P_E), with support function min(θ, h_E(w)). Then Π_n = e_y + Σ_{E≠∅} conv(e_y, P_E), as stated.
+
+**(a) and (b), checked.** They follow from Newt(N_g H) = Newt N_g + Newt H and Lemma 8.2.
+
+**(b) ⇒ (c), checked.** The normal fan of a Minkowski sum is the common refinement of the summands' fans.
+
+**Corner loci.** The corner locus of a sum of concave piecewise-linear functions is the union of the corner loci, since superdifferentials add and a sum of sets is a singleton only if each set is. So the graphs θ = h_E(w) lie in the corner locus of F, for all w. This step is correct.
+
+**Converse (c) ⇒ Π_n is a summand of λP: correct, with one qualification.**
+- This is the standard weak-Minkowski-summand criterion (Shephard; see e.g. Grünbaum, *Convex Polytopes* §15.1).
+- Integer λ suffices, and lattice vertices are preserved. log λ = O(n) suffices, since Π_n has edge lengths ≤ 2^n·poly.
+- Qualification: the converse only produces a *polytope circuit* or a positive polynomial B with that Newton polytope. It does **not** produce a multiple of N_g. "The tropical content is exactly fan refinement" is right only in that sense.
+
+**The two consequences of Problem TC.**
+- "tc(n) > poly ⇒ no polynomial-size Newton-faithful test family decides A_g at any depth": **correct.** The product of the F_i is a Newton-faithful multiple of N_g of size O(Ts + T).
+- "tc(n) = poly ⇒ universal barrier": **correct.** Take B positive with Newt B = P. Then Trop B ⊇ Trop N_g, so Sl(σ_w B) ⊇ Sl(σ_w N_g) for every real w.
+
+### 12.4 §8.4: reductions and the quadratic bound
+
+**Reduction to Problem R: correct.**
+- With w_ii = 0 and w_ij = a_i (j ≠ i), one gets h_E = Σ_{i∉E} a_i on a > 0.
+- Restricting a concave function to a linear subspace keeps the kinks along θ = a(S), because θ is a coordinate of the subspace and min(θ, a(S)) has distinct pieces there. The corner loci of the summands still add.
+- So tc(n) ≥ r(n).
+- A general warning: restricting a corner locus to a subspace can lose kinks (min(x, y) on x = y). That does not happen here, for the reason just given.
+
+**Lemma 8.4: the counting part is correct; the "each maximal cone equals a selection region" part is not.**
+- Correct: the regions R_σ, where the winner at each min gate is fixed, cover ℝ^d. Every gate is linear on each of them. So each R_σ lies in one maximal cone of fan(P_tot), and #maximal cones ≤ #selections ≤ 2^m (fan-in 2; ∏ fan-ins in general).
+- Not correct: "each maximal cone *is* {…} for a σ" and "≤ m facets". A maximal cone can be a union of several R_σ. Only the counting is needed, so state just that.
+
+**Prop. 8.5 (r(n) ≥ (1−o(1))n² min gates): correct.**
+- A maximal linearity cone, being convex, cannot meet two chambers of the arrangement inside the open orthant: the open segment between interior points would cross a hyperplane where F has a kink. So #cones ≥ c(n).
+- Chambers ↔ positive-weight threshold functions S ↦ [a(S) ≤ θ]. Their count is 2^{n²(1−o(1))} (Zuev 1989; flipping variables loses at most 2^n).
+- This is a bound on min gates of fan-in 2, or more generally on log₂ ∏ fan-ins.
+- "No counting argument can do better" is correct: K = 2^n hyperplanes in ℝ^{n+1} give ≤ K^{n+1} = 2^{O(n²)} cells.
+- It is linear in the n² Ryser variables. Solid but weak.
+
+### 12.5 §8.5: the ReLU reformulation and barrier-side remarks
+
+**Lemma 8.6: correct.**
+- The pair rules are right: min(g_1 − h_1, g_2 − h_2) = min(g_1 + h_2, g_2 + h_1) − (h_1 + h_2), and positivity gives trop of a sum = min. The size is O(s).
+- Sign changes of δ lie in the closure of the kinks of min(trop G, trop H).
+- Conversely, kinks of a (min,+) circuit lie in ∪_gates {inputs tie}.
+- So the ReLU formulation is correct "up to zero versus sign change", as the authors say.
+- Prior art: the fold gadget is Telgarsky's sawtooth ("Benefits of depth in neural networks", COLT 2016) in one dimension, and Hrubeš–Yehudayoff Thm 5.1 in Newton-polytope form. The authors' "whether that example is in their paper I have not checked" can be answered: **yes**, it is Theorem 5.1 / Section 8 of Hrubeš–Yehudayoff, CCC 2021 (I read it), and their Remark 1.3 makes the same point.
+
+**"A δ whose zero set is exactly the arrangement decides Subset-Sum, so it cannot be small unless NP ⊆ P/poly": correct.**
+- Integer-weight (min,+,−) circuits with poly-bit constants are evaluable in polynomial time on integer inputs, since values grow additively.
+- With extra zeros allowed there is no such obstruction. The authors say so, and it is right.
+
+**Euclid / Ostrowski construction:** an unverified [C]; the authors label it so.
+
+### 12.6 §8.6: why known methods do not apply
+
+**Jerrum–Snir / Schnorr / Jukna.** These bound circuits that *compute* a given exact polynomial or tropical function, so they do not survive an arbitrary concave summand. Fair.
+
+**Extension complexity.**
+- The permutohedron is Newt ∏_{i<j}(x_i + x_j) (graphical zonotope of K_n). Correct.
+- Every generalized permutohedron, including matroid base polytopes, is a weak Minkowski summand of a dilate (Postnikov). Correct.
+- Some matroid polytopes need exponential extension complexity (Rothvoss 2013). Correct.
+- "Most" matroid polytopes should be "some (by a counting argument)". The conclusion — extension complexity is not inherited by summands — is correct.
+
+**Conjecture H and its claimed consequence: the consequence is NOT justified as stated.**
+- Problem R requires the planes θ = a(S) only over the open orthant a > 0. A generic 2-plane L in a-space meets the orthant in an open *sector*. So the restricted problem only requires the planes over the wedge (L ∩ orthant) × ℝ_θ, not complete planes.
+- Conjecture H is about complete planes, so "Conjecture H ⇒ r(n) ≥ 2^{Ω(n)}" does not follow.
+- Fixes, either:
+  - state Conjecture H′ for planes required only over a common open wedge; this is strictly stronger and much less plausible, since the authors' constructions do cover pieces "cone by cone"; or
+  - find a restriction in which h_E is linear on a whole plane. Problem TC itself does not have this property: h_E restricted to a 2-plane is only piecewise linear.
+- The general-position hypothesis does hold. I checked: for generic plane coordinates v_i ∈ ℝ², no three subset sums v(S) are collinear, because 1_B − 1_A ∥ 1_C − 1_A in {−1,0,1}^n forces A = B = C. So "no three planes share a line" is fine.
+
+### 12.7 What in §8 is solid
+
+| Statement | Status |
+|---|---|
+| Prop. 8.1 (positive tests never catch positive branches; S′ vacuous for A_g) | SOLID. Minor overstatement for entrywise sign changes. |
+| Newton-faithful model; Lemma 8.2; restated S′; N_g's product formula is faithful | SOLID |
+| Prop. 8.3 (a)(b)(c) and the two TC consequences | SOLID. The converse is only tropical: it gives no multiple. |
+| tc(n) ≥ r(n) (resonance reduction) | SOLID |
+| Lemma 8.4 | Counting part SOLID; "cone = selection region, ≤ m facets" FALSE as stated and unnecessary |
+| Prop. 8.5, r(n) ≥ (1−o(1))n² min gates; counting caps at O(n²) | SOLID (cite Zuev for threshold counts) |
+| Lemma 8.6 (ReLU equivalence up to zero vs sign change); Subset-Sum remark | SOLID; prior art Telgarsky, Hrubeš–Yehudayoff |
+| §8.6 assessments of known methods | Fair heuristics; "most matroid polytopes" should be "some" |
+| Conjecture H ⇒ r(n) ≥ 2^{Ω(n)} | NOT JUSTIFIED: Problem R lives on the orthant, so a 2-plane restriction needs only a wedge |
+| Euclid/Ostrowski universal construction | [C], unverified |
+
+**Bottom line.** §8 correctly identifies the right model and reduces the all-depth question to a clean tropical covering problem, Problem R. The only proved lower bound is quadratic. The route to an exponential bound through Conjecture H has a gap: the orthant restriction.

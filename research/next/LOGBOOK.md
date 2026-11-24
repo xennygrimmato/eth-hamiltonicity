@@ -330,9 +330,25 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   border bound), Lemma L (defect ≤ 1), cofactor-hardness and trace-germ statements, Theorem A, Theorem B (with the
   corrected B′), Theorem 2T, the valuation barrier.
 
+### Referee addendum (`review-sparse.md` §12): the S′ correction and §8 [V]
+- The idea agent's correction is right; the referee's first verdict on S′ is withdrawn. S′ for literally positive
+  tests is vacuous on A_g. Nothing else depended on it.
+- The "Newton-faithful" model is well defined and non-trivial; restated S′ holds: T·(1 + s/Δ)^Δ ≥ 2^n − 1; depth
+  Θ(n/log n) is tight.
+- §8 solid: Problem TC and its two consequences; the reduction to the resonance arrangement; r(n) ≥ (1−o(1))n² min
+  gates (and counting cannot do better); the ReLU-network equivalence.
+- §8 not justified: "Conjecture H ⇒ exponential bound" has a gap (Problem R only needs planes over the positive
+  orthant, a wedge; H is about complete planes). The Euclid/Ostrowski construction is unverified.
+- More prior art: the fold gadget is Telgarsky's sawtooth (COLT 2016).
+- STATE OF TARGET 2: all agents finished. Reviewed results listed in the previous entry stand, with S′ in its
+  Newton-faithful form. Open: O1–O3, Problem TC, a repaired Conjecture H.
+
+### State at end of round (24 Nov, evening)
+- Target 1 (engine / VP ≠ VNP link): link reviewed [V]; Δ₃ ≥ 1/2 theorem and three-wire no-gos unreviewed [R];
+  no faster algorithm; one precisely stated open case.
+- Target 2 (P_ℂ vs NP_ℂ): not proved, not within reach of these methods; restricted-machine separations and a
+  valuation barrier reviewed [V].
+- No agents running. Proposed next: referee w1; write the two papers.
+
 ### Running (as of this entry)
-- `review-link.md` (Opus referee): Findings 2 and 3.
-- `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.
-- `ideas-span.md` (Fable): try to refute the Span Conjecture; ranked attacks.
-- `w1/` (Opus): rank lemma, three-wire fusion, recoupling pieces.
-- `pc1/` (Fable): restricted-model separations; partial norms.
+- none

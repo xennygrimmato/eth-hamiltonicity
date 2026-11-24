@@ -219,6 +219,25 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   polynomial-time machine must look like: a test that is not a short product of y-sparse polynomials,
   superpolynomially many spurious roots, a border-hard spurious-root trace), O3 (the test-case norm).
 
+### w1 interim 3 (three-merge line) [R claimed, unreviewed]
+- THEOREM claimed: ρ_Δ₃ ≥ 1/2 for every family and every weighting q, in characteristic 0. Human proof: one
+  CHLW Thm 2 instance plus three instances of Song et al.'s inequality give 2h(R) ≤ Σ h(C_g) + Σ h(D_g); hence
+  c_k ≤ 2(c_k′ + c_k″); with the pigeonhole piece, V ≥ 4.5λ. LP dual certificate checked symbolically. Field-free
+  only 4/9 survives; no violation found over GF(2)/GF(3) in 79k tests [N]. Closes the "ρ < 1/2 on Δ₃ not ruled out"
+  item from the engine3 notes.
+- Lead's su(1,1) reading (H8) partly right, partly wrong: su(1,1) recoupling projectors also die (each energy shell
+  is finite). Appendix B escapes because its pieces are boosts with a Gram pole, not channel projectors.
+- No-go claimed: single-flavour three-wire fusion at 1/√3 is impossible in the whole multivariate
+  generalised-Meixner class (Tratnik families lie inside x7's ansatz; at most d+1 wires on a d-mode bond).
+- LIVE CANDIDATE [C]: a d = 2 bond with 2D wires (bivariate Meixner, multinomial weights) passes the constant-term
+  conditions for three wires and has naive ρ ≈ 3^{−1/3} ≈ 0.693 < 1/√2 ≈ 0.707. Sufficiency untested. If real:
+  α′ ≈ 0.528, #3-SAT in 2^{O(n/(log n)^{0.528})}. Consistent with all floors (1/2 unconditional, 1/√3 flat).
+- Lead's worry: for two merges the same 2D-oscillator spectrum gave 0.794 because of the degree budget (x5/x6).
+  Asked w1 what plays that role with three merges and to do the engine's real accounting before anything else.
+- Z₃ interpolation on K₄: a sphere law capped exactly at the flat floor [X as an improvement].
+- H9 [C]: the candidate dies to a three-merge version of the degree-budget/ladder argument. If it does not, it is a
+  new record.
+
 ### Running (as of this entry)
 - `review-link.md` (Opus referee): Findings 2 and 3.
 - `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.

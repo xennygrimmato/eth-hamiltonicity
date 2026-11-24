@@ -230,3 +230,47 @@ If it exists, the naive exponent is ρ ≈ 0.693, a sliver below 1/√2. It is n
 (1/√3) is impossible in every multivariate generalised-Meixner ansatz**, because rank P ≤ d. This also answers the lead's
 question on Tratnik families: they fall *inside* the ansatz (their generating functions are the multinomial form
 above), and their only escape is the extra modes, which cost spectrum.
+
+### 1.5 Theorem (Δ₃ floor ρ ≥ 1/2 for every family, general q; characteristic 0) [R]
+Notation: nodes n_{αβγ} (α+β+γ ≡ 0 mod 3). Write R_g = G^1_g (α = g), C_g = G^2_g (β = g), D_g = G^3_g (γ = g), and
+h(S) = log₂ rk(S | rest) for a single tensor (piece).
+
+**Lemma 1.5.1.** For every tensor on Δ₃ over a field of characteristic 0, and every group R of one merge,
+  **2h(R) ≤ Σ_g h(C_g) + Σ_g h(D_g)**   (C, D the groups of the other two merges).
+
+*Proof* (exact LP dual certificate found by `code/d3_certificate.py S12H`, summed in `d3_cert_sum.out`). Take R = R_2 and
+split the other six nodes as B = {n000, n111}, C = {n012, n120}, D = {n021, n102}.
+1. CHLW Thm 2 on (R_2, B, C) gives 2h(R_2) ≤ h(X_1) + h(X_2) + h(X_3), where
+   X_1 = {n012,n021,n102,n120}, X_2 = {n000,n021,n102,n111}, X_3 = {n000,n012,n111,n120}
+   (each a complement of R_2∪B, R_2∪C or B∪C).
+2. L2 (Song et al.) on suitable coarse-grainings gives
+   h(X_1) ≤ h(C_2) + h(D_2),  h(X_2) ≤ h(C_0) + h(D_1),  h(X_3) ≤ h(C_1) + h(D_0).
+   For X_1, take parties A = {n000,n111,n201,n210}, B = {n012,n102}, C = {n021,n120}, D = {n222}, so that A∪B is
+   the complement of C_2 and A∪C is the complement of D_2. The other two are the same up to the symmetry of AG(2,3).
+3. The three pairs (C_2,D_2), (C_0,D_1), (C_1,D_0) use every column and every diagonal exactly once. ∎
+
+The same holds for R_0 and R_1 (and for the other merges) by the translation and S₃ symmetry of Δ₃. The certificate
+pairs R_0 with a different split; the script checks the summed identity symbolically.
+
+**Corollary 1.5.2.** c_k ≤ h(G_i) + h(G_j) ≤ Σ_{g}h(G^{k'}_g) + Σ_g h(G^{k''}_g) ≤ 2(c_{k'} + c_{k''}).
+- **x7's Prop. 3.1 constant improves from 4 to 2.**
+- The rank LP shows that 2 is the best constant any combination of known four-party rank inequalities can give:
+  the LP optimum (9, 2.25, 2.25) is feasible.
+
+**Theorem 1.5.3 (ρ_Δ₃ ≥ 1/2, char 0, every family, every q).**
+1. For each merge k, pigeonhole (Theorem 1) gives a piece with c_k ≥ 9λ − o(λ). Corollary 1.5.2 then gives
+   c_{k'} + c_{k''} ≥ 4.5λ − o(λ). Hence ⟨q, c⟩ ≥ 9q_k + 4.5·min(q_{k'}, q_{k''}).
+2. Order q_1 ≤ q_2 ≤ q_3. The merge-3 piece gives 9q_3 + 4.5q_1 ≥ 4.5(q_1 + q_2 + q_3), because 2q_3 ≥ q_2 + q_3.
+3. So V ≥ 4.5λ − o(λ), i.e. **ρ_Δ₃ ≥ 1/2**. ∎
+
+Remarks:
+- This closes open-door §4's "ρ < 1/2 on Δ₃ not ruled out" (window [4/9,1] → [1/2,1]) over ℚ, ℝ, ℂ.
+- [N] The LP over a 1/6 grid of q, with all inequalities, gives exactly min_q max_k = 4.5 (`rank_lp_d3_grid_all.out`).
+  f_star1(q) = 9q_1 + 4.5·min(q_2,q_3) matches all 28 grid values.
+- **Which inequalities are needed.** Exact uniform-q values: subadditivity + L1 (field-free) give 15/4, which is
+  x7's factor 4. Adding CHLW2 alone also gives 15/4. Adding L2 alone gives 33/8. **Both CHLW2 and L2 are needed for
+  9/2.** Field-free (L1 + subadditivity), the uniform-q floor stays max(15/4, flattening 4) = 4, i.e. 4/9.
+- Over finite fields the theorem holds if L2 and CHLW2 hold there. [N] `code/field_check2.py`: 79,058 random
+  structured 4-party tensors over GF(2), GF(3), dims 2–4, all 24 permutations of L1, L2 and CHLW2: **no violation** [C].
+- Relative to the prize: 1/2 < 1/√3 < 1/√2, so Δ₃ stays open. The flat floor 1/√3 is untouched, and the single-tensor
+  question c_1 ≤ c_2 + c_3 (which would give 2/3 at uniform q) stays [C].

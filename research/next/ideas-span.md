@@ -22,6 +22,9 @@ bound for per.
    T(s/Δ)^Δ ≥ 2^n − 1), Theorem G (tightness: (s/Δ)^{Θ(Δ)} slopes are achievable, so the method stops at Δ = Θ(n/log n)),
    and Theorem 2T (two-term sums of products of powers of sparse polynomials, with cancellation, via a non-archimedean
    Rolle lemma: slopes ≤ 2m·t^{2m} + 4m(t−1) + 2 whatever the exponents).
+3b. **Barrier [P, N] (§7):** under pc1's substitution, and under every integral monomial substitution, an O(n)-size positive
+   polynomial (the gadget with ε_k = 2^{n−1−k}·c, G_0 = y^{2c}) has a slope set containing that of N_g; also for polynomially
+   many substitutions at once. Single valuations cannot prove Gap G. All weights at once (tropical containment) is open.
 4. **Referee's test case** Φ = ∏_i (x_i + T^{2^{i−1}}): undecided; my guess is that its cyclic norm has no easy multiple (§1.5).
 5. **Is the original problem within reach?** No. See §5.
 
@@ -383,3 +386,78 @@ Not within reach. After this round the picture is:
 - Not verified first-hand: Mason–Stothers / Newman–Slater statements, KPTT, Schaefer–Štefankovič, Andrews–Forbes (all from
   memory). The general-type claim for the quadratic tower (§1.3) is a canonical-class count on a singular complete
   intersection, hence [C].
+
+## 7. Barrier: single valuations cannot prove Gap G (answer to pc1's question: **yes**)
+
+Added after pc1's question. Notation of Idea 1 (K, v, Sl, σ_w : X_ij ↦ u_ij τ^{w_ij}). All statements [P]; script `span/c5.py` [N].
+
+### 7.1 Exact slope set of the gadget
+
+Generalised gadget. Fix p ≥ 1, a constant H_0 with v(H_0) = η_0, constants c_k with v(c_k) = ε_k > 0 (k = 0..n−1), all with
+positive coefficients (monomials in τ, or in the X_ij). G_0 := y^p, G_{k+1} := c_k (G_k + H_k)², H_{k+1} := G_k H_k,
+Q := G_n + H_n. Then deg_y Q = p·2^n and Q(0) ≠ 0.
+
+**Proposition 7.1.** If the ε_k are strictly superdecreasing, ε_k > Σ_{l>k} ε_l for all k, then
+**Sl(Q) = { (η_0 + Σ_k σ_k ε_k)/p : σ ∈ {±1}^n }**, exactly 2^n values, each carried by p roots.
+*Proof.* No cancellation, so with g_k, h_k the (min,+) values at θ = v(y) and δ_k := g_k − h_k:
+δ_0 = pθ − η_0 and δ_{k+1} = ε_k − |δ_k| (because g_{k+1} = 2 min(g_k, h_k) + ε_k, h_{k+1} = g_k + h_k). Let P_n := {0} and
+P_k := {δ : ε_k − |δ| ∈ P_{k+1}}, so that δ_n = 0 iff δ_k ∈ P_k iff δ_0 ∈ P_0. By downward induction P_k is symmetric, equals
+{Σ_{l≥k} σ_l ε_l}, has 2^{n−k} elements, and every c ∈ P_{k+1} has |c| ≤ Σ_{l>k} ε_l < ε_k; so ε_k − |δ| = c has the two
+solutions ±(ε_k − c), and {±(ε_k − c)} = {±ε_k + c'} by symmetry. The sums are pairwise distinct by superdecrease. δ_n is
+piecewise linear in θ with all slopes ±p, so it changes sign at each of its 2^n zeros, and each is a breakpoint of
+min(g_n, h_n), i.e. a root valuation of Q. Q is a polynomial in y^p of degree 2^n in y^p with nonzero constant term, so
+there are at most 2^n distinct root valuations. ∎ [N: random rational superdecreasing ε, n ≤ 7, exact agreement.]
+Without superdecrease the slope set is smaller and I have no closed form (my guess "preimage recursion with the
+constraint c ≤ ε_k" failed a random test; with ε_k = 2^k increasing most sign patterns are lost). So take ε_k = 2^{n−1−k}·c,
+decreasing, not ε_k = 2^k.
+
+**Corollary 7.2 (arithmetic progressions).** With v(M) = c > 0, c_k := M^{2^{n−1−k}}, H_0 := M^{2^n − 1}, G_0 := y^p:
+Sl(Q) = {(2c/p)·k : k = 0, 1, …, 2^n − 1}. Size O(n + log p) with shared squarings.
+*Proof.* Σ_k σ_k 2^{n−1−k} runs over the odd integers m with |m| ≤ 2^n − 1, and (c(2^n − 1) + cm)/p = (2c/p)·k. ∎
+
+### 7.2 The barrier
+
+**Theorem 7.3 (pc1's substitution).** Let w_ij = 2^i for j ≠ i, w_ii = 0 (i, j = 1..n), so that Sl(σ_w N_g) =
+{Σ_{i∉E} 2^i : E ≠ ∅} = the even integers in [0, 2^{n+1} − 2). Let M := X_12 (v(σ_w M) = 2) and
+B(X, y) := Q of Corollary 7.2 with p = 2: G_0 = y², H_0 = X_12^{2^n − 1}, c_k = X_12^{2^{n−1−k}}.
+Then B has positive integer coefficients, circuit size O(n), and **Sl(σ_w B) = all even integers in [0, 2^{n+1}) ⊇
+Sl(σ_w N_g)**. [N: n ≤ 8.] B is not a multiple of N_g (it involves one variable X_12 only).
+So no argument that uses only the set of root valuations under this substitution can show that N_g has no easy multiple;
+it cannot even distinguish N_g from a factor of an O(n)-size positive polynomial.
+
+**Theorem 7.4 (every integral monomial substitution, and polynomially many at once).**
+(a) For every weight matrix w with non-negative integer entries of ≤ b bits, not all zero, there is a positive polynomial
+B_w(X, y) of size O(n(b + log n)) with Sl(σ_w B_w) ⊇ {0, 1, …, 2^L − 1} ⊇ Sl(σ_w N_g), where 2^L > Σ_i max_j w_ij.
+*Proof.* Pick X_ij with c := w_ij > 0, M := X_ij, p := 2c, and L levels in Corollary 7.2: the slope set is {0, …, 2^L − 1}.
+Every v(σ_w g_E) = Σ_i min_{j∈E} w_ij is an integer in that range. y^{2c} and the powers of M cost O(b + L) gates. ∎
+Rational weights reduce to integer ones by rescaling τ. Any ring-valued "monomial" substitution X_ij ↦ u_ij τ^{w_ij} is
+covered; so is any substitution after which the root valuations lie in a cyclic group and a poly-bit range.
+(b) For any polynomially many such weight matrices w^{(1)}, …, w^{(q)}, the product B := ∏_r B_{w^{(r)}} has size
+O(q·n(b + log n)) and Sl(σ_{w^{(r)}} B) ⊇ Sl(σ_{w^{(r)}} N_g) for every r (Lemma S1: slopes of a product are the union).
+(c) The same holds on whole cones of real weights when the rows are hierarchically scaled: the base-r gadget of Theorem G
+with symmetric zero sets D_i = ±{w_ij − w_i1 : j} (constants are monomials X_ij/X_i1 after clearing denominators) realises
+the sumset Σ_i (w_i1 + D_i) ⊇ Sl(σ_w N_g), by the same proof as 7.1, provided max D_{i+1} < ½·(minimal gap of D_i) and the
+order of the entries in each row is fixed. One polynomial per chamber; exponentially many chambers.
+
+**What is not covered: all weights simultaneously.** A single B with Sl(σ_w B) ⊇ Sl(σ_w N_g) for *all* w is, for generic
+coefficients, the same as the containment of tropical hypersurfaces Trop(B) ⊇ Trop(N_g) = ∪_E graph(h_E),
+h_E(w) = Σ_i min_{j∈E} w_ij, in ℝ^{n²+1}. The constructions above do not give this: B_w uses the arithmetic of one w
+(a monomial of valuation c and the exponent 2c), and (c) uses one chamber. What I can say:
+- Trop(N_g) ⊆ Trop(M_n) for the multiplicative n-ary Knapsack norm M_n = ∏_{j∈[n]^n} (y − ∏_i X_{i j_i}) (the minimum is
+  attained by some j). So a small B with Trop(B) ⊇ Trop(M_n) — for instance an easy multiple of M_n, a Kronecker-product
+  characteristic polynomial — would be a universal barrier. M_n is believed hard, and Theorem S applies to it.
+- For one row (additive Knapsack) the universal B exists trivially: ∏_j (y + X_j), n roots, because there are only n
+  functions h_E.
+- For positive B the question is exactly Idea 7 (the tropical cofactor problem): is Σ_E min(θ, h_E(w)) + (concave) computed
+  by a small (min,+) circuit?
+**So "many valuations at once" is the next method, and it must use super-polynomially many weight vectors, or the
+piecewise-linear dependence on w itself.** Any argument that looks at poly(n) integral valuations, one at a time or jointly
+through their slope sets, is blocked by 7.4(b). A concrete formulation of the next step: prove that no polynomial of size
+n^{O(1)} has a tropical hypersurface containing ∪_E graph(h_E) unless it is "N_g-like"; first for positive polynomials
+(Idea 7), where it is a monotone-circuit statement.
+
+**Robustness summary.** One substitution: barrier, O(n) size (7.3). Every integral monomial substitution: barrier, with a
+polynomial depending on w (7.4a). Polynomially many at once: barrier (7.4b). All real weights at once / the tropical
+variety: open, equivalent to a tropical containment problem; not a barrier yet and not a proof method yet.
+Theorems S, S′, 2T are unaffected: they bound the slope count of *restricted* tests, and 7.3 only says that the
+restriction cannot be removed.

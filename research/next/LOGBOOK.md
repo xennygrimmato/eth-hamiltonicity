@@ -238,6 +238,20 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - H9 [C]: the candidate dies to a three-merge version of the degree-budget/ladder argument. If it does not, it is a
   new record.
 
+### Idea agent: the valuation barrier (`ideas-span.md` §7) [R claimed; with referee]
+- Answer to pc1's question: YES. A positive-coefficient polynomial of size O(n), in one x-variable and y, has root
+  valuations (under pc1's weights) equal to all even integers in [0, 2^{n+1}), which contain those of N_g.
+- Robust to: any single integral monomial substitution; polynomially many weight vectors at once.
+- Not covered: all weight vectors simultaneously (containment of tropical varieties).
+- BARRIER: no argument using root valuations for one, or polynomially many, monomial substitutions can prove that
+  N_g has no easy multiple. H7 resolved: valuations settle restricted models only. Theorems S, A, S′, 2T stand; the
+  barrier says their restrictions cannot be dropped.
+- Lead's next assignment to the idea agent: for cancellation-free (positive) tests, tropicalisation is exact for all
+  weights at once, so the barrier may not apply. Try to remove the depth restriction from Theorem S′ using
+  monotone/tropical circuit lower bounds (Jerrum–Snir, Jukna). Deliver a theorem, a universal positive barrier, or a
+  reduction to a named open problem.
+- H10 [C]: no polynomial-size family of positive tests of any depth decides A_g (a "monotone" BSS separation).
+
 ### Running (as of this entry)
 - `review-link.md` (Opus referee): Findings 2 and 3.
 - `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.

@@ -6,3 +6,4 @@ eight-square at N0 = 8 (costs = log2 rank)
   identity R + C = d f with d = 2: over GF(2) it reads R + C = 0 (no identity).
   C mod 2 == R mod 2: True
 N0 = 2, GF(2): |R1| = 369; best rho T=2: (np.float64(1.0), ((1, 4), (4, 1)))  T=3: (np.float64(1.122481250360578), ((1, 2), (1, 2), (4, 1)))
+N0 = 2, GF(3): |R1| = 5888; best rho T=2: (np.float64(1.0), ((1, 4), (4, 1)))  T=3: (np.float64(1.122481250360578), ((1, 2), (1, 2), (4, 1)))

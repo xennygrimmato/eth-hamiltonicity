@@ -154,3 +154,20 @@ characteristic-2 engine currently has no trade at all (ρ = 1 at every computed 
 it below. The only measured field effect is a constant-factor rank drop in characteristic 3 for the eight-square
 pieces. Route 4's "first experiment" fails at N₀ = 2 (equal optima); its premise (F₂ makes things easier) is
 contradicted by the observation that the known identities need d invertible and d is even.
+
+## 4. Brainstorm item: Weyl/Heisenberg partial sums as crossing pieces [N, `weyl_pieces.out`]
+
+In operator language the crossing f = [x=v][y=u] is SWAP as a map (u,v) → (x,y) (row split, rank N²); the column
+split is its realignment (operator-Schmidt rank N²); the third split (both edges internal) is its partial transpose
+(rank 1). SWAP = (1/N)Σ_{(a,b)∈Z_N²} W_ab ⊗ W_ab†. Pieces A_S = (1/N)Σ_{S} W⊗W† for S = cosets of every subgroup
+H ≤ Z_N², and for Weyl balls, N = 2…5, ranks (row, col, third) by SVD:
+- **Cosets of H: (row, col, third) = (N²/|H|, |H|, t(H))** for every subgroup and every coset (all N ≤ 5), with
+  t = |H| for |H| ≤ N (e.g. Lagrangian/cyclic |H| = N: (N, N, N), costs (1,1,1)λ) and t = N²/|H| for |H| ≥ N
+  (N = 4, |H| = 8: (8, 8, 2)). So **row·col = N² exactly**: each coset is cheap (c_row + c_col = 2λ, i.e. "ρ = 1/2" on
+  the two crossing merges, plus third cost ≤ λ), but there are N²/|H| cosets, and grouping cosets adds ranks. With
+  |H| = N^α the naming is (2−α)λ per merge, which puts the family back at ρ = 1 — the Strassen/rank-one trap of
+  open-door §1.7, with a third split attached. Weyl balls are worse: row rank stays N² (ball r ≥ 1), and only N = 5,
+  r = 1 shows a third-split drop (25 → 17).
+- Conclusion [N, small N]: subgroup/ball partial sums give no 2^{o(λ)}-piece family; any useful family must group
+  exponentially many cosets into one piece *with rank cancellation*, which is what App. B's Fock grading does in two
+  directions. The three-rank object of §2 is not produced by Weyl partial sums.

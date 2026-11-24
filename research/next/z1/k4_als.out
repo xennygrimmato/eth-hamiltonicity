@@ -1,1 +1,3 @@
 ranks of f: S1 16 S2 16 S3 16
+trial 0 residual 0.920855
+best residual f = (rank1 across S3) + (rank1 across S1): 0.9208550089826341

@@ -1,0 +1,8 @@
+=== (A) ladder class: unions of ladders o+1, o+3, o+5, ...  (density nondecreasing)
+ spectrum                         E    R2=F(2E)/F(E)  flat   rho_cert
+ one ladder (paper)               50   1.4791        1.082   0.7395
+ one ladder (paper)              150   1.4559        1.052   0.7279
+ one ladder (paper)              300   1.4456        1.039   0.7228
+ 5 flavors                        50   1.4481        1.042   0.7241
+ 5 flavors                       150   1.4357        1.027   0.7178
+ 5 flavors                       300   1.4303        1.020   0.7151

@@ -60,3 +60,97 @@ PΓL(2,g) is transitive on every p-set of classes for g ≤ 5, so one price give
    e(K) ≳ K^{−1/2}·(log K)^{O(1)} — the same order as b1's oblivious floor 1/(16√K). So the AG(2,g)-all-classes tower
    is *flat-optimal up to constants*: if its flat floor were attained, 3-SAT would run in 2^{n^{1−1/18+o(1)}}
    (K ≈ n^{1/9}) [D, modulo the term-count caveat of the ideas file].
+
+### 1.1 Table completed for g = 4, 5 [N, `ag_floor_45.out`]
+g = 4, p = 5: orth 0.400 = cap 0.400, Euclid 0.398, line 0.267, star 0.160.
+g = 5, p = 2…6: orth 0.638, 0.524, 0.455, 0.408, 0.373; caps 0.646, 0.527, 0.456, 0.408(p=5), 0.373(p=6);
+line 0.380, 0.320, 0.282, … (see file). Same pattern as g = 3, 4: line ≈ (0.62–0.67)·orth, both ∝ 1/√p.
+
+**ρ and α′ (if the flat floor were attained).**
+
+| regime | ρ_flat | α′ = log₂(1/ρ) | end-to-end |
+|---|---|---|---|
+| p = 2, any g (Anthropic; attained) | → 1/√2 | 1/2 | 2^{O(n/√log n)} (current) |
+| p = 3, g → ∞ | → 1/√3 | 0.79 | 2^{O(n/(log n)^{0.79})} |
+| p = 4, g → ∞ | → 1/2 | 1 | 2^{O(n/log n)} |
+| p fixed, g → ∞ | → 1/√p | ½log₂p | 2^{O(n/(log n)^{½log₂p})} |
+| p = g+1 (all classes) | √g/(g+1) ≈ K^{−1/4} per level | — (polynomial) | e(K) ≈ K^{−1/2}: 2^{n^{1−1/18+o(1)}} |
+| unconditional (line prices), p fixed | ≳ 0.56/√p | ≤ ½log₂(πp) | no door closed |
+
+Fixed-g α′ values in the table (`alpha_orth` column of the .out files, e.g. 1.21 at (3,4), 1.32 at (4,5)) are not
+end-to-end exponents: the recursion needs g → ∞, where only the 1/√p part survives.
+
+## 2. Route 2, step 2: a construction at the smallest instance
+
+**Instance.** The smallest (g,p) whose flat floor lies below the p = 2 value at the same g is g = 2, p = 3:
+K₄ with its three perfect matchings as merges (S1 = ab|cd, S2 = ac|bd, S3 = ad|bc), ρ_flat = √2/3 = 0.471
+(= method cap, so the far-leg method is exact here), versus 0.569 for p = 2, trivial 4/6, unconditional 1/3.
+Not an asymptotic level (K = 4 → 2), but the cleanest test of "internal edges + a third merge".
+
+**Class-by-class generalisation of App. B [R].** K₄ = X₁ ⊗ X₂ ⊗ X₃, X_k = the crossing formed by the two edges of
+class k; X_k crosses the two merges ≠ k and both its edges are internal to merge k. Product pieces
+P¹⊗P²⊗P³ have Σ_k c_k = Σ_j (r_j + c_j + t_j), where (r_j, c_j) are the costs of P^j on its two crossing merges and
+t_j its cost on its own merge (the split separating its two edges). So the product family reaches the flat floor
+2√2λ per merge iff crossing pieces exist with r + c ≤ 2√2λ AND t = o(λ). Facts:
+- the price method cannot see t: for a merge under which both edges are internal, L − H ≤ 0 by the triangle
+  inequality, so b_t ≤ 0 for every price [R]. The flat floor therefore *allows* (√2, √2, 0)λ.
+- **t = 0 exactly is impossible [R]:** if every piece is a product α(x,v)⊗β(y,u) across that split, its row and
+  column flattenings are α⊗β and α⊗βᵀ (partial transpose), both of rank rk α·rk β, and Σ rk α·rk β ≥ N², so some
+  piece costs ≥ 2λ − log T in both crossing merges: no trade at all.
+- App. B pieces are generically full rank (N²) across the third split (span of Q_s(a_x,b_v) over x,v), t = 2λ:
+  the product family costs Σ = 2√2 + 2 = 4.83 > 4 per crossing, *worse than trivial* [C, by the span argument;
+  not computed].
+- Beating 1/2 on K₄ (normalised by all 6 edges) needs t < (3 − 2√2)λ ≈ 0.17λ; beating trivial needs t < 1.17λ.
+So the class-by-class route needs a new object: crossing pieces with the sphere law in two directions and
+2^{o(λ)} operator-Schmidt rank in the third (i.e. a decomposition of I⊗I into 2^{o(λ)} pieces of small rank,
+small partial-transpose rank and small realignment rank). Open; I found no inequality excluding it, and none
+constructing it.
+
+**Exact small test (N₀ = 2) [N, `k4_als.py`].** Two-type identity f = A + B with A a product across S3 and B a
+product across S1 (the only two-type shape that could give value + naming < 3 at N₀ = 2, by the case analysis in
+the script header); result below in §2.1.
+
+## 3. Route 4: the engine in positive characteristic
+
+**Which floors survive [R, from b2 §2 and the definitions].** Theorem 1 (two merges, ρ ≥ 1/2), the star prices,
+segment (line) prices and hence the whole "unconditional" column of §1 hold over every field (Strassen support
+functionals). The core floor as written uses CVZ (ℂ); its proof only needs a subadditive, restriction-monotone
+functional with value N^{2E_cross/g_H} on graph tensors and ≤ 2^{2c/g_H} on networks, which Strassen's upper support
+functional provides on oblique (graph) tensors, so it holds over every field as well [R, same lift as b2's Q1].
+The flat floors are [R|FH] *per field*; whether FH/PH hold over F̄₂ is the open dichotomy. The HWY sum-of-squares
+obstruction is characteristic-0 only.
+
+**Level tensors [R].** f_C is a 0/1 tensor that is a tensor product of identity matrices; every flattening is a
+permutation matrix times an all-ones-free product, so its ranks are the same over every field (checked: f at N₀ = 8
+has (64,64) over ℚ, GF(3), GF(2), `f2_pieces.out`). All field dependence is in the pieces.
+
+**The existing crossing pieces, reduced mod q [N].**
+1. **Eight-square pieces (Lemma 2, N₀ = 8), `f2_pieces.out`, `cd_ranks.out`, independent check `check_gf3.out`.**
+   Identity R + C = 2f.
+   - ℚ, GF(5), GF(7), GF(11), GF(13): ranks R (row 8, col 64), C (64, 8): ρ = (3+6+2)/12 = 11/12.
+   - **GF(3): R has column rank 56, C row rank 56** (det of the 64×64 flattening = 2⁶⁴·3⁸, rank mod 3 = 56,
+     confirmed with sympy on an independently built Fano-plane octonion table). Ranks are multiplicative under
+     Kronecker products, so Lemma 2's tensored family over GF(3) has **ρ = (3 + log₂56 + 2)/12 = 0.9006 < 11/12**
+     exactly, α′ = 0.151 instead of 0.126 [N, exact]. This is a genuine field dependence of a certified exponent
+     (answering x5's question in the affirmative for these pieces), usable for decision by counting mod 3 with
+     isolation. It is far from 1/√2 and is **not** an improvement over App. B.
+   - GF(2): d = 2 = 0, and R ≡ C mod 2 with ranks (8, 8): the identity becomes 0 = 0. No pieces.
+   - Quaternion version (N₀ = 4): no rank drop in any characteristic tested; ρ = 1.
+2. **App. B / Fock pieces, h = 2…5 (`fock_modp.out`, using `scripts/pieces_fock_ranks.py` unchanged).**
+   Σ_s A_s = h!·f, so **for every prime q ≤ h the identity vanishes mod q; in particular over F₂ for all h ≥ 2.**
+   Dividing out q^{v_q(h!)} does not rescue it: some pieces have smaller q-adic content (`fock_padic.out`,
+   q = 2, 3, h = 2…5: "all pieces divisible: False"). So **App. B does not exist in characteristic 2**, and in
+   characteristic q it exists only for h < q (fine for an algorithm: choose a prime q > h = poly(λ)).
+   For the smallest valid prime q just above h the worst piece's (c_r + c_c)/(4λ) drops below its ℚ value
+   (h=2/GF(3): 0.75 vs 1.00; h=3/GF(5): 0.946; h=4/GF(5): 0.981; h=5/GF(7): 0.997), but the drop shrinks with h
+   and is absent for larger q. No evidence of an asymptotic (2^{Ω(λ)}) rank gain [N, small h only].
+3. **Exhaustive N₀ = 2 search (one bit per leg), all T [N, `f2_pieces.out`].** For ρ < 1 every piece must have
+   rank 1 in one flattening (else its pure strategy costs ≥ 1 bit and naming adds ≥ 1); T ≥ 4 is excluded by naming
+   alone. Over GF(2): best T = 2 family ρ = 1 (App. H profile (1,4)/(4,1)), best T = 3 family ρ = 1.12. GF(3):
+   see §3.1. So at the smallest block F₂ shows no gain.
+
+**Reading.** Over F₂ the engine loses *both* known crossing constructions (d = 2 and d = h! vanish), so the
+characteristic-2 engine currently has no trade at all (ρ = 1 at every computed size); Theorem 1's 1/2 still bounds
+it below. The only measured field effect is a constant-factor rank drop in characteristic 3 for the eight-square
+pieces. Route 4's "first experiment" fails at N₀ = 2 (equal optima); its premise (F₂ makes things easier) is
+contradicted by the observation that the known identities need d invertible and d is even.

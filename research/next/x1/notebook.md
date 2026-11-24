@@ -328,7 +328,19 @@ So the worst-case budget is very conservative for products: about 58 bits of sla
 The observed error scales like 2^{−D}·poly(N), not N⁵·2^{−D}. This is not used anywhere; the theorem uses the
 rigorous budget.
 
-PATTERNS_PLACEHOLDER
+**Adversarial checks and more copies** (`run.py pattern N h₁,…,h_j`, with the j-copy budget of §2):
+
+| pattern | N | copies / factors | (M, p, t) | true final count | failures | max error |
+|---|---|---|---|---|---|---|
+| (n, n+1), **not admissible** | 1000 | 2 / 8 | 379, 84, 79 | 1 (only 2, 3) | 0 / 999 | 2^−74.7 |
+| (n, n+2, n+4), **not admissible** mod 3 | 600 | 3 / 12 | 500, 111, 106 | 1 (only 3, 5, 7) | 0 / 599 | 2^−101.3 |
+| (n, n+2, n+6), admissible | 600 | 3 / 12 | 500, 111, 106 | 11 | 0 / 599 | 2^−96.2 |
+| (n, n+2, n+6, n+8), prime quadruplets | 300 | 4 / 16 | 581, 129, 124 | 4 | 0 / 299 | 2^−114.8 |
+
+The non-admissible patterns return the trivially correct counts at every prefix. In those cases the pipeline
+must cancel P̃(n)P̃(n+1) ≈ 0 for all n > 2. It does, to ~2^{−75}.
+
+MERTENS_MARGIN
 
 ## 6. Mertens details
 M(x) is the special case k = 1 of Theorem D: the only factor is the Ramanujan phase. The budget is D = 2β + 2,

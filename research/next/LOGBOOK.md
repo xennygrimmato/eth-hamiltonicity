@@ -185,6 +185,23 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - Lead's action: launched an Opus referee (`review-sparse.md`) on Theorems S, 2T, S′, G and on pc1's A and B, with a
   prior-art search (Ben-Or, Meyer auf der Heide, Grigoriev–Vorobjov, Koiran et al., Cucker–Shub, Meer).
 
+### pc1 note 2: notebook on disk; theorems merged [R claimed; with referee]
+- pc1 verified the idea agent's Newton-polygon theorem and found a one-line distinctness proof (weights w_ij = 2^i
+  off the diagonal, 0 on it; val g_E = Σ_{i∉E} 2^i).
+- Merged Theorem A: sparsity in x is not needed. If every generic-path test numerator is a product of ≤ m
+  polynomials, each with ≤ τ distinct powers of y (arbitrary coefficients, any degree, any multiplicities), then
+  T·m·(τ−1) ≥ 2^n − 1. Over any field. Contains bounded y-degree, sparse tests, the ΠΣ-sparse model, y-lacunary tests.
+- Theorem B′: "(h,h′)-tight" machines; quotable case: unambiguous machines with polynomially many false alarms.
+  Unambiguity alone is not enough (lead's suggestion was too optimistic).
+- Lead's partial-averaging idea for the multiplicity caveat: does not work (the Fourier mass stays on a coset of size
+  2^n/|Γ|). Recorded as open problem O1.
+- Theorem B cannot be re-proved tropically: slopes record presence of branches, never their sum.
+- Question raised by pc1, relayed to the idea agent: can the gadget realise a slope set containing the one N_g
+  forces? If yes, a barrier: no valuation-only argument proves the cofactor gap.
+- Idea agent's final report: original problem not within reach; top items are the slope theorems (S, S′, G, 2T).
+- H7 refined [C]: valuations settle restricted models but probably cannot settle the full gap (pending the gadget
+  answer). H5 confirmed pending referee.
+
 ### Running (as of this entry)
 - `review-link.md` (Opus referee): Findings 2 and 3.
 - `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.

@@ -30,44 +30,47 @@ co = Q.all_coeffs()
 assert sp.expand(-co[1]-co[0]*(per+0+2*R[(1,0)]))==0
 print("(1) trace identity Sigma(Q)=per+sum w*rho: OK")
 
-# ---- (2) Buergisser perturbation tracks a root of multiplicity 3 with eps-regular coefficients
-z, eps, Y = sp.symbols('z eps Y')
+# ---- (2) Buergisser perturbation tracks a root of multiplicity 3; exact rational eps, error -> 0 linearly
+z, Y = sp.symbols('z Y')
 rho = 1+z+2*z**2-z**3           # root function, a=0, y0=1
-Qz = (y-rho)**3*(y+2+z)
-F = sp.expand(Qz.subs(y, Y+eps) - Qz.subs({y:1+eps, z:0}))
-J = sp.diff(F, Y).subs({Y:1, z:0})
-cur = sp.Integer(1)
+Qz = sp.expand((y-rho)**3*(y+2+z)*(y**2+1+z**2))
 ORD=3
-for it in range(ORD+1):          # chord iteration, truncated at z^ORD
-    cur = sp.expand(cur - sp.cancel(F.subs(Y, cur)/J))
-    cur = sum(sp.cancel(cur.coeff(z,k))*z**k for k in range(ORD+1))
-ok=True
-for k in range(ORD+1):
-    ck = sp.cancel(cur.coeff(z,k))
-    lim = sp.cancel(ck).subs(eps,0)
-    ok &= (lim == rho.coeff(z,k))
-print("(2) perturbed chord iteration -> root coefficients as eps->0:", ok)
+def track(e):
+    F = sp.Poly(sp.expand(Qz.subs(y, Y+e) - Qz.subs({y:1+e, z:0})), Y, z)
+    J = sp.diff(F.as_expr(), Y).subs({Y:1, z:0})
+    cur = sp.Integer(1)
+    for it in range(ORD+1):
+        val = sp.expand(F.as_expr().subs(Y, cur))
+        val = sum(val.coeff(z,k)*z**k for k in range(ORD+1))
+        cur = sp.expand(cur - val/J)
+    return [cur.coeff(z,k) for k in range(ORD+1)]
+errs=[]
+for e in [sp.Rational(1,10**3), sp.Rational(1,10**6)]:
+    cs = track(e)
+    errs.append(max(abs(float(cs[k]-rho.coeff(z,k))) for k in range(ORD+1)))
+print("(2) perturbed chord iteration, max coefficient error at eps=1e-3, 1e-6:", errs, "-> O(eps):", errs[1] < 1e-2*errs[0])
 
-# ---- (3) Theorem A numerically: generalized Vandermonde of 2tau-1 Ryser roots has rank tau
-import numpy as np
+# ---- (3) Lemma A.1 exactly: generalized Vandermonde of 2tau-1 Ryser roots at a rational point has rank tau;
+#          Lemma A.2: valuations sum_{i notin E} 2^i are distinct (trivial) 
+from fractions import Fraction
 n=3
-Xr = [[random.uniform(0.5,1.5)*random.choice([1,-1]) for j in range(n)] for i in range(n)]
+Xr = [[Fraction(random.randint(1,9)*random.choice([1,-1]), random.randint(1,5)) for j in range(n)] for i in range(n)]
 vals=[]
 for E in itertools.product([0,1], repeat=n):
     if sum(E)==0: continue
     s=(-1)**n
     for j in range(n): s*=(1-2*E[j])
-    p=s
+    p=Fraction(s)
     for i in range(n): p*=sum(Xr[i][j]*E[j] for j in range(n))
     vals.append(p)
+assert len(set(vals))==len(vals) and 0 not in vals
 tau=3; ok=True
-for trial in range(200):
+for trial in range(60):
     be = random.sample(range(0,40), tau)
     sub = random.sample(vals, 2*tau-1)
-    Mx = np.array([[v**b for b in be] for v in sub], dtype=float)
-    Mx = Mx/np.abs(Mx).max(axis=0)
-    ok &= (np.linalg.matrix_rank(Mx, tol=1e-9)==tau)
-print("(3) rank of (g_E^beta_j) on 2tau-1 roots = tau (200 trials, numeric):", ok)
+    Mx = sp.Matrix([[sp.Rational(v.numerator, v.denominator)**b for b in be] for v in sub])
+    ok &= (Mx.rank()==tau)
+print("(3) rank of (g_E^beta_j) on 2tau-1 roots = tau (60 trials, exact):", ok)
 
 # ---- (4) referee test case: power sums by digit/carry transfer matrices
 n=3; M=2**n

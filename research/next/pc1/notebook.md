@@ -89,6 +89,16 @@ This contains: tests of y-degree ≤ Δ (m = 1, τ = Δ+1; the lead's candidate 
 agent's ΠΣ-sparse model (products of m powers of t-sparse polynomials: T·m·(t−1) ≥ 2^n − 1, same constant), without
 needing sparsity in x; and y-lacunary tests Σ_j A_j(x)y^{β_j} with A_j of arbitrary degree and complexity.
 
+**Exact comparison with the idea agent's Theorem S** (`ideas-span.md`: ≤ R factors with ≤ t monomials each ⇒
+R(t−1) ≥ 2^n − 1). One proof gives both: Lemma A.2 is the Newton-polygon argument of Theorem S with the observation
+that only the number of powers of *y* enters, because the polygon is taken in y over the valued field k(u)((t)) and the
+x-coefficients may be anything nonzero. So Theorem A ⊇ Theorem S: same constant, products and multiplicities handled,
+cofactor-blind, every characteristic, and no sparsity in x. With "t-sparse" read as "≤ t powers of y" (as the idea
+agent's note allows) the two statements coincide. The Descartes proof A.1 is weaker for Ryser roots (constant 2τ−2,
+characteristic 0, real root family) and is kept only because it also covers root families that no valuation separates
+(Knapsack). The idea agent's Theorems 2T, S′ and G (two-term cancellation, cancellation-free depth hierarchy, gadget)
+go beyond Theorem A; I have not refereed them.
+
 **Slope count as a complexity measure [R + idea agent].** Define sl(f) := number of distinct valuations of nonzero roots
 of ι(f). Then sl(fg) ≤ sl(f) + sl(g), sl(f^a) = sl(f), sl(f) ≤ (y-sparsity) − 1, and any tree deciding A_g has
 Σ_{tests} sl ≥ 2^n − 1. Sums are the only operation that can create slopes. The idea agent's gadget (G_0 = y, H_0 = 1,

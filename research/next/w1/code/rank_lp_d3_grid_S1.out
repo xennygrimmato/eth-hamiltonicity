@@ -25,3 +25,6 @@ f_star0 (4, 0, 2) 6.0
 f_star0 (4, 1, 1) 6.375
 f_star0 (4, 2, 0) 6.0
 f_star0 (5, 0, 1) 7.5
+f_star0 (5, 1, 0) 7.5
+f_star0 (6, 0, 0) 9.0
+TYPES S1 : min_q max_k f_star_k(q) = 3.75 at q*6 = (2, 2, 2)

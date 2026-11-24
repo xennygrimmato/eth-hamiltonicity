@@ -94,6 +94,24 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - New hypothesis H6 [C]: target the weaker trigger directly — an unbalanced piece family with min cost below
   (E/√p)λ on every piece — since it decides the dichotomy without needing a faster algorithm.
 
+### Review of Finding 5 (`review-pc.md`) — proofs sound, one claimed result fails [V]
+- L1 (reduction): correct. H4 answered: the generic path of the whole input space must reject, so every component
+  y = g_e divides one of its test numerators. The weakest-link worry does not apply.
+- L2, L3 (N_g hard; cofactor hard): correct.
+- L4 (local-method barrier): correct for ideals of small (polynomial) colength only.
+- L6 (Span Conjecture): the implication is correct, but it is NOT a reduction [X]. For Ryser g the span of the g_e is
+  2^n − 1 by elementary linear algebra, so the permanent bound plays no role and the conjecture just restates the gap
+  in a stronger form. It is harder than the target. Drop it as a route.
+- Degenerations: one implication in y2 was stated in reverse.
+- P_ℂ ≠ PAR_ℂ and P_ℝ ≠ PAR_ℝ: correct; a one-line corollary of Bürgisser 2004 plus the border bound. Whether it was
+  open before rests on y1's quotations (not re-checked).
+- Lemma L (defect ≤ 1): correct. Overclaim removed: graph(per) ∉ NP_ℂ(nu) is proved only for defect ≤ 1 verifiers.
+- Bürgisser's Oct 2026 conjecture (VNP ⊄ closure of VP ⇒ P_ℂ(nu) ≠ NP_ℂ(nu)) exists as cited (arXiv:2606.25121).
+- Lead's updated assessment of target 2: the real gains are P_ℂ ≠ PAR_ℂ, Lemma L for defect ≤ 1, the cofactor-hardness
+  lemma and the local-method barrier. Toward P_ℂ ≠ NP_ℂ itself we have only located the gap.
+- Open test case suggested by the referee: is the cyclic norm of Φ = ∏_i (x_i + T^{2^{i−1}}) easy? Its roots span 2^n
+  dimensions. Passed to pc1.
+
 ### Running (as of this entry)
 - `review-link.md` (Opus referee): Findings 2 and 3.
 - `review-pc.md` (Opus referee): Finding 5 and P_ℂ ≠ PAR_ℂ.

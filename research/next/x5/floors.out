@@ -2,3 +2,4 @@ crossing 0S,AD (calib)                   F_rho3 = 2.0000   F_E = 2.8169   ratio 
 two squares, 4 cuts                      F_rho3 = 6.0000   F_E = 7.3276   ratio 0.8188
 0S,AD,CD rows/cols with C,A split        F_rho3 = 8.0000   F_E = 8.0011   ratio 0.9999
 0S,AD,CD,AC 3 cuts                       F_rho3 = 3.0000   F_E = 5.3993   ratio 0.5556
+0S,AD,CD 3 cuts {0A},{0C},{0D}           F_rho3 = 4.0000   F_E = 5.1923   ratio 0.7704

@@ -340,13 +340,20 @@ rigorous budget.
 The non-admissible patterns return the trivially correct counts at every prefix. In those cases the pipeline
 must cancel P̃(n)P̃(n+1) ≈ 0 for all n > 2. It does, to ~2^{−75}.
 
-MERTENS_MARGIN
+**Mertens with margin.** At D = 2β + 22 (20 extra bits), M(x) for x ≤ 3000 uses (M, p, t) = (275, 61, 56). There
+are 0 rounding failures, the max error is 2^−35.1, and the rigorous bound is 1.3e−7.
 
 ## 6. Mertens details
 M(x) is the special case k = 1 of Theorem D: the only factor is the Ramanujan phase. The budget is D = 2β + 2,
-so M ≈ 9β, and n = 1 is exact. Measured at x ≤ 3000: see §5. The error is ~2^{-16} at x ≤ 500 against a bound of
-0.24 (only ~14 bits of slack). Here the budget is fairly tight, unlike π₂, because there are only φ(n) terms per
-n and no cancelling products.
+so M ≈ 9β, and n = 1 is exact. The minimal budget is rigorous but leaves only ~14 bits of measured slack (error
+2^{−16.3} against a bound of 0.13 at x ≤ 3000), because there is a single factor and no product slack.
+
+**Recommended parameters:** D_M = 2β + 22, i.e. M = ⌈(2β + 22 + log₂(147·245))/log₂(7/6)⌉ ≈ 9β + 168 and
+p, t ≈ 2β + 36. This gives a rigorous total error ≤ 2^{−20}/2 and a measured 2^{−35} at x ≤ 3000. It is still
+smaller than Ni's table (35β + 185, 7β + 32, 7β + 25), which may simply be reused (δ = 2^{−6β−6} ≪ x^{−2}).
+
+The Mertens network is one copy of the e₂ block plus data. Variables are n, x′, u, v and the 10 kernel variables,
+14 in all. Equations: 1 (Bézout) + 8 (kernel) = 9. Variable × variable products: 2 + 4 = 6.
 
 ## 7. Risks
 1. **Everything inherits Prop. 4.** It is formalised in Lean, but the 3-SAT engine underneath is an unrefereed

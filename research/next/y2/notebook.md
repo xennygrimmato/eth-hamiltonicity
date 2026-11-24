@@ -243,22 +243,24 @@ which is not contradictory by itself: X^D − 1 = (hard)·(hard) shows hard·har
 
 ## 8. Files
 
-- `checks.py`: exact sympy checks of Lemma 2(a)(b)(c) for n = 2, 3; Lemma 3 for n = 2 (one division plus truncation
-  around a random point); span dimensions; the Moore divisibility in char 2 and 3; the cyclic norm via companion powering.
+- `checks.py`: exact sympy checks of Lemma 2(a)(b)(c) for n = 2, 3; Lemma 3 for n = 2 (one exact division, then the border
+  limit δ → 0; the Strassen truncation step is the standard theorem and is not re-run); span dimensions; the Moore divisibility in char 2 and 3; the cyclic norm via companion powering.
 
 ## 9. Lead's brainstorm (1)–(5)
 
 **(1) Calibrating the Span Conjecture [R].** Trivially dim span Roots_d(Q) ≤ dim ℂ[x]_{≤d} = C(m+d, d). For Ryser g
 (m = n², d = n) this is n^{Θ(n)}, so for fixed d the conjecture holds with p = m^d, and all its content is at growing d.
 
-*Weakest sufficient growth.* The proof of Lemma 6 gives L(per_n) ≤ r·(L(g)+2), with r ≤ p(s', n), s' = s + O(n²),
-L(g) = O(n²). [T26] (exact form suffices) gives L(per_n) > n^{c(log n)^{1/3}}. So a contradiction for s = n^{k} follows from
-p(n^{k}, n) ≤ n^{c(log n)^{1/3} − 3}. For example p(s,d) ≤ 2^{ε (log s)^{4/3}} · poly(d) works for every fixed k, once
-ε < c/k^{4/3}. More cleanly, **p(s,d) = s^{o((log s)^{1/3})} · d^{O(1)} is enough**, so polynomial is not needed. A bound
-of the form d^{o(d)} or m^{o(d)}, of shape like the trivial one, is **not** enough: with d = n, m = n², even
-m^{(log n)^{1/3}} = n^{2(log n)^{1/3}} would be enough, but only for constant c > 2. The d-dependence must therefore be
-sub-(log d)^{1/3}-in-the-exponent, i.e. barely above polynomial. Exponentially large spans (Moore-type, ≥ 2^{Ω(s)}) are the
-thing to exclude.
+*Weakest sufficient growth.* The proof of Lemma 6 gives L(per_n) ≤ r·(L(g)+2), with L(g) = O(n²) and
+r ≤ p(s + O(n²), n). The exact form of [T26] suffices: L(per_n) > n^{c(log n)^{1/3}}. So for s = n^k a contradiction follows
+as soon as p(n^k, n) < n^{c(log n)^{1/3} − 3}. Write N := s·d.
+- **Sufficient:** p(s,d) ≤ N^{ε (log N)^{1/3}} with ε < c/(k+1)^{4/3}, which works for each fixed k. In particular
+  p = N^{o((log N)^{1/3})} suffices for all k.
+- **Not sufficient:** anything of the trivial shape m^{Θ(d)}, or N^{Ω((log N)^{1/3})} with a large constant.
+
+So the conjecture may be weakened from polynomial to "barely quasi-polynomial" (exponent o((log)^{1/3})), matched to the
+[T26] exponent. A stronger lower bound for per would weaken the requirement accordingly. What must be excluded are
+spans that grow like m^{Θ(d)} or 2^{Ω(s)}.
 
 **(2) Degenerations [R; one citation from memory].** Facts:
 - (i) For any family Q_ε ∈ ℂ[ε][x,y], the lowest ε-order term is multiplicative, since ℂ[x,y][ε] is a domain:
@@ -270,21 +272,19 @@ So "N_g has a border-easy multiple" is preserved under every such degeneration, 
 - (2a) **WLOG Q and H are multi-homogeneous** for every grading under which N_g is homogeneous. For Ryser g: one grading
   per row of X (y has weight 1 in each), plus the weighted grading (x:1, y:d). Take in_w for a generic weight. Column
   scalings do *not* stabilise Z(N_g), because row sums mix columns. So H may be assumed a semi-invariant of the
-  (n+1)-dim torus. Semi-invariants of a torus are just multi-homogeneous polynomials, so this constrains almost nothing.
+  (n+1)-dim torus. Semi-invariants of a torus are just multi-homogeneous polynomials, so this constrains almost nothing. (Since in_w(Q) is only border-easy, (2a) applies to the border form of Gap G, which is
+  stronger than needed and is still implied by the Span Conjecture with L̄.)
 - (2b) **No degeneration produces a hard low-degree factor [R mod K].** By (i), lt(N_g∘A_ε) = ∏_e lt((y − g_e)∘A_ε).
   Each factor ℓ_e⁰ := lt((y−g_e)∘A_ε) has degree ≤ d (≥1) and L̄(ℓ_e⁰) ≤ L(g) + O(m²). By the closure of border-VP
   under factors of polynomial degree (Bürgisser, FoCM 2004, approximative version of Kaltofen; *from memory, to be
   checked*), every irreducible factor of the degenerate norm is border-easy. The degenerate hypersurface may stop being
   a union of graphs (an ℓ_e⁰ may lose y, or become non-reduced when branches merge). But its equation is still a product
   of 2^n limits of individually easy low-degree polynomials. **So the "merge branches into a hard irreducible limit"
-  lever is closed**, for torus *and* non-torus one-parameter families: limits of products are products of limits. The
-  only effect of a degeneration is to replace g_e by ℓ_e⁰. Simplest target: with the weight that keeps only one entry per
-  row… every in_w(g_e) is a product of initial forms of row sums. Choosing w to single out column j_i(E) in row i gives
-  ±∏_i X_{i,max(E)} = ±m_E, which is monomial-type. The norm then degenerates to products of (y ∓ monomial) factors with
-  huge multiplicities. Its S is computable from the degeneration of per, which is a monomial/easy. *The degeneration
-  kills the hardness of S along with everything else.* A degeneration in_w(N_g) whose S_{in_w g} is still hard (this
-  needs in_w(per) hard) keeps Gap G for the degenerate g. No simplification was found that keeps S hard and makes the
-  root set structured (e.g. ℂ-Knapsack needs S = linear, which is easy).
+  lever is closed**, for torus *and* non-torus one-parameter families: limits of products are products of limits. The only effect of a degeneration is to replace each g_e by its limit ℓ_e⁰. Every degeneration is then
+again an instance of the same problem: a norm of 2^n easy low-degree polynomials. Gap G for the degenerate family is
+implied by Gap G for g, and it is useful only if its S (the degeneration of per) stays hard. Torus degenerations of per
+that single out one monomial per row are easy. I found no degeneration that keeps S hard and also gives the root set an
+exploitable structure. ℂ-Knapsack, for instance, would need S linear, hence easy.
 
 **(3) Symmetrisation [R, negative].** The stabiliser of Z(N_g) for Ryser g contains S_n (rows) × S_n (columns, acting on e)
 × the row torus. Torus isotypic projection = initial forms is free in border (2a). Finite-group projections

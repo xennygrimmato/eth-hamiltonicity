@@ -6,3 +6,6 @@ pattern [0, 2, 4] counts: 599 values, rounding failures 0, max |error| = 3.295e-
 pattern [0, 2, 6] counts: 599 values, rounding failures 0, max |error| = 1.137e-29 (2^-96.2), budget bound 5.695e-03
 [pattern [0, 2, 6, 8]] N=300 X=308 D=114 M=581 p=129 t=124 time 36s; final true count 4
 pattern [0, 2, 6, 8] counts: 299 values, rounding failures 0, max |error| = 2.802e-35 (2^-114.8), budget bound 1.772e-03
+[mertens] N=3000 D=46 M=275 p=61 t=56 time 787s
+M~(x), x<=N: 3000 values, rounding failures 0, max |error| = 2.652e-11 (2^-35.1), budget bound 1.279e-07
+   max_n |mu~(n) - mu(n)| = 2.939e-14

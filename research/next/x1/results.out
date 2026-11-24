@@ -19,3 +19,9 @@ stress counts: 299 values, rounding failures 0, max |error| = 3.632e-15 (2^-48.0
 stress counts: 299 values, rounding failures 0, max |error| = 1.253e-10 (2^-32.9), budget bound 4.497e+07
 [stress] N=300 X=302 D=24 (needed 64) M=176 p=38 t=34 time 16s
 stress counts: 299 values, rounding failures 0, max |error| = 1.132e-08 (2^-26.4), budget bound 1.151e+10
+[stress] N=300 X=302 D=16 (needed 64) M=140 p=30 t=26 time 11s
+stress counts: 299 values, rounding failures 0, max |error| = 3.660e-05 (2^-14.7), budget bound 2.947e+12
+[stress] N=300 X=302 D=12 (needed 64) M=122 p=26 t=22 time 8s
+stress counts: 299 values, rounding failures 0, max |error| = 2.439e-04 (2^-12.0), budget bound 4.715e+13
+[stress] N=300 X=302 D=10 (needed 64) M=114 p=24 t=20 time 8s
+stress counts: 299 values, rounding failures 0, max |error| = 1.159e-03 (2^-9.8), budget bound 1.886e+14

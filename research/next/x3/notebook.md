@@ -97,3 +97,45 @@ both terms of cost 2√2. Exact over ℤ, so over every field. σ = 1.17.
 - n = 2: (1,1).  n = 3: (1,3), (2,3), (3,1).  n = 4: (1,6), (3,5), (4,4), (5,3), (6,1) (all residual < 1e−13).
 - min max(r,s): n=2: 1, n=3: 3, n=4: 4, n=5: 7 (r=s=6: residual 1.8e−2; 7: 4e−4, slow convergence).
 - Endpoints (1, C(n,2)) = I⊗I − 2P_anti and its realignment dual. [C] min max(r,s) = ⌈n²/4⌉, equivalently log r ≈ 2m − 2.
+
+**The SWAP problem, stated cleanly [open].** Over an algebraically closed field, let S_n ∈ End(ℂⁿ⊗ℂⁿ) be the swap. Define
+F(n) = min{max(r,s) : S_n = R + L, opSR(R) ≤ r, rank(L) ≤ s} (opSR = rank of the realignment; the problem is self-dual under
+realignment, which fixes S_n and exchanges opSR and rank). Proven: r + s ≥ n and r·s ≥ n²/4 up to rounding (Lemmas), so F(n) ≥ n/2.
+Numerics: F(2)=1, F(3)=3, F(4)=4, F(5)≈7 (alternating projections; r=s=6 stalls at 1.8e−2, r=s=7 reaches 4e−4 with slow convergence;
+L-BFGS confirmed (4,4) at n=4 to 7e−15; runs at n ≥ 6 were stopped for time). [C] F(n) = ⌈n²/4⌉.
+**Consequence:** a two-hub A = 2 √D-shortening of C_{2,m} exists iff F(2^m) ≤ 2^{βm} for some β < √2 with m·[4 − √2(β+√(4−β²))] > 2√2.
+The proven bound only excludes β < 1.
+
+**More terms (A = 3, 4).** If every term is "pure" (cheap across one diagonal cut), the terms add to a single split S_n = R + L with
+r = Σ r_a, s = Σ s_a. So more terms never help on the matrix side and only add selector cost. Mixed terms (both cut ranks large) are
+excluded by Crofton at A = 2: a term full on both cuts costs ≥ 4m − 2, a saving ≤ 2 < 2√2. For A = 3, 4 the certificate table (§3)
+already covers m ≤ 4–5. So the picture does not change.
+
+## 5. Candidates against the target (σ = saving per selector bit; need σ > 2√D, or > 2D for [O])
+
+| candidate | instance | A | w | σ | verdict |
+|---|---|---|---|---|---|
+| product (rank) decompositions, incl. asymptotic rank / Zhou-type K_n results | any D | ≥ 2^{Dm} (flattening e_i vs −e_i) | 0 | ≤ 2 | below 2√D for D ≥ 2 [R] |
+| cut k diameters, keep the rest | any | 2^{km} | 2(D−k)m | 2 | below [R] |
+| Kauffman skein (exact, every field) | (2,1) | 2 | 2√2 | 1.17 | below [R,N] |
+| entanglement swapping (Bell/Clifford, F₂) | (2,1) | 4 | 2√2 | 0.59 | below [R] |
+| fast matrix multiplication (triangle grouping of C_{3,m}: parties {e1,−e3},{−e1,e2},{−e2,e3}) | (3,m) | n^ω | 3√2·m | (6−3√2)/ω ≤ 0.88 | below; dropped per x2 [R] |
+| two-hub split S_n = R + L, A = 2 | (2,m) | 2 | √2(β+√(4−β²))m | needs β < √2 | numerics β ≈ 2 [N] |
+| engine/App. B crossing pieces, ρ = 1/√2 | (2,m) | 2^{o(m)} | 4m − o(m) | 0 to first order | exactly on threshold [R] |
+
+**Hub vocabulary for a sub-additive (x5 "β < 4") family.** I have not checked x5's normalisation. In this notebook's terms a winning
+family is: 2^{o(m)} pieces summing to C_{2,m}, each a two-hub network (hubs at ±t(1,−1)/√2 holding {e1,−e2} | {−e1,e2}, or the
+rotated pair) whose bond across its hub cut is b = β_h·m bits with **β_h < √2**. Its cost is √2(β_h + √(4−β_h²))·m < 4m, which beats
+both thresholds once m is large. Degree = total energy (x5's β = 4) corresponds to c_row + c_col = 2√2λ with min(c_row, c_col) = √2λ,
+i.e. β_h = √2: the hub sits at t = 0 and saves nothing. Any strict sub-additivity that lowers min(c_row, c_col) below √2λ moves the
+optimal hub off the origin and gives a linear saving 4 − 2√2(ρ+√(1−ρ²)) per m, with ρ = β_h/2.
+For general D the half/half hub cut has break-even bond √D·m, cost m[2√(1−1/D)√(D²−β²) + 2β/√D], which is b2's 1/√p again.
+
+## 6. Conclusion
+
+No identity found. The prize is equivalent, in the hub vocabulary, to beating bond √D·m with subexponentially many pieces. For
+A = 2, D = 2 it is equivalent to F(2^m) ≤ 2^{(√2−δ)m}. Proven F(n) ≥ n/2, numerics suggest F(n) ≈ n²/4. Small instances
+(2,1)–(2,3) are excluded unconditionally, and (2,4) is open only for A ≤ 3.
+
+Code: code/{verify_kauffman.py (exact checker), cert_d2.py (certificate table), hub_cost.py, swap_split.py, frontier4.py,
+diag.py, probe.py, lbfgs_split.py}, outputs diag.out, lbfgs.out.

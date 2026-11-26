@@ -1136,3 +1136,13 @@ nonempty S ⊆ F₂ⁿ some k ∈ [2, n+1] isolates with probability ≥ 3/16; `
 Break found: the notes' range {2..n+1} is empty at n = 0; assume n ≥ 1 (harmless). Next: Tseitin parsimony.
 So the probabilistic core of C1 (hash + isolation + choice of k) is machine-checked; the reduction itself
 (attaching the circuit to the counting network) is not.
+
+## 26 Nov (late, 21): 6-gate search finished — MC(2×2 over F₂) = 7 [N]
+
+All 72 first-gate orbits are refuted for k = 6 (3 earlier, 69 in the background run; every log line "none"). So no
+XOR/AND circuit with 6 AND gates computes the 2×2 matrix product over F₂; with Strassen's 7 the unrestricted
+multiplicative complexity is exactly 7. Trust base: `research/mm/lab/mc_span.c`, the orbit computation, the pruning
+rules, a 128-bit memo hash. No proof object. Novelty not checked (Winograd's 7 is for a different model: non-scalar
+multiplications in arithmetic straight-line programs; here intermediate polynomials may have any degree and x² = x).
+Possible follow-ups, low priority against the ports work: an independent re-implementation in tensorlab with a
+different pruning order; a literature check; a SAT/DRAT certificate.

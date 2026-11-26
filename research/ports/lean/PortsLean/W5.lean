@@ -106,19 +106,59 @@ theorem w5_metric :
 
 /-! ## 3. Cuts: every cut metric has `Σ_S ≥ Σ_T`; hence W5 is not in the cut cone -/
 
-/-- The cut metric of `A ⊆ Fin 5`. -/
-def cut (A : Finset (Fin 5)) (i j : Fin 5) : ℝ := if (i ∈ A) = (j ∈ A) then 0 else 1
+/-- The cut metric of `A ⊆ Fin 5`, with values in `ℕ`. -/
+def cutN (A : Finset (Fin 5)) (i j : Fin 5) : ℕ := if (i ∈ A ↔ j ∈ A) then 0 else 1
 
-/-- The separating inequality `Σ_S d − Σ_T d ≥ 0` holds for every cut (checked on all 32). -/
+def sumTN (A : Finset (Fin 5)) : ℕ := ∑ i, ∑ j, if demand i j then cutN A i j else 0
+def sumSN (A : Finset (Fin 5)) : ℕ := ∑ i, ∑ j, if supply i j then cutN A i j else 0
+
+theorem cutN_ineq : ∀ A : Finset (Fin 5), sumTN A ≤ sumSN A := by decide
+
+/-- The cut metric as a real function. -/
+def cut (A : Finset (Fin 5)) (i j : Fin 5) : ℝ := (cutN A i j : ℝ)
+
+/-- The separating inequality `Σ_S d − Σ_T d ≥ 0` holds for every cut (all 32 checked). -/
 theorem cut_ineq (A : Finset (Fin 5)) : sumT (cut A) ≤ sumS (cut A) := by
-  have key : ∀ a b c d e : Bool,
-      sumT (cut (Finset.univ.filter fun i => ![a, b, c, d, e] i)) ≤
-        sumS (cut (Finset.univ.filter fun i => ![a, b, c, d, e] i)) := by
-    decide +revert
-  sorry
+  have h := cutN_ineq A
+  have eT : sumT (cut A) = (sumTN A : ℝ) := by
+    simp only [sumT, sumTN, cut]; push_cast; rfl
+  have eS : sumS (cut A) = (sumSN A : ℝ) := by
+    simp only [sumS, sumSN, cut]; push_cast; rfl
+  rw [eT, eS]; exact_mod_cast h
 
-/-- The cut `{v₁}` attains ratio 1, so min over cuts of `R` is exactly 1 (with `cut_ineq`). -/
-theorem cut_v1 : sumT (cut {0}) = 2 ∧ sumS (cut {0}) = 2 := by
-  constructor <;> simp [sumT, sumS, Fin.sum_univ_five, cut, demand, supply, isV] <;> norm_num
+/-- Hence for every nonnegative combination of cut metrics `Σ_S ≥ Σ_T`, while W5 has `Σ_S < Σ_T`:
+**W5 is not a nonnegative combination of cut metrics** (not ℓ₁-embeddable). -/
+theorem w5_not_cut_combination (c : Finset (Fin 5) → ℝ) (hc : ∀ A, 0 ≤ c A) :
+    w5 ≠ fun i j => ∑ A, c A * cut A i j := by
+  intro h
+  have lin : ∀ (f : Finset (Fin 5) → Fin 5 → Fin 5 → ℝ) (P : Fin 5 → Fin 5 → Bool),
+      (∑ i, ∑ j, if P i j then ∑ A, c A * f A i j else 0) = ∑ A, c A * ∑ i, ∑ j, if P i j then f A i j else 0 := by
+    intro f P
+    simp only [Finset.mul_sum]
+    rw [Finset.sum_comm]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [Finset.sum_comm]
+    refine Finset.sum_congr rfl fun j _ => ?_
+    split_ifs <;> simp
+  have hT : sumT w5 = ∑ A, c A * sumT (cut A) := by rw [h]; exact lin _ _
+  have hS : sumS w5 = ∑ A, c A * sumS (cut A) := by rw [h]; exact lin _ _
+  have : sumT w5 ≤ sumS w5 := by
+    rw [hT, hS]; exact Finset.sum_le_sum fun A _ => mul_le_mul_of_nonneg_left (cut_ineq A) (hc A)
+  linarith [w5_ratio.2]
+
+/-- The cut `{v₁}` attains ratio 1, so the cut upper bound for the rate is exactly 1. -/
+theorem cut_v1 : sumTN {0} = 2 ∧ sumSN {0} = 2 := by decide
+
+/-! ## 4. Flow lower bound 3/4: `3 Σ_T d ≤ 4 Σ_S d` for every pseudometric -/
+
+/-- Routing `v_iv_j` through `u₁,u₂` (half each) and `u₁u₂` through `v₁,v₂,v₃` (a third each). -/
+theorem flow_bound (d : Fin 5 → Fin 5 → ℝ) (hsymm : ∀ i j, d i j = d j i)
+    (htri : ∀ i j k, d i k ≤ d i j + d j k) : 3 * sumT d ≤ 4 * sumS d := by
+  simp only [sumT, sumS, Fin.sum_univ_five, demand, supply, isV]
+  norm_num
+  have t := htri
+  have s := hsymm
+  linarith [t 0 3 1, t 0 4 1, t 1 3 2, t 1 4 2, t 0 3 2, t 0 4 2, t 3 0 4, t 3 1 4, t 3 2 4,
+    s 3 0, s 3 1, s 3 2, s 4 0, s 4 1, s 4 2, s 1 3, s 2 3, s 2 4, s 1 4]
 
 end PortsLean.W5

@@ -137,6 +137,13 @@ Scripts: `mc_sat.py` (E1 exact MC via SAT + CEGAR on input rows), `e2_wordram.py
     (modulo trusting the code + orbit computation; no DRAT-style proof object).
     k=6: 3 of 72 first-gate orbits refuted (≈4.5 min/orbit, ~42k states each); full run would
     take ≈ 1.8 h on 3 cores; STOPPED on lead's instruction (priority change). So: 6 ≤ MC ≤ 7.
+    **UPDATE 26 Nov (late): the remaining 69 orbits were run (`run_k6.sh`, three shards, niced, several hours
+    wall time because of contention). All 69 report "none" (`k6_log{0,1,2}.txt`, 23 each; verdicts in
+    `k6_out{0,1,2}.txt`: NO CIRCUIT, 971007 / 1308960 / 1139984 states). With orbits 0–2 refuted earlier, all 72
+    first-gate orbits are refuted: there is no circuit with 6 AND gates (XOR free) for the 2×2 matrix product over
+    F₂. Hence unrestricted MC(⟨2,2,2⟩ over F₂) = 7 [N].** Trust base: `mc_span.c`, the orbit computation
+    (`orbits.py`, `plane_orbits.json`), the pruning rules (a)–(e) above, and the 128-bit state hash (collisions
+    ignored). No independent proof object; novelty against the literature not checked.
     Why k=6 is costly: helpers (gates not landing in S+T) are allowed at positions 1–2, so the
     second gate ranges over all ~2^18 products; positions 3–6 must all be reducers.
   - Boolean-quadratic MC(⟨2,2,2⟩) = 7 (E1b) and Qf = R = 7.

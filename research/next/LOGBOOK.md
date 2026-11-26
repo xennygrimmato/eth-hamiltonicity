@@ -2722,3 +2722,30 @@ links pinned to commit aef111e. First X draft and README row 9 updated.
   remarks rely on Boyar–Find's statement of it, and say so).
 - Open: the other X drafts still link the old repository name at an older commit; several self-check rows in
   `posts-x.md` are stale.
+
+## 27 Nov: Q2 (interim): any algebraic clique engine beating exponent 1/2 gives ports
+
+**Q2 agent, steps 2–3 [R for the two lemmas; D for the theorem, conditional on OpenAI's HC Thm 3.1 with its
+proof and on IM Thm 7.1, both machine-generated and unrefereed].** (`research/sat3/q2-notes.md` in progress;
+checks in `research/sat3/q2/`.)
+- The route proposed in `prior-barriers.md` §5.3 (price the complete-graph wire tensor T_K directly against
+  rank-R terms) is dead. Lemma N [R, any pseudometric space]: for K points there is an exactly balanced cut
+  (A, B) with (K−1)·[Σ_A d(x_i, y₀) + Σ_B d(x_i, y₁)] ≥ Σ_{u<v} d(x_u, x_v) for all suppliers y₀, y₁ (random
+  balanced cut; same-side pairs obey d ≤ r_u + r_v). So the gap is ≤ 0 on some cut even for rank one. The
+  §5.3 inequality is correct but not sharp, and its "borderline" verdict was wrong.
+- The theorem follows anyway, by restriction instead of pricing. Lemma [R]: T_K(2a) = ⊗_v Star_v(a), and a
+  star restricts row-locally to any K-row tensor whose other rows have side ≤ 2^a; hence T_K(λ) ≥ T_d^{⊗h} for
+  OpenAI's own hard tensor with d = K, losing only a factor 2(K−1)/K in bits per row. Row-local restriction
+  preserves the decomposition used in HC Lemma 3.3.
+- **Statement.** If the characteristic of F has no ports, then for all large even K and
+  λ ≥ Θ(K (log K)^{3/2}), every arithmetic circuit (border, degree component) for the clique polynomial
+  f_{K,λ} has ≥ 2^{c·λK²/√log K} gates; in the terms of Anthropic's ETH paper (Def. 4), (K, e) achievable by an
+  oblivious algebraic algorithm ⇒ e ≥ c/√log K. Hence: an algebraic clique engine with exponent α > 1/2 (any
+  number of merges, hyperedge pieces, non-product term sets; one (K, λ) in the regime suffices) ⇒ ports ⇒
+  (IM 7.1, characteristic 0) power-saving 3-SAT ⇒ Weak ETH fails.
+- Caveats: rests on two unrefereed OpenAI theorems; regime of long wires (λ ≳ K log^{3/2} K); arithmetic
+  circuits only (not value-dependent algorithms); one direction only. Consistency: the Euclidean
+  specialisation gives λK^{3/2}, the order of Anthropic's Prop. E.10; Anthropic's engine shows HC Cor. 3.2 is
+  tight for grouped powers.
+- Reading: for this whole class there is no moderate improvement of 1/2: either nothing, or ports and a
+  power-saving 3-SAT algorithm. H42 resolved in the affirmative, conditionally. Referee needed.

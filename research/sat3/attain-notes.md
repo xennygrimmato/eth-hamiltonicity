@@ -34,7 +34,7 @@ in `attain/out2/` (`attain/out/` holds a first run made with a bug in the consta
 | Weak duality, depth 1 | every metric with B.3 (in particular every CAT(0) placement) bounds every level-1 cover | [R] (Theorem W1) |
 | Lemma S (Steiner crossing inequality) | in every CAT(0) space: after crossing two wires of a network with free hubs there is an N for which neither child is below the parent's Steiner value | [D], proof in §5.3 |
 | **Theorem W** (weak duality, all depths) | for every placement in a CAT(0) space, every crossing-generated cover with certified costs, of any nesting depth, has a term costing ≥ λ(L−H_k)/δ_k − o under every merge at once; no spectral point, no hypothesis, no count of terms | [D], §5.3; to be refereed |
-| Numerical test of Lemma S | stepwise form on ≈ 2200 parents in ℝ³ and products of tripods and lines, incl. degenerate ones; depth-2 game with all 15 second crossings: no violation, tight cases on the circle | [N]; §5.5 |
+| Numerical test of Lemma S | stepwise form on 2800 parents in ℝ³ and products of tripods and lines, incl. degenerate ones; depth-2 game with all 15 second crossings: no violation, tight cases on the circle | [N]; §5.5 |
 | Floor for the crossing-generated family, any depth | F_CAT(configuration): ≥ 1/√3 on 3-nets, ≥ 2/3 on Δ₃, ≥ 0.6124 on nets of F₃^M, F₄^M; = 1/√2 on nets of F₂^m if the Q1 placement stands: there the family is stuck at the two-merge value | [D] |
 | P4 | the adversary of level 1 at the two-merge corner is the flat orthogonal-simplex metric; nesting cannot beat any CAT(0) placement (Theorem W); the Q1 agent reports a CAT(0) space (filtrations of F₂^N) in which F₂^m-nets have value exactly 1/√2 and which is a price if contracting fails | [D]; the placement is the Q1 agent's claim, unreviewed |
 
@@ -243,7 +243,7 @@ What is left is nesting (§5) or pieces that are not built from two-way crossing
   1/√k" holds in the PT measure; for the engine game nothing below the two-merge value follows.
 - **Coordinator's check confirmed [D].** The configuration is the cross-polytope a_i = c + t e_i, b_i = c − t e_i with
   hyperplane classes of normal ε: it sits in AG(k,g), node growth β = k, value 1/√k, exponent log_k √k = 1/2.
-- **On nets**: §1.3. The nested identity is inside the class of §5 (crossing applied to a hub–hub bond), so Theorem W2
+- **On nets**: §1.3. The nested identity is inside the class of §5 (crossing applied to a hub–hub bond), so Theorem W
   applies to it: evaluated in the engine game it can never go below the flat floor.
 
 ---
@@ -314,11 +314,13 @@ a₁S_c/|oo′| + a₂S_b/|ww′| ≤ √(2(p²+q²))·|a| for all hubs; taking 
 i.e. ρ_c² + ρ_b² ≤ 2(p²+q²). Take (r, r′) = (ρ_c, ρ_b). ∎
 
 **Lemma 5.2 (discretisation) [D].** For classes Σ₁, Σ₂ with p = log₂|Σ₁|, q = log₂|Σ₂| and every (r, r′) with
-r² + r′² ≤ 2(p²+q²) there is N with b_c(N) ≥ r − ε and b_b(N) ≥ r′ − ε, where ε/(p+q) → 0 as min(e₁,e₂) → ∞.
-*Proof.* ln|Σ_i| ≤ ln P(e_i) ≤ κ√e_i, so 2(p²+q²) ≤ κ′²Θ with κ′ = κ/ln 2; b_b(N) ≥ log₂P(N) ≥ (κ′ − o(1))√N and
-b_c(N) ≥ (κ′ − o(1))√(Θ−N) (Lemma B.1); take N = ⌈r′²/κ′²⌉ (for bounded N or Θ−N use b ≥ 0 and absorb the loss in ε). ∎
-(For the referee: the uniformity of o(1) for N in the middle range is all that is used; at the ends the trivial
-bound p+q is available to the cover as well, which only lowers the needed r.)
+r² + r′² ≤ 2(p²+q²) there is N with b_c(N) ≥ r − ε and b_b(N) ≥ r′ − ε, where ε = ε(p,q) = o(p+q) as p+q → ∞.
+*Proof.* Put κ′ = κ/ln 2 and η(E) = 1 − log₂P(E)/(κ′√E) ∈ [0,1), η̄(N₀) = sup_{E ≥ N₀} η(E) → 0 (Lemma B.1). From
+ln|Σ_i| ≤ ln P(e_i) ≤ κ√e_i: 2(p²+q²) ≤ κ′²Θ. Take N = min(Θ, ⌈r′²/κ′²⌉). Then b_b(N) ≥ log₂P(N) ≥ (1 − η(N))r′ and, since
+Θ − N ≥ r²/κ′² − 1, b_c(N) ≥ (1 − η(Θ−N))(r − κ′). If N ≤ N₀ then r′ ≤ κ′√N₀ and the deficit r′η(N) is at most κ′√N₀; if
+N > N₀ it is at most r′η̄(N₀); the same for Θ − N. So ε ≤ κ′(1 + √N₀) + (p+q)·η̄(N₀) for every N₀. ∎
+(Only the certificates' lower bounds b ≥ log₂P are used; the factor N+1 in the certificate and the cover's trivial
+cap p+q are harmless, the latter because the thresholds of Lemma 5.1 and Lemma S are ≤ p+q.)
 
 **Theorem W1.** Let d be a pseudometric on legs and hubs satisfying (B) and the triangle inequality (for instance the
 restriction of a CAT(0) placement). For every crossing-generated cover of depth 1 in which the crossed wires are edge
@@ -448,10 +450,10 @@ gap = 1 − (r_c² + r_b²)/(2(p²+q²)), thresholds computed with a slack 10⁻
 | tripod × ℝ | 300 | 3.4·10⁻⁶ | 7 | 0 |
 | tripod × ℝ² | 300 | 8.4·10⁻⁶ | 4 | 0 |
 | tripod × tripod | 300 | 3.3·10⁻⁶ | 13 | 0 |
-| tripod, degenerate ("tie") parents: integer bits, unit positions | 347 | 2.6·10⁻⁶ | 40 | 0 |
-| tripod × ℝ, tie | 253 | 4.1·10⁻⁶ | 12 | 0 |
-| tripod × tripod, tie | 235 | 3.0·10⁻⁶ | 5 | 0 |
-| tripod × tripod × ℝ, tie | 205 | 4.0·10⁻⁶ | 6 | 0 |
+| tripod, degenerate ("tie") parents: integer bits, unit positions | 400 | 2.6·10⁻⁶ | 45 | 0 |
+| tripod × ℝ, tie | 400 | 4.1·10⁻⁶ | 18 | 0 |
+| tripod × tripod, tie | 400 | 3.0·10⁻⁶ | 12 | 0 |
+| tripod × tripod × ℝ, tie | 400 | 4.0·10⁻⁶ | 9 | 0 |
 
 (The positive minimum is the slack; the tight cases have r_c² + r_b² = 2(p²+q²) to 10⁻⁵.)
 
@@ -463,10 +465,10 @@ R_c, R_b = least first bonds for which the adversary wins against all options; m
 | space, legs | instances | min margin | max (R − depth-1 threshold) |
 |---|---|---|---|
 | ℝ³, far legs (calibration) | 2 | −8·10⁻⁶ | 5·10⁻⁶ |
-| tripod × ℝ, far legs (lines through the origin) | 13 | −9·10⁻⁶ | 6·10⁻⁶ |
-| tripod × tripod, far legs | 9 | −8·10⁻⁶ | 7·10⁻⁶ |
-| tripod × ℝ, finite legs | 9 | +1·10⁻⁶ | 8·10⁻⁶ |
-| tripod × tripod, finite legs | 9 | +0.15 | 8·10⁻⁶ |
+| tripod × ℝ, far legs (lines through the origin) | 19 | −9·10⁻⁶ | 7·10⁻⁶ |
+| tripod × tripod, far legs | 14 | −8·10⁻⁶ | 7·10⁻⁶ |
+| tripod × ℝ, finite legs | 14 | −4·10⁻⁶ | 8·10⁻⁶ |
+| tripod × tripod, finite legs | 14 | +4·10⁻⁶ | 8·10⁻⁶ |
 
 (Tolerance of the bisection: 2·10⁻⁵.) With far legs through one point the game is exactly tight, as in Hilbert
 space; in every instance the nested options require no larger bond than depth 1. No candidate violation; nothing to
@@ -480,24 +482,30 @@ confirm in exact arithmetic.
   rows and columns, far legs): CAT(0), and a price under FH. At uniform weights level 1 has value ≈ 0.77 and the
   binding dual solutions are not metrics of the price type at all (the third-merge cost of a rectangle piece is
   ≥ raw, a constraint no price sees). So level 1 is stuck for a reason that has nothing to do with the geometry.
-- **Depth ≥ 2.** Unconditionally (W2) the value of every depth is in [1/√3, 1/√2]. If Lemma S holds in a CAT(0)
-  space X, every depth is ≥ F_X. I have **no depth-2 cover with a computed value below 1/√2**, and I did not compute the
-  full depth-2 game on a net (the design space — which hub–hub bonds to cross with which wires, under which later
-  merge — is far larger than level 1; §1.3 shows that the natural nested pieces reduce to rectangles when they are
-  certified by aligned cuts, so a gain would have to come from non-aligned evaluations (5.1) of nested pieces).
-- **F_CAT.** The Q1 agent reports [D, unreviewed, its notes] that for nets of F₂^m the space of real filtrations of
-  F₂^N (cone over the spherical building of GL_N(F₂), times ℝ) carries a placement of value exactly 1/√2 on generic
-  edges, with the equality structure of §7, and that every finite subset of it is a price when contracting fails.
-  If that stands, then for F₂^m-nets: (i) when contracting fails, **no engine of any kind** with three net merges has
-  level value below 1/√2 (price method, all covers), i.e. Q1 of `notes.md` is answered and the three-merge window
-  closes at exponent 1/2 for these nets; (ii) when contracting holds, 3-SAT is power-saving by other means. For
-  crossing-generated covers the same conclusion would be unconditional if Lemma S holds in that space.
-  Nets of Z₃^m, Z_p^m, Z₄ are not covered by that construction (its message: no realisation for Z₃); there the window
-  [0.6124 or less, 0.7071) for all covers under ¬contracting, and [0.5774, 0.7071] unconditionally for
-  crossing-generated covers, stays open.
-- **Can the levels converge below 1/√2?** For F₂^m-nets: no, if the Q1 construction and its price claim are right
-  (or if Lemma S holds there). For other groups: open; and by §2.2 any gain must come from pieces that are not
-  "cheap for two merges, raw or worse for the third".
+- **Depth ≥ 2.** By Theorem W every depth has value ≥ F_CAT(configuration), unconditionally, and ≤ the level-1 value.
+  I did not compute a depth-2 game on a net: for nets with F_CAT = 1/√2 there is nothing to find, and for the others
+  the design space (which hub–hub bonds to cross with which wires, evaluated under which later merge) is large;
+  §1.3 shows that nested pieces certified by aligned cuts reduce to rectangles, so a gain could only come from
+  non-aligned evaluations (5.1) of nested pieces.
+- **F_CAT.** The Q1 agent reports [D, unreviewed; `sat3/q1-notes.md`] that for nets of F₂^m the space of real
+  filtrations of F₂^N (cone over the spherical building of GL_N(F₂), times ℝ; CAT(0) unconditionally) carries a
+  placement of value exactly 1/√2 on generic edges, with the equality structure of §7, and that every finite subset
+  of it is a price when contracting fails. If the placement stands, then for 3-nets of F₂^m:
+  (i) **crossing-generated covers of every depth are stuck at exactly 1/√2** (Theorem W; needs only CAT(0));
+  (ii) if moreover its price claim stands and contracting fails, **no engine of any kind** with three net merges
+  has level value below 1/√2 (price method, all covers): Q1 of `notes.md` is answered for these nets and the window
+  closes at exponent 1/2; (iii) if contracting holds, 3-SAT is power-saving by other means.
+  Nets of Z₃^m, Z_p^m, Z₄ are not covered by that construction (its message: no realisation for Z₃). There the
+  floors are the tree-product ones (0.6124 for F₃^M, F₄^M; 0.5857 for cyclic groups by the referee's correction of
+  `notes.md`), valid for crossing-generated covers unconditionally (Theorem W) and for all covers when contracting
+  fails; the window up to 0.7071 is open, and by §2.2 it cannot be entered by pieces that are "cheap for two merges,
+  raw or worse for the third".
+- **Can the levels converge below 1/√2?** For F₂^m-nets: no (given the Q1 placement). In general the nested
+  crossing family cannot go below F_CAT, and nothing computed here suggests that it goes below the level-1 value
+  at all: in the depth-2 tests of §5.5 the nested options never forced the adversary to a larger bond than depth 1.
+- **So which way is the barrier question settled?** For the crossing-generated family on F₂^m-nets: there is a
+  barrier at exponent 1/2, and its extremal metric is a genuine CAT(0) placement. Whether that metric is a price is
+  the Q1 agent's claim and decides the statement for all covers.
 
 ---
 
@@ -529,7 +537,10 @@ The Q1 agent's space realises (a)–(c) with branching along every segment [hub,
 - [X] Majdoddin Prop. 4.23 as a barrier for the D1 game (§4.1).
 - [X] Weak duality for all CAT(0) placements at all depths by a potential with fixed hub positions: the leaf step
   fails across merges (§5.1). Withdrawn from my first note.
-- [X] Lemma S via the linearised crossing inequality: false in a tripod (§5.4, item 3).
+- [X] Lemma S via a crossing inequality linearised at the parent optimum: false in a tripod (§5.4). The proof
+  interpolates two child configurations instead (§5.3).
+- [X] A violation of the depth-2 game in pod × ℝ (which would have been a contracting-proof candidate): none in the
+  tests, and Lemma S excludes it for crossing-generated covers.
 - [X] θ-grid for the adversary in the LP: misses the kink at r′ = |p−q| and reports values below the pigeonhole
   floor with one merge (3.9993 against 4 on K₄). Use breakpoints.
 
@@ -537,15 +548,15 @@ The Q1 agent's space realises (a)–(c) with branching along every segment [hub,
 
 ## 9. Next steps and specs
 
-1. **Lemma S in products of pods** (the open point of §5). Either a proof in the Banach form — flows in ℓ₂(ℓ_∞)
-   with legs on the pods; the tree structure must be used, e.g. through the laminar family of minimum cuts of each
-   pod factor — or a violation found by a search aimed at tight parents (hubs at branch points, equal bits, several
-   pod factors). Spec for the executor: `lemmaS.py`/`lemmaS_step.py` with (i) 10⁴ instances per space in
-   {3,1}, {3,3}, {3,3,1}, {4,1}; (ii) structured parents: every pod coordinate of every hub's legs on a different arm,
-   bits tuned so that the parent optimum is at the branch point of all factors (degenerate optimum); (iii) exact
-   confirmation of any margin < −10⁻³ by enumeration of arm assignments (the true pod product, not the relaxation) and
-   by rational arithmetic on the resulting SOCP certificate.
-2. **Referee** for §5.2–5.3 (Lemma 5.1, Lemma 5.2's uniformity, Lemma 5.3, the bookkeeping (S1), (S2)) and for §1.3.
+1. **Referee** for §5 (weakest points first): (a) Lemma S — the identification of r_c as a supremum, steps (i)–(iv),
+   the use of `notes.md` Prop. 3.1; (b) the class of §5.1: is every realisation a cover can certify from B.2 + A.3
+   really one of the moves, and is (5.1) the right leaf cost (legs never used as hubs; the bits at a leg);
+   (c) Lemma 5.2 (uniformity of ln P(E) ≥ (κ − o(1))√E in the middle range, the additive loss near the ends) and the
+   accumulation of ε over a branch with many crossings; (d) §1.3. A Lean statement of Lemma S is short: CAT(0) space,
+   finite weighted graph with some vertices fixed, the two children, the inequality r_c² + r_b² ≤ 2(p²+q²).
+2. **Referee for the Q1 placement** (CAT(0)-ness of the filtration space, the placement, the value on generic
+   edges, the far-leg limit in the normalisation of §5.1). Theorem W turns it into an unconditional statement about
+   the crossing-generated family, so it should be checked independently of the price claim.
 3. **Depth-2 game on a net**, restricted: after a rectangle step for (k,k′), cross the hub–hub bond of one rectangle
    with the bond of a second rectangle sharing a line of a third class, evaluate all leaves by (5.1) under the three
    merges (a small LP per term type; g = 3, 4). This is the only nested shape I can name that is not reduced to
@@ -553,4 +564,9 @@ The Q1 agent's space realises (a)–(c) with branching along every segment [hub,
    w_k > 0.
 4. **Exact certificates** for the table of §2.1 (rational LP over ℚ(√2): the two-merge values and K₄), through the
    executor (`tools/tensorlab`, modules `opt`): the dual solutions are y ≡ 1/√2 on generic edges and ½ on straight ones.
-5. The Q1 construction should be refereed before anything is built on §6.
+5. Other groups: F_CAT for 3-nets of Z₃^m, Z_p^m, Z₄ (the Q1 agent's problem). Any value < 1/√2 there leaves the
+   window open for those nets and makes the depth-2 game of item 3 worth computing; a value of 1/√2 closes the
+   crossing-generated family on all nets.
+6. Outside the class: identities not generated by B.2, and true ranks of Ψ_N below the certificates (`ports/protocol`
+   §1.3 found the certificates nearly sharp at small sizes). `notes.md` §7 item 5 (a three-way identity on a
+   translation class) is unchanged and is the only route that Theorem W does not touch.

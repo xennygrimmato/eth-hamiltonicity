@@ -25,7 +25,7 @@ def matmul_targets(p, q, r):
     return n, len(outs), f
 
 class Enc:
-    def __init__(self, n, m, k, f, threads=4):
+    def __init__(self, n, m, k, f, threads=4, quad=False):
         self.n, self.m, self.k, self.f = n, m, k, f
         self.s = pycryptosat.Solver(threads=threads)
         self.nv = 0
@@ -40,6 +40,11 @@ class Enc:
         for j in range(k):
             for s_ in range(2):
                 self.s.add_clause(self.c[j][s_][1:] + self.d[j][s_])
+        if quad:  # no gate reuse: quadratic circuits (still Boolean, x^2=x)
+            for j in range(k):
+                for s_ in range(2):
+                    for x in self.d[j][s_]:
+                        self.s.add_clause([-x])
         self.rows = set()
 
     def new(self):
@@ -94,10 +99,10 @@ def eval_circuit(C, bits, n, k, m):
         out.append(e[0] ^ (sum(e[1 + i] & bits[i] for i in range(n)) & 1) ^ (sum(C['g'][o][j] & v[j] for j in range(k)) & 1))
     return out
 
-def solve(p, q, r, k, seed=0, init=64, verbose=True, timelimit=None):
+def solve(p, q, r, k, seed=0, init=64, verbose=True, timelimit=None, quad=False, threads=4):
     n, m, f = matmul_targets(p, q, r)
     rnd = random.Random(seed)
-    E = Enc(n, m, k, f)
+    E = Enc(n, m, k, f, threads=threads, quad=quad)
     allrows = None if n > 20 else list(itertools.product([0, 1], repeat=n))
     for _ in range(init):
         E.add_row(tuple(rnd.randint(0, 1) for _ in range(n)))
@@ -125,6 +130,8 @@ def solve(p, q, r, k, seed=0, init=64, verbose=True, timelimit=None):
 if __name__ == '__main__':
     p, q, r, k = map(int, sys.argv[1:5])
     seed = int(sys.argv[5]) if len(sys.argv) > 5 else 0
-    C = solve(p, q, r, k, seed)
+    quad = len(sys.argv) > 6 and sys.argv[6] == 'quad'
+    th = int(sys.argv[7]) if len(sys.argv) > 7 else 4
+    C = solve(p, q, r, k, seed, quad=quad, threads=th)
     if C:
-        print(C)
+        import json; json.dump(C, open(f'circ_{p}{q}{r}_k{k}{"_quad" if quad else ""}.json','w'))

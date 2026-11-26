@@ -1,6 +1,6 @@
 # CHECKS for main.tex ("Three barriers at exponent one half for the counting engines")
 
-Build: `pdflatex`, `bibtex`, `pdflatex`, `pdflatex` in this folder. Result: **16 pages** (amsart 10pt, 1 in margins).
+Build: `pdflatex`, `bibtex`, `pdflatex`, `pdflatex` in this folder. Result: **17 pages** (amsart 10pt, 1 in margins) after the review fixes of `REVIEW.md`.
 `main.log`: no errors, no undefined references or citations, no overfull boxes. `main.blg`: no warnings.
 Not committed or pushed by the author of this folder. (Note: a snapshot commit by another session, c45c683, picked up an early version of `refs.bib`; the
 working copy differs from it.)
@@ -62,7 +62,7 @@ the final build (`git rev-parse HEAD`). This folder itself (main.tex, CHECKS.md,
 | Remark: mechanism; m = 1 gives Σ_k s ≤ √2 (Lemma 6.1) | `q1-notes.md` §2.2, Lemma 6.1; `review-q1.md` §6b | R |
 | Cor. 4.6 quotients (1/√2)(1−q^{−m})(1−q^{1−m}) | `q1-notes.md` Cor. 2.2; `review-q1.md` §2(v) | R |
 | Numbers 0.999950; 0.48279/0.58247/0.64111 vs 0.48284/0.58252/0.64115; caps 0.63246/0.66667/0.68599 | `review-q1.md` §2 table (referee's `refQ1/t_place.py`); formulas recomputed for this file | N |
-| Rust reproduction 0.482843, 0.582516 | `s3-experiments.md` §5c | N |
+| Rust reproduction 0.482843, 0.582516 (merge average; min_k 0.433, 0.569 by tie-breaking) | `s3-experiments.md` §5c | N |
 
 ## Section 5 (price barrier)
 
@@ -90,7 +90,7 @@ the final build (`git rev-parse HEAD`). This folder itself (main.tex, CHECKS.md,
 | Certified cost (6.1), c_k ≤ cost_k | `attain-notes.md` §5.1; `review-thmW.md` §1 | P |
 | (S1), (S2) | `attain-notes.md` §5.1; `review-thmW.md` §4 (leaf step) | P |
 | Lemma 6.1 (Lemma S) with full proof | `attain-notes.md` §5.3; `review-thmW.md` §2 ("correct [R]"); Lean `LemmaS.lean` (`lemmaS_core`, `lemmaS_interp`, `lemmaS_inner`, `Nc_le`, `Nb_le`, `circle_of_linear`, `circle_of_sSup`), note `lean-lemmaS.md` | PL (core; scope in §11) |
-| Lemma S tests: >650 instances, ℓ¹/ℓ^∞ violations −0.59 | `review-thmW.md` §2 | N |
+| Lemma S tests: 503 instances in ℝ², ℝ³, star trees (table of §2; the verdict line says "650+"), ℓ¹/ℓ^∞ violations up to −0.59 | `review-thmW.md` §2 | N |
 | Lemma 6.2 (zero loss) | `attain-notes.md` Lemma 5.3; `review-lemma53.md` (verdict: correct; presentational repairs; finite parts recomputed in interval arithmetic, 7380 pairs) | R (see "downgrades/updates" below); uses quoted (K2) [BO16] |
 | Referee of W: loss 0 for energies ≤ 300 exhaustively, grid to 1200 | `review-thmW.md` §3 | N |
 | Lemma 5.2 fallback ε ≥ κ′ ≈ 2.6 bits | `attain-notes.md` Lemma 5.2; `review-thmW.md` §3 | R |

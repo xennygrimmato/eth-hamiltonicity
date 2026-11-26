@@ -12,7 +12,7 @@ from lemmaS import Space, System, far, fin, depth1_threshold, random_far_wire, r
 
 
 def rand_leg(space, rng, name):
-    kind = rng.choice(['far', 'fin', 'branch'], p=[0.4, 0.4, 0.2])
+    kind = rng.choice(['far', 'fin', 'branch'], p=[0.0, 0.7, 0.3])
     if kind == 'far':
         w = rng.normal(size=len(space.blocks)); w /= np.linalg.norm(w)
         arms = [int(rng.integers(m)) for m in space.blocks]
@@ -72,8 +72,8 @@ if __name__ == '__main__':
         if not np.isfinite(v) or abs(v) > 1e6:
             continue          # unbounded parent (far legs not balanced): skip
         try:
-            rc = depth1_threshold(S0, 0, 1, 'c', v - 1e-7, p, q)
-            rb = depth1_threshold(S0, 0, 1, 'b', v - 1e-7, p, q)
+            rc = depth1_threshold(S0, 0, 1, 'c', v - 1e-6 * (1 + abs(v)), p, q)
+            rb = depth1_threshold(S0, 0, 1, 'b', v - 1e-6 * (1 + abs(v)), p, q)
         except Exception as e:
             continue
         if rc is None or rb is None:

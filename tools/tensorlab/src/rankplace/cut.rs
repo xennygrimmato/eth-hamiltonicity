@@ -50,7 +50,7 @@ pub fn beta_cut_exact(g: &Graph) -> CutResult {
             let mut e = cut_size(g, &side) as i64;
             let mut s = mask.count_ones() as usize;
             let mut best = (0.0f64, 0u64);
-            let mut eval = |mask: u64, s: usize, e: i64, best: &mut (f64, u64)| {
+            let eval = |mask: u64, s: usize, e: i64, best: &mut (f64, u64)| {
                 if s > 0 {
                     let r = cut_ratio(n, g.d, s, e as usize);
                     if r > best.0 {

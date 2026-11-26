@@ -150,3 +150,42 @@ which is what H2 supplies. The same proof works with N5 as V.
 - `square_case`.
 
 The tripod inequality itself is a theorem about spectral points (OA) and is not formalised.
+
+## Task 6: rank kernel and Proposition S (`PortsLean/RankKernel.lean`, middle/notes.md §4). Status: all proved
+
+All seven main theorems print `[propext, Classical.choice, Quot.sound]` under `#print axioms`. The file
+contains no `sorry`, `axiom` or `native_decide`. `lake build` succeeds with the file imported from
+`PortsLean.lean`.
+
+- (a) `card_ker_mul_two_pow_rank (c : Matrix (Fin m) (Fin n) (ZMod 2)) :
+  (univ.filter (fun x => c.mulVec x = 0)).card * 2 ^ c.rank = 2 ^ n`.
+  The proof uses rank–nullity (`LinearMap.finrank_range_add_finrank_ker`) and
+  `Module.card_eq_pow_finrank`. `Matrix.rank` is Mathlib's: the finrank of the range of `mulVecLin`.
+- (b) Feature-map positivity.
+  - `featK φ u v := Σ_c φ u c * φ v c` for `φ : V → ι → ℝ`, with `ι` finite.
+  - `featK_psd : 0 ≤ Σ_{i∈s} Σ_{j∈s} w i * w j * featK φ (p i) (p j)`.
+  - `rankKernel_eq_feature : (2:ℝ)^(-(rank(a-b):ℤ)) = featK rankFeat a b`. Here
+    `rankFeat a (x,y) = 2^{-n/2}·1[a x = y]`, on the index set `(Fin n → ZMod 2) × (Fin m → ZMod 2)`.
+    This is the identity 2^{-rk c} = Pr_x[c x = 0] of the notes, written as a Gram matrix.
+  - `rankKernel_psd : 0 ≤ Σ_{i,j∈s} w i * w j * 2^{-rank(a i - a j)}` (Lemma K, k = 1).
+  - `rankKernel_pow_psd`: the same with `2^{-(k·rank)}` for every `k : ℕ` (Lemma K, all integer k).
+    It goes through the product features `featPow` and `featK_featPow : featK (featPow φ k) = (featK φ)^k`.
+- (c) `spectral_ineq`, the abstract form of Proposition S.
+  - Hypotheses:
+    - `A : V → V → ℝ` with every row sum and every column sum equal to 1. Symmetry is not needed.
+    - `hgap : ∀ g, Σ_u g u = 0 → Σ_{u,v} A u v * g u * g v ≤ λ Σ_u g u²`.
+    - `φ : V → ι → ℝ` with `featK φ u u = 1`.
+  - Conclusion: `(1/N) Σ_{u,v} A u v * K u v ≤ λ + (1-λ) * ((1/N²) Σ_{u,v} K u v)`, where `N = |V|`
+    and `K = featK φ`.
+
+  This is exactly the normalisation of the notes: E_edges uses n⁻¹Σ A_uv, and E_pairs uses ordered
+  pairs with u = v included. Here λ is the constant of the quadratic form on 1^⊥. For a symmetric A
+  it can be taken to be λ₂, signed, so the notes' max(λ₂, 0) is not needed. The step from "λ₂ is the
+  second eigenvalue" to `hgap` (Courant–Fischer) is a hypothesis, not formalised.
+
+  Corollaries:
+  - `propS_rank`: E_edges 2^{-D_f} ≤ λ + (1-λ) E_pairs 2^{-D_f} for every
+    `f : V → Matrix (Fin m) (Fin n) (ZMod 2)`, with D_f(u,v) = rank(f u - f v).
+  - `propS_rank_pow`: the same for 2^{-k·D_f}.
+
+Not formalised: the consequences 4.2(a)–(c), which need the expander mixing lemma and co-area.

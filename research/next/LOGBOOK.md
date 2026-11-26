@@ -1513,3 +1513,16 @@ second eigenvalue and is exactly tight on Cay(Mat_μ(F₂), rank one) for μ = 2
 averaging uses transitivity of the affine group on pairs of given difference rank. Bookkeeping: one table row tags
 an equivalence [R] whose ⇐ direction is Theorem A ([D]/refereed separately). Numerics on SL₃(F₄): E_edges = 0.5,
 E_pairs = 2.292, λ₂ = 0.80.
+
+## 26 Nov (late, 42): kernel lemma and the spectral inequality in Lean [L]; rebuilt by me
+
+`research/ports/lean/PortsLean/RankKernel.lean` (project now 11 files; `lake build` 18274 jobs, success; no sorry):
+- `card_ker_mul_two_pow_rank`: #{x : c·x = 0}·2^{rank c} = 2ⁿ over ZMod 2.
+- `rankKernel_psd`, `rankKernel_pow_psd`: Σ w_i w_j 2^{−k·rank(a_i−a_j)} ≥ 0, via the explicit feature map
+  φ_a(x,y) = 2^{−n/2}·1[a x = y] and product features for powers.
+- `spectral_ineq`: for A with unit row and column sums (symmetry not needed) and the quadratic-form gap hypothesis
+  ⟨g, A g⟩ ≤ λ⟨g, g⟩ on mean-zero g, and a feature-map kernel with unit diagonal:
+  N⁻¹ΣA_uv K_uv ≤ λ + (1−λ)·N⁻²ΣK_uv (ordered pairs incl. u = v) — the notes' normalisation, with signed λ.
+- `propS_rank`, `propS_rank_pow`: Proposition S for any f : V → Matrix (Fin m) (Fin n) (ZMod 2).
+Not formalised: that the second eigenvalue of a symmetric A gives the quadratic-form hypothesis (Courant–Fischer);
+it is a hypothesis of the theorem.

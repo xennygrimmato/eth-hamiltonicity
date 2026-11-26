@@ -406,8 +406,9 @@ over the Boolean semiring, has at least c·n²√(log n) − n² gates. More gen
  (d) rectangular n×n by n×m: ≥ c·nm√(log n) − O(n² + nm); J independent products: ≥ c·J n²√(log n) − O(Jn²);
  (e) via fixed embeddings (pins and ≡1 closures, [R] one line each): inverse of 3n×3n unitriangular matrices over
      F₂ (the (1,3) block of [[I,A,0],[0,I,B],[0,0,I]]⁻¹ is AB), transitive closure of 3n-vertex digraphs (three-layer
-     graph), F₂-matrix squaring of 2n×2n matrices ([[0,A],[0... ]] trick: [[0,A],[B... ]] — use [[0,A,0],[0,0,B],
-     [0,0,0]]² whose (1,3) block is AB).
+     graph), and squaring of 3n×3n matrices over F₂ (the (1,3) block of [[0,A,0],[0,0,B],[0,0,0]]² is AB). In each
+     case the fixed zero/identity entries are pinned by e₀/e₁ leaves and the unneeded outputs closed by ≡1 leaves,
+     which keeps Lemma P applicable; the bound is Ω(n²√log n) in terms of the n of the embedded product.
 *Proof.* Size(Net_π) = size(Net) ≤ 16s + 12n² by Lemma P(b); Lemma 4.1 with r = n² (resp. n²b, nm, Jn²), q = n.
 For (b),(c) the extra output bits are pinned by e₀ (Lemma P remark). ∎
 
@@ -482,4 +483,75 @@ algorithm). So the only world in which our matrix bound has no proof from the re
   hard in port characteristics.
 - γ: our exponent is γ = 1/2, from Lemma 4.1 / Lemma 8.2. It is **not** Theorem 2.2's σ. Do not write (log n)^σ for
   matrices.
+
+---
+
+## Step 2′ (addendum). Corollary A rests on a Lean-formalised statement [K, Lean source read, not built]
+
+The clone contains Lean source under `lean/OAI/` (not only Comparator statements). Found by the "note" executor and
+re-read by me:
+
+`lean/OAI/LinearAlgebra/MatrixExponent/BatchDescent/Hard.lean`
+```
+theorem hard (F : Type) [Field F] [Finite F] : Tagged.Hard F :=
+  Processor.hard_of_descent (descent fun bad => compilation_of_encoded (encoded bad))
+
+theorem manyList_full (F : Type) [Field F] [Finite F] :
+    ∃ η : ℝ, 0 < η ∧ ∀ᶠ w : ℕ in atTop, ∀ t m : ℕ,
+      1 ≤ t → (t : ℝ) ≤ (2 : ℝ) ^ ((w : ℝ) ^ (1 + η)) → Realizes F w t m →
+      (t : ℝ) * listBits w * (w : ℝ) ^ η < m
+```
+with (`Network.lean`, `ListBounds.lean`) `listBits w = 2*w*2^w`; `Net F a b k v` = networks built from tables of
+total bit-arity ≤ 3 (`h : wd a + wd b ≤ 3`) by juxtaposition, contraction over shared bits, trace (internal
+cycles) and rewiring, v = number of vertices; `Realizes F w t m` = ∃ v, a `Net` for `distinctPower F w t` (product
+over t lists of [list is Nodup]) with m = v + t·listBits w (vertices + exterior bits = the paper's *size*).
+Also `Tagged/Hard.lean`: "Power-of-logarithm lower bound for verifying one permutation":
+`Hard F := ∃ σ > 0, ∀ᶠ w, ∀ m, Net F (inputs w (word w)) .unit (tag F w (word w)) m → 2^w * w * w^σ ≤ m`
+(a single Tag(w,w) test). `grep sorry` over `lean/OAI/LinearAlgebra/MatrixExponent` returns nothing; we did not
+build the project and did not audit axioms.
+
+Consequences.
+- **Corollary A holds for every finite field with no ports / no Weak ETH hypothesis, resting on a Lean theorem**
+  (as read). With size m instead of volume, Lemma E gives m ≤ (4s + N + 1) + N, so every B₂-circuit for LD_N
+  (N = 2w·2^w) has s > N(w^η − 2)/4 − 1. Direct sum now for all t ≤ 2^{w^{1+η}}.
+- The Lean top level has no ports split (route "descent + resists", `Processor.hard_of_descent`); [MM] Lemma 4.1
+  does not appear in it. So the matrix theorems of Step 3 still need Lemma 4.1 (paper-only) or [Int] (paper-only).
+
+## Step 3.7. Can distinctness (or Tag) be reduced to matrix multiplication? (lead's second route) [R + C]
+
+Goal: from a B₂-circuit of size S(n) for MM_n, build a network for D_w^{⊗t} (or Tagged.Hard's Tag(w,w)) on
+≈ n² input bits with overhead o(n²·w^η). Since η is an unknown small constant, the MM inputs used must total
+n²·(log n)^{o(1)} bits and the glue must cost n²·(log n)^{o(1)} gates.
+
+**Obstruction 1: information density of a permutation matrix (kills one-hot routing) [R].** The only data-dependent
+routing a single product does is P·B (or B·Q) with P a 0/1 matrix built from the data. An n×n permutation matrix
+has n² bits but carries log₂ n! ≈ n log n bits. To route records of width W by P one needs n² control bits and
+moves nW payload bits. Within budget this forces W ≈ n: wide records. The hard instances that are formalised or
+proved unconditionally have narrow records: Tag(h,h) (`Tagged.Hard`: 2^w records of w bits) and D_w (2^w words of
+2w bits). Embedding Tag(h,h) as P_π (N×N) times B (N×h) costs ≥ N² gates just to produce P_π from the tags (each
+of the N² entries is a distinct function of the tags), against a target lower bound N h^{1+σ} ≪ N². The loss is a
+factor ≈ N/(h^{1+σ}) — everything.
+
+**Obstruction 2: products by permutation matrices generate a tiny group (kills radix-pass pipelines) [R].**
+Put the n² bits on an n×n grid. B ↦ P_σ B Q_τ acts as (i, j) ↦ (σ(i), τ(j)); transposition swaps coordinates.
+These maps form the group S_n ≀ S₂ of order 2(n!)², and compositions stay in it. A pipeline of k matrix products,
+each with one factor a data-dependent permutation matrix, interleaved with *fixed* wirings, realises at most
+(2(n!)²)^k · (number of fixed pipelines = 1) distinct bit-routings, i.e. ≤ 2^{2kn log₂ n + k}. Routing Tag(h,h)^{⊗t}
+with tNh = Θ(n²) payload bits requires (N!)^t = 2^{(1−o(1))·tNh} = 2^{Θ(n²)} distinct routings (one per tag
+pattern, all distinct as tensors). Hence k = Ω(n/log n) products, total cost ≥ (n/log n)·n² — no lower bound for
+MM_n can come out. A radix pass ("one-hot matrix of a digit × record matrix") is such a step, so **radix sorting by
+matrix products is ruled out unless the glue circuitry between passes does most of the routing itself**. Glue of
+size O(n²) does have enough entropy (2^{O(n²)} settings) to escape this count, so the count is not a proof that no
+mixed reduction exists; but the glue would then be a linear-size circuit doing near-arbitrary routing of h-bit
+records with the help of a few row-uniform permutations, which nothing suggests is possible [C].
+
+**Obstruction 3: counting-type reductions.** Rank counting (rank_i = #{j: x_j < x_i}) or collision counting via
+one-hot bucket matrices needs M×M matrices for M = 2^w records, i.e. M² ≫ N = 2wM entries. With n² ≈ N one has
+n ≪ M buckets, too few to separate the records. [R for these specific schemes.]
+
+**Verdict.** No reduction from list distinctness or narrow tagged permutations to square matrix multiplication with
+near-linear overhead is available; the natural ones lose a factor n/polylog(n). The matrix bound stays on the
+wide-routing route (Lemma 4.1 or [Int]), and the **Weak-ETH dichotomy remains the main statement**. What would be
+needed is an unconditional lower bound for *wide* single-permutation routing, e.g. `Tagged.Hard` with payload
+`word W`, W ≥ 2^w — the Lean `Hard` explicitly says "Only square payloads at powers of two are required".
 

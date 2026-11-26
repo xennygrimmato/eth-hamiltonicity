@@ -1098,3 +1098,10 @@ refereed C1 and hull results.
 Anthropic's sources was denied by the permission classifier, twice. Not retried. Fallback in progress: guess count on
 a faithful copied fragment of NS1/Machine.lean. Finding: `Gives`/`Does` do not imply guess-freeness, so every guess
 bound must be re-derived syntax-directedly. → ask the user whether to permit the real build.
+
+## 26 Nov (late, 17): Toeplitz pairwise independence in Lean [L]
+
+`research/ports/lean-c1/IsoLean/Toeplitz.lean`: `hash_pairwise_F2` — for x ≠ y the number of (a, b) with h(x) = s and
+h(y) = t, times 4^k, equals 2^{(n+k−1)+k}; `hash_pairwise_F2'` gives the count as 2^{n−1}. Indexing as in the notes,
+(T_a)_{j,i} = a_{n−1+j−i}, a ∈ F^{n+k−1}. Surjectivity of a ↦ T_a z for z ≠ 0 holds over any field. No sorry (per the
+executor; I have not rebuilt this project). The notes' statement is correct. Next: the isolation bound.

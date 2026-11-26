@@ -146,12 +146,8 @@ theorem toeplitz_fiber_card [Fintype F] [DecidableEq F] (n k : ℕ) (z : Fin n �
       * Fintype.card F ^ k = Fintype.card F ^ (n + k - 1) := by
   have := card_fiber_mul_card (toeplitzLin (F := F) n k z).toAddMonoidHom
     (toeplitz_surjective n k z hz) s
-  simp only [Fintype.card_fun, Fintype.card_fin, LinearMap.toAddMonoidHom_coe,
-    toeplitzLin_apply] at this
-  convert this using 3
-  ext a
-  set_option pp.explicit true in trace_state
-  sorry
+  simp only [Fintype.card_fun, Fintype.card_fin] at this
+  exact this
 
 /-- The Toeplitz hash `h_{a,b}(x) = T_a x + b`, keyed by `p = (a, b)`. -/
 def hash (n k : ℕ) (p : (Fin (n + k - 1) → F) × (Fin k → F)) (x : Fin n → F) : Fin k → F :=

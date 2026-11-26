@@ -945,3 +945,26 @@ From the hull agent (`research/ports/hull/notes.md`), re-derived twice by it, no
 - Sent to the library executor: certify f_Q; scan small supply/demand instances on 5 parties for the largest gap
   between the N5/W₅ bound and the cut bound; protocol search on those. Sent to the Lean executor: rank table, the
   equality case, the tripod × ℝ model, and an explicit hypothesis structure for the rigidity step.
+
+## 26 Nov (late, 8): Theorem A skeleton in Lean [L, conditional]; f_Q computed [N]
+
+**Lean (`research/ports/lean/PortsLean/ThmA.lean`, `ThmAArith.lean`).** `theorem_A : Contracting → PortZero`,
+sorry-free; I rebuilt it myself (18256 jobs, success) and read the statement. Hypotheses are explicit arguments, no
+axioms: F6Statement (copy of AN `thm_poincare`, quantifier order ∃u ∃C₀ ∀l ∀price), LogPlacementStatement (copy of OA
+`exists_logarithmic_placement` incl. `large`, `scalar`, threshold s/(10000(e+3))), ContainStatement (OA target ⇒ AN
+price, one direction), LineStatement (line placements are AN prices; used only for `scalar`), |U_h| = 2^{h(h−1)/2},
+generators are involutions. What this does and does not show: the *deduction* and the arithmetic are machine-checked;
+the four imported statements are copies, not the labs' own Lean objects.
+- Break found: the referee's condition h/(log₂h+4) > 40000·C₀ is not sufficient for the Lean form; OA's `large`
+  (10000(e+3) ≤ h(h−1)/2) is separate (counterexample C₀ = 0). Proved sufficient: 40000(C₀+1)(e+3) ≤ h.
+- Field bookkeeping sits inside ContainStatement (needs K = ℚ or ℚ̄); undischarged.
+
+**E3 (`tools/tensorlab`, `research/ports/e3/notebook.md`).** Library builds (Rust + rayon; metric/opt/models; 8 tests).
+- f_Q = 0.9446059737… (triangles + 30 Reshetnyak quadruple inequalities), root of 58x³−14x²−29x−9; **below 3/√10**.
+  The minimiser is argued not CAT(0) (double equality ⇒ parallelogram, fails). So four-point inequalities alone do
+  not prove R ≥ 3/√10; the rigidity case or five-point conditions are needed. Sent to the hull agent.
+- Triangles only: 0.75 (flow). Triangles + Euler: 0.893.
+- Products of two trees: minimum exactly 3/√10 at W₅. Single tree or Euclidean: exactly 1 (strategist's 1.078 wrong).
+- [R] No exact single-shot K_{2,3} restriction at equal bond dimension over any field. Border/asymptotic open.
+- H22 [C]: min of R over five-point CAT(0) sets = 3/√10, so f*(K_{2,3}) = 3/√10 exactly under ¬contracting…
+  (only if W₅-type sets are the extremal prices; upper bound side is the hull lemma).

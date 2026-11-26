@@ -27,7 +27,7 @@ OpenAI result at all.
 - We prove no unconditional algorithm and no unconditional lower bound.
 - We do not decide whether the two cases exclude each other. [AN] does not decide this either (D.3: "We do not show that
   the two cases exclude each other").
-- Every conclusion below is an implication between hypotheses, each with the status recorded in §6.
+- Every conclusion below is an implication between hypotheses, each with the status recorded in §7.
 
 **Provenance of the sources.** Both source papers were produced by AI systems and have not been refereed by people.
 - [AN, §3, p. 11]: "The proofs in this paper were found and written by AI. No human mathematician has checked the
@@ -66,8 +66,7 @@ The internal referee reports are `review-theoremR.md` and `review-theoremAB.md`.
 (`Price.lean`) asks for a single `FiniteMultiTapeMachine`, so it is *uniform*.
 - **Non-uniform Weak ETH** (nu-Weak ETH) says the same for algorithms that may also receive, for each n, an advice string
   of length poly(n).
-- nu-Weak ETH implies Weak ETH. Ordinary ETH implies Weak ETH. Whether ordinary ETH implies nu-Weak ETH depends on
-  which non-uniform form of ETH one assumes; we only use the two hypotheses as defined here.
+- nu-Weak ETH implies Weak ETH, and ordinary ETH implies Weak ETH. We use only these two hypotheses, as defined here.
 
 ---
 
@@ -139,8 +138,7 @@ s v^48 ≤ τ, some program of size at most v^H cuts (τ, s) into (v^H, v^{H−3
 τ/v^24 steps."
 - §§F–K assume the contracting case throughout (p. 37: "In this section and in Sections G to K we are in the
   contracting case").
-- J.4 involves no circuit and no permanent. The permanent enters only in K.3 (§1.1 of the rebase notebook tabulates
-  this).
+- J.4 involves no circuit and no permanent. The permanent enters only in K.3 (Fig. 1 of [AN]).
 - Lean `exists_setting` (`Paper/Cuts.lean`, l. 570) supplies, for any `Field K` with `Contracting K`, a subring A with
   `Algebra.FiniteType ℤ A`, named generators θ and the hypotheses of `thm_cut`.
 - In the Lean, H = 16(a₀ + 217). H is not explicit.
@@ -209,7 +207,7 @@ For H = 272 the bound on δ would be about 0.121, but H is not explicit.
 sparsification. In this sense it is deterministic subexponential counting for nondeterministic linear time in that
 model. We have not written out a translation to multitape Turing machines with linear overhead. A machine with tapes as
 pairs of lists looks routine, but it is [ours] and not refereed. For #3-SAT *measured in the number of variables*, see
-§7.4.
+§8, item 4.
 
 ### 3.2 Why the stated J.4 is not enough [ours-R]
 
@@ -248,7 +246,7 @@ pairs of lists looks routine, but it is [ours] and not refereed. For #3-SAT *mea
 - The other `guess` sites in the development belong to the evaluator, the universal evaluator and the accelerator. They
   are summed inside the pieces, not enumerated by G.
 - No Lean predicate counts guesses, so Lemma 1 is a reading of the code and the prose. It is not a checked theorem
-  (§7.2).
+  (§8, item 2).
 
 *Proof.* Each `guess` costs one step. So the guesses of one cut are at most the steps of its non-word phases. The word
 phase (sΛ steps) is guess-free.
@@ -259,7 +257,7 @@ phase (sΛ steps) is guess-free.
 - **Cut packets:** at most k_iΛ pieces, each with at most KTΛ/v^300 bits of cut packets (Prop. J.2). Here KT ≤ τ_iΛ + K
   and K ≤ τ_i. This gives at most τ_iΛ³/v^236.
 
-  (The rebase notebook wrote Λ² here. The referee's count gives Λ³. Since Λ is "a power of lg v whose exponent may grow
+  (Our working notes wrote Λ² here. The referee's count gives Λ³. Since Λ is "a power of lg v whose exponent may grow
   a bounded number of times" (p. 51), the difference is absorbed. We use Λ³.)
 - **Per cut:** g_i ≤ 2τ_iΛ³/v^236.
 
@@ -273,7 +271,7 @@ phase (sΛ steps) is guess-free.
 - The last step uses (100Λ³)^{r+1} ≤ v. That is the J.4 proof's "All these powers of Λ are below v if C_cut is large",
   and in Lean the hypothesis discharged via `polylog_loss_le` in `thm_cut`. ∎
 
-**Robustness of the exponent.** Only the form "total guesses ≤ τ/v^{48+g} with g > 0" matters (§3.6).
+**Robustness of the exponent.** Only the form "total guesses ≤ τ/v^{48+g} with g > 0" matters (see the end of §3.5).
 - 256 and 300 are in the paper. 235 and 236 are our inference.
 - Using only the *statement* of J.3, and granting that its s-term is guess-free (which the Lean shows), the per-cut
   guesses are ≤ τkΛ/v^256. This gives g = 143 and δ < 143/(5H+143).
@@ -288,7 +286,7 @@ phase (sΛ steps) is guess-free.
 1. **Enumerate the run tree of G on z, pruned.** Explore depth-first. Cut off any branch once it exceeds t = τ′/v^24
    steps or g = τ′/v^235 guesses.
    - Every prefix of an accepting run survives (J.4 and Lemma 1), so the pruning loses nothing.
-   - We do not need any bound on non-accepting runs. This is the referee's fix: it replaces the notebook's claim that
+   - We do not need any bound on non-accepting runs. This is the referee's fix: it replaces the working notes' claim that
      *every* run has few guesses.
    - `guess` is the only branching and it is binary (p. 48), so the pruned tree has at most 2^{g+1} leaves.
    - Each construct costs O(1) pointer operations, so the enumeration takes 2^{g+1}·poly(τ′).
@@ -528,8 +526,8 @@ field (D.1: "two hypotheses on the field k"), so no transfer between fields is n
 
 Corollary 1 is a conditional proof of [AN]'s flat hypothesis in characteristic 0. It does not use OpenAI's [EG] Thm 1.2
 ("Over every field there is a spectral flat of every positive finite dimension"), which would give the flat hypothesis
-unconditionally via the containment of §2.1. Route (a′) uses no OpenAI result at all. The sparsification it uses is
-classical.
+unconditionally via the containment of §2.1. The route via Theorem R uses no OpenAI result at all. The sparsification it uses is
+classical, although we read it in the form written out in [IM].
 
 **The case table** (one characteristic χ; "contracting" means over some field of characteristic χ). Each label is
 attached to the cell it concerns.
@@ -608,11 +606,12 @@ We built neither lab's Lean. "Lean-backed" means a Lean statement exists per the
 
 ## 8. Open points
 
-1. **Uniformity of Theorem R (§3.6).** Either check in the Lean that `thm_tree` and `prop_pieces` build their witnesses
-   explicitly from (v, laws, tower), or refactor their `obtain`s into `def`s with those parameters. Until then:
-   - Corollary 1(a′) is proved under nu-Weak ETH only;
-   - the uniform statement depends on OpenAI's route (a).
-   [Audit `review-uniformity.md`: not available at drafting time.]
+1. **A Lean-checked uniform Theorem R (§3.6).** The refactoring has two parts:
+   - turn the choice witnesses into parameters or computable `def`s: `Gam`, the host maps, `idx`, `coQ`, `FQ`, `FU`,
+     `eE`, the route words, `ch`, `Pl`, the uses of `Fintype.equivFin`, and the SLP;
+   - restate `thm_onecut` as `CutD … (Gprog v τ s k)`, with `Gprog` an explicit function of the constant table.
+
+   This is mechanical according to the audit, but it has not been done. A second reader of the audit would also help.
 2. **Machine-checking Lemma 1.** The referee's plan (review-R, final section) is:
    - add a `guesses` field to the run semantics;
    - define a guess-aware `Does` and a predicate `CutDG`;
@@ -624,14 +623,31 @@ We built neither lab's Lean. "Lean-backed" means a Lean statement exists per the
    would need a count-preserving sparsification. Two candidates are Dell–Husfeldt–Marx–Taslaman–Wahlén (2014) and
    branching with the negated centre added as unit clauses. Not refereed; not claimed.
 5. **Positive characteristic.** Theorem R(a) holds over any field where contracting holds: it computes sum(z) in a
-   finite field A/𝔪. But this does not yet give a statement about 3-SAT.
+   finite field A/𝔪. But no statement about 3-SAT is claimed here.
    - The sparsification is not disjoint, so leaf counts mod p do not combine.
-   - In characteristic 2 the factor 2^e in our encoding is a normalisation problem that is still open.
-   - A separate note (in preparation, **unreviewed**) proposes that ports or contracting in characteristic p ⇒
-     one-sided-error randomised 3-SAT in 2^{O(v^{1−δ})}, via Valiant–Vazirani isolation with a Toeplitz hash. We state
-     nothing for p = 2, and no theorem for p > 2.
+   - A decision algorithm needs isolation (§9).
 6. **Omitted.** We omit a corollary about the optimality of our own decomposition engine under Weak ETH ("Corollary 2"
    of the working notes). It rests on internal results that were not checked, and we do not claim it. Likewise, the
    working notes' statement that the ports algorithm "obeys all flat floors" is heuristic. It is not a theorem, and it is
    not used here.
 7. **Explicit constants.** H, u, C₀ and the laws are not explicit. δ is not explicit either.
+
+---
+
+## 9. Outlook: further results in preparation (all **unrefereed**)
+
+None of the following is claimed in this note. They are recorded so that readers know what is being checked.
+
+1. **Characteristic p, via isolation** (working notes `c1d1/notes.md`). The proposal: if characteristic p admits ports,
+   or the contracting hypothesis holds over a field of characteristic p, then there is a one-sided-error randomised
+   algorithm for 3-SAT in 2^{O(v^{1−δ})}, with the same δ.
+   - The tool is Valiant–Vazirani isolation with a Toeplitz hash, given by a near-linear XOR/AND circuit attached to
+     the counting network.
+   - On the Anthropic route this uses the padding fix e = 0 of §3.5.
+   - A normalisation question in characteristic 2 was raised during drafting. We make no claim for p = 2.
+2. **Hull lemma and the K_{2,3} rate** (working notes `hull/notes.md` §1; under review). The proposal: if contracting
+   fails over k, then the asymptotic rate of tensor protocols on K_{2,3} over k is at most 3/√10.
+   - Equivalently, a K_{2,3} tensor protocol over ℚ of rate > 3/√10 would imply contracting over ℚ.
+   - By Theorem R or Theorem A, it would then imply 3-SAT in 2^{O(v^{1−δ})}.
+3. **Engine gap** (Theorem D of `c1d1/notes.md`). This is a threshold statement for decomposition engines, with
+   threshold α′ > ½·log_β p. We have not stated or checked it here.

@@ -50,6 +50,7 @@ def prune : RTree A → ℕ → ℕ → RTree A
   | guess _ _, 0, _ => reject
   | guess l r, g + 1, t => guess (l.prune g t) (r.prune g t)
 
+omit [CommRing A] in
 theorem leaves_prune_le (T : RTree A) (g t : ℕ) : (T.prune g t).leaves ≤ 2 ^ g := by
   induction T generalizing g with
   | reject => simp [prune, leaves, Nat.one_le_two_pow]

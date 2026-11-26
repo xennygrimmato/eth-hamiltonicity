@@ -1053,3 +1053,16 @@ Notes: `research/ports/c1d1/notes.md`. Unrefereed, nothing run.
   success ≥ 1 − e^{−3}, one-sided.
 - Leaves are tested separately; sound and complete.
 - Pending: item 5 (hidden divisions in AN §§G–J), 6 (C4), 7 (Theorem M1 dependency list), 8 (Theorem D).
+
+## 26 Nov (late, 15): pruned evaluator in Lean; Anthropic's run semantics; build scoping
+
+- `PortsLean/PrunedTree.lean` [L]: pruning at g guesses / t steps gives ≤ 2^g leaves by construction; pruned sum =
+  true sum if every accepting leaf has depth ≤ g and cost ≤ t. Arithmetic of Theorem R unchanged.
+- Anthropic's Lean semantics (read, not built): `Ev θ F x l` lists only accepting runs and its derivability encodes
+  "all runs halt"; `Does` and `CutD` bound cost on accepting runs only. So a guess-aware `DoesG` should bound guesses
+  on accepting runs — matching the pruned evaluator.
+- vp-vnp: 324 files / 72.9k lines, Lean v4.33.1, Mathlib pinned. Guess-relevant closure: 61 files / 13.6k lines.
+  `Paper.Cuts` closure: 261 files / 60.7k lines. 46 GB free.
+- Decision: build the 61-file closure and define the guess count against the real definitions (EvG / DoesG,
+  guess-freeness of deterministic combinators, costs of pickB and bitsB, additivity under compC), then estimate the
+  rest. Top priority for the Lean executor.

@@ -13,6 +13,8 @@ fn main() {
         "euler" => cons.extend(euler_family(n)),
         "resh" => cons.extend(reshetnyak_family(n)),
         "tri" => {}
+        "box" => cons.extend(box_family(n)),
+        "all" => { cons.extend(reshetnyak_family(n)); cons.extend(box_family(n)); }
         _ => panic!("family"),
     }
     let p = RatioProblem::new(k23::num(), k23::den(), cons.clone());
@@ -47,4 +49,12 @@ fn main() {
         for (i, b) in &s.at_lower { let (a, c) = pr[*i]; println!("   bound d({}{})=0 [{:.3e}]", names[a], names[c], b); }
     }
     println!("3/sqrt(10) = {:.15}", 3.0 / 10f64.sqrt());
+    // check the best point against every family, all orderings
+    let b = &feas[0].x;
+    let m = Metric::new(n, b.clone());
+    println!("best point: tri {:.3e} euler {:.3e} resh {:.3e} box(all 24 orders) {:.3e}", m.max_triangle_violation(),
+        m.max_violation(&euler_family(n)).0, m.max_violation(&reshetnyak_family(n)).0, m.max_violation(&box_family_all_orders(n)).0);
+    for c in box_family(n) { if let Constraint::BoxQ{p} = &c { let q=[0,1,2,3,4,5].map(|k| b[p[k]].powi(2)); let (t,s,v)=box_min(&q);
+        if v < 1e-6 { println!("   box {} min Q={:.3e} at (t,s)=({:.12},{:.12})", c.describe(n,&names), v, t, s); } } }
+    println!("best point full precision: {:?}", b);
 }

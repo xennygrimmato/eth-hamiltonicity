@@ -1662,3 +1662,12 @@ graph and group generators incl. LPS; Lanczos; parallel annealer; kernel-inequal
 - Caveats: β_cut for n > 32 is a lower bound; machine was heavily shared.
 - Three 6 MB regenerable placement files are git-ignored; smaller ones and logs are committed.
 All agents have now finished. Nothing is running.
+
+## 26 Nov (late, 52): overview written; literature check and a generalisation launched
+
+- `research/ports/README.md`: one-page overview of the seven results with status tags, the two notes, the tools and
+  the known weak points.
+- Launched: (1) literature and novelty check with web search, for the two notes, the 7-AND-gate result and the
+  rank-metric expander question (output `research/ports/literature-check.md`); (2) high-effort theory agent on
+  K_{2,m} for all m and on which networks have a "pinned" rate (output `research/ports/k2m/notes.md`).
+- Still pending with the user: permission to build Anthropic's Lean here; whether/where to post.

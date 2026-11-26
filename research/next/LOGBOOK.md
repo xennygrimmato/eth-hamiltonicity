@@ -3016,3 +3016,15 @@ deleted and `lake build` run from source: 18426 jobs, 74m55s wall (4 jobs in par
 this; machine shared with other jobs), `mc_eq_seven : MC = 7`, axiom list identical to the first build (three
 standard axioms + 365 compiled-evaluation axioms, 360 of them cubes), no `sorryAx`. Same machine and
 toolchain: reproducibility, not independent confirmation. Paper and README updated accordingly.
+
+**H45, interim (attainment agent) [N]: depth 2 strictly beats depth 1 on Δ₃ standalone, by a tiny margin.**
+- Level 1 on Δ₃, minimised over weights on a fine grid: 0.891902 at w = (0.64, 0.18, 0.18).
+- With depth-2 strategies of one type (cross two wires; after seeing the adversary's first angle either stop
+  or commit to one cut and cross that hub–hub bond with a third wire; leaves by exact 0-extension): 0.891022
+  at w = (0.62, 0.19, 0.19). At uniform weights 0.939512 → 0.929966. The binding strategy takes one edge from
+  each anti-diagonal triangle; it is genuine nesting (non-adaptive bundle versions give 0.971 and 1.000).
+- Caveats: coarse adversary grids first produced spurious gains; everything counted was re-evaluated with
+  exact maximisation over the second angle and a zoomed grid over the first. Not yet covered: crossing two
+  hub–hub bonds, adaptive choice of the third wire, depth 3. All values are far above the floor 2/3.
+- Not a tower level. On the Z₅ net the two-merge corner already sits on its floor (0.638071), so a gain needs
+  an interior weight vector whose depth-2 value drops from 0.69–0.77 to below 0.638. Sweep running.

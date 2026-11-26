@@ -36,7 +36,7 @@ proof, given the [R] Propositions 3.1 and 3.2. The certified statement is (CL\*)
   each leaf, and requires the header (problem name, bound, domain) to match the built-in problem bit for
   bit.
 
-Tests: `cargo test --release` runs 16 tests. They cover known-true claims; false claims refused with
+Tests: `cargo test --release` runs 18 tests. They cover known-true claims; false claims refused with
 exact counterexamples (`bowl2:c=1e-9`, `hull3:c=3.0001`, `hull3:k=2`, `clnear:…:k=2`); true claims with a
 non-isolated or boundary equality, which are correctly not proved (`ring2:c=0`, `hull3:k=8`); tampered
 certificates rejected (5 kinds); and agreement of the interval evaluators with plain floats, including
@@ -183,7 +183,40 @@ G ≥ G(W5) = 0 on the box.
 clamp of hull(s_j, s_k), together with upper bounds g(±h) and g(0). These configurations are not smooth
 (a distance vanishes), so only the natural extension applies there.
 
-Status at the time of writing: see §5 (filled in at the end of the run).
+**Status: NOT completed.**
+
+* Region A (`book:m=128`, run with `--max-depth 120 --hull-max 0.5`) was stopped after 58.7·10⁶ nodes
+  (about 40 min, on a machine shared with other jobs; load 16 on 4 cores). It had **0 failing boxes and
+  no counterexample** up to that point, but the run is not a certificate. Nodes were being produced at
+  0.8–5·10⁶ per minute, and the total is unknown, plausibly 10⁹ or more.
+* The face problems (`bookface:f=rho|s`) were not run to completion either.
+* Two earlier runs were lost. One was killed by OOM at 33·10⁶ nodes, before subtrees were streamed to
+  text; the tree is now serialised as it is built, so memory stays around 0.5 GB. The other was stopped
+  to fix an enclosure.
+
+Where the time goes: configurations in which some v_j lies near the spine line (ρ_j ≈ 0), and
+especially near u₁ or u₂. There a distance vanishes and the d^Z branch can only be enclosed, not
+differentiated, so only the natural extension applies. The margin of G is O(1) there, but the region
+is six-dimensional and the cancellation between √10·Σ_S and 3Σ_T (both ~20) forces widths of
+10⁻²–10⁻³.
+
+The K test works near W5: the unit test `book_hull_convexity_near_w5` closes, with bound exactly 0, a
+box at distance 5·10⁻⁴ that Taylor-2 cannot close, and the box [3±1/32]³ × [±1/32]³ with a 15-box PD
+cover. The interval Hessian is too wide for a PD cover of [3±1/8]³ × [±1/8]³ within 4096 boxes, so
+`--hull-max` should be about 0.06, not 0.5. With 0.5 the run wastes PD-cover attempts.
+
+What a complete direct certificate would need:
+
+1. A problem-specific reduction in the near-spine region, for example monotonicity of G in ρ_j for
+   small ρ_j (a one-variable lemma) or a separate treatment of "v_j = u_i".
+2. A smaller region A: M = 128 is far more than needed. A sharper face bound than
+   G ≥ 0.32Σr − 25h would allow M ≈ 8.
+3. Hours of CPU on an unloaded machine.
+
+None of this is needed for Theorem 5, because the calibration (Prop. 3.2) plus the certified (CL\*)
+already imply the book claim. A direct certificate would only be an independent check of Prop. 3.2's
+algebra. The notes' own random-book check (20 000 books) and the numerics in §3.1 already give such a
+check numerically.
 
 ## 4. Files
 

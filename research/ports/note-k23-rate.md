@@ -52,7 +52,7 @@ Item 1 says that tensor restriction beats routing on these five parties by at le
 - **No explicit protocol near 3/√10.** Item 1 comes from Strassen's duality theorem, which proves that protocols
   exist and does not construct them. Numerical searches (§4.6) found nothing above 3/4 at the sizes tried. After this
   note was drafted, an explicit asymptotic family with rate above 3/4 was derived from the crossing identity of [AN]
-  (rate ≥ 0.8313, and 6/(4+√10) ≈ 0.8377 in the limit under one numerical claim); see open problem 1. It is not part
+  (rate ≥ 0.8367 with exact certificates, and 6/(4+√10) ≈ 0.8377 in the limit under one numerical claim); see open problem 1. It is not part
   of Theorem K, and its smallest instances are far beyond direct computation.
 - **No unconditional value.** If contracting holds over k, we know only f*(k) ∈ [3/√10, 1].
 - **No claim that contracting holds or fails** over any field.
@@ -719,7 +719,7 @@ the CN inequality.)
 | K.4(b) bond 2 border over ℂ | [P], uses [Lan06] | — | no | — | ALS floor 0.6695 |
 | K.4(c) ℓ₁ ⇒ R ≥ 1; cut {v₁} gives 1 | [P] | — | `cut_ineq`, `w5_not_cut_combination`, `cut_v1` | — | — |
 | Flow 3/4 | [P] | — | `flow_bound` | — | — |
-| Explicit protocols above 3/4 | [D] family at rate ≥ 0.8313 (`protocol/notes.md`) | review-protocol: no fatal gap; limit 0.8377 only numerical | — | exact rational game certificates (B = 2…16) | none found single-shot at D_s ≤ 5 (none can exist from this construction below wire dimension ≈ 2⁵⁰) |
+| Explicit protocols above 3/4 | [D] family at rate ≥ 0.8367 (`protocol/notes.md`) | review-protocol: no fatal gap; limit 0.8377 only numerical | — | exact rational game certificates (B = 2…32); Lean for B = 2 | none found single-shot at D_s ≤ 5 (none can exist from this construction below wire dimension ≈ 2⁵⁰) |
 
 ---
 
@@ -736,10 +736,13 @@ the CN inequality.)
    - *Rates.* For B buckets per pair the rate is 1/n*(B), with n*(2) = 1.20291 and n*(16) = 1.19643 from
      linear programs (two independent floating-point implementations): rate ≥ 0.8313, and ≥ 0.8358. The limit is
      6/(4+√10) ≈ 0.83772 if the game's maximum over term types is at the all-middle type, which is supported only
-     numerically. Exact rational certificates now exist for B = 2, 4, 8, 16 (`protocol/certificates/`; a standalone
-     verifier using only exact fractions checks, for every term type, an explicit mixture with all six edge loads
-     below c_B; square roots are rounded up, which only raises loads): n*(2) ≤ 1.2029076090 and
-     n*(16) ≤ 1.1964314390, so the rate is ≥ 0.83131 and ≥ 0.83581 exactly.
+     numerically. Exact rational certificates now exist for B = 2, 4, 8, 16, 32 (`protocol/certificates/`; a
+     standalone verifier using only exact fractions checks, for every term type, an explicit mixture with all six
+     edge loads below c_B; square roots are rounded up, which only raises loads): n*(2) ≤ 1.2029076090 and
+     n*(32) ≤ 1.1951535690, so the rate is ≥ 0.83131 and ≥ 0.83671 exactly. A dual certificate gives
+     n*(2) ≥ 1.2029076080, and the two-bucket bound (with the looser constant 1.20292) is also checked in Lean
+     (`PortsLean/ProtocolCert.lean`, game arithmetic only). In floating point n*(B) for B = 8 … 128 decreases towards
+     (4+√10)/6 with gap ≈ 0.048/B.
    - *This is the ceiling for the method without nesting:* the minimum of R over five-point metrics satisfying the
      triangle inequalities and all instances of [AN, Prop. B.3] on the five parties is the same 0.8377 (numerical).
    - *Sizes.* With the proved rank bounds the first instances above 3/4 have demand wires of dimension about 2¹²⁸

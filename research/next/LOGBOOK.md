@@ -1612,3 +1612,17 @@ From the `rankplace` executor (module in `tools/tensorlab`; 26 Rust tests + Pyth
 - What would make the experiment informative: a search that nucleates linear structure (e.g. placements parametrised
   by F₂-linear maps / module structures, or algebraic ansätze), or exact small cases (which rays of MET₆/MET₇ are rank
   metrics).
+
+## 26 Nov (late, 49): first certifier final; everything re-run with its final code
+
+`tools/ivcert` final (`research/ports/ivcert-notes.md`; README; 18 tests). With the final binary I re-ran
+`run_proofs.sh`: all 12 certificates VERIFIED, no FAIL leaves, sha256 unchanged (so the later source edits for the
+book problem did not alter the (I)/(CL\*) certificates); `cargo test --release`: 10 + 8 tests pass.
+- Stretch goal NOT reached: a direct interval certificate for the book claim (6 parameters, homogeneous
+  compactification, a new hull-convexity leaf for the ill-conditioned minimum at W₅). Stopped after 58.7M nodes with
+  0 failures — not a certificate. Bottleneck: v_j near the spine line. The book claim follows anyway from
+  reduction + calibration + (CL\*); numerically re-confirmed (600 L-BFGS-B starts, DE, basin hopping: min 3/√10 at W₅,
+  next local minima 0.9519, 0.9613).
+- K_{2,3} note updated with the final protocol figures: exact certificates to B = 32 (rate ≥ 0.83671), dual for B = 2,
+  Lean for B = 2.
+Agents still running: the rank-placement experiments only.

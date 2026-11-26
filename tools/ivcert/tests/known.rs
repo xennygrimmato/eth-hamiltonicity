@@ -156,3 +156,32 @@ fn book_w5_exact_and_numeric_agreement() {
     assert!((iv.mid() - g).abs() < 1e-6, "{g} {iv:?}");
     let _ = b.bound();
 }
+
+#[test]
+fn book_hull_convexity_near_w5() {
+    use ivcert::bnb::{find_pd_cover, lb_hullconvex, lb_taylor2};
+    use ivcert::interval::I;
+    use ivcert::problems::book::Book;
+    let p = Book::from_name("book").unwrap();
+    let w5 = [3.0, 3.0, 3.0, 0.0, 0.0, 0.0];
+    // a box near W5, not containing it: Taylor-2 fails, hull-convexity closes it with bound exactly 0
+    let b = [
+        I::new(2.9993896484375, 2.99951171875),
+        I::new(2.9993896484375, 2.99951171875),
+        I::new(2.99951171875, 2.9996337890625),
+        I::new(-2.44140625e-4, 0.0),
+        I::new(-2.44140625e-4, 0.0),
+        I::new(-2.44140625e-4, 0.0),
+    ];
+    assert!(lb_taylor2(&p, &b) < 0.0);
+    let hb = ivcert::bnb::hull_with(&b, &w5);
+    let mut budget = 256;
+    let toks = find_pd_cover(&p, &hb, &mut budget, 0).expect("PD cover");
+    assert_eq!(lb_hullconvex(&p, &b, &w5, &toks), 0.0);
+    // a larger box around W5
+    let big: [I; 6] = std::array::from_fn(|i| if i < 3 { I::new(2.96875, 3.03125) } else { I::new(-0.03125, 0.03125) });
+    let mut budget = 4096;
+    let toks = find_pd_cover(&p, &big, &mut budget, 0).expect("PD cover of [3-1/32,3+1/32]^3 x [-1/32,1/32]^3");
+    assert_eq!(lb_hullconvex(&p, &big, &w5, &toks), 0.0);
+    eprintln!("PD cover of the big box: {} tokens", toks.len());
+}

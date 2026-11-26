@@ -968,3 +968,14 @@ the four imported statements are copies, not the labs' own Lean objects.
 - [R] No exact single-shot K_{2,3} restriction at equal bond dimension over any field. Border/asymptotic open.
 - H22 [C]: min of R over five-point CAT(0) sets = 3/√10, so f*(K_{2,3}) = 3/√10 exactly under ¬contracting…
   (only if W₅-type sets are the extremal prices; upper bound side is the hull lemma).
+
+## 26 Nov (late, 9): uniformity audit interim — Theorem R looks uniform [D]
+
+- `prop_pieces` (Paper/Pieces.lean:765–801) and `thm_tree` → `exists_thinTrees` (Paper/Tree.lean:1468–1512) build
+  their witnesses as structure literals; the uncheckable `value` fields are theorems for any spec-satisfying inputs.
+- Remaining choices are finite with decidable specs (subgroup chain, host maps, route words, embedding, bijection,
+  move order, bounded law choice, SLP conversion): poly(v) directly; blind search ≤ 2^{O(v^{2Cp+1})} ≪ 2^{v^H}.
+- Nothing depends on the input z (CutD quantifies ∀z after G).
+- Non-explicit only: n-independent constants (laws, universal automaton, finitely many group evaluators).
+- Caveat: "any spec-satisfying choice works" is a parametricity argument at the meta level, not a Lean theorem.
+- H20: supported [D]. Tentative statement of Theorem R: uniform algorithm with a non-explicit constant table.

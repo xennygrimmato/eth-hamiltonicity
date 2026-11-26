@@ -175,10 +175,40 @@ Theorem R.
 *Proof sketch.* In §2.3 of the rebase notebook replace the instance z_j = (P, ⟨F_j⟩) by (P′, ⟨F_j, C⟩), where C
 is the circuit of Lemma C2 written as a gate list and P′ is the fixed program that guesses x, checks F_j, then
 evaluates C gate by gate (values kept in a balanced tree: O(log) steps per gate) and fails unless all outputs are
-0. Then τ₀ and |z| grow by O(n log² n log log n), which is below L = O(n^{1+4α} log n), and sum(z) =
-2^e·|{x : F_j(x), h(x)=0}| with 2^e a unit mod p for p odd. For p = 2 remove the padding (use a tree with exactly
-n leaves) so that e = 0. The rest is steps 4–5 above with Theorem R's Corollary 1′ in place of HC 13.1. ∎
-(The p = 2 padding point is a small correction to rebase Cor. 1′: 2^e·#SAT is 0 mod 2 when e > 0.)
+0. P′ must be exactly parsimonious (see "Normalisation" below): after guessing the 2^{⌈log n⌉} leaves it fails
+unless every padding leaf is 0. Then τ₀ and |z| grow by O(n log² n log log n), which is below
+L = O(n^{1+4α} log n), and sum(z) = |{x : F_j(x), h(x)=0}|·1_A exactly. The rest is steps 4–5 above with
+Theorem R's Corollary 1′ in place of HC 13.1. ∎
+
+**Normalisation factors in small characteristic [D, checked against the texts].**
+- *Anthropic route, where the 2^e comes from.* Rebase §2.3: P builds a balanced tree of depth ⌈log₂n⌉ whose
+  2^{⌈log n⌉} leaves are all guessed bits; only n of them are variables. Each of the e = 2^{⌈log n⌉} − n padding
+  leaves is a free guess, so every satisfying assignment has 2^e accepting runs: sum(z) = 2^e·#SAT. This is the
+  only source; `guess` gives two runs, the check is deterministic, all weights are 1.
+- *Consequence as written.* In characteristic 2, sum(z) = 0 whenever e ≥ 1 (n not a power of two): **rebase
+  Cor. 1′ as written gives nothing for p = 2**, and isolation would be lost. For odd p, 2^e is a unit and the
+  encoding works as written.
+- *Fix (one line, all p).* Make the padding leaves non-free: P′ fails unless each padding leaf is 0 (O(n) extra
+  deterministic steps), or builds the tree with exactly n guessed leaves and constant padding. Then accepting runs
+  ↔ satisfying assignments bijectively, e = 0, and sum(z) = #SAT·1_A. With this fix the Anthropic route works at
+  p = 2. No other weight or prime is needed.
+- *No other factor on the Anthropic route.* Def. J.1 is an exact identity sum(z) = Σ_runs weight·Π sum(y) in A,
+  with no scalar on the left. The laws of G.2 are covers over a finitely generated subring A ⊂ k (Lean:
+  `Algebra.FiniteType ℤ A`); in characteristic p, A is a nonzero finitely generated F_p-algebra, a maximal ideal
+  gives ψ : A → F_q with ψ(1) = 1, and ψ(sum(z)) = #SAT mod p. The element ½ is used only in Prop. E.1 (flat
+  case), not in §§F–J (AN App. M, l.3471). I did not re-read §§G–J for hidden divisions; the statement of J.1
+  has none.
+- *OpenAI route: no factor.* The IM 7.1 network has contraction exactly #SAT(F_j): "Every assignment has a unique
+  compatible labeling of the copy wires"; an unused variable is "a wire joining two all-ones unary tables", which
+  contributes its two values, as it should. EG Theorem 12.1 is "an ordinary sum identity" W_D(b) = Σ_α(⊗L_{v,α})
+  W_S(c_α), with no scalar multiple, holding "over every commutative unital ring with any assignment satisfying
+  these equations"; HC 13.1 uses "fixed prime-field constants". The denominator m in HC 13.1 appears only in the
+  characteristic-0 paragraph (rational scalars); in characteristic p the scalars are in F_p and nothing is
+  divided. There is no |F|^k or 2^{#wires} factor: internal wires of the hash circuit are functions of x.
+- *Dependency list for M over F₂.* M1 with k = F₂ needs "characteristic 2 has no ports". That is the OpenAI route
+  (HC 13.1 at p = 2, Theorem C1-OA), which has no normalisation issue. The Anthropic route at p = 2 (with the
+  fix) excludes *contracting* in characteristic 2, which is not what M1 uses. So M1's list is: MM Lemma 4.1,
+  HC 13.1, and rWETH (or ⊕₂WETH); Theorem R is not on it.
 
 **A caveat on "#3-SAT mod p" itself [D].** Rebase Cor. 1′ and the strategist's item (ii) say that the mod-p
 *count* of a 3-CNF follows. That needs a count-preserving sparsification: the sunflower branching printed in IM
@@ -187,7 +217,9 @@ the petals, the negation of the centre as unit clauses (kept as clauses, not pro
 partition the parent's solutions, the potential argument of IM §7 is unchanged apart from at most two extra units
 per branch, and #F = Σ_j #F_j. Alternatively cite the counting sparsification lemma of
 Dell–Husfeldt–Marx–Taslaman–Wahlén (2014) with ε = v^{−α} (constants to be checked in that regime).
-Theorem C1 does **not** need this.
+Theorem C1 does **not** need this. The same caveat applies in characteristic 0 to any claim of exact
+*counting* from IM 7.1 or Theorem R: decision is fine with overlapping leaves (leaf counts are non-negative
+integers), counting needs the disjoint version.
 
 ## C1.5 Derandomisation [D]
 
@@ -377,8 +409,8 @@ is not derivable, by items 2–3. It becomes derivable under an effective flat h
 
 **Proposition D3 (sharp form under a rate) [D].** Suppose FH holds over k with a rate such that
 ε_𝒞(λ)·log log λ → 0 (for instance c(C, M, ε) ≤ exp(exp(o(1/ε))) for the configurations of 𝒞, with τ = O(log λ)).
-Then every (p, p, 𝒞)-engine over k has e_L ≥ (1−o(1))·e_0·(log_p-normalised) (log K_L)^{−1/2}·const, i.e. certified
-time 2^{Ω(n/√log n)}. Contrapositive: an engine of this type with certified time 2^{o(n/√log n)} refutes FH **with
+Then every (p, p, 𝒞)-engine over k has e_L ≥ (1−o(1))·e_0·(log K_0/log K_L)^{1/2}, i.e. certified time
+2^{Ω(n/√log n)}. Contrapositive: an engine of this type with certified time 2^{o(n/√log n)} refutes FH **with
 that rate**. It does not by itself refute FH, and so does not give contracting.
 
 *Proof.* Π_ℓ(1−η_ℓ) ≥ 1 − L·ε_n and L ≤ log log n ≈ log log λ_min up to constants (λ_min ≥ n^{7/9} in the

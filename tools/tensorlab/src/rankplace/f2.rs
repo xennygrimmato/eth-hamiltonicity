@@ -21,26 +21,28 @@ pub fn block_mask(mu: usize) -> u64 {
 /// nonzero row taken as pivot, its lowest set bit is cleared in all later rows at once (byte-broadcast
 /// multiply). Later rows never regain a pivot bit, because everything XOR-ed into them afterwards is a
 /// later row, so the nonzero pivot rows have distinct lowest bits and are independent.
-#[inline]
+#[inline(always)]
 pub fn rank(mut x: u64) -> u32 {
+    // fully unrolled and branch-free: a zero pivot row gives p = 0, which makes the update a no-op
     let mut r = 0u32;
-    let mut i = 0u32;
-    while x >> (8 * i) != 0 {
-        let p = (x >> (8 * i)) & 0xFF;
-        if p != 0 {
-            r += 1;
-            if i < 7 {
-                let b = p.trailing_zeros();
-                let later = LSB_BYTES << (8 * (i + 1));
-                let m = (x >> b) & later;
-                x ^= m.wrapping_mul(p);
-            }
-        }
-        i += 1;
-        if i == 8 {
-            break;
-        }
+    macro_rules! step {
+        ($i:expr) => {{
+            let p = (x >> (8 * $i)) & 0xFF;
+            r += (p != 0) as u32;
+            let b = (p | 0x100).trailing_zeros();
+            let later = LSB_BYTES << (8 * ($i + 1));
+            let m = (x >> b) & later;
+            x ^= m.wrapping_mul(p);
+        }};
     }
+    step!(0);
+    step!(1);
+    step!(2);
+    step!(3);
+    step!(4);
+    step!(5);
+    step!(6);
+    r += ((x >> 56) != 0) as u32;
     r
 }
 

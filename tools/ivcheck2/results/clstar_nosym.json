@@ -65,8 +65,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 7.78,
-   "time_bounds_s": 12.88
+   "time_parse_s": 7.99,
+   "time_bounds_s": 13.26
   }
  ],
  "overall": "VERIFIED"

@@ -507,10 +507,28 @@ Every certificate is re-checked by the separate binary `ivcheck`, which performs
    above.
 5. Not needed: Reshetnyak gluing, Toyoda's theorem, uniqueness of the minimiser, anything from OpenAI.
 
-**The weakest point is item 4.** The prover and the checker share one Rust implementation. `ivcheck` is
+**The weakest point is item 4.** The prover and its checker `ivcheck` share one Rust implementation: `ivcheck` is
 independent of the search but not of the implementation. The referee verified the encoding of Φ by hand and only
-spot-checked the rounding and gain-test code. An independent second checker, using a different arithmetic
-library, is being built. It is not finished, and nothing in this note relies on it.
+spot-checked the rounding and gain-test code.
+
+To address this, a second checker was written afterwards (`tools/ivcheck2`; run by `run_all.sh`, about one minute).
+- **Different stack.** Python with Arb ball arithmetic (python-flint 0.9.0, FLINT 3.6.0) and its own
+  endpoint-interval layer, its own encoding of Φ and its own gradients. Its author was instructed not to read the
+  arithmetic, differentiation or leaf-test code of `ivcert`, and reports reading only the certificate format and
+  the problem statement.
+- **What it takes from the certificates:** only the list of boxes. It checks that they partition the domain (split
+  tree rebuilt; exact rational volume), that the 94 excluded boxes lie inside the central cube (64) or a corner
+  region (30) by exact comparison, and it re-proves Φ ≥ 0 on each of the other boxes by natural extension, a
+  mean-value form, or further bisection (no second-order leaf test).
+- **Its own argument at the origin:** on [−1/8,1/8]⁶ in the coordinates (a, e), g(a) = V(a,0) has g(0) = 3, is even,
+  and has a positive definite interval Hessian (Sylvester minors); sup|∂V/∂e_k| ≤ 2.063 < 3; hence
+  Φ ≥ (g − 3) + Σ(3 − L_k)|e_k| ≥ 0 there.
+- **Result:** the no-symmetry `clstar` certificate (528 970 boxes), all eight `clnear` certificates and the
+  three-angle certificate verify, with no discrepancy from `ivcheck`. A mutation test (Φ − 0.001 with the origin
+  argument off) is rejected. It also proves Φ ≥ 0 on the twelve boundary faces of the corner regions.
+- **Status.** Both checkers were re-run on freshly regenerated certificates. The second checker has not itself been
+  refereed. The two implementations share: the certificates' box lists, the problem statement, and the hand steps
+  listed below.
 
 The shared implementation in detail:
 - **Floating point.** IEEE-754 binary64 round-to-nearest for + − × ÷ √, and a correctly rounded fused
@@ -686,7 +704,7 @@ Products of spectral points add their metrics. None of these certifies an upper 
 | §3.2 calibration, Prop. 3.2 | [P] | review-fivepoint §2: correct, recomputed | no | — | 200 000 books (referee), 2 × 20 000 (author, this note) |
 | (3.5) sine substitution; orthant cover; corner lemma; symmetry | [P] | review-fivepoint §6: correct | no | — | — |
 | Gain-test derivation; interval and AD code | [P] (bnb.rs header) | encoding checked by hand; rounding and gain logic spot-checked | no | shared prover/checker code | — |
-| (CL*) on [−1,1]⁶ | — | review-fivepoint §6: re-ran `ivcheck` | no | `clstar` (with and without symmetry) + 8 × `clnear`; second independent checker in progress, not used | 2·10⁷ random points, 800 local + 2 DE runs (referee); 9 000 local searches (author) |
+| (CL*) on [−1,1]⁶ | — | review-fivepoint §6: re-ran `ivcheck` | no | `clstar` (with and without symmetry) + 8 × `clnear`; second checker in a different arithmetic stack (`ivcheck2`, Arb) verifies the no-symmetry certificates | 2·10⁷ random points, 800 local + 2 DE runs (referee); 9 000 local searches (author) |
 | (I) three-angle inequality | — | — | no | `hull3` (401 / 1 014 leaves) | 121³ grid |
 | Theorem 5 and Theorem K.1 | = §§3.1–3.3 + C.3 + duality | review-fivepoint: no gap; computer-assisted | no | via (CL*) | Toyoda SIP: 1000/1000 at W5 |
 | Uniqueness of the minimiser | — | — | — | — | [N] only; [C] |

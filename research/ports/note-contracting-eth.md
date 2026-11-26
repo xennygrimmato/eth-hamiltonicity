@@ -574,8 +574,8 @@ six binary wires u_iv_j of K_{2,3} to the four wires v₁v₂, v₂v₃, v₁v�
 over k, then f*(K_{2,3}; k) ≤ 3/√10; border protocols of approximation degree 2^{o(n)} are included over infinite k
 [ours-R, review-hull]. (ii) Unconditionally, f*(K_{2,3}; k) ≥ 3/√10 over every field [ours; computer-assisted: the
 reduction to books and the calibration are refereed (review-fivepoint, no gap found), and one six-variable inequality
-is certified by interval arithmetic; the certificate checker re-verifies every box without search but shares its code
-base with the prover, and a second checker in a different arithmetic library is in progress]. So under Weak ETH, by
+is certified by interval arithmetic and verified by two checkers, the second written in a different arithmetic
+library and sharing no arithmetic code with the prover]. So under Weak ETH, by
 Corollary 1, f*(K_{2,3}; k) = 3/√10 exactly over every field of characteristic 0. Statements, scope and proofs are in
 the companion note.
 

@@ -1408,3 +1408,16 @@ theorem, a construction is not known; it would be the positive control for any s
 - Mutation test (Φ − 0.001 with the lemma off) fails 898 leaves, as it should.
 - No discrepancy with the first checker. Corner-face confirmation and README pending; I will re-run it myself when
   it is final, then update the two notes (they still say "second checker in progress").
+
+## 26 Nov (late, 37): second checker final; I re-ran both checkers on regenerated certificates
+
+- `tools/ivcheck2` final (README, `run_all.sh`). I regenerated all certificates with the current prover code
+  (`tools/ivcert/run_proofs.sh`, exit 0; sha256 unchanged from the first run) and ran `tools/ivcheck2/run_all.sh`:
+  **OVERALL: VERIFIED** for the three-angle certificate, the eight `clnear` certificates and the no-symmetry `clstar`
+  certificate (528 970 leaves: 520 956 natural extension, 6 852 mean-value, 1 068 after extra bisection; 94 excluded:
+  64 central, 30 corner). Twelve corner faces proved. Corner lemma h(d) ≥ 0 on [0, 1/16].
+- Both notes updated: the K_{2,3} note now describes the second checker and what the two implementations still share
+  (box lists, problem statement, hand steps); the main note's pointer paragraph says "verified by two checkers".
+- Remaining trust items for Theorem K: Anthropic's thm_cn / C.3 / C.4(a) (their Lean, not built by us); the hand
+  steps (substitution, covering, corner lemma — referee-checked, corner lemma also re-derived by the second
+  checker's author); the book reduction and calibration (one referee + two independent numerical tests).

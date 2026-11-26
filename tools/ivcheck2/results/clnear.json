@@ -77,8 +77,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.1,
-   "time_bounds_s": 2.54
+   "time_parse_s": 0.16,
+   "time_bounds_s": 2.59
   },
   {
    "cert": "clnear_rho0.5_s++-.cert",
@@ -141,8 +141,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.2,
-   "time_bounds_s": 2.3
+   "time_parse_s": 0.24,
+   "time_bounds_s": 2.12
   },
   {
    "cert": "clnear_rho0.5_s+-+.cert",
@@ -205,8 +205,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.18,
-   "time_bounds_s": 2.79
+   "time_parse_s": 0.21,
+   "time_bounds_s": 2.1
   },
   {
    "cert": "clnear_rho0.5_s+--.cert",
@@ -269,8 +269,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.16,
-   "time_bounds_s": 3.56
+   "time_parse_s": 0.2,
+   "time_bounds_s": 2.38
   },
   {
    "cert": "clnear_rho0.5_s-++.cert",
@@ -333,8 +333,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.16,
-   "time_bounds_s": 2.42
+   "time_parse_s": 0.25,
+   "time_bounds_s": 2.65
   },
   {
    "cert": "clnear_rho0.5_s-+-.cert",
@@ -397,8 +397,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.23,
-   "time_bounds_s": 2.07
+   "time_parse_s": 0.25,
+   "time_bounds_s": 2.42
   },
   {
    "cert": "clnear_rho0.5_s--+.cert",
@@ -461,8 +461,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.14,
-   "time_bounds_s": 2.42
+   "time_parse_s": 0.17,
+   "time_bounds_s": 2.28
   },
   {
    "cert": "clnear_rho0.5_s---.cert",
@@ -525,8 +525,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.15,
-   "time_bounds_s": 2.45
+   "time_parse_s": 0.13,
+   "time_bounds_s": 2.66
   }
  ],
  "overall": "VERIFIED"

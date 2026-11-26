@@ -2144,3 +2144,23 @@ there would be a Boolean circuit beating bilinear rank.
 - ⟨1,2,3⟩ (eight inputs, three outputs), interim from the executor: exact search finds no 5-gate circuit (51 orbits
   under GL₂ × GL₃ of order 1008, generators checked on truth tables; 2,829,011 states; 199 s); k = 4 refuted too.
   Points to MC = 6 = bilinear rank. SAT + LRAT over 51 × 10 cubes pending.
+
+## 27 Nov: back to 3-SAT itself (user: "lets make progress on 3-SAT")
+
+Honest position: we have no result on SAT itself. Yesterday's 3-SAT statement is conditional on a case nobody expects.
+The one concrete unconditional opening is the exponent of log n: known algorithms give 2^{O(n/(log n)^{1/2})}; D1 showed
+that under flatness an engine with p merges and node growth β is capped at exponent ½·log_β p, so designs with more
+merges than their growth pays for (three non-product merges: up to ½·log₂3 ≈ 0.79) are not excluded.
+My framing of the question, as a duality problem:
+- H26 [C]: the true floor of a multi-merge piece is the maximum over ALL prices, not only Euclidean ones. If
+  contracting fails, building-type prices (√rank on Mat_μ(F₂), tripod × ℝ) are available and may raise the floor above
+  1/√p — then more merges cannot help in the world everyone believes in, and 1/2 is a barrier for the whole method
+  (a theorem worth having: "no rewriting engine beats (log n)^{1/2} unless contracting holds").
+- H27 [C]: if the floor is NOT raised, duality (AN Thm A.6) should give covers attaining it, at least
+  non-constructively; whether that yields an algorithm depends on finding pieces by search or on an explicit
+  "three-way crossing identity" (terms with log-ranks on a sphere across three cuts).
+Launched: (1) a high-effort theory agent on exactly this (P1: which designs have p > β honestly; P2: the true floor;
+P3: attainment; P4: the barrier if negative) → `research/sat3/notes.md`; (2) an executor computing floors for K₄ and Δ₃
+over Euclidean configurations, matrix placements and tree products with a new tensorlab module (spec S3 of c1d1) →
+`research/sat3/s3-experiments.md`.
+Still running from before: referee on the 7-AND-gate paper; ⟨1,2,3⟩ executor; Lean prototype for the 7-AND-gate theorem.

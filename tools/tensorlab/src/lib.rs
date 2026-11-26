@@ -13,6 +13,8 @@ pub mod metric;
 pub mod models;
 pub mod opt;
 pub mod k23;
+pub mod tensor;
+pub mod restrict;
 
 #[cfg(feature = "python")]
 mod python;

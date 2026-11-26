@@ -990,3 +990,24 @@ the four imported statements are copies, not the labs' own Lean objects.
 - OpenAI route: no normalisation factor (IM 7.1 contracts to exactly #SAT; HC 13.1 uses prime-field constants).
 - Theorem M over F₂ depends on the OpenAI route at p = 2 (HC 13.1 + isolation) + randomised Weak ETH; Theorem R is
   not on its dependency list. H21: confirmed [D].
+
+## 26 Nov (late, 11): c1d1 final — C1 positive [D]; D1 gives a gap theorem with a corrected threshold [D]
+
+Notes: `research/ports/c1d1/notes.md`. Unrefereed, nothing run.
+- **C1-OA [D]:** ports in characteristic p ⇒ randomised one-sided 3-SAT in 2^{O(v^{1−δ})}, same δ as IM 7.1.
+  **C1-AN [D]:** same from contracting in characteristic p (with the padding fix), δ < 187/(5H+187).
+- **Lemma C4 [R, classical]:** power-saving #3-SAT mod p, or Unique-3-SAT, ⇒ randomised power-saving 3-SAT.
+  So rWETH ⇒ UWETH ⇒ ⊕_pWETH for all p.
+- Theorems S: WETH (unchanged). **Theorem M1 over F₂: one hypothesis now suffices — rWETH** (or nuWETH, UWETH,
+  ⊕₂WETH with disjoint sparsification, or WETH + Impagliazzo–Wigderson). Depends on MM Lemma 4.1 + HC 13.1 at p = 2.
+- **Theorem D [D] (engine gap):** a (p, β, 𝒞)-tower engine with certified e_L ≤ (log K_L)^{−α′}, α′ > ½·log_β p,
+  forces ¬flat ⇒ contracting ⇒ power-saving 3-SAT. For Anthropic's engine type the threshold is α′ > 1/2.
+- Dead [X]: (i) the sharp form "2^{o(n/√log n)} ⇒ ¬flat": sub-constant deficits can accumulate up to (log n)^{o(1)};
+  Anthropic's flat hypothesis has no rate. (ii) "beating 1/2 forces ¬flat" for all engines: with three non-product
+  merges the floor is 1/√3 and the threshold is ½·log₂3 ≈ 0.79; engines in (1/2, 0.79] are not excluded.
+  (iii) network-rewriting via MM Lemma 4.1 (one topology per family, not per term). (iv) CIKP as a black box.
+- If EG 1.2 holds, Theorem D's hypothesis is vacuous; what remains is the Anthropic-only dichotomy.
+- My earlier leaning ("D1 would be the most quotable consequence") is downgraded: true but with a grey zone and
+  vacuous under OpenAI's theorem. C1 is the real gain.
+- Queue: referee on C1.4/S4 (launched); Lean for Toeplitz + isolation lemmas (launched); S3 (Δ₃ placements in
+  Mat_μ(F₂) vs 3√3, compiled) after the K_{2,3} protocol search; S5 (Majdoddin Thm 4.13 with floor 1/√2) later.

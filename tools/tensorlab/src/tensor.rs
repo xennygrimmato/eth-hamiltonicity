@@ -6,17 +6,17 @@ use num_complex::Complex64;
 
 /// Scalar types usable in tensors (f64 and Complex64).
 pub trait Scalar: ComplexField<RealField = f64> + Copy + Send + Sync + 'static {
-    fn from_f64(x: f64) -> Self;
+    fn sc(x: f64) -> Self;
     fn conj_(self) -> Self;
     fn abs2(self) -> f64;
 }
 impl Scalar for f64 {
-    fn from_f64(x: f64) -> Self { x }
+    fn sc(x: f64) -> Self { x }
     fn conj_(self) -> Self { self }
     fn abs2(self) -> f64 { self * self }
 }
 impl Scalar for Complex64 {
-    fn from_f64(x: f64) -> Self { Complex64::new(x, 0.0) }
+    fn sc(x: f64) -> Self { Complex64::new(x, 0.0) }
     fn conj_(self) -> Self { self.conj() }
     fn abs2(self) -> f64 { self.norm_sqr() }
 }
@@ -228,18 +228,18 @@ pub fn random_matrix<T: Scalar, R: rand::Rng>(r: usize, c: usize, rng: &mut R, c
     DMatrix::from_fn(r, c, |_, _| {
         let re = normal(rng);
         if complex {
-            // T is Complex64 here; build via from_f64 + i*im using ComplexField ops
+            // T is Complex64 here; build via sc + i*im using ComplexField ops
             let im = normal(rng);
-            T::from_f64(re) + T::from_f64(im) * imag_unit::<T>()
+            T::sc(re) + T::sc(im) * imag_unit::<T>()
         } else {
-            T::from_f64(re)
+            T::sc(re)
         }
     })
 }
 
 fn imag_unit<T: Scalar>() -> T {
     // sqrt(-1) in T: for f64 this is NaN-free 0 (never used for real), for Complex64 it is i.
-    let m1 = T::from_f64(-1.0);
+    let m1 = T::sc(-1.0);
     let s = m1.sqrt();
     if s.clone().abs2().is_nan() { T::zero() } else { s }
 }

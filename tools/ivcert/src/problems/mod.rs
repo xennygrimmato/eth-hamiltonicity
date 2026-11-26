@@ -1,5 +1,6 @@
 //! Problem definitions. Each problem is identified by a registry name `base[:key=value]*`;
 //! the certificate stores the name and the checker rebuilds the problem from it.
+pub mod clstar;
 pub mod hull3;
 pub mod testfns;
 

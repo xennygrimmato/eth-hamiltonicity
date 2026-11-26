@@ -2,7 +2,7 @@
 
 use crate::bnb::{self, Options, Problem};
 use crate::cert;
-use crate::problems::{hull3::Hull3, testfns::TestFn};
+use crate::problems::{clstar::{ClNear, ClStar}, hull3::Hull3, testfns::TestFn};
 use std::fs::File;
 use std::io::{BufReader, BufWriter, Write};
 
@@ -85,6 +85,12 @@ macro_rules! dispatch {
         let name: &str = $name;
         if name.starts_with("hull3") {
             let p = Hull3::from_name(name)?;
+            $f(&p, $($args),*)
+        } else if name.starts_with("clstar") {
+            let p = ClStar::from_name(name)?;
+            $f(&p, $($args),*)
+        } else if name.starts_with("clnear") {
+            let p = ClNear::from_name(name)?;
             $f(&p, $($args),*)
         } else if name.starts_with("bowl2") || name.starts_with("valley2") || name.starts_with("ring2") {
             let p = TestFn::from_name(name)?;

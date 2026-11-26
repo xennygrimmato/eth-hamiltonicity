@@ -34,7 +34,7 @@
 use super::{param_f64, parse_name};
 use crate::ad::Scalar;
 use crate::bnb::{BoxN, Problem};
-use crate::interval::{add_rd, add_ru, I};
+use crate::interval::{add_ru, I};
 
 fn vertex_terms<const N: usize, T: Scalar<N>>(s: &[T; 6]) -> T {
     let one = T::cf(1.0);
@@ -171,7 +171,3 @@ impl Problem<6> for ClNear {
     }
 }
 
-#[allow(dead_code)]
-fn _keep(_: f64) -> f64 {
-    add_rd(0.0, 0.0)
-}

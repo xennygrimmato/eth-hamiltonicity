@@ -1287,3 +1287,16 @@ builds; ALS over ℝ/ℂ, Levenberg–Marquardt, border ALS, F₂ SAT encoder, c
 3/4 that must exist asymptotically. So a null result here says nothing about contracting. The K_{2,3} statement is
 valuable as a theorem and a prediction; as an experiment it needs either structured constructions (from the crossing
 identity) or a contraction scheme that avoids the dense environment. H19 remains untested.
+
+## 26 Nov (late, 30): referee interim on the five-point theorem — items 1, 2, 4 pass
+
+- Book reduction: fine. C.4(a) (l.1667–1669) is a statement inside a CAT(0) space; the notes pass to a price space via
+  C.3 first; only the triangle inequality in that space is then used, so no book-geometry claim is needed.
+- Calibration Prop. 3.2: re-derived line by line, every identity checks; 200k random books (incl. degenerate ones),
+  no violation; W₅ gives equality.
+- **No normalisation mismatch** (the point I worried about): the price is d_φ itself, with φ(⟨q⟩_uv) = q^{d_φ}
+  (l.1069–1074, Def. A.4); CN is stated for the price with squared prices (l.417, l.1446). Strassen spectral points
+  are AN spectral points. Every field is covered.
+- Minor: the infimum of R over Strassen's spectrum may not be attained (not closed under scaling); affects only an
+  "iff" in notes §4.2, not f* ≥ 3/√10.
+- So the lower bound now rests on (CL\*) alone. Certificate and the referee's own violation search still running.

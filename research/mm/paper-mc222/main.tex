@@ -1,5 +1,5 @@
 \documentclass[11pt,a4paper]{article}
-\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage[a4paper,margin=25mm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
@@ -13,16 +13,12 @@
 \usepackage{newunicodechar}
 \setlength{\emergencystretch}{3em}
 
-\newunicodechar{→}{\ensuremath{\to}}
 \newunicodechar{∃}{\ensuremath{\exists}}
 \newunicodechar{∀}{\ensuremath{\forall}}
 \newunicodechar{∈}{\ensuremath{\in}}
 \newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
 \newunicodechar{∪}{\ensuremath{\cup}}
 \newunicodechar{∧}{\ensuremath{\wedge}}
-\newunicodechar{¬}{\ensuremath{\neg}}
-\newunicodechar{⟨}{\ensuremath{\langle}}
-\newunicodechar{⟩}{\ensuremath{\rangle}}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -54,7 +50,7 @@
 \maketitle
 
 \begin{abstract}
-Let $c_{ij}=a_{i1}b_{1j}\oplus a_{i2}b_{2j}$ $(i,j\in\{1,2\})$ be the four entries of the product of two $2\times2$ matrices over $\F_2$, viewed as Boolean functions of the eight entries. We show that every circuit over the basis $\{\wedge,\oplus,1\}$ that computes all four of them has at least seven AND gates. The circuit model is unrestricted: an AND gate may multiply any two affine combinations of the inputs and of earlier AND outputs, and intermediate functions may have any degree, with $x^2=x$. Strassen's algorithm gives seven AND gates, so the multiplicative complexity is exactly $7$. The classical lower bounds of Winograd and of Hopcroft and Kerr concern algorithms over polynomials and do not transfer to this model. The lower bound has two supports. First, short lemmas, proved here, reduce the question to a finite search, which two separately written programs carry out: an exact search over spaces of truth tables, and a SAT encoding split into 1080 cubes, each refuted by CaDiCaL 2.1.3 with an LRAT proof that \code{lrat-check} accepts. The two programs share no code but rely on the same lemmas. Second, the statement is proved in Lean~4 with Mathlib. The Lean proof proves the reductions and the meaning of its own cube encoding, and it discharges $360$ cubes with \code{bv\_decide}. Its trusted base is the Lean kernel together with the Lean compiler and runtime, which carry out $365$ Boolean evaluations; it is not the kernel alone. By the same external pipeline we also show that the product of a $1\times2$ and a $2\times3$ matrix over $\F_2$ has multiplicative complexity $6$; this second result is not formalized.
+Let $c_{ij}=a_{i1}b_{1j}\oplus a_{i2}b_{2j}$ $(i,j\in\{1,2\})$ be the four entries of the product of two $2\times2$ matrices over $\F_2$, viewed as Boolean functions of the eight entries. We show that every circuit over the basis $\{\wedge,\oplus,1\}$ that computes all four of them has at least seven AND gates. The circuit model is unrestricted: an AND gate may multiply any two affine combinations of the inputs and of earlier AND outputs, and intermediate functions may have any degree, with $x^2=x$. Strassen's algorithm gives seven AND gates, so the multiplicative complexity is exactly $7$. The classical lower bounds of Winograd and of Hopcroft and Kerr concern algorithms over polynomials and do not transfer to this model. The lower bound has two supports. First, short lemmas, proved here, reduce the question to a finite search, which two separately written programs carry out: an exact search over spaces of truth tables, and a SAT encoding split into 1080 cubes, each refuted by CaDiCaL 2.1.3 with an LRAT proof that \code{lrat-check} accepts. The two programs share no code but rely on the same lemmas. Second, the statement is proved in Lean~4 with Mathlib. The Lean proof proves the reductions and the meaning of its own cube encoding, and it discharges $360$ cubes with \code{bv\_decide}. Its trusted base is the Lean kernel together with the Lean compiler and runtime, which carry out $365$ Boolean evaluations. By the same external pipeline we also show that the product of a $1\times2$ and a $2\times3$ matrix over $\F_2$ has multiplicative complexity $6$; this second result is not formalized.
 \end{abstract}
 
 \section{Introduction}
@@ -110,15 +106,16 @@ one has $c_{11}=m_1+m_4+m_5+m_7$, $c_{12}=m_3+m_5$, $c_{21}=m_2+m_4$ and $c_{22}
 \end{proposition}
 
 \begin{proof}
-These are Strassen's identities \cite{Strassen69} with all signs replaced by $+$, which is valid in characteristic $2$. Expanding, for example, $m_3+m_5=a_{11}b_{12}+a_{11}b_{22}+a_{11}b_{22}+a_{12}b_{22}=c_{12}$; the other three are similar. The circuit file \code{results/circuit\_mm222\_7\_p2.txt} contains exactly these seven products, in the order $m_1,m_2,m_4,m_5,m_7,m_3,m_6$, and these four outputs; \code{verify\_circuit.py} evaluates it on all $256$ inputs and accepts it. The same seven products are \code{strassen} in \code{MC222/Upper.lean}, where \code{hasCircuit\_seven} proves the bound in Lean.
+These are Strassen's identities \cite{Strassen69} with all signs replaced by $+$, which is valid in characteristic $2$. Expanding, for example, $m_3+m_5=a_{11}b_{12}+a_{11}b_{22}+a_{11}b_{22}+a_{12}b_{22}=c_{12}$; the other three are similar. The circuit file \code{results/circuit\_mm222\_7\_p2.txt} contains exactly these seven products, in the order $m_1,m_2,m_4,m_5,m_7,m_3,m_6$, and these four outputs; \code{verify\_circuit.py} evaluates it on all $256$ inputs and accepts it.
 \end{proof}
 
 \section{Arithmetic lower bounds and the Boolean model}\label{sec:arith}
 
 Bilinear algorithms are circuits in the sense of Definition~\ref{def:circuit} in which every $L_i$ is a linear form in the $a$'s and every $R_i$ a linear form in the $b$'s. Quadratic algorithms allow every $L_i,R_i\in\Aff$. Hence
 \[
-\MC(\Tg)\;\le\;\text{(quadratic complexity)}\;\le\;\text{(bilinear rank over }\F_2)=7 .
+\MC(\Tg)\;\le\;\text{(quadratic complexity)}\;\le\;\text{(bilinear rank over }\F_2)=7 ,
 \]
+and Theorem~\ref{thm:main} shows that all three equal $7$.
 Lower bounds for general arithmetic circuits over an infinite field are reduced to the quadratic case by homogenization \cite{Strassen73}. One expands each intermediate polynomial $f$ into homogeneous parts $f=f^{(0)}+f^{(1)}+f^{(2)}+\cdots$ and uses that for a product
 \[
 (fg)^{(2)}=f^{(0)}g^{(2)}+f^{(1)}g^{(1)}+f^{(2)}g^{(0)} ,
@@ -131,7 +128,7 @@ Let $J=\begin{pmatrix}0&1\\1&1\end{pmatrix}$, so that $\spn\{I,J\}\subset M_2(\F
 
 \section{Reductions}\label{sec:lemmas}
 
-This section proves the lemmas used by the computations. Lemmas~\ref{lem:normal}--\ref{lem:sym} and~\ref{lem:helpers} are used; Lemma~\ref{lem:first} only explains why $720$ cubes of Method B are trivial, and it is used by the Lean proof. Table~\ref{tab:use} at the end records which support uses which lemma.
+This section proves the lemmas used by the computations. Lemmas~\ref{lem:normal}--\ref{lem:sym} and~\ref{lem:helpers} are used; Lemma~\ref{lem:first} only explains why $720$ cubes of Method B are trivial. Table~\ref{tab:use} records which support uses which lemma.
 
 For a circuit, write each $L_i$, $R_i$ as an $\F_2$-combination of the \emph{generators} $1,x_1,\dots,x_8$, $g_1,\dots,g_{i-1}$. When the generators are linearly independent, the coefficient vector of an element of $S_{i-1}$ is unique.
 
@@ -200,7 +197,7 @@ Take a shortest circuit, with $m\le 6$ gates; $m\ge4$ by Lemma~\ref{lem:count}. 
 \begin{table}[ht]
 \centering
 \footnotesize
-\begin{tabular}{>{\raggedright}p{0.17\textwidth}>{\raggedright}p{0.25\textwidth}>{\raggedright}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.24\textwidth}}
+\begin{tabular}{>{\raggedright}p{0.16\textwidth}>{\raggedright}p{0.25\textwidth}>{\raggedright}p{0.23\textwidth}>{\raggedright\arraybackslash}p{0.24\textwidth}}
 \toprule
 statement & exact search (A) & SAT with proofs (B) & Lean (Section~\ref{sec:lean})\\
 \midrule
@@ -237,13 +234,13 @@ The program \code{gen\_cnf.py} (249 lines of Python at the pinned commit, writte
 
 \emph{Outputs.} Each $c_{ij}$ gets free coefficients for $1$, $x_1,\dots,x_8$ and $g_1,\dots,g_6$, and the combination must equal $c_{ij}(p)$ at all $256$ points.
 
-\emph{Cubes.} For a representative $(\alpha,\beta)$, gate $1$ is fixed to the reduced echelon basis of $\spn\{\alpha,\beta\}$. For a set $H$ of two positions, each gate $i\notin H$ gets fresh variables $e,\ell_1,\dots,\ell_8,\mu_1,\dots,\mu_4$ and $\gamma_j$ $(j\in H,\ j<i)$ with the constraint $g_i=e+\sum\ell_kx_k+\sum\mu_tc_t+\sum\gamma_jg_j$ at all $256$ points, that is, $g_i\in W_i$ (Lemma~\ref{lem:helpers}). The faithfulness claim for the encoding is: the formula for $(\alpha,\beta,H)$ is satisfiable if and only if a circuit as in Lemma~\ref{lem:helpers} exists for this $(\alpha,\beta)$ and $H$. The proof of Theorem~\ref{thm:main} needs only the direction from circuit to satisfying assignment. This claim is supported by reading and testing, not by a formal proof (Section~\ref{sec:trust}).
+\emph{Cubes.} For a representative $(\alpha,\beta)$, gate $1$ is fixed to the reduced echelon basis of $\spn\{\alpha,\beta\}$. For a set $H$ of two positions, each gate $i\notin H$ gets fresh variables $e,\ell_1,\dots,\ell_8,\mu_1,\dots,\mu_4$ and $\gamma_j$ $(j\in H,\ j<i)$ with the constraint $g_i=e+\sum\ell_kx_k+\sum\mu_tc_t+\sum\gamma_jg_j$ at all $256$ points, that is, $g_i\in W_i$ (Lemma~\ref{lem:helpers}). The faithfulness claim for the encoding is: the formula for $(\alpha,\beta,H)$ is satisfiable if and only if a circuit as in Lemma~\ref{lem:helpers} exists for this $(\alpha,\beta)$ and $H$. Only the direction from circuit to satisfying assignment is needed; it is supported by reading and testing, not by a formal proof (Section~\ref{sec:trust}).
 
 There are $72\cdot\binom{6}{2}=1080$ cubes. The cubes with $1\notin H$ are unsatisfiable by Lemma~\ref{lem:first}; they were run anyway as a consistency check, and each is refuted in about $0.1$\,s. A typical formula, root $0$ with $H=\{1,4\}$, has $42{,}036$ variables and $152{,}710$ clauses ($2.89$\,MB).
 
 \paragraph{Result for $k=6$.} Command at the pinned commit: \code{python3 run\_sat.py <cadical> <lrat-check> 3 6}, then \code{python3 summarize\_sat.py out/sat\_k6/results.tsv}. For each cube, \code{run\_sat.py} generates the formula, runs CaDiCaL 2.1.3 \cite{CaDiCaL2} (\code{-q -{}-lrat=true -{}-binary=false}), checks the LRAT proof \cite{CruzFilipe17} with \code{lrat-check} from drat-trim \cite{Wetzler14} (commit \code{2e3b2dc0ecf938add}\allowbreak\code{bd779d42877b6ed69d9a985}), accepts the check only if the checker prints the line \code{c VERIFIED}, records sizes and SHA-256 hashes of formula and proof, and deletes both. All $1080$ cubes are unsatisfiable and all $1080$ proofs are reported \code{c VERIFIED}. The formulas total $3.05$\,GB ($2.68$--$2.96$\,MB each) and the proofs $5.41$\,GB ($0.40$--$54.05$\,MB each; the largest is root $65$, $H=\{1,2\}$). In the committed record solving took $0.33$\,h CPU in total (at most $17.2$\,s per cube) and checking $0.08$\,h; a second run took $0.59$\,h and $0.13$\,h on a more loaded machine. Most of the work is in $H=\{1,2\}$, $\{1,3\}$ and $\{1,4\}$ ($685$\,s, $263$\,s and $116$\,s in the committed record); the $720$ cubes with $1\notin H$ took $56$\,s together.
 
-\paragraph{Proof objects.} An LRAT check certifies that the formula file it was given has no satisfying assignment, provided the checker is correct; it does not certify that the formula expresses the intended statement. The proofs are not stored in the repository. The file \code{results/sat\_k6\_results.tsv} lists, for each cube, the representative, $H$, verdict, check result, times, and the size and SHA-256 hash of the formula and of the proof. It contains $1080$ distinct formula hashes and $864$ distinct proof hashes: $216$ pairs of cubes with $1\notin H$ have byte-identical proofs, for example root $0$ with $H=\{2,5\}$ and $H=\{3,4\}$, because the refutation uses only the clauses of gate $1$ and the variable numbering of those clauses coincides. CaDiCaL is deterministic for a fixed build, so one script regenerates all of them: \code{run\_all.sh} at the pinned commit builds the pinned solver and checker and reruns everything. In a second run of the same pipeline, on the same machine with the same binaries, every one of the $1080$ formula hashes and $1080$ proof hashes was identical to the committed record. This shows that the pipeline is deterministic; it is not an independent confirmation. With a solver built by another compiler the proof hashes may differ, and the proofs then have to be checked rather than compared. We also regenerated the formula for root $0$ with $H=\{1,4\}$ and obtained the recorded hash \code{8561c7e2\ldots}; the recorded proof hash is \code{3854bd00\ldots}. Any subset of cubes can be regenerated and re-checked in minutes.
+\paragraph{Proof objects.} An LRAT check certifies that the formula file it was given has no satisfying assignment, provided the checker is correct; it does not certify that the formula expresses the intended statement. The proofs are not stored in the repository. The file \code{results/sat\_k6\_results.tsv} lists, for each cube, the representative, $H$, verdict, check result, times, and the size and SHA-256 hash of the formula and of the proof. It contains $1080$ distinct formula hashes and $864$ distinct proof hashes: $216$ pairs of cubes with $1\notin H$ have byte-identical proofs, for example root $0$ with $H=\{2,5\}$ and $H=\{3,4\}$, because the refutation uses only the clauses of gate $1$ and the variable numbering of those clauses coincides. CaDiCaL is deterministic for a fixed build, so one script regenerates all of them: \code{run\_all.sh} at the pinned commit builds the pinned solver and checker and reruns everything. In a second run of the same pipeline, on the same machine with the same binaries, every one of the $1080$ formula hashes and $1080$ proof hashes was identical to the committed record. This shows that the pipeline is deterministic; it is not an independent confirmation. With a solver built by another compiler the proof hashes may differ, and the proofs then have to be checked rather than compared. Regenerating the formula for root $0$ with $H=\{1,4\}$ reproduces its recorded hash \code{8561c7e2\ldots}. Any subset of cubes can be regenerated and re-checked in minutes.
 
 \begin{proof}[Proof of Theorem~\ref{thm:main} from the external pipeline]
 The upper bound is Proposition~\ref{prop:strassen}. Suppose $\MC(\Tg)\le6$. By Lemma~\ref{lem:helpers} some cube of Method B has a circuit satisfying all its constraints, and the formula of that cube is then satisfiable. All $1080$ formulas are unsatisfiable. Separately, by Lemmas~\ref{lem:normal}, \ref{lem:count} and~\ref{lem:sym} some shortest circuit, with $m\le6$ gates, has its first space $S_1$ equal to one of the $72$ roots of Method A. Its spaces $S_1\subset\dots\subset S_m$ form a path of successors in the sense of Section~\ref{sec:exact}, along which the pruning bound of Lemma~\ref{lem:count} never applies, and the search stops with success at any state with $\rem=0$, so no padding is needed. Method A finds no such path.
@@ -272,13 +269,13 @@ $\langle2,2,2\rangle$, $k=7$ & & found with $m_1,m_2$ fixed ($0.7$\,s) & $H=\{1,
 \label{tab:val}
 \end{table}
 
-For $\F_4$ multiplication the lower bound $3$ follows from Lemma~\ref{lem:count} and the argument of Lemma~\ref{lem:first}: with two gates and $\rem=2$ both gates would be reducers, and the first, a product of two linear forms, would lie in $\Aff+\Tg$, while the three nonzero target combinations have alternating rank $4$. For $\langle2,2,1\rangle$ see Remark~\ref{rem:221}. The SAT run for $k=7$ uses $H=\{1,2,3\}$, the analogue of Lemma~\ref{lem:helpers} with three helpers, and fixes no gate; the decoded circuit is correct on all inputs, which shows that the encoding admits genuine circuits.
+For $\F_4$ multiplication the lower bound $3$ follows from Lemma~\ref{lem:count} and the argument of Lemma~\ref{lem:first}: with two gates and $\rem=2$ both gates would be reducers, and the first, a product of two linear forms, would lie in $\Aff+\Tg$, while the three nonzero target combinations have alternating rank $4$. The SAT run for $k=7$ uses $H=\{1,2,3\}$, the analogue of Lemma~\ref{lem:helpers} with three helpers, and fixes no gate; the decoded circuit is correct on all inputs, which shows that the encoding admits genuine circuits.
 
 \paragraph{Reproduction.} At the pinned commit, \code{./run\_all.sh [ext\_dir]} clones and builds CaDiCaL at tag \code{rel-2.1.3} and drat-trim at the commit above, builds the Rust program, runs the validation cases, recomputes the orbits, runs Method A for $k=6$ and Method B for all $1080$ cubes, and summarizes. Development versions of CaDiCaL should not be used: version 3.1.0 printed a partial model that the decoder misread.
 
 \section{A formal proof in Lean}\label{sec:lean}
 
-The folder \code{research/mm/lean-mc222} of the repository contains a Lean~4 proof of Theorem~\ref{thm:main}, for Lean 4.36.0 and Mathlib v4.36.0. It was written after the external pipeline. It uses none of its programs, and it does not rely on the hand proofs of Section~\ref{sec:lemmas}.
+The folder \code{research/mm/lean-mc222} of the repository contains a Lean~4 proof of Theorem~\ref{thm:main}, for Lean 4.36.0 and Mathlib v4.36.0. It was written after the external pipeline. It neither runs nor trusts the programs of Sections~\ref{sec:exact} and~\ref{sec:sat} or the hand proofs of Section~\ref{sec:lemmas}; it takes the $72$ orbit representatives from \code{plane\_orbits.txt} and checks them.
 
 \paragraph{Statement.} The file \code{MC222/Statement.lean} contains the following definitions (comments removed); \code{MC222/Main.lean} contains the theorem.
 \begin{Verbatim}[fontsize=\footnotesize,frame=single,framesep=2mm]
@@ -296,27 +293,24 @@ def IsCircuit {k : ℕ} (g : Fin k → Fn) : Prop :=
 def Computes {k : ℕ} (g : Fin k → Fn) : Prop := ∀ i j : Fin 2, c i j ∈ S g k
 def HasCircuit (k : ℕ) : Prop := ∃ g : Fin k → Fn, IsCircuit g ∧ Computes g
 noncomputable def MC : ℕ := sInf {k | HasCircuit k}
-
 theorem mc_eq_seven : MC = 7
 \end{Verbatim}
 Here \code{Fn} is the algebra of functions $\F_2^8\to\F_2$, so $f^2=f$ holds. Gates are indexed from $0$: gate $i$ is a product of two elements of $\code{S g i}=\spn\{1,x_0,\dots,x_7,g_0,\dots,g_{i-1}\}$, and the circuit computes the targets if the four $c_{ij}$ lie in \code{S g k}. This is Definition~\ref{def:circuit}. The set in \code{MC} is nonempty because \code{hasCircuit\_seven} proves \code{HasCircuit 7}, so \code{sInf} is its least element.
 
-\paragraph{Proof architecture.} A map $\code{tt}:\Fn\to\code{BitVec 256}$ sends a function to its truth table; it is injective and sends $+$ and $\cdot$ to bitwise XOR and AND, so membership in a span becomes the existence of a $16$-bit coefficient vector. A replacement lemma states that a gate may be replaced by a product $y$ of two elements of the previous space whenever the old gate lies in that space plus $\spn\{y\}$; the circuit stays a circuit and no space shrinks. With it, gates $2$ to $6$ are put into the normal form of Lemma~\ref{lem:normal}(c), and composition with a linear map of $\F_2^8$ moves the plane of gate $1$ onto one of the $72$ representatives of \code{plane\_orbits.txt}. Two \code{native\_decide} checks over $432$ listed maps establish this: each map keeps the targets computed (\code{checkT\_all}), and every echelon pair of $8$-bit masks is sent by some listed map onto a basis of a representative plane (\code{covers\_all}); the group structure of the maps is not used. Lemmas~\ref{lem:count} and~\ref{lem:helpers} are replaced by a dimension count that applies to every $6$-gate circuit: with $U_i=S_{i-1}+\Tg$ one has $\dim U_1=13$ and $\dim U_7\le15$, each helper raises $\dim U$ by one, and gate $1$ is a helper by Lemma~\ref{lem:first}, so all helpers lie in $\{1,h\}$ for some $h\in\{2,\dots,6\}$. The theorem \code{lower\_of\_cubes} proves that a $6$-gate circuit computing $\Tg$ gives a satisfying assignment of one of the $360$ cube propositions \code{Cube} $\alpha$ $\beta$ \code{0} \code{h}, statements about \code{BitVec} variables, and each cube proposition is proved by \code{bv\_decide}, which bit-blasts it, obtains an LRAT certificate from the SAT solver CaDiCaL, and checks the certificate with Lean's LRAT checker, whose soundness is proved in Lean.
+\paragraph{Proof architecture.} A map $\code{tt}:\Fn\to\code{BitVec 256}$ sends a function to its truth table; it is injective and sends $+$ and $\cdot$ to bitwise XOR and AND, so membership in a span becomes the existence of a $16$-bit coefficient vector. A replacement lemma states that a gate may be replaced by a product $y$ of two elements of the previous space whenever the old gate lies in that space plus $\spn\{y\}$; the circuit stays a circuit and no space shrinks. Composition with a linear map of $\F_2^8$ moves the plane of gate $1$ onto one of the $72$ representatives of \code{plane\_orbits.txt}, and the replacement lemma then puts gates $2$ to $6$ into the normal form of Lemma~\ref{lem:normal}(c). Two \code{native\_decide} checks over $432$ listed maps establish this: each map keeps the targets computed (\code{checkT\_all}), and every echelon pair of $8$-bit masks is sent by some listed map onto a basis of a representative plane (\code{covers\_all}); the group structure of the maps is not used. Lemmas~\ref{lem:count} and~\ref{lem:helpers} are replaced by a dimension count that applies to every $6$-gate circuit: with $U_i=S_{i-1}+\Tg$ one has $\dim U_1=13$ and $\dim U_7\le15$, each helper raises $\dim U$ by one, and gate $1$ is a helper by Lemma~\ref{lem:first}, so all helpers lie in $\{1,h\}$ for some $h\in\{2,\dots,6\}$. The theorem \code{lower\_of\_cubes} proves that a $6$-gate circuit computing $\Tg$ gives a satisfying assignment of one of the $360$ cube propositions \code{Cube} $\alpha$ $\beta$ \code{0} \code{h}, statements about \code{BitVec} variables, and each cube proposition is proved by \code{bv\_decide}, which bit-blasts it, obtains an LRAT certificate from the SAT solver CaDiCaL, and checks the certificate with Lean's LRAT checker, whose soundness is proved in Lean.
 
 \paragraph{Axioms.} The command \code{\#print axioms} gives, in abbreviated form:
 \begin{Verbatim}[fontsize=\footnotesize,frame=single,framesep=2mm]
 MC222.hasCircuit_seven : [propext, Classical.choice, Quot.sound]
 MC222.mc_eq_seven : [propext, Classical.choice, Quot.sound,
-  MC222.AT_indep._native.bv_decide.ax_1_24,
-  MC222.ech_exists._native.bv_decide.ax_1_5,
-  MC222.first_helper._native.bv_decide.ax_1_25,
-  MC222.checkT_all._native.native_decide.ax_1_1,
+  MC222.AT_indep._native.bv_decide.ax_1_24, MC222.ech_exists._native.bv_decide.ax_1_5,
+  MC222.first_helper._native.bv_decide.ax_1_25, MC222.checkT_all._native.native_decide.ax_1_1,
   MC222.covers_all._native.native_decide.ax_1_1,
   MC222.cube_r_h._native.bv_decide.ax_1_37   -- one for each of the 72 x 5 cubes]
 \end{Verbatim}
 In Lean 4.36 each call of \code{bv\_decide} or \code{native\_decide} adds one auxiliary axiom, which states that one compiled Boolean evaluation returned \code{true}. For \code{bv\_decide} the evaluation is the LRAT checker run on the certificate, for example \code{verifyBVExpr cube\_0\_1.\_expr\_def\_1\_32 cube\_0\_1.\_cert\_def\_1\_32 = true}; for \code{native\_decide} it is the decision procedure itself. There are $365$ such axioms: $360$ for the cubes, $3$ for the lemmas \code{AT\_indep} (the functions $1,x_k,c_{ij}$ are independent), \code{ech\_exists} (existence of echelon bases) and \code{first\_helper} (Lemma~\ref{lem:first}), and $2$ for \code{checkT\_all} and \code{covers\_all}. So the trusted base of the Lean proof is the Lean kernel together with the Lean compiler and runtime, which carry out these $365$ evaluations; it is not the kernel alone. The upper bound \code{hasCircuit\_seven} uses only the three standard axioms. The list contains no \code{sorryAx}. A proof checked by the kernel alone would require the kernel to evaluate the cube certificates itself; we have not attempted this.
 
-\paragraph{Sizes and times.} The library has $1396$ hand-written lines in $13$ files and $4057$ generated lines: $72$ files with five cube theorems each, \code{AllCubes.lean}, and \code{OrbitData.lean}, which holds the $432$ maps and $72$ representatives as unchecked certificate data. The following times are from one build on a shared machine with load average about $20$. The $72$ cube files, built four at a time, took $4245$\,s wall time; their per-file wall times add up to $16{,}897$\,s, and the slowest file took $427$\,s. Run alone, the cube for root $0$ with $H=\{1,4\}$ took $11$\,s, of which $4.6$\,s in the SAT solver, and the cube for root $9$ with $H=\{1,2\}$, the slowest cube of Method B, took $22$\,s, of which $12.2$\,s in the SAT solver. Each Lean process used about $1$\,GB of memory. The compiled cube files hold the certificates and take $5.7$\,GB. With the cube files built, a full \code{lake build} takes about $6$ minutes, mostly for \code{covers\_all} (about $3$ minutes) and for loading the cube files.
+\paragraph{Sizes and times.} The library has $1396$ hand-written lines in $13$ files and $4057$ generated lines: $72$ files with five cube theorems each, \code{AllCubes.lean}, and \code{OrbitData.lean}, which holds the $432$ maps and $72$ representatives as untrusted certificate data that \code{Orbit.lean} checks. The following times are from one build on a shared machine with load average about $20$. The $72$ cube files, built four at a time, took $4245$\,s wall time; their per-file wall times add up to $16{,}897$\,s, and the slowest file took $427$\,s. Run alone, the cube for root $0$ with $H=\{1,4\}$ took $11$\,s, of which $4.6$\,s in the SAT solver, and the cube for root $9$ with $H=\{1,2\}$, the slowest cube of Method B, took $22$\,s, of which $12.2$\,s in the SAT solver. Each Lean process used $0.9$--$1.0$\,GB of resident memory. The compiled cube files hold the certificates and take $5.7$\,GB. With the cube files built, a full \code{lake build} takes about $6$ minutes, mostly for \code{covers\_all} (about $3$ minutes) and for loading the cube files.
 
 \paragraph{Reproduction.} At the pinned commit, in \code{research/mm/lean-mc222}, the commands \code{lake exe cache get} (which downloads the compiled Mathlib) and \code{lake build} build the library; \code{\#print axioms MC222.mc\_eq\_seven} then prints the axioms. The repository folder is
 \begin{center}\footnotesize \leanrepo\end{center}
@@ -337,11 +331,11 @@ In Lean 4.36 each call of \code{bv\_decide} or \code{native\_decide} adds one au
 
 \section{Other formats}\label{sec:other}
 
-\paragraph{The format $\langle1,2,3\rangle$.} We prove Theorem~\ref{thm:123}. The inputs are $x=(a_1,a_2,b_{11},b_{12},b_{13},b_{21},b_{22},b_{23})$ and the targets are $c_j=a_1b_{1j}+a_2b_{2j}$ for $j=1,2,3$; let $\Tg'=\spn\{c_1,c_2,c_3\}$. The six products $a_kb_{kj}$ give $\MC(\Tg')\le6$. The bilinear rank is also $6$: flattening the tensor $\sum_{k,j}a_k\otimes b_{kj}\otimes c_j$ with the six $b$-variables on one side gives a map whose image contains the six independent elements $a_k\otimes c_j$.
+\paragraph{The format $\langle1,2,3\rangle$.} We prove Theorem~\ref{thm:123}. The inputs are $a_1,a_2,b_{11},b_{12},b_{13},b_{21},b_{22},b_{23}$, in this order, and the targets are $c_j=a_1b_{1j}+a_2b_{2j}$ for $j=1,2,3$; let $\Tg'=\spn\{c_1,c_2,c_3\}$. The six products $a_kb_{kj}$ give $\MC(\Tg')\le6$. The bilinear rank is also $6$: flattening the tensor $\sum_{k,j}a_k\otimes b_{kj}\otimes c_j$ with the six $b$-variables on one side gives a map whose image contains the six independent elements $a_k\otimes c_j$.
 
 For the lower bound, Lemmas~\ref{lem:normal}--\ref{lem:sym} and~\ref{lem:helpers} hold, with the same proofs, after three changes. First, $\rem(\Aff)=3$, since the three targets are sums of disjoint sets of monomials; so a shortest circuit with $m$ gates has $3$ reducers and $m-3$ helpers, and at $k=5$ the helper set has $|H|=2$. Second, the group $G'$ is generated by $(a,B)\mapsto(aQ^{-1},QB)$ for $Q\in\GL_2(\F_2)$ and $(a,B)\mapsto(a,BR)$ for $R\in\GL_3(\F_2)$; then $aB\mapsto aBR$, so $\Tg'\circ\sigma=\Tg'$, and $|G'|=6\cdot168=1008$. There is no transposition, because $\langle3,2,1\rangle$ is a different format. Third, the $10795$ planes fall into $51$ orbits, of sizes $1,7^2,14^2,21^5,42^5,63^3,126^{12},168^2,252^{10},336,504^5,1008^3$, computed by \code{orbits\_mm123.py} and by \code{src/main.rs} with the same representatives and sizes. The analogue of Lemma~\ref{lem:first} holds, since every nonzero element of $\Tg'$ has alternating rank $4$; it is not used.
 
-\emph{Method A.} The command \code{mc222 mm123 5 -{}-threads 4} reports no circuit for any of the $51$ roots, after $2{,}829{,}011$ states and $199.1$\,s wall time on four threads (\code{results/exact\_mm123\_k5\_orbits.log}).
+\emph{Method A.} For $k=5$ and all $51$ roots the search reports no circuit, after $2{,}829{,}011$ states and $199.1$\,s wall time on four threads (log in \code{results/exact\_mm123\_k5\_orbits.log}).
 
 \emph{Method B.} There are $51\cdot\binom52=510$ cubes, produced by \code{gen\_cnf.py mm123} and run by \code{run\_sat\_mm123.py}, which also checks that all cubes are present. All $510$ are unsatisfiable, and all $510$ LRAT proofs are reported \code{c VERIFIED} by \code{lrat-check}. Solving took $145.5$\,s CPU in total and checking $54.4$\,s; the proofs total $1.14$\,GB, the largest $16.5$\,MB (\code{results/sat\_mm123\_k5\_results.tsv}). For the same reason as in Section~\ref{sec:sat} the file has $459$ distinct proof hashes.
 
@@ -350,41 +344,25 @@ For the lower bound, Lemmas~\ref{lem:normal}--\ref{lem:sym} and~\ref{lem:helpers
 \emph{Status.} Theorem~\ref{thm:123} has the support of (a) for Theorem~\ref{thm:main}: the hand lemmas with the changes above, the exact search, and the SAT refutations with LRAT proofs checked by \code{lrat-check}. The trusted base is that of Section~\ref{sec:trust} with \code{orbits\_mm123.py} and \code{run\_sat\_mm123.py} in place of \code{orbits.py}, \code{run\_sat.py} and \code{summarize\_sat.py}, and the \code{mm123} parts of \code{main.rs}, \code{gen\_cnf.py} and \code{verify\_circuit.py}. It is not proved in Lean.
 
 \begin{remark}[$\langle2,2,1\rangle$]\label{rem:221}
-The matrix-vector product $\F_2^{2\times2}\times\F_2^2\to\F_2^2$ has bilinear rank $4$ \cite{HopcroftKerr71}, and both programs give multiplicative complexity $4$ (Table~\ref{tab:val}), without proof objects. The map has two outputs, so by the theorem of Mirwald and Schnorr \cite{MirwaldSchnorr92}, as stated in \cite[\S2.1]{BoyarFind18}, its multiplicative complexity equals its quadratic complexity, which is therefore also $4$. The same applies to $\F_4$ multiplication.
-\end{remark}
-
-\begin{remark}[quadratic model]
-If every gate must multiply two affine functions of the inputs, with $x^2=x$ and with $a$- and $b$-entries allowed in one factor, at least $7$ gates are needed. This is a special case of Theorem~\ref{thm:main}.
+The matrix-vector product $\F_2^{2\times2}\times\F_2^2\to\F_2^2$ has bilinear rank $4$ \cite{HopcroftKerr71}, and both programs give multiplicative complexity $4$ (Table~\ref{tab:val}), without proof objects. It has two outputs, so by Mirwald and Schnorr \cite{MirwaldSchnorr92}, as stated in \cite[\S2.1]{BoyarFind18}, this value equals its quadratic complexity.
 \end{remark}
 
 \section{Open questions}\label{sec:open}
 
-\begin{question}
-What is the least number of multiplications for the $2\times2$ product over $\F_3$ or $\F_4$ in the corresponding model, where gates multiply affine combinations of earlier values and $x^q=x$?
-\end{question}
-
-\begin{question}
-What is the multiplicative complexity of $\langle2,2,3\rangle$ over $\F_2$? Hopcroft and Kerr give an algorithm with $11$ multiplications and prove that $11$ are needed without commutativity \cite{HopcroftKerr71}.
-\end{question}
-
-\begin{question}
-Does the multiplicative complexity equal the bilinear rank over $\F_2$ for all small matrix formats?
-\end{question}
-
-\begin{question}
-Is there a proof of Theorem~\ref{thm:main} that the Lean kernel checks without compiled evaluation?
-\end{question}
-
-\begin{question}
-Is there a human-readable proof of Theorem~\ref{thm:main}, for example along the lines of Morse's structural argument for polynomial multiplication \cite{Morse26}?
-\end{question}
+\begin{enumerate}
+\item What is the least number of multiplications for the $2\times2$ product over $\F_3$ or $\F_4$ in the corresponding model, where gates multiply affine combinations of earlier values and $x^q=x$?
+\item What is the multiplicative complexity of $\langle2,2,3\rangle$ over $\F_2$? Hopcroft and Kerr give an algorithm with $11$ multiplications and prove that $11$ are needed without commutativity \cite{HopcroftKerr71}.
+\item Does the multiplicative complexity equal the bilinear rank over $\F_2$ for all small matrix formats?
+\item Is there a proof of Theorem~\ref{thm:main} that the Lean kernel checks without compiled evaluation?
+\item Is there a human-readable proof of Theorem~\ref{thm:main}, for example along the lines of Morse's structural argument for polynomial multiplication \cite{Morse26}?
+\end{enumerate}
 
 \section{How this paper was produced}\label{sec:provenance}
 
-The searches, the proofs of the lemmas, the Lean proof and the text of this paper were produced by AI systems. A first search found no six-gate circuit. A second AI-run pass then re-implemented the search as two programs, Methods A and B, without reading the first program. The pipeline was run a second time on the same machine with identical verdicts and hashes. The Lean proof was written after the external pipeline. The project lead has read the Lean statement and printed its axioms, and a full rebuild of the Lean library from source is in progress at the time of writing. Apart from this, no person has checked the proofs or the code. The code, the per-cube records, a seven-gate circuit and the Lean library are in the repository at commit \code{\commit}:
+The searches, the proofs of the lemmas, the Lean proof and the text of this paper were produced by AI systems. A first search found no six-gate circuit. A second AI-run pass then re-implemented the search as two programs, Methods A and B, without reading the first program. The pipeline was run a second time on the same machine with identical verdicts and hashes. The Lean proof was written after the external pipeline. The AI session that coordinated the work read the Lean statement and printed its axioms; its full rebuild of the Lean library from source was in progress at the time of writing. No person has checked the proofs or the code. The code, the per-cube records, a seven-gate circuit and the Lean library are in the repository at commit \code{\commit}:
 \begin{center}\footnotesize \repo\end{center}
 
 \bibliographystyle{plain}
-\bibliography{refs}
+{\footnotesize\bibliography{refs}}
 
 \end{document}

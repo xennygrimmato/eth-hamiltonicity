@@ -1,10 +1,5 @@
 \begin{thebibliography}{10}
 
-\bibitem{AlderStrassen26}
-A.~Alder and V.~Strassen.
-\newblock Automated lower bounds for bilinear complexity over finite fields.
-\newblock arXiv:2603.07280, 2026.
-
 \bibitem{CaDiCaL2}
 Armin Biere, Tobias Faller, Katalin Fazekas, Mathias Fleury, Nils Froleyks, and
   Florian Pollitt.
@@ -16,7 +11,7 @@ Armin Biere, Tobias Faller, Katalin Fazekas, Mathias Fleury, Nils Froleyks, and
 Joan Boyar and Magnus~Gausdal Find.
 \newblock Multiplicative complexity of vector valued {B}oolean functions.
 \newblock {\em Theoretical Computer Science}, 720:36--46, 2018.
-\newblock arXiv:1407.6169.
+\newblock arXiv:1407.6169; section numbers cited here are those of arXiv v2.
 
 \bibitem{BoyarPeraltaPochuev00}
 Joan Boyar, Ren{\'e} Peralta, and Denis Pochuev.
@@ -91,6 +86,12 @@ Volker Strassen.
 \newblock Vermeidung von {D}ivisionen.
 \newblock {\em Journal f{\"u}r die reine und angewandte Mathematik},
   264:184--202, 1973.
+
+\bibitem{Wang26}
+Chengu Wang.
+\newblock Automated lower bounds for bilinear complexity over finite fields.
+\newblock arXiv:2603.07280, 2026.
+\newblock Submitted 7 March 2026.
 
 \bibitem{Wetzler14}
 Nathan Wetzler, Marijn J.~H. Heule, and Warren~A. Hunt.

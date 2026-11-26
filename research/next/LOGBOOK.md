@@ -2708,3 +2708,17 @@ placement known (0.6124 for F₃^M, F₄^M from tree products; 0.5857 cyclic), a
 - H43 resolved (holds). H29, H39 dead on F₂^m nets by theorem rather than by computation.
 - No contracting-proof candidate came out of the violation search.
 - Next: two referees (Theorem W with Lemma S; the Q1 placement and its price version).
+
+**Paper on the 7-AND-gate theorem revised** (`research/mm/paper-mc222/`: `main.tex`, `main.pdf` 13 pages,
+`CHECKS.md`, `RESPONSE.md`). All referee items F1–F15 and the 24 prose edits applied; new §8 "A formal proof in
+Lean" (statement listing, architecture, axioms and what they mean for trust, sizes and times); new Theorem 1.2
+MC(⟨1,2,3⟩) = 6 (external pipeline only, not in Lean); trusted-base section rewritten; the "no proof assistant"
+sentence removed; author of arXiv:2603.07280 corrected to Chengu Wang (also in `literature-check.md`); code
+links pinned to commit aef111e. First X draft and README row 9 updated.
+- Lead's edit: the revision said "the project lead has read the Lean statement … apart from this, no person
+  has checked", which reads as if a person had. Reworded: the coordinating AI session did those checks; no
+  person has checked the proofs or the code. Same wording fixed in the README.
+- Not verified by the reviser: Lean build figures (from NOTES.md only); Mirwald–Schnorr 1992 not read (two
+  remarks rely on Boyar–Find's statement of it, and say so).
+- Open: the other X drafts still link the old repository name at an older commit; several self-check rows in
+  `posts-x.md` are stale.

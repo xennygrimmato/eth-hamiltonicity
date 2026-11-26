@@ -361,7 +361,7 @@ Our f* ≥ 3/√10 says nothing about LOCC rates. I found no LOCC result for K_{
   - ML-051 and MF-086 (29 Aug): formal-quadratic and bilinear values are 7s for s copies; unrestricted is open.
 - **Classical bilinear and quadratic results:**
   - Hopcroft–Kerr 1971 (rank over F₂ ≥ 7) and Winograd 1971 (≥ 7 over any field) [read: as cited in arXiv:1705.09652
-    and in Alder–Strassen arXiv:2603.07280, which re-derives R_{F₂}(⟨2,2,2⟩) ≥ 7 automatically].
+    and in arXiv:2603.07280 (Chengu Wang; earlier misattributed here to "Alder–Strassen"), which re-derives R_{F₂}(⟨2,2,2⟩) ≥ 7 automatically].
   - Shpilka, FOCS 2001 (quadratic circuits over GF(2)) [read: abstract].
 - **Related 2026 work, different model:** Y. Spiizer, "Partial homogenization and the structure of optimal algebraic
   algorithms", arXiv:2611.23622 (17 Nov 2026) [read: abstract]. Arithmetic circuits with unbounded fan-in products; over

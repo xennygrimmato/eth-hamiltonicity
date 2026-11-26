@@ -3010,3 +3010,9 @@ Filtration-space runs (hubs = a point or a hyperplane at a free level; exact far
 C₄(F₃) 33.16 (short, under-converged runs: C₄(F₂) contains the C₃(F₂) optimum). K₄: exactly 0.471405. Net of Z₄:
 0.5354, 0.5307 (tree record 0.5410). Net of Z₅: 0.5268 (tree record 0.5519). Limitations: no subspaces of
 intermediate dimension, at most two levels per hub, N ≤ 5.
+
+**Lean proof of MC = 7: full rebuild by the lead succeeded.** Every build product of the MC222 library was
+deleted and `lake build` run from source: 18426 jobs, 74m55s wall (4 jobs in parallel is not used by lake for
+this; machine shared with other jobs), `mc_eq_seven : MC = 7`, axiom list identical to the first build (three
+standard axioms + 365 compiled-evaluation axioms, 360 of them cubes), no `sorryAx`. Same machine and
+toolchain: reproducibility, not independent confirmation. Paper and README updated accordingly.

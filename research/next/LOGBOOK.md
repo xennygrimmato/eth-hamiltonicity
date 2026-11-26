@@ -2103,3 +2103,15 @@ exact figures, trust base, provenance statement, open questions; author line lef
 a CHECKS.md listing what was re-derived and which references were verified. A referee pass will follow.
 Also for the record: I could not open GitHub pages from this container (403 from the proxy), so the public link given
 for the tweet is unverified from here.
+
+## 27 Nov: posts for X drafted (`research/ports/posts-x.md`)
+
+By a subagent, after web research. Found the "claudish-to-english" plugin (github.com/gvzdv/claudish-to-english; its
+rules are the rewrite prompts in rewrite.sh / md-core.sh) plus a companion style reference; and guidance on research
+posts on X (result must fit above the ~280-character fold; links in the first reply or last thread post; state review
+status; no hype, emoji or hashtags). For each of the three tweetable results: a long post, a 4–6 post thread (all
+≤ 280 weighted characters), image alt text and a reply post with links pinned to commit 8039282. Nothing was posted.
+Softenings it made, all correct: no "2^(n^0.88)" (δ ≈ 0.121 only at the smallest allowed value of Anthropic's constant
+H, which is not explicit) — my morning summary to the user stated 0.88 too flatly; "flat holds under weak ETH" is not
+news by itself since OpenAI claims flat outright — what result 2 adds is that contracting fails; the refereed form of
+Theorem R uses advice; "no assumptions" for the weighted rate still uses Anthropic's CAT(0) lemma.

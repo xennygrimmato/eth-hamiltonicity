@@ -150,23 +150,19 @@ impl<'a> State<'a> {
             }
             ne += r as i64;
         }
-        let mut nr = 0i64;
-        let f = &self.f;
-        for (w, (bw, &fw)) in self.buf.iter_mut().zip(f.iter()).enumerate() {
-            let r = if w == v { 0 } else { f2::rank(b ^ fw) as u8 };
-            *bw = r;
-            nr += r as i64;
-        }
+        // the w = v slot gives rank(b ^ a), removed afterwards
+        let mut nr = f2::ranks_against(b, &self.f, &mut self.buf);
+        nr -= self.buf[v] as i64;
+        self.buf[v] = 0;
         Some((self.pdir + 2 * (nr - self.row[v]), self.edir + 2 * (ne - self.esum[v]), nr, ne))
     }
 
     fn accept_vertex(&mut self, v: usize, b: u64, np: i64, ne_tot: i64, nr: i64, ne: i64) {
         let a = self.f[v];
-        for w in 0..self.g.n {
-            if w != v {
-                self.row[w] += self.buf[w] as i64 - f2::rank(a ^ self.f[w]) as i64;
-            }
+        for ((rw, &bw), &fw) in self.row.iter_mut().zip(self.buf.iter()).zip(self.f.iter()) {
+            *rw += bw as i64 - f2::rank(a ^ fw) as i64;
         }
+        // the w = v term above added 0 - rank(a ^ a) = 0
         for &w in self.g.nb(v) {
             let w = w as usize;
             self.esum[w] += f2::rank(b ^ self.f[w]) as i64 - f2::rank(a ^ self.f[w]) as i64;

@@ -29,9 +29,11 @@ pub fn rank(mut x: u64) -> u32 {
         ($i:expr) => {{
             let p = (x >> (8 * $i)) & 0xFF;
             r += (p != 0) as u32;
-            let b = (p | 0x100).trailing_zeros();
+            // m = 0x01 in every later row byte that contains the lowest set bit of p
+            let lsb = p & p.wrapping_neg();
+            let t = x & lsb.wrapping_mul(LSB_BYTES);
             let later = LSB_BYTES << (8 * ($i + 1));
-            let m = (x >> b) & later;
+            let m = (t.wrapping_add(0x7F7F_7F7F_7F7F_7F7F) >> 7) & later;
             x ^= m.wrapping_mul(p);
         }};
     }
@@ -44,6 +46,24 @@ pub fn rank(mut x: u64) -> u32 {
     step!(6);
     r += ((x >> 56) != 0) as u32;
     r
+}
+
+/// out[w] = rank(b ^ f[w]); returns the sum. Written so that the loop vectorises (AVX-512 with
+/// target-cpu=native).
+#[inline]
+pub fn ranks_against(b: u64, f: &[u64], out: &mut [u8]) -> i64 {
+    let mut s = 0i64;
+    for (o, &x) in out.iter_mut().zip(f.iter()) {
+        let r = rank(b ^ x);
+        *o = r as u8;
+        s += r as i64;
+    }
+    s
+}
+
+#[inline]
+pub fn rank_sum(b: u64, f: &[u64]) -> i64 {
+    f.iter().map(|&x| rank(b ^ x) as i64).sum()
 }
 
 /// Reference rank (top-bit basis), used in tests.

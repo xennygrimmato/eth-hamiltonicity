@@ -3092,3 +3092,14 @@ and none even passes the filter where the adversary plays the level-1 maximisers
 maximised exactly (maximum violation 0). Coverage: 270 orbits of first pieces × 44 850 second pairs × 75
 splits. Positive control on Δ₃ at uniform weights: 0.939002 → 0.925198 (better than type A's 0.929966);
 at (½, ½, 0) on Δ₃ nothing. Other weight vectors running.
+
+## 27 Nov (late): consolidation of the 3-SAT barriers
+
+Launched, on the user's "continue with what is meaningful":
+- A paper consolidating the refereed barrier results (Theorem A and the cap; the price barrier; Theorem W;
+  Theorem T; open: cyclic nets) → `research/sat3/paper-barriers/`.
+- A referee for the zero-loss Lemma 5.3 (the one unrefereed step in Theorem W's "any depth"), and a Lean
+  formalisation of Lemma N (unconditional) → `research/sat3/review-lemma53.md`, `PortsLean/LemmaN.lean`.
+- H46: the cap for cyclic designs (prove F_CAT(Δ₃) < 1/√2, or find a placement above the tree records) →
+  `research/sat3/cyclic-cap.md`. This decides whether the one remaining window for nesting is real.
+The type-B depth-2 run is still in progress.

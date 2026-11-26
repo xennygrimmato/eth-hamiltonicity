@@ -1,0 +1,4 @@
+name a b c | R Qf Qb MC | time
+trunc2 2 2 2 | 3 3 3 3 | 0.2s
+polymul2 2 2 3 | 3 3 3 3 | 0.3s
+F4 2 2 2 | 3 3 3 3 | 0.2s

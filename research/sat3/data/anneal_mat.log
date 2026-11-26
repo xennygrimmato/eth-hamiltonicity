@@ -3,3 +3,7 @@ BEST value = 2.000000  rho = 0.333333  (flat 2.828427)  hit by 16/16 chains
 b = [2.000000, 4.000000, -3.363961]
 distinct chain values (top 12): ["2.0000"]
 == k4 mu=3
+BEST value = 1.333333  rho = 0.222222  (flat 2.828427)  hit by 16/16 chains
+b = [4.000000, -5.656854, -6.381341]
+distinct chain values (top 12): ["1.3333"]
+== k4 mu=4

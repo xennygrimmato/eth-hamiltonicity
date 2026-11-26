@@ -414,3 +414,15 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - Functional algorithms over F₂ do not tensor (x² = x fails for matrices), so a small-size gap between Boolean and
   bilinear cost does not amplify by recursion. H11 downgraded: a gap at size 2 would be a curiosity unless a
   block-compatible mechanism is found.
+
+### Lab note 1 (E2 baselines, first E1/E3 data) [N]
+- Word-RAM baselines over F₂ (w = 64, exact word-operation counts): Four-Russians n = 512…4096 costs 0.43M, 2.9M,
+  20.5M, 148M; local exponent 2.70 → 2.85, heading to 3 (it is n³/(w log n)). Bit-packed Strassen–Winograd: slope
+  ≈ 2.82, not yet ahead at n = 4096. About 9 word operations per output bit at 4096, growing like n/(64 log n).
+- Reading: every known word trick buys w·log n over n³ and nothing more. For n²·polylog the n-fold sharing has to come
+  from structure, not parallelism.
+- E1 first data point: 2×2 matrix times vector over F₂ has Boolean multiplicative complexity exactly 4 = its rank
+  (3 AND gates certified impossible). No gap there. 2×2 × 2×2 at 6 AND gates: SAT still running.
+- E3: 1-D Kronecker packing for 2×2 needs product length 11 > n³ = 8 (exact). n = 3 running.
+- Lead's steer: use Mirwald–Schnorr (a quadratic Boolean form in 2k essential variables needs exactly k ANDs) on XOR
+  combinations of outputs as a free lower bound; also compare TOTAL gate counts, since the 9/4 claim counts additions.

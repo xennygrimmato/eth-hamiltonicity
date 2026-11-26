@@ -2557,3 +2557,27 @@ corner from what the engine needs (few terms, each cheap under one merge). Parti
 trade-off ((9/4)s label bits buy cut ranks 2(1−s)); sub-exponentially many terms buy nothing. Remaining
 sub-question: the identity as a three-way hub under a merge; first numbers give a value in [1, 9/8] in the
 engine's units, i.e. no gain. Verdict pending the agent's item 2.
+
+## 27 Nov: the 7-AND-gate theorem is proved in Lean
+
+`MC222.mc_eq_seven : MC = 7` (`research/mm/lean-mc222/MC222/Main.lean`), Lean 4.36 + Mathlib, no `sorry`.
+- Statement (`Statement.lean`, read by the lead): Boolean functions F₂⁸ → F₂ with pointwise operations; a
+  circuit is a sequence of gates, each a product of two elements of span{1, inputs, earlier gates}; it computes
+  the product if the four entries lie in the final span; MC = sInf of the gate counts. Faithful to the paper's
+  Definition 2.1 (free XOR and constants, arbitrary intermediate functions).
+- Proof: Strassen for ≤ 7 (standard axioms only). For ≥ 7: `lower_of_cubes` proves in Lean that a 6-gate circuit
+  yields a satisfying assignment of one of 360 bit-vector propositions (72 orbit representatives × 5 helper
+  sets); each is refuted by `bv_decide`. The paper's Lemma 4.5 is itself a Lean lemma, so the 720 cubes with
+  0 ∉ H are not needed. The Python encoder, `lrat-check` and the hand lemmas are outside the trust base.
+- Axioms (printed by the lead): propext, Classical.choice, Quot.sound, and 365 auxiliary axioms of the form
+  "this compiled Boolean evaluation returned true" (360 cubes, 3 `bv_decide` lemmas, 2 `native_decide` checks).
+  No `sorryAx`. So the trust base is the Lean kernel plus the Lean compiler and runtime, not the kernel alone.
+  A kernel-only proof is not realistic (5.7 GB of certificates).
+- Lead's checks: `lake build` up to date and successful (18426 jobs); one cube file deleted and rebuilt from
+  source in 47 s; a full rebuild from source of the whole MC222 library started (result to follow). Same
+  machine and toolchain: a reproducibility check, not an independent confirmation.
+- Agent's measurements: 360 cubes in 71 min wall with 4 files in parallel on a loaded machine; 11–22 s per
+  cube alone; `.lake/build` 11 GB.
+- Launched: one revision pass of the paper (referee items F1–F15, a Lean section, MC(⟨1,2,3⟩) = 6, the first
+  X draft, README row 9).
+- Disk: 6.3 GB free of 252 GB; keep an eye on it.

@@ -1860,6 +1860,516 @@ pub fn anneal_limit(net: &LimitNet, nv: usize, iters: usize, chains: usize, t0: 
     out
 }
 
+// ------------------------------------------------------------------------------------ cones over metric graphs
+
+/// A finite metric graph G (all cycles >= 2 pi) as the link of the Euclidean cone C(G), given by its
+/// (subdivided) vertex set; d = min(pi, d_G). Hubs and leg directions live at vertices.
+#[derive(Clone, Debug)]
+pub struct ConeGraph {
+    pub name: String,
+    pub n: usize,
+    /// edges of the subdivided graph: (a, b, length)
+    pub edges: Vec<(usize, usize, f64)>,
+    pub dist: Vec<f64>,
+    pub cosd: Vec<f64>,
+    /// for each direction b, the directions at angle >= pi
+    pub opp: Vec<Vec<u32>>,
+    /// original edges (a, b, subdivision chain) for free graphs: list of subdivided-edge indices
+    pub chains: Vec<Vec<usize>>,
+}
+
+fn pg_incidence(q: usize) -> (usize, Vec<(usize, usize)>) {
+    let mut pts: Vec<[usize; 3]> = vec![];
+    for a in 0..q {
+        for b in 0..q {
+            for c in 0..q {
+                let v = [a, b, c];
+                if v == [0, 0, 0] {
+                    continue;
+                }
+                let f = *v.iter().find(|&&x| x != 0).unwrap();
+                let inv = (1..q).find(|&y| (f * y) % q == 1).unwrap();
+                let w = [(a * inv) % q, (b * inv) % q, (c * inv) % q];
+                if !pts.contains(&w) {
+                    pts.push(w);
+                }
+            }
+        }
+    }
+    let n = pts.len();
+    let mut e = vec![];
+    for (i, p) in pts.iter().enumerate() {
+        for (j, l) in pts.iter().enumerate() {
+            if (p[0] * l[0] + p[1] * l[1] + p[2] * l[2]) % q == 0 {
+                e.push((i, n + j));
+            }
+        }
+    }
+    (2 * n, e)
+}
+
+fn gq22_incidence() -> (usize, Vec<(usize, usize)>) {
+    let mut pts = vec![];
+    for a in 0..6 {
+        for b in a + 1..6 {
+            pts.push((a, b));
+        }
+    }
+    let mut lines: Vec<Vec<(usize, usize)>> = vec![];
+    fn rec(rest: Vec<usize>, cur: Vec<(usize, usize)>, out: &mut Vec<Vec<(usize, usize)>>) {
+        if rest.is_empty() {
+            out.push(cur);
+            return;
+        }
+        let a = rest[0];
+        for &b in &rest[1..] {
+            let r2: Vec<usize> = rest.iter().cloned().filter(|&x| x != a && x != b).collect();
+            let mut c2 = cur.clone();
+            c2.push((a, b));
+            rec(r2, c2, out);
+        }
+    }
+    rec((0..6).collect(), vec![], &mut lines);
+    let mut e = vec![];
+    for (j, l) in lines.iter().enumerate() {
+        for pr in l {
+            e.push((pts.iter().position(|x| x == pr).unwrap(), 15 + j));
+        }
+    }
+    (15 + lines.len(), e)
+}
+
+impl ConeGraph {
+    /// Build from base edges with lengths; each base edge subdivided into `s` pieces; `extra` isolated points.
+    pub fn from_edges(name: &str, n0: usize, base: &[(usize, usize, f64)], s: usize, extra: usize) -> Self {
+        let mut n = n0;
+        let mut edges = vec![];
+        let mut chains = vec![];
+        for &(a, b, l) in base {
+            let mut chain = vec![];
+            let mut prev = a;
+            for _ in 0..s.max(1) - 1 {
+                chain.push(edges.len());
+                edges.push((prev, n, l / s as f64));
+                prev = n;
+                n += 1;
+            }
+            chain.push(edges.len());
+            edges.push((prev, b, l / s.max(1) as f64));
+            chains.push(chain);
+        }
+        let n = n + extra;
+        let mut g = ConeGraph { name: name.into(), n, edges, dist: vec![], cosd: vec![], opp: vec![], chains };
+        g.recompute();
+        g
+    }
+    pub fn recompute(&mut self) {
+        let n = self.n;
+        let mut d = vec![f64::INFINITY; n * n];
+        for i in 0..n {
+            d[i * n + i] = 0.0;
+        }
+        for &(a, b, l) in &self.edges {
+            if l < d[a * n + b] {
+                d[a * n + b] = l;
+                d[b * n + a] = l;
+            }
+        }
+        for k in 0..n {
+            for i in 0..n {
+                let dik = d[i * n + k];
+                if dik == f64::INFINITY {
+                    continue;
+                }
+                for j in 0..n {
+                    let t = dik + d[k * n + j];
+                    if t < d[i * n + j] {
+                        d[i * n + j] = t;
+                    }
+                }
+            }
+        }
+        let pi = std::f64::consts::PI;
+        self.dist = d.iter().map(|&x| x.min(pi)).collect();
+        self.cosd = self.dist.iter().map(|x| x.cos()).collect();
+        self.opp = (0..n).map(|b| (0..n).filter(|&c| self.dist[b * n + c] >= pi - 1e-9).map(|c| c as u32).collect()).collect();
+    }
+    /// Shortest cycle length (girth) of the graph, inf if a forest.
+    pub fn girth(&self) -> f64 {
+        let n = self.n;
+        let mut best = f64::INFINITY;
+        for (ei, &(a, b, l)) in self.edges.iter().enumerate() {
+            // Dijkstra from a without edge ei
+            let mut dist = vec![f64::INFINITY; n];
+            let mut done = vec![false; n];
+            dist[a] = 0.0;
+            for _ in 0..n {
+                let mut u = usize::MAX;
+                let mut du = f64::INFINITY;
+                for v in 0..n {
+                    if !done[v] && dist[v] < du {
+                        du = dist[v];
+                        u = v;
+                    }
+                }
+                if u == usize::MAX {
+                    break;
+                }
+                done[u] = true;
+                for (ej, &(x, y, w)) in self.edges.iter().enumerate() {
+                    if ej == ei {
+                        continue;
+                    }
+                    let o = if x == u { y } else if y == u { x } else { continue };
+                    if du + w < dist[o] {
+                        dist[o] = du + w;
+                    }
+                }
+            }
+            best = best.min(l + dist[b]);
+        }
+        best
+    }
+    /// pods:M | circle:N | kmm:M | heawood | pg3 | gq22, optional "+pods:K" (K isolated points), subdivision s.
+    pub fn named(spec: &str, s: usize) -> Self {
+        let pi = std::f64::consts::PI;
+        let (main, extra) = match spec.split_once("+pods:") {
+            Some((m, k)) => (m, k.parse().unwrap()),
+            None => (spec, 0),
+        };
+        let (n0, base, l): (usize, Vec<(usize, usize)>, f64) = if let Some(m) = main.strip_prefix("pods:") {
+            (m.parse().unwrap(), vec![], pi)
+        } else if let Some(m) = main.strip_prefix("circle:") {
+            let n: usize = m.parse().unwrap();
+            (n, (0..n).map(|i| (i, (i + 1) % n)).collect(), 2.0 * pi / n as f64)
+        } else if let Some(m) = main.strip_prefix("kmm:") {
+            let m: usize = m.parse().unwrap();
+            (2 * m, (0..m).flat_map(|i| (0..m).map(move |j| (i, m + j))).collect(), pi / 2.0)
+        } else if main == "heawood" {
+            let (n, e) = pg_incidence(2);
+            (n, e, pi / 3.0)
+        } else if main == "pg3" {
+            let (n, e) = pg_incidence(3);
+            (n, e, pi / 3.0)
+        } else if main == "gq22" {
+            let (n, e) = gq22_incidence();
+            (n, e, pi / 4.0)
+        } else {
+            panic!("unknown graph {}", spec)
+        };
+        let base: Vec<(usize, usize, f64)> = base.into_iter().map(|(a, b)| (a, b, l)).collect();
+        ConeGraph::from_edges(&format!("{}/s{}", spec, s), n0, &base, s, extra)
+    }
+    /// Random free graph: n0 vertices, `ne` random edges with lengths in [lmin, lmax], girth >= 2 pi enforced
+    /// by rejection when adding edges.
+    pub fn random_free<R: Rng>(rng: &mut R, n0: usize, ne: usize, s: usize, extra: usize) -> Self {
+        let pi = std::f64::consts::PI;
+        let mut base: Vec<(usize, usize, f64)> = vec![];
+        let mut tries = 0;
+        while base.len() < ne && tries < 2000 {
+            tries += 1;
+            let a = rng.gen_range(0..n0);
+            let b = rng.gen_range(0..n0);
+            if a == b || base.iter().any(|&(x, y, _)| (x, y) == (a, b) || (x, y) == (b, a)) {
+                continue;
+            }
+            let l = pi * (0.25 + 0.9 * rng.gen::<f64>());
+            base.push((a, b, l));
+            let g = ConeGraph::from_edges("free", n0, &base, 1, 0);
+            if g.girth() < 2.0 * pi - 1e-9 {
+                base.pop();
+            }
+        }
+        ConeGraph::from_edges("free", n0, &base, s, extra)
+    }
+}
+
+/// Hubs in ONE cone factor: vertex hv[h] of the link, radius r[h].
+#[derive(Clone, Debug)]
+pub struct ConePlacement {
+    pub hv: Vec<usize>,
+    pub r: Vec<f64>,
+}
+
+#[inline]
+fn cone_d2(g: &ConeGraph, a: usize, ra: f64, b: usize, rb: f64) -> f64 {
+    (ra * ra + rb * rb - 2.0 * ra * rb * g.cosd[a * g.n + b]).max(0.0)
+}
+
+/// Node gain vectors f_u(b) = sum_k r^k_u cos(theta(b, x^k_u)), for a list of hub triples.
+fn cone_gains(g: &ConeGraph, pl: &ConePlacement, hubsets: &[Vec<usize>]) -> Vec<Vec<f64>> {
+    let n = g.n;
+    hubsets
+        .iter()
+        .map(|hs| {
+            let mut f = vec![0.0; n];
+            for &h in hs {
+                let row = &g.cosd[pl.hv[h] * n..pl.hv[h] * n + n];
+                let r = pl.r[h];
+                if r != 0.0 {
+                    for b in 0..n {
+                        f[b] += r * row[b];
+                    }
+                }
+            }
+            f
+        })
+        .collect()
+}
+
+/// best saving max_{b, b' at angle >= pi} f_u(b) + f_v(b'), clipped at 0
+fn cone_pair(g: &ConeGraph, fu: &[f64], fv: &[f64]) -> f64 {
+    let mut best = 0.0f64;
+    for b in 0..g.n {
+        let mut m = f64::NEG_INFINITY;
+        for &c in &g.opp[b] {
+            m = m.max(fv[c as usize]);
+        }
+        best = best.max(fu[b] + m);
+    }
+    best
+}
+
+/// One cone factor on a design: (Gamma = S/Dbar, S, Dbar); value over products of such cones
+/// (orbit product, merge- and edge-transitive designs) = (1/p) sqrt(E Gamma) per merge, balanced.
+pub fn cone_gamma(des: &Design, g: &ConeGraph, pl: &ConePlacement) -> (f64, f64, f64) {
+    let nl = des.nlegs();
+    let p = des.p();
+    let hubsets: Vec<Vec<usize>> = (0..des.nnodes).map(|u| (0..p).map(|m| des.hub(m, des.groups[m][u]) - nl).collect()).collect();
+    let f = cone_gains(g, pl, &hubsets);
+    let s: f64 = des.edges.iter().zip(&des.weights).map(|(&(u, v), w)| {
+        let c = cone_pair(g, &f[u], &f[v]);
+        w * c * c
+    }).sum();
+    let mut db = 0.0;
+    for m in 0..p {
+        let r = des.ngroups[m];
+        let mut t = 0.0;
+        for a in 0..r {
+            for b in a + 1..r {
+                let (ha, hb) = (des.hub(m, a) - nl, des.hub(m, b) - nl);
+                t += cone_d2(g, pl.hv[ha], pl.r[ha], pl.hv[hb], pl.r[hb]);
+            }
+        }
+        db += t / (r * (r - 1) / 2) as f64;
+    }
+    db /= p as f64;
+    if db < 1e-14 {
+        return (0.0, s, db);
+    }
+    (s / db, s, db)
+}
+
+/// One cone factor in the limit problem: Phi.
+pub fn cone_limit_phi(net: &LimitNet, g: &ConeGraph, pl: &ConePlacement) -> f64 {
+    let m = net.q.m;
+    let p = net.p();
+    let mut db = 0.0;
+    for k in 0..p {
+        for a in 0..m {
+            for b in 0..m {
+                let (ha, hb) = (k * m + a, k * m + b);
+                db += cone_d2(g, pl.hv[ha], pl.r[ha], pl.hv[hb], pl.r[hb]);
+            }
+        }
+    }
+    db /= (p * m * m) as f64;
+    if db < 1e-14 {
+        return 0.0;
+    }
+    // node types by (vertex, radius) multiset
+    let mut types: Vec<(Vec<usize>, f64)> = vec![];
+    for nh in &net.node_hubs {
+        let mut t: Vec<usize> = nh.clone();
+        t.sort_by(|&a, &b| (pl.hv[a], pl.r[a].to_bits()).cmp(&(pl.hv[b], pl.r[b].to_bits())));
+        let key: Vec<(usize, u64)> = t.iter().map(|&h| (pl.hv[h], pl.r[h].to_bits())).collect();
+        if let Some(e) = types.iter_mut().find(|(tt, _)| tt.iter().map(|&h| (pl.hv[h], pl.r[h].to_bits())).collect::<Vec<_>>() == key) {
+            e.1 += 1.0;
+        } else {
+            types.push((t, 1.0));
+        }
+    }
+    let hs: Vec<Vec<usize>> = types.iter().map(|t| t.0.clone()).collect();
+    let f = cone_gains(g, pl, &hs);
+    let mut s = 0.0;
+    for (i, (_, wi)) in types.iter().enumerate() {
+        for (j, (_, wj)) in types.iter().enumerate() {
+            let c = cone_pair(g, &f[i], &f[j]);
+            s += wi * wj * c * c;
+        }
+    }
+    s / (m * m * m * m) as f64 / db
+}
+
+/// Objective for the cone annealer.
+pub enum ConeTarget<'a> {
+    Design(&'a Design),
+    Limit(&'a LimitNet),
+}
+
+impl ConeTarget<'_> {
+    fn nhubs(&self) -> usize {
+        match self {
+            ConeTarget::Design(d) => d.nhubs(),
+            ConeTarget::Limit(l) => l.nhubs(),
+        }
+    }
+    pub fn score(&self, g: &ConeGraph, pl: &ConePlacement) -> f64 {
+        match self {
+            ConeTarget::Design(d) => cone_gamma(d, g, pl).0,
+            ConeTarget::Limit(l) => cone_limit_phi(l, g, pl),
+        }
+    }
+}
+
+/// Annealing over hub vertices and radii in one cone factor; if `free` is set, also over the lengths of
+/// the base edges of the link (moves keeping girth >= 2 pi) and over deleting / restoring base edges.
+/// Starts: `starts` (cycled over even chains), random otherwise. Returns (score, graph, placement).
+#[allow(clippy::too_many_arguments)]
+pub fn anneal_cone(target: &ConeTarget, g0: &ConeGraph, free: bool, iters: usize, chains: usize, t0: f64, t1: f64, seed: u64,
+                   starts: &[ConePlacement]) -> Vec<(f64, ConeGraph, ConePlacement)> {
+    let nh = target.nhubs();
+    let pi = std::f64::consts::PI;
+    let mut out: Vec<(f64, ConeGraph, ConePlacement)> = (0..chains)
+        .into_par_iter()
+        .map(|c| {
+            let mut rng = SmallRng::seed_from_u64(seed ^ (c as u64 + 29).wrapping_mul(0x9E37_79B9_7F4A_7C15));
+            let mut g = g0.clone();
+            let n = g.n;
+            let mut pl = if !starts.is_empty() && c % 2 == 0 {
+                starts[(c / 2) % starts.len()].clone()
+            } else {
+                ConePlacement {
+                    hv: (0..nh).map(|_| rng.gen_range(0..n)).collect(),
+                    r: (0..nh).map(|_| if rng.gen::<f64>() < 0.3 { 0.0 } else { rng.gen::<f64>() }).collect(),
+                }
+            };
+            let mut cur = target.score(&g, &pl);
+            let mut best = (cur, g.clone(), pl.clone());
+            let mut sigma = 0.2;
+            let (mut acc, mut tried) = (0usize, 0usize);
+            for it in 0..iters {
+                let t = t0 * (t1 / t0).powf(it as f64 / iters as f64) * best.0.max(1e-9);
+                let (oldpl, mut oldg) = (pl.clone(), None);
+                let mv = rng.gen_range(0..20);
+                if mv < 7 {
+                    let h = rng.gen_range(0..nh);
+                    pl.r[h] = (pl.r[h] + sigma * gauss(&mut rng)).max(0.0);
+                } else if mv < 8 {
+                    let h = rng.gen_range(0..nh);
+                    pl.r[h] = if rng.gen::<bool>() { 0.0 } else { pl.r[rng.gen_range(0..nh)] };
+                } else if mv < 13 {
+                    let h = rng.gen_range(0..nh);
+                    pl.hv[h] = rng.gen_range(0..n);
+                } else if mv < 15 {
+                    // move to a neighbouring vertex
+                    let h = rng.gen_range(0..nh);
+                    let v = pl.hv[h];
+                    let nb: Vec<usize> = g.edges.iter().filter_map(|&(a, b, _)| if a == v { Some(b) } else if b == v { Some(a) } else { None }).collect();
+                    if !nb.is_empty() {
+                        pl.hv[h] = nb[rng.gen_range(0..nb.len())];
+                    }
+                } else if mv < 17 || !free {
+                    let a = rng.gen_range(0..nh);
+                    let b = rng.gen_range(0..nh);
+                    pl.hv[a] = pl.hv[b];
+                    pl.r[a] = pl.r[b];
+                } else if !g.chains.is_empty() {
+                    // change the length of one base edge (all its subdivision pieces)
+                    oldg = Some(g.clone());
+                    let ci = rng.gen_range(0..g.chains.len());
+                    let chain = g.chains[ci].clone();
+                    let total: f64 = chain.iter().map(|&e| g.edges[e].2).sum();
+                    let nt = if rng.gen_range(0..10) == 0 { 10.0 } else { (total + 0.3 * sigma * gauss(&mut rng)).clamp(0.05, 10.0) };
+                    for &e in &chain {
+                        g.edges[e].2 = nt / chain.len() as f64;
+                    }
+                    g.recompute();
+                    if g.girth() < 2.0 * pi - 1e-9 {
+                        g = oldg.take().unwrap();
+                    }
+                }
+                let v = target.score(&g, &pl);
+                tried += 1;
+                if v >= cur || rng.gen::<f64>() < ((v - cur) / t).exp() {
+                    cur = v;
+                    acc += 1;
+                    if v > best.0 + 1e-12 {
+                        best = (v, g.clone(), pl.clone());
+                    }
+                } else {
+                    pl = oldpl;
+                    if let Some(og) = oldg {
+                        g = og;
+                    }
+                }
+                if tried == 500 {
+                    let r = acc as f64 / tried as f64;
+                    sigma *= if r > 0.3 { 1.25 } else { 0.8 };
+                    sigma = sigma.clamp(1e-8, 5.0);
+                    acc = 0;
+                    tried = 0;
+                }
+            }
+            best
+        })
+        .collect();
+    out.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+    out
+}
+
+/// Direct far-leg value of an explicit l2-product of cone factors on a design (b-vector per merge),
+/// independent of the one-factor reduction: per edge, per factor the best antipodal direction pair for
+/// the delta-weighted sum, weights proportional to the positive parts.
+pub fn cone_product_b(des: &Design, factors: &[(&ConeGraph, &ConePlacement)]) -> Vec<f64> {
+    let nl = des.nlegs();
+    let p = des.p();
+    let hd = |a: usize, b: usize| -> f64 {
+        factors.iter().map(|(g, pl)| cone_d2(g, pl.hv[a], pl.r[a], pl.hv[b], pl.r[b])).sum::<f64>().sqrt()
+    };
+    let mut inv = vec![0.0; p];
+    for m in 0..p {
+        let mut dm: f64 = 0.0;
+        for a in 0..des.ngroups[m] {
+            for b in a + 1..des.ngroups[m] {
+                dm = dm.max(hd(des.hub(m, a) - nl, des.hub(m, b) - nl));
+            }
+        }
+        inv[m] = if dm > 1e-12 { 1.0 / dm } else { 0.0 };
+    }
+    let mut bk = vec![0.0; p];
+    for &(u, v) in &des.edges {
+        let mut cvec = vec![];
+        let mut svec = vec![];
+        for (g, pl) in factors {
+            let n = g.n;
+            let hu: Vec<usize> = (0..p).map(|m| des.hub(m, des.groups[m][u]) - nl).collect();
+            let hv: Vec<usize> = (0..p).map(|m| des.hub(m, des.groups[m][v]) - nl).collect();
+            let gain = |h: usize, b: usize| pl.r[h] * g.cosd[pl.hv[h] * n + b];
+            let mut best = (f64::NEG_INFINITY, 0, 0);
+            for b in 0..n {
+                let fu: f64 = (0..p).map(|m| inv[m] * gain(hu[m], b)).sum();
+                for &c in &g.opp[b] {
+                    let fv: f64 = (0..p).map(|m| inv[m] * gain(hv[m], c as usize)).sum();
+                    if fu + fv > best.0 {
+                        best = (fu + fv, b, c as usize);
+                    }
+                }
+            }
+            cvec.push(best.0.max(0.0));
+            svec.push((0..p).map(|m| gain(hu[m], best.1) + gain(hv[m], best.2)).collect::<Vec<f64>>());
+        }
+        let nrm = cvec.iter().map(|x| x * x).sum::<f64>().sqrt();
+        if nrm > 0.0 {
+            for m in 0..p {
+                let s: f64 = cvec.iter().zip(&svec).map(|(c, sv)| c / nrm * sv[m]).sum();
+                bk[m] += inv[m] * s;
+            }
+        }
+    }
+    bk
+}
+
 // ------------------------------------------------------------------------------------ tests
 
 #[cfg(test)]
@@ -2018,6 +2528,52 @@ mod tests {
             let f = net.pod01(&lab, 3);
             assert!((net.phi(&f) - 27.0 / 8.0).abs() < 1e-12, "{} {}", qn, net.phi(&f));
         }
+    }
+
+    #[test]
+    fn cone_calibration() {
+        // crossing: plane (circle:8), cone over K33, pods:4 -> one-factor value sqrt2 per merge
+        let des = Design::crossing(1.0, 1.0);
+        // plane: rows at +-a/2 (directions 0, pi), columns at +-b/2 (pi/2, 3pi/2): circle with 4 vertices
+        // (directions at pi/4 are needed for the legs: circle with 8 vertices)
+        let g = ConeGraph::named("circle:8", 1);
+        let pl = ConePlacement { hv: vec![0, 4, 2, 6], r: vec![0.5; 4] };
+        let (gm, _, _) = cone_gamma(&des, &g, &pl);
+        assert!(((2.0 * gm).sqrt() / 2.0 - 2f64.sqrt()).abs() < 1e-9, "{}", gm);
+        // direct product evaluation with one factor agrees (no symmetrisation needed here)
+        let b = cone_product_b(&des, &[(&g, &pl)]);
+        assert!((value(&b) - 2f64.sqrt()).abs() < 1e-9, "{:?}", b);
+        // Delta3, pods:3 node-tripod: Gamma 36
+        let d3 = Design::delta3(3);
+        let g3 = ConeGraph::named("pods:3", 1);
+        let mut pl3 = ConePlacement { hv: vec![0; 9], r: vec![0.0; 9] };
+        for (m, &h) in [0usize, 3, 6].iter().enumerate() {
+            pl3.hv[h] = m;
+            pl3.r[h] = 1.0;
+        }
+        assert!((cone_gamma(&d3, &g3, &pl3).0 - 36.0).abs() < 1e-9);
+        // nine tripods as an explicit 9-factor cone product: b = (6,6,6)
+        let mut pls = vec![];
+        for node in 0..9 {
+            let mut q = ConePlacement { hv: vec![0; 9], r: vec![0.0; 9] };
+            for m in 0..3 {
+                let h = d3.hub(m, d3.groups[m][node]) - d3.nlegs();
+                q.hv[h] = m;
+                q.r[h] = 1.0;
+            }
+            pls.push(q);
+        }
+        let fs: Vec<(&ConeGraph, &ConePlacement)> = pls.iter().map(|q| (&g3, q)).collect();
+        let b = cone_product_b(&d3, &fs);
+        for x in &b {
+            assert!((x - 6.0).abs() < 1e-9, "{:?}", b);
+        }
+        // graph sanity
+        assert_eq!(ConeGraph::named("heawood", 1).n, 14);
+        assert!((ConeGraph::named("heawood", 1).girth() - 2.0 * std::f64::consts::PI).abs() < 1e-9);
+        assert_eq!(ConeGraph::named("gq22", 1).n, 30);
+        assert!((ConeGraph::named("gq22", 2).girth() - 2.0 * std::f64::consts::PI).abs() < 1e-9);
+        assert_eq!(ConeGraph::named("pg3", 1).n, 26);
     }
 
     #[test]

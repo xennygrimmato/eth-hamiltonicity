@@ -484,3 +484,12 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - New executor `research/mm/anti/` (Opus): derive from OpenAI's network lower bound a precise theorem that Boolean
   circuits for n×n multiplication over F₂ need c·n²·(log n)^γ gates. Crux: the routing must be input-dependent.
 - H12 [C]: given OpenAI's Theorem 2.2 / Lemma 4.1, flat n² is impossible even at the bit level, by a power of log n.
+
+### Lead's assessment of the "why 9/4" picture (asked by the user): not convinced
+- It explains ω ≥ 2 (flat: label = half the perimeter) and where 9/4 sits in the October ALGORITHM. It does not
+  explain why nothing can beat it: the "tripod" is a change of variables, "parallel resistance" is the shape of one
+  trick's optimum, and the Legendre-dual check is internal consistency, not outside evidence.
+- A real "why" must come from the lower bound's mechanism (Parts II–IV of the paper, unread by us), or the picture
+  must predict a number checkable on another tensor with a known exponent.
+- Reasons to hold the claim itself loosely: refutes Strassen's asymptotic rank conjecture; implies an unadvertised
+  superlinear Boolean circuit lower bound; Lean scope claims more than the paper.

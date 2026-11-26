@@ -528,7 +528,67 @@ Odds are mine, conditional on the release being right, for a team of Opus execut
   written reduction of "ports" to a statement about that list.
 - **Odds.** 10% for a decision; 50% for a useful partial statement.
 
-### Negative direction, stated once
+### Negative targets (impossibility statements within reach of OpenAI's network bound)
+
+The executor "anti" (`research/mm/anti/`) is writing the derivation of §3.2 in full. Here: my best statement, the
+pitfalls, and the list. All are conditional on (H1) Lemma 4.1 as printed and (H2) some characteristic has no ports,
+unless marked. "New" means: I know no earlier unconditional or conditional result of that form; before the release
+every such statement was conditional on the network coding conjecture or absent.
+
+**Best statement.** Let R be any semiring with 0 ≠ 1. Every trivalent tensor network over a finite field without ports
+that represents the 0/1 tensor [C = A·B] for n×n matrices over R, with entries encoded in bits and 0, 1 encoded by fixed
+strings, has size Ω(n²·β·√log n), where β is the number of bits per entry of B that can vary. In particular every
+bounded fan-in Boolean circuit for the product has Ω(n²√log n) gates.
+
+**Pitfalls.**
+1. *Routing must depend on the input.* A fixed permutation is free wiring. The lemma needs one topology that realises
+   every permutation in the support by changing only vertex tables. Pinning A does that: a pinned exterior bit is a
+   constant vector contracted into a neighbouring table.
+2. *Leave the outputs exterior.* The network must represent the graph tensor [C = AB], not a pinned scalar. A
+   deterministic circuit gives it with coefficient exactly 1 over every k (unique consistent assignment).
+3. *After pinning the tensor must be exactly a product of wires.* True for A = P_π. Not true for other A.
+4. *Only the marginal law of each destination matters* (uniform on q outputs); the n² destinations are fully correlated
+   through π and the lemma as printed allows that. Check this reading against the lemma's proof (the measure μ there is
+   "a uniform input and its random destination").
+5. *The field is ours to choose*, because the circuit is Boolean. Ports depend only on the characteristic.
+6. *Size versus gates.* Size counts vertices and exterior bits; 3n² exterior bits are within the bound. Fan-out costs
+   at most two equality vertices per gate.
+7. *Sanity bounds.* The sub-problem (P, B) ↦ PB has circuits of size O(n² log n), so the method cannot exceed that.
+   No O(n²) circuit is known even with P given by Beneš control bits. A guess-and-verify network does not obviously
+   help: verifying a guessed source row still needs a selection.
+8. *Do not claim the ports case.* Shared permutations across payload chunks are a restriction of the independent-list
+   tensor of Theorem 2.2; that is the wrong direction (§3.2).
+9. *The exponent.* √log n comes from Lemma 4.1 directly, not from Theorem 2.2's σ. Do not write (log n)^γ with γ from the
+   ports case.
+
+| # | Statement (Boolean circuits / trivalent networks) | Route | Within reach? | New? |
+|---|---|---|---|---|
+| N1 | n×n product over F₂ (any ring): Ω(n²√log n) | A = P_π, rows of B are n-bit records | yes, §3.2 | yes |
+| N2 | Boolean (OR–AND) product: Ω(n²√log n) | same; P_π B is the same over the Boolean semiring | yes | yes for general circuits; monotone n³ is classical |
+| N3 | (min,+) product with b-bit entries: Ω(n²·b·√log n) | A has 0 on π and +∞ elsewhere | yes | yes |
+| N4 | Transitive closure on N vertices: Ω(N²√log N) | three-layer graph computes a Boolean product (Fischer–Meyer, Munro) | yes | yes |
+| N5 | Inverse of a unitriangular matrix over F₂: Ω(n²√log n) | block matrix (I A 0; 0 I B; 0 0 I) | yes | yes |
+| N6 | Polynomial multiplication over F₂, degree n: Ω(n√log n) | pin b = x^s; a·x^s is an input-dependent shift, r = n, q = n | yes | yes; and **tight** up to o(1) in the log exponent against the release's formal upper bound n(log n)^{1/2+ε} |
+| N7 | Integer multiplication circuits: Ω(n√log n) | multiply by 2^s | yes | unconditional-in-(H2) version of Afshani et al. 2019; the release has only a Weak-ETH bound for tapes |
+| N8 | Sorting n records of w ≥ log n bits: Ω(n·w·√log n) | direct | yes | cf. Farhadi et al. 2019 (conditional, log n) |
+| N9 | Matrix–vector product, A as input: nothing | routes only n bits against n² input bits | no | — |
+| N10 | Matrix–vector with preprocessing (circuit depends on A) | fixed A is fixed wiring; needs rigidity-type bounds for explicit F₂-linear maps | no | — |
+| N11 | Online matrix–vector (OMv) | a data-structure model with adaptivity, not a circuit; the offline batch is N1 | no | — |
+| N12 | Unrestricted AND-count of the 2×2 product over F₂ is 7 | SAT certificate (E1) | yes, by computation | probably; check Morse and Boyar–Find |
+| N13 | Quadratic circuits are optimal for the product over F₂ within AND-depth 2 | structural, à la Morse | maybe (25%) | yes |
+| N14 | Any n^{2+ε} bound for Boolean circuits or AND-count | none; §3.3 | no | — |
+
+Remarks.
+- N6 is the cleanest. With (H2) it pins the Boolean complexity of binary polynomial multiplication to
+  n(log n)^{1/2±o(1)}: the only tight item in the table. For matrices the gap stays n²√log n versus n^{9/4}.
+- N1–N5 are one theorem with five corollaries. N4 and N5 use only linear-size reductions.
+- AND-count with free XOR is *not* reachable by the network bound: prices are monotone under linear maps at one
+  site, not under XOR gates between distant bits, and network size counts XORs.
+- Single-output problems (determinant, rank, triangle detection as a decision) get nothing from routing. Theorem 2.2
+  itself is single-output (distinctness); a linear-size reduction from distinctness to triangle detection or rank would
+  give Ω(N(log N)^σ) there, unconditionally. I do not know one. Worth an hour.
+
+### Negative direction not to pursue
 
 Extending the n^{9/4} bound to Boolean circuits is not a target. It asks for polynomially superlinear circuit size for
 an explicit function, the central wall of Boolean complexity; the release's methods stop at polylog factors (§3.3).

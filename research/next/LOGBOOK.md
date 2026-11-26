@@ -777,3 +777,18 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   or permits it.
 - State of evidence: everything KNOWN is on the "ports exist" side; Weak ETH says the truth in characteristic 0 is on
   the other side. One of: a new spectral point (then lower bounds), or no such point (then fast 3-SAT).
+
+### Ports strategist, interim 5: attack routes (`research/ports/ideas-ports.md` §5) [plan]
+- Route 0 (already running): referee Theorems A/B; re-base "contracting ⇒ fast 3-SAT" on Anthropic's Thm J.4.
+- Route A (ports via rigidity): only live form is one new tensor identity showing some √rank metric or M5 is not a
+  price. The LP/SDP I proposed is predetermined (those metrics satisfy every CAT(0)-valid constraint): do not run.
+- Route B (no ports via a wild price): all construction steps missing. Best idea B1 (5%): do OpenAI's VALUED prices
+  (9/4 paper §5–6) induce building metrics on lattice classes? If yes, contracting is false unconditionally.
+  (Same direction as the lead's arithmetic idea H17.)
+- Route C (characteristic p): nothing excludes ports in characteristic 2; consequence would be mod-2 counting of
+  networks in 2^{s^{1−η}}; whether that contradicts a randomised Weak ETH needs an isolation lemma check (C1, 50%).
+- Route D: no intermediate algorithm from weaker expansion (the certificate is a dichotomy with no middle regime).
+  Proposed D1 (25%): an "engine gap" theorem — any rewriting algorithm of the engine's type beating log-exponent 1/2
+  implies ports, hence 2^{n^{1−δ}}.
+- Route E: E3 compute the Okamura–Seymour tensor rate ("tensor coding always attains the cut bound" would imply
+  contracting, hence fast 3-SAT).

@@ -668,3 +668,192 @@ For no ports:
 
 Against a quick decision either way: ports ⇒ a 2^{v^{1−δ}} 3-SAT algorithm; no ports ⇒ unconditional
 Ω(n√log n) Boolean circuit lower bounds for multiplication. Each would be a landmark; neither lab claims either.
+
+---
+
+## Part 5. Attack routes, ranked, each with a first experiment (≤ 3 hours for an executor)
+
+Ranking is by (value × chance) for us, not by importance of the target.
+
+### Route 0 (first). Nail down Theorems A and B and the re-basing
+
+- **Why first.** It is the only new, checkable, lab-independent statement we have: "Anthropic's contracting
+  hypothesis over ℚ ⇒ 3-SAT in 2^{O(v^{1−δ})}", hence "Weak ETH ⇒ the contracting hypothesis is false in
+  characteristic 0 ⇒ √rk metrics are prices over ℚ ⇒ Anthropic's permanent bound in characteristic 0 is the
+  flat-case one, and in the contracting case it can be raised to 2^{m^ε}".
+- **Experiment 0a (referee, 2 h).** Check §2.2 line by line: AN F.6 as stated in the paper and in AN's Lean
+  (thm_poincare: is it stated for "every price on U_h", with C₀ independent of h?); the normalisation in my
+  step 2; HC Theorem 4.2's proof (Lemma 4.1, the rounding of S, the cloud step) and the Lean constant; the
+  inclusion {OA spectral points} ⊆ {AN spectral points}; EG Lemma 2.3 for the field transfer.
+- **Experiment 0b (reader, 3 h).** AN §§I–J: write out the corollary of Theorem J.4 "contracting over ℚ ⇒ sums
+  over runs of τ-step nondeterministic tape computations in 2^{O(τ^{1−12/H})}", then the 3-SAT corollary with
+  sparsification. Decide: is it a corollary of Anthropic's paper alone? Odds it goes through: 65%.
+- Odds Theorem A survives review: 85%.
+
+### Route A. PORTS via a rigidity statement (the only live form of "bounded Izeki–Nayatani invariant")
+
+- **Target.** Show some ρ_μ (or M5) is not a price: one tensor identity, i.e. a cover of an M5- or ρ₂-weighted
+  wire network that is cheaper than its ρ-length. By Theorems A/B this gives a 2^{v^{1−δ}} 3-SAT algorithm.
+- **Status.** x5 searched compositions of crossing identities and proved they cannot work in any space
+  satisfying B.3; no cover found. Metric-only arguments are impossible (§2.6). Under Weak ETH the target is false
+  over ℚ.
+- **On the experiment proposed in the brief** (LP/SDP over metrics satisfying CAT(0) + B.3 on Mat₂(F₂) or on a
+  small expander): its outcome is predetermined. ρ₂ is feasible (it is a building metric, and c1 found no B.3
+  violation), so the LP returns the trivial constant D(2)² = 2·D(1)². On a small bounded-degree expander the LP
+  over CAT(0)-embeddable metrics is the Poincaré constant against all Hadamard spaces, which is the Gromov–Kondo
+  value. Not worth running. The one useful variant: **prove or refute [C] "B.3 holds in every CAT(0) space"**
+  (c1). If B.3 fails somewhere in a building, B.3 becomes a genuinely new constraint and the LP becomes
+  informative.
+- **Experiment A1 (2 h).** Numerical search for a B.3 violation in the building of GL₄(F₂((t))) with hubs at
+  arbitrary vertices and edge midpoints (c1 tested hubs in Mat_μ(F₂) only), and in the Euclidean cone over the
+  incidence graph of the Fano plane (the tangent cone of an Ã₂ building).
+- Odds of proving ports this way: < 1% (3% that contracting is true at all over ℚ).
+
+### Route B. NO PORTS via an explicit wild price
+
+- **Target.** A spectral point whose wire metric defeats bounded-degree expanders, e.g. the cone over a
+  large-girth graph, or any metric with d² ≈ information at all scales (§4.3).
+- **Which step is missing.** Every step. Flats, trees, rescaling, convex hulls and limits stay inside
+  {Hilbert, ℝ-trees} (§4.2). Products are not available. Local-to-global gluing (a cone over a tree-like ball is
+  locally a union of flat sectors, each of which is spectral) is not available: spectrality is a condition on all
+  finite subsets and there is no Cartan–Hadamard theorem for it. The only existence technique is "not a price ⇒
+  too-good identities ⇒ contradiction".
+- **Sub-route B1 (constructive, the best idea here).** Valued prices. MM §5–6 constructs prices over a valued
+  field K = Frac E[t^ℚ] (the "Gauss lift": p(cT) = p(T) − ν(c), nonincreasing under integral restrictions). Lattice
+  classes in K^n are the vertices of the building, and c1's L_a are such lattices. Question: does a valued price
+  induce an ordinary spectral point on a finite set of lattices (party = lattice, a tensor is transported by
+  the base changes between lattices) whose wire metric is the building distance? If yes, ρ_μ is a price over
+  every field, contracting is false unconditionally, and Anthropic's theorem loses its second case.
+  **Experiment B1 (3 h):** read MM §§5–6 and EG §3; define the candidate "lattice price" for n = 2 (the tree of
+  GL₂); check the axioms on wires and whether the tree metric comes out; then n = 4 and the five points of M5.
+  Odds it works: 5%. Value if it works: high (an unconditional theorem about both labs' case splits).
+- **Sub-route B2.** Q-build (§3.3): find, for every bounded-degree graph, a bad placement in buildings of growing
+  rank, or prove there are expanders against all of them. **Experiment B2 (3 h):** numerics on small cases:
+  place Cayley graphs of SL_N(F₂), N = 3, 4 (168 and 20160 elements; bounded generating sets) into the
+  Grassmann metric by g ↦ g·U₀ and by random orbit maps, and optimise pair energy/edge energy; compare with the
+  scalar gap. Literature check: expanders with respect to buildings of unbounded rank (Oppenheim; de la Salle;
+  Kassabov's uniform expanders of SL_N(F_p)). Outcome is evidence only.
+- Odds of proving no ports in any characteristic by us: < 2%. It implies unconditional superlinear Boolean
+  circuit lower bounds with the sharp exponent; expect it to be as hard as it sounds.
+
+### Route C. Positive characteristic
+
+- [K-OA] The release excludes ports only in characteristic 0 and only under Weak ETH. Nothing is said for
+  characteristic p. Field transfer (EG Lemma 7.1) goes one way: a metric realised over F_p for infinitely many p
+  is realised over ℚ. So X_0 contains the "common part" of the X_p; ports in characteristic 0 does not follow from
+  ports in some characteristic p, nor conversely.
+- **Could characteristic 2 have ports with no contradiction?** Yes as far as anything proved goes. It would give:
+  (i) HC_N needs 2^{N^ε} gates in characteristic 2 (HC 12.2); (ii) the count mod 2 of any volume-s bit network,
+  in particular ⊕3-SAT after sparsification, in 2^{O(s^{1−η})} (HC 13.1 is stated "over any field of this
+  characteristic"); (iii) MM Theorem 2.2 over F₂ with a small σ < 1/2 and no exponent-1/2 circuit bounds over
+  F₂ from this source; (iv) via an isolation lemma, a randomised 3-SAT algorithm in 2^{v^{1−δ′}}, **provided**
+  isolation can be done with XOR constraints of total volume v^{1+o(1)} and success probability 2^{−v^{1−δ}}.
+  Valiant–Vazirani costs volume ≈ v² (useless here); the Calabro–Impagliazzo–Kabanets–Paturi isolation lemma for
+  k-CNF trades success probability 2^{−εv} for width; whether it reaches the power-saving regime is the thing to
+  check. **Experiment C1 (2 h):** work out (iv). If it holds: "ports in ANY characteristic refutes randomised
+  Weak ETH", so Weak ETH (randomised form) gives no ports everywhere and our Theorems S and M hold over F₂ in the
+  M1 form under one standard hypothesis. That is a real strengthening of our conditional theorems and costs only
+  reading. Odds: 50%.
+- Is characteristic p easier? I see no Frobenius argument. The buildings in §2 are over F₂((t)) because the index
+  set is Mat_μ(F₂), for every coefficient field; the coefficient characteristic enters only through which tensor
+  identities exist. One genuine difference: in characteristic 2 the permanent is the determinant and exterior
+  and symmetric constructions coincide, so crossing-type identities may have extra relatives there.
+  **Experiment C2:** rerun x5's small cover searches over F₂ and F₃ instead of ℚ (exact linear algebra).
+
+### Route D. Run the implication backwards as an algorithm hunt
+
+- **Can a weaker, provable expansion property give an intermediate algorithm?** Two obstacles, both structural.
+  (1) An identity exists iff the metric inequality holds at ALL spectral points (Strassen duality). Expansion
+  with respect to flats and trees only proves nothing about restrictions. (2) HC Theorem 4.2 is a dichotomy:
+  the Poincaré constant of bounded-degree graphs over the spectral class is O(1) (ports) or ≥ c log n on every
+  graph. There is no intermediate regime such as (log n)^{1/2} to exploit.
+- What is unconditional: the six-party motif and crossing identities (CAT(0) only), which is what our engine and
+  OpenAI's n(log n)^{1/2+ε} upper bounds use. This suggests a **gap theorem** rather than an algorithm:
+
+  > [C] **Engine gap.** If a network-rewriting algorithm of the engine's type (exact expansion into terms with
+  > fewer shared bits, fixed topology per term) contracts every volume-s bounded-degree network in
+  > 2^{O(s/(log s)^c)} for some c > 1/2, then ports holds, hence 2^{O(s^{1−η})}.
+
+  Heuristic: MM Lemma 4.1 says that without ports a fixed topology that realises r wires with q-way uncertain
+  destinations has size Ω(r√log q); rewriting a network into terms that fall apart is such a realisation.
+  **Experiment D1 (3 h):** formalise "engine type" so that MM Lemma 4.1 / IM Lemma 8.2 apply, and derive the
+  bound "shared bits ≥ s/O(√log s) in some term" under no ports. If it works we get: *the exponent 1/2 in
+  2^{n/√log n} is optimal for this class of algorithms unless 3-SAT is in 2^{n^{1−δ}}*. A conditional optimality
+  theorem for both labs' ETH refutations, phrased with no reference to tensors. Odds of a clean statement: 25%.
+- Also worth one hour: **does the engine extend to exact #3-SAT mod p and to network contraction at
+  2^{s/√log s}?** If yes it is the unconditional shadow of HC 13.1 and should be stated.
+
+### Route E. Wild ideas
+
+- **E1. Make ports refute itself.** Under ports, every permutation demand π on the N vertices of a port graph
+  satisfies Σ_i d(x_i,x_{π(i)})² ≤ 4γN·E_edges (triangle inequality through one vertex plus the Poincaré
+  inequality), so by EG 12.1 every fixed permutation of N h-bit records is realised on ONE bounded-degree topology
+  of size O(√γ·N·h), with vertex maps depending on π. MM §4.3 shows that under ports the data-dependent version
+  (the tagged-permutation tensor) costs ≥ N·h^{1+σ′}. So under ports the rerouting maps must depend on π in a
+  way that costs more than a factor h^{σ′} to compute from the tags. If one could show the maps can be chosen
+  with local dependence on π (they come from Strassen duality, so nothing is known about them), ports would be
+  refuted unconditionally in every characteristic, and all the exponent-1/2 lower bounds would follow. I checked
+  one naive version (Valiant two-hop routing over a complete-graph demand with recursion); it fails at the base
+  case exactly as classical switching does (cost N h·log N). **Experiment E1 (2 h):** read EG §§12–14 for what
+  is known about the dependence of the motif maps on the demand; decide whether "locality" can even be stated.
+- **E2. Refute contracting the way OpenAI refuted a largest flat.** EG Parts II–III: rigidity (cube exclusion) ⇒
+  ports AND cheap routing gates (§9, via local Euclidean coordinates on a maximal flat) ⇒ a network simulates a
+  larger one ⇒ contradiction. Under contracting we have the first half (Theorem A) and a different rigidity
+  (some Grassmann metric is excluded). If the excluded Grassmann configuration can drive the local tests of EG §9
+  the way the excluded cube does, contracting is false over every field, unconditionally. Then: Anthropic's
+  second case disappears, all √rk metrics are prices, buildings of every rank are spectral, and ports reduces to
+  Q-build. EG §9 uses the maximal flat heavily (Lemma 9.5 "local flattening"), so this is a research programme,
+  not an afternoon. **Experiment E2 (3 h):** locate every use of cube exclusion in EG §§8–10 and say for each
+  whether "σ_m is not spectral" could replace it.
+- **E3. The Okamura–Seymour rate.** Compute lower bounds on f*(K_{2,3}) by finding explicit restrictions.
+  **Experiment E3 (3 h):** alternating least squares for local maps taking the K_{2,3} supply with bond
+  dimension 2 on each edge to the four demand wires of dimension 2 (rate 1; all flattening ranks allow it:
+  I checked the cuts {v₁}, {u₁}, {v₁,u₁}); if infeasible, supply dimension 4 against demand dimension 3 (rate
+  0.79 > 3/4), also in border form. Any exact solution with rate > 3/4 is an explicit tensor code beating
+  routing on five parties, a publishable small fact; rate 1 would mean the cut bound is attained.
+  Link to ports: **"tensor coding attains the cut bound on every instance" ⇔ every spectral metric is
+  ℓ₁-embeddable ⇒ (ρ_μ is not ℓ₁-embeddable for large μ, by Cheeger on the rank-one Cayley graph) contracting ⇒
+  ports ⇒ fast 3-SAT.** So under Weak ETH some instance has tensor rate strictly below its cut bound; small
+  instances will not show it (M5 and ρ₂ are ℓ₁), which is why this is evidence, not a decision procedure.
+
+---
+
+## Part 6. Recommendation
+
+**Odds [C], characteristic 0.**
+
+| Statement | My probability |
+|---|---|
+| No ports (so Weak ETH-consistent world) | 93% |
+| Contracting hypothesis false over ℚ (all √rk metrics are prices) | 95% |
+| The middle cell: contracting false but ports true | 3% |
+| Contracting true (hence ports, hence 2^{v^{1−δ}} 3-SAT) | 2% |
+| Ports in some positive characteristic | 10% (no hypothesis excludes it yet; see C1) |
+| Theorem A (contracting ⇒ ports) is correct as written | 85% |
+| The re-basing on Anthropic's J.4 alone goes through | 65% |
+| We prove ports or no ports outright in the next weeks | < 2% each |
+
+**What to do.**
+
+1. **First experiment: 0a + 0b together** (one referee, one reader, about 3 hours each). They turn today's main
+   finding into a short note with a title like *"Anthropic's contracting case contradicts Weak ETH"*:
+   Theorem A, Theorem B with the finite objects (M5, 4×4 and 3×3 binary matrices under √rank), the side-by-side
+   table, and the corollaries for both labs' permanent bounds. It uses Anthropic's Lean-backed F.6 and D.2, one
+   elementary zig-zag theorem, and (for the 3-SAT conclusion) either OpenAI's Lean-backed IM 7.1 or, if 0b
+   succeeds, Anthropic's J.4 alone. It is the result here that the user's reliability ordering favours.
+2. **Then C1** (isolation in the power-saving regime): if it works, our conditional lower bounds extend to
+   characteristic 2 under one hypothesis, and "ports anywhere ⇒ randomised 3-SAT speed-up" joins the note.
+3. **Then D1** (engine gap theorem): the statement "beating the exponent 1/2 by this kind of algorithm already
+   gives 2^{n^{1−δ}}" would be the most quotable consequence for the ETH line.
+4. **In parallel, cheap numerics: E3** (K_{2,3}), then A1 (B.3 in buildings), then B2.
+5. **Long shots to assign only if a strong reader is free: B1** (valued prices ⇒ building metrics) and **E2**
+   (refute contracting unconditionally). Either would be a theorem about both papers at once.
+
+**What not to do.** Do not run LPs/SDPs over CAT(0) conditions to "test" M5 or ρ₃ (§2.6: predetermined). Do not
+try to prove ports through the Izeki–Nayatani invariant (§3.3: equivalent to contracting or stronger). Do not
+present "finite test" without the caveat that only one side has finite certificates.
+
+**Dependencies to flag in anything we publish.** Theorem A's conclusion "ports" uses OpenAI's HC Theorem 4.2
+(elementary; Lean exists; we have not built it). "Ports ⇒ 3-SAT" is OpenAI's (Lean exists). "Flat is a theorem"
+is OpenAI's EG 1.2. Everything about Anthropic's side (F.6, D.2, D.3, J.4, thm_cn) is from the paper the user
+trusts more. The network-coding reformulation and the K_{2,3} bound use only Strassen's theorem and thm_cn.

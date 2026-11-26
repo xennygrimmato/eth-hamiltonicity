@@ -1,0 +1,10 @@
+closed forms:
+  kappa=1.0000: equilateral orthogonal hubs: 3.46410
+  kappa=1.3333: equilateral orthogonal hubs: 4.61880
+  kappa=1.5000: equilateral orthogonal hubs: 5.19615
+  time mode: equilateral orthogonal hubs: 3.46410;  hubs (1,1,0) orthogonal, merge average: 4.14626;  3*sqrt2 = 4.24264
+numerical maxima (softmin + L-BFGS, 30 restarts, hubs in R^9); per merge, in units of lambda; raw bits: 9
+  kappa=2.0000         best 5.18367  (rho = 0.5760 of 9)  top5 [5.1837 5.1782 5.1745 5.1737 5.1724]  hub triangles (1.000,1.000,1.000) (1.000,1.000,1.000) (1.000,1.000,1.000)
+  kappa=1.5000         best 5.18109  (rho = 0.5757 of 9)  top5 [5.1811 5.1798 5.1796 5.1765 5.1758]  hub triangles (1.000,1.000,1.000) (1.000,1.000,1.000) (1.000,1.000,1.000)
+  kappa=1.4000         best 4.86897  (rho = 0.5410 of 9)  top5 [4.869  4.8648 4.8636 4.8635 4.8633]  hub triangles (0.800,1.000,1.000) (0.801,0.999,1.000) (0.816,0.984,1.000)
+  kappa=1.3333         best 4.68710  (rho = 0.5208 of 9)  top5 [4.6871 4.6821 4.6806 4.6764 4.6752]  hub triangles (0.667,1.000,1.000) (0.667,1.000,1.000) (0.667,1.000,1.000)

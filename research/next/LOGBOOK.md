@@ -2657,3 +2657,18 @@ limit in λ.
 - With the attainment agent's note 2: IF Lemma S (H43) holds in this space, nested crossing covers of every
   depth are stuck at 1/√2 − O(1/g) on these nets unconditionally.
 - Next: referee on `q1-notes.md` when written.
+
+**H33 (triangle identity), item 2: neutral; verdict [X] as a route past 1/2** (`research/sat3/hunch-triangle.md`,
+`research/sat3/hunch/`).
+- In the engine's units the triangle identity is worth exactly 1: it trades 3 pair bits for ω = 9/4 hub bits,
+  and a hub bit costs κ ∈ [3/ω, 3/2] = [4/3, 3/2] pair bits downstream, so its value is (ω/3)·κ ∈ [1, 9/8].
+  "3/4" is the base exponent ω/3, not a level factor; comparing it with 1/√2 was a units error of the lead's.
+- Allowing three-way hubs (labels shared by three groups) under a merge changes floors by at most the factor
+  2κ/3 ≥ 8/9 [R given OpenAI's ω bound and Strassen's subrank]: Δ₃ ≥ 0.5926, nets of F₂^M ≥ 0.5443 (when
+  contracting fails), flat ≥ 0.5132. Floors for a larger class of pieces, not constructions. No value below
+  1/√2 is attained. No collision with our floors.
+- Towers [D]: hubs are native only directly above a K = 3 base; one level higher they cost 3/2 and give
+  nothing against a flat price. At most one constant factor 8/9 in the base, never a change of ρ* along the
+  tower.
+- Side fact: for the triangle's own three one-party cuts the few-term game has value exactly 2/3 with no
+  trade; there is no universal "9/8 squash".

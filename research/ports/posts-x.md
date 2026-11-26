@@ -104,7 +104,7 @@ posts link the mc222 README instead.
 ### 1(a) Long post
 
 ```text
-Over F₂, multiplying two 2×2 matrices needs exactly 7 AND gates, even with free XOR gates and arbitrary Boolean intermediate values. So Strassen's 7 is optimal in this model too. Shown with a SAT solver: 1080 instances, all unsatisfiable, each with a machine-checked proof.
+Over F₂, multiplying two 2×2 matrices needs exactly 7 AND gates, even with free XORs and arbitrary Boolean intermediate values, so Strassen's 7 is optimal here too. Proved in Lean, checked by Lean's `bv_decide`, which trusts the Lean compiler for the SAT certificate checks.
 
 Strassen (1969) multiplies 2×2 matrices with 7 multiplications instead of 8. That 7 is the least possible was proved in 1971 (Hopcroft–Kerr, Winograd), for algorithms in which each multiplication is a product of two linear forms in the matrix entries.
 
@@ -112,22 +112,25 @@ A Boolean circuit can do more. An AND gate may multiply any two things computed 
 
 How it was checked:
 
-- The search for a 6-gate circuit was split, after removing symmetries, into 1080 SAT instances. All 1080 are unsatisfiable, and each one came with an LRAT proof that a separate proof checker verified.
-- A second program, sharing no code with the first, does an exact search over circuit states. It also finds no 6-gate circuit.
-- A separate re-run reproduced the results, with identical file hashes.
+- Lean 4 with Mathlib, no sorry. The symmetry reduction and the meaning of the SAT encoding are proved in Lean. 360 SAT instances are checked by bv_decide: a SAT solver writes a refutation, and Lean's verified LRAT checker checks it as compiled code. So the proof trusts Lean's kernel plus the Lean compiler and runtime, not the kernel alone.
+- Separately, outside Lean: the search was split into 1080 SAT instances. All are unsatisfiable, and each came with an LRAT proof that a separate checker verified.
+- A second program, sharing no code with that SAT encoder, does an exact search over circuit states. It also finds no 6-gate circuit.
+- A second run of the outside pipeline gave identical file hashes. That shows the runs are deterministic; it is not an independent check.
 
-What you have to trust: the SAT encoding (tested on smaller cases with known answers), two short reduction lemmas proved on paper in the README, and the proof checker. The SAT solver itself does not need to be trusted.
+The SAT solver does not need to be trusted in either proof. The Lean proof and the outside pipeline use different encodings and different proof checkers, but they were written in the same project, follow the same strategy and start from the same list of 72 symmetry classes (which Lean re-checks).
 
-Credit and status: the lower bound 6 was already public (September 2026), where 6 versus 7 was called open. I found no statement that the answer is exactly 7, though specialists may know it. The search and the checks were done by AI agents in a project I direct, and no human has reviewed them yet. A paper is in preparation.
+Credit and status: the lower bound 6 was already public (September 2026), where 6 versus 7 was called open. I found no statement that the answer is exactly 7, though specialists may know it. The search, the checks and the Lean proof were done by AI agents in a project I direct. I have read the Lean statement and printed its axioms; no human has reviewed the rest yet. A paper is in preparation.
 
-Code, proofs and how to re-run everything: link in the reply.
+Lean proof, code and how to re-run everything: links in the reply.
 ```
 
-Reply with link:
+Reply with links:
 
 ```text
-Code, the 1080 proof hashes, and the paper proofs of the reduction lemmas (re-run with ./run_all.sh):
-https://github.com/xennygrimmato/math/tree/8039282656870eedcf4a25697d28626682defbb6/tools/mc222
+Lean proof (the statement is in Statement.lean next to it; build with lake build):
+https://github.com/xennygrimmato/eth-hamiltonicity/blob/aef111eb9bcac4f32267dc730c0098be3a4b5179/research/mm/lean-mc222/MC222/Main.lean
+Outside pipeline, the 1080 proof hashes and ./run_all.sh:
+https://github.com/xennygrimmato/eth-hamiltonicity/tree/aef111eb9bcac4f32267dc730c0098be3a4b5179/tools/mc222
 ```
 
 ### 1(b) Thread
@@ -420,8 +423,8 @@ count 2), computed by script over every block above:
 
 | Block | Weighted total | Opening paragraph (must be ≤ 280 for long posts; whole post ≤ 280 for thread posts) |
 |---|---|---|
-| 1(a) Long post: Over F₂, multiplying two 2×2 matrices ta… | 1771 | 230 |
-| 1(a) Reply: Code, the 1080 proof hashes, and the pap… | 125 | 125 |
+| 1(a) Long post: Over F₂, multiplying two 2×2 matrices ne… | 2349 | 275 |
+| 1(a) Reply: Lean proof (the statement is in Statement.… | 188 | 188 |
 | 1(b) Thread: 1/4 Over F₂, multiplying two 2×2 matrice… | 257 | 257 |
 | 1(b) Thread: 2/4 The 1971 lower bound of 7 (Hopcroft–… | 249 | 249 |
 | 1(b) Thread: 3/4 Evidence: the search for a 6-gate ci… | 241 | 241 |
@@ -476,4 +479,4 @@ Rules against posts (P = pass; notes where a judgement was needed).
 | X9 one visible uncertainty | P | P | P | P | P | P | P | |
 | X10 plain-text maths, white space | P | P | P | P | P | P | P | No LaTeX, no Markdown inside posts |
 | Brief: no AI model named | P | P | P | P | P | P | P | "AI agents" only |
-| Brief: forbidden claims absent | P | P | P | P | P | P | P | No "Lean" in result 1; no "fast SAT algorithm found", "contracting refuted", "ETH refuted", "a Lean proof", P vs NP |
+| Brief: forbidden claims absent | P | P | P | P | P | P | P | 1a (revised 26 Nov, after the Lean proof): says "proved in Lean" only with the qualification that `bv_decide` trusts the Lean compiler; 1b, 1c and the overview still do not mention Lean; no "fast SAT algorithm found", "contracting refuted", "ETH refuted", "a Lean proof", P vs NP |

@@ -15,8 +15,9 @@ pull-backs of rank metrics, [R] there); `ports/c1d1/notes.md` D1.1–D1.3 (engin
 Standard facts used only for the unconditional statement: spherical buildings are CAT(1) and Euclidean cones over
 CAT(1) spaces are CAT(0) (Bridson–Haefliger II.10A.4, II.3.14).
 
-Script: `q1_verify.py` (exact distances in the filtration space, the placement for m = 2, 3, 4, random four-point
-tests of the metric).
+Scripts: `q1_verify.py` (exact distances in the filtration space, the placement for m = 2, 3, 4, random four-point
+tests of the metric); `q1_x4.py` (partition of the generic edges into copies of X₄ for m = 2, 3, 4: 1, 28, 560 copies
+of 48 edges; balance of X₄ and of the six matchings E_D).
 
 ---
 
@@ -49,10 +50,15 @@ tests of the metric).
    K_N = union of the cubes [0,1]^N of all bases = the truncated cone over the spherical building. Every finite subset
    of it is a price when contracting fails ("hull conjecture" of the K_{2,m} notes: true for these vertex sets).
    Mat_μ(F₂) with √rank sits in K_{2μ} (graphs, scale 1/√2), inside the slice Σx_i = μ.
-6. **Not covered.** Nets of cyclic groups (m = 1: the realisation is planar and any two node-lines meet), Δ₃ and K₄
-   (both are m = 1), nets of Z₄^m and other non-elementary-abelian groups, p ≥ 4 nets whose slopes generate a field
-   F_Q with [F_g : F_Q] bounded. For odd q the CAT(0) statement holds but the price statement is not known (the rank
-   metric over F₃ is not known to be forced).
+6. **Quotients (Cor. 2.2) [D].** If a group Γ has a surjection onto F_q^m, the 3-net of Γ has
+   F_CAT ≥ (1/√2)(1 − 1/q^m)(1 − q/q^m) (pull the placement back; hubs with equal images coincide). So the result
+   holds for Z_p^m, Z₄^m, Z_n^m (m → ∞) and for Z_p × Z_p (p → ∞); as a price statement for groups with large
+   elementary abelian 2-quotients of rank ≥ 2.
+   **Not covered:** groups all of whose elementary abelian quotients are cyclic or small: cyclic groups Z_g (m = 1:
+   the realisation is planar and any two node-lines meet), hence Δ₃ and K₄ (both are m = 1); perfect groups; Latin
+   squares that are not group tables; p ≥ 4 nets whose slopes generate a field F_Q with [F_g : F_Q] bounded. For
+   odd q the CAT(0) statement holds (and with the attainment agent's Lemma S it bounds all crossing-generated
+   covers unconditionally), but the price statement is not known (the rank metric over F₃ is not known to be forced).
 7. **Dead [X].** Cones over the incidence graph of the net (Φ = 9/4) or of PG(2,q) (Φ = 1): rank 2 is too small. Exact
    equality with all edge lines through one cone point (net triangles give closed local geodesics of length 3π/2).
 
@@ -201,6 +207,21 @@ distances by hand and re-ran the script.
 the O(1/g) gap needs either other hubs or a sharper cap: the Cauchy–Schwarz step of Cor. 3.4 treats an edge internal
 to merge k₀ as if |m_{k₀l}(n) m_{k₀l}(n′)| could be δ/√2, while it is at most δ/2. I did not optimise this.
 
+**Corollary 2.2 (quotients) [D].** Let Γ be a group (or a loop) with a surjective homomorphism π: Γ → F_q^m, and
+consider the 3-net of Γ (nodes (a,b), classes a, b, ab). Place the hub of class k and value y at the hub of
+(k, π(y)) and call an edge generic if the images (π a, π b), (π a′, π b′) are a generic pair. Legs of generic edges as in
+§2.2; for every other edge take legs far out in the two directions of a line of an apartment whose direction is
+orthogonal to all hubs (add two dummy coordinates to V), which gives s^k_e → 0 for all k. Hubs of one merge are at
+distance 0 or √2, so δ_k = √2. Generic edges are at least the fraction (1 − 1/g′)(1 − q/g′), g′ = q^m, of all edges
+(|Γ|²·|ker π|²·(g′−1)(g′−q)/2 pairs out of |Γ|²(|Γ|²−1)/2, and |Γ| = |ker π|·g′). Hence
+
+    F_CAT(net of Γ) ≥ (1/√2)(1 − 1/q^m)(1 − q/q^m).
+
+This tends to 1/√2 for Γ = Z_n^m (m → ∞, any n), for Z_p × Z_p (p → ∞), and for every family of groups with elementary
+abelian quotients of rank ≥ 2 and order → ∞. It gives nothing for cyclic groups (rank 1). For q = 2^s the placement is
+a price when contracting fails (§3). (This is the limit model of `notes.md` §5.4, where the pull-back from a quotient
+was used with pods; there Φ = 27/8, here Φ = 9/2.)
+
 ### 2.3 Remarks
 
 1. **Dimension.** The flats of 𝒞_{m+2} have dimension m+2 = log_q g + 2, while the Euclidean optimum for two merges
@@ -296,11 +317,17 @@ that contains it, hence an extreme point, and is not in the hull of the others. 
 big cell exactly; it is not needed, because Step 2 reaches all subspaces through extension fields.
 
 What the class contains: pods with q+1 arms (N = 2), pod × ℝ^M, all finite ℓ₂-products of such (block sums), cones
-over A_{N−1} buildings. Not contained (the reason is geometric, not a proof of non-realisability as a price): trees
-with two branch points (in Cone(Δ) × ℝ three pairwise opposite directions exist only at points whose link is a join
-with a discrete set, and a geodesic leaving such a point does not meet a second one of the same kind in the right
-position); affine buildings with their Euclidean metric (the lattice model of `ports/middle` §1.2 has √ℓ₁, not ℓ₂,
-relative positions).
+over A_{N−1} buildings.
+
+**Remark 3.4 (no tree with two branch points embeds in 𝒞_N) [D].** At a point p of an apartment let L be the
+intersection of the walls x_i = x_j through p (a linear subspace containing p). The link at p is the spherical join
+of the unit sphere of L with a spherical building; three directions pairwise at angle π in such a join have no
+component in the sphere (two directions with components cos θ·s, cos θ′·s′ ≠ 0 are antipodal only if s′ = −s, which
+three cannot satisfy pairwise). So the arms of a tripod centred at p are orthogonal to L. If b₁, b₂ were two branch
+points of an embedded tree, the segment [b₁,b₂] lies in an apartment, v = b₂ − b₁ is orthogonal to L₁ ∋ b₁ and to
+L₂ ∋ b₂, so 0 = ⟨v,b₂⟩ − ⟨v,b₁⟩ = |v|², a contradiction. Hence trees with two branch points are not obtained this way;
+whether they are prices when contracting fails stays open, as in `notes.md` §4. Also not obtained: affine buildings
+with their Euclidean metric (the lattice model of `ports/middle` §1.2 has √ℓ₁, not ℓ₂, relative positions).
 
 ---
 
@@ -486,7 +513,8 @@ argument either way beyond (i): if the game ever lost there with q even, it woul
 ## 8. Open problems and specs
 
 **Open.**
-1. **Other groups.** F_CAT (and the price floor) for 3-nets of cyclic groups Z_g, of Z₄^m, of non-abelian groups; for
+1. **Other groups.** F_CAT (and the price floor) for 3-nets of cyclic groups Z_g (prime g in particular), of groups
+   without elementary abelian quotients of rank ≥ 2 and large order, of Latin squares that are not group tables; for
    Δ₃ (in [2/3, 1/√2]); for p ≥ 4 nets of F_g whose slopes are not in a subfield of unbounded codegree. By
    Prop. 6.2 these need something other than points on lines of a projective space. Candidates I did not work out:
    (a) for cyclic Γ, carry-free digit maps Γ ⊃ box → F_q^m (the incidence w_{a+b} ∈ ⟨u_a, v_b⟩ then holds only for pairs

@@ -2749,3 +2749,29 @@ checks in `research/sat3/q2/`.)
   tight for grouped powers.
 - Reading: for this whole class there is no moderate improvement of 1/2: either nothing, or ports and a
   power-saving 3-SAT algorithm. H42 resolved in the affirmative, conditionally. Referee needed.
+
+**Attainment agent finished** (`research/sat3/attain-notes.md`; scripts `research/sat3/attain/`; outputs
+`attain/out2/`; `attain/out/` is a buggy first run, marked superseded). Final verdicts: level-1 three-class game
+= two-merge value [N; calibrated against the rectangle formula to six digits]; Theorem W with Lemma S [D];
+no construction, no exponent above 1/2, no violation in 2800 parents and 61 depth-2 games. Not done: the
+depth-2 game on a net; Liu's uncrossing tool (2611.00994) not checked against nets.
+
+**Scope widened (Q1 agent, via the attainment agent's addendum; unrefereed).** The filtration construction
+works over every finite field, and pulls back along quotients Γ → F_q^m:
+F_CAT(net of Γ) ≥ (1/√2)(1 − q^{−m})(1 − q^{1−m}). With Theorem W: crossing-generated covers are stuck at 1/√2
+on the 3-nets of Z_p^m (any prime p, m ≥ 2) and, in the limit, of Z₄^m, Z_n^m, Z_p × Z_p. Still open (window up
+to 0.7071): cyclic groups (hence Δ₃ and K₄), perfect groups, Latin squares that are not group tables.
+
+**Executor, cone model (H41 closed) [N].** Rust implementation (`piecefloor::ConeGraph` and friends; unit
+tests: crossing √2 in the plane; nine tripods = 6 exactly). One-factor reduction: products of any mix of
+factor types have value ≤ (1/p)√(E·max_f Γ_f), attained by orbit products, so mixing cannot help. On Δ₃ every
+cone type (pods, K_{m,m}, Heawood, PG(2,3), GQ(2,2), with subdivisions) gives Γ ≤ 36, i.e. exactly 6 per merge
+at best, never above; circles give 27 (flat). Limit model: 27/8 at best for Z₄, Z₂², Z₈, Z₂³, Z₂×Z₄, Z₁₂; 10/3
+for Z₃, Z₆, Z₉, Z₃²; 3.36 for Z₅. The lead's weak Python runs (5.0–5.5) were simply unconverged. 4-nets: Z₃
+16/3, Z₅ 5.12; the characteristic-2 "4-nets" with slopes ±1 are not nets (two merges coincide) and are
+discarded. Next for the executor: the filtration-space model on cyclic groups, Δ₃, K₄.
+
+**Launched.** Referee for Theorem W and Lemma S → `research/sat3/review-thmW.md` (first question: is the leaf
+cost a lower bound on the true network cost of the leaf tensor, or only the cost of the inherited
+realisation). Lean formalisation of the weighted two-bimedian inequality and the core of Lemma S →
+`research/ports/lean/PortsLean/{Bimedian,LemmaS}.lean`, note `research/sat3/lean-lemmaS.md`.

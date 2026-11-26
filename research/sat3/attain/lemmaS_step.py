@@ -5,7 +5,8 @@ gap = 1 - (r_c^2 + r_b^2) / (2(p^2+q^2)),  r_c (r_b) = least bond with child_c (
 Parents: random 'caterpillars': hubs h1, h2 (optionally identified, optionally joined by a wire), each
 attached to 1-3 legs (finite, far, or at the branch point) with random bits; crossed wires: (h1, c), (h2, d)
 with c, d legs or a third hub.  Usage: lemmaS_step.py BLOCKS seed n"""
-import sys, json, math
+import sys, json, math, os
+TIE = os.environ.get('TIE') == '1'
 import numpy as np
 import cvxpy as cp
 from lemmaS import Space, System, far, fin, depth1_threshold, random_far_wire, random_fin_wire
@@ -21,9 +22,9 @@ def rand_leg(space, rng, name):
     pos = np.zeros(space.D)
     for b, m in enumerate(space.blocks):
         if m == 1:
-            pos[space.off[b]] = rng.normal()
+            pos[space.off[b]] = float(rng.integers(-1, 2)) if TIE else rng.normal()
         elif kind == 'fin' and rng.random() > 0.2:
-            pos[space.off[b] + rng.integers(m)] = abs(rng.normal())
+            pos[space.off[b] + rng.integers(m)] = 1.0 if TIE else abs(rng.normal())
     return fin(space, pos)
 
 
@@ -34,13 +35,14 @@ def parent(space, rng):
     parties['h1'] = ('aux',)
     if not same: parties['h2'] = ('aux',)
     p, q = [round(float(x), 3) for x in rng.uniform(0.2, 1.0, size=2)]
-    if rng.random() < 0.3: p = q = 1.0
+    if rng.random() < 0.3 or TIE: p = q = 1.0
+    if TIE and rng.random() < 0.4: q = 2.0
     third = rng.random() < 0.3
     if third:
         parties['h3'] = ('aux',)
         for t in range(int(rng.integers(2, 4))):
             parties[f'm{t}'] = rand_leg(space, rng, f'm{t}')
-            wires.append(['h3', f'm{t}', round(float(rng.uniform(0.2, 1.5)), 3)])
+            wires.append(['h3', f'm{t}', (float(rng.integers(1, 3)) if TIE else round(float(rng.uniform(0.2, 1.5)), 3))])
     ends = []
     for nm in ('c', 'd'):
         if third and rng.random() < 0.5:
@@ -52,9 +54,9 @@ def parent(space, rng):
         for t in range(int(rng.integers(1, 4))):
             nm = f'l{hi}{t}'
             parties[nm] = rand_leg(space, rng, nm)
-            wires.append([h, nm, round(float(rng.uniform(0.2, 1.5)), 3)])
+            wires.append([h, nm, (float(rng.integers(1, 3)) if TIE else round(float(rng.uniform(0.2, 1.5)), 3))])
     if not same and rng.random() < 0.4:
-        wires.append(['h1', 'h2', round(float(rng.uniform(0.2, 1.5)), 3)])
+        wires.append(['h1', 'h2', (float(rng.integers(1, 3)) if TIE else round(float(rng.uniform(0.2, 1.5)), 3))])
     return System(space, parties, wires), p, q
 
 

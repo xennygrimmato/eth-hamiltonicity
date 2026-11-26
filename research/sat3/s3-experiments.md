@@ -236,7 +236,89 @@ Commands:
 
 **General-tree annealing** (`$B limit Q 3 16 ITERS 8 SEED`; seeds: all subgroup labellings, plus random chains):
 
-LIMIT_TABLE
+| Q | p | best Φ | level √Φ/p | maximiser | random-only chains (coset moves) |
+|---|---|---|---|---|---|
+| Z₃ | 3 | 10/3 | 0.6086 | index-3 subgroup tripod | 8/8 |
+| Z₄ | 3 | **27/8** | **0.6124** | index-4 tripod | 8/8 reach 27/8 |
+| Z₂² | 3 | **27/8** | 0.6124 | index-4 tripod | 8/8 |
+| Z₅ | 3 | 3.36 = 84/25 | 0.6110 | point tripod (class 0 per merge) | 8/8 |
+| Z₆ | 3 | 10/3 | 0.6086 | index-3 tripod | 7/8 |
+| Z₈ | 3 | 27/8 | 0.6124 | index-4 tripod (lifted) | seeded only (random: 3.28) |
+| Z₂³ | 3 | 27/8 | 0.6124 | index-4 tripod | seeded |
+| Z₃² | 3 | 10/3 | 0.6086 | index-3 tripod | seeded |
+| Z₂ × Z₄ | 3 | 27/8 | 0.6124 | index-4 tripod | seeded |
+| Z₉ | 3 | 10/3 | 0.6086 | index-3 tripod | seeded |
+| Z₁₂ | 3 | 27/8 | 0.6124 | index-4 tripod | seeded |
+| Z₃ | 4 | 16/3 | 0.5774 = 1/√3 | index-3 tripod (theory formula) | 8/8 |
+| Z₃² | 4 | 16/3 | 0.5774 | index-3 | seeded |
+| Z₅ | 4 | 5.12 | 0.5657 | point | 5/8 |
+| Z₂, Z₄, Z₂² | 4 | 8 (= cap) | — | **invalid**: slopes 1 and −1 are not transversal in characteristic 2 (two merges coincide mod 2), not a net | |
+
+- Annealing: 100k–150k steps × 8 chains on a tree of 16 vertices; Z₁₂ took 507 s.
+- Logs: `data/limscan2.log`, `data/limscan3.log`.
+- Seeds: every subgroup labelling (classes of H on arm k+1, radius 1; Φ of every seed printed in the log).
+- Moves: single hub, coset move (q + ⟨g⟩ of one or all merges to one vertex), edge length, prune-and-regraft.
+- No quotient exceeded 27/8. The maximum over the subgroup family is θ = 1/4, Φ = 3(1−θ)(1+2θ).
+- For Z₄ and Z₂² this is also the exhaustive optimum over {0,1}-pods with ≤ 4 arms (table above).
+- For larger Q it is a search result. Random-only chains on Z₈ stall at 3.28 (the point labelling), so the
+  annealer is not strong enough on its own there.
+
+## 5b. Cones over metric graphs (coordinator request, after §5)
+
+**Model.**
+- A factor is the Euclidean cone C(G) over a finite metric graph G with girth ≥ 2π.
+- Points are (vertex of the possibly subdivided G, radius), with
+  d² = r² + s² − 2rs·cos(min(π, d_G)).
+- Legs go to directions b, b′ ∈ V(G) at angle ≥ π (a line through the apex).
+- The saving of a hub (r, x) towards b is r·cos(min(π, d_G(b,x))).
+- Directions are restricted to vertices of the subdivided graph, so each value is a valid lower bound for that
+  space.
+- Code: `piecefloor::{ConeGraph, cone_gamma, cone_limit_phi, cone_product_b, anneal_cone}`.
+
+**Reduction used [R, Cauchy–Schwarz as in notes §5.2].**
+- For any family of factors and any design: value ≤ (1/p)√(E·max_f Γ_f), where:
+  - S_f = Σ_e s_{e,f}²;
+  - δ_k² ≥ Σ_f D̄_f (max ≥ mean over merges and pairs);
+  - Σ_e √(Σ_f s²) ≤ √E·√(Σ_f S_f).
+- For an edge- and merge-transitive design (Δ₃) the orbit product of the best factor attains the bound, and it is
+  balanced (b_k equal for all k, by the transitive action on merges).
+- So **products mixing factor types cannot beat the best single type**, and it suffices to optimise Γ of ONE
+  cone.
+- The same holds for Φ in the limit model.
+- The "balanced value" requested is therefore the value itself.
+  - Single-factor b-vectors are unbalanced; e.g. the plane on the crossing gives b = (2, 0).
+  - A direct product evaluator (`cone_product_b`) is included and checked on the 9-tripod product: b = (6, 6, 6)
+    exactly (unit test `cone_calibration`).
+- Calibration: crossing in the plane (circle:8), in C(K₃,₃) and in pods → √2 per merge.
+
+**Δ₃, one cone, Γ.**
+- Run: 200k steps × 16 chains seeded (three hubs of one node at three mutually far vertices, radius 1) + 8
+  random-only chains.
+- Command: `$B cone delta3 GRAPH SUBDIV 200000 16 5`; log `data/cone_delta3.log`.
+
+| link G (subdivision) | n | best Γ | value per merge | random-only |
+|---|---|---|---|---|
+| pods:3, pods:6 | 3, 6 | 36 | 6.000 | 36 |
+| circle:12, circle:24 (plane) | 12, 24 | 27 | 5.196 = flat | 27 |
+| K₃,₃ (s2, s4), K₄,₄ (s2) (= pod × pod) | 15–33 | 36 | 6.000 | 36 |
+| Heawood (s1) | 14 | 33.175 | 5.760 | same |
+| Heawood (s2, s4), Heawood + 3 points (s2) | 35–77 | 36 | 6.000 | 36 |
+| PG(2,3) incidence (s1) / (s2) | 26 / 78 | 33.175 / 36 | 5.760 / 6.000 | same |
+| GQ(2,2) incidence (s1, s2), GQ + 3 points | 30–78 | 36 | 6.000 | 36 |
+| K₃,₃ + 3 points (s2) | 18 | 36 | 6.000 | 36 |
+
+- Heawood at s1 and PG(2,3) at s1 fall short only because they have no three vertices pairwise at angle π.
+  Subdivision supplies them.
+- Γ was recomputed in plain Python for the saved configurations (`verify_pf.check_cone`).
+
+**Limit model, one cone** (`$B cone limit:Q:3 GRAPH SUBDIV 100000 8 7`; log `data/cone_camp2.log`):
+
+CONE_LIMIT
+
+**Free links.** These are random metric graphs whose base-edge lengths are annealed under girth ≥ 2π (moves that
+violate it are rejected), with hubs and directions at subdivision vertices:
+
+CONE_FREE
 
 ## 6. Summary
 

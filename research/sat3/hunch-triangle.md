@@ -37,7 +37,7 @@ Convention after the referee's remark: comparisons are in **level values** ρ, n
 3. **(b) A small barrier [R given K].** Hubs of arity three cannot lower a level value by more than the factor
    2/ω = 8/9: ρ_hub(κ) ≥ (2κ/3)·ρ_pair. With our floors: Δ₃ ≥ 16/27 = 0.5926 and nets of F₂^M, F₄^M ≥ 0.5443 if
    contracting fails; ≥ 0.5132 from flats alone. On Δ₃ with Euclidean prices the hub floor at κ = 4/3 is
-   0.5208…0.5212 ([N] below, [R] above). In a tower hubs are native only directly above a rank base (K = 3), so
+   0.5208…0.5212 ([N] lower end, [R] upper end). In a tower hubs are native only directly above a rank base (K = 3), so
    the effect is at most one constant factor in e, never a change of ρ* (§2.5).
 4. **No value below 1/√2 is attained anywhere in this note.** Everything below 0.7071 is a floor.
 5. **The tripod inequality and our tripod prices are not the same object [D]** (§3): ours is a statement about
@@ -126,7 +126,7 @@ For the triangle with one bit per wire (3 raw bits):
 
 | count | value | of 3 | status |
 |---|---|---|---|
-| terms of rank one across **one** cut of their choice (few terms, cost = cut rank; or slice rank) | 2 | 2/3 | [R] below |
+| terms of rank one across **one** cut of their choice (few terms, cost = cut rank) | 2 | 2/3 | [R] below |
 | terms of rank one across **all** cuts (tensor rank; a hub) | 9/4 | 3/4 | [K-OA] |
 | trivial | 3 | 1 | |
 
@@ -211,9 +211,11 @@ a triangle. Everywhere else it is a loss. Consequences for the numerology in the
 
 **Proposition 2.2 (hubs are worth at most 2/ω).** ρ_hub(κ) ≥ (2κ/3)·ρ_pair for κ ≤ 3/2, and ρ_hub(κ) = ρ_pair for
 κ ≥ 3/2. In particular ρ_hub ≥ (2/ω)·ρ_pair = (8/9)·ρ_pair for every admissible κ.
-*Proof.* Replace every hub of t bits by a bond triangle with (1/2+o(1))t bits per side (subrank, as above; the
-conversion is a degeneration of bounded degree per tensor power followed by interpolation, poly(λ) extra terms).
-A piece with cost Σb + κΣt becomes a pair piece with cost Σb + (3/2)Σt ≤ (3/(2κ))(Σb + κΣt). ∎
+*Proof.* Replace every hub of t bits by a bond triangle with (1/2+o(1))t bits per side. In detail: fix n₀ and
+Strassen's degeneration T_{n₀} ⇝ ⟨⌈3n₀²/4⌉⟩ of degree L₀; its m-th power has degree mL₀, so by interpolation a
+hub of m·log(3n₀²/4) bits is a sum of mL₀+1 = poly(λ) restrictions of a bond triangle with m·log n₀ bits per
+side, and log(3n₀²/4)/log n₀ → 2. A piece with cost Σb + κΣt becomes poly(λ) pair pieces with cost
+Σb + (3/2+o(1))Σt ≤ (3/(2κ))(Σb + κΣt). ∎
 
 With the floors of `notes.md` (referee-confirmed: 2/3 on Δ₃; 0.6124 on nets of F₂^M, F₃^M, F₄^M):
 
@@ -251,21 +253,25 @@ the maximising hub triangle being isosceles with sides (1, 1, 2κ−2). The opti
 | 3/2 | 5.181 | 5.196 | 5.196 |
 | 1.4 | 4.869 | 4.874 | 4.850 |
 | 4/3 | 4.687 (ρ = 0.5208) | 4.690 (ρ = 0.5212) | 4.619 (ρ = 0.5132) |
+| 1.2 | 4.402 | 4.409 | 4.157 |
+| 1 | 4.160 | 4.243 | 3.464 |
 
 (The optimiser undershoots the known value 3√3 at κ ≥ 3/2 by 0.3 %; the printed values are attained by explicit
-placements and are valid lower bounds on the supremum. Rows κ = 1.2, 1.0 and the time mode: see `hubfloor.out`.)
+placements and are valid lower bounds on the supremum. At κ = 1 the hub triangles collapse to segments and the
+bound is not attained: the nine edges cannot all have the same norm.)
 So against Euclidean prices the adversary answers hubs by making the hub triangle of each merge isosceles; the
-flat hub floor on Δ₃ at κ = 4/3 is ρ = √22/9 = 0.5212 [C for equality, N to 0.1 %].
+flat hub floor on Δ₃ at κ = 4/3 lies in [4.687, 4.690]/9, i.e. ρ ∈ [0.5208, 0.5212] (upper end √22/9).
 
 **The smallest three-sided level in time units [D + N].** Δ₃ → three groups → rectangular matrix multiplication,
 everything measured in label bits (no κ): cost of a piece under merge k = min over hub networks of t + ω(b);
 for any price, t + ω(b) ≥ λB_k/D_k (because D·ω(b) ≥ Σ b_{ij}d_{ij} at every spectral point, by the rank bound).
 - no pieces: (9/4)·3λ = 6.75λ;
-- Euclidean floor: sup min_k B_k/W_k ∈ [TIME_LO, 4.243]λ (upper end 3√2: hub triangles collapsed to segments,
-  i.e. the price sees merge k as a cut; lower end found by the optimiser);
+- Euclidean floor: sup min_k B_k/W_k ∈ [4.160, 4.243]λ (this is the row κ = 1 of the table, since W_k ≥ δ_k;
+  upper end 3√2: hub triangles collapsed to segments, i.e. the price sees merge k as a cut; lower end found by
+  the optimiser);
 - a hypothetical pair family at the flat pair floor with symmetric bonds would cost (3/4)·3√3 λ = 3.897λ, below
   this floor: such a family does not exist. In time units the binding flat prices are the collapsed ones.
-The window for the smallest three-sided level is therefore [4.15, 6.75]λ of 9λ raw bits, and it contains no
+The window for the smallest three-sided level is therefore [4.16, 6.75]λ of 9λ raw bits, and it contains no
 construction (the ALS searches of `engine3-STATUS.md` item 2 found no three-merge identity on Δ₃ at N₀ = 2).
 
 ### 2.5 Towers [D]
@@ -332,8 +338,10 @@ Prop. 2.3, where both enter. There is one honest bridge:
 applies to them as it stands: the label rate at three tips satisfies D*(a) ≤ D(a) ≤ Σa; if the prices on the pod
 are radially homogeneous (they can be made so: K-OA HC §2.3, limit H(T; sx)/s), then either D ≡ D* on the whole
 pod or D > D* everywhere. In the first case the pod is a spectral point with perimeter/D = 9/4, so
-**¬contracting + contact on the √rk pod ⇒ ω ≥ 9/4**, by AN's objects alone and without K-OA Parts II–IV. In the
-second case hubs at κ = 4/3 gain against pod prices (by δκ/D < 1). Which case holds is not decidable from the
+**¬contracting + contact on the √rk pod ⇒ ω ≥ 9/4**, by AN's objects alone and without K-OA Parts II–IV
+(provided AN's prices are spectral points in Strassen's sense on three-party tensors; `c1d1` records only the
+inclusion "OA spectral points are AN spectral points", so this direction must be checked). In the second case
+hubs at κ = 4/3 gain against pod prices by the factor 4δ/(3D) < 1. Which case holds is not decidable from the
 wire metric; it needs the spectral point behind `thm_alt_rank_price`.
 
 ### 3.3 Does their argument transplant to a barrier for three-merge values? [X, with the exact point of failure]
@@ -382,7 +390,8 @@ Tools that give lower bounds on prices of non-wire tensors, and what each covers
    as expensive as a label per unit of rank at flat points; K-OA say how cheap a label can be relative to wires
    at non-flat points. Disjoint information; both are about a single hub.
 3. K-OA HC Thm 11.2 (statement at HC §3.2): an explicit binary tensor that comes within O(1) per row of the star
-   bound d·F(1) at prescribed placements in a Hadamard cone. Single hub (the cone tip), unconditional.
+   bound d·F(1) at prescribed placements in a Hadamard cone. Single hub (the cone tip); used in the no-ports
+   case, with no hypothesis on ω.
 4. K-OA Nov Thm 14.1: sphere tensors attain the transport bound for prescribed leg widths **and expand into
    contractions through legs of controlled width when marked points collide**. This is the shape of tensor that
    attainment needs (max price and a cheap network at once). It is proved under ω < 9/4, which K-OA refute.
@@ -439,6 +448,9 @@ right shape looks like and why it is not available.
 ≥ 0.5443 (nets, ¬contracting), ≥ 0.5926 (Δ₃, ¬contracting); in a tower only the level above a rank base is
 affected. This gives K-M's "hyperedges under the merge" a cost model and replaces his 1/2 by these numbers for
 arity three. It does not close the three-merge window [0.6124, 0.7071) for pair networks.
+Relation to `engine3-STATUS.md` item 2 (Δ₃: unconditional game floor 4/9, pigeonhole 1/3, in a flattening cost
+model): the numbers here are larger but conditional (K-OA flats, or ¬contracting) and belong to the hub cost
+model with κ ≥ 4/3; neither set implies the other.
 
 **(c)** The hunch as stated is dead. Exact reasons: (i) label terms are the wrong corner of the trade (§1.3–1.4);
 (ii) as a hub, 9/4 is an exchange rate and the identity has value ≥ 1 (§2.3); (iii) the triangle has no trade of
@@ -450,8 +462,8 @@ the √rk pod S_m ⊂ Mat_{2r}(F₂) under the price of `thm_alt_rank_price`, i.
 with that wire metric of D(tips) equals D* = (8/9)·hp (four tips: 3/2 of the diameter, K-OA (7.8)).
 - Contact ⇒ ω ≥ 9/4 follows from ¬contracting by a two-page argument (K-OA Prop. 8.1 only), an independent
   check on K-OA's most doubtful claim, and hubs gain nothing against pod prices.
-- No contact ⇒ the pods are label-flat, K-OA's optimal point is a different geometry from ours, and the hub
-  floor on Δ₃ under ¬contracting is 16/27 and not 2/3.
+- No contact ⇒ D > D* on our pods, K-OA's optimal point is a different geometry from ours, and the hub floor
+  that the pod price gives on Δ₃ is (2/3)·4δ/(3D), somewhere in [16/27, 2/3).
 Concretely: unfold K-AN's proof of `thm_alt_rank_price` to see which tensors certify the rank price, and compute
 the value it assigns to the diagonal on {0, I, ι₂(t_p)}; the K_{2,m} structure (Lemma P) gives the four-tip
 configuration of K-OA §7.4 directly.

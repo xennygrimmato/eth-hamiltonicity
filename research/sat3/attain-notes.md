@@ -507,6 +507,18 @@ confirm in exact arithmetic.
   barrier at exponent 1/2, and its extremal metric is a genuine CAT(0) placement. Whether that metric is a price is
   the Q1 agent's claim and decides the statement for all covers.
 
+**Addendum (after the hand-back; the Q1 agent's correction of scope, its claims, unreviewed; `sat3/q1-notes.md`).**
+The filtration construction works over every finite field F_q (V = F_q² ⊕ F_q^m, hubs = points ⟨(x,y)⟩, nodes = graphs
+of a ∈ Mat_{m×2}(F_q); the filtration space of F_q^N is CAT(0) for every q), and pulls back along quotients
+Γ → F_q^m with F_CAT(net of Γ) ≥ (1/√2)(1 − q^{−m})(1 − q^{1−m}). So the sentences above that exclude Z₃^m, Z_p^m, Z₄ are
+superseded: with Theorem W, crossing-generated covers are stuck at 1/√2 on the 3-nets of Z_p^m (m ≥ 2, any prime p),
+and of Z_4^m, Z_n^m, Z_p × Z_p in the limit. Not covered: cyclic groups (hence Δ₃ and K₄), perfect groups, Latin
+squares that are not group tables; there the floors of this note stand (Δ₃: 2/3; cyclic: 0.5857) and the window to
+0.7071 is open. Its proposed finite testbed for a depth-2 computation: the translation class E_D of the order-4 net
+X₄ (8 disjoint wires, three merges into 4 groups, F_CAT = 1/√2, four AN crossings for any two merges); by Theorem W no
+crossing-generated cover can go below 1/√2 there, so a depth-2 computation on it can only confirm the barrier.
+
+
 ---
 
 ## 7. Equality structure for value 1/√2 (sent to the Q1 agent) [D]

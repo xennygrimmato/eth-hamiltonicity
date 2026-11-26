@@ -604,3 +604,17 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   equals the number of wires.
 - Matrices need Lemma 4.1's entropy step (n destinations for n² wires). To be written with every dependency listed.
 - Note: the current ETH refutation (2^{n/(log n)^{1/2+o(1)}}) is compatible with Weak ETH. H12 sharpened accordingly.
+
+### Note agent: the network lower bound IS in OpenAI's Lean, inside the cone of the 9/4 theorem [K by grep; not built]
+- Import chain traced: square_exponent → … → BatchDescent.hard → `manyList_full (F) [Field F] [Finite F]`:
+  ∃ η > 0, eventually in w, for all t ≤ 2^{w^{1+η}}: any bit network (tables of bit-arity ≤ 3) computing t-fold list
+  distinctness has size > t · (2w·2^w) · w^η. Hypotheses: finite field only. No ports / no-ports split at top level.
+  The Lean route is a "descent + resists" diagonal argument, not visibly the paper's Lemma 4.1 (which the Lean cone
+  does not appear to use). 592 modules in the cone; grep finds no sorry/admit/axiom.
+- So the hidden superlinear circuit bound rests on a Lean-formalised statement (as read by us, not built). OpenAI's
+  Lean has the pieces of the circuit embedding (used for a sorting seed) but states no general circuit corollary.
+- Context found: the multiple-unicast network coding conjecture was refuted in Oct 2026 (arXiv:2610.20079 and others),
+  so the older conditional lower bounds built on it have a false premise.
+- Lead's idea passed to anti: reduce list distinctness to matrix multiplication (radix passes = data-dependent 0/1
+  matrix times a record matrix) to get the matrix lower bound from the Lean statement directly, without Weak ETH or
+  Lemma 4.1. May lose too many log factors; to be worked out.

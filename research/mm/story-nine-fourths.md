@@ -2,93 +2,93 @@
 
 *A story for anyone who knows how to multiply. Written 26 November 2026. The last part reports a claim that is two days old and has not been checked by other mathematicians.*
 
-## The school method
+## The school method, and Strassen's trick
 
-A *grid* (mathematicians say "matrix") is a square table of numbers with n rows and n columns. To multiply two grids you fill in a third one. The entry in row 3, column 5 of the answer is: take row 3 of the first grid and column 5 of the second, multiply them entry by entry, and add up the n products.
-
-The answer has n × n entries and each one needs n multiplications, so the school method uses n × n × n = n³ multiplications. For a 1000 × 1000 grid that is a billion. Weather forecasts, video games, search engines and AI programs multiply big grids all day long, so people care a lot about that 3 in n³. It is called the **exponent**.
-
-## Strassen's trick: 7 instead of 8
+A *grid* (a "matrix") is a square table of numbers with n rows and n columns. To multiply two grids you fill in a third. Its entry in row 3, column 5 is: take row 3 of the first grid and column 5 of the second, multiply them entry by entry, and add. That is n multiplications for each of n × n entries, so **n³** in all. The 3 is called the **exponent**. Computers multiply huge grids all day, so the exponent matters.
 
 Cut each grid into four blocks:
 
 ![Blocks and Strassen's trick](story-fig1.svg)
 
-The school method needs 8 block products (two for each of the four blocks of the answer). In 1969 Volker Strassen found a way to do it with 7. Here are his seven products:
+The school method needs 8 block products. In 1969 Volker Strassen did it with 7:
 
-- M1 = (a + d)·(e + h)
-- M2 = (c + d)·e
-- M3 = a·(f − h)
-- M4 = d·(g − e)
-- M5 = (a + b)·h
-- M6 = (c − a)·(e + f)
-- M7 = (b − d)·(g + h)
+- M1 = (a + d)·(e + h)  M2 = (c + d)·e  M3 = a·(f − h)  M4 = d·(g − e)
+- M5 = (a + b)·h  M6 = (c − a)·(e + f)  M7 = (b − d)·(g + h)
 
-and the four blocks of the answer are M1 + M4 − M5 + M7, M3 + M5, M2 + M4, and M1 − M2 + M3 + M6. Check one yourself: M3 + M5 = a·f − a·h + a·h + b·h = a·f + b·h, which is the top right block. One multiplication has been traded for a handful of additions, and additions are cheap.
+The four blocks of the answer are M1 + M4 − M5 + M7, M3 + M5, M2 + M4 and M1 − M2 + M3 + M6. Check one: M3 + M5 = a·f − a·h + a·h + b·h = a·f + b·h, the top right block.
 
-**Why a trick for size 2 helps at every size.** The letters a to h can be blocks, not just numbers, because the trick never swaps the order of a product. So a 1024 × 1024 grid is a 2 × 2 grid of 512 × 512 blocks, each of those is a 2 × 2 grid of 256 × 256 blocks, and so on ten times. The school method multiplies the work by 8 at each level; Strassen multiplies it by 7. Ten levels of 7 instead of 8 turns n³ into about n^2.81.
+The letters can themselves be blocks, because the trick never swaps the order of a product. So a 1024 × 1024 grid is a 2 × 2 grid of 512 × 512 blocks, each of which is a 2 × 2 grid of smaller blocks, ten levels deep. The school method multiplies the work by 8 per level, Strassen by 7. That turns n³ into about n^2.81.
 
 ## How low can the exponent go?
 
-After Strassen, people found cleverer and cleverer tricks. The exponent fell to 2.5 by 1981 and to 2.376 by 1990. Then it stalled: thirty-four more years of hard work moved it only to 2.371.
-
 ![The exponent over time](story-fig3.svg)
 
-Nobody can go below 2, because the answer has n² entries and you must at least write them down. For decades most experts guessed that the true answer is exactly 2: that with enough cleverness, multiplying grids costs barely more than reading them. No one could find any reason for a barrier above 2.
+Cleverer tricks brought the exponent to 2.376 by 1990, and then only to 2.371 in the next thirty-four years. It cannot go below 2, since the answer has n² entries that must at least be written down. Most experts guessed the truth is exactly 2.
 
-In October 2026 a new trick, based on multiplying polynomials, reached **2.25, which is 9/4**. Several groups have checked and re-proved it. Then on 24 November 2026 came a much bolder claim: **9/4 is the end of the road. No trick, however clever, will ever beat it.**
+In October 2026 a new trick reached **2.25 = 9/4**, and several groups have confirmed it. On 24 November 2026 came a bolder claim: **9/4 is the final answer. No trick will ever beat it.**
 
-## Where does the number 9/4 come from? A game with six friends
+## Where 9 and 4 come from: a game of matching switches
 
-Here is the cleanest way I know to see the number. It explains why the best trick lands on 9/4, and what the new claim says.
+Three people, A, B and C. Every pair is joined by a *link*, and each person has an on/off switch at their end of each link. So each person holds two switches. Call a setting of all six switches **consistent** if on every link the two ends match. Write down the table that gives 1 to consistent settings and 0 to the others.
 
-Six friends want to set up shared secrets: every pair of friends should end up with its own secret coin flip. That is 15 coins. They are allowed one tool: a loudspeaker that announces a single random number to all six at once. From that number each friend computes, alone, what they need. How many bits must the announced number have?
+We want to build this table out of **simple pieces**. In a simple piece A, B and C each write, on their own, a list of numbers, one for each way of setting their own switches. The piece's value at a setting is A's number times B's number times C's number. Pieces may be added and subtracted, so they can cancel each other.
 
-Split the six into two groups of three. Nine pairs straddle the split, so nine coins' worth of randomness has to cross from one side to the other, and the only thing both sides hear is the loudspeaker. So you need **at least 9 bits**. Surprisingly, 9 bits are also enough (in the long run, when the game is repeated many times). That is what the polynomial trick achieves.
+*How many simple pieces does the consistency table need?*
 
-![Six friends and their coins](story-fig2.svg)
+This is 2 × 2 grid multiplication in disguise: A is the first grid, B the second, C the answer, and one piece is one multiplication. The school method uses 8 pieces. Strassen's seven products are 7 pieces.
 
-Now put the friends into three teams of two, and let team-mates sit together and pool what they know. This team game *is* grid multiplication. The three teams are the first grid, the second grid and the answer; for 16 × 16 grids each pair of teams must agree on a label with 16 values, which is 4 coins; and a method using R multiplications is a loudspeaker with R possible announcements.
+There is also a floor. Put A on one side and B, C on the other. Two links cross, so A's two switches must be matched across the split: four possibilities. Seen across a split, one simple piece can only say "my side's number times your side's number", and it takes at least four of those to build a four-way match. So at least 4 pieces: that is the n² floor.
 
-Teaming up can only make things easier, so 9 bits still suffice. Could fewer do? Run the splitting argument again, but now a split is not allowed to break up a team. The best split has one team against two, and only **8** coins cross it.
+**Now six people**, every pair linked: 15 links.
 
-So the truth for the team game is somewhere between 8 and 9:
+![Six people and their links](story-fig2.svg)
 
-- **8** would mean exponent 8/4 = **2**. This was the old belief.
-- **9** means exponent **9/4**. This is the new claim: sitting together does not help the teams at all.
+Split them three against three (left picture). Nine links cross. Matching nine switches across a split has 2⁹ possibilities, so the table needs at least 2⁹ pieces. Call that **cost 9**. The polynomial trick of 2026 shows that cost 9 can actually be met: the three-against-three split is the true bottleneck. (Precisely: playing N rounds at once needs about 2^(9N) pieces.) For six separate people the answer is exactly 9. The floor is elementary; that it can be met is a theorem from autumn 2026.
 
-The school method, by the way, corresponds to 12 bits (all the coins between different teams), and 12/4 = 3.
+**Now let them sit in three teams of two** (right picture). A team writes one joint list, so more tables count as "simple" and the job can only get easier. Links inside a team no longer matter. Between two teams there are 4 links, which is a label with 16 values, and the team game is exactly **16 × 16 grid multiplication**.
 
-## Why would you not be able to reach 2?
+Cost 9 still works. Could it drop? Redo the floor argument, but a split may not cut a team in half. The best split is one team against two: only **8** links cross.
 
-Honestly: the number 9/4 comes from the best trick we know. The new claim is that the trick cannot be improved, and the reason given has nothing to do with coins or triangles. It goes like this.
+- Cost **8** would be exponent 8/4 = **2**, the old belief.
+- Cost **9** is exponent **9/4**, the new claim: *teaming up never saves the ninth bit.*
 
-**Step 1. A faster multiplier would be a bulk-discount machine.** The paper argues that if grids could be multiplied even slightly faster than n^(9/4), you could build fast sorting from it, and from fast sorting a general discount: take any small computation at all, and you could run a thousand copies of it for noticeably less than a thousand times the price. Then you could apply the discount to the discounted machine, and again, and again.
+(The school method is cost 12, all the links between different teams: 12/4 = 3.)
 
-**Step 2. Some jobs cannot be discounted forever.** Take the job "here are several lists of numbers; does any list contain a repeat?". Checking this is as hard as running a parcel service: every record must be able to reach any position, to be compared with whatever sits there. A parcel network with too few roads cannot deliver every parcel to every possible address, because the total distance the parcels may have to travel is more than the total length of road. So this job has a price floor per record that no amount of batching removes.
+So the whole question fits in one sentence: **when neighbours team up, does the bottleneck of the un-teamed game still apply?**
 
-Repeated discounts from Step 1 would go through that floor. So Step 1's assumption must be false: nothing beats n^(9/4).
+Other team sizes give other shapes of grid. With teams of p, q and r people the cost is (p + q + r)²/4, half the people times the other half, as long as no team has more than half of them. If one team is bigger than all the rest together, the cost is (big team) × (rest), and then a team-respecting split already achieves it. That case is a tall thin grid times a short wide one, and there the cost really is just the size of the answer. Square grids are the balanced case, where the best split has to cut through teams.
 
-That is the whole shape of the argument. The details fill about a hundred pages.
+> **What this picture hides**
+> - "Cost 9" is about long runs: the number of pieces for N rounds grows like 2^(9N). For a single 2 × 2 multiplication the best is still 7, far above the floor of 4 and above the claimed long-run rate 2^(9/4) ≈ 4.76.
+> - Pieces are added *and subtracted*. Cancellation is why 9 can be enough when there are 15 links. If you think of the links as secret coins and the pieces as public announcements, you will get the wrong answer (15).
+> - How the trick meets the bottleneck is not shown. It uses multiplication of polynomials.
 
-> **What we don't know, and why experts will be cautious**
->
-> - The "no trick can beat 9/4" claim is two days old. Nobody outside the authors has checked it. Only the 9/4 *trick* itself is confirmed.
-> - It would overturn a famous thirty-year-old conjecture of Strassen, which predicted exponent 2.
-> - The proof leans on two other brand-new, unchecked papers. And its Step 2, taken alone, would already settle a different famous open problem (it shows that a simple yes-or-no task needs more than a fixed number of operations per input bit). When one proof quietly solves two famous problems, careful people look twice.
-> - The explanation of the *number* is solid: it is a count of coins crossing a split. The explanation of why you *cannot do better* is only as good as that hundred-page proof.
-> - For small grids none of this changes anything. For 2 × 2 grids Strassen's 7 is still the best possible.
+## Why would teaming never help?
 
-## The same story in six tweets
+Here there is no simple picture, and I will not pretend otherwise. The claimed proof is about a hundred pages and runs by contradiction. Its shape:
 
-> 1/ Multiplying two n×n grids of numbers the school way takes n³ multiplications. In 1969 Strassen showed 2×2 blocks need only 7 products, not 8. Use it inside every block, again and again, and n³ becomes n^2.81.
+**Either** a certain mathematical "best position" shifts when you tweak a parameter, and then a direct calculation gives 9/4.
 
-> 2/ For 55 years people pushed that exponent down: 2.81, 2.5, 2.376, 2.371. It can't go below 2, since you must write n² answers. Most experts guessed the truth is exactly 2.
+**Or** nothing ever shifts, and then a faster-than-9/4 multiplier becomes a **bulk-discount machine**: it gives fast sorting, and from that a way to run a thousand copies of *any* small computation for noticeably less than a thousand times the price, over and over.
 
-> 3/ October 2026: a new trick reaches 2.25 = 9/4, now confirmed by several groups. 24 November 2026: a claim that 9/4 is the true answer, so no trick will ever do better. That part is unchecked.
+But some jobs cannot be discounted forever. "Here are several lists; does any list contain a repeat?" is like a parcel service: each record must be able to reach any position. The total distance the records may need to travel cannot exceed the total length of wire in the machine. That sets a price floor per record, and repeated discounts would break through it.
 
-> 4/ Why 9/4? Six friends, a secret coin for each pair, one loudspeaker. Split them 3 against 3: nine pairs straddle the split, so the announcement needs 9 bits. Nine turns out to be enough.
+> **Why experts will be cautious**
+> - Only the trick (exponent at most 9/4) is confirmed. "Nothing beats 9/4" is two days old and unchecked.
+> - It would overturn a famous conjecture of Strassen from the 1990s, which predicted exponent 2.
+> - The price-floor step rests on two other new, unchecked papers, and taken alone it would settle another famous open problem about how many operations a simple yes/no task needs. One proof quietly solving two famous problems deserves a second look.
+> - The number 9/4 enters the proof through the same family of tricks that gave the upper bound. I could not confirm that the match at 9/4 is more than that method agreeing with itself.
 
-> 5/ Seat the friends in 3 teams of 2 and you have 16×16 grid multiplication, with 4 coins per pair of teams. Splits that keep teams together cut only 8 coins. Exponent 2 means 8/4. The claim is that it stays 9: 9/4.
+## Six tweets
 
-> 6/ Why no better? A faster multiplier would give a bulk discount on all computation, and repeated discounts would let you check lists for duplicates cheaper than parcel-routing allows. If the 100-page proof holds, a famous conjecture falls.
+> 1/ Multiplying two n×n grids the school way takes n³ multiplications. In 1969 Strassen showed that 2×2 blocks need only 7 products, not 8. Use that inside every block, again and again, and n³ becomes n^2.81.
+
+> 2/ For 55 years the exponent crept down: 2.81, 2.5, 2.376, 2.371. It can't go below 2, because you must write down n² answers. Most experts guessed the truth is exactly 2.
+
+> 3/ Oct 2026: a new trick reaches 2.25 = 9/4 (confirmed). 24 Nov 2026: a claim that 9/4 is the true answer and no trick will ever do better (unchecked).
+
+> 4/ Where do 9 and 4 come from? Link six people in all 15 pairs and ask them to match switches on every link. Split them 3 against 3: nine links cross. That bottleneck, cost 9, is exactly what the job costs.
+
+> 5/ Seat them in 3 teams of 2: that is 16×16 grid multiplication, 4 links per pair of teams. Splits that keep teams whole cut only 8 links. Exponent 2 means cost 8. The claim: teaming never saves the ninth bit. 9/4.
+
+> 6/ Why not? The proof says a faster multiplier would give a bulk discount on all computation, enough to check lists for repeats more cheaply than moving the records allows. 100 pages, overturns a famous conjecture, not yet checked.

@@ -127,9 +127,10 @@ Relations: ETH ⇒ WETH; rWETH ⇒ WETH; nuWETH ⇒ WETH; and rWETH ⇒ UWETH �
 - [CP] defines a "rewrite-and-merge" class of algorithms that contains the recursion of [AN-ETH]. For two balanced
   homogeneous merges it proves that the exponent per edge bit is ≥ (log₂K)^{−3}, "which excludes running times
   2^{n^{1−c}}" within that class. We know this only from a search-engine excerpt of the abstract. It does not
-  conflict with our conditional algorithms as far as we can see: they enumerate the runs of [AN]'s cutting program
-  (§3.4) and do not run a merge recursion, so they do not appear to belong to that class. We have not analysed the
-  relation further.
+  conflict with Theorem R as far as we can see: the algorithm of Theorem R enumerates the runs of [AN]'s cutting
+  program (§3.4) and does not run a merge recursion, so it does not appear to belong to that class (this is also the
+  reason the literature check gives). We have not analysed the relation further, nor the relation to the algorithm of
+  [IM] Thm 7.1 used in Corollary A′.
 
 ---
 
@@ -412,6 +413,12 @@ words, the cosets and the maps χ ↦ χ̂ are constants of the program").
 4. **[HC Thm 4.2]** [OA-L]. If X_χ had no ports, then C₀(h−1) ≥ c·h(h−1)/(2 log h), false once h/log h > 2C₀/c. So
    X_χ has ports, and by [HC §2.2] χ admits ports. ∎
 
+**Relation to [EG] §11.1.** [EG] Lemma 11.3 and Prop. 11.2 prove the analogous implication on OpenAI's side: a
+uniform gap B_m ≤ (m − η)B₁ on Gr(m, 2m) over F₂, derived there from a largest spectral flat dimension, gives ports
+through a replacement-product construction (EG §§11.1.2–11.1.3). Theorem A is the corresponding statement for [AN]'s
+contracting hypothesis, proved instead from [AN] F.6 and [HC] Thm 4.2. See §0, "Prior work and novelty", including the
+unchecked second route.
+
 **Lean form (characteristic 0).** Citing `exists_logarithmic_placement` instead of the paper's Thm 4.2 needs:
 - **Padding** with 2^e − (h−1) loops per vertex, e = ⌊log₂(h−1)⌋ + 1 (the draft's ⌈log₂ h⌉ was meant). F.6 then gives
   exactly the constant C₀·2^e ≤ 2C₀(h−1) in OpenAI's normalisation; simplicity of the graph is not needed.
@@ -619,7 +626,7 @@ no-ports part. (Referee fix:) [HC] Thm 1.1 is weaker than [AN] K.7 by a factor l
 (and approximate circuits, Thm 1.4).
 
 **Tensor rate of K_{2,3}** (companion note `note-k23-rate.md`; sources `hull/notes.md`, `review-hull.md`,
-`review-fivepoint.md`). Let f*(K_{2,3}; k) be the supremum of rates of asymptotic restriction protocols over k from the
+`review-fivepoint.md`). The instance is the Okamura–Seymour example of network-flow theory. Let f*(K_{2,3}; k) be the supremum of rates of asymptotic restriction protocols over k from the
 six binary wires u_iv_j of K_{2,3} to the four wires v₁v₂, v₂v₃, v₁v₃, u₁u₂. (i) If the contracting hypothesis fails
 over k, then f*(K_{2,3}; k) ≤ 3/√10; border protocols of approximation degree 2^{o(n)} are included over infinite k
 [ours-R, review-hull]. (ii) Unconditionally, f*(K_{2,3}; k) ≥ 3/√10 over every field [ours; computer-assisted: the

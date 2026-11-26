@@ -1,0 +1,9 @@
+  group SL3(F4)_p111 n = 60480
+  [SL3(F4)_p111] lambda2=0.80050 lmin=-0.5951 beta_cut=2.5199(lb) (26.7s)
+  Grassmann placement gW, W = U^3, dim U = j = 1: E_edges d_J = 0.5000, E_pairs d_J = 2.2917, ratio = 4.5833; hist [168, 3528, 35280, 21504]; lambda2 >= 0.6786 (4.2(e)); kernel 0.7500 <= 0.8448
+  matrix placement M_g P M_g^-1 (mu = 6), j = 1: ratio=4.5833 Ep=4.5833 Ee=1.0000 maxedge=2 kernel(k=1) 0.6250<=0.8123 ok=true lam2>=0.6013 (a)(false, true) (b)(false, true) (c)hyp=false ok=true
+    hist pairs [10160640, 0, 213373440, 0, 2133734400, 0, 1300561920, 0, 0] edges [362880, 0, 362880, 0, 0, 0, 0, 0, 0]
+  saved ../../research/ports/middle/data/rankplace/SL3(F4)_p111_conjproj_j1.json
+| graph | n | d | λ₂ | 1/(1−λ₂) | β_cut | μ | best ratio | ratio/β_cut | E_pairs | E_edges | best random-start chain | worst chain | kernel | s |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SL3(F4)_p111 | 60480 | 12 | 0.8005 | 5.0126 | 2.5199* | 6 | 2.5377 | 1.007 | 0.497 | 0.196 | 1.1085 | 1.0748 | ok | 1353.2 |

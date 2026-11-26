@@ -1641,3 +1641,24 @@ Agents still running: the rank-placement experiments only.
 - E-M2: 6 of 7 orbits of extreme rays of MET₆ are rank metrics at μ = 2; the seventh (with a distance 3) not found for
   μ ≤ 8. E-M3 running.
 (GE) remains open; my reading: no evidence against it, weak evidence for it.
+
+## 26 Nov (late, 51): rank-placement executor final
+
+`research/ports/middle/experiments.md`; module `tools/tensorlab/src/rankplace/` (bit-packed F₂ matrices, rank ≈ 5 ns;
+graph and group generators incl. LPS; Lanczos; parallel annealer; kernel-inequality checks; nine Python functions;
+26 unit tests). An independent plain-Python checker agrees with six saved placements to 10⁻⁹.
+- E-M1 (51 random graphs + named families): excess over the best cut ≤ 3.1%, > 0.5% only at n ≤ 32; ≤ 0.14% at n ≥ 128.
+- E-M3 (edge rank ≤ r): for d ≥ 8 every placement found has E_pairs ≈ r; for d = 3, 4 the spread rises to 1.3–1.5·r at
+  r = 4 — consistent with a threshold near r ≈ log₂ d, in a narrow window (μ = 8).
+- E-M4: λ₂ = 0.8005 (n = 60 480), 0.8773 and 0.8798 (n = 16 482 816); all above the notes' bounds.
+- E-M2: 7 orbits of extreme rays of MET₆ found (281 rays; the executor recalls 296 from the literature — a 15-ray gap,
+  unresolved); 6 orbits are rank metrics at μ = 2 (incl. K_{3,3}); the seventh (90 rays, contains a distance 3) not
+  found for μ ≤ 8, not excluded by the kernel test: open.
+- Small graphs with real non-commutative gain: Heawood 27/14 vs 1.714 (above 1/(1−λ₂) = 1.892), K_{3,3} 1.167,
+  Pappus ≈ 1.05, McGee 1.029, Tutte–Coxeter 1.017.
+- On SL₃(F₄) the structured placement's excess over cuts is ≤ 1.55 and not certified > 1 (β_cut ∈ [2.96, 5.01]); on the
+  SL₂ controls cuts beat the structured placements.
+- Calibration as before: the search repairs structure but does not nucleate it.
+- Caveats: β_cut for n > 32 is a lower bound; machine was heavily shared.
+- Three 6 MB regenerable placement files are git-ignored; smaller ones and logs are committed.
+All agents have now finished. Nothing is running.

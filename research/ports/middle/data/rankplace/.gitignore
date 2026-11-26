@@ -1,0 +1,3 @@
+# Large regenerable placements (about 6 MB each); regenerate with tools/tensorlab/examples/rankplace.rs
+SL3(F4)_p111_best_mu6.json
+grad_SL3(F4)_p111_mu6_r*.json

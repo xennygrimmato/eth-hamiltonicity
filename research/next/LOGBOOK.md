@@ -1810,3 +1810,16 @@ Lean project: 14 files.
 - Minor: the table row m = 6 is wrong (R₆(1) = 12/√904 = 0.399114, checked by me, not 0.399557); the duality for
   non-integer w needs an explicit rational-w plus monotonicity/continuity step (exposition, not a gap).
 - Items 2, 6, 7 pending.
+
+## 26 Nov (late, 62): Theorem K_m passes review [V]
+
+`research/ports/review-k2m.md`: no fatal gap. For m ≥ 3: f*(K_{2,m}; w) ≥ R_m(w) = 2m/√(m²(m−1)²+4w²) over every field for
+0 < w ≤ m(m−1)/6, and ≤ R_m(w) for every w > 0 when contracting fails. Same imported statements as the m = 3 theorem.
+- Fixes: weighted duality needs the rational-w + monotonicity/continuity lines; table row m = 6; "can be taken" in the
+  degenerate counterexample; a stale line in `lean/NOTES.md`.
+- Confirmed with the referee's own code: Lemma P (r ≤ 5, exhaustive maximality for q = 2, 4, 8), Lemma P′ (largest family
+  in Mat₄(F₂) is exactly 5; not used in the theorem), calibration on 200k books, flow LPs (2m/(m(m−1)+2w), m = 3–6), all
+  cuts by brute force, the counterexample to the direct m-page calibration (bracket −0.658 at m = 4, w = 1 while the
+  true left side is +2.03).
+Launched: a writer turning the K_{2,3} note into a K_{2,m} note (analytic proof primary and in Lean; interval
+certificates as confirmation; explicit-protocol section). Sent the referee's fixes to the K_{2,m} agent.

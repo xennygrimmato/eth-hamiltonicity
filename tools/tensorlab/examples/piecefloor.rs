@@ -275,10 +275,11 @@ fn filt_cmd(a: &[String]) {
     let q2: Vec<String> = r.iter().map(|x| format!("{:.5}", x.0)).collect();
     println!("chains ({}): {:?}", target, q2);
     let pts: Vec<String> = r[0].1.pt.iter().map(|&i| format!("{:?}", fs.pts[i])).collect();
-    println!("hub points {:?}\nlevels {:?}", pts, r[0].1.r.iter().map(|x| (x * 1e4).round() / 1e4).collect::<Vec<_>>());
+    println!("hub points {:?}\nkind (0 point, 1 hyperplane ker) {:?}\nlevel a {:?}\nlevel c of V {:?}", pts, r[0].1.kind,
+             r[0].1.r.iter().map(|x| (x * 1e4).round() / 1e4).collect::<Vec<_>>(), r[0].1.c.iter().map(|x| (x * 1e4).round() / 1e4).collect::<Vec<_>>());
     save(&format!("filt_{}_q{}_n{}_{}_s{}", des.name, q, n, target, seed),
-         format!("{{\"design\":\"{}\",\"q\":{},\"n\":{},\"sym\":{},\"cs\":{},\"gamma\":{},\"avg\":{},\"min\":{},\"points\":[{}],\"levels\":{:?}}}",
-                 des.name, q, n, sc.sym, sc.cs, sc.gamma, sc.avg, sc.minb, pts.join(","), r[0].1.r));
+         format!("{{\"design\":\"{}\",\"q\":{},\"n\":{},\"sym\":{},\"cs\":{},\"gamma\":{},\"avg\":{},\"min\":{},\"points\":[{}],\"kind\":{:?},\"a\":{:?},\"c\":{:?}}}",
+                 des.name, q, n, sc.sym, sc.cs, sc.gamma, sc.avg, sc.minb, pts.join(","), r[0].1.kind, r[0].1.r, r[0].1.c));
     eprintln!("elapsed {:.2}s", t.elapsed().as_secs_f64());
 }
 

@@ -3289,6 +3289,18 @@ mod tests {
             assert!((sc.avg / e - target).abs() < 2e-4, "m={} avg b/E = {} (b = {:?})", m, sc.avg / e, sc.b);
             eprintln!("m={} avg b/E = {:.6} min b/E = {:.6} CS {:.6} frames {}", m, sc.avg / e, sc.minb / e, sc.cs / e, fs.nframes);
         }
+        // in N = 2 a hyperplane is a point: ker(1,0) = <(0,1)>, ker(1,1) = <(1,1)>; edge values must agree
+        let fs2 = FiltSpace::new(3, 2, 1000, 1);
+        let p01 = fs2.point_index(&[0, 1]);
+        let p10 = fs2.point_index(&[1, 0]);
+        let p11 = fs2.point_index(&[1, 1]);
+        let p12 = fs2.point_index(&[1, 2]);
+        // ker(1,2) over F_3 = <(1,1)>, ker(1,1) = <(1,2)>
+        let w = [1.0, 0.7];
+        let a = filt_edge(&fs2, &[(p01, 0, 1.3, 0.2), (p11, 0, 0.8, -0.4)], &[(p12, 0, 1.0, 0.1), (p10, 0, 0.5, 0.0)], &w);
+        let b = filt_edge(&fs2, &[(p10, 1, 1.3, 0.2), (p12, 1, 0.8, -0.4)], &[(p11, 1, 1.0, 0.1), (p01, 1, 0.5, 0.0)], &w);
+        assert!((a.0 - b.0).abs() < 1e-9, "{} {}", a.0, b.0);
+        assert!((filt_d2(&fs2, (p01, 0, 1.3, 0.2), (p11, 0, 0.8, -0.4)) - filt_d2(&fs2, (p10, 1, 1.3, 0.2), (p12, 1, 0.8, -0.4))).abs() < 1e-12);
         // MNP: hull of {e1 - e2} -> distance sqrt2
         let x = mnp_supports(3, &[(1, 1.0)], &[(2, 1.0)]);
         assert!(((x[0] * x[0] + x[1] * x[1]).sqrt() - 2f64.sqrt()).abs() < 1e-12);

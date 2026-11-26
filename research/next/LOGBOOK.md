@@ -1671,3 +1671,32 @@ All agents have now finished. Nothing is running.
   rank-metric expander question (output `research/ports/literature-check.md`); (2) high-effort theory agent on
   K_{2,m} for all m and on which networks have a "pinned" rate (output `research/ports/k2m/notes.md`).
 - Still pending with the user: permission to build Anthropic's Lean here; whether/where to post.
+
+## 26 Nov (late, 53): literature and novelty check
+
+`research/ports/literature-check.md` (web search worked; primary sources read). No prior public statement of the two
+main results found; no retraction or correction by either lab.
+- **A. Contracting ⇒ fast 3-SAT.** Not stated publicly (blogs and comments, HN, MathOverflow, alphaXiv, issues on both
+  labs' repositories checked). Anthropic's paper never mentions SAT or ETH. **Overlap to cite:** OpenAI's EG §11.1
+  proves the mechanism of Theorem A under another hypothesis (Lemma 11.3: a uniform contracting gap on the
+  F₂-Grassmannian from a largest flat dimension; Prop. 11.2: gap ⇒ ports). So Theorem A is partly anticipated;
+  Theorem R looks new. Context to add: both labs' October refutations of classical ETH are compatible with Weak ETH;
+  arXiv:2610.41622 (October-type algorithms cannot reach 2^{n^{1−c}}).
+- **B. K_{2,3}.** The instance is the Okamura–Seymour example; classical network coding also achieves only 3/4 there
+  (Harvey–Kleinberg–Lehman 2006, Thm 27). No study of it for tensor restriction/SLOCC/LOCC found; constants 3/√10 and
+  6/(4+√10) not found. Different resource model from classical coding and from LOCC — phrase comparisons carefully.
+- **C. 7 AND gates.** The cited 2026 paper on Mul_n exists and says what we wrote. A public machine-generated register
+  already claims MC ≥ 6 and calls 6 vs 7 open. So our "≥ 6" is not new; **MC = 7 appears new**, and rests on an
+  unverified search → independent recheck launched.
+- **D. Expanders.** Lubotzky–Zelmanov attribution verified. Whether one bounded-degree family is an expander against
+  all Hadamard spaces is open (three references). For each fixed Euclidean building every expander works, with a
+  dimension-dependent constant (Naor–Silberman); unbounded rank is the gap, where Theorem M2 sits. Kernel lemma and
+  Prop. S are standard.
+- **E. Toyoda.** Theorem confirmed; our reference had the wrong title; fails at six points (so K_{2,m}, m ≥ 4, cannot
+  use the box inequalities).
+- **Exposure:** the project's GitHub repository is public and indexed, and `research/ports/` has been pushed there all
+  day under the standing instruction to keep the public repository updated. So these drafts are already publicly
+  readable, though unannounced. My earlier phrasing "nothing has been posted" was imprecise; told the user.
+Launched: a writer applying the check's edits to both notes, the overview and the middle-cell notes; an independent
+executor re-verifying the 7-AND-gate claim with a different method and, if possible, a proof object
+(`tools/mc222/`).

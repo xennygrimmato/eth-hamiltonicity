@@ -1,6 +1,6 @@
 # MC222 in Lean: the multiplicative complexity of 2×2 matrix multiplication over F₂ is 7
 
-Status: STATUS_LINE
+Status: **complete**. `MC222.mc_eq_seven : MC = 7` is proved and the whole library builds with `lake build`, with no `sorry`. The axioms are listed below.
 
 Toolchain `leanprover/lean4:v4.36.0`, Mathlib `v4.36.0`. The toolchain, lakefile and manifest
 were copied from `research/ports/lean`, and the Mathlib cache came from `lake exe cache get`.
@@ -91,7 +91,16 @@ MC222.lower_of_cubes   : [propext, Classical.choice, Quot.sound,
    MC222.AT_indep._native.bv_decide.ax_1_24, MC222.checkT_all._native.native_decide.ax_1_1,
    MC222.covers_all._native.native_decide.ax_1_1, MC222.ech_exists._native.bv_decide.ax_1_5,
    MC222.first_helper._native.bv_decide.ax_1_25]
-AXIOMS_MAIN
+MC222.mc_eq_seven (and not_hasCircuit_six) : [propext, Classical.choice, Quot.sound,
+   the 5 axioms above, and MC222.cube_r_h._native.bv_decide.ax_1_37 for all 72 × 5 cubes]
+   -- 365 auxiliary axioms in total; no sorryAx, no Lean.ofReduceBool / trustCompiler by name
+```
+
+What such an axiom says, for example:
+```
+axiom MC222.covers_all._native.native_decide.ax_1_1 : decide (MC222.coversAll = true) = true
+axiom MC222.cube_0_1._native.bv_decide.ax_1_37 :
+  Std.Tactic.BVDecide.Reflect.verifyBVExpr MC222.cube_0_1._expr_def_1_32 MC222.cube_0_1._cert_def_1_32 = true
 ```
 
 In Lean 4.36, `bv_decide` and `native_decide` no longer go through `Lean.ofReduceBool`.
@@ -121,12 +130,20 @@ certificate. The cubes are the obstacle.
 * A control instance (6 gates computing only c11, c12, c21, with first gate Strassen's m1)
   is satisfiable: bv_decide returns a counterexample, so the encoding is not vacuous. In any
   case, `lower_of_cubes` is a Lean proof.
-* All 360 cubes: CUBE_TIMING
+* All 360 cubes (72 files `lake build`, 4 files in parallel; each file elaborates its 5
+  cubes in parallel; nice 10; machine load average about 20 because of two other jobs):
+  4245 s wall (71 min). The per-file wall times add up to 16 897 s, and the slowest file
+  took 427 s. On an idle machine this is roughly 360 × 5–20 s, so about 1 h CPU, or 15–20 min
+  wall on 4 cores. No cube failed, and none came close to the timeout.
+* Disk: the cube `.olean` files hold the LRAT certificates, about 80 MB per file and
+  5.7 GB in total (`.lake/build` is 11 GB). Afterwards a full `lake build` takes about 6 min,
+  mostly `covers_all` and loading the cube oleans.
 * `covers_all` (native_decide): about 3 min of elaboration on the loaded machine. Most of it is
   the compiled search over 10795 planes × up to 432 maps × 72 representatives. A certificate
   table would make it take seconds.
-* Lean source: about 1400 lines, excluding generated data and cubes. Work time: one agent
-  session.
+* Lean source: about 1400 hand-written lines (`MC222/*.lean` without `OrbitData`/`AllCubes`),
+  plus 1600 generated lines. Work time: one agent session, about 3 h, a little over half of it
+  waiting for the cube build.
 
 ## Alternative: a verified exact search run by native_decide
 

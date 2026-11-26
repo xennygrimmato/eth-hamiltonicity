@@ -2540,3 +2540,20 @@ paper is now at `scratchpad/pb/aneth/paper.txt`.
   improvement would be as hard as refuting Weak ETH, for all engines. It breaks, or not, at one step (the price
   of a wire tensor against the star bound); a first-order count is borderline. Agent launched →
   `research/sat3/q2-notes.md`.
+
+**H41, first runs [N, weak search].** `research/sat3/cone/coneprod.py` on Δ₃ (6 restarts, hubs at graph
+vertices only; outputs in `research/sat3/cone/out/`). Average over merges of b_k:
+one factor: pod 4.00, K₃,₃-cone 4.98, plane 4.96, Heawood-cone 5.00, PG(2,3)-cone 4.79, GQ(2,2)-cone 4.55;
+two factors: pods 4.91, K₃,₃ 5.22, K₄,₄ 5.34, GQ(2,2) 5.29, Heawood 5.46;
+three factors: 5.24–5.30 (under-optimised: worse than two).
+Nothing above the tree-product record 6 (cap 6.364). Cones over the Heawood graph beat pods per factor, but
+these runs are far from converged and several optima are unbalanced, so this is neither evidence for nor
+against H40. Model handed to the executor for a Rust implementation with many factors, hubs inside edges, free
+link graphs and the large-net limit model.
+
+**Triangle hunch (H33), interim: no three-wire piece in OpenAI's ω ≤ 9/4 construction.** It is a spectral
+inequality plus duality giving exponentially many terms that are rank one across all three cuts, the opposite
+corner from what the engine needs (few terms, each cheap under one merge). Partial application has a linear
+trade-off ((9/4)s label bits buy cut ranks 2(1−s)); sub-exponentially many terms buy nothing. Remaining
+sub-question: the identity as a three-way hub under a merge; first numbers give a value in [1, 9/8] in the
+engine's units, i.e. no gain. Verdict pending the agent's item 2.

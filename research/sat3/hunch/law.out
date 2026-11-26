@@ -1,0 +1,13 @@
+1. convexity: min of [t w(x)+(1-t) w(y) - w(tx+(1-t)y)] over 200000 samples = -3.553e-15 (>= 0 expected)
+   partial application: min of w(x)+w(1-x) = 2.250000 at x = [0.753 0.752 0.752]   (9/4 = 2.25, attained on the diagonal)
+   diagonal s=0.1: w(s,s,s)+w(1-s,1-s,1-s) = 2.250000
+   diagonal s=0.5: w(s,s,s)+w(1-s,1-s,1-s) = 2.250000
+   diagonal s=0.9: w(s,s,s)+w(1-s,1-s,1-s) = 2.250000
+2. label efficiency 2*sum(x)/w(x): max over 200000 samples = 2.666666 at x ~ [1.    1.    0.998] (8/3 = 2.666667)
+   single wire (1,0,0): 2.0000;  collapsed (1,1,1/2): 2.5000;  square: 2.6667
+3. Legendre duality max{c.a : D*(a)<=1} = w(x): max relative error over 300 shapes = 2.76e-13
+4. D*/hp in [0.888889, 0.999997] (8/9 = 0.888889 at equal arms; -> 1 when an arm -> 0);  convexity gap min = 0.00e+00
+   equilateral triple, pair distance delta = 2a: hub price per bit / pair price per bit = D/delta in [1.3333, 1.5000]
+5. triangle, 3 raw wire bits:  one-cut terms 2 (2/3);  all-cut terms 9/4 (3/4);  trivial 3 (1).
+   ratio truth/Euclidean label floor = (9/4)/2 = 1.1250
+   for comparison (level values, 3-nets): pod floor/flat floor = 1.0607 (Delta_3: 1.1547), cap/flat = 1.2247

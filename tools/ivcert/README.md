@@ -12,8 +12,11 @@ cargo build --release
 cargo test --release                                     # unit + end-to-end tests
 ```
 
-Prover options: `--max-depth D`, `--no-mv`, `--no-taylor2`, `--no-convex` (disables the convexity and gain
-tests), `--no-symmetry`, `--threads T`. Exit code 0 means proved; 1 means not proved (counterexamples and
+Prover options: `--max-depth D`, `--max-fail K`, `--no-mv`, `--no-taylor2`, `--no-convex` (disables the
+convexity, gain and hull-convexity tests), `--no-symmetry`, `--threads T`, `--hull-max W` (enables the K test
+for boxes whose hull with an anchor has sides <= W), `--hull-budget B` (max boxes of a PD cover).
+Progress lines go to stderr every 2^22 nodes; finished subtrees below the parallel depth are serialised
+immediately, so memory is about the certificate size. Exit code 0 means proved; 1 means not proved (counterexamples and
 unclosed boxes are printed).
 
 ## Trust base
@@ -52,6 +55,7 @@ structural, and it re-runs the named test on each leaf. The header must match th
 | T | Taylor-2 | f(c) + ∇f(c)·(B−c) + ½ (B−c)ᵀ∇²f(B)(B−c) |
 | C | certified convexity, anchor x* ∈ B | ∇²f(B) PD ⇒ f ≥ f(x*) + ∇f(x*)·(B−x*) |
 | G | gain test (partial convexity + linear gain) | see `lb_gain_h` in `bnb.rs` |
+| K | hull-convexity, anchor x* | ∇²f PD on a bisection cover of hull(B, x*) ⇒ f convex there ⇒ anchor bound (cover of >1 box needs the problem's `c1()` declaration) |
 | P | symmetry pruning | box misses the problem's closed fundamental domain |
 | X | excluded | box lies in a region covered by a stated lemma or by another certificate |
 
@@ -81,7 +85,8 @@ written as hex bit patterns. A certificate containing `F` (an unclosed box) is r
 ## Adding a problem
 
 Implement `bnb::Problem<N>`: `name`, `statement`, `domain`, `bound`, a generic `eval<T: Scalar<N>>`, and
-optionally `special_points`, `outside_fundamental`, `excluded`, `linear_block`. Then register the name
+optionally `special_points`, `outside_fundamental`, `excluded`, `linear_block`, `anchors_critical` (an
+analytic claim that ∇f vanishes at the anchors; the tool still checks that 0 is in the enclosure), `c1`. Then register the name
 prefix in `driver.rs`. Problems are parsed from names such as `hull3:k=9:c=3`, and the checker rebuilds
 the problem from the name stored in the certificate.
 

@@ -425,6 +425,9 @@ pub enum Leaf<const N: usize> {
 pub enum Node<const N: usize> {
     Split(usize, Box<Node<N>>, Box<Node<N>>),
     Leaf(Leaf<N>),
+    /// A finished subtree already serialised to certificate lines (saves memory), with its stats and
+    /// leaf count.
+    Text(Vec<u8>, Stats, u64),
 }
 
 #[derive(Clone, Debug)]
@@ -631,7 +634,15 @@ impl<'a, const N: usize, P: Problem<N>> Ctx<'a, N, P> {
         } else {
             let a = self.solve(&l, depth + 1);
             let bb = self.solve(&r, depth + 1);
-            Node::Split(d, Box::new(a), Box::new(bb))
+            let node = Node::Split(d, Box::new(a), Box::new(bb));
+            if depth == self.opt.par_depth {
+                let mut buf = Vec::new();
+                let mut nl = 0u64;
+                crate::cert::write_tree(&node, &mut buf, &mut nl).expect("write to memory");
+                let st = stats(&node);
+                return Node::Text(buf, st, nl);
+            }
+            node
         }
     }
 }
@@ -660,6 +671,21 @@ pub fn stats<const N: usize>(n: &Node<N>) -> Stats {
     fn go<const N: usize>(n: &Node<N>, d: u32, s: &mut Stats) {
         s.max_depth = s.max_depth.max(d);
         match n {
+            Node::Text(_, t, _) => {
+                s.natural += t.natural;
+                s.meanvalue += t.meanvalue;
+                s.taylor2 += t.taylor2;
+                s.convex += t.convex;
+                s.gain += t.gain;
+                s.hullconvex += t.hullconvex;
+                s.pruned += t.pruned;
+                s.excluded += t.excluded;
+                s.fail += t.fail;
+                s.splits += t.splits;
+                s.max_depth = s.max_depth.max(d + t.max_depth);
+                s.min_lb = s.min_lb.min(t.min_lb);
+                s.min_lb_nonconvex = s.min_lb_nonconvex.min(t.min_lb_nonconvex);
+            }
             Node::Split(_, a, b) => {
                 s.splits += 1;
                 go(a, d + 1, s);

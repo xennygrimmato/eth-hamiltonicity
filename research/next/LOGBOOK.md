@@ -1443,3 +1443,22 @@ From the middle-cell agent (`research/ports/middle/notes.md`, being written):
 H23 [C → doubtful]: AN-ports ⇔ contracting is not reachable through ρ_μ if (GE) holds. New question H24 [C]: (GE) —
 random regular graphs are expanders against the rank metric on all Mat_μ(F₂). Itself a clean metric-geometry
 statement (expanders against buildings of unbounded rank).
+
+## 26 Nov (late, 39): an explicit protocol family at rate 6/(4+√10) ≈ 0.8377 > 3/4 [D]
+
+From the protocol agent (`research/ports/protocol/notes.md`, being written); unrefereed.
+- **Construction.** Split the u₁u₂ demand into three equal parts, pair each with one wire v_iv_j, apply Anthropic's
+  crossing identity (Prop. B.2) to each pair with log-dimensions (1/3, 1): the pair is a sum of Θ+1 terms Ψ_N whose
+  log-ranks across the two crossing cuts satisfy r² + r′² ≤ 2(P²+Q²). By Lemma A.3, with hubs at real parties, each
+  term is a restriction of a three-wire network through u₁ or through u₂. The trivial rank bound is exactly routing,
+  so any rank saving beats 3/4. Over K blocks, choose the network per block adaptively (time-sharing); a zero-sum
+  game / LP gives the rate. Worst type is all-middle; optimal mixture is a cyclic orientation.
+- **Rate 6/(4+√10) = 0.83772.** Dual check [N]: the minimum of R over five-point metrics satisfying triangles + all
+  instances of Prop. B.3 with all eight points among the five parties is the same 0.83772. So this is exactly what
+  the crossing identity with real hubs gives; reaching 3/√10 needs virtual hubs and recursion (the rest of thm_cn).
+- **Why small searches fail [N, exact mod p]:** computed Ψ_N for dimensions (2,2), (3,3), (5,5), (4,8): the middle terms
+  have full rank across both cuts at these sizes. Break-even near wire dimension ~10⁴; a usable gain only at wire
+  dimension ≳ 10¹². So the single-shot searches at dimension ≤ 5 could not have found anything, and a direct
+  numerical test of H19 (nothing above 3/√10) is out of reach by many orders of magnitude.
+- To do when the notes are complete: referee; record in the K_{2,3} note (open problem 1 becomes "explicit family at
+  0.8377 [D]; gap to 0.9487 open").

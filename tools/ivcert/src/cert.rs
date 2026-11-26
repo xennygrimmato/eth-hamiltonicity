@@ -40,8 +40,19 @@ pub fn write_cert<const N: usize, P: Problem<N>, W: Write>(p: &P, tree: &Node<N>
     }
     writeln!(w, "tree")?;
     let mut leaves = 0u64;
+    write_tree(tree, w, &mut leaves)?;
+    writeln!(w, "end {leaves}")?;
+    Ok(leaves)
+}
+
+/// Preorder lines of a (sub)tree.
+pub fn write_tree<const N: usize, W: Write>(tree: &Node<N>, w: &mut W, leaves: &mut u64) -> std::io::Result<()> {
     fn go<const N: usize, W: Write>(n: &Node<N>, w: &mut W, leaves: &mut u64) -> std::io::Result<()> {
         match n {
+            Node::Text(buf, _, nl) => {
+                w.write_all(buf)?;
+                *leaves += nl;
+            }
             Node::Split(d, a, b) => {
                 writeln!(w, "S {d}")?;
                 go(a, w, leaves)?;
@@ -109,9 +120,7 @@ pub fn write_cert<const N: usize, P: Problem<N>, W: Write>(p: &P, tree: &Node<N>
         }
         Ok(())
     }
-    go(tree, w, &mut leaves)?;
-    writeln!(w, "end {leaves}")?;
-    Ok(leaves)
+    go(tree, w, leaves)
 }
 
 pub struct Parsed<const N: usize> {

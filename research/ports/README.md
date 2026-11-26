@@ -53,8 +53,9 @@ Neither has been posted. `literature-check.md` records the literature and novelt
    built development.
 2. Theorem A's 3-SAT conclusion depends on OpenAI's unreviewed chain (HC 13.1 → IM 7.1).
 3. Theorem K's lower bound depends on Anthropic's CAT(0) theorem for prices (their Lean, not built by us; OpenAI's EG
-   Thm 4.3 is an independent alternative source) and on a
-   hand-checked reduction and calibration (one referee, two numerical tests; not in Lean).
+   Thm 4.3 is an independent alternative source) and on
+   Strassen duality (not formalised). The reduction and calibration are now in Lean (`lean/PortsLean/FivePoint.lean`:
+   the weighted five-point inequality from one comparison hypothesis, which is our transcription of their Lemma C.4(a)).
 4. Result 8 at levels (b), (c) rests on interval certificates whose two encodings (prover side and Arb checker) were
    written by the same author; a bug in the checker's new code was found by a mutation test and fixed before the
    reported runs. The certificates are not refereed. Level (a) is hand-proved and refereed, but not in Lean. Like

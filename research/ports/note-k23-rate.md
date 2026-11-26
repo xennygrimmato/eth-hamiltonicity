@@ -947,11 +947,21 @@ accounting, adaptive rounding, all o(n) terms).
 6. Not needed: interval arithmetic, Reshetnyak gluing, Toyoda's theorem, m-page books, uniqueness, anything from
    OpenAI.
 
-**Weakest points.** The computer is no longer part of item 1. What remains:
-- the **book reduction and the calibration** (§§3.1–3.2): proved by hand and checked by one referee each
-  (review-fivepoint at w = 1; review-k2m for the weighted form), with numerical tests, but not in Lean;
-- the **imported statements from [AN]** (C.1/C.3, C.4(a); for item 2 also C.4(f) and `thm_alt_rank_price`): the
-  paper is machine-generated and not refereed by people, and we have not built its Lean.
+**Weakest points.** The computer is no longer part of item 1. Since the previous version, the book reduction and
+the calibration (§§3.1–3.2) have also been formalised: `PortsLean/FivePoint.lean` (with `FivePoint/Calibration.lean` and
+`FivePoint/Hub.lean`) proves `five_point_weighted` — in any pseudometric space, for 0 < w ≤ 1 and any five points
+together with a map c: ℝ → X, if the comparison inequality
+dist(v_i, c(t))² ≤ (1 − t/D)·dist(v_i,u₁)² + (t/D)·dist(v_i,u₂)² − t(D − t) holds for 0 ≤ t ≤ D = dist(u₁,u₂) and i = 1, 2, 3
+(hypothesis `CMP`), then 3/√(9+w²)·(Σ_vv + wD) ≤ Σ_S. The project compiles with no `sorry` and only the standard
+axioms. Also proved there: `cmp_inner` (the hypothesis holds in every real inner product space, so it is satisfiable),
+`five_point` (w = 1) and `k2m_five_point` (the K_{2,m} form). So Theorem 5_w and Theorem B are machine-checked from
+that single comparison hypothesis; the formalisation found no discrepancy with §§3.1–3.2 and needs no sign conditions
+on the planar coordinates. What remains:
+- the **imported statements from [AN]**: that prices satisfy the comparison inequality along a geodesic of a price
+  space (C.1/C.3, C.4(a)); for item 2 also C.4(f) and `thm_alt_rank_price`. The paper is machine-generated and not
+  refereed by people, and we have not built its Lean. The hypothesis `CMP` is our transcription of C.4(a), not linked to
+  their Lean statement;
+- **Strassen duality** for this instance (§1), which is not formalised.
 
 For item 2 there is in addition Lemma H_m, refereed twice but not in Lean (Mathlib has no CAT(0) theory).
 

@@ -2062,3 +2062,18 @@ which also covers the degenerate case. No discrepancy with the note's §3.2. Sta
 [0, D]; one-sided optimality is proved without derivatives, from f(y+h) ≤ f(y) − σh + h²/(2f(y)). Spine case handled by
 choosing σ_i = −σ_j (minimality not needed there), as the note says. No discrepancy with the note. Stage 3 (metric
 reduction from the comparison hypothesis) in progress. Per the executor; rebuild pending.
+
+## 26 Nov (late, 80): the five-point theorem is machine-checked from one hypothesis [L]; rebuilt by me
+
+`research/ports/lean/PortsLean/FivePoint.lean` (+ `FivePoint/Calibration.lean`, `FivePoint/Hub.lean`; 526 lines). I rebuilt the
+project (18284 jobs, success; no sorry) and read the statements.
+- `CMP u1 u2 c v`: ∀ t ∈ [0, D], dist(v, c t)² ≤ (1 − t/D)·dist(v,u₁)² + (t/D)·dist(v,u₂)² − t(D − t), D = dist(u₁,u₂).
+- **`five_point_weighted`**: in any pseudometric space, 0 < w ≤ 1, five points and c with CMP for v₁, v₂, v₃:
+  3/√(9+w²)·(|v₁v₂| + |v₂v₃| + |v₁v₃| + w·|u₁u₂|) ≤ Σ_{k,i}|u_kv_i|. D = 0 handled inside without CMP.
+- `five_point` (w = 1); `cmp_inner` (CMP holds in every real inner product space — the hypothesis is satisfiable);
+  `five_point_inner`; **`k2m_five_point`** (K_{2,m} form with R_m(w)).
+- No step of the informal proof failed; no sign conditions on the planar coordinates needed; optimality conditions
+  proved without derivatives.
+So Theorem 5_w and Theorem B are in Lean modulo CMP (our transcription of AN Lemma C.4(a), not linked to their Lean).
+Not formalised: Strassen duality; "prices satisfy CMP" (imported); Lemma H_m; Theorem E's refined calibration.
+Note §8 and the overview updated accordingly. Lean project: 17 files.

@@ -231,3 +231,54 @@ Findings:
    proved, with 8 sharp at the corner (π/2, π/2, −π/2).
 3. The bookkeeping θ₁ = ψ₁₂, θ₂ = −ψ₁₃, θ₃ = ψ₂₃ checks out: each slice term equals
    `½√((cos θ_i + cos θ_j)² + K(sin θ_i + sin θ_j)²)`.
+
+## FivePoint.lean (+ FivePoint/Calibration.lean, FivePoint/Hub.lean) — Theorem 5_w from one comparison hypothesis
+
+Source: note-k23-rate.md §3.1 (book reduction), §3.2 (calibration, Prop. C₃), §3.3 (proof of Theorem 5_w).
+Status: **all proved**, with no `sorry`, `axiom` or `native_decide`. `#print axioms` for every theorem below gives
+`[propext, Classical.choice, Quot.sound]`.
+
+Hypothesis. `CMP u1 u2 c v` (for `X` a `PseudoMetricSpace`, `c : ℝ → X`, `D = dist u1 u2`):
+`∀ t ∈ [0,D], dist v (c t)² ≤ (1 − t/D)·dist v u1² + (t/D)·dist v u2² − t(D − t)`. This is C.4(a) in a CAT(0)
+space. Mathlib has no CAT(0) spaces, so it stays a hypothesis. Nothing is assumed about `c 0` or `c D`.
+
+- `book_calibration` (Calibration.lean, **Prop. C₃**). Data: w > 0, real numbers ρ_i, a_i, D, six σ's with |σ| ≤ 1, hubs y_ij
+  and numbers Z_ij. Hypotheses: `Z_ij ≤ ρ_i√(1−σ_ij²) + (a_i−y_ij)σ_ij + ρ_j√(1−σ_ji²) + (a_j−y_ij)σ_ji`, and (3.2)
+  in the one-line form `D/2·|σ_ij+σ_ji| ≤ (y_ij − D/2)(σ_ij+σ_ji)`. Conclusion:
+  `κ(ΣZ + wD) + (κw/3)·D·Phi(1+9/w²)(3/w)(σ) ≤ Σ_i √(ρ_i²+a_i²) + Σ_i √(ρ_i²+(a_i−D)²)`, with κ = 3/√(9+w²).
+  It needs no sign conditions on ρ, a or D.
+- `page_calib`: the calibration of one page. `exists_perp` and `unit_id` are the algebra behind the vectors.
+- `hub_exists` (Hub.lean): for ρ_i, ρ_j ≥ 0 and D ≥ 0 there are y ∈ [0,D] and σ_i, σ_j ∈ [−1,1] such that
+  f_i(y) = ρ_i√(1−σ_i²) + (a_i−y)σ_i (likewise for j) and (3.2) holds.
+- `triangle_coords`: given sides A, B ≥ 0, D > 0 satisfying the triangle inequalities, it produces ρ ≥ 0 and a with
+  √(ρ²+a²) = A, √(ρ²+(a−D)²) = B and ρ² + (a−t)² = (1−t/D)A² + (t/D)B² − t(D−t) (Stewart).
+- `five_point_weighted` (**Theorem 5_w**): for 0 < w ≤ 1, CMP for v1, v2, v3 implies
+  `3/√(9+w²)·(|v1v2| + |v2v3| + |v1v3| + w|u1u2|) ≤ Σ_{k=1,2} Σ_i |u_k v_i|`.
+- `five_point`: the case w = 1 (κ = 3/√10).
+- `interp_id`, `cmp_inner`: CMP holds with equality in any real inner product space, with c the segment
+  `u1 + (t/D)•(u2−u1)`. So the hypothesis is satisfiable, and `five_point_inner` is Theorem 5_w there with no
+  hypotheses at all.
+- `k2m_five_point`: m ≥ 3 and CMP for every v_i give the K_{2,m} bound
+  `2m/√(m²(m−1)²+4w²)·(Σ_{i<j}|v_iv_j| + wD) ≤ Σ_i(|u1v_i|+|u2v_i|)`, with w = w′m(m−1)/6 and 0 < w′ ≤ 1.
+  It is obtained by combining `five_point_weighted` with `k2m_rate`.
+
+How the formal proof differs from the notes (none of these is an error in the notes):
+1. *Calibration without angles.* The note picks α_i = ν_i + μ_i and β_i = ν_i − μ_i. Here the vectors are algebraic.
+   With P = c_ij + c_ik, Q = σ_ij + σ_ik and M = (κw/6)√(P² + K(σ_ij−σ_ik)²), the vector for B_i is
+   q = (κP/2 + z, κQ/2 − M) and the vector for A_i is p = κ(P,Q) − q, where Pz = QM. Cauchy–Schwarz only needs
+   |p|, |q| ≤ 1. That covers the degenerate case P = 0 (both exit vectors vertical, where μ_i is undefined) without
+   a separate argument. In the generic case |p| = |q| = 1, by the identity R²(P²+Q²) = (4−P²−Q²)P² for unit vectors.
+   M agrees with the note's M_i = (λw/3)cos μ_i √(1+(9/w²)sin²δ_i).
+2. *(3.2) as one inequality.* The three cases of (3.2), together with y_ij ∈ [0,D], are equivalent to
+   (D/2)|ε| ≤ (y − D/2)ε. This is exactly what removes E₁ and E₂ in the note's sum. The calibration then never uses
+   y ∈ [0,D]; that constraint is needed only for (3.1).
+3. *Optimality without derivatives.* The one-sided conditions (y < D ⇒ ε ≤ 0, y > 0 ⇒ ε ≥ 0) come from the bound
+   f(y+h) ≤ f(y) − σh + h²/(2f(y)), valid for f(y) > 0, together with minimality of the hub on [0,D].
+4. *Spine case.* When f_i(y_ij) = 0 the note chooses σ_ij = −σ_ji (or 0 if both vanish). Lean confirms that this
+   choice is all that is needed. The exit identity becomes 0 = 0 and (3.2) holds trivially, so minimality is not
+   even used for such a pair. The other choice the task statement suggests, "any subgradient in [−1,1] works", is
+   **not** what the proof uses and is false as stated. The choice must satisfy (3.2). The note warns that σ_ij = 0
+   breaks the inequality numerically.
+5. *D = 0* is handled inside `five_point_weighted` (B_i = A_i, κ ≤ 1), as in §3.1. CMP is not used there.
+6. Theorem D enters through `clstar_gen` with K = 1 + 9/w² and t = 3/w, as in `clstar_weighted`.
+7. In the note's §3.1, t is a fraction in [0,1]. In CMP, t is arc length in [0,D]. The two forms agree.

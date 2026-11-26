@@ -2164,3 +2164,13 @@ P3: attainment; P4: the barrier if negative) → `research/sat3/notes.md`; (2) a
 over Euclidean configurations, matrix placements and tree products with a new tensorlab module (spec S3 of c1d1) →
 `research/sat3/s3-experiments.md`.
 Still running from before: referee on the 7-AND-gate paper; ⟨1,2,3⟩ executor; Lean prototype for the 7-AND-gate theorem.
+
+## 27 Nov: MC(⟨1,2,3⟩ over F₂) = 6 [N‑rig, per the executor; my check pending]
+
+Both methods: (A) exact search, 51/51 orbits under GL₂ × GL₃, no 5-gate circuit, 2,829,011 states, 199 s; (B) SAT, all
+510 cubes (51 orbits × 10 helper pairs) UNSAT, every LRAT proof verified; 146 s solver, 54 s checking, 1.14 GB.
+k = 4 UNSAT in both; a 6-gate circuit found and verified on all 256 inputs. Orbits agree between Rust and Python.
+The executor says the old 2×2 results still reproduce — I will confirm by re-running the 2×2 hashes after it is done,
+since it edited the shared generator and search program.
+So in both small formats settled so far (⟨2,2,2⟩: 7; ⟨1,2,3⟩: 6; also ⟨2,2,1⟩: 4) the unrestricted Boolean
+multiplicative complexity equals the bilinear rank over F₂. No example of a Boolean circuit beating bilinear rank.

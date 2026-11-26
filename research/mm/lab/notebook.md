@@ -57,3 +57,31 @@ Scripts: `mc_sat.py` (E1 exact MC via SAT + CEGAR on input rows), `e2_wordram.py
   read-out is *non-linear* (carries, overflow, comparisons), which is no longer "Kronecker".
 - Changes: kill E3 as a route. 2-D (bivariate) packing is still a commutative group algebra
   (Z²), same obstruction.
+
+## E1b. 2×2·2×2 over F₂, Boolean-QUADRATIC model (ANDs of affine forms, x²=x allowed)
+- Idea: first relaxation of "formal identity": products of affine forms in all 8 inputs (A and B
+  entries may be mixed inside one factor, squares x_i² = x_i are free), outputs = XOR of products
+  + affine. Over F₂, Boolean quadratic functions modulo affine functions ≅ alternating 2-forms
+  (the diagonal becomes linear), and a product L₁L₂ ↦ l₁∧l₂. So the Boolean-quadratic MC of a
+  system = fewest decomposable 2-forms whose span contains the target space W.
+- Ran: `quad_alt.py 2 2 2 7` (SAT, 0.1 s, alternating-form XOR encoding; finds a 7-product
+  scheme mixing A- and B-entries inside factors). k=6 SAT run stalled (>20 min) →
+  `quad_enum.c`: exact enumeration. 10795 decomposable forms on F₂⁸, 10705 classes mod W
+  (dim W = 4). k decomposables span ⊇ W ⇒ their classes span ≤ k−4 dims of Λ²/W; for k=6
+  enumerate all 57.3M class pairs. Positive controls (targets needing exactly 5 and 6) correct.
+- Result: k ≤ 6 impossible. **Boolean-quadratic MC(⟨2,2,2⟩) = 7 = bilinear rank.** 3 s.
+- Changes: x² = x and mixing A/B inside factors buy nothing at 2×2 in the quadratic model.
+  (Literature agrees: Winograd 1971 / Hopcroft–Kerr 1971 lower bound 7 for quadratic
+  algorithms; this is an independent machine check of the Boolean variant over F₂.)
+  Literature status of the *general* model (AND gates fed by degree ≥ 2 intermediates):
+  Mirwald–Schnorr (TCS 102, 1992) prove quadratic circuits optimal for quadratic maps with 1 or
+  2 outputs; for ≥ 3 outputs it is OPEN (Boyar–Find question). arXiv 2608.30238 (Aug 2026)
+  settles one instance: 4-term binary polynomial multiplication has unrestricted MC 9 = quadratic
+  bound. So "does gate reuse at degree > 2 ever save an AND for a bilinear map" is genuinely open.
+- Free Mirwald–Schnorr bound (lead's suggestion): any XOR of outputs Σ c_ik C_ik is the single
+  form xᵀ(c⊗I)y with MC = rank(c⊗I_n) ≤ n²: gives only 4 (2×2) and 9 (3×3). Useless here.
+- Total gate count remark: at fixed size the naive 2×2 circuit (8 AND + 4 XOR = 12) beats
+  Strassen–Winograd (7 + 15 = 22); total gate counts at constant size say nothing about the
+  exponent. Exponents come only from recursion, and recursion needs block-compatibility
+  (bilinear over a ring). A non-bilinear Boolean saving at size 2 would NOT recurse (x² = x
+  fails in M_n(F₂)), so a constant-size gap is only a curiosity unless it grows with n.

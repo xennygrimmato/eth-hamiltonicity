@@ -467,3 +467,20 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - So the non-algebraic route, at the level of AND counts, is exactly an open question in the literature, with every
   settled instance saying "no gain". H11 further weakened.
 - Next: E5 sweep of tiny bilinear maps (exact general complexity), then general 6-AND search for 2×2.
+
+### "Why 9/4" write-up complete (`research/mm/why-nine-fourths.md`, `.svg`) [K + agent's own derivations; unreviewed]
+- Core: 9/4 = 2 × 9/8; tripod inequality D ≥ Σa − 1/Σ(1/a); unit arms 8/3; AM–HM gives the cap.
+- 8/3 in two lines: the polynomial-multiplication price is homogeneous of degree D; the "half rule" (three long×short
+  blocks fit in 3h + a) gives ∂P/∂log b ≥ 4/3 at a = b; two inputs give 4/3 + 4/3.
+- Equivalent form: D* = max over splits f of Σ a_i(1 − f_i²). "Parallel resistance" is partly mechanism (lever rule,
+  optimal split), partly formula; no literal flow found.
+- Legendre dual reproduces the rectangular formula exactly (checked on 200 random shapes).
+- Paper vs Lean: the paper states only 1/2 ≤ α ≤ 2/3 and the max(...) bound; OpenAI's Lean scope note claims α = 1/2
+  and the exact rectangular formula. The Lean claims more than the paper. Solution module not inspected.
+- Figure rendered and checked by the lead. Tweet (279 chars) and three-tweet thread included.
+- Caveats: barrier constants and history from memory; Parts II–IV of the lower-bound paper not read.
+
+### User steer: anti-proofs welcome
+- New executor `research/mm/anti/` (Opus): derive from OpenAI's network lower bound a precise theorem that Boolean
+  circuits for n×n multiplication over F₂ need c·n²·(log n)^γ gates. Crux: the routing must be input-dependent.
+- H12 [C]: given OpenAI's Theorem 2.2 / Lemma 4.1, flat n² is impossible even at the bit level, by a power of log n.

@@ -2926,3 +2926,23 @@ value below that bound proves contracting, hence power-saving 3-SAT.
   (Anthropic's engine qualifies); the characteristic-p sentence of Cor. T2 has no quoted source (IM 7.1 is
   characteristic 0 only); constants and the threshold d₀ are unspecified, so "one circuit for one (K, λ)"
   means beating an unknown bound at an unknown K.
+
+**Referee on Theorem W, final** (`research/sat3/review-thmW.md`; own scripts).
+- Lemma S: correct (503 instances in ℝ², ℝ³ and exact trees, no violation, many tight; the same test finds a
+  violation of −0.59 in the ℓ¹ and ℓ^∞ planes, so the lemma really needs curvature and the test has power).
+- Theorem W: correct as a bound on CERTIFIED costs only (see the correction entry above). Exact evidence of
+  the gap to true costs: Ψ₄ rank 7 against certificate 20; Ψ₂₄ rank 15 across the third cut against 25.
+- Class: must be enlarged to "any crossing identity whose certified bond boxes cover the circle arc";
+  Khoruzhii's identity is not a coarsening of B.2 but is inside the enlarged class, and so is Sra's nesting.
+  Regrouped sums are inside; covers that are not trees of moves are outside.
+- "Any depth": gap as written (the discretisation loses ≈ 2.6 bits per crossing). Exact computation: loss 0
+  for all 11,175 pairs of class energies up to 300 and on a grid up to 1200 [N]; asymptotic sketch beyond [D].
+  Given a zero-loss lemma, Theorem W is exact at every depth.
+- Leaf step, "no count of terms" (not vacuous: no move produces bond-free pieces), and all consistency checks
+  (rectangle, K₄, K_{2,3}, Δ₃): correct. Level-1 LP values reproduced independently (0.569036, 0.695399,
+  0.603553, 2/3). One table row wrong, values unaffected. Two-sided cuts lemma misses the triangle case;
+  consequence survives.
+- What survives: on 3-nets of F₂^m every cover in the enlarged class has certified level value
+  ≥ 1/√2 − 1.121/(g+1), unconditionally and for any number of terms; at any depth given the zero-loss lemma.
+  "Stuck at exactly 1/√2" only as g → ∞ (g = 4: bound 0.4828, level 1 gives 0.6243).
+- The author is applying the edits and attempting the zero-loss lemma.

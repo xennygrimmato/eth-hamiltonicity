@@ -6,7 +6,7 @@ every JSON configuration given on the command line (written by examples/pieceflo
 
 usage: python3 verify_pf.py research/sat3/data/*.json
 """
-import json, math, sys
+import itertools, json, math, sys
 
 
 def design(name):
@@ -258,3 +258,74 @@ def check_cone(path):
         val = S / (Db / p); lab = 'Gamma'
     print('%-55s %s(py) = %.6f  score(rust) = %.6f  %s' % (path.split('/')[-1], lab, val, J['score'],
           'OK' if abs(val - J['score']) < 1e-6 * max(1, val) else 'MISMATCH'))
+
+
+def check_filt(path, max_vertices=20000):
+    """Independent recomputation (q = 2 only) of Gamma for a filtration-space JSON: all frames of F_2^N enumerated
+    as independent N-subsets, supports and dual supports recomputed, the hull of the gradients of the concave
+    saving enumerated explicitly and its min-norm point found by NNLS (augmented sum-to-one row)."""
+    import numpy as np
+    from scipy.optimize import nnls
+    J = json.load(open(path))
+    assert J['q'] == 2
+    N = J['n']
+    des = design({'Delta3': 'Delta3', 'K4': 'K4'}[J['design']])
+    pts = [int(''.join(str(x) for x in reversed(eval(pstr) if isinstance(pstr, str) else pstr)), 2) for pstr in J['points']]
+    kind, A, C = J['kind'], J['a'], J['c']
+    vecs = list(range(1, 1 << N))
+    def rank(vs):
+        basis = []
+        for v in vs:
+            for b in basis:
+                v = min(v, v ^ b)
+            if v: basis.append(v)
+        return len(basis)
+    frames = [f for f in itertools.combinations(vecs, N) if rank(list(f)) == N]
+    def coords(f, v):
+        for combo in range(1, 1 << N):
+            w = 0
+            for i in range(N):
+                if combo >> i & 1: w ^= f[i]
+            if w == v: return [i for i in range(N) if combo >> i & 1]
+    off = []; o = 0
+    for g in des['groups']:
+        off.append(o); o += max(g) + 1
+    p = len(des['groups'])
+    def edge(u, v):
+        best = 0.0
+        for f in frames:
+            lin = np.zeros(N); choices = []
+            for side, node in ((0, u), (1, v)):
+                for m, g in enumerate(des['groups']):
+                    h = off[m] + g[node]; a, c = A[h], C[h]
+                    supp = coords(f, pts[h]) if kind[h] == 0 else [i for i in range(N) if bin(f[i] & pts[h]).count('1') % 2]
+                    if kind[h] == 0 and side == 0: lin += c; choices.append([(i, a - c) for i in supp])
+                    elif kind[h] == 1 and side == 0: lin += a; choices.append([(i, -(a - c)) for i in supp])
+                    elif kind[h] == 0: lin -= c; choices.append([(i, -(a - c)) for i in supp])
+                    else: lin -= a; choices.append([(i, a - c) for i in supp])
+            verts = []
+            for ch in itertools.product(*choices):
+                x = lin.copy()
+                for i, w in ch: x[i] += w
+                verts.append(x)
+                if len(verts) > max_vertices: break
+            Vm = np.array(verts).T
+            Mbig = 1e5
+            Aug = np.vstack([Vm, Mbig * np.ones((1, Vm.shape[1]))])
+            lam, _ = nnls(Aug, np.concatenate([np.zeros(N), [Mbig]]))
+            best = max(best, float(np.linalg.norm(Vm @ lam)))
+        return best
+    S = sum(edge(u, v) ** 2 for (u, v) in des['edges'])
+    def d2(h1, h2):
+        k1, k2 = kind[h1], kind[h2]; a, c, b, c2 = A[h1], C[h1], A[h2], C[h2]
+        dot = bin(pts[h1] & pts[h2]).count('1') % 2
+        i = int(pts[h1] == pts[h2]) if k1 == k2 == 0 else ((N - 1 if pts[h1] == pts[h2] else N - 2) if k1 == k2 == 1 else int(dot == 0))
+        K1 = 1 if k1 == 0 else N - 1; K2 = 1 if k2 == 0 else N - 1
+        return i * (a - b) ** 2 + (K1 - i) * (a - c2) ** 2 + (K2 - i) * (c - b) ** 2 + (N - K1 - K2 + i) * (c - c2) ** 2
+    Db = 0.0
+    for m, g in enumerate(des['groups']):
+        R = max(g) + 1; prs = [(i, j) for i in range(R) for j in range(i + 1, R)]
+        Db += sum(d2(off[m] + i, off[m] + j) for i, j in prs) / len(prs)
+    Db /= p
+    G = S / Db
+    print('%-45s Gamma(py, NNLS) = %.6f  Gamma(rust) = %.6f  %s' % (path.split('/')[-1], G, J['gamma'], 'OK' if abs(G - J['gamma']) < 1e-4 * max(1, G) else 'MISMATCH'))

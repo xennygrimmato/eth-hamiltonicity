@@ -1,0 +1,179 @@
+<title>The Three-Merge Ceiling</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* layout: one reading column, five numbered steps (a real sequence), each a short text + one diagram */
+:root{
+  --bg:#f6f8f7; --panel:#ffffff; --fg:#17211f; --muted:#5b6b67; --line:#d5dedb;
+  --a:#0f6e84; --b:#b4551e; --c:#5d58c4; --hit:#0b7a55; --soft:#e7eeec;
+  --display:"Space Grotesk",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#101615; --panel:#18211f; --fg:#e7efec; --muted:#9aaba6; --line:#2c3a37;
+  --a:#58c2d8; --b:#f0935a; --c:#a5a1ff; --hit:#4fd3a2; --soft:#1f2b28; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#101615; --panel:#18211f; --fg:#e7efec; --muted:#9aaba6; --line:#2c3a37;
+  --a:#58c2d8; --b:#f0935a; --c:#a5a1ff; --hit:#4fd3a2; --soft:#1f2b28; color-scheme:dark }
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55}
+.wrap{max-width:780px;margin:0 auto;padding-block:36px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:28px}
+h1{font-family:var(--display);font-size:clamp(28px,5vw,40px);line-height:1.1;margin:0;text-wrap:balance}
+.lede{font-size:18px;color:var(--muted);margin:10px 0 0;max-width:60ch}
+section{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:12px}
+h2{font-family:var(--display);font-size:21px;margin:0;display:flex;gap:10px;align-items:baseline;text-wrap:balance}
+h2 .n{font-family:var(--mono);font-size:14px;color:var(--muted)}
+p{margin:0;max-width:65ch}
+.fig{overflow-x:auto}
+svg{display:block;width:100%;height:auto;min-width:300px}
+svg text{font-family:var(--body);fill:var(--fg)}
+.cap{font-size:13.5px;color:var(--muted)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.take{border-left:0;background:var(--soft)}
+.take p+p{margin-top:8px}
+ul{margin:0;padding-left:20px;max-width:65ch}
+li+li{margin-top:4px}
+b.a{color:var(--a)} b.b{color:var(--b)} b.c{color:var(--c)} b.hit{color:var(--hit)}
+</style>
+<div class="wrap">
+<header>
+  <h1>Why a third merge doesn't speed up 3-SAT</h1>
+  <p class="lede">The new 3-SAT algorithms pay <span class="num">0.707</span> of brute force at every level of their recursion. A third "merge" looked like a way to pay only <span class="num">0.577</span>. Here is why it still costs <span class="num">0.707</span>.</p>
+</header>
+
+<section>
+  <h2><span class="n">1</span>The algorithm groups nodes to save work</h2>
+  <p>Picture a grid of nodes with a wire between every pair. Brute force enumerates every wire. A <b>merge</b> groups nodes into clusters, so wires inside a cluster no longer cost anything.</p>
+  <div class="fig"><svg viewBox="0 0 720 210" role="img" aria-label="The same 3 by 3 grid of nodes grouped three ways: by row, by column, by diagonal">
+    <g id="g1">
+      <rect x="22" y="38" width="176" height="36" rx="18" fill="none" stroke="var(--a)" stroke-width="2"/>
+      <rect x="22" y="88" width="176" height="36" rx="18" fill="none" stroke="var(--a)" stroke-width="2"/>
+      <rect x="22" y="138" width="176" height="36" rx="18" fill="none" stroke="var(--a)" stroke-width="2"/>
+      <g fill="var(--fg)"><circle cx="50" cy="56" r="7"/><circle cx="110" cy="56" r="7"/><circle cx="170" cy="56" r="7"/><circle cx="50" cy="106" r="7"/><circle cx="110" cy="106" r="7"/><circle cx="170" cy="106" r="7"/><circle cx="50" cy="156" r="7"/><circle cx="110" cy="156" r="7"/><circle cx="170" cy="156" r="7"/></g>
+      <text x="110" y="200" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--a)">merge 1: rows</text>
+    </g>
+    <g transform="translate(250,0)">
+      <rect x="32" y="28" width="36" height="156" rx="18" fill="none" stroke="var(--b)" stroke-width="2"/>
+      <rect x="92" y="28" width="36" height="156" rx="18" fill="none" stroke="var(--b)" stroke-width="2"/>
+      <rect x="152" y="28" width="36" height="156" rx="18" fill="none" stroke="var(--b)" stroke-width="2"/>
+      <g fill="var(--fg)"><circle cx="50" cy="56" r="7"/><circle cx="110" cy="56" r="7"/><circle cx="170" cy="56" r="7"/><circle cx="50" cy="106" r="7"/><circle cx="110" cy="106" r="7"/><circle cx="170" cy="106" r="7"/><circle cx="50" cy="156" r="7"/><circle cx="110" cy="156" r="7"/><circle cx="170" cy="156" r="7"/></g>
+      <text x="110" y="200" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--b)">merge 2: columns</text>
+    </g>
+    <g transform="translate(500,0)">
+      <g stroke="var(--c)" stroke-width="2" fill="none" stroke-linecap="round">
+        <path d="M50 56 L110 106 L170 156"/>
+        <path d="M110 56 L170 106"/><path d="M170 106 Q205 150 50 156" stroke-dasharray="4 4"/>
+        <path d="M170 56 Q215 20 50 106" stroke-dasharray="4 4"/><path d="M50 106 L110 156"/>
+      </g>
+      <g fill="var(--fg)"><circle cx="50" cy="56" r="7"/><circle cx="110" cy="56" r="7"/><circle cx="170" cy="56" r="7"/><circle cx="50" cy="106" r="7"/><circle cx="110" cy="106" r="7"/><circle cx="170" cy="106" r="7"/><circle cx="50" cy="156" r="7"/><circle cx="110" cy="156" r="7"/><circle cx="170" cy="156" r="7"/></g>
+      <text x="110" y="200" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--c)">merge 3: diagonals</text>
+    </g>
+  </svg></div>
+  <p>An algebraic identity splits the problem into pieces, and each piece is handled by whichever merge makes it cheapest. The current algorithms use merges 1 and 2.</p>
+</section>
+
+<section>
+  <h2><span class="n">2</span>One number decides the speed</h2>
+  <p>Call <b>ρ</b> the share of brute-force cost that the worst piece still pays. Lower is faster.</p>
+  <div class="fig"><svg viewBox="0 0 720 150" role="img" aria-label="A scale from 0.5 to 1 showing the hoped-for value 0.577 and the current value 0.707">
+    <line x1="60" y1="80" x2="660" y2="80" stroke="var(--line)" stroke-width="10" stroke-linecap="round"/>
+    <line x1="152" y1="80" x2="308" y2="80" stroke="var(--c)" stroke-width="10" opacity=".45"/>
+    <g font-size="12" style="fill:var(--muted)" text-anchor="middle">
+      <text x="60" y="112" style="fill:var(--muted)">0.5</text><text x="660" y="112" style="fill:var(--muted)">1.0 = brute force</text>
+    </g>
+    <circle cx="152" cy="80" r="9" fill="var(--c)"/>
+    <text x="152" y="52" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--c)">0.577</text>
+    <text x="152" y="34" text-anchor="middle" font-size="12.5" style="fill:var(--muted)">hope with 3 merges</text>
+    <circle cx="308" cy="80" r="9" fill="var(--a)"/>
+    <text x="308" y="52" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--a)">0.707</text>
+    <text x="308" y="34" text-anchor="middle" font-size="12.5" style="fill:var(--muted)">today, 2 merges</text>
+    <text x="230" y="134" text-anchor="middle" font-size="12.5" style="fill:var(--muted)">the window we hoped to enter</text>
+  </svg></div>
+  <p class="cap">Scale drawn to proportion: 0.577 = 1/√3, 0.707 = 1/√2. Reaching 0.577 would turn the running time from 2^(n/(log n)^0.5) into 2^(n/(log n)^0.79).</p>
+</section>
+
+<section>
+  <h2><span class="n">3</span>To prove a limit, play the adversary with geometry</h2>
+  <p>Place every cluster as a point (a <b>hub</b>) in some space, and let distance stand for cost. A wire wants to run straight between its two ends. Under a merge it must detour through the hubs of its two clusters.</p>
+  <div class="fig"><svg viewBox="0 0 720 170" role="img" aria-label="A straight wire between two ends compared with the forced detour through two hubs">
+    <line x1="90" y1="120" x2="630" y2="120" stroke="var(--fg)" stroke-width="2.5"/>
+    <path d="M90 120 L250 50 L470 50 L630 120" fill="none" stroke="var(--b)" stroke-width="2.5" stroke-dasharray="7 5"/>
+    <g fill="var(--fg)"><circle cx="90" cy="120" r="7"/><circle cx="630" cy="120" r="7"/></g>
+    <g fill="var(--b)"><rect x="242" y="42" width="16" height="16" rx="3"/><rect x="462" y="42" width="16" height="16" rx="3"/></g>
+    <text x="90" y="148" text-anchor="middle" font-size="13">wire end</text><text x="630" y="148" text-anchor="middle" font-size="13">wire end</text>
+    <text x="360" y="140" text-anchor="middle" font-size="13" style="fill:var(--muted)">direct route</text>
+    <text x="250" y="30" text-anchor="middle" font-size="13" style="fill:var(--b)">hub</text><text x="470" y="30" text-anchor="middle" font-size="13" style="fill:var(--b)">hub</text>
+    <text x="360" y="72" text-anchor="middle" font-size="13" style="fill:var(--b)">forced detour under this merge</text>
+  </svg></div>
+  <p>If you can place the points so the detour is long under <em>every</em> merge at once, no set of pieces can be cheap. The longer the forced detours, the higher the floor under ρ. So the question becomes: how good a placement can the adversary find?</p>
+</section>
+
+<section>
+  <h2><span class="n">4</span>The right space needs two opposite properties</h2>
+  <p>The adversary's best placement depends on the shape of the space. Only "non-positively curved" spaces are allowed. Three kinds matter.</p>
+  <div class="fig"><svg viewBox="0 0 720 250" role="img" aria-label="Three spaces: flat space, a tree, and a building made of flat sheets glued along a spine">
+    <!-- flat -->
+    <g>
+      <polygon points="40,150 190,150 215,70 65,70" fill="var(--soft)" stroke="var(--line)" stroke-width="1.5"/>
+      <g stroke="var(--a)" stroke-width="1.5" fill="none"><path d="M85 135 L170 130 L150 85 L95 90 Z"/><path d="M85 135 L150 85"/><path d="M170 130 L95 90"/></g>
+      <g fill="var(--a)"><circle cx="85" cy="135" r="5"/><circle cx="170" cy="130" r="5"/><circle cx="150" cy="85" r="5"/><circle cx="95" cy="90" r="5"/></g>
+      <text x="127" y="182" text-anchor="middle" font-size="15" font-weight="600">Flat space</text>
+      <text x="127" y="202" text-anchor="middle" font-size="12.5" style="fill:var(--hit)">✓ roomy: 4 points all far apart</text>
+      <text x="127" y="220" text-anchor="middle" font-size="12.5" style="fill:var(--b)">✗ no branching</text>
+      <text x="127" y="242" text-anchor="middle" font-size="14" class="num" font-weight="600">floor 0.577</text>
+    </g>
+    <!-- tree -->
+    <g transform="translate(250,0)">
+      <g stroke="var(--fg)" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M110 110 L110 50"/><path d="M110 110 L50 150"/><path d="M110 110 L170 150"/></g>
+      <g fill="var(--b)"><circle cx="110" cy="50" r="5"/><circle cx="50" cy="150" r="5"/><circle cx="170" cy="150" r="5"/></g>
+      <circle cx="110" cy="110" r="4" fill="var(--fg)"/>
+      <text x="110" y="182" text-anchor="middle" font-size="15" font-weight="600">Tree</text>
+      <text x="110" y="202" text-anchor="middle" font-size="12.5" style="fill:var(--hit)">✓ branching: equal detours</text>
+      <text x="110" y="220" text-anchor="middle" font-size="12.5" style="fill:var(--b)">✗ too thin, no room</text>
+      <text x="110" y="242" text-anchor="middle" font-size="14" class="num" font-weight="600">floor 0.612</text>
+    </g>
+    <!-- building -->
+    <g transform="translate(490,0)">
+      <polygon points="105,40 105,150 30,165 30,60" fill="var(--soft)" stroke="var(--line)" stroke-width="1.5"/>
+      <polygon points="105,40 105,150 185,165 185,60" fill="var(--soft)" stroke="var(--line)" stroke-width="1.5"/>
+      <polygon points="105,40 105,150 150,120 150,22" fill="var(--panel)" stroke="var(--line)" stroke-width="1.5"/>
+      <line x1="105" y1="40" x2="105" y2="150" stroke="var(--hit)" stroke-width="3"/>
+      <g fill="var(--hit)"><circle cx="55" cy="110" r="5"/><circle cx="160" cy="118" r="5"/><circle cx="135" cy="62" r="5"/></g>
+      <text x="108" y="182" text-anchor="middle" font-size="15" font-weight="600">Building</text>
+      <text x="108" y="202" text-anchor="middle" font-size="12.5" style="fill:var(--hit)">✓ roomy inside each sheet</text>
+      <text x="108" y="220" text-anchor="middle" font-size="12.5" style="fill:var(--hit)">✓ branches where sheets meet</text>
+      <text x="108" y="242" text-anchor="middle" font-size="14" class="num" font-weight="600" style="fill:var(--hit)">floor 0.707</text>
+    </g>
+  </svg></div>
+  <p>A <b>building</b> is many flat sheets glued along shared edges: flat inside a sheet, tree-like across sheets. It is a classical object from geometry. Placing each cluster at a point of a finite vector space inside such a building makes every wire's detour equally long under all three merges.</p>
+</section>
+
+<section>
+  <h2><span class="n">5</span>The floor meets the ceiling</h2>
+  <p>A separate inequality, checked in the Lean proof assistant, says no allowed space can ever force more than <span class="num">0.707</span>. The building reaches exactly that.</p>
+  <div class="fig"><svg viewBox="0 0 720 190" role="img" aria-label="Floors from flat space, trees and buildings rising to the proven ceiling at 0.707">
+    <line x1="80" y1="150" x2="680" y2="150" stroke="var(--line)" stroke-width="1.5"/>
+    <line x1="80" y1="38" x2="680" y2="38" stroke="var(--fg)" stroke-width="2" stroke-dasharray="6 5"/>
+    <text x="676" y="28" text-anchor="end" font-size="13" font-weight="600">proven ceiling 0.707 = what 2 merges already achieve</text>
+    <text x="72" y="154" text-anchor="end" font-size="12" style="fill:var(--muted)">0.5</text>
+    <text x="72" y="42" text-anchor="end" font-size="12" style="fill:var(--muted)">0.707</text>
+    <rect x="130" y="108.4" width="110" height="41.6" fill="var(--a)" rx="3"/>
+    <text x="185" y="100" text-anchor="middle" font-size="14" class="num" font-weight="600">0.577</text>
+    <text x="185" y="172" text-anchor="middle" font-size="13">flat space</text>
+    <rect x="325" y="89.5" width="110" height="60.5" fill="var(--b)" rx="3"/>
+    <text x="380" y="81" text-anchor="middle" font-size="14" class="num" font-weight="600">0.612</text>
+    <text x="380" y="172" text-anchor="middle" font-size="13">trees (yesterday)</text>
+    <rect x="520" y="38" width="110" height="112" fill="var(--hit)" rx="3"/>
+    <text x="575" y="62" text-anchor="middle" font-size="14" class="num" font-weight="600" style="fill:var(--panel)">0.707</text>
+    <text x="575" y="172" text-anchor="middle" font-size="13">building (today)</text>
+  </svg></div>
+  <p class="cap">Bar heights are to scale between 0.5 and 0.707. The building's value is 0.707 minus a small term that shrinks as the design grows.</p>
+</section>
+
+<section class="take">
+  <h2>What it means</h2>
+  <ul>
+    <li>On these designs, a third merge buys nothing: the adversary can force <span class="num">0.707</span>, the same as two merges.</li>
+    <li>The only escape is if that pricing turns out not to be legitimate. That would prove a major open hypothesis ("contracting") and give a much faster 3-SAT algorithm. So there is no small improvement here: nothing, or a breakthrough.</li>
+  </ul>
+  <p class="cap">Limits: this covers designs built from vector spaces over finite fields, one level of the recursion at a time. Designs built from cyclic groups are still open. The "nothing" half assumes the contracting hypothesis is false, as is widely expected. It is not a lower bound for 3-SAT in general. An AI referee checked the result; no human has.</p>
+</section>
+</div>

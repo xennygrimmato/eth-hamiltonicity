@@ -908,3 +908,22 @@ Report: `research/ports/review-theoremR.md`.
 **State of the headline.** "Anthropic's contracting case contradicts (non-uniform) Weak ETH" now has two independent
 routes, each refereed once: Theorem A (via OpenAI HC 4.2 + IM 7.1) and Theorem R (Anthropic only).
 **Launching:** uniformity audit of `thm_tree`/`prop_pieces`; first draft of the note.
+
+## 26 Nov (late, 6): C1 interim — isolation is free in the power-saving regime [D]
+
+From the char-p agent (`research/ports/c1d1/notes.md`):
+- Claim [D]: ports or contracting in characteristic p ⇒ one-sided-error randomised 3-SAT in 2^{O(v^{1−δ})}, same δ.
+- Mechanism: both mod-p counters accept more than 3-CNF (HC 13.1: any closed bit network; Theorem R: any weighted
+  nondeterministic program), so a hash circuit attaches parsimoniously. Toeplitz hash h(x) = T_a x + b is pairwise
+  independent and is polynomial multiplication over F₂: circuit size O(v log v loglog v), below the v^{1+4α} leaf
+  volume sparsification already creates. Success 3/(16v) per trial (ordinary Valiant–Vazirani).
+- CIKP as a black box is fatal here (2^{Θ(εn)} repetitions). The power-saving regime tolerates v ↦ v^{1+o(1)} but needs
+  success ≥ 2^{−v^{1−δ}}.
+- Derandomisation: free non-uniformly (Adleman); uniformly under Impagliazzo–Wigderson; no unconditional route.
+- Effect on anti's Theorem M (F₂): would follow from one hypothesis, randomised one-sided Weak ETH.
+- Caveat it found: the sunflower sparsification printed in IM §7 is not disjoint, so "#3-SAT mod p" (and exact
+  counting in char 0) needs count-preserving sparsification. Decision does not.
+- **My check, sent back:** the Theorem R encoding has sum 2^e·#SAT; in characteristic 2 this vanishes for e ≥ 1, so
+  the Anthropic route may fail exactly at p = 2 — the case Theorem M needs. Asked for the source of 2^e and the same
+  check on the OpenAI route. H21 [C]: the encoding can be made exactly parsimonious (e = 0).
+- 6-gate search: shard 0 of 3 done, no circuit in its orbits.

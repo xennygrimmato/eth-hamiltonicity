@@ -1486,3 +1486,30 @@ Final report in `research/ports/middle/notes.md`. Unrefereed.
 controls) running E-M1/E-M3/E-M4; (2) one agent refereeing §2/§4/§5.2 and formalising the kernel lemma and the
 spectral inequality in Lean (`PortsLean/RankKernel.lean`).
 H24 (GE): open; computation will say whether β_ρ/β_cut grows on generic expanders.
+
+## 26 Nov (late, 41): protocol agent final; referee interim on the middle-cell notes
+
+**Protocol agent final** (`research/ports/protocol/notes.md` + six scripts). Unrefereed → referee launched.
+- Explicit asymptotic family at rate 6/(4+√10) ≈ 0.83772 [D]; a coarser fully finite version at 0.83132.
+- The tensor statement from App. B: two crossing wires are a sum of Θ+1 integer tensors Ψ_N with log-ranks
+  r² + r′² ≤ 2(p²+q²); a cover, not a restriction; the midpoint statement (CN) appears only in the limit (C.2, C.1).
+- Level 1 (hubs at real parties, no nesting) is exactly 0.83772: the game value and the dual (triangles + all
+  instances of B.3 on five parties) agree [N]. Anything higher needs nesting. One nesting step, heuristic: ≈ 0.854.
+- **Sizes (corrects its interim):** with proved rank bounds the first instance above 3/4 has demand wires ≈ 2¹²⁸ per
+  block (rate 0.7529 as K → ∞); possibly 2⁵⁰–2⁶⁰ if true ranks are smaller. At ≤ 5×5 the middle terms have full rank
+  [R, exact mod p]. So no dense check of any instance above 3/4 is possible.
+- Reformulation: a two-term crossing decomposition is SWAP = X + Y with small operator-Schmidt rank(X) and small
+  rank(Y); for d = 2 it is δδ − δδ = εε, which gives no asymptotic gain.
+- Dead [X]: level 1 without adaptivity; gain on a single 4-cycle; midpoint of u₁u₂ as the only virtual point;
+  matrix-multiplication/laser route on the v-side (my suggestion): the triangle alone at rate 1 is routing, all gain
+  is in the coupling with u₁u₂.
+- It flagged a wrong sentence in the K_{2,3} note ("products of spectral points add their metrics"); fixed.
+- My main worry, given to the referee: turning a SUM of restrictions with term-dependent local maps into ONE
+  restriction — who knows the term index, what it costs on the supply, and whether rank bounds apply to what is
+  actually sent.
+
+**Referee interim on middle-cell notes: kernel lemma, Prop. S and Theorem M0 correct.** Prop. S holds with the signed
+second eigenvalue and is exactly tight on Cay(Mat_μ(F₂), rank one) for μ = 2, 3. M0: D.2 Step 1 is unconditional; the
+averaging uses transitivity of the affine group on pairs of given difference rank. Bookkeeping: one table row tags
+an equivalence [R] whose ⇐ direction is Theorem A ([D]/refereed separately). Numerics on SL₃(F₄): E_edges = 0.5,
+E_pairs = 2.292, λ₂ = 0.80.

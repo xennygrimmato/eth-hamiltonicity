@@ -677,7 +677,11 @@ Which explicit spectral points have ℓ₁ wire metrics [K] (`ideas-ports.md` §
 - Strassen's support functionals (every field) give star metrics d(x,y) = θ_x + θ_y = Σ_z θ_z δ_{{z}}(x,y);
 - the quantum functionals of Christandl–Vrana–Zuiddam (over ℂ) give star metrics.
 
-Products of spectral points add their metrics. None of these certifies an upper bound below 1.
+Each of these wire metrics is ℓ₁-embeddable, and ℓ₁-embeddability survives the operations that preserve prices
+(pull-backs, non-negative multiples, pointwise limits). So neither these points nor any price obtained from one of
+them by those operations certifies an upper bound below 1. (Products of spectral points are in general not spectral
+points, and a sum of cut metrics need not be a price: the path metric of the 4-cycle is a sum of two cuts and violates
+the CN inequality.)
 
 **(d) Routing [P; L].**
 - *Routing achieves 3/4.* Send each v_iv_j half through u₁ and half through u₂, and send u₁u₂ through v₁, v₂, v₃, a

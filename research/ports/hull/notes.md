@@ -29,7 +29,7 @@ f*(K_{2,3};k) = sup{ f : T^{⊗⌈fn⌉} is a restriction of S^{⊗(n+o(n))} ove
 | 7 | A protocol on K_{2,3} over a field of characteristic 0 with asymptotic rate > 3/√10 ⇒ Contracting ⇒ 3-SAT in 2^{O(v^{1−δ})}. | first arrow [R]; second arrow [D]: Theorem A (AN F.6 + [OA] HC 4.2) then [OA] IM 7.1, or Theorem R (AN only, `../rebase/`, [D]) |
 | 8 | **Book reduction.** For five points of a CAT(0) space, R ≥ R of the book of three flat comparison triangles on the common side [u₁,u₂]. | [R] from AN C.4(a) (§3.1) |
 | 9 | **Calibration.** In a book, Σ_S − κ Σ_T ≥ (D/√10)·Φ(ψ), Φ the explicit function of the six exit angles in §3.3. | [R] (§3.2; algebra checked numerically on 20 000 random books, [N]) |
-| 10 | **Inequality (CL\*)**: Φ ≥ 0 on [−π/2,π/2]⁶. Contains the three-angle inequality (I). | [N] (no violation; equality set located); analytic proof missing; spec for an interval certificate in §3.3 |
+| 10 | **Inequality (CL\*)**: Φ ≥ 0 on [−π/2,π/2]⁶. Contains the three-angle inequality (I). | (I): interval-certified (coordinator's `tools/ivcert`), which settles all books in which no geodesic v_iv_j passes through an end of the spine. Three-ends case C: [R]. Rest of (CL\*): [N] (no violation; equality set located); spec in §3.3 |
 | 11 | **Five-point theorem.** Every five-point subset of a CAT(0) space, hence every AN price on five parties, has R ≥ 3/√10. | [D]: = 8 + 9 + 10. Independent [N] support: Toyoda's five-point criterion gives minimum 3/√10 (executor, 1000/1000 multistarts) |
 | 12 | f*(K_{2,3};k) ≥ 3/√10 over every field; = 3/√10 whenever Contracting(k) fails. | [D], = 11 + Strassen duality + 6 |
 
@@ -298,6 +298,29 @@ The structured sub-cases, if a smaller domain is preferred (each is a face or su
  - if (i,j) and (i,k) pass through the same end, ψ_ij = ψ_ik (then δ_i = 0 and the vertex term is cos ψ_ij).
 Proving (CL\*) on the full cube makes the case distinction unnecessary.
 
+*Structured cases in full (alternative to the 6-cube; at most 5 variables each).* Write
+V(a,b) = cos((a+b)/2)·√(1+9 sin²((a−b)/2)) (so the vertex term of vertex i is V(ψ_ij,ψ_ik), and V(a,a) = cos a).
+Let χ_i, χ′_i ∈ [−H,H] be the elevation angles of v_i seen from u₂ and from u₁ (tan χ_i = (a_i−D)/ρ_i,
+tan χ′_i = a_i/ρ_i), so χ_i ≤ χ′_i, and every exit angle of v_i towards an interior hub lies in [χ_i, χ′_i].
+Pair (i,j) passes through u₂ iff χ_i+χ_j ≥ 0 (then ψ_ij = χ_i, ψ_ji = χ_j); through u₁ iff χ′_i+χ′_j ≤ 0 (then
+ψ_ij = χ′_i, ψ_ji = χ′_j); otherwise the hub is interior and ψ_ji = −ψ_ij. Up to permuting the pages and the
+reflection a ↦ D−a (which swaps u₁,u₂ and replaces every angle by its negative), the cases are:
+ - 0. no end: (I), certified.
+ - A. one pair through u₂, say (1,2): variables χ₁,χ₂,x=ψ₁₃,y=ψ₂₃ with χ₁+χ₂ ≥ 0, x ≥ χ₁, y ≥ χ₂:
+   V(χ₁,x) + V(χ₂,y) + V(−x,−y) − 3 + (3/2)(sin χ₁ + sin χ₂) ≥ 0.
+ - B. two pairs through u₂, (1,2),(1,3): variables χ₁,χ₂,χ₃,y=ψ₂₃ with χ₁+χ₂ ≥ 0, χ₁+χ₃ ≥ 0, χ₂ ≤ y ≤ −χ₃:
+   cos χ₁ + V(χ₂,y) + V(χ₃,−y) − 3 + (3/2)(2 sin χ₁ + sin χ₂ + sin χ₃) ≥ 0.
+ - C. three pairs through u₂: Σ_i (cos χ_i + 3 sin χ_i) ≥ 3 for pairwise sums χ_i+χ_j ≥ 0. **[R]**: at most one
+   χ is negative; if none, each term is ≥ 1 on [0,H]; if χ₁ = −x < 0 then χ₂,χ₃ ∈ [x,H], where
+   cos χ + 3 sin χ ≥ min(cos x + 3 sin x, 3), and both cos x − 3 sin x + 2(cos x + 3 sin x) = 3(cos x + sin x) ≥ 3
+   and cos x − 3 sin x + 6 ≥ 3 hold.
+ - D. (1,2) through u₂, (1,3) through u₁, (2,3) interior: variables χ₁ ≤ χ′₁, χ₂, χ′₃, y=ψ₂₃ with χ₁+χ₂ ≥ 0,
+   χ′₁+χ′₃ ≤ 0, y ≥ χ₂, −y ≤ χ′₃:
+   V(χ₁,χ′₁) + V(χ₂,y) + V(χ′₃,−y) − 3 + (3/2)(sin χ₁ + sin χ₂ − sin χ′₁ − sin χ′₃) ≥ 0.
+ - E. (1,2) and (2,3) through u₂, (1,3) through u₁: variables χ₁ ≤ χ′₁, χ₂, χ₃ ≤ χ′₃ with χ₁+χ₂ ≥ 0, χ₂+χ₃ ≥ 0,
+   χ′₁+χ′₃ ≤ 0: V(χ₁,χ′₁) + cos χ₂ + V(χ′₃,χ₃) − 3 + (3/2)(sin χ₁ + 2 sin χ₂ + sin χ₃ − sin χ′₁ − sin χ′₃) ≥ 0.
+ All of these are restrictions of (CL\*) to subsets of the cube.
+
 **(c) Expected equality cases [N].**
  - (I): only θ = 0. Each pair contributes 1 − (θ_i−θ_j)²/8 + (9/8)(θ_i+θ_j)² + O(4), so
    F(θ) = 3 + 2Σ_iθ_i² + (5/2)Σ_{i<j}θ_iθ_j + O(|θ|⁴) = 3 + θᵀQθ + O(|θ|⁴), Q = (3/4)·Id + (5/4)·J (J = all-ones
@@ -325,9 +348,14 @@ proved; with a certificate it is a computer-assisted proof.
 
 ### 3.4 Numerical record for (I), (CL\*) and Theorem 5 [N]
 
-- (I): 121³ grid, minimum 3.000000 at 0; ≥ 3.0655 outside |θ| ≤ 0.3.
+- (I): 121³ grid, minimum 3.000000 at 0; ≥ 3.0655 outside |θ| ≤ 0.3. **Now certified** (coordinator's interval
+  certifier `tools/ivcert`: F ≥ 3 on the cube, 1014 leaves, convexity test on [−π/32,π/32]³, bound ≥ 3.00072
+  elsewhere; independent checker run by the coordinator). With 9 replaced by 8 the certificate does not close
+  (equality at the corner (π/2,π/2,−π/2)), so the constant is sharp for this method.
 - (CL\*): 3000 Nelder–Mead starts and 2·10⁶ random points in the cube: minimum 0 (at the corners described),
-  no negative value; all 27 hub-type patterns with the structural constraints: minimum 0.
+  no negative value; all 27 hub-type patterns with the structural constraints: minimum 0. Scan for
+  near-equality points (6000 Powell starts, `scratchpad/hull/cl6b.py`): 1880 runs end at the six corners
+  (values ≤ 6·10⁻¹¹), the remaining near-zero ones cluster at ψ = 0; nothing else below 2·10⁻³.
 - Books (7 parameters): 400 starts, minimum 0.9486832980505134 at ρ_i = 1.5·D, a_i = D/2 (this is W5(ℓ,ℓ/3));
   other local minima ≥ 0.9488.
 - Independent route (executor): Toyoda's theorem (arXiv:1907.09074, Thm 1.3: ≤ 5 points embed in a CAT(0)

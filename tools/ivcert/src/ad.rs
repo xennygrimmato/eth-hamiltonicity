@@ -24,6 +24,12 @@ pub trait Scalar<const N: usize>:
     fn cos(self) -> Self;
     fn sqrt(self) -> Self;
     fn sqr(self) -> Self;
+    /// |x|. Jet2 (only ever evaluated over a box): if the value enclosure over the box is
+    /// sign-definite, |x| coincides on the box with the smooth function +-x and is differentiated as
+    /// such (all leaf tests only use the function on the box); otherwise INVALID. Jet1: +-dx if the
+    /// value is strictly of one sign, else the Clarke generalised-gradient enclosure [-1,1]*dx,
+    /// which is valid in Lebourg's mean-value theorem and contains the derivative of either branch.
+    fn abs(self) -> Self;
     /// Enclosure of the value.
     fn val(&self) -> I;
     /// Value and (sin, cos) at once (saves work for jets).
@@ -52,6 +58,10 @@ impl<const N: usize> Scalar<N> for I {
     #[inline]
     fn sqr(self) -> I {
         I::sqr(&self)
+    }
+    #[inline]
+    fn abs(self) -> I {
+        I::abs(&self)
     }
     #[inline]
     fn val(&self) -> I {
@@ -164,6 +174,25 @@ impl<const N: usize> Scalar<N> for Jet1<N> {
     fn sqr(self) -> Self {
         let g1 = self.v * I::point(2.0);
         self.chain(I::sqr(&self.v), g1)
+    }
+    fn abs(self) -> Self {
+        if !self.v.is_valid() {
+            return Jet1 { v: INVALID, d: [INVALID; N] };
+        }
+        // strict tests: at a point where the value may be 0 the Clarke enclosure is used, which
+        // contains the derivative of either smooth branch (so point jets are always sound)
+        if self.v.lo > 0.0 {
+            self
+        } else if self.v.hi < 0.0 {
+            -self
+        } else {
+            let mut d = self.d;
+            for i in 0..N {
+                let m = d[i].mag();
+                d[i] = if d[i].is_valid() { I::new(-m, m) } else { INVALID };
+            }
+            Jet1 { v: I::abs(&self.v), d }
+        }
     }
     fn val(&self) -> I {
         self.v
@@ -314,6 +343,15 @@ impl<const N: usize> Scalar<N> for Jet2<N> {
     fn sqr(self) -> Self {
         let g1 = self.v * I::point(2.0);
         self.chain(I::sqr(&self.v), g1, I::point(2.0))
+    }
+    fn abs(self) -> Self {
+        if self.v.is_valid() && self.v.lo >= 0.0 {
+            self
+        } else if self.v.is_valid() && self.v.hi <= 0.0 {
+            -self
+        } else {
+            Jet2 { v: I::abs(&self.v), d: [INVALID; N], h: [[INVALID; N]; N] }
+        }
     }
     fn val(&self) -> I {
         self.v

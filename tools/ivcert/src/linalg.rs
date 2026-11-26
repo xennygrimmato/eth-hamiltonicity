@@ -226,3 +226,114 @@ mod tests {
         assert!(!interval_cholesky(&s));
     }
 }
+
+// ---------------------------------------------------------------- dynamic-size versions
+
+pub type MatI = Vec<Vec<I>>;
+
+pub fn gershgorin_lb_dyn(a: &MatI) -> f64 {
+    let n = a.len();
+    let mut lb = f64::INFINITY;
+    for k in 0..n {
+        let mut r = a[k][k];
+        for l in 0..n {
+            if l != k {
+                let m = a[k][l].abs();
+                r = r - I::new(m.hi, m.hi);
+            }
+        }
+        if !r.is_valid() {
+            return f64::NEG_INFINITY;
+        }
+        lb = lb.min(r.lo);
+    }
+    lb
+}
+
+/// Heuristic preconditioner for a dynamic symmetric interval matrix (row-major n*n output).
+pub fn choose_p_dyn(h: &MatI) -> Option<Vec<f64>> {
+    // embed in fixed sizes up to 8
+    let n = h.len();
+    macro_rules! go {
+        ($k:expr) => {{
+            let mut m = [[I::point(0.0); $k]; $k];
+            for i in 0..$k {
+                for j in 0..$k {
+                    m[i][j] = h[i][j];
+                }
+            }
+            choose_p::<$k>(&m).map(|p| p.iter().flat_map(|r| r.iter().copied()).collect())
+        }};
+    }
+    match n {
+        1 => go!(1),
+        2 => go!(2),
+        3 => go!(3),
+        4 => go!(4),
+        5 => go!(5),
+        6 => go!(6),
+        7 => go!(7),
+        8 => go!(8),
+        _ => None,
+    }
+}
+
+/// Rigorous lower bound for lambda_min of every symmetric matrix in h, via the congruence with the
+/// float matrix p (row-major): lambda_min(H) >= lambda_min(P^T H P) / ||P||_F^2. Returns -inf if the
+/// test fails or P is not certified nonsingular.
+pub fn lambda_min_lb_dyn(h: &MatI, p: &[f64]) -> f64 {
+    let n = h.len();
+    if p.len() != n * n {
+        return f64::NEG_INFINITY;
+    }
+    let pm = |i: usize, j: usize| I::point(p[i * n + j]);
+    let cong = |hh: &MatI| -> MatI {
+        let mut b = vec![vec![I::point(0.0); n]; n];
+        for i in 0..n {
+            for l in 0..n {
+                let mut s = I::point(0.0);
+                for j in 0..n {
+                    s = s + hh[i][j] * pm(j, l);
+                }
+                b[i][l] = s;
+            }
+        }
+        let mut a = vec![vec![I::point(0.0); n]; n];
+        for k in 0..n {
+            for l in k..n {
+                let mut s = I::point(0.0);
+                for i in 0..n {
+                    s = s + pm(i, k) * b[i][l];
+                }
+                a[k][l] = s;
+                a[l][k] = s;
+            }
+        }
+        a
+    };
+    let mut hs = h.clone();
+    for i in 0..n {
+        for j in 0..n {
+            hs[i][j] = h[i][j].meet(&h[j][i]);
+            if !hs[i][j].is_valid() || hs[i][j].lo > hs[i][j].hi {
+                return f64::NEG_INFINITY;
+            }
+        }
+    }
+    let mut id = vec![vec![I::point(0.0); n]; n];
+    for i in 0..n {
+        id[i][i] = I::point(1.0);
+    }
+    if !(gershgorin_lb_dyn(&cong(&id)) > 0.0) {
+        return f64::NEG_INFINITY;
+    }
+    let g = gershgorin_lb_dyn(&cong(&hs));
+    if !(g > 0.0) {
+        return f64::NEG_INFINITY;
+    }
+    let mut fro = I::point(0.0);
+    for x in p {
+        fro = fro + I::point(*x).sqr();
+    }
+    (I::point(g) / fro).lo
+}

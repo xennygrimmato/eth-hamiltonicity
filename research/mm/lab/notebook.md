@@ -129,3 +129,31 @@ Scripts: `mc_sat.py` (E1 exact MC via SAT + CEGAR on input rows), `e2_wordram.py
 - Calibration (all exact, seconds): F₄ mult MC = 3, 2-term poly mult = 3, 3-term poly mult = 6
   (k=5 refuted with 8 states, k=6 found with 334 states) — matches Morse arXiv:2608.30238
   (Mul₂ = 3, Mul₃ = 6).
+- Results (unrestricted model, exact unless noted):
+  - ⟨2,2,1⟩ (≅ ⟨1,2,2⟩ by transposition): MC = 4 (E1a, CEGAR SAT k=3 UNSAT). = rank.
+  - ⟨1,2,3⟩: k=4 refuted by `mc_span` (all 10795 first-gate planes, 10865 states); k=6 exists
+    (quadratic). MC ∈ {5, 6}; k=5 NOT settled (search needs ~hours without orbit reduction).
+  - ⟨2,2,2⟩: **k=5 refuted** (72 orbits, 75 states, 0.06 s) → unrestricted MC ≥ 6 certified
+    (modulo trusting the code + orbit computation; no DRAT-style proof object).
+    k=6: 3 of 72 first-gate orbits refuted (≈4.5 min/orbit, ~42k states each); full run would
+    take ≈ 1.8 h on 3 cores; STOPPED on lead's instruction (priority change). So: 6 ≤ MC ≤ 7.
+    Why k=6 is costly: helpers (gates not landing in S+T) are allowed at positions 1–2, so the
+    second gate ranges over all ~2^18 products; positions 3–6 must all be reducers.
+  - Boolean-quadratic MC(⟨2,2,2⟩) = 7 (E1b) and Qf = R = 7.
+- Changes: no gap found anywhere; the unrestricted question at 2×2 is reduced to 69 orbit
+  subtrees of a ~4-minute search each — a cheap job to finish later if anyone cares.
+
+## Tiny bilinear-map sweep (lead's E5) — status: PARTIAL
+- `e5_sweep.py` computes R (bilinear rank), Qf (formal commutative quadratic), Qb (Boolean
+  quadratic), MC (unrestricted) per map. Completed rows: trunc2 (mult mod x²) 3/3/3/3,
+  polymul2 3/3/3/3, F₄ 3/3/3/3; plus via mc_span polymul3 R=6, MC=6; ⟨2,2,1⟩ 4/–/4/4;
+  ⟨2,2,2⟩ 7/7/7/≥6. The SAT-based MC column was the bottleneck (stalled at polymul3); the
+  random-map part was never run. Fix: plug a generic target loader into `mc_span.c` (seconds per
+  map at ≤ 6 inputs) and rerun. No map so far has MC < Qb or Qb < Qf.
+
+## Summary of intuition after this session
+- Every route to n²·polylog over F₂ that I could test closes with a reason: word tricks = w·log n
+  (E2); packing = bilinear in disguise, ≥ n^{9/4} (E3); thin-product decompositions need ≥ √n
+  pieces pointwise by rank (T5); the twisted-convolution form is algebraic (E7). At the
+  AND-count level, x²=x buys nothing for 2×2 in the quadratic model (7), and gate reuse buys at
+  most one AND (≥ 6 certified, 7 suspected); no tiny map shows any gap.

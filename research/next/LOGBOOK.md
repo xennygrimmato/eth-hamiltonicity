@@ -541,3 +541,13 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   achieves trivially. Cost √n · n^{2+o(1)} = n^{2.5}. The idea agent's one "positive" experiment for the user's
   literal wish (T5) cannot pass for any preprocessing. [X]
 - Positive routes tried so far for n²·polylog over F₂: word tricks, packing, thin products. All closed with reasons.
+
+### Lab note 6: matrix multiplication over F₂ as a twisted convolution (set-up verified) [N]
+- M_n(F₂) ≅ F_{2^n}[x; Frobenius]/(xⁿ − 1): a matrix is a linearised polynomial Σ a_i z^{2^i}, and the product is
+  c_k = Σ_{i+j≡k} a_i · b_j^{2^i}. Checked for n = 2…8 on random pairs.
+- Lead's reading: WITHOUT the twist b_j ↦ b_j^{2^i} this is an ordinary cyclic convolution over F_{2^n}, which costs
+  n²·polylog bit operations by FFT. So matrix multiplication over F₂ = convolution + an index-dependent Frobenius
+  twist, and in a normal basis the twist is a cyclic shift of coordinates (free wiring). The whole gap between
+  n²·polylog and n^{9/4} sits in that twist.
+- Known fast skew-polynomial multiplication is algebraic and bounded by the same exponent. No non-algebraic use of
+  "Frobenius is free" found. Open as an idea, not as a result.

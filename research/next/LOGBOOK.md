@@ -1626,3 +1626,18 @@ book problem did not alter the (I)/(CL\*) certificates); `cargo test --release`:
 - K_{2,3} note updated with the final protocol figures: exact certificates to B = 32 (rate ≥ 0.83671), dual for B = 2,
   Lean for B = 2.
 Agents still running: the rank-placement experiments only.
+
+## 26 Nov (late, 50): E-M1 done — no growing excess over cuts on random graphs, with a weak search
+
+- Random d-regular graphs (d = 3, 4, 6; n = 16 … 512; μ = 2 … 6; 1M iterations × 8 chains): β_found/β_cut ∈ [1.000, 1.031];
+  excess > 0.5% only at n ≤ 64; ≤ 0.14% for n ≥ 128. LPS X^{5,13}, X^{5,17}, PSL₂(13), SL₂(F₈) with random generators:
+  1.000. Cycles and tori: exactly β_cut.
+- Earlier apparent excesses of 6–17% were artefacts of a weak cut baseline (cuts S_xy = {v : yᵀf(v)x = 1} read off the
+  placements beat it); fixed.
+- Controls: structured placements reproduce the notes; on SL₂(F₁₆) the structured ratio 6.63 is below β_cut ≥ 8.84 (cuts
+  win at that size); on SL₃(F₄) structured 4.58 vs β_cut ∈ [2.52, 5.01].
+- Calibration unchanged: from random or cut starts the search does not find the structured placements (2.54 vs 4.58;
+  1.79 vs 2.23). So the null result is evidence only against placements reachable by local search from cuts.
+- E-M2: 6 of 7 orbits of extreme rays of MET₆ are rank metrics at μ = 2; the seventh (with a distance 3) not found for
+  μ ≤ 8. E-M3 running.
+(GE) remains open; my reading: no evidence against it, weak evidence for it.

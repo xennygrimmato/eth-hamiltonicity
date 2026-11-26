@@ -703,3 +703,20 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - Atlas table recorded earlier. Lab's intuition: a non-algebraic win would need something non-linear AND recursive;
   no hint of one; the 5% prior for a 2×2 gap looks generous.
 - Leftover cheap job: finish the 69 orbits (settles one instance of the Boyar–Find question). To be run unattended.
+
+### Ports strategist, interim 1 (`research/ports/ideas-ports.md` §0, Part 1) [K quoted + D; unreviewed]
+- Ports (OpenAI's Euclidean-geometry paper, Def. 11.1): one family of bounded-degree regular graphs and one constant γ
+  with E_pairs d² ≤ γ·E_edges d² for every placement into every spectral space of the characteristic. Depends only on
+  the characteristic.
+- Finite certificate (their HC paper, Thm 4.2): ONE graph whose Poincaré constant over all spectral spaces is below
+  c·log n/log(d+1) already gives ports.
+- "Ports ⇒ 3-SAT" chain: Poincaré inequality → exact rerouting identities (Strassen duality) → iterated compression →
+  contraction of any size-s network in 2^{s^{1−η}} → sparsified 3-SAT. δ not tracked in the papers.
+- Lean (read, not built): ports defined; "ports in characteristic 0 ⇒ power-saving 3-SAT" formalised. Which
+  characteristics have ports: stated nowhere.
+- KEY (H13 confirmed in one direction): Anthropic's CONTRACTING hypothesis IMPLIES ports (their Thm F.6 gives a
+  Poincaré constant far below the certificate threshold). Hence contracting ⇒ 3-SAT in 2^{v^{1−δ}} (char 0), and Weak
+  ETH ⇒ contracting fails in characteristic 0.
+- Lead's follow-up: with c1's reduction (contracting ⇔ √rank on Mat_μ(F₂) is not a price for some μ ≥ 3) this gives a
+  finite test for a faster 3-SAT algorithm; asked for exact statements and review status.
+- H15 [C]: "the metric √rank on 3×3 binary matrices is not a tensor price over ℚ" ⇒ 3-SAT in 2^{v^{1−δ}}.

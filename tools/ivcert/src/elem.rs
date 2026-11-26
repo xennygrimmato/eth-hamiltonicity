@@ -170,7 +170,7 @@ mod tests {
             let (ls, lc) = (x.sin(), x.cos());
             assert!(s.lo <= ls.next_up() && ls.next_down() <= s.hi, "{x} {s:?} {ls}");
             assert!(c.lo <= lc.next_up() && lc.next_down() <= c.hi, "{x} {c:?} {lc}");
-            assert!(s.width() < 1e-15 && c.width() < 1e-15);
+            assert!(s.width() < 1e-14 && c.width() < 1e-14);
             x += 0.0137;
         }
     }

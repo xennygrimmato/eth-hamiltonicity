@@ -1,0 +1,450 @@
+//! Generic branch-and-bound prover for  f(x) >= c  on a box, and the leaf tests shared by the prover
+//! and the checker.
+//!
+//! Leaf tests (each returns a rigorous lower bound of f on the closed float box B, or -inf / NaN):
+//!   N  natural interval extension                     f(B)
+//!   M  mean-value form at the centre c                f(c) + grad f(B) . (B - c)
+//!   T  second-order Taylor form at c                  f(c) + grad f(c) . (B - c) + 1/2 (B-c)^T Hess f(B) (B-c)
+//!   C  certified convexity with anchor x* in B:       Hess f(B) certified PD (congruence-Gershgorin with an
+//!      explicit matrix P stored in the certificate, or interval Cholesky)  =>  f convex on B  =>
+//!      f(x) >= f(x*) + grad f(x*) . (x - x*)  for x in B, bounded below by interval evaluation.
+//!      With x* a critical point (exact zero gradient enclosure), the bound is f(x*) exactly, which is
+//!      how equality points are closed.
+//!   P  pruned by symmetry: the problem asserts the box misses a closed fundamental domain R of its
+//!      symmetry group (every point of the domain has an image in R with the same value of f).
+//! Splitting: bisection of the widest coordinate at the float midpoint, so children cover the parent
+//! exactly. The certificate is the preorder traversal of the resulting tree.
+
+use crate::ad::{Jet1, Jet2, Scalar};
+use crate::interval::I;
+use crate::linalg;
+use rayon::prelude::*;
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::sync::Mutex;
+
+pub type BoxN<const N: usize> = [I; N];
+
+pub trait Problem<const N: usize>: Sync + Send {
+    /// Registry name, including parameters (the checker rebuilds the problem from it).
+    fn name(&self) -> String;
+    /// Human-readable statement.
+    fn statement(&self) -> String;
+    /// Float box containing the (true) domain.
+    fn domain(&self) -> BoxN<N>;
+    /// Claimed lower bound c: the claim is f >= c on the domain.
+    fn bound(&self) -> f64;
+    /// The function, generically over the scalar type.
+    fn eval<T: Scalar<N>>(&self, x: &[T; N]) -> T;
+    /// Known minimisers (anchor points for the convexity test). Must be exact floats.
+    fn special_points(&self) -> Vec<[f64; N]> {
+        vec![]
+    }
+    /// Return true only if the closed box contains no point of the problem's fundamental domain.
+    fn outside_fundamental(&self, _b: &BoxN<N>) -> bool {
+        false
+    }
+}
+
+// ----------------------------------------------------------------- leaf tests
+
+pub fn eval_box<const N: usize, P: Problem<N>>(p: &P, b: &BoxN<N>) -> I {
+    p.eval::<I>(b)
+}
+
+pub fn eval_point<const N: usize, P: Problem<N>>(p: &P, x: &[f64; N]) -> I {
+    let b: [I; N] = std::array::from_fn(|i| I::point(x[i]));
+    p.eval::<I>(&b)
+}
+
+fn jet1_at<const N: usize, P: Problem<N>>(p: &P, b: &BoxN<N>) -> Jet1<N> {
+    let x: [Jet1<N>; N] = std::array::from_fn(|i| Jet1::var(b[i], i));
+    p.eval(&x)
+}
+
+fn jet2_at<const N: usize, P: Problem<N>>(p: &P, b: &BoxN<N>) -> Jet2<N> {
+    let x: [Jet2<N>; N] = std::array::from_fn(|i| Jet2::var(b[i], i));
+    p.eval(&x)
+}
+
+pub fn center<const N: usize>(b: &BoxN<N>) -> [f64; N] {
+    std::array::from_fn(|i| b[i].mid())
+}
+
+fn lo_or_neg(x: I) -> f64 {
+    if x.is_valid() {
+        x.lo
+    } else {
+        f64::NEG_INFINITY
+    }
+}
+
+pub fn lb_natural<const N: usize, P: Problem<N>>(p: &P, b: &BoxN<N>) -> f64 {
+    lo_or_neg(eval_box(p, b))
+}
+
+pub fn lb_meanvalue<const N: usize, P: Problem<N>>(p: &P, b: &BoxN<N>) -> f64 {
+    let c = center(b);
+    let fc = eval_point(p, &c);
+    let g = jet1_at(p, b);
+    let mut s = fc;
+    for i in 0..N {
+        s = s + g.d[i] * (b[i] - I::point(c[i]));
+    }
+    // the natural bound is also valid; take the better
+    lo_or_neg(s).max(lo_or_neg(g.v))
+}
+
+/// Taylor-2 bound given a precomputed Hessian enclosure over b.
+fn lb_taylor2_h<const N: usize, P: Problem<N>>(p: &P, b: &BoxN<N>, h: &[[I; N]; N]) -> f64 {
+    let c = center(b);
+    let cp: [I; N] = std::array::from_fn(|i| I::point(c[i]));
+    let jc = jet1_at(p, &cp);
+    let d: [I; N] = std::array::from_fn(|i| b[i] - cp[i]);
+    let mut s = jc.v;
+    for i in 0..N {
+        s = s + jc.d[i] * d[i];
+    }
+    let mut q = I::point(0.0);
+    for i in 0..N {
+        q = q + h[i][i].meet(&h[i][i]) * I::sqr(&d[i]);
+        for j in i + 1..N {
+            q = q + I::point(2.0) * h[i][j] * (d[i] * d[j]);
+        }
+    }
+    lo_or_neg(s + I::point(0.5) * q)
+}
+
+pub fn lb_taylor2<const N: usize, P: Problem<N>>(p: &P, b: &BoxN<N>) -> f64 {
+    let j = jet2_at(p, b);
+    lb_taylor2_h(p, b, &j.hessian())
+}
+
+/// Convexity leaf. `pm = None` means interval Cholesky.
+pub fn lb_convex_h<const N: usize, P: Problem<N>>(
+    p: &P,
+    b: &BoxN<N>,
+    h: &[[I; N]; N],
+    xs: &[f64; N],
+    pm: &Option<[[f64; N]; N]>,
+) -> f64 {
+    for i in 0..N {
+        if !b[i].contains(xs[i]) {
+            return f64::NEG_INFINITY;
+        }
+    }
+    let pd = match pm {
+        Some(pp) => linalg::congruence_gershgorin(h, pp),
+        None => linalg::interval_cholesky(h),
+    };
+    if !pd {
+        return f64::NEG_INFINITY;
+    }
+    let xp: [I; N] = std::array::from_fn(|i| I::point(xs[i]));
+    let j = jet1_at(p, &xp);
+    let mut s = j.v;
+    for i in 0..N {
+        s = s + j.d[i] * (b[i] - xp[i]);
+    }
+    lo_or_neg(s)
+}
+
+pub fn lb_convex<const N: usize, P: Problem<N>>(
+    p: &P,
+    b: &BoxN<N>,
+    xs: &[f64; N],
+    pm: &Option<[[f64; N]; N]>,
+) -> f64 {
+    let j = jet2_at(p, b);
+    lb_convex_h(p, b, &j.hessian(), xs, pm)
+}
+
+// ----------------------------------------------------------------- tree
+
+#[derive(Clone, Debug)]
+pub enum Leaf<const N: usize> {
+    Natural(f64),
+    MeanValue(f64),
+    Taylor2(f64),
+    Convex { lb: f64, xs: [f64; N], pm: Option<[[f64; N]; N]> },
+    Pruned,
+    /// Not closed (depth limit): the run is not a proof.
+    Fail { counterexample: Option<([f64; N], I)> },
+}
+
+#[derive(Debug)]
+pub enum Node<const N: usize> {
+    Split(usize, Box<Node<N>>, Box<Node<N>>),
+    Leaf(Leaf<N>),
+}
+
+#[derive(Clone, Debug)]
+pub struct Options {
+    pub max_depth: u32,
+    pub par_depth: u32,
+    pub use_mv: bool,
+    pub use_taylor2: bool,
+    pub use_convex: bool,
+    pub use_symmetry: bool,
+    /// stop all work after the first confirmed counterexample
+    pub stop_on_counterexample: bool,
+    /// a counter of failing boxes after which the run is aborted
+    pub max_fail: u64,
+}
+
+impl Default for Options {
+    fn default() -> Self {
+        Options {
+            max_depth: 64,
+            par_depth: 22,
+            use_mv: true,
+            use_taylor2: true,
+            use_convex: true,
+            use_symmetry: true,
+            stop_on_counterexample: true,
+            max_fail: 1000,
+        }
+    }
+}
+
+pub struct Ctx<'a, const N: usize, P: Problem<N>> {
+    pub p: &'a P,
+    pub opt: Options,
+    pub c: f64,
+    pub specials: Vec<[f64; N]>,
+    pub abort: AtomicBool,
+    pub nfail: AtomicU64,
+    pub fails: Mutex<Vec<(BoxN<N>, Option<([f64; N], I)>)>>,
+}
+
+fn closes(lb: f64, c: f64) -> bool {
+    lb >= c // false for NaN
+}
+
+pub fn split<const N: usize>(b: &BoxN<N>, d: usize) -> Option<(BoxN<N>, BoxN<N>)> {
+    let m = b[d].mid();
+    if !(b[d].lo < m && m < b[d].hi) {
+        return None;
+    }
+    let mut l = *b;
+    let mut r = *b;
+    l[d] = I::new(b[d].lo, m);
+    r[d] = I::new(m, b[d].hi);
+    Some((l, r))
+}
+
+pub fn split_dim<const N: usize>(b: &BoxN<N>) -> usize {
+    let mut best = 0;
+    let mut w = -1.0;
+    for i in 0..N {
+        let wi = b[i].hi - b[i].lo;
+        if wi > w {
+            w = wi;
+            best = i;
+        }
+    }
+    best
+}
+
+impl<'a, const N: usize, P: Problem<N>> Ctx<'a, N, P> {
+    pub fn new(p: &'a P, opt: Options) -> Self {
+        Ctx {
+            p,
+            opt,
+            c: p.bound(),
+            specials: p.special_points(),
+            abort: AtomicBool::new(false),
+            nfail: AtomicU64::new(0),
+            fails: Mutex::new(vec![]),
+        }
+    }
+
+    fn fail(&self, b: &BoxN<N>, ce: Option<([f64; N], I)>) -> Node<N> {
+        let n = self.nfail.fetch_add(1, Ordering::Relaxed) + 1;
+        if n >= self.opt.max_fail || (ce.is_some() && self.opt.stop_on_counterexample) {
+            self.abort.store(true, Ordering::Relaxed);
+        }
+        self.fails.lock().unwrap().push((*b, ce));
+        Node::Leaf(Leaf::Fail { counterexample: ce })
+    }
+
+    /// Try to close the box without splitting.
+    pub fn try_leaf(&self, b: &BoxN<N>) -> Option<Leaf<N>> {
+        let p = self.p;
+        if self.opt.use_symmetry && p.outside_fundamental(b) {
+            return Some(Leaf::Pruned);
+        }
+        let nat = lb_natural(p, b);
+        if closes(nat, self.c) {
+            return Some(Leaf::Natural(nat));
+        }
+        if self.opt.use_mv {
+            let mv = lb_meanvalue(p, b);
+            if closes(mv, self.c) {
+                return Some(Leaf::MeanValue(mv));
+            }
+        }
+        let anchor = self.specials.iter().find(|x| (0..N).all(|i| b[i].contains(x[i])));
+        if self.opt.use_taylor2 || (self.opt.use_convex && anchor.is_some()) {
+            let j = jet2_at(p, b);
+            let h = j.hessian();
+            if self.opt.use_convex {
+                if let Some(xs) = anchor {
+                    if let Some(pm) = linalg::choose_p(&h) {
+                        let lb = lb_convex_h(p, b, &h, xs, &Some(pm));
+                        if closes(lb, self.c) {
+                            return Some(Leaf::Convex { lb, xs: *xs, pm: Some(pm) });
+                        }
+                    }
+                    let lb = lb_convex_h(p, b, &h, xs, &None);
+                    if closes(lb, self.c) {
+                        return Some(Leaf::Convex { lb, xs: *xs, pm: None });
+                    }
+                }
+            }
+            if self.opt.use_taylor2 {
+                let t = lb_taylor2_h(p, b, &h);
+                if closes(t, self.c) {
+                    return Some(Leaf::Taylor2(t));
+                }
+            }
+        }
+        None
+    }
+
+    pub fn solve(&self, b: &BoxN<N>, depth: u32) -> Node<N> {
+        if self.abort.load(Ordering::Relaxed) {
+            return Node::Leaf(Leaf::Fail { counterexample: None });
+        }
+        if let Some(l) = self.try_leaf(b) {
+            return Node::Leaf(l);
+        }
+        // counterexample check at the centre: f(c) < bound proved by exact evaluation
+        let c = center(b);
+        let fc = eval_point(self.p, &c);
+        if fc.is_valid() && fc.hi < self.c {
+            return self.fail(b, Some((c, fc)));
+        }
+        if depth >= self.opt.max_depth {
+            return self.fail(b, None);
+        }
+        let d = split_dim(b);
+        let Some((l, r)) = split(b, d) else {
+            return self.fail(b, None);
+        };
+        if depth < self.opt.par_depth {
+            let (a, bb) = rayon::join(|| self.solve(&l, depth + 1), || self.solve(&r, depth + 1));
+            Node::Split(d, Box::new(a), Box::new(bb))
+        } else {
+            let a = self.solve(&l, depth + 1);
+            let bb = self.solve(&r, depth + 1);
+            Node::Split(d, Box::new(a), Box::new(bb))
+        }
+    }
+}
+
+#[derive(Clone, Debug, Default)]
+pub struct Stats {
+    pub natural: u64,
+    pub meanvalue: u64,
+    pub taylor2: u64,
+    pub convex: u64,
+    pub pruned: u64,
+    pub fail: u64,
+    pub splits: u64,
+    pub max_depth: u32,
+    /// minimum over closing leaves of their certified lower bound
+    pub min_lb: f64,
+    /// minimum certified lower bound over leaves that are not convexity leaves
+    pub min_lb_nonconvex: f64,
+}
+
+pub fn stats<const N: usize>(n: &Node<N>) -> Stats {
+    let mut s = Stats { min_lb: f64::INFINITY, min_lb_nonconvex: f64::INFINITY, ..Default::default() };
+    fn go<const N: usize>(n: &Node<N>, d: u32, s: &mut Stats) {
+        s.max_depth = s.max_depth.max(d);
+        match n {
+            Node::Split(_, a, b) => {
+                s.splits += 1;
+                go(a, d + 1, s);
+                go(b, d + 1, s);
+            }
+            Node::Leaf(l) => match l {
+                Leaf::Natural(x) => {
+                    s.natural += 1;
+                    s.min_lb = s.min_lb.min(*x);
+                    s.min_lb_nonconvex = s.min_lb_nonconvex.min(*x);
+                }
+                Leaf::MeanValue(x) => {
+                    s.meanvalue += 1;
+                    s.min_lb = s.min_lb.min(*x);
+                    s.min_lb_nonconvex = s.min_lb_nonconvex.min(*x);
+                }
+                Leaf::Taylor2(x) => {
+                    s.taylor2 += 1;
+                    s.min_lb = s.min_lb.min(*x);
+                    s.min_lb_nonconvex = s.min_lb_nonconvex.min(*x);
+                }
+                Leaf::Convex { lb, .. } => {
+                    s.convex += 1;
+                    s.min_lb = s.min_lb.min(*lb);
+                }
+                Leaf::Pruned => s.pruned += 1,
+                Leaf::Fail { .. } => s.fail += 1,
+            },
+        }
+    }
+    go(n, 0, &mut s);
+    s
+}
+
+pub struct Outcome<const N: usize> {
+    pub tree: Node<N>,
+    pub stats: Stats,
+    pub fails: Vec<(BoxN<N>, Option<([f64; N], I)>)>,
+    pub proved: bool,
+    pub seconds: f64,
+}
+
+pub fn prove<const N: usize, P: Problem<N>>(p: &P, opt: Options) -> Outcome<N> {
+    let t0 = std::time::Instant::now();
+    let ctx = Ctx::new(p, opt);
+    let tree = ctx.solve(&p.domain(), 0);
+    let st = stats(&tree);
+    let mut fails = ctx.fails.into_inner().unwrap();
+    fails.sort_by(|a, b| {
+        let ka: Vec<f64> = a.0.iter().map(|x| x.lo).collect();
+        let kb: Vec<f64> = b.0.iter().map(|x| x.lo).collect();
+        ka.partial_cmp(&kb).unwrap_or(std::cmp::Ordering::Equal)
+    });
+    let proved = st.fail == 0;
+    Outcome { tree, stats: st, fails, proved, seconds: t0.elapsed().as_secs_f64() }
+}
+
+/// Re-verify every leaf of a tree (used by the checker after parsing): returns the number of
+/// leaves and the list of offending leaves (index, reason).
+pub fn verify_leaves<const N: usize, P: Problem<N>>(
+    p: &P,
+    leaves: &[(BoxN<N>, Leaf<N>)],
+) -> Vec<(usize, String)> {
+    let c = p.bound();
+    let bad: Vec<(usize, String)> = leaves
+        .par_iter()
+        .enumerate()
+        .filter_map(|(k, (b, l))| {
+            let ok = match l {
+                Leaf::Pruned => p.outside_fundamental(b),
+                Leaf::Natural(_) => closes(lb_natural(p, b), c),
+                Leaf::MeanValue(_) => closes(lb_meanvalue(p, b), c),
+                Leaf::Taylor2(_) => closes(lb_taylor2(p, b), c),
+                Leaf::Convex { xs, pm, .. } => closes(lb_convex(p, b, xs, pm), c),
+                Leaf::Fail { .. } => false,
+            };
+            if ok {
+                None
+            } else {
+                Some((k, format!("leaf {k} ({:?}) not verified on box {:?}", l, b)))
+            }
+        })
+        .collect();
+    bad
+}

@@ -5,8 +5,8 @@
 //! - [`opt`]: multistart augmented-Lagrangian minimisation of N.d/D.d with KKT polishing.
 //! - [`models`]: CAT(0) model spaces (products of trees, Euclidean, cones over graphs).
 //! - [`tensor`]: dense tensors over f64 / c64, flattening ranks, graph (EPR-network) tensors.
-//! - [`restrict`]: restriction search T <= S by alternating least squares, border variant.
-//! - [`ff`]: exact linear algebra over F_p (p = 2, 3) for exact restriction checks.
+//! - [`restrict`]: restriction search T <= S by ALS (R/C), Levenberg-Marquardt refinement (R), border diagnostics.
+//! - exact F_2 restriction search by SAT lives in `python/f2sat.py` (python-sat).
 //! - [`k23`]: the K_{2,3} network-coding instance (parties, weights, wires).
 
 pub mod metric;

@@ -132,7 +132,7 @@ impl<const N: usize> Div for Jet1<N> {
     #[inline]
     fn div(self, o: Self) -> Self {
         let r = o.v.recip();
-        let rec = o.chain(r, -(r.sqr()));
+        let rec = o.chain(r, -(I::sqr(&r)));
         self * rec
     }
 }
@@ -154,7 +154,7 @@ impl<const N: usize> Scalar<N> for Jet1<N> {
         (self.chain(s, c), self.chain(c, -s))
     }
     fn sqrt(self) -> Self {
-        let r = self.v.sqrt();
+        let r = I::sqrt(&self.v);
         if !r.is_valid() || r.lo <= 0.0 {
             return Jet1 { v: r, d: [INVALID; N] };
         }
@@ -163,7 +163,7 @@ impl<const N: usize> Scalar<N> for Jet1<N> {
     }
     fn sqr(self) -> Self {
         let g1 = self.v * I::point(2.0);
-        self.chain(self.v.sqr(), g1)
+        self.chain(I::sqr(&self.v), g1)
     }
     fn val(&self) -> I {
         self.v
@@ -280,7 +280,7 @@ impl<const N: usize> Div for Jet2<N> {
     #[inline]
     fn div(self, o: Self) -> Self {
         let r = o.v.recip();
-        let r2 = r.sqr();
+        let r2 = I::sqr(&r);
         let rec = o.chain(r, -r2, I::point(2.0) * r2 * r);
         self * rec
     }
@@ -303,7 +303,7 @@ impl<const N: usize> Scalar<N> for Jet2<N> {
         (self.chain(s, c, -s), self.chain(c, -s, -c))
     }
     fn sqrt(self) -> Self {
-        let r = self.v.sqrt();
+        let r = I::sqrt(&self.v);
         if !r.is_valid() || r.lo <= 0.0 {
             return Jet2 { v: r, d: [INVALID; N], h: [[INVALID; N]; N] };
         }
@@ -313,7 +313,7 @@ impl<const N: usize> Scalar<N> for Jet2<N> {
     }
     fn sqr(self) -> Self {
         let g1 = self.v * I::point(2.0);
-        self.chain(self.v.sqr(), g1, I::point(2.0))
+        self.chain(I::sqr(&self.v), g1, I::point(2.0))
     }
     fn val(&self) -> I {
         self.v

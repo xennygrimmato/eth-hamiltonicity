@@ -1211,3 +1211,19 @@ that S²/(4xyz) solves the rectangular formula). Executor's notes: `research/por
 Numbers worth keeping: OpenAI's `large` alone needs h ≥ 491; both conditions need h ≥ 480 300 at C₀ = 1.
 Open Lean items: `bitsB`, dealProg, thm_cut threading (need Anthropic's build — permission pending with the user);
 Lemma H (needs CAT(0) theory absent from Mathlib); the field identification inside `ContainStatement`.
+
+## 26 Nov (late, 26): inequality (I) certified by interval arithmetic [N, rigorous]
+
+`tools/ivcert` (Rust + rayon): own outward-rounded intervals (TwoSum/fma error sign), Taylor sin/cos with Lagrange
+remainder and a rigorous π enclosure, no libm; leaf tests = natural extension, mean-value form, Taylor-2, certified
+convexity (interval Hessian PD via Gershgorin after congruence or interval Cholesky); deterministic certificate and a
+separate checker `ivcheck`. 14 tests (true claims, false claims refused with exact counterexamples, tampered
+certificates rejected).
+- (I): F(θ) ≥ 3 on [−π/2, π/2]³. 1014 leaves without symmetry, 401 with; < 1 s. The box [−π/32, π/32]³ closes by
+  convexity with F(0) = 3, ∇F(0) = 0 exact; elsewhere bound ≥ 3.00072. **I built the tool and ran `ivcheck` on both
+  certificates myself: VERIFIED.** Certificates: `tools/ivcert/certificates/hull3{,-nosym}.cert`.
+- Sanity: constant 2 in place of 9 is refuted (F(π/4, −π/4, 0) = 2.808); constant 8 does not close (equality at the
+  corner (π/2, π/2, −π/2)).
+- Trust base: the Rust interval code and the checker. Not Lean.
+- Remaining for the lower bound: the end-of-spine variant (spec not yet written by the hull agent), and a referee
+  pass on the book reduction and calibration.

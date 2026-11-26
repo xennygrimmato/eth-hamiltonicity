@@ -2480,6 +2480,9 @@ pub struct FiltSpace {
     pub pts: Vec<Vec<u8>>,
     pub nframes: usize,
     pub supp: Vec<u8>,
+    /// dsupp[frame][point]: indices i with <phi, f_i> != 0 for the functional phi with coordinates of the point
+    /// (support of the hyperplane ker phi in the dual frame)
+    pub dsupp: Vec<u8>,
     pub exhaustive: bool,
 }
 
@@ -2530,10 +2533,24 @@ impl FiltSpace {
         }
         let exhaustive = comb <= max_frames as f64 * 1.5;
         let mut supp = vec![];
+        let mut dsupp: Vec<u8> = vec![];
         let mut nframes = 0;
-        let push_frame = |idx: &[usize], supp: &mut Vec<u8>| -> bool {
+        let mut push_frame = |idx: &[usize], supp: &mut Vec<u8>| -> bool {
             let cols: Vec<Vec<u8>> = idx.iter().map(|&i| pts[i].clone()).collect();
             if let Some(inv) = rank_and_inverse(&f, &cols, n) {
+                for ph in &pts {
+                    let mut mask = 0u8;
+                    for (r, col) in cols.iter().enumerate() {
+                        let mut c = 0u8;
+                        for j in 0..n {
+                            c = f.a(c, f.m(ph[j], col[j]));
+                        }
+                        if c != 0 {
+                            mask |= 1 << r;
+                        }
+                    }
+                    dsupp.push(mask);
+                }
                 for p in &pts {
                     let mut mask = 0u8;
                     for r in 0..n {
@@ -2597,7 +2614,7 @@ impl FiltSpace {
                 }
             }
         }
-        FiltSpace { f, n, pts, nframes, supp, exhaustive }
+        FiltSpace { f, n, pts, nframes, supp, dsupp, exhaustive }
     }
     pub fn point_index(&self, v: &[u8]) -> usize {
         // normalise
@@ -2611,8 +2628,13 @@ impl FiltSpace {
 /// Wolfe's minimum-norm-point algorithm for conv{Σ_k (a_k e_{i_k} - b_k e_{j_k}) : i_k in A_k, j_k in B_k}
 /// in R^n (n <= 8), via the separable linear oracle. Returns the minimum-norm point.
 pub fn mnp_supports(n: usize, a: &[(u8, f64)], b: &[(u8, f64)]) -> [f64; 8] {
+    mnp_supports_lin(n, a, b, &[0.0; 8])
+}
+
+/// [`mnp_supports`] with a constant vector `lin` added to every hull point.
+pub fn mnp_supports_lin(n: usize, a: &[(u8, f64)], b: &[(u8, f64)], lin: &[f64; 8]) -> [f64; 8] {
     let oracle = |x: &[f64; 8]| -> [f64; 8] {
-        let mut v = [0.0; 8];
+        let mut v = *lin;
         for &(m, w) in a {
             if w == 0.0 || m == 0 {
                 continue;
@@ -2740,55 +2762,117 @@ fn solve_dense(mut a: Vec<Vec<f64>>, mut b: Vec<f64>) -> Option<Vec<f64>> {
     Some((0..n).map(|i| b[i] / a[i][i]).collect())
 }
 
-/// Hubs in C_N(q): point index pt[h] and level (radius) r[h] >= 0.
+/// Hubs in C_N(q): hub h is the filtration "U at level r[h], V at level c[h]" (r >= c), U = the point pt[h]
+/// (kind 0) or the hyperplane ker(phi), phi with the coordinates of the point pt[h] (kind 1).
 #[derive(Clone, Debug)]
 pub struct FiltPlacement {
     pub pt: Vec<usize>,
     pub r: Vec<f64>,
+    pub kind: Vec<u8>,
+    pub c: Vec<f64>,
 }
 
-/// Far-leg value of one edge: max over frames and unit d of Σ_k w_k [r_k min_{supp h_k} d - r'_k max_{supp h'_k} d]
-/// = max over frames of the distance from 0 to the hull (0 if it contains 0). Returns (c_e, per-merge savings at the
-/// optimum, unweighted).
-pub fn filt_edge(fs: &FiltSpace, hu: &[(usize, f64)], hv: &[(usize, f64)], w: &[f64]) -> (f64, Vec<f64>) {
+impl FiltPlacement {
+    pub fn points(pt: Vec<usize>, r: Vec<f64>) -> Self {
+        let n = pt.len();
+        FiltPlacement { pt, r, kind: vec![0; n], c: vec![0.0; n] }
+    }
+}
+
+/// A hub as seen by one edge: (point index, kind, a, c).
+pub type FHub = (usize, u8, f64, f64);
+
+/// Busemann-type term of a hub for a leg along +d (side 0) or -d (side 1) in a frame: value at d.
+fn fhub_term(fs: &FiltSpace, fr: usize, h: FHub, side: u8, d: &[f64]) -> f64 {
     let np = fs.pts.len();
     let n = fs.n;
-    let mut seen: std::collections::HashMap<Vec<u8>, ()> = Default::default();
-    let mut best = (0.0f64, vec![0.0; hu.len()]);
-    for fr in 0..fs.nframes {
-        let row = &fs.supp[fr * np..(fr + 1) * np];
-        let key: Vec<u8> = hu.iter().chain(hv.iter()).map(|&(p, _)| row[p]).collect();
-        if seen.insert(key, ()).is_some() {
-            continue;
-        }
-        let a: Vec<(u8, f64)> = hu.iter().zip(w).map(|(&(p, r), &wk)| (row[p], r * wk)).collect();
-        let b: Vec<(u8, f64)> = hv.iter().zip(w).map(|(&(p, r), &wk)| (row[p], r * wk)).collect();
-        let x = mnp_supports(n, &a, &b);
-        let nrm = (0..n).map(|i| x[i] * x[i]).sum::<f64>().sqrt();
-        if nrm > best.0 + 1e-12 {
-            let d: Vec<f64> = (0..n).map(|i| x[i] / nrm).collect();
-            let sk: Vec<f64> = hu
-                .iter()
-                .zip(hv)
-                .map(|(&(p, r), &(p2, r2))| {
-                    let mn = (0..n).filter(|&i| (row[p] >> i) & 1 == 1).map(|i| d[i]).fold(f64::INFINITY, f64::min);
-                    let mx = (0..n).filter(|&i| (row[p2] >> i) & 1 == 1).map(|i| d[i]).fold(f64::NEG_INFINITY, f64::max);
-                    r * mn - r2 * mx
-                })
-                .collect();
-            best = (nrm, sk);
-        }
+    let (p, kind, a, c) = h;
+    let sum: f64 = d[..n].iter().sum();
+    let mask = if kind == 0 { fs.supp[fr * np + p] } else { fs.dsupp[fr * np + p] };
+    let mn = (0..n).filter(|&i| (mask >> i) & 1 == 1).map(|i| d[i]).fold(f64::INFINITY, f64::min);
+    let mx = (0..n).filter(|&i| (mask >> i) & 1 == 1).map(|i| d[i]).fold(f64::NEG_INFINITY, f64::max);
+    match (kind, side) {
+        (0, 0) => (a - c) * mn + c * sum,
+        (1, 0) => a * sum - (a - c) * mx,
+        (0, _) => -(a - c) * mx - c * sum,
+        _ => -a * sum + (a - c) * mn,
     }
-    best
 }
 
-#[inline]
-fn filt_d2(pa: usize, ra: f64, pb: usize, rb: f64) -> f64 {
-    if pa == pb {
-        (ra - rb) * (ra - rb)
-    } else {
-        ra * ra + rb * rb
+/// Far-leg value of one edge: max over frames and unit d of Σ_k w_k [term(h_k, +d) + term(h'_k, -d)], where for
+/// U = point (support A in the frame) term(+d) = (a-c) min_A d + c Σd, term(-d) = -(a-c) max_A d - c Σd; for U =
+/// hyperplane (dual support A*) term(+d) = a Σd - (a-c) max_{A*} d, term(-d) = -a Σd + (a-c) min_{A*} d (entry levels of
+/// U in the flag of the ray; q1-notes Lemma 1.4 for points). Each term is concave in d, so the maximum is the
+/// distance from 0 to a convex hull (Wolfe). Returns (c_e, per-merge savings at the optimum, unweighted).
+pub fn filt_edge(fs: &FiltSpace, hu: &[FHub], hv: &[FHub], w: &[f64]) -> (f64, Vec<f64>) {
+    let np = fs.pts.len();
+    let n = fs.n;
+    let mut seen: std::collections::HashSet<Vec<u8>> = Default::default();
+    let mut best = (0.0f64, vec![0.0; hu.len()], 0usize, [0.0f64; 8]);
+    for fr in 0..fs.nframes {
+        let key: Vec<u8> = hu
+            .iter()
+            .chain(hv.iter())
+            .map(|&(p, k, _, _)| if k == 0 { fs.supp[fr * np + p] } else { fs.dsupp[fr * np + p] })
+            .collect();
+        if !seen.insert(key) {
+            continue;
+        }
+        let mut lin = [0.0f64; 8];
+        let mut mins: Vec<(u8, f64)> = vec![];
+        let mut maxs: Vec<(u8, f64)> = vec![];
+        for (side, hs) in [(0u8, hu), (1u8, hv)] {
+            for (&(p, kind, a, c), &wk) in hs.iter().zip(w) {
+                let mask = if kind == 0 { fs.supp[fr * np + p] } else { fs.dsupp[fr * np + p] };
+                let (l, mi, ma) = match (kind, side) {
+                    (0, 0) => (c, a - c, 0.0),
+                    (1, 0) => (a, 0.0, a - c),
+                    (0, _) => (-c, 0.0, a - c),
+                    _ => (-a, a - c, 0.0),
+                };
+                for x in lin.iter_mut().take(n) {
+                    *x += wk * l;
+                }
+                if mi != 0.0 {
+                    mins.push((mask, wk * mi));
+                }
+                if ma != 0.0 {
+                    maxs.push((mask, wk * ma));
+                }
+            }
+        }
+        let x = mnp_supports_lin(n, &mins, &maxs, &lin);
+        let nrm = (0..n).map(|i| x[i] * x[i]).sum::<f64>().sqrt();
+        if nrm > best.0 + 1e-12 {
+            let mut d = [0.0; 8];
+            for i in 0..n {
+                d[i] = x[i] / nrm;
+            }
+            best = (nrm, vec![], fr, d);
+        }
     }
+    let (c, _, fr, d) = best;
+    let sk = if c > 0.0 { hu.iter().zip(hv).map(|(&h, &h2)| fhub_term(fs, fr, h, 0, &d) + fhub_term(fs, fr, h2, 1, &d)).collect() } else { vec![0.0; hu.len()] };
+    (c, sk)
+}
+
+/// Squared distance of two hub filtrations (U at a, V at c), (U' at b, V at c'), dims k, k', i = dim(U ∩ U'):
+/// i(a-b)^2 + (k-i)(a-c')^2 + (k'-i)(c-b)^2 + (N-k-k'+i)(c-c')^2.
+fn filt_d2(fs: &FiltSpace, x: FHub, y: FHub) -> f64 {
+    let n = fs.n;
+    let f = &fs.f;
+    let (p, kp, a, c) = x;
+    let (p2, kp2, b, c2) = y;
+    let dot = |u: &[u8], v: &[u8]| (0..n).fold(0u8, |acc, j| f.a(acc, f.m(u[j], v[j])));
+    let (k, k2) = (if kp == 0 { 1 } else { n - 1 }, if kp2 == 0 { 1 } else { n - 1 });
+    let i = match (kp, kp2) {
+        (0, 0) => (p == p2) as usize,
+        (1, 1) => if p == p2 { n - 1 } else { n - 2 },
+        (0, 1) => (dot(&fs.pts[p], &fs.pts[p2]) == 0) as usize,
+        _ => (dot(&fs.pts[p], &fs.pts[p2]) == 0) as usize,
+    };
+    let (k, k2, i) = (k as f64, k2 as f64, i as f64);
+    i * (a - b).powi(2) + (k - i) * (a - c2).powi(2) + (k2 - i) * (c - b).powi(2) + (n as f64 - k - k2 + i) * (c - c2).powi(2)
 }
 
 /// Scores of a single filtration factor on a design:
@@ -2818,7 +2902,7 @@ pub fn filt_scores(des: &Design, fs: &FiltSpace, pl: &FiltPlacement, cache: &mut
         for a in 0..r {
             for b in a + 1..r {
                 let (ha, hb) = (des.hub(m, a) - nl, des.hub(m, b) - nl);
-                let d2 = filt_d2(pl.pt[ha], pl.r[ha], pl.pt[hb], pl.r[hb]);
+                let d2 = filt_d2(fs, (pl.pt[ha], pl.kind[ha], pl.r[ha], pl.c[ha]), (pl.pt[hb], pl.kind[hb], pl.r[hb], pl.c[hb]));
                 t += d2;
                 delta[m] = delta[m].max(d2.sqrt());
             }
@@ -2827,9 +2911,10 @@ pub fn filt_scores(des: &Design, fs: &FiltSpace, pl: &FiltPlacement, cache: &mut
     }
     db /= p as f64;
     let mut eval = |u: usize, v: usize, w: &[f64]| -> (f64, Vec<f64>) {
-        let hu: Vec<(usize, f64)> = (0..p).map(|m| (pl.pt[hub(m, u)], pl.r[hub(m, u)])).collect();
-        let hv: Vec<(usize, f64)> = (0..p).map(|m| (pl.pt[hub(m, v)], pl.r[hub(m, v)])).collect();
-        let mut key: Vec<u64> = hu.iter().chain(hv.iter()).flat_map(|&(a, r)| [a as u64, r.to_bits()]).collect();
+        let fh = |h: usize| -> FHub { (pl.pt[h], pl.kind[h], pl.r[h], pl.c[h]) };
+        let hu: Vec<FHub> = (0..p).map(|m| fh(hub(m, u))).collect();
+        let hv: Vec<FHub> = (0..p).map(|m| fh(hub(m, v))).collect();
+        let mut key: Vec<u64> = hu.iter().chain(hv.iter()).flat_map(|&(a, k, r, c)| [(a as u64) << 1 | k as u64, r.to_bits(), c.to_bits()]).collect();
         key.extend(w.iter().map(|x| x.to_bits()));
         if let Some(c) = cache.get(&key) {
             return c.clone();
@@ -2880,6 +2965,9 @@ pub fn anneal_filt(des: &Design, fs: &FiltSpace, target: &str, iters: usize, cha
     let nh = des.nhubs();
     let np = fs.pts.len();
     let direct = target != "gamma" && target != "sym";
+    // PF_FILT_POINTS: points only; PF_FILT_NOC: V at level 0 only
+    let allow_hyp = std::env::var("PF_FILT_POINTS").is_err();
+    let allow_c = std::env::var("PF_FILT_NOC").is_err();
     let score = |sc: &FiltScores| match target {
         "gamma" => sc.gamma,
         "sym" => sc.sym,
@@ -2894,7 +2982,12 @@ pub fn anneal_filt(des: &Design, fs: &FiltSpace, target: &str, iters: usize, cha
             let mut pl = if !starts.is_empty() && c % 2 == 0 {
                 starts[(c / 2) % starts.len()].clone()
             } else {
-                FiltPlacement { pt: (0..nh).map(|_| rng.gen_range(0..np)).collect(), r: vec![1.0; nh] }
+                FiltPlacement {
+                    pt: (0..nh).map(|_| rng.gen_range(0..np)).collect(),
+                    r: vec![1.0; nh],
+                    kind: (0..nh).map(|_| if allow_hyp && rng.gen::<bool>() { 1 } else { 0 }).collect(),
+                    c: vec![0.0; nh],
+                }
             };
             let mut cur = score(&filt_scores(des, fs, &pl, &mut cache, direct));
             let mut best = (cur, pl.clone());
@@ -2904,15 +2997,24 @@ pub fn anneal_filt(des: &Design, fs: &FiltSpace, target: &str, iters: usize, cha
                 let t = t0 * (t1 / t0).powf(it as f64 / iters as f64) * best.0.abs().max(1e-6);
                 let old = pl.clone();
                 let h = rng.gen_range(0..nh);
-                match rng.gen_range(0..10) {
+                match rng.gen_range(0..14) {
                     0..=4 => pl.pt[h] = rng.gen_range(0..np),
-                    5 => pl.pt[h] = pl.pt[rng.gen_range(0..nh)],
-                    6..=7 => pl.r[h] = (pl.r[h] + sigma * gauss(&mut rng)).max(0.0),
-                    8 => pl.r[h] = if rng.gen::<bool>() { 0.0 } else { 1.0 },
+                    5 => {
+                        let h2 = rng.gen_range(0..nh);
+                        pl.pt[h] = pl.pt[h2];
+                        pl.kind[h] = pl.kind[h2];
+                    }
+                    6..=7 => pl.r[h] = (pl.r[h] + sigma * gauss(&mut rng)).max(pl.c[h]),
+                    8 => pl.r[h] = if rng.gen::<bool>() { pl.c[h].max(0.0) } else { pl.c[h] + 1.0 },
+                    9 if allow_hyp => pl.kind[h] ^= 1,
+                    10..=11 if allow_c => pl.c[h] = (pl.c[h] + sigma * gauss(&mut rng)).min(pl.r[h]),
+                    12 if allow_c => pl.c[h] = if rng.gen::<bool>() { 0.0 } else { pl.r[h] - 1.0 },
                     _ => {
                         let h2 = rng.gen_range(0..nh);
                         pl.pt.swap(h, h2);
                         pl.r.swap(h, h2);
+                        pl.kind.swap(h, h2);
+                        pl.c.swap(h, h2);
                     }
                 }
                 if cache.len() > 2_000_000 {
@@ -2961,7 +3063,7 @@ pub fn q1_placement(des: &Design, fs: &FiltSpace, m: usize) -> FiltPlacement {
             pt[des.hub(k, y) - nl] = fs.point_index(&v);
         }
     }
-    FiltPlacement { pt, r: vec![1.0; des.nhubs()] }
+    FiltPlacement::points(pt, vec![1.0; des.nhubs()])
 }
 
 // ------------------------------------------------------------------------------------ tests

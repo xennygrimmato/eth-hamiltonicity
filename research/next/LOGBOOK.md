@@ -2873,3 +2873,13 @@ Referee on Theorem W (`research/sat3/review-thmW.md` in progress), interim verdi
 - `prior-barriers.md` now carries a correction banner. Referee launched → `research/sat3/review-q2.md`
   (first questions: does HC Thm 3.1 say what is used; is Anthropic's clique polynomial the polynomial HC
   bounds; do the three uses of "ports" compose).
+
+**Referee on the Q1 notes, interim (items 1–2): correct; Theorem A upgraded to [R].** The filtration distance
+is well defined and is the cone × line metric of the vectorial building of GL_N, so CAT(0) follows from the
+cited theorems; tested with the referee's own code for q = 2, 3, 4 and N = 3, 4, 5, including hundreds of
+triples NOT in a common apartment (CN along explicit geodesics, Reshetnyak, four-point condition: no
+violation above 4e-12). Placement: all hubs at √2, |xy| = 2T + 1, |x,h|² = T² + 1/2 for every point of W,
+generic s^k = 1 − 1/(2T) for every class; full-level values and edge counts match the formula for q = 2
+(m = 2, 3, 4), q = 3 (p = 3, 4), q = 4 (p = 5). Every step of the cap's proof is tight on X₄ and E_D (only
+slack: convexity, 3.39/T). Minor: "on every set of generic edges … which is the cap" holds for balanced sets
+only. Items 3–6 (price version, Theorem D′, the 8-wire target, negative results) still to come.

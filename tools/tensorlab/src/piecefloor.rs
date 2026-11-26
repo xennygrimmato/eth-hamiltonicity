@@ -1,0 +1,855 @@
+//! piecefloor: the price method for pieces (research/vpvnp/b2 §1, research/ports/c1d1 spec S3).
+//!
+//! A *design* has nodes, weighted edges (each edge has two legs, one at each end) and p merges
+//! (partitions of the nodes into groups; one hub per group). A *placement* puts every leg and every
+//! hub at a point of a metric space. For merge m:
+//!
+//!   b_m = (L - H_m) / delta_m,   L = sum_e w_e |leg_u(e) leg_v(e)|,
+//!   H_m = sum_e w_e (|leg_u(e), hub_m(u)| + |leg_v(e), hub_m(v)|),  delta_m = max hub-hub distance of m.
+//!
+//! (delta_m = 0 gives L <= H_m by the triangle inequality, and we set b_m = 0.) A price yields one piece
+//! with c_m >= b_m lambda - o(lambda) for every m at once; the adversary mixes pieces, so the floor is
+//! max over convex combinations of the (clipped) b-vectors of min_m. For designs whose automorphisms act
+//! transitively on the merges (all designs below) this equals max over placements of
+//! **value = (sum_m max(0, b_m)) / p**, which is the quantity maximised here. LARGER is a STRONGER lower
+//! bound on the cost of the best piece, i.e. a HIGHER floor for the level factor rho = value / sum_e w_e.
+//!
+//! Spaces: Mat_mu(F_2) with sqrt(rank(a - b)) (mu <= 8, bit-packed as in `rankplace::f2`), Euclidean
+//! R^k, and l2 products of spiders (star trees with A arms; A = 3 is the tripod) with R^k.
+//!
+//! - [`Design`]: crossing (two wires, two merges), K4 = AG(2,2) with its three parallel classes
+//!   (all six edges; each edge is internal to one merge), Delta_3 (anti-diagonal-class edges of the
+//!   3 x 3 grid, merges rows / columns / diagonals, or only rows / columns).
+//! - [`MatSpace`]: point tables for mu <= 3, exact leg optimisation for given hubs
+//!   ([`MatSpace::best_legs`], decouples over edges), exhaustive enumeration of hub placements up to
+//!   the isometry group a -> alpha a beta + c, a -> a^T ([`exhaustive_hubs`]).
+//! - [`anneal_mat`]: parallel simulated annealing over full placements in Mat_mu(F_2), mu <= 8, with
+//!   coordinatewise exhaustive polishing of legs (mu <= 4) and exact legs (mu <= 3).
+//! - [`Model`] / [`anneal_model`]: the same objective in spider^j x R^k.
+
+use crate::rankplace::f2;
+use rand::rngs::SmallRng;
+use rand::{Rng, SeedableRng};
+use rayon::prelude::*;
+use std::collections::HashSet;
+
+// ------------------------------------------------------------------------------------ designs
+
+#[derive(Clone, Debug)]
+pub struct Design {
+    pub name: String,
+    pub nnodes: usize,
+    pub edges: Vec<(usize, usize)>,
+    pub weights: Vec<f64>,
+    /// groups[m][node] = group of node under merge m
+    pub groups: Vec<Vec<usize>>,
+    pub ngroups: Vec<usize>,
+    hub_off: Vec<usize>,
+}
+
+impl Design {
+    pub fn new(name: &str, nnodes: usize, edges: Vec<(usize, usize)>, weights: Vec<f64>, groups: Vec<Vec<usize>>) -> Self {
+        let ngroups: Vec<usize> = groups.iter().map(|g| g.iter().max().unwrap() + 1).collect();
+        let mut hub_off = vec![];
+        let mut o = 2 * edges.len();
+        for &r in &ngroups {
+            hub_off.push(o);
+            o += r;
+        }
+        Design { name: name.into(), nnodes, edges, weights, groups, ngroups, hub_off }
+    }
+    /// Rectangle crossing: wires x-v (weight l1) and y-u (weight l2); rows {x,y}|{u,v}, columns {x,u}|{y,v}.
+    /// Nodes x,y,u,v = 0,1,2,3.
+    pub fn crossing(l1: f64, l2: f64) -> Self {
+        Design::new("crossing", 4, vec![(0, 3), (1, 2)], vec![l1, l2], vec![vec![0, 0, 1, 1], vec![0, 1, 0, 1]])
+    }
+    /// K4 = AG(2,2), all 6 edges, merges = the three parallel classes (= the three perfect matchings);
+    /// node (a,b) = 2a+b, groups by the functionals a, b, a+b.
+    pub fn k4() -> Self {
+        let mut edges = vec![];
+        for i in 0..4 {
+            for j in i + 1..4 {
+                edges.push((i, j));
+            }
+        }
+        let f = |k: usize, v: usize| {
+            let (a, b) = (v >> 1, v & 1);
+            match k {
+                0 => a,
+                1 => b,
+                _ => a ^ b,
+            }
+        };
+        let groups = (0..3).map(|k| (0..4).map(|v| f(k, v)).collect()).collect();
+        Design::new("K4", 4, edges, vec![1.0; 6], groups)
+    }
+    /// Delta_3: nodes (r,c) = 3r+c of the 3x3 grid, edges between nodes of the same anti-diagonal
+    /// class (r+c mod 3) (9 edges, 18 legs), merges rows, columns, diagonals (r-c mod 3); `p` = 2 keeps
+    /// rows and columns only. Edge and leg order as in research/vpvnp/b2/*.py.
+    pub fn delta3(p: usize) -> Self {
+        let nodes: Vec<(usize, usize)> = (0..3).flat_map(|r| (0..3).map(move |c| (r, c))).collect();
+        let mut edges = vec![];
+        for (i, &(r, c)) in nodes.iter().enumerate() {
+            for (j, &(r2, c2)) in nodes.iter().enumerate() {
+                if i < j && (r + c) % 3 == (r2 + c2) % 3 {
+                    edges.push((i, j));
+                }
+            }
+        }
+        let mf = |k: usize, (r, c): (usize, usize)| match k {
+            0 => r,
+            1 => c,
+            _ => (r + 3 - c) % 3,
+        };
+        let groups = (0..p).map(|k| nodes.iter().map(|&v| mf(k, v)).collect()).collect();
+        Design::new(if p == 3 { "Delta3" } else { "Delta3-2merge" }, 9, edges, vec![1.0; 9], groups)
+    }
+    pub fn by_name(name: &str) -> Option<Self> {
+        match name {
+            "crossing" => Some(Self::crossing(1.0, 1.0)),
+            "crossing-half" => Some(Self::crossing(1.0, 0.5)),
+            "crossing-tenth" => Some(Self::crossing(1.0, 0.1)),
+            "k4" | "K4" => Some(Self::k4()),
+            "delta3" | "Delta3" => Some(Self::delta3(3)),
+            "delta3-2" => Some(Self::delta3(2)),
+            _ => None,
+        }
+    }
+    pub fn p(&self) -> usize {
+        self.groups.len()
+    }
+    pub fn nlegs(&self) -> usize {
+        2 * self.edges.len()
+    }
+    pub fn nhubs(&self) -> usize {
+        self.ngroups.iter().sum()
+    }
+    pub fn npoints(&self) -> usize {
+        self.nlegs() + self.nhubs()
+    }
+    /// point index of the hub of group g of merge m
+    #[inline]
+    pub fn hub(&self, m: usize, g: usize) -> usize {
+        self.hub_off[m] + g
+    }
+    #[inline]
+    pub fn leg_node(&self, l: usize) -> usize {
+        let (u, v) = self.edges[l / 2];
+        if l % 2 == 0 {
+            u
+        } else {
+            v
+        }
+    }
+    pub fn total_weight(&self) -> f64 {
+        self.weights.iter().sum()
+    }
+    /// The flat (Euclidean far-leg) value of the orthogonal-simplex price: per merge,
+    /// (1/p) sum_e w_e |sum_k Delta^k_e| with |Delta^k_e| = 1 if e crosses k, else 0.
+    pub fn flat_value(&self) -> f64 {
+        let p = self.p() as f64;
+        let s: f64 = self
+            .edges
+            .iter()
+            .zip(&self.weights)
+            .map(|(&(u, v), w)| w * (self.groups.iter().filter(|g| g[u] != g[v]).count() as f64).sqrt())
+            .sum();
+        s / p
+    }
+    /// b-vector for a distance function on point indices.
+    pub fn bvec<F: Fn(usize, usize) -> f64>(&self, d: F) -> Vec<f64> {
+        let mut l = 0.0;
+        let mut h = vec![0.0; self.p()];
+        for (e, &(u, v)) in self.edges.iter().enumerate() {
+            let w = self.weights[e];
+            l += w * d(2 * e, 2 * e + 1);
+            for m in 0..self.p() {
+                h[m] += w * (d(2 * e, self.hub(m, self.groups[m][u])) + d(2 * e + 1, self.hub(m, self.groups[m][v])));
+            }
+        }
+        (0..self.p())
+            .map(|m| {
+                let mut dm: f64 = 0.0;
+                for g in 0..self.ngroups[m] {
+                    for g2 in g + 1..self.ngroups[m] {
+                        dm = dm.max(d(self.hub(m, g), self.hub(m, g2)));
+                    }
+                }
+                if dm <= 1e-12 {
+                    0.0
+                } else {
+                    (l - h[m]) / dm
+                }
+            })
+            .collect()
+    }
+}
+
+/// (sum_m max(0, b_m)) / p.
+pub fn value(b: &[f64]) -> f64 {
+    b.iter().map(|x| x.max(0.0)).sum::<f64>() / b.len() as f64
+}
+
+// ------------------------------------------------------------------------------------ Mat_mu(F_2)
+
+/// sqrt(r) for r = 0..=8
+pub const SQ: [f64; 9] = [0.0, 1.0, 1.4142135623730951, 1.7320508075688772, 2.0, 2.23606797749979, 2.449489742783178, 2.6457513110645907, 2.8284271247461903];
+
+#[inline]
+pub fn mdist(a: u64, b: u64) -> f64 {
+    SQ[f2::rank(a ^ b) as usize]
+}
+
+/// Matrix with index i (row r = bits mu*r .. mu*r+mu-1 of i).
+pub fn idx2mat(i: usize, mu: usize) -> u64 {
+    let mask = (1usize << mu) - 1;
+    (0..mu).fold(0u64, |a, r| a | ((((i >> (mu * r)) & mask) as u64) << (8 * r)))
+}
+pub fn mat2idx(a: u64, mu: usize) -> usize {
+    (0..mu).fold(0usize, |s, r| s | ((((a >> (8 * r)) & 0xFF) as usize) << (mu * r)))
+}
+
+pub fn b_mat(d: &Design, pts: &[u64]) -> Vec<f64> {
+    d.bvec(|i, j| mdist(pts[i], pts[j]))
+}
+
+/// Enumerated Mat_mu(F_2) for mu <= 3 with the full distance table.
+pub struct MatSpace {
+    pub mu: usize,
+    pub n: usize,
+    pub mats: Vec<u64>,
+    pub dist: Vec<f64>,
+}
+
+impl MatSpace {
+    pub fn new(mu: usize) -> Self {
+        assert!(mu <= 3);
+        let n = 1usize << (mu * mu);
+        let mats: Vec<u64> = (0..n).map(|i| idx2mat(i, mu)).collect();
+        let mut dist = vec![0.0; n * n];
+        for i in 0..n {
+            for j in 0..n {
+                dist[i * n + j] = mdist(mats[i], mats[j]);
+            }
+        }
+        MatSpace { mu, n, mats, dist }
+    }
+    #[inline]
+    pub fn d(&self, i: usize, j: usize) -> f64 {
+        self.dist[i * self.n + j]
+    }
+    /// Exact optimum over all leg positions for hubs at point indices `hubs` (in hub order of the
+    /// design): max over nonempty S of sum_{m in S} b_m, which decouples over edges:
+    /// sum_e w_e max_{x,y} [W |xy| - c_u(x) - c_v(y)], W = sum_{m in S} 1/delta_m,
+    /// c_u(x) = sum_{m in S} |x, hub_m(u)| / delta_m. Returns (sum_m b_m^+ = p*value, S mask, legs).
+    pub fn best_legs(&self, des: &Design, hubs: &[usize], want_legs: bool, scratch: &mut Vec<f64>) -> (f64, u32, Vec<usize>) {
+        let p = des.p();
+        let n = self.n;
+        let nl = des.nlegs();
+        let hb = |m: usize, g: usize| hubs[des.hub(m, g) - nl];
+        let mut inv = vec![0.0; p];
+        for m in 0..p {
+            let mut dm: f64 = 0.0;
+            for g in 0..des.ngroups[m] {
+                for g2 in g + 1..des.ngroups[m] {
+                    dm = dm.max(self.d(hb(m, g), hb(m, g2)));
+                }
+            }
+            inv[m] = if dm > 1e-12 { 1.0 / dm } else { 0.0 };
+        }
+        let nn = des.nnodes;
+        scratch.resize(nn * n, 0.0);
+        let mut best = (0.0f64, 0u32);
+        for s in 1u32..(1u32 << p) {
+            if (0..p).any(|m| (s >> m) & 1 == 1 && inv[m] == 0.0) {
+                continue;
+            }
+            let wsum: f64 = (0..p).filter(|m| (s >> m) & 1 == 1).map(|m| inv[m]).sum();
+            for u in 0..nn {
+                let c = &mut scratch[u * n..(u + 1) * n];
+                for x in c.iter_mut() {
+                    *x = 0.0;
+                }
+                for m in 0..p {
+                    if (s >> m) & 1 == 1 {
+                        let h = hb(m, des.groups[m][u]);
+                        let row = &self.dist[h * n..(h + 1) * n];
+                        for x in 0..n {
+                            c[x] += inv[m] * row[x];
+                        }
+                    }
+                }
+            }
+            let mut tot = 0.0;
+            for (e, &(u, v)) in des.edges.iter().enumerate() {
+                let cu = &scratch[u * n..(u + 1) * n];
+                let cv = &scratch[v * n..(v + 1) * n];
+                let mut bx = f64::NEG_INFINITY;
+                for x in 0..n {
+                    let row = &self.dist[x * n..(x + 1) * n];
+                    let mut by = f64::NEG_INFINITY;
+                    for y in 0..n {
+                        let t = wsum * row[y] - cv[y];
+                        if t > by {
+                            by = t;
+                        }
+                    }
+                    let t = by - cu[x];
+                    if t > bx {
+                        bx = t;
+                    }
+                }
+                tot += des.weights[e] * bx;
+            }
+            if tot > best.0 + 1e-12 {
+                best = (tot, s);
+            }
+        }
+        let mut legs = vec![];
+        if want_legs && best.1 != 0 {
+            legs = self.legs_for(des, hubs, best.1, &inv);
+        }
+        (best.0, best.1, legs)
+    }
+    fn legs_for(&self, des: &Design, hubs: &[usize], s: u32, inv: &[f64]) -> Vec<usize> {
+        let n = self.n;
+        let p = des.p();
+        let nl = des.nlegs();
+        let hb = |m: usize, g: usize| hubs[des.hub(m, g) - nl];
+        let wsum: f64 = (0..p).filter(|m| (s >> m) & 1 == 1).map(|m| inv[m]).sum();
+        let cost = |u: usize, x: usize| -> f64 {
+            (0..p).filter(|m| (s >> m) & 1 == 1).map(|m| inv[m] * self.d(x, hb(m, des.groups[m][u]))).sum()
+        };
+        let mut legs = vec![0; nl];
+        for (e, &(u, v)) in des.edges.iter().enumerate() {
+            let mut b = (f64::NEG_INFINITY, 0, 0);
+            for x in 0..n {
+                for y in 0..n {
+                    let t = wsum * self.d(x, y) - cost(u, x) - cost(v, y);
+                    if t > b.0 + 1e-12 {
+                        b = (t, x, y);
+                    }
+                }
+            }
+            legs[2 * e] = b.1;
+            legs[2 * e + 1] = b.2;
+        }
+        legs
+    }
+}
+
+/// Invertible mu x mu matrices over F_2.
+pub fn gl(mu: usize) -> Vec<u64> {
+    (0..1usize << (mu * mu)).map(|i| idx2mat(i, mu)).filter(|&a| f2::rank(a) as usize == mu).collect()
+}
+
+/// The linear isometries a -> alpha a beta, a -> alpha a^T beta of Mat_mu(F_2), as permutations of
+/// point indices (deduplicated). Together with translations they generate the isometry group used
+/// for orbit reduction (sufficient for correctness: any subgroup gives a valid reduction).
+pub fn linear_isometries(mu: usize) -> Vec<Vec<u16>> {
+    let g = gl(mu);
+    let n = 1usize << (mu * mu);
+    let mut set = HashSet::new();
+    let mut out = vec![];
+    for &a in &g {
+        for &b in &g {
+            for t in [false, true] {
+                let perm: Vec<u16> = (0..n)
+                    .map(|i| {
+                        let x = idx2mat(i, mu);
+                        let x = if t { f2::transpose(x, mu) } else { x };
+                        mat2idx(f2::mul(f2::mul(a, x), b), mu) as u16
+                    })
+                    .collect();
+                if set.insert(perm.clone()) {
+                    out.push(perm);
+                }
+            }
+        }
+    }
+    out
+}
+
+#[derive(Clone, Debug)]
+pub struct ExhaustiveResult {
+    pub best: f64,
+    pub hubs: Vec<usize>,
+    pub legs: Vec<usize>,
+    pub subset: u32,
+    pub leaves: u64,
+    /// histogram of p*value rounded to 1e-6, top entries (value, count of hub orbits)
+    pub top: Vec<(f64, u64)>,
+}
+
+/// Exhaustive search over all hub placements in Mat_mu(F_2) (mu <= 3) up to the isometry group
+/// (first hub at 0 by translation, then lex-min canonical tuples under the linear isometries),
+/// with exact leg optimisation for each. Optionally hubs restricted to the first `hub_pts` point
+/// indices (e.g. 16 = Mat_2 embedded in the top-left block of Mat_3; then the group used is the
+/// one of Mat_2 acting blockwise, passed in `group`).
+pub fn exhaustive_hubs(des: &Design, sp: &MatSpace, group: &[Vec<u16>], hub_pts: usize, split_depth: usize) -> ExhaustiveResult {
+    let nh = des.nhubs();
+    // canonical prefixes up to split_depth, with stabilisers
+    let mut prefixes: Vec<(Vec<usize>, Vec<u32>)> = vec![(vec![0], (0..group.len() as u32).collect())];
+    for _ in 1..split_depth.min(nh) {
+        let mut next = vec![];
+        for (pre, stab) in &prefixes {
+            for p in 0..hub_pts {
+                if let Some(st) = extend(group, stab, p) {
+                    let mut q = pre.clone();
+                    q.push(p);
+                    next.push((q, st));
+                }
+            }
+        }
+        prefixes = next;
+    }
+    let results: Vec<(f64, Vec<usize>, u64, Vec<(i64, u64)>)> = prefixes
+        .par_iter()
+        .map(|(pre, stab)| {
+            let mut scratch = vec![];
+            let mut hubs = pre.clone();
+            hubs.resize(nh, 0);
+            let mut best = (f64::NEG_INFINITY, vec![]);
+            let mut leaves = 0u64;
+            let mut hist: std::collections::HashMap<i64, u64> = Default::default();
+            dfs(des, sp, group, hub_pts, &mut hubs, pre.len(), stab, &mut scratch, &mut best, &mut leaves, &mut hist);
+            let mut h: Vec<(i64, u64)> = hist.into_iter().collect();
+            h.sort_by(|a, b| b.0.cmp(&a.0));
+            h.truncate(20);
+            (best.0, best.1, leaves, h)
+        })
+        .collect();
+    let mut best = (f64::NEG_INFINITY, vec![]);
+    let mut leaves = 0;
+    let mut hist: std::collections::HashMap<i64, u64> = Default::default();
+    for (v, h, l, hh) in results {
+        leaves += l;
+        if v > best.0 + 1e-12 {
+            best = (v, h);
+        }
+        for (k, c) in hh {
+            *hist.entry(k).or_insert(0) += c;
+        }
+    }
+    let mut top: Vec<(i64, u64)> = hist.into_iter().collect();
+    top.sort_by(|a, b| b.0.cmp(&a.0));
+    top.truncate(10);
+    let mut scratch = vec![];
+    let (v, s, legs) = sp.best_legs(des, &best.1, true, &mut scratch);
+    assert!((v - best.0).abs() < 1e-9);
+    ExhaustiveResult { best: best.0, hubs: best.1, legs, subset: s, leaves, top: top.into_iter().map(|(k, c)| (k as f64 * 1e-6, c)).collect() }
+}
+
+#[inline]
+fn extend(group: &[Vec<u16>], stab: &[u32], p: usize) -> Option<Vec<u32>> {
+    let mut st = Vec::with_capacity(stab.len());
+    for &g in stab {
+        let q = group[g as usize][p] as usize;
+        if q < p {
+            return None;
+        }
+        if q == p {
+            st.push(g);
+        }
+    }
+    Some(st)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn dfs(des: &Design, sp: &MatSpace, group: &[Vec<u16>], hub_pts: usize, hubs: &mut Vec<usize>, k: usize, stab: &[u32],
+       scratch: &mut Vec<f64>, best: &mut (f64, Vec<usize>), leaves: &mut u64, hist: &mut std::collections::HashMap<i64, u64>) {
+    if k == hubs.len() {
+        *leaves += 1;
+        let (v, _, _) = sp.best_legs(des, hubs, false, scratch);
+        *hist.entry((v * 1e6).round() as i64).or_insert(0) += 1;
+        if v > best.0 + 1e-12 {
+            *best = (v, hubs.clone());
+        }
+        return;
+    }
+    for p in 0..hub_pts {
+        if let Some(st) = extend(group, stab, p) {
+            hubs[k] = p;
+            dfs(des, sp, group, hub_pts, hubs, k + 1, &st, scratch, best, leaves, hist);
+        }
+    }
+}
+
+// ------------------------------------------------------------------------------------ annealing in Mat_mu
+
+#[derive(Clone, Debug)]
+pub struct AnnealOpts {
+    pub iters: usize,
+    pub chains: usize,
+    pub t0: f64,
+    pub t1: f64,
+    pub seed: u64,
+    /// polish legs coordinatewise over all of Mat_mu (only mu <= 4)
+    pub polish: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct MatSolution {
+    pub value: f64,
+    pub b: Vec<f64>,
+    pub pts: Vec<u64>,
+    pub chain: usize,
+}
+
+fn random_point<R: Rng>(rng: &mut R, mu: usize) -> u64 {
+    match rng.gen_range(0..3) {
+        0 => f2::random_matrix(rng, mu),
+        1 => f2::random_rank_le(rng, mu, 1),
+        _ => f2::random_rank_le(rng, mu, 2),
+    }
+}
+
+/// Simulated annealing over placements in Mat_mu(F_2) of all legs and hubs, objective
+/// sum_m b_m^+ (scale-free). Moves: add a rank-one matrix to a point; copy another point; move a
+/// point to a random point. Returns the best solution of each chain, sorted (best first).
+pub fn anneal_mat(des: &Design, mu: usize, o: &AnnealOpts) -> Vec<MatSolution> {
+    let np = des.npoints();
+    let mut sols: Vec<MatSolution> = (0..o.chains)
+        .into_par_iter()
+        .map(|c| {
+            let mut rng = SmallRng::seed_from_u64(o.seed.wrapping_mul(0x9E37_79B9_7F4A_7C15) ^ (c as u64 + 1).wrapping_mul(0xBF58_476D_1CE4_E5B9));
+            let mut pts: Vec<u64> = (0..np).map(|_| random_point(&mut rng, mu)).collect();
+            let f = |pts: &[u64]| value(&b_mat(des, pts));
+            let mut cur = f(&pts);
+            let mut best = (cur, pts.clone());
+            for it in 0..o.iters {
+                let frac = it as f64 / o.iters as f64;
+                let t = o.t0 * (o.t1 / o.t0).powf(frac);
+                let i = rng.gen_range(0..np);
+                let old = pts[i];
+                let mv = rng.gen_range(0..10);
+                pts[i] = if mv < 6 {
+                    old ^ f2::random_rank_one(&mut rng, mu)
+                } else if mv < 8 {
+                    pts[rng.gen_range(0..np)]
+                } else {
+                    random_point(&mut rng, mu)
+                };
+                let v = f(&pts);
+                if v >= cur || rng.gen::<f64>() < ((v - cur) / t).exp() {
+                    cur = v;
+                    if v > best.0 + 1e-12 {
+                        best = (v, pts.clone());
+                    }
+                } else {
+                    pts[i] = old;
+                }
+            }
+            let mut pts = best.1;
+            if o.polish && mu <= 4 {
+                polish_mat(des, mu, &mut pts);
+            }
+            let b = b_mat(des, &pts);
+            MatSolution { value: value(&b), b, pts, chain: c }
+        })
+        .collect();
+    sols.sort_by(|a, b| b.value.partial_cmp(&a.value).unwrap());
+    sols
+}
+
+/// Coordinatewise exhaustive ascent: each point in turn moved to the best point of Mat_mu
+/// (mu <= 4), until no improvement.
+pub fn polish_mat(des: &Design, mu: usize, pts: &mut [u64]) {
+    let n = 1usize << (mu * mu);
+    let mut cur = value(&b_mat(des, pts));
+    loop {
+        let mut improved = false;
+        for i in 0..pts.len() {
+            let old = pts[i];
+            let mut bestp = (cur, old);
+            for x in 0..n {
+                pts[i] = idx2mat(x, mu);
+                let v = value(&b_mat(des, pts));
+                if v > bestp.0 + 1e-12 {
+                    bestp = (v, pts[i]);
+                }
+            }
+            pts[i] = bestp.1;
+            if bestp.0 > cur + 1e-12 {
+                cur = bestp.0;
+                improved = true;
+            }
+        }
+        if !improved {
+            break;
+        }
+    }
+}
+
+/// Hub annealing with exact legs (mu <= 3): state = hub indices, objective = best_legs value.
+pub fn anneal_hubs_exact(des: &Design, sp: &MatSpace, iters: usize, chains: usize, t0: f64, t1: f64, seed: u64,
+                         starts: Option<Vec<Vec<usize>>>) -> Vec<(f64, Vec<usize>, Vec<usize>)> {
+    let nh = des.nhubs();
+    let mut out: Vec<(f64, Vec<usize>, Vec<usize>)> = (0..chains)
+        .into_par_iter()
+        .map(|c| {
+            let mut rng = SmallRng::seed_from_u64(seed ^ (c as u64 + 7).wrapping_mul(0x9E37_79B9_7F4A_7C15));
+            let mut scratch = vec![];
+            let mut hubs: Vec<usize> = match &starts {
+                Some(s) => s[c % s.len()].clone(),
+                None => (0..nh).map(|_| mat2idx(random_point(&mut rng, sp.mu), sp.mu)).collect(),
+            };
+            let mut cur = sp.best_legs(des, &hubs, false, &mut scratch).0;
+            let mut best = (cur, hubs.clone());
+            for it in 0..iters {
+                let t = t0 * (t1 / t0).powf(it as f64 / iters.max(1) as f64);
+                let i = rng.gen_range(0..nh);
+                let old = hubs[i];
+                let mv = rng.gen_range(0..10);
+                hubs[i] = if mv < 6 {
+                    mat2idx(sp.mats[old] ^ f2::random_rank_one(&mut rng, sp.mu), sp.mu)
+                } else if mv < 8 {
+                    hubs[rng.gen_range(0..nh)]
+                } else {
+                    rng.gen_range(0..sp.n)
+                };
+                let v = sp.best_legs(des, &hubs, false, &mut scratch).0;
+                if v >= cur || rng.gen::<f64>() < ((v - cur) / t).exp() {
+                    cur = v;
+                    if v > best.0 + 1e-12 {
+                        best = (v, hubs.clone());
+                    }
+                } else {
+                    hubs[i] = old;
+                }
+            }
+            let (v, _, legs) = sp.best_legs(des, &best.1, true, &mut scratch);
+            (v, best.1, legs)
+        })
+        .collect();
+    out.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+    out
+}
+
+// ------------------------------------------------------------------------------------ continuous models
+
+pub const MAXF: usize = 3;
+pub const MAXK: usize = 8;
+
+/// l2 product of spiders (arms[f] arms each; a point is (arm, radius) per spider) and R^k.
+#[derive(Clone, Debug)]
+pub struct Model {
+    pub arms: Vec<usize>,
+    pub k: usize,
+}
+
+#[derive(Clone, Copy, Debug, Default)]
+pub struct CPoint {
+    pub arm: [u8; MAXF],
+    pub t: [f64; MAXF],
+    pub x: [f64; MAXK],
+}
+
+impl Model {
+    pub fn label(&self) -> String {
+        let mut s: Vec<String> = self.arms.iter().map(|a| if *a == 3 { "tripod".into() } else { format!("spider{}", a) }).collect();
+        if self.k > 0 {
+            s.push(format!("R^{}", self.k));
+        }
+        s.join(" x ")
+    }
+    #[inline]
+    pub fn dist(&self, p: &CPoint, q: &CPoint) -> f64 {
+        let mut s = 0.0;
+        for f in 0..self.arms.len() {
+            let d = if p.arm[f] == q.arm[f] { (p.t[f] - q.t[f]).abs() } else { p.t[f] + q.t[f] };
+            s += d * d;
+        }
+        for c in 0..self.k {
+            let d = p.x[c] - q.x[c];
+            s += d * d;
+        }
+        s.sqrt()
+    }
+    fn random_point<R: Rng>(&self, rng: &mut R, scale: f64) -> CPoint {
+        let mut p = CPoint::default();
+        for f in 0..self.arms.len() {
+            p.arm[f] = rng.gen_range(0..self.arms[f]) as u8;
+            p.t[f] = rng.gen::<f64>() * scale;
+        }
+        for c in 0..self.k {
+            p.x[c] = (rng.gen::<f64>() * 2.0 - 1.0) * scale;
+        }
+        p
+    }
+    pub fn b(&self, des: &Design, pts: &[CPoint]) -> Vec<f64> {
+        des.bvec(|i, j| self.dist(&pts[i], &pts[j]))
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct ModelSolution {
+    pub value: f64,
+    pub b: Vec<f64>,
+    pub pts: Vec<CPoint>,
+}
+
+fn gauss<R: Rng>(rng: &mut R) -> f64 {
+    let u: f64 = rng.gen::<f64>().max(1e-300);
+    let v: f64 = rng.gen();
+    (-2.0 * u.ln()).sqrt() * (2.0 * std::f64::consts::PI * v).cos()
+}
+
+/// Simulated annealing in a model space; objective sum_m b_m^+ (scale-free; the hub scale is
+/// renormalised every 1000 steps so that the largest delta is 1). Moves: Gaussian kick of one point
+/// (step size adapted to the acceptance rate), radial scaling of a point, arm change, copy.
+pub fn anneal_model(des: &Design, model: &Model, iters: usize, chains: usize, t0: f64, t1: f64, seed: u64) -> Vec<ModelSolution> {
+    let np = des.npoints();
+    let nl = des.nlegs();
+    let mut sols: Vec<ModelSolution> = (0..chains)
+        .into_par_iter()
+        .map(|c| {
+            let mut rng = SmallRng::seed_from_u64(seed ^ (c as u64 + 11).wrapping_mul(0x9E37_79B9_7F4A_7C15));
+            let mut pts: Vec<CPoint> = (0..np).map(|i| model.random_point(&mut rng, if i < nl { 3.0 } else { 1.0 })).collect();
+            let f = |pts: &[CPoint]| value(&model.b(des, pts));
+            let mut cur = f(&pts);
+            let mut best = (cur, pts.clone());
+            let mut sigma = 0.3;
+            let (mut acc, mut tried) = (0usize, 0usize);
+            for it in 0..iters {
+                let t = t0 * (t1 / t0).powf(it as f64 / iters as f64);
+                let i = rng.gen_range(0..np);
+                let old = pts[i];
+                let mv = rng.gen_range(0..20);
+                let mut p = old;
+                if mv < 14 {
+                    let norm = 1.0 + if i < nl { 0.3 * (p.t.iter().map(|x| x * x).sum::<f64>() + p.x.iter().map(|x| x * x).sum::<f64>()).sqrt() } else { 0.0 };
+                    for f in 0..model.arms.len() {
+                        p.t[f] = (p.t[f] + sigma * norm * gauss(&mut rng)).max(0.0);
+                    }
+                    for cc in 0..model.k {
+                        p.x[cc] += sigma * norm * gauss(&mut rng);
+                    }
+                } else if mv < 16 {
+                    let s = (0.3 * gauss(&mut rng)).exp();
+                    for f in 0..model.arms.len() {
+                        p.t[f] *= s;
+                    }
+                    for cc in 0..model.k {
+                        p.x[cc] *= s;
+                    }
+                } else if mv < 18 && !model.arms.is_empty() {
+                    let f = rng.gen_range(0..model.arms.len());
+                    p.arm[f] = rng.gen_range(0..model.arms[f]) as u8;
+                } else {
+                    p = pts[rng.gen_range(0..np)];
+                }
+                pts[i] = p;
+                let v = f(&pts);
+                tried += 1;
+                if v >= cur || rng.gen::<f64>() < ((v - cur) / t).exp() {
+                    cur = v;
+                    acc += 1;
+                    if v > best.0 + 1e-12 {
+                        best = (v, pts.clone());
+                    }
+                } else {
+                    pts[i] = old;
+                }
+                if tried == 1000 {
+                    let r = acc as f64 / tried as f64;
+                    sigma *= if r > 0.3 { 1.3 } else { 0.77 };
+                    sigma = sigma.clamp(1e-7, 10.0);
+                    acc = 0;
+                    tried = 0;
+                    // renormalise scale: largest delta -> 1 (everything is homogeneous)
+                    let mut dm: f64 = 0.0;
+                    for m in 0..des.p() {
+                        for g in 0..des.ngroups[m] {
+                            for g2 in g + 1..des.ngroups[m] {
+                                dm = dm.max(model.dist(&pts[des.hub(m, g)], &pts[des.hub(m, g2)]));
+                            }
+                        }
+                    }
+                    if dm > 1e-9 && it < iters - 1000 {
+                        for q in pts.iter_mut() {
+                            for f in 0..model.arms.len() {
+                                q.t[f] /= dm;
+                            }
+                            for cc in 0..model.k {
+                                q.x[cc] /= dm;
+                            }
+                        }
+                    }
+                }
+            }
+            let b = model.b(des, &best.1);
+            ModelSolution { value: value(&b), b, pts: best.1 }
+        })
+        .collect();
+    sols.sort_by(|a, b| b.value.partial_cmp(&a.value).unwrap());
+    sols
+}
+
+// ------------------------------------------------------------------------------------ tests
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn designs_shape() {
+        let d = Design::delta3(3);
+        assert_eq!((d.nlegs(), d.nhubs(), d.p()), (18, 9, 3));
+        for &(u, v) in &d.edges {
+            for g in &d.groups {
+                assert_ne!(g[u], g[v]);
+            }
+        }
+        assert!((d.flat_value() - 3.0 * 3f64.sqrt()).abs() < 1e-12);
+        assert!((Design::delta3(2).flat_value() - 9.0 / 2f64.sqrt()).abs() < 1e-12);
+        assert!((Design::crossing(1.0, 1.0).flat_value() - 2f64.sqrt()).abs() < 1e-12);
+        assert!((Design::k4().flat_value() - 2.0 * 2f64.sqrt()).abs() < 1e-12);
+    }
+
+    #[test]
+    fn far_leg_euclid_crossing() {
+        // hubs: rows at +-a/2, columns at +-b/2, a ⟂ b; legs far along (a+b), (a-b)
+        let des = Design::crossing(1.0, 1.0);
+        let m = Model { arms: vec![], k: 2 };
+        let mk = |x: f64, y: f64| {
+            let mut p = CPoint::default();
+            p.x[0] = x;
+            p.x[1] = y;
+            p
+        };
+        let big = 1e6;
+        let s = 1.0 / 2f64.sqrt();
+        let pts = vec![mk(big * s, big * s), mk(-big * s, -big * s), mk(big * s, -big * s), mk(-big * s, big * s),
+                       mk(0.5, 0.0), mk(-0.5, 0.0), mk(0.0, 0.5), mk(0.0, -0.5)];
+        // legs: edge0 = (x,v): x far +(a+b), v far -(a+b); edge1 = (y,u): y far +(a-b), u far -(a-b)
+        let b = m.b(&des, &pts);
+        assert!((value(&b) - 2f64.sqrt()).abs() < 1e-4, "{:?}", b);
+    }
+
+    #[test]
+    fn best_legs_matches_bruteforce_crossing_mu2() {
+        let des = Design::crossing(1.0, 1.0);
+        let sp = MatSpace::new(2);
+        let mut scratch = vec![];
+        let mut rng = SmallRng::seed_from_u64(3);
+        for _ in 0..20 {
+            let hubs: Vec<usize> = (0..4).map(|_| rng.gen_range(0..16)).collect();
+            let (v, _, _) = sp.best_legs(&des, &hubs, false, &mut scratch);
+            let mut bf = 0.0f64;
+            for l in 0..16usize.pow(4) {
+                let mut pts: Vec<u64> = (0..4).map(|k| sp.mats[(l >> (4 * k)) & 15]).collect();
+                pts.extend(hubs.iter().map(|&h| sp.mats[h]));
+                bf = bf.max(b_mat(&des, &pts).iter().map(|x| x.max(0.0)).sum());
+            }
+            assert!((v - bf).abs() < 1e-9, "{} {}", v, bf);
+        }
+    }
+
+    #[test]
+    fn group_sizes() {
+        assert_eq!(gl(2).len(), 6);
+        assert_eq!(gl(3).len(), 168);
+        assert_eq!(linear_isometries(2).len(), 72);
+    }
+}

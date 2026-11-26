@@ -551,3 +551,15 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   n²·polylog and n^{9/4} sits in that twist.
 - Known fast skew-polynomial multiplication is algebraic and bounded by the same exponent. No non-algebraic use of
   "Frobenius is free" found. Open as an idea, not as a result.
+
+### Anti, step 1: the paper's network bounds quoted verbatim (`research/mm/anti/notebook.md` §1) [K]
+- "Prop. 2.3" is ω ≥ 9/4 over finite fields; the circuit embedding is one sentence in its proof, for the sorting
+  circuit only. The general embedding of Boolean circuits into trivalent networks is ours to prove (elementary).
+- Network wires carry bits; field values live only in vertex tables.
+- σ in Theorem 2.2 is not effective: any σ < 1/2 under "no ports"; an unspecified smaller σ > 0 under "ports". Which
+  case holds is open and depends only on the characteristic. So the hidden corollary is Ω(N(log N)^σ) for some σ > 0.
+- Lemma 4.1's proof uses only the marginal destination law and lets tables vary with the permutation; the paper itself
+  pins tag inputs to a uniform permutation. This is the precedent for pinning A to a permutation matrix.
+- Lean: Theorem 2.2 / Lemma 4.1 not found among the formalised statements in the sparse clone. If the network bound is
+  not in the Lean cone of `square_exponent`, how does the Lean proof get the lower bound? The note agent is checking
+  the import cone; this is now the most informative open fact.

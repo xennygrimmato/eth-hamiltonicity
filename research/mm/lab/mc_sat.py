@@ -56,6 +56,42 @@ class Enc:
         self.nv += 1
         return self.nv
 
+    # ---- symmetry breaking (all WLOG; see notebook E1c) ----
+    def vec(self, j, s_, upto=None):
+        """linear form of gate j side s_ as literal list, most significant first:
+        gate coefficients (highest gate first, only gates < upto), then inputs (highest first)."""
+        upto = j if upto is None else upto
+        return [self.d[j][s_][i] for i in reversed(range(upto))] + [self.c[j][s_][1 + i] for i in reversed(range(self.n))]
+
+    def lex(self, X, Y, strict, cond=()):
+        """X <=lex Y (or <) unless one of the literals in cond is true."""
+        cond = list(cond)
+        e = self.new(); self.s.add_clause([e])
+        for x, y in zip(X, Y):
+            self.s.add_clause(cond + [-e, -x, y])
+            e2 = self.new()
+            self.s.add_clause([-e, x, y, e2]); self.s.add_clause([-e, -x, -y, e2])
+            e = e2
+        if strict:
+            self.s.add_clause(cond + [-e])
+
+    def add_symmetry(self, first_fixed=True):
+        k = self.k
+        for j in range(k):
+            if first_fixed and j == 0:
+                continue
+            X, Y = self.vec(j, 0), self.vec(j, 1)
+            Wv = []
+            for x, y in zip(X, Y):
+                w = self.new(); self.s.add_xor_clause([w, x, y], False); Wv.append(w)
+            self.lex(X, Y, True)      # plane basis = its two smallest elements
+            self.lex(Y, Wv, True)
+        for j in range(1 if first_fixed else 0, k - 1):
+            # gates j, j+1 independent => order by first basis vector (greedy topological canonical order)
+            X = self.vec(j, 0)
+            Y = self.vec(j + 1, 0, upto=j)
+            self.lex(X, Y, False, cond=[self.d[j + 1][0][j], self.d[j + 1][1][j]])
+
     def AND(self, a, b):
         x = self.new()
         self.s.add_clause([-x, a]); self.s.add_clause([-x, b]); self.s.add_clause([x, -a, -b])

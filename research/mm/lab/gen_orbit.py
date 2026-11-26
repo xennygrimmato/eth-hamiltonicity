@@ -4,6 +4,7 @@ inputs/earlier gates, which every consumer absorbs). usage: gen_orbit.py k i0 i1
 import sys, itertools, time, json
 from mc_sat import Enc, matmul_targets, eval_circuit
 k, i0, i1, th = map(int, sys.argv[1:5])
+SYM = len(sys.argv) > 5 and sys.argv[5] == 'sym'
 orbs = json.load(open('plane_orbits.json'))
 n, m, f = matmul_targets(2, 2, 2)
 rows = list(itertools.product([0, 1], repeat=n))
@@ -18,6 +19,7 @@ for oi in range(i0, min(i1, len(orbs))):
         for i in range(n):
             # input bit i of mc_sat ordering: A(i,j)=2i+j, B=4+2j+k -- same as orbits.py
             E.s.add_clause([E.c[0][s_][1 + i] if (l >> i) & 1 else -E.c[0][s_][1 + i]])
+    if SYM: E.add_symmetry(first_fixed=True)
     for x in rows: E.add_row(x)
     t = time.time(); sat, sol = E.s.solve(); dt = time.time() - t
     print(f"orbit {oi} plane {pk} size {sz}: {'SAT' if sat else 'UNSAT'} {dt:.1f}s", flush=True)

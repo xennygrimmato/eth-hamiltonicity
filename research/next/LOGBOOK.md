@@ -534,3 +534,10 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   rectangular blocks, so only upper bounds on the true derived exponents.
 - Lead's caveat: the "ideal" rows need only the UPPER bounds (October algorithms). The "not ideal" rows need the new
   lower bound and the exact formula, which the paper itself does not state (only the Lean notes do).
+
+### Lab note 5: thin-product decomposition closed without computation [R]
+- If AB = Σ_{t≤s} F_t·G_t with F_t of size n×√n and G_t of size √n×n, for ANY functions F_t, G_t of the inputs, then
+  rank(AB) ≤ s·√n pointwise. A random product over F₂ has rank n − O(1), so s ≥ √n, which splitting the inner index
+  achieves trivially. Cost √n · n^{2+o(1)} = n^{2.5}. The idea agent's one "positive" experiment for the user's
+  literal wish (T5) cannot pass for any preprocessing. [X]
+- Positive routes tried so far for n²·polylog over F₂: word tricks, packing, thin products. All closed with reasons.

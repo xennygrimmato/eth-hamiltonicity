@@ -1,4 +1,4 @@
-"""Check (q2-notes.md, Lemma S): the complete-graph wire tensor T_K(2a) equals the product of the
+"""Check (q2-notes.md, star lemma): the complete-graph wire tensor T_K(2a) equals the product of the
 K star tensors Star_v(a), and restricts row-locally to A_1 (x) ... (x) A_K for ARBITRARY tensors
 A_v on K rows whose rows u != v have side <= 2^a.  Also checks f_U(X) = f_T(M^t X).
 Sizes: K=3, a=1 (edge dimension 4, row dimension 16) and K=4, a=1 (row dimension 64)."""

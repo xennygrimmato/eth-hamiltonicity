@@ -1,4 +1,4 @@
-"""Dense check of Lemma S for K=3, a=1: build T_3(2) as an explicit 16x16x16 array, build the local
+"""Dense check of star lemma for K=3, a=1: build T_3(2) as an explicit 16x16x16 array, build the local
 maps M_u explicitly, contract, and compare with A_0 (x) A_1 (x) A_2 (grouped rows).  Also checks the
 polynomial identity f_U(X) = f_T(Y), Y_u = M_u^t X_u, at a random point."""
 import numpy as np, itertools

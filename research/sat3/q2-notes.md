@@ -1,6 +1,14 @@
 # q2-notes: does OpenAI's balanced-cut argument (HC Part I) transfer to the clique wire tensor?
 
-Working notes, 26 Nov 2026. Nothing here is committed, machine-checked or refereed by a second reader.
+Working notes, 26 Nov 2026. Nothing here is committed or machine-checked.
+
+**Referee.** Report in `review-q2.md` (26 Nov 2026): no fatal error; Theorem T is a correct deduction from HC Thm 3.1 as
+printed. Changes made here after it: (1) "oblivious algebraic algorithm" is now defined as a straight-line program
+whose output equals f_{K,λ} as a polynomial identity (Cor. T1, T2, §5); (2) the characteristic-p sentence of Cor. T2 is
+struck; (3) "one circuit for one (K, λ) suffices" is replaced by the asymptotic form e(K)·√log K → 0 along even K;
+(4) Lemma N is stated for K ≥ 4; (5) Cor. T4 has the added hypothesis of spare ℓ₂ coordinates; (6) a trust paragraph is
+added in §6.1; (7) the former "Lemma S" (time-shared stars) is renamed "star lemma", to avoid a clash with the Steiner Lemma S of `attain-notes.md`; (8) §0 ends with the referee's sentence on what may be
+claimed publicly.
 
 Tags: **[K]** quoted, with location; **[R]** proved here in full; **[D]** derived here, unreviewed (or resting on an
 unrefereed input, named); **[N]** numerical (script named); **[C]** conjecture or open; **[X]** dead, with reason.
@@ -26,22 +34,37 @@ every metric space (Lemma N, §2). Pricing T_K itself with one site per row can 
 **The theorem Q2 was meant to deliver: YES, conditionally on HC Thm 3.1 as printed (Theorem T, §3.3).** The transfer
 does not go through a price of T_K. It goes through a restriction: T_K(λ) restricts, by linear maps on the rows, to
 h = K·⌊⌊λ/2⌋/log₂q₀⌋ grouped copies of HC's own tensor T_d (d = K), at the cost of a factor 2(K−1)/K in bits per row
-(Lemma S, "time-shared stars"). HC's proof of its Thm 3.1 is stable under row-wise restriction, so:
+(the star lemma, "time-shared stars"). HC's proof of its Thm 3.1 is stable under row-wise restriction, so:
 
 > **Theorem T [D; conditional on HC Thm 3.1].** If the characteristic of F has no ports, then for every sufficiently
 > large even K and every λ ≥ λ₀(K) = Θ(K (log K)^{3/2}), every arithmetic circuit over F for f_{K,λ} (also in HC's
 > border, degree-component sense) has at least 2^{c_T·K²λ/√⌈log₂K⌉} gates, with an absolute c_T > 0.
 
-In AN-ETH's terms (Def. 4): a pair (K, e) that is achievable by an algorithm which is an arithmetic circuit in the
-table entries has e ≥ c_T/√log K. So **an oblivious algebraic clique-sum algorithm with exponent α > 1/2 (any number
-of merges, nets, hyperedge pieces, non-product term sets, any recursion or none) forces ports, hence, in
-characteristic 0, 3-SAT in 2^{O(v^{1−δ})} by IM Thm 7.1 [K], hence the failure of Weak ETH.** One circuit for one pair
-(K, λ) in the regime is enough.
+Throughout, an **oblivious algebraic algorithm** means: for each (λ, B) a straight-line program in the table entries
+(over ℤ; constants and divisions by fixed nonzero integers allowed) **whose output equals f_{K,λ} as a polynomial
+identity**. In AN-ETH's terms (Def. 4): a pair (K, e) that is achievable by such an algorithm has e ≥ c_T/√log K. So
+**an oblivious algebraic clique-sum algorithm over ℚ with e(K)·√log K → 0 along even K, in particular one with
+exponent α > 1/2 (any number of merges, nets, hyperedge pieces, non-product term sets, any recursion or none), forces
+ports in characteristic 0, hence 3-SAT in 2^{O(v^{1−δ})} by IM Thm 7.1 [K], hence the failure of Weak ETH.** The
+statement is asymptotic: HC's constant c and its threshold on d are unspecified, so no single explicit pair (K, λ) can
+be named at which a small circuit would decide the matter.
 
 What this rests on and what it leaves out is in §6. Short version: (i) HC Thm 3.1 and IM Thm 7.1 are unrefereed, and
 the d/√log d rate of HC is outside the scope of the lab's Lean (§1.6); (ii) the regime is long wires,
 λ ≳ K (log K)^{3/2}, which is AN-ETH's regime but not every conceivable one; (iii) only arithmetic circuits are
 covered; (iv) the implication is one-directional.
+
+**What may be claimed publicly (referee, `review-q2.md`).** Lemma N (for K ≥ 4), E2, E3 and the star lemma are
+unconditional; the negative answer to the literal Q2 of `prior-barriers.md` §5.3 and the star restriction can be
+stated as proved, short results. Beyond that, publicly one may claim only the following. If OpenAI's unrefereed and
+unformalised HC Thm 3.1 holds as printed, then over any field whose characteristic has no ports (in HC's sense, the
+same notion as EG Def. 11.1), every straight-line program that computes AN-ETH's clique polynomial f_{K,λ} as a
+polynomial identity needs 2^{c·K²λ/√log K} gates, for all sufficiently large even K and all λ ≥ C·K(log K)^{3/2}, with
+unspecified absolute constants. Consequently, if in addition OpenAI's IM Thm 7.1 holds (unrefereed; a Lean counterpart
+`middle_count_bridge` exists in their release, which we did not build), then any such polynomial-identity algorithm
+over ℚ with e(K)·√log K → 0 along even K would give 3-SAT in deterministic time 2^{O(v^{1−δ})} and refute
+variable-count Weak ETH. Nothing may be claimed in positive characteristic, for algorithms that are correct only on
+bounded integer tables, for non-algebraic algorithms, or for wires shorter than C·K(log K)^{3/2}.
 
 ---
 
@@ -181,7 +204,7 @@ This is what §5.3 states. It is right. It is also far from sharp, because it bo
 
 ### 2.2 The sharp statement
 
-**Lemma N [R] (no hypothesis; any pseudometric space).** Let x₁,…,x_K be points of a pseudometric space, K even.
+**Lemma N [R] (no hypothesis; any pseudometric space).** Let x₁,…,x_K be points of a pseudometric space, K even, K ≥ 4.
 There is a partition [K] = A ⊔ B with |A| = |B| = K/2 such that for all points y₀, y₁
 
     (K − 1)·[ Σ_{i∈A} d(x_i, y₀) + Σ_{i∈B} d(x_i, y₁) ] ≥ Σ_{u<v} d(x_u, x_v).
@@ -189,7 +212,8 @@ There is a partition [K] = A ⊔ B with |A| = |B| = K/2 such that for all points
 *Proof.* For any such partition and any y₀, y₁, the triangle inequality on same-side pairs gives
 Σ_{same} d(x_u,x_v) ≤ (K/2 − 1)[Σ_A d(x_i,y₀) + Σ_B d(x_i,y₁)]. For a uniformly random partition into halves a pair is
 on the same side with probability (K/2 − 1)/(K − 1), so some partition has
-Σ_{same} d ≥ ((K/2−1)/(K−1)) Σ_{u<v} d. Combine. ∎
+Σ_{same} d ≥ ((K/2−1)/(K−1)) Σ_{u<v} d. Combine, dividing by K/2 − 1 > 0. ∎
+(The statement is false at K = 2: A = {1}, B = {2}, y₀ = x₁, y₁ = x₂ gives 0 on the left. Referee's remark.)
 
 Equality: a K-pod with unit legs and both suppliers at the centre (56 = 56 at K = 8).
 [N] `q2/check_lemmaN.py`: 180 random finite metric spaces (graph, tree, ℓ₁, ℓ₂, ℓ_∞), K = 4, 6, 8, suppliers ranging
@@ -231,7 +255,7 @@ same order as required", "first-order counting neither proves nor excludes the p
 §5.3 asks whether HC's T_d is a restriction of a complete-graph wire tensor on O(d) nodes with O(w) bits per node,
 and says "The trivial representation uses (d−1)·w bits per node, which is useless." That count is for one copy hosted
 by one star. For grouped powers the d star centres can be used in turn and the count is 2(d−1)/d times the bits of
-the hosted power (Lemma S below). This is the route that works.
+the hosted power (the star lemma below). This is the route that works.
 
 ---
 
@@ -310,7 +334,7 @@ the end (b, a) at −½e_a"). The bound obtained is log R ≥ λ·V_ℓ − (sha
 
 ### 3.3 Restriction to HC's own tensor: works
 
-**Lemma S [R] (time-shared stars).** Let a ≥ 1, K ≥ 2, and for v ∈ [K] let Star_v(a) = ⊗_{u≠v} ⟨2^a⟩_{vu}. Then
+**Star lemma [R] (time-shared stars).** Let a ≥ 1, K ≥ 2, and for v ∈ [K] let Star_v(a) = ⊗_{u≠v} ⟨2^a⟩_{vu}. Then
 (i) T_K(2a) = ⊗_v Star_v(a) (grouped by rows): each edge {u, v} gives a bits to the star of u and a bits to the star
 of v. (ii) For every tensor A on K rows whose rows u ≠ v have side ≤ 2^a (row v arbitrary), A is a row-wise
 restriction of Star_v(a): with M_v: |(j_u)_{u≠v}⟩ ↦ Σ_i A_{i,(j_u)} |i⟩ at row v and the identity (or a coordinate
@@ -341,7 +365,7 @@ have no ports. Let d ≥ d₀ be even (HC's threshold), K = d, m = ⌈log₂K⌉
 and in both forms, for K large, log₂ L(f_{K,λ}) ≥ c_T K²λ/√⌈log₂K⌉ ≥ 2c_T·S/√⌈log₂K⌉, with
 c_T = c/(12 C₀ ln 2)·(1 − o(1)) (c₂ in place of c for form (b)).
 
-*Proof.* Lemma S(iv) with T = T_d, q = q₀, a = h₀b₀ ≤ ⌊λ/2⌋: T_K(λ) ≥ T_d^{⊗h} row-wise (first project T_K(λ) to
+*Proof.* Star lemma (iv) with T = T_d, q = q₀, a = h₀b₀ ≤ ⌊λ/2⌋: T_K(λ) ≥ T_d^{⊗h} row-wise (first project T_K(λ) to
 T_K(2a) by zeroing letters; this is a substitution of zeros). Form (a): Lemma L(a) and HC Thm 3.1. The Y of row v are
 sums of at most q₀^{h₀} variables with coefficients in {0, 1}, and there are at most q₀^{2h₀(K−1)} nonzero ones per
 row, so the extra gates number at most K·q₀^{h₀(2K−1)} ≤ K·2^{λ(K−½)}. Form (b): Lemma L(b), then the proof of HC
@@ -366,27 +390,42 @@ Remarks.
 **Corollary T1 [D] (AN-ETH's normalisation).** [K, AN-ETH Def. 4, l. 819–823] "(K, e) is achievable if there are an
 algorithm and a constant C, both depending only on K and e, such that for all integers λ, B ≥ 1 and all tables with
 |W_w| < 2^B the algorithm, given λ, B and query access, outputs the value of the (K, λ)-clique within
-C·2^{eK²λ}(B + λ)^C operations." If the algorithm is a straight-line program in the table entries that computes
-f_{K,λ} as a polynomial over a field of characteristic χ without ports, then e ≥ c_T/√⌈log₂K⌉ for all large K.
-(Let λ → ∞ at fixed K.)
+C·2^{eK²λ}(B + λ)^C operations." Suppose the algorithm is oblivious algebraic in the sense of §0: for each (λ, B) a
+straight-line program in the table entries whose output **equals f_{K,λ} as a polynomial identity**, over a field of
+characteristic χ without ports. Then e ≥ c_T/√⌈log₂K⌉ for all large even K. (Take B = 1 and let λ → ∞ at fixed K.)
 
-**Corollary T2 [D] (the chain; uses HC Thm 3.1, IM Thm 7.1 and through it HC Thm 13.1).** Suppose that for one
-sufficiently large even K and one λ ≥ λ₀(K) there is an arithmetic circuit over a field of characteristic 0 for
-f_{K,λ} with fewer than 2^{c_T K²λ/√⌈log₂K⌉} gates. Then characteristic 0 admits ports, and by [K, IM Thm 7.1, l. 1686–1689]
-"for some δ > 0 a deterministic algorithm decides 3-SAT on v variables in 2^{O(v^{1−δ})} bit operations times a
-polynomial in the input length", so Weak ETH fails. In particular every oblivious algebraic clique-sum algorithm over
-ℤ or ℚ with e(K) ≤ (log K)^{−α}, α > 1/2, for infinitely many K, refutes Weak ETH. Under Weak ETH the exponent 1/2 of
-AN-ETH is optimal in this class. In characteristic p the same with "randomised" (ports/c1d1 C1-OA) and rWETH.
+*The definition matters.* Def. 4 itself only requires correct values on integer tables with |W_w| < 2^B, and a program
+with that property need not compute f_{K,λ}, nor have it as its degree-K component: add (x³ − x)·g to a correct
+program and take B = 1. Taking B at least the formal degree does not help, since the factor (B + λ)^C would then
+dominate. **Theorem T says nothing about programs that are correct only on bounded integer tables.** AN-ETH's engine
+does qualify [D, §5]: it consists of polynomial identities in the table entries with integer constants that do not
+depend on table values (the expansion d^{|R|}Z = Σ_ι Z_ι, group tables as sums of products, brute force at level 0),
+and its only divisions are by the fixed integer d^{|R|}, once per level.
+
+**Corollary T2 [D] (the chain; uses HC Thm 3.1, IM Thm 7.1 and through it HC Thm 13.1).** Suppose an oblivious
+algebraic clique-sum algorithm over ℤ or ℚ (polynomial-identity sense, as in Cor. T1) has e(K)·√log K → 0 along a
+sequence of even K; e(K) ≤ (log K)^{−α} with α > 1/2 for infinitely many even K is such a case, and odd K follow by
+Remark 2. Then for large K in the sequence and large λ its circuits for f_{K,λ} have fewer than 2^{c_T K²λ/√⌈log₂K⌉}
+gates, so by Theorem T characteristic 0 admits ports, and by [K, IM Thm 7.1, l. 1686–1689] "for some δ > 0 a
+deterministic algorithm decides 3-SAT on v variables in 2^{O(v^{1−δ})} bit operations times a polynomial in the input
+length", so variable-count Weak ETH fails. Under Weak ETH the exponent 1/2 of AN-ETH is optimal in this class.
+The statement is asymptotic on purpose: Theorem T holds at every pair (K, λ) of its regime, but c_T and the threshold
+on K are unspecified absolute constants (HC gives none), so "one small circuit at one pair" would mean beating an
+unknown bound at an unknown size.
+~~In characteristic p the same with "randomised" and rWETH.~~ Struck (referee): IM Thm 7.1 is a characteristic-0
+theorem and no quoted source covers positive characteristic. Nothing is claimed there.
 
 **Corollary T3 [D] (HC Cor. 3.2 is tight, given AN-ETH).** For d in AN-ETH's sequence K_ℓ and any d-row tensor T of
-side q, Lemma S and AN-ETH Thm A(b) with Thm B [K, l. 1596–1597, "outputs the value of the (K_ℓ, λ)-clique within
+side q, the star lemma and AN-ETH Thm A(b) with Thm B [K, l. 1596–1597, "outputs the value of the (K_ℓ, λ)-clique within
 2^{e_ℓ K_ℓ² λ}(K_ℓ(λ + B))^{C₀K_ℓ²} operations", e_ℓ ≤ 0.85((3x₀+6)/log K_ℓ)^{1/2}] give circuits of size n^{O(d/√log d)}
 for the grouped powers T^{⊗dh₀} (n the number of variables, h₀ large; over ℚ, or any field in which the integer d of
 AN-ETH Def. 7(a) and 2 are invertible). So grouped powers of every tensor are this easy, and HC's n^{Ω(d/√log d)} cannot be improved in the exponent, even under no ports. The "same shape" observed in
 `prior-barriers.md` §5.3 is the same quantity seen from the two sides.
 
 **Corollary T4 [D] (the rate 1/√log d of the lamp certificate is forced; uses AN-ETH Thm A, B and HC Thms 8.1, 11.2).**
-Suppose some Hadamard cone with homogeneous spectral prices over a field of characteristic 0 carried d unit sites of
+Suppose some Hadamard cone Y with homogeneous spectral prices over a field of characteristic 0, **with spare Hilbert
+coordinates as in HC Lemma 2.2 (Y × ℓ₂ carries prices; this is what bounds the cost of sharing the summand index by
+O(d√m); without it only the tree bound O(d²) is available, which is absorbed as h → ∞)**, carried d unit sites of
 barycenter 0 and, for every balanced cut, suppliers at distance ≤ 1 with ‖Z‖ = O(√d) and saving ≥ g·d. HC's comparison
 (§1.3 with g in place of c₀/√m, τ ≈ ηg/d) would give log L(f_{T_d^{⊗h}}) ≳ c h d w g, and Corollary T3 gives
 ≤ C h d w/√log d for h a multiple of d, d = K_ℓ. So g ≤ C′/√log d: for the full list of balanced cuts the loss in HC's
@@ -394,7 +433,7 @@ barycenter 0 and, for every balanced cut, suppliers at distance ≤ 1 with ‖Z�
 
 **A consistency check that could have failed [D].** Run the same route in a Euclidean placement (flats exist over
 every field by EG Thm 1.2 [K]; simplex sites): the saving for a balanced cut is ≈ √d/2 per unit separation, the
-quadratic error is O(wτ²d), τ ≈ 1/√d, and HC's comparison gives log s ≳ c h w √d for T_d^{⊗h}. Through Lemma S this is
+quadratic error is O(wτ²d), τ ≈ 1/√d, and HC's comparison gives log s ≳ c h w √d for T_d^{⊗h}. Through the star lemma this is
 log L(f_{K,λ}) ≳ c′ λ K^{3/2}: the order of AN-VP Prop. E.10 (λk^{3/2}/16), which is proved there by an independent
 argument with wire ends as sites, and which E2 shows is the Euclidean optimum. So "rows as sites + near-star
 restriction" and "ends as sites + wires" agree in the one case where both can be computed.
@@ -503,13 +542,33 @@ sets, growing lists of configurations, cut hierarchies that are not merges, and 
 
 | input | status | used for |
 |---|---|---|
-| Lemma S, Lemma L, Lemma N, E1–E3 | [R] here, short; S and N also [N] | everything in §§2–3 |
+| star lemma, Lemma L, Lemma N, E1–E3 | [R] here, short; the star lemma and Lemma N also [N] | everything in §§2–3 |
 | HC Lemma 3.3 | [K]; proof checked here; a version is in their Lean scope | Theorem T |
 | **HC Thm 3.1 (Thms 5.1, 6.1, 7.1, 8.1, 11.2)** | **[K], unrefereed, not formalised; I read §§4–7 and 11 but did not verify them** | Theorem T |
-| IM Thm 7.1, HC Thm 13.1 | [K], unrefereed (our README: "Theorem A's 3-SAT conclusion depends on OpenAI's unreviewed chain") | Corollary T2 only |
+| IM Thm 7.1, HC Thm 13.1 | [K], unrefereed (our README: "Theorem A's 3-SAT conclusion depends on OpenAI's unreviewed chain"); a Lean form `middle_count_bridge : PortZero → PowerSavingDecision` exists in their release (read by the referee, not built by us) | Corollary T2 only |
 | AN-ETH Thm A, B | [K], unrefereed | Corollary T3 and "the bound is attained" only |
 
-If HC Thm 3.1 fails, Theorem T fails with it, and nothing in §3.3 survives except Lemma S and Corollary T3's upper
+**How far HC Thm 3.1 can be trusted (referee's paragraph, `review-q2.md` item 7).**
+- *Rechecked in HC, arithmetic only:* the three steps that carry the bound, and in each the arithmetic closes.
+  (A) The proof skeleton (3.3) → (3.4) → (3.5): with τ = η/(d√m) the linear saving is c·c₀·η·w/m, the error O(η²w/m),
+  sharing 2^d terms costs O(d√m) (the constant of Lemma 2.2 was checked numerically by the referee), the target
+  deficit is O(hd), and w = ⌈a d m^{3/2}⌉ absorbs both for every h ≥ 1. (B) The saving c₀d/√m of Thm 7.1 from the one
+  inequality at l. 1813–1815, with Σ_a √r_a ≈ 4m√r and S = rm; the loss from adding the P batch lengths linearly is
+  exactly the factor √m. (C) The near-star deficit in Thm 11.2 from Thm 8.1: per batch b·C₀M(1 + d/q)·log n = O(m⁶) = o(d),
+  M ≥ 100 log N, F′(1) = Θ(w). Lemma 3.3 and the closure under row-wise maps were re-read and are standard.
+- *One harmless typo:* in the displayed inequality before l. 2819 the subtracted term must be b·d·Σ_j max(θ_j, 0)
+  (the shift in (11.7) also sums over the b copies); with that the left side is d·F(1) − O(m⁶).
+- *Not verified by anyone here:* Thm 5.1 (observable entropy), Thm 6.1 (the product-closed subclass M), Lemma 7.3
+  (which rests on both, hence on all of §§4–6), the claim at l. 1800–1806 that the averages "are precisely a test for
+  J", and §§9–10 (the proof of Thm 8.1).
+- *Formal status:* OpenAI's own documentation (`lean/docs/379.md`) says the quantitative bound "remains unformalized";
+  Thm 3.1's rate, its tensor T_d and the grouped powers are outside the formalised scope. For the other half of the
+  chain their Lean does contain `middle_count_bridge : PortZero → PowerSavingDecision` (ports in characteristic 0 ⇒
+  power-saving 3-SAT), which the referee read and we did not build; matching `PortZero` to HC's notion takes one step
+  (Hadamard completion) and is [D].
+- *Verdict:* no error found; treat HC Thm 3.1 as an unrefereed, unformalised claim whose final arithmetic is right.
+
+If HC Thm 3.1 fails, Theorem T fails with it, and nothing in §3.3 survives except the star lemma and Corollary T3's upper
 bound. Lemma N and the negative answer to the literal Q2 are unconditional.
 
 ### 6.2 The regime: short wires are not covered
@@ -531,7 +590,7 @@ equivalence. Under ports AN-VP E.10 (flat) still gives e(K) ≥ 1/(8√K).
 
 ### 6.4 What I would do
 
-1. **Referee §3.3 (30 minutes).** Lemma S and Lemma L are elementary. The only judgement call is that HC's proof of
+1. **Referee §3.3 (30 minutes).** The star lemma and Lemma L are elementary. The only judgement call is that HC's proof of
    Thm 3.1 uses T^{⊗h} only through the Lemma 3.3 property of Û^{⊗h} (form (b)); form (a) avoids even that and uses
    the statement of Thm 3.1 alone.
 2. **The risk is HC Thm 3.1.** Cheapest tests of it, in order: (i) the Euclidean specialisation against AN-VP E.10
@@ -554,7 +613,7 @@ equivalence. Under ports AN-VP E.10 (flat) still gives e(K) ≥ 1/(8√K).
   ‖Z‖ on all ends outside it.
 - [X] "Pod × lamp" as a way to get antipodal partners: the pod factor drops out of the second-order criterion (E5).
 - Correction to `prior-barriers.md` §5.3: the inequality is right; the angle count's verdict is wrong (§2.3); the
-  missing lemma as stated is false (Cor. N3); the dismissed last paragraph is the route that works (§2.4, Lemma S).
+  missing lemma as stated is false (Cor. N3); the dismissed last paragraph is the route that works (§2.4, the star lemma).
 - Correction to `prior-barriers.md` §0 item 3 and §5.2: "The 'ports' lower bounds of OpenAI do not transfer" is true
   for FT, IM 8.1 and MM 4.1, and false for HC Thm 3.1, which transfers by restriction.
 - Not done: I did not read HC §§9–10 (the proof of Thm 8.1) or §§12–19; I did not build or read in depth either lab's

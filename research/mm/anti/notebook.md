@@ -154,3 +154,93 @@ same with w-bit payloads. §4.1 shows vol(Tag(h,h)^{⊗t}) ≤ 2·vol(D_w^{⊗t}
   2.2, a Lean proof following the paper would contain it internally, but **we cannot check whether the Lean proof
   contains Theorem 2.2 or Lemma 4.1 in any form.** Treat both as paper-only.
 
+---
+
+## Step 2. Corollary A: an explicit superlinear Boolean circuit lower bound
+
+### 2.1 The embedding lemma [R]
+
+Circuits: acyclic, gates of fan-in ≤ 2 from the full binary basis B₂ (all 16 functions), unbounded fan-out, no depth
+bound. Size s = number of gates. Constants may be removed by substituting them into the gates they feed (the result
+is a gate of fan-in ≤ 1), so assume none. For a gate basis of fan-in ≤ f, first replace each gate by a B₂-circuit
+of size ≤ C_f (any f-ary function has one); everything below changes by the factor C_f.
+
+**Lemma E (circuits as networks).** Let C be a B₂-circuit with inputs x₁..x_N, s gates and outputs y₁..y_m (each
+output is an input or a gate). Let k be any field (finite or not). Then:
+(a) there is a trivalent k-network with exterior bits x₁..x_N, y₁..y_m that represents the 0/1 tensor
+    Γ_C(x, y) = [y = C(x)], with volume ≤ 16s + 4N + 4m;
+(b) if m = 1, attaching to y₁ the arity-1 table e₁ (value 1 at bit 1, 0 at bit 0) gives a network for the 0/1
+    tensor [C(x) = 1] with volume ≤ 16s + 4N + 6;
+(c) if C has extra inputs z₁..z_g ("witness bits") and the z-positions are closed by arity-1 tables ≡ 1, the network
+    represents x ↦ #{z : C(x,z) = 1}·1_k, with volume ≤ 16s + 4(N+g) + 6 + 2g.
+
+*Proof.* Call *signals* the N inputs and the s gate outputs. For a signal σ let f_σ = number of gate inputs reading
+σ plus number of outputs equal to σ; Σ_σ f_σ ≤ 2s + m.
+- Gate g with inputs u, v (or only u): one vertex of arity 3 (resp. 2) with table (a, b, c) ↦ [c = g(a,b)]
+  (resp. (a, c) ↦ [c = g(a)]). Its last position is the *source* of signal g.
+- Input x_i: its source is an exterior position x_i.
+- Copying ("copy bits at fan-outs with equality tables"): a chain of j ≥ 1 equality vertices EQ₃(a,b,c) = [a=b=c]
+  has j+2 free positions all forced equal. For a gate signal with f_σ ≥ 2 wire its source to a chain of f_σ − 1 EQ₃
+  (leaving f_σ free positions); with f_σ = 1 wire the source directly; with f_σ = 0 wire it to an arity-1 table ≡ 1.
+  For an input signal we need f_σ + 1 positions, one exterior: chain of f_σ − 1 EQ₃ if f_σ ≥ 2, an EQ₂ vertex if
+  f_σ = 1, an arity-1 table ≡ 1 carrying the exterior position if f_σ = 0.
+- Wire each free copy position to the gate input it feeds; for each output y_j leave one free copy position of the
+  output's signal exterior, named y_j.
+Count: vertices V ≤ s + Σ_σ max(f_σ − 1, 1) ≤ s + (2s + m) + (N + s) = 4s + N + m. Every vertex has ≤ 3 positions
+and every wire (internal or exterior) uses at least one position, so wires ≤ 3V and volume ≤ 4V.
+Correctness: fix exterior values x, y. A setting of the internal wires has nonzero product only if all copies of
+each signal carry one value (equality tables) and each gate's output copy equals the gate function of its input
+copies (gate tables). Going through the gates in topological order this forces every signal to its value in C(x);
+so there is **at most one** nonzero term, it exists iff y = C(x), and it is the product of table entries all equal
+to 1. Hence the value is exactly 1 ∈ k if y = C(x) and exactly 0 otherwise, in every characteristic (no sum of
+several nonzero terms ever occurs). This is the paper's sentence "For each accepted input there is exactly one
+consistent assignment of the internal wires", now for every input and with the outputs exterior. (b): summing y₁
+against e₁ gives [C(x)=1]; +1 vertex +1 wire. (c): for each fixed z the previous argument gives one term of value
+[C(x,z)=1]; the ≡1 leaves sum over z. ∎
+
+Remarks. (i) The wires carry bits only; there are no field values on wires to worry about. (ii) Tables used: 0/1
+gate graphs, EQ₂, EQ₃, e₁, ≡1 — all defined over the prime field; the network exists over every field.
+(iii) Fan-out is paid for with ≤ 2s + m + N extra vertices, hence O(s + N + m) in all.
+
+### 2.2 Corollary A [R from Thm 2.2]
+
+**Corollary A.** Fix any finite field k and let σ = σ(k) > 0 be the constant of Theorem 2.2. For all sufficiently
+large w, with N = n_w = 2w·2^w:
+1. every B₂-circuit computing list distinctness LD_N = D_w (1 iff the 2^w words of 2w bits are pairwise distinct)
+   has more than N(w^σ − 4)/16 − 1 gates; since w ≥ ½·log₂N for large w, this is **≥ c·N·(log N)^σ**;
+2. (direct sum) for 1 ≤ t ≤ 2^w, every B₂-circuit with one output computing ⋀_{l≤t} D_w(x^{(l)}) on t disjoint
+   blocks — or with t outputs computing all t answers — has more than t·N(w^σ − 4)/16 − 1 − t gates;
+3. (nondeterministic) if C(x, z) has g witness bits and #{z : C(x,z)=1} ≡ D_w(x) (mod char k) for every x, then
+   16s + 4N + 6g + 6 > N·w^σ. In particular this holds for unambiguous circuits (≤ 1 witness, any k) and for
+   parity circuits (k = F₂).
+
+*Proof.* 1: Lemma E(b) gives a trivalent k-network for D_w of volume ≤ 16s + 4N + 6, so by (2.2) with t = 1,
+16s + 4N + 6 > N·w^σ. 2: the AND of t blocks is one circuit computing D_w^{⊗t} as a 0/1 function, so (2.2) applies
+with this t (a t-output circuit plus an AND-tree of t−1 gates is such a circuit). 3: Lemma E(c) and (2.2). ∎
+
+Other input lengths: for n_w ≤ N < n_{w+1} (and n_{w+1} < 2.2·n_w), let LD_N be D_w on the first n_w bits; the
+bound Ω(N (log N)^σ) holds for all large N.
+
+**Checks of every step (the brief's list).**
+- *Fan-out*: paid explicitly (equality chains), linear cost. Unbounded fan-out allowed.
+- *Constants*: absorbed into gates, or realised by arity-1 tables e_b; linear cost.
+- *The output pin*: an arity-1 table e₁ on the output position; this is literally the paper's "pin the output to
+  one".
+- *Field values*: wires are bits by definition of the model; the represented value is exactly 0 or 1 because at
+  most one internal assignment contributes. Works over every k, so we may use whichever k we like; σ(k) depends
+  on the k chosen.
+- *Basis*: any finite basis of bounded fan-in (constant-factor loss). Not formulas-only, not depth-restricted.
+- *What is not covered*: nothing about randomised circuits that err (the network must be exact).
+
+**Upper bound for calibration [R + L].** D_w has B₂-circuits of size O(N log N): AKS sorting network,
+O(2^w·w) comparators [L: Ajtai–Komlós–Szemerédi 1983], each comparator on 2w-bit words O(w) gates, total
+O(2^w w²) = O(N log N); then 2^w − 1 adjacent comparisons and an AND-tree, O(N). (The paper uses a sorting network
+with O(2^w w²) comparisons and gets m₀ = O(n_w w²) = O(N log² N); AKS saves one log.) The function is in uniform AC⁰ (OR over pairs of
+AND of XNORs, negated; quadratic size). So **c·N(log N)^σ ≤ size(LD_N) ≤ C·N log N.**
+
+**Positioning [L].** The best lower bounds for explicit functions for B₂-circuits are linear: 3.1n − o(n) (Li–Yang,
+STOC 2022), (3 + 1/86)n (Find–Golovnev–Hirsch–Kulikov, FOCS 2016), 3n (Blum 1984); 5n − o(n) over U₂
+(Iwama–Morizumi 2002). No superlinear bound for an explicit function in NP was known. Corollary A, if Theorem 2.2
+holds, is the first, and for a function in AC⁰ ∩ (size N log N). As the idea agent says, this is the release's
+most checkable claim in classical vocabulary; either it is a major corollary or Theorem 2.2 is where an error sits.
+

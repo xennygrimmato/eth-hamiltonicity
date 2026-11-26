@@ -563,3 +563,11 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - Lean: Theorem 2.2 / Lemma 4.1 not found among the formalised statements in the sparse clone. If the network bound is
   not in the Lean cone of `square_exponent`, how does the Lean proof get the lower bound? The note agent is checking
   the import cone; this is now the most informative open fact.
+
+### Anti, step 2: Corollary A proved from the paper's Theorem 2.2 [R, given the paper; unreviewed]
+- Lemma E (ours): a fan-in-2 Boolean circuit with N inputs, s gates, m outputs becomes a trivalent network for the
+  graph of its function, of volume ≤ 16s + 4N + 4m, over every field; exactly one internal assignment contributes.
+- Corollary A: every fan-in-2 Boolean circuit (any basis) for list distinctness on N = 2w·2^w bits has more than
+  N(w^σ − 4)/16 − 1 gates = Ω(N(log N)^σ), σ > 0 ineffective. Direct-sum version for up to 2^w blocks. Also for
+  unambiguous and parity-nondeterministic circuits. Upper bound O(N log N) by a sorting network.
+- So the gap for this function is (log N)^σ ≤ size/N ≤ log N.

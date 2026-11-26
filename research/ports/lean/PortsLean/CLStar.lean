@@ -215,9 +215,9 @@ theorem three_angle_alg {K : ℝ} (hK : 9 ≤ K) {s1 s2 s3 : ℝ}
     add_zero, mul_zero] at this
   linarith
 
-/-- The trigonometric form of one term: for `cos((a−b)/2) ≥ 0` and `c ≥ 0`,
+/-- The trigonometric form of one term: for `cos((a−b)/2) ≥ 0`,
 `cos((a−b)/2)·√(1 + c·sin²((a+b)/2)) = ½√((cos a + cos b)² + (1+c)(sin a + sin b)²)`. -/
-lemma trig_term {a b c : ℝ} (hC : 0 ≤ cos ((a - b) / 2)) (hc : 0 ≤ c) :
+lemma trig_term {a b c : ℝ} (hC : 0 ≤ cos ((a - b) / 2)) :
     cos ((a - b) / 2) * √(1 + c * sin ((a + b) / 2) ^ 2)
       = √((cos a + cos b) ^ 2 + (1 + c) * (sin a + sin b) ^ 2) / 2 := by
   rw [cos_add_cos, sin_add_sin]
@@ -250,9 +250,8 @@ theorem three_angle {c : ℝ} (hc : 8 ≤ c) {θ1 θ2 θ3 : ℝ}
     3 ≤ cos ((θ1 - θ2) / 2) * √(1 + c * sin ((θ1 + θ2) / 2) ^ 2)
       + cos ((θ1 - θ3) / 2) * √(1 + c * sin ((θ1 + θ3) / 2) ^ 2)
       + cos ((θ2 - θ3) / 2) * √(1 + c * sin ((θ2 + θ3) / 2) ^ 2) := by
-  have c0 : 0 ≤ c := by linarith
-  rw [trig_term (cos_half_diff_nonneg h1 h2) c0, trig_term (cos_half_diff_nonneg h1 h3) c0,
-    trig_term (cos_half_diff_nonneg h2 h3) c0]
+  rw [trig_term (cos_half_diff_nonneg h1 h2), trig_term (cos_half_diff_nonneg h1 h3),
+    trig_term (cos_half_diff_nonneg h2 h3)]
   have := three_angle_alg (K := 1 + c) (by linarith) (abs_sin_le_one θ1) (abs_sin_le_one θ2)
     (abs_sin_le_one θ3)
   rw [sqrt_one_sub_sin_sq h1, sqrt_one_sub_sin_sq h2, sqrt_one_sub_sin_sq h3] at this
@@ -272,9 +271,7 @@ theorem three_angle_corner (c : ℝ) :
     cos ((π/2 - π/2) / 2) * √(1 + c * sin ((π/2 + π/2) / 2) ^ 2)
       + cos ((π/2 - -(π/2)) / 2) * √(1 + c * sin ((π/2 + -(π/2)) / 2) ^ 2)
       + cos ((π/2 - -(π/2)) / 2) * √(1 + c * sin ((π/2 + -(π/2)) / 2) ^ 2) = √(1 + c) := by
-  have e1 : (π/2 + π/2) / 2 = π / 2 := by ring
-  have e2 : (π/2 - -(π/2)) / 2 = π / 2 := by ring
-  simp [e1, e2]
+  simp
 
 /-! ## The K_{2,m} averaging arithmetic -/
 
@@ -292,7 +289,7 @@ lemma count_k (i j : Fin m) : ∑ k, dist3 i j k = if i ≠ j then (m : ℝ) - 2
   · have e : ∀ k, dist3 i j k = 1 - (if i = k then 1 else 0) - (if j = k then 1 else 0) := by
       intro k; unfold dist3
       by_cases h1 : i = k <;> by_cases h2 : j = k <;> simp_all
-    simp only [e, sum_sub_distrib, sum_ite_eq, mem_univ, if_true, sum_const, card_univ,
+    simp only [e, sum_sub_distrib, sum_ite_eq, mem_univ, ite_true, sum_const, card_univ,
       Fintype.card_fin, nsmul_eq_mul, mul_one, ne_eq, h, not_false_eq_true]
     ring
 
@@ -335,7 +332,7 @@ lemma Q_smul (c : ℝ) (f : Fin m → Fin m → ℝ) : Q (fun i j => c * f i j) 
 lemma sum_ne_one (i : Fin m) : ∑ j : Fin m, (if i ≠ j then (1 : ℝ) else 0) = (m : ℝ) - 1 := by
   have e : ∀ j : Fin m, (if i ≠ j then (1 : ℝ) else 0) = 1 - (if i = j then 1 else 0) := by
     intro j; by_cases h : i = j <;> simp [h]
-  simp only [e, sum_sub_distrib, sum_ite_eq, mem_univ, if_true, sum_const, card_univ,
+  simp only [e, sum_sub_distrib, sum_ite_eq, mem_univ, ite_true, sum_const, card_univ,
     Fintype.card_fin, nsmul_eq_mul, mul_one]
 
 lemma Q_left (S : Fin m → ℝ) : Q (fun i _ => S i) = ((m : ℝ) - 1) * ∑ i, S i := by
@@ -393,7 +390,6 @@ theorem k2m_average (hm : 3 ≤ m) (S : Fin m → ℝ) (T : Fin m → Fin m → 
   have a5 := pat_jk (fun j k => κ * T j k)
   have a6 := pat_ik (fun i k => κ * T i k)
   have a7 := pat_ij (fun (_ : Fin m) (_ : Fin m) => κ * w' * D)
-  simp only at a1 a2 a3 a4 a5 a6 a7
   rw [a1, a2, a3, a4, a5, a6, a7, Q_left, Q_right, Q_smul, Q_const, Q_symm T hT, ← hP] at hsum
   have hm2 : (0 : ℝ) < (m : ℝ) - 2 := by linarith
   have hm1 : (0 : ℝ) < (m : ℝ) - 1 := by linarith
@@ -401,9 +397,7 @@ theorem k2m_average (hm : 3 ≤ m) (S : Fin m → ℝ) (T : Fin m → Fin m → 
     have : 0 ≤ ((m : ℝ) - 2) *
         (3 * ((m : ℝ) - 1) * ∑ i, S i - 6 * κ * P - κ * w' * D * (m * ((m : ℝ) - 1))) := by
       linarith
-    exact nonneg_of_mul_nonneg_right (by linarith) hm2 |>.le.trans' le_rfl |> fun _ =>
-      (pos_and_pos_or_neg_and_neg_of_mul_pos (α := ℝ) (a := 1) (b := 1) one_pos).elim
-        (fun _ => by nlinarith) (fun _ => by nlinarith)
+    exact (mul_nonneg_iff_of_pos_left hm2).mp this
   rw [div_mul_eq_mul_div, div_le_iff₀ hm1]
   nlinarith
 
@@ -419,7 +413,6 @@ theorem R_eq {m w' : ℝ} (hm : 1 < m) :
   have hm1 : 0 < m - 1 := by linarith
   rw [e, sqrt_mul (sq_nonneg _), sqrt_sq hA]
   field_simp
-  ring
 
 /-- **Target 4.** The K_{2,m} rate: from the weighted five-point inequality with
 `κ(w′) = 3/√(9+w′²)` on every triple of pages,
@@ -432,8 +425,8 @@ theorem k2m_rate (hm : 3 ≤ m) (S : Fin m → ℝ) (T : Fin m → Fin m → ℝ
     2 * m / √((m : ℝ) ^ 2 * ((m : ℝ) - 1) ^ 2 + 4 * w ^ 2)
       * ((∑ i, ∑ j, if i < j then T i j else 0) + w * D) ≤ ∑ i, S i := by
   intro w
-  have hm' : (1 : ℝ) < m := by have : (3 : ℝ) ≤ m := by exact_mod_cast hm
-                                linarith
+  have hm3 : (3 : ℝ) ≤ m := by exact_mod_cast hm
+  have hm' : (1 : ℝ) < m := by linarith
   have := k2m_average hm S T hT _ w' D h
   rw [R_eq hm']
   have e : w * D = w' * (m * ((m : ℝ) - 1) / 6) * D := rfl

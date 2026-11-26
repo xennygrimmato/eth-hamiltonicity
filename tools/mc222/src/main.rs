@@ -356,6 +356,35 @@ fn plane_orbits(pr: &Problem) -> Vec<((u8, u8), usize)> {
     reps
 }
 
+/// Some other element of the orbit of a plane (the last one reached by the orbit traversal);
+/// used only for the consistency check --member.
+fn orbit_member(pr: &Problem, p: (u8, u8)) -> (u8, u8) {
+    let n = pr.n;
+    let tr = |cols: &Vec<u8>, l: u8| -> u8 {
+        let mut r = 0u8;
+        for k in 0..n {
+            if (l & cols[k]).count_ones() & 1 == 1 {
+                r |= 1 << k;
+            }
+        }
+        r
+    };
+    let mut seen: HashSet<(u8, u8)> = HashSet::new();
+    let mut stack = vec![p];
+    seen.insert(p);
+    let mut last = p;
+    while let Some(q) = stack.pop() {
+        last = q;
+        for cols in &pr.sym {
+            let r = canon_plane(tr(cols, q.0), tr(cols, q.1));
+            if seen.insert(r) {
+                stack.push(r);
+            }
+        }
+    }
+    last
+}
+
 // ---------------------------------------------------------------- search
 struct Stats {
     states: u64,
@@ -626,10 +655,12 @@ fn main() {
     let mut range: Option<(usize, usize)> = None;
     let mut out = format!("circuit_{}_{}.txt", pr.name, k);
     let mut prefix: Vec<(u8, u8)> = vec![];
+    let mut member = false;
     let mut i = 3;
     while i < args.len() {
         match args[i].as_str() {
             "--no-orbits" => orbits = false,
+            "--member" => member = true,
             "--threads" => {
                 threads = args[i + 1].parse().unwrap();
                 i += 1
@@ -678,7 +709,11 @@ fn main() {
             s.sort();
             s
         });
-        r
+        if member {
+            r.iter().map(|&(p, sz)| (orbit_member(&pr, p), sz)).collect()
+        } else {
+            r
+        }
     } else {
         let lim = 1u16 << n;
         let mut all = vec![];
@@ -731,6 +766,7 @@ fn main() {
                         gens.push(g2);
                         gates.push(((a2 as u64) << 1, (b2 as u64) << 1));
                     }
+                    ctx.memo.clear(); // fresh cache per root: per-root statistics are deterministic
                     let s0 = ctx.st.states;
                     let h0 = ctx.st.helpers;
                     let t1 = Instant::now();

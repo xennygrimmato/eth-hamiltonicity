@@ -1771,3 +1771,16 @@ rebuild when it is done.
 - Method 2: its own SAT encoding with CaDiCaL agrees on all small cases; the k = 6 run with LRAT proof checking is
   in progress — that would give a proof object.
 Status of MC(⟨2,2,2⟩ over F₂) = 7: two independent exact searches agree; proof object pending.
+
+## 26 Nov (late, 59): K_{2,m} notes ready (§§0–4); referee launched
+
+`research/ports/k2m/notes.md`: Lemma P (q+1 rank-one idempotents of Mat₂(F_q), q = 2^r: t₀, t_∞, t₁, t_a = [a+1 1; a²+a a];
+pairwise differences invertible; rank over F₂ scales by r; machine-checked r ≤ 6, m ≤ 65), Lemma P′ (maximality
+m ≤ 2^k+1), Lemma H_m, Theorem A (upper bound under ¬contracting for every w > 0), Proposition C (weighted calibration
+written out), Theorem D (the analytic inequality), Theorem 5_w, Theorem B (averaging), Theorem K_m with routing value
+2m/(m(m−1)+2w) and cut bound min(2/(m−1), m/(⌊m²/4⌋+w)). Corrected [X]: the direct m-page inequality is false for every
+even m ≥ 4, and for odd m ≥ 5 at large w.
+My spot check: t_a has trace 1 and determinant 0 in characteristic 2, so it is a rank-one idempotent.
+Question I put to the referee: since the five-point theorem applies to any five points of a CAT(0) space, the m-page
+book may not be needed at all for the averaging; and whether Strassen duality is stated correctly for a weighted
+(non-integer) demand.

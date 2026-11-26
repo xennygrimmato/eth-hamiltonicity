@@ -840,3 +840,16 @@ hosts are reachable. 4 cores, 15 GB; the 6-gate search is reniced to 19.
 
 **Launching.** (1) `tools/tensorlab` Rust+PyO3 library and the E3 K_{2,3} computation. (2) Lean skeletons: Theorem A
 quantifier line-up, Theorem R arithmetic, W₅. (3) Adversarial referee on Lemma 1 / Theorem R.
+
+## 26 Nov (late, 2): two hard subproblems assigned to stronger thinkers (user request)
+
+- **Hull lemma / is W₅ spectral** (high effort): does failure of contracting force a tripod × segment configuration
+  with W₅'s distances inside a price space? Is tripod × ℝ spectral outright? Output: `research/ports/hull/notes.md`.
+  This is what would make the K_{2,3} computation decisive; without it a protocol above 0.9487 only refutes product
+  closure.
+- **C1 + D1** (medium effort): (C1) does ports/contracting in characteristic p refute a randomised Weak ETH, via
+  isolation with variable overhead small enough for the power-saving regime? (D1) an "engine gap" theorem: engine-type
+  algorithms run at n/√log n or jump to n^{1−δ}. Output: `research/ports/c1d1/notes.md`.
+- Lean toolchain is up (Lean 4.36.0 + prebuilt Mathlib) in `research/ports/lean`; scaffold committed (6c5e38d).
+- Running in total: library/E3 executor, Lean executor, referee on Theorem R, referee on Theorems A/B, the two above,
+  and the 6-gate search (niced).

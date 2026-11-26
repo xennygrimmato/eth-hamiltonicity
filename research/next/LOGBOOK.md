@@ -1160,3 +1160,27 @@ rebuilt it and read the main statements):
 Discrepancies with the notes: marginal uniformity must be assumed separately; n ≥ 1.
 Machine-checked now: the probabilistic and combinatorial core of C1 / Lemma C4. Not machine-checked: the link to
 either lab's counting theorem, and the multiplication-circuit size bound.
+
+## 26 Nov (late, 23): towards a proof that the five-point minimum is 3/√10
+
+From the hull agent (interim 3):
+- My route (i) and its projection variant are refuted [X] (tree-like sets; e.g. u₁ = v₁, u₂ = v₂, v₃ the apex).
+- **Book reduction [R, unreviewed]:** for five points in a CAT(0) space, glue the three Euclidean comparison triangles
+  (u₁,u₂,v_i) along [u₁,u₂]. By AN C.4(a) and the triangle inequality the v–v distances only increase, the others
+  are unchanged, so R(Y) ≥ R(book). The minimum is attained on books of three flat triangles (7 parameters). Uses
+  only C.4(a), so it holds for all AN prices. [N] minimum over books = 3/√10 at W₅.
+- **Calibration [D]:** bounding each |u_k v_i| below by its projection on a chosen unit vector makes all length terms
+  cancel and leaves one scalar inequality in three angles:
+  (I) Σ_{i<j} cos((θ_i−θ_j)/2)·√(1+9 sin²((θ_i+θ_j)/2)) ≥ 3 on [−π/2, π/2]³; equivalently, for z_i on the half-ellipse
+  x² + y²/10 = 1, x ≥ 0: |z₁+z₂| + |z₁+z₃| + |z₂+z₃| ≥ 6. Equality only at θ = 0 (= W₅). [N] on a 121³ grid.
+  An end-of-spine variant (geodesic through an end of the spine) remains to be checked.
+- **Dependency chain settled [D]:** f* = min over Strassen's spectrum (exact, Strassen 1988); each such point is an AN
+  spectral point, so the lower bound needs Strassen + AN C.4(a) + the five-point inequality — nothing from OpenAI.
+  The upper bound holds for every AN price. So the larger AN class costs nothing here.
+- H22 status: reduced to inequality (I) + the end-of-spine variant.
+- Launched: `tools/ivcert`, a Rust interval branch-and-bound certifier with a certified-convexity test near equality
+  points and an independent certificate checker; first jobs are (I) and the variant. Sent the hull agent a
+  reformulation: with φ_k the half-sums, (I) reads Σ_k cos(φ_i − φ_j)·g(φ_k) ≥ 3, g(φ) = √(1+9 sin²φ).
+
+**If (I) is proved: Theorem K (unconditional).** f*(K_{2,3}; k) ≥ 3/√10 over every field. And with the hull lemma:
+f*(K_{2,3}; k) = 3/√10 whenever contracting fails over k; in characteristic 0, f* > 3/√10 ⇒ fast 3-SAT.

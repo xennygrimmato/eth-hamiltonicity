@@ -9,7 +9,9 @@
 //!   P > 0, -h <= y* <= h  (N - hP <= 0 <= N + hP) : d^Z = sqrt(P^2 + (s_j - s_k)^2)
 //!   P > 0, y* >= h                                : d^Z = g(h)
 //!   P > 0, y* <= -h                               : d^Z = g(-h)
-//!   otherwise (box straddles)                    : enclosure [line.lo, min(g(h).hi, g(-h).hi)]
+//!   P > 0, y* straddles +-h                      : g(h tau) with tau a constant enclosure of the
+//!                                                   minimiser tau* = clamp(y*/h) (Danskin: C^1 only)
+//!   P may be 0                                    : enclosure [line.lo, min(g(h).hi, g(-h).hi)]
 //!                                                   (d^Z >= line distance; d^Z <= g(t) for every t).
 //! The branch is decided from enclosures over the whole box (or point), so on the box the formula used
 //! coincides with d^Z; smooth branches are differentiated, the straddling one only enclosed.
@@ -47,6 +49,29 @@ fn dz<const N: usize, T: Scalar<N>>(h: T, rj: T, sj: T, rk: T, sk: T) -> T {
         if dn.hi <= 0.0 {
             return g(-h);
         }
+    }
+    if pv.is_valid() && pv.lo > 0.0 && up.is_valid() && dn.is_valid() {
+        // y* straddles an end of the spine. With t = h tau, tau in [-1, 1] (a fixed set),
+        // g(x, h tau) is strictly convex in tau when h > 0 and P > 0, so the minimiser tau*(x) is
+        // unique and by Danskin's theorem d^Z is C^1 with gradient grad_x g(x, h tau)|_{tau = tau*}.
+        // Hence evaluating g with tau replaced by a constant enclosure of tau* gives valid value and
+        // gradient enclosures (Hessian dropped). If h may be 0 we use tau in [-1, 1]; the mean-value
+        // form only needs differentiability inside segments, where h > 0 whenever the box centre has
+        // h > 0 (the centre of a box with h in [0, w], w > 0).
+        let hv = h.val();
+        let tau = if hv.lo > 0.0 {
+            let yh = (n.val() / pv) / hv;
+            if yh.is_valid() {
+                let cl = |x: f64| x.max(-1.0).min(1.0);
+                I::new(cl(yh.lo), cl(yh.hi))
+            } else {
+                I::new(-1.0, 1.0)
+            }
+        } else {
+            I::new(-1.0, 1.0)
+        };
+        let t = h * T::cst(tau);
+        return g(t).c1_only();
     }
     let (gl, gp, gm) = (line.val(), g(h).val(), g(-h).val());
     if !(gl.is_valid() && gp.is_valid() && gm.is_valid()) {

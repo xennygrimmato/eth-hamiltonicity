@@ -32,6 +32,11 @@ pub trait Scalar<const N: usize>:
     /// A quantity known only through an enclosure `v` valid on the box (value only; derivatives
     /// INVALID for jets).
     fn from_enclosure(v: I) -> Self;
+    /// Mark the quantity as only C^1 on the box: Jet2 drops (invalidates) its Hessian, I and Jet1 are
+    /// unchanged.
+    fn c1_only(self) -> Self {
+        self
+    }
     /// Enclosure of the value.
     fn val(&self) -> I;
     /// Value and (sin, cos) at once (saves work for jets).
@@ -357,6 +362,9 @@ impl<const N: usize> Scalar<N> for Jet2<N> {
     }
     fn from_enclosure(v: I) -> Self {
         Jet2 { v, d: [INVALID; N], h: [[INVALID; N]; N] }
+    }
+    fn c1_only(self) -> Self {
+        Jet2 { v: self.v, d: self.d, h: [[INVALID; N]; N] }
     }
     fn val(&self) -> I {
         self.v

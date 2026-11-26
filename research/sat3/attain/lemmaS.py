@@ -68,7 +68,6 @@ class System:
         o, o2 = 'o' + tag, 'o' + tag + "'"
         S.parties[o] = ('aux',); S.parties[o2] = ('aux',)
         # a leg-leg wire that is removed carried a constant length; far-far wires are normalised to 0
-        S.const -= S._wire_const(i) + S._wire_const(j)
         S.wires = [w for k, w in enumerate(S.wires) if k not in (i, j)]
         if cut == 'c':
             S.wires += [[u1, o, b1], [u2, o, b2], [v1, o2, b1], [v2, o2, b2], [o, o2, bond]]

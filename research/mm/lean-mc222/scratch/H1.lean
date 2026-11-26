@@ -71,7 +71,6 @@ theorem tt_witGensF (g : Fin 6 → Fn) (h i j : Nat) :
     | exact tt_one | exact tt_zero | rw [GT_eq] | rw [tt_cN]
     | (rw [tt_xN, XG_eq]; omega)
 
-#exit
 theorem tt_outGensF (g : Fin 6 → Fn) (j : Nat) : tt (outGensF g j) = outGens (GT g) j := by
   unfold outGensF outGens
   split_ifs <;> first
@@ -80,6 +79,7 @@ theorem tt_outGensF (g : Fin 6 → Fn) (j : Nat) : tt (outGensF g j) = outGens (
 
 /-! ## Spaces -/
 
+#exit
 theorem cN_mem (g : Fin 6 → Fn) (hc : Computes g) (t : Nat) : cN t ∈ S g 6 := by
   unfold cN; split
   · exact hc _ _

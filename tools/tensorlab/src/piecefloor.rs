@@ -1554,6 +1554,283 @@ pub fn node_pod(des: &Design, node: usize) -> TreeFactor {
     TreeFactor::pod(&arm, &t)
 }
 
+// ------------------------------------------------------------------------------------ large-net limit
+
+/// Finite abelian group Q = Z_{d1} x ... x Z_{dr} (elements in mixed radix).
+#[derive(Clone, Debug)]
+pub struct QGroup {
+    pub name: String,
+    pub m: usize,
+    pub dims: Vec<usize>,
+    /// lin[(a, b, x, y)] = a x + b y for small integer coefficients a, b in {-1, 0, 1}: table per coefficient pair
+    pub add: Vec<usize>,
+    pub neg: Vec<usize>,
+}
+
+impl QGroup {
+    /// "4" = Z_4, "2x2" = Z_2^2, "2x4", "3x3", ...
+    pub fn new(name: &str) -> Self {
+        let dims: Vec<usize> = name.split('x').map(|t| t.parse().unwrap()).collect();
+        let m: usize = dims.iter().product();
+        let dec = |mut i: usize| -> Vec<usize> {
+            let mut v = vec![];
+            for &d in &dims {
+                v.push(i % d);
+                i /= d;
+            }
+            v
+        };
+        let enc = |v: &[usize]| -> usize {
+            let mut i = 0;
+            for (k, &d) in dims.iter().enumerate().rev() {
+                i = i * d + v[k];
+            }
+            i
+        };
+        let mut add = vec![0; m * m];
+        let mut neg = vec![0; m];
+        for a in 0..m {
+            let va = dec(a);
+            neg[a] = enc(&va.iter().zip(&dims).map(|(x, d)| (d - x) % d).collect::<Vec<_>>());
+            for b in 0..m {
+                let vb = dec(b);
+                add[a * m + b] = enc(&va.iter().zip(&vb).zip(&dims).map(|((x, y), d)| (x + y) % d).collect::<Vec<_>>());
+            }
+        }
+        QGroup { name: name.into(), m, dims, add, neg }
+    }
+    /// a x + b y with a, b in {-1, 0, 1}
+    pub fn lin(&self, a: i32, b: i32, x: usize, y: usize) -> usize {
+        let t = |c: i32, z: usize| match c {
+            0 => 0,
+            1 => z,
+            _ => self.neg[z],
+        };
+        self.add[t(a, x) * self.m + t(b, y)]
+    }
+}
+
+/// The limit problem (theory agent, research/sat3/limitnet.py): nodes n = (r, c) in Q^2, p merges given
+/// by functionals (a_k, b_k): hub of n under merge k is class (k, a_k r + b_k c); hub class (k, q) sits at
+/// vertex hv[k m + q] of ONE tree. Two generic nodes are independent uniform elements of Q^2:
+///   Phi = E_{n,n'} [c(n,n')_+^2] / Dbar,  c(n,n') = max_{r+,r-} [p d(r+,r-) - F_n(r+) - F_n'(r-)],
+///   F_n(x) = sum_k d(x, hub_k(n)),  Dbar = (1/p) sum_k E_{q,q'} d(pos_k(q), pos_k(q'))^2.
+/// Level value (lower bound on the floor rho if the tree's far-leg sets are prices) = sqrt(Phi)/p.
+pub struct LimitNet {
+    pub q: QGroup,
+    pub funcs: Vec<(i32, i32)>,
+    /// node -> hub classes (k m + q)
+    pub node_hubs: Vec<Vec<usize>>,
+}
+
+impl LimitNet {
+    pub fn new(qname: &str, p: usize) -> Self {
+        let q = QGroup::new(qname);
+        let funcs: Vec<(i32, i32)> = [(1, 0), (0, 1), (1, -1), (1, 1)][..p].to_vec();
+        let m = q.m;
+        let mut node_hubs = vec![];
+        for r in 0..m {
+            for c in 0..m {
+                node_hubs.push(funcs.iter().enumerate().map(|(k, &(a, b))| k * m + q.lin(a, b, r, c)).collect());
+            }
+        }
+        LimitNet { q, funcs, node_hubs }
+    }
+    pub fn p(&self) -> usize {
+        self.funcs.len()
+    }
+    pub fn nhubs(&self) -> usize {
+        self.p() * self.q.m
+    }
+    pub fn phi(&self, f: &TreeFactor) -> f64 {
+        let n = f.n();
+        let m = self.q.m;
+        let p = self.p();
+        let mut db = 0.0;
+        for k in 0..p {
+            for a in 0..m {
+                for b in 0..m {
+                    let d = f.dist[f.hv[k * m + a] * n + f.hv[k * m + b]];
+                    db += d * d;
+                }
+            }
+        }
+        db /= (p * m * m) as f64;
+        if db < 1e-14 {
+            return 0.0;
+        }
+        // distinct sorted vertex tuples of nodes, with multiplicities
+        let mut tuples: std::collections::HashMap<Vec<usize>, usize> = Default::default();
+        for nh in &self.node_hubs {
+            let mut t: Vec<usize> = nh.iter().map(|&h| f.hv[h]).collect();
+            t.sort_unstable();
+            *tuples.entry(t).or_insert(0) += 1;
+        }
+        let tl: Vec<(Vec<f64>, f64)> = tuples
+            .into_iter()
+            .map(|(t, w)| ((0..n).map(|x| t.iter().map(|&v| f.dist[v * n + x]).sum()).collect(), w as f64))
+            .collect();
+        let pw = p as f64;
+        let mut s = 0.0;
+        for (cu, wu) in &tl {
+            for (cv, wv) in &tl {
+                let mut best = 0.0f64;
+                for r in 0..n {
+                    let row = &f.dist[r * n..r * n + n];
+                    let mut by = f64::NEG_INFINITY;
+                    for r2 in 0..n {
+                        let t = pw * row[r2] - cv[r2];
+                        if t > by {
+                            by = t;
+                        }
+                    }
+                    best = best.max(by - cu[r]);
+                }
+                s += wu * wv * best * best;
+            }
+        }
+        s / ((m * m * m * m) as f64) / db
+    }
+    /// Pod labelling: hub class h on arm lab[h] (1..=A) at radius 1, or at the centre (lab 0).
+    pub fn pod01(&self, lab: &[usize], arms: usize) -> TreeFactor {
+        let mut parent = vec![0; arms + 1];
+        let mut len = vec![1.0; arms + 1];
+        len[0] = 0.0;
+        for v in 1..=arms {
+            parent[v] = 0;
+        }
+        let mut f = TreeFactor { parent, len, hv: lab.to_vec(), dist: vec![] };
+        f.recompute();
+        f
+    }
+}
+
+/// Exhaustive search over pod labellings with radii in {0, 1} and at most `arms` arms (arm labels in
+/// restricted-growth order to quotient by arm permutations). Returns (best Phi, labelling, count).
+pub fn limit_exhaustive_pod01(net: &LimitNet, arms: usize) -> (f64, Vec<usize>, u64) {
+    let nh = net.nhubs();
+    // split on the first 4 hubs (restricted growth), then parallel DFS
+    fn rec(net: &LimitNet, arms: usize, lab: &mut Vec<usize>, used: usize, f: &mut TreeFactor, best: &mut (f64, Vec<usize>), cnt: &mut u64) {
+        if lab.len() == net.nhubs() {
+            *cnt += 1;
+            f.hv.copy_from_slice(lab);
+            let v = net.phi(f);
+            if v > best.0 + 1e-12 {
+                *best = (v, lab.clone());
+            }
+            return;
+        }
+        for a in 0..=(used + 1).min(arms) {
+            lab.push(a);
+            rec(net, arms, lab, used.max(a), f, best, cnt);
+            lab.pop();
+        }
+    }
+    let mut prefixes: Vec<(Vec<usize>, usize)> = vec![(vec![], 0)];
+    for _ in 0..nh.min(6) {
+        let mut nx = vec![];
+        for (pre, used) in &prefixes {
+            for a in 0..=(used + 1).min(arms) {
+                let mut q = pre.clone();
+                q.push(a);
+                nx.push((q, (*used).max(a)));
+            }
+        }
+        prefixes = nx;
+    }
+    let res: Vec<(f64, Vec<usize>, u64)> = prefixes
+        .par_iter()
+        .map(|(pre, used)| {
+            let mut f = net.pod01(&vec![0; nh], arms);
+            let mut best = (f64::NEG_INFINITY, vec![]);
+            let mut cnt = 0;
+            let mut lab = pre.clone();
+            rec(net, arms, &mut lab, *used, &mut f, &mut best, &mut cnt);
+            (best.0, best.1, cnt)
+        })
+        .collect();
+    let mut best = (f64::NEG_INFINITY, vec![], 0u64);
+    for (v, l, c) in res {
+        best.2 += c;
+        if v > best.0 + 1e-12 {
+            best.0 = v;
+            best.1 = l;
+        }
+    }
+    best
+}
+
+/// Annealing over one general tree for the limit problem (same moves as [`anneal_one_tree`]).
+pub fn anneal_limit(net: &LimitNet, nv: usize, iters: usize, chains: usize, t0: f64, t1: f64, seed: u64, starts: &[TreeFactor]) -> Vec<(f64, TreeFactor)> {
+    let nh = net.nhubs();
+    let mut out: Vec<(f64, TreeFactor)> = (0..chains)
+        .into_par_iter()
+        .map(|c| {
+            let mut rng = SmallRng::seed_from_u64(seed ^ (c as u64 + 23).wrapping_mul(0x9E37_79B9_7F4A_7C15));
+            let mut f = if !starts.is_empty() && c % 2 == 0 {
+                let mut s = starts[(c / 2) % starts.len()].clone();
+                while s.parent.len() < nv {
+                    let v = s.parent.len();
+                    s.parent.push(rng.gen_range(0..v));
+                    s.len.push(0.0);
+                }
+                s.recompute();
+                s
+            } else {
+                TreeFactor::random(&mut rng, nv, nh)
+            };
+            let n = f.n();
+            let mut cur = net.phi(&f);
+            let mut best = (cur, f.clone());
+            let mut sigma = 0.2;
+            let (mut acc, mut tried) = (0usize, 0usize);
+            for it in 0..iters {
+                let t = t0 * (t1 / t0).powf(it as f64 / iters as f64) * best.0.max(1e-9);
+                let old = f.clone();
+                let sub = rng.gen_range(0..10);
+                if sub < 4 {
+                    let v = rng.gen_range(1..n);
+                    f.len[v] = (f.len[v] + sigma * gauss(&mut rng)).max(0.0);
+                } else if sub < 5 {
+                    let v = rng.gen_range(1..n);
+                    f.len[v] = if rng.gen::<bool>() { 0.0 } else { f.len[v] * (0.5 * gauss(&mut rng)).exp() };
+                } else if sub < 8 {
+                    let h = rng.gen_range(0..nh);
+                    f.hv[h] = if rng.gen::<bool>() { rng.gen_range(0..n) } else { f.hv[rng.gen_range(0..nh)] };
+                } else {
+                    let v = rng.gen_range(1..n);
+                    let np = rng.gen_range(0..n);
+                    if !f.is_ancestor(v, np) {
+                        f.parent[v] = np;
+                    }
+                }
+                f.recompute();
+                let v = net.phi(&f);
+                tried += 1;
+                if v >= cur || rng.gen::<f64>() < ((v - cur) / t).exp() {
+                    cur = v;
+                    acc += 1;
+                    if v > best.0 + 1e-12 {
+                        best = (v, f.clone());
+                    }
+                } else {
+                    f = old;
+                }
+                if tried == 500 {
+                    let r = acc as f64 / tried as f64;
+                    sigma *= if r > 0.3 { 1.25 } else { 0.8 };
+                    sigma = sigma.clamp(1e-8, 5.0);
+                    acc = 0;
+                    tried = 0;
+                }
+            }
+            (net.phi(&best.1), best.1)
+        })
+        .collect();
+    out.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+    out
+}
+
 // ------------------------------------------------------------------------------------ tests
 
 #[cfg(test)]
@@ -1696,6 +1973,22 @@ mod tests {
         }
         let m = Model { arms: vec![3; 9], k: 0 };
         assert!((far_value(&des, &m, &hubs).0 / 3.0 - 6.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn limit_index4_subgroup() {
+        // theory agent: rows / columns / diagonals in the subgroup A of index 4 on arms 1, 2, 3 at radius 1,
+        // all other hubs at the centre: Phi = 27/8 for Q = Z_4 and Z_2^2.
+        for qn in ["4", "2x2"] {
+            let net = LimitNet::new(qn, 3);
+            let m = net.q.m;
+            let mut lab = vec![0; 3 * m];
+            for k in 0..3 {
+                lab[k * m] = k + 1; // the identity element 0 = the trivial subgroup A of index 4
+            }
+            let f = net.pod01(&lab, 3);
+            assert!((net.phi(&f) - 27.0 / 8.0).abs() < 1e-12, "{} {}", qn, net.phi(&f));
+        }
     }
 
     #[test]

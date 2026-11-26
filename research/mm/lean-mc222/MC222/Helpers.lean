@@ -67,15 +67,33 @@ theorem tt_gateGensF (g : Fin 6 → Fn) (i j : Nat) :
 theorem tt_witGensF (g : Fin 6 → Fn) (h i j : Nat) :
     tt (witGensF g h i j) = witGens (GT g) 0 h i j := by
   unfold witGensF witGens
-  split_ifs <;> first
-    | exact tt_one | exact tt_zero | rw [GT_eq] | rw [tt_cN]
-    | (rw [tt_xN, XG_eq]; omega)
+  by_cases j0 : j = 0
+  · simp only [j0, ite_true, tt_one]; rfl
+  simp only [j0, ite_false]
+  by_cases j9 : j < 9
+  · simp only [j9, ite_true, tt_xN, XG_eq _ (show j - 1 < 8 by omega)]
+  simp only [j9, ite_false]
+  by_cases j13 : j < 13
+  · simp only [j13, ite_true, tt_cN]
+  simp only [j13, ite_false]
+  by_cases j13' : j = 13
+  · simp only [j13', ite_true]; split <;> simp [GT_eq, tt_zero]
+  simp only [j13', ite_false]
+  by_cases j14 : j = 14
+  · simp only [j14, ite_true]; split <;> simp [GT_eq, tt_zero]
+  simp only [j14, ite_false, tt_zero]; rfl
 
 theorem tt_outGensF (g : Fin 6 → Fn) (j : Nat) : tt (outGensF g j) = outGens (GT g) j := by
   unfold outGensF outGens
-  split_ifs <;> first
-    | exact tt_one | exact tt_zero | rw [GT_eq]
-    | (rw [tt_xN, XG_eq]; omega)
+  by_cases j0 : j = 0
+  · simp only [j0, ite_true, tt_one]; rfl
+  simp only [j0, ite_false]
+  by_cases j9 : j < 9
+  · simp only [j9, ite_true, tt_xN, XG_eq _ (show j - 1 < 8 by omega)]
+  simp only [j9, ite_false]
+  by_cases j15 : j < 15
+  · simp only [j15, ite_true, GT_eq]
+  simp only [j15, ite_false, tt_zero]; rfl
 
 /-! ## Spaces -/
 
@@ -90,15 +108,33 @@ theorem Tsp_le (M : Submodule (ZMod 2) Fn) (h : ∀ t < 4, cN t ∈ M) : Tsp ≤
 theorem witGensF_mem_W (g : Fin 6 → Fn) (h i : Nat) (j : Nat) (hj : j < 16) :
     witGensF g h i j ∈ W g h i := subset_span ⟨⟨j, hj⟩, rfl⟩
 
+theorem witGensF_mono (g : Fin 6 → Fn) (h : Nat) {i i' : Nat} (hi : i ≤ i') (j : Nat) :
+    witGensF g h i j = witGensF g h i' j ∨ witGensF g h i j = 0 := by
+  unfold witGensF
+  by_cases j0 : j = 0
+  · left; simp [j0]
+  by_cases j9 : j < 9
+  · left; simp [j0, j9]
+  by_cases j13 : j < 13
+  · left; simp [j0, j9, j13]
+  by_cases j13' : j = 13
+  · by_cases h0 : 0 < i
+    · left; simp [j13', h0, show 0 < i' by omega]
+    · right; simp [j13', h0]
+  by_cases j14 : j = 14
+  · by_cases h0 : h < i
+    · left; simp [j14, h0, show h < i' by omega]
+    · right; simp [j14, h0]
+  left; simp [j0, j9, j13, j13', j14]
+
 theorem W_mono (g : Fin 6 → Fn) (h : Nat) {i i' : Nat} (hi : i ≤ i') : W g h i ≤ W g h i' := by
   refine span_le.mpr ?_
   rintro f ⟨j, rfl⟩
-  have hj := j.isLt
-  by_cases e : witGensF g h i j = witGensF g h i' j
-  · rw [e]; exact witGensF_mem_W g h i' j hj
-  · -- only the gate generators can differ, and then the one for `i` is zero
-    unfold witGensF at e ⊢
-    split_ifs at e ⊢ <;> first | exact zero_mem _ | (exfalso; omega) | (exfalso; exact e rfl)
+  rcases witGensF_mono g h hi j with e | e
+  · show witGensF g h i j ∈ W g h i'
+    rw [e]; exact witGensF_mem_W g h i' j j.isLt
+  · show witGensF g h i j ∈ W g h i'
+    rw [e]; exact zero_mem _
 
 theorem gN_val (g : Fin 6 → Fn) (j : Fin 6) : gN g j.val = g j := by simp [gN, j.isLt]
 
@@ -116,12 +152,12 @@ theorem U_le_W (g : Fin 6 → Fn) (h : Nat)
     · by_cases h0 : j.val = 0
       · have := witGensF_mem_W g h i 13 (by omega)
         have e : witGensF g h i 13 = g j := by
-          simp [witGensF, show 0 < i by omega, ← h0, gN_val]
+          rw [← gN_val, h0]; simp [witGensF, show 0 < i by omega]
         rwa [e] at this
       by_cases hh : j.val = h
       · have := witGensF_mem_W g h i 14 (by omega)
         have e : witGensF g h i 14 = g j := by
-          simp [witGensF, show h < i by omega, ← hh, gN_val]
+          rw [← gN_val, hh]; simp [witGensF, show h < i by omega]
         rwa [e] at this
       · exact W_mono g h (le_of_lt hj) (ih j.val hj (hH j h0 hh))
   · have := witGensF_mem_W g h i (9 + t) (by omega)

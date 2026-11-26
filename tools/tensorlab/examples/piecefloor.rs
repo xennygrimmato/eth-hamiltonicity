@@ -82,9 +82,61 @@ fn load_pod_start(path: &str, nf: usize, nv: usize, k: usize) -> TreeModel {
     tm
 }
 
+fn tree_json(f: &TreeFactor) -> String {
+    format!("{{\"parent\":{:?},\"len\":{:?},\"hv\":{:?}}}", f.parent, f.len, f.hv)
+}
+
+/// limitexh Q P ARMS            exhaustive pod labellings, radii in {0,1}, <= ARMS arms
+/// limit Q P NV ITERS CHAINS [SEED]   annealing over one general tree (NV vertices), seeded by the
+///                                    index-|Q| point labelling and by the exhaustive optimum if present
+fn limit_cmd(a: &[String]) {
+    let t = Instant::now();
+    let net = LimitNet::new(&a[2], a[3].parse().unwrap());
+    let p = net.p() as f64;
+    let m = net.q.m;
+    if a[1] == "limitexh" {
+        let arms: usize = a[4].parse().unwrap();
+        let (v, lab, cnt) = limit_exhaustive_pod01(&net, arms);
+        println!("Q={} p={} pods01 arms<={}: {} labellings, time {:.1}s", net.q.name, net.p(), arms, cnt, t.elapsed().as_secs_f64());
+        println!("BEST Phi = {:.9}  level = {:.6}  (flat Phi = {}, level {:.6}; cap Phi = {})", v, v.sqrt() / p, net.p(), 1.0 / p.sqrt(), p * p / 2.0);
+        for k in 0..net.p() {
+            println!("  merge {}: arms of classes q=0..{}: {:?}", k, m - 1, &lab[k * m..(k + 1) * m]);
+        }
+        save(&format!("limitexh_{}_p{}_a{}", net.q.name, net.p(), arms),
+             format!("{{\"Q\":\"{}\",\"p\":{},\"phi\":{},\"tree\":{}}}", net.q.name, net.p(), v, tree_json(&net.pod01(&lab, arms))));
+    } else {
+        let nv: usize = a[4].parse().unwrap();
+        let iters: usize = a[5].parse().unwrap();
+        let chains: usize = a[6].parse().unwrap();
+        let seed: u64 = a.get(7).map(|s| s.parse().unwrap()).unwrap_or(1);
+        let mut starts = vec![];
+        // point labelling: class 0 of merge k on arm k+1
+        let mut lab = vec![0; net.nhubs()];
+        for k in 0..net.p() {
+            lab[k * m] = k + 1;
+        }
+        starts.push(net.pod01(&lab, net.p()));
+        let r = anneal_limit(&net, nv, iters, chains, 0.05, 1e-6, seed, &starts);
+        let v = r[0].0;
+        println!("Q={} p={} one tree NV={} iters={} chains={} time {:.1}s", net.q.name, net.p(), nv, iters, chains, t.elapsed().as_secs_f64());
+        println!("BEST Phi = {:.9}  level = {:.6}  (flat {}, cap {})", v, v.sqrt() / p, net.p(), p * p / 2.0);
+        let q: Vec<String> = r.iter().map(|x| format!("{:.5}", x.0)).collect();
+        println!("chains: {:?}", q);
+        let f = &r[0].1;
+        println!("tree: parent {:?}\n      len {:?}\n      hv {:?}", f.parent, f.len.iter().map(|x| (x * 1e4).round() / 1e4).collect::<Vec<_>>(), f.hv);
+        save(&format!("limit_{}_p{}_n{}_s{}", net.q.name, net.p(), nv, seed),
+             format!("{{\"Q\":\"{}\",\"p\":{},\"phi\":{},\"tree\":{}}}", net.q.name, net.p(), v, tree_json(f)));
+    }
+    eprintln!("elapsed {:.2}s", t.elapsed().as_secs_f64());
+}
+
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     let cmd = a.get(1).map(|s| s.as_str()).unwrap_or("help");
+    if cmd == "limitexh" || cmd == "limit" {
+        limit_cmd(&a);
+        return;
+    }
     let des = a.get(2).and_then(|s| Design::by_name(s));
     let t = Instant::now();
     match (cmd, des) {

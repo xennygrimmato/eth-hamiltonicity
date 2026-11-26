@@ -1973,3 +1973,18 @@ New in the final report beyond what is already logged:
   (3) I must confirm the fix did not touch the code path used for the original (CL\*) verification (that problem has
   no M scaling) — re-run both original suites when the executor is done.
 - (CL\*\*₀): ivcheck2 running (~62M leaves, ~1 h).
+
+## 26 Nov (late, 73): Theorem E passes review [V] — an unconditional exact rate
+
+`research/ports/review-thmE.md`: no gap, no numerical violation; all recomputation with the referee's own code.
+**f*(K_{2,3}(w); k) = 3/(2+w) for every w ≥ w₁ = 1.9134429 and f*(K_{2,4}(w); k) = 4/(4+w) for every w ≥ 2w₁, over every field,
+with no hypothesis.** Routing gives 3/(3+w) and 4/(6+w). (At w = 2: 3/4 against 3/5.)
+- Cut bound over all 15 bipartitions: min(1, 3/(2+w), 3/w) = 3/(2+w) for w ≥ 1; crosses the W₅ value exactly at 5/4.
+- Prop. C′ re-derived; the only dropped term is ρ_i(a_ix + b_ix − λP_i) ≥ 0. 60k random books, weights 1.1–2.
+- Br′ ≥ 0 for λ ≤ λ₁ checked line by line; numerically the bracket's minimum is 0 up to λ = 12/13 and negative beyond.
+- Equality set is larger than stated: the whole family of line metrics (v_i = u₁, v_j = u₂, v_k on [u₁u₂]).
+- Specs: S(λ₂) gives every w ≥ (3 − 2λ₂)/λ₂ by convexity (4/3 for λ₂ = 9/10); (CL\*\*₀) gives 13Σ_S ≥ 12Σ_vv + 15D.
+- Prop. T, its octahedron instance and the book principle: correct. Minor: non-regular demand graphs need a different
+  constant (not used); "minimum" → "infimum" in Prop. B; one recorded margin missed σ = 0 (+0.0158 not +0.0163 at 0.92).
+Combined with the certificates: threshold 4/3 now has two checkers (same author for both encodings); threshold 5/4
+awaits the second checker.

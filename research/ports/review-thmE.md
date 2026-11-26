@@ -172,7 +172,8 @@ characterise five-point subsets of CAT(0) spaces.
   mixtures, random) finds, after normalising Σ_vv + wD = 1:
   - w = 2: −1.7·10⁻⁶, at the line metric above, within the penalty tolerance. Value 0.
   - w = 1.92: −1.7·10⁻⁶, same.
-  - Remaining w: see the addendum at the end.
+  - w = 1.5, 1.3, 1.25 and 1.2: the same picture. See the addendum, including the caveat that this optimiser misses W5
+    at w = 1.2.
 - A bug I found in my own first version (wrong tuple index, which skipped the ⊠ penalty) produced −0.15 at the graph
   metric of K_{2,3}. That metric is not CAT(0): it violates ⊠ on (u₁,u₂; v₁,v₂) by 0.01. tensorlab reports this
   correctly, so this was my error, not a problem with the claim.
@@ -260,4 +261,24 @@ negative, at W5, as it must be.
 
 ## Addendum: remaining w of the own five-point run
 
-(filled in below when the run finished)
+`item4_own5pt.py` (outputs `item4_own.out`, `item4_own_125.out`, `item4_own_120.out`), normalised minimum of
+Σ_S − λ(Σ_vv + wD) over triangle + ⊠ feasible five-point metrics:
+
+| w | minimum found | at |
+|---|---|---|
+| 2 | −1.7·10⁻⁶ | line metric |
+| 1.92 | −1.7·10⁻⁶ | line metric |
+| 1.5 | −1.8·10⁻⁶ | line metric |
+| 1.3 | −1.9·10⁻⁶ | line metric |
+| 1.25 | −1.9·10⁻⁶ | line metric |
+| 1.2 | −2.0·10⁻⁶ | line metric |
+
+The −2·10⁻⁶ is the slack allowed by the penalty tolerance; the exact value at a line metric is 0. Nothing went below
+the cut value at any w.
+
+**Caveat on this run:** at w = 1.2 it did *not* find the known negative value κ(1.2) − 3/3.2 = −0.009 at W5, although
+one start was a perturbed W5. So this penalised optimiser is weak: it finds the degenerate cut and line minima and
+misses smooth interior ones. tensorlab's `min_ratio` does the opposite (finds W5, misses the cut). The book
+minimisation finds both. Taken together, the three searches give min = min(κ(w), 3/(2+w)) at every tested w, with no
+configuration of any kind below the cut value for w ≥ 5/4. That is numerical support for Theorem E (w ≥ w₁, proved)
+and for Conjecture W at m = 3 (w ≥ 5/4, open). It is not a certificate.

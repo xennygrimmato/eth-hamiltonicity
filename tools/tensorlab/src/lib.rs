@@ -8,6 +8,7 @@
 //! - [`restrict`]: restriction search T <= S by ALS (R/C), Levenberg-Marquardt refinement (R), border diagnostics.
 //! - exact F_2 restriction search by SAT lives in `python/f2sat.py` (python-sat).
 //! - [`rankplace`]: placements into Mat_mu(F_2), rank-metric Poincaré ratios on graphs (expanders, Cayley graphs).
+//! - [`piecefloor`]: the price method for pieces (b_m = (L - H_m)/delta_m), placements in Mat_mu(F_2) with sqrt(rank), Euclidean and spider-product models; exhaustive hub orbits for mu <= 3.
 //! - [`k23`]: the K_{2,3} network-coding instance (parties, weights, wires).
 
 pub mod metric;
@@ -17,6 +18,7 @@ pub mod k23;
 pub mod tensor;
 pub mod restrict;
 pub mod rankplace;
+pub mod piecefloor;
 
 #[cfg(feature = "python")]
 mod python;

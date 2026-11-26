@@ -107,8 +107,8 @@ impl Design {
     pub fn by_name(name: &str) -> Option<Self> {
         match name {
             "crossing" => Some(Self::crossing(1.0, 1.0)),
-            "crossing-half" => Some(Self::crossing(1.0, 0.5)),
-            "crossing-tenth" => Some(Self::crossing(1.0, 0.1)),
+            "crossing-half" => Some(Design { name: name.into(), ..Self::crossing(1.0, 0.5) }),
+            "crossing-tenth" => Some(Design { name: name.into(), ..Self::crossing(1.0, 0.1) }),
             "k4" | "K4" => Some(Self::k4()),
             "delta3" | "Delta3" => Some(Self::delta3(3)),
             "delta3-2" => Some(Self::delta3(2)),
@@ -387,6 +387,23 @@ pub struct ExhaustiveResult {
 /// indices (e.g. 16 = Mat_2 embedded in the top-left block of Mat_3; then the group used is the
 /// one of Mat_2 acting blockwise, passed in `group`).
 pub fn exhaustive_hubs(des: &Design, sp: &MatSpace, group: &[Vec<u16>], hub_pts: usize, split_depth: usize) -> ExhaustiveResult {
+    let map: Vec<usize> = (0..hub_pts).collect();
+    exhaustive_hubs_map(des, sp, group, &map, split_depth)
+}
+
+/// Hubs restricted to Mat_2 embedded in the top-left block of Mat_3 (legs anywhere in Mat_3);
+/// orbit reduction by the isometries of Mat_2 (which extend blockwise to Mat_3).
+pub fn exhaustive_hubs_sub(des: &Design, sp: &MatSpace, group2: &[Vec<u16>], split_depth: usize) -> ExhaustiveResult {
+    assert_eq!(sp.mu, 3);
+    let map: Vec<usize> = (0..16).map(|i| mat2idx(idx2mat(i, 2), 3)).collect();
+    exhaustive_hubs_map(des, sp, group2, &map, split_depth)
+}
+
+/// General form: hub labels 0..map.len() (acted on by `group`, label 0 fixed by every element and
+/// the group transitive modulo translations, so the first hub may be put at label 0), label i placed at
+/// point index map[i] of `sp`. Returned hubs are point indices of `sp`.
+pub fn exhaustive_hubs_map(des: &Design, sp: &MatSpace, group: &[Vec<u16>], map: &[usize], split_depth: usize) -> ExhaustiveResult {
+    let hub_pts = map.len();
     let nh = des.nhubs();
     // canonical prefixes up to split_depth, with stabilisers
     let mut prefixes: Vec<(Vec<usize>, Vec<u32>)> = vec![(vec![0], (0..group.len() as u32).collect())];
@@ -412,7 +429,7 @@ pub fn exhaustive_hubs(des: &Design, sp: &MatSpace, group: &[Vec<u16>], hub_pts:
             let mut best = (f64::NEG_INFINITY, vec![]);
             let mut leaves = 0u64;
             let mut hist: std::collections::HashMap<i64, u64> = Default::default();
-            dfs(des, sp, group, hub_pts, &mut hubs, pre.len(), stab, &mut scratch, &mut best, &mut leaves, &mut hist);
+            dfs(des, sp, group, map, &mut hubs, pre.len(), stab, &mut scratch, &mut best, &mut leaves, &mut hist);
             let mut h: Vec<(i64, u64)> = hist.into_iter().collect();
             h.sort_by(|a, b| b.0.cmp(&a.0));
             h.truncate(20);
@@ -435,9 +452,10 @@ pub fn exhaustive_hubs(des: &Design, sp: &MatSpace, group: &[Vec<u16>], hub_pts:
     top.sort_by(|a, b| b.0.cmp(&a.0));
     top.truncate(10);
     let mut scratch = vec![];
-    let (v, s, legs) = sp.best_legs(des, &best.1, true, &mut scratch);
+    let best_hubs: Vec<usize> = best.1.iter().map(|&h| map[h]).collect();
+    let (v, s, legs) = sp.best_legs(des, &best_hubs, true, &mut scratch);
     assert!((v - best.0).abs() < 1e-9);
-    ExhaustiveResult { best: best.0, hubs: best.1, legs, subset: s, leaves, top: top.into_iter().map(|(k, c)| (k as f64 * 1e-6, c)).collect() }
+    ExhaustiveResult { best: best.0, hubs: best_hubs, legs, subset: s, leaves, top: top.into_iter().map(|(k, c)| (k as f64 * 1e-6, c)).collect() }
 }
 
 #[inline]
@@ -456,11 +474,13 @@ fn extend(group: &[Vec<u16>], stab: &[u32], p: usize) -> Option<Vec<u32>> {
 }
 
 #[allow(clippy::too_many_arguments)]
-fn dfs(des: &Design, sp: &MatSpace, group: &[Vec<u16>], hub_pts: usize, hubs: &mut Vec<usize>, k: usize, stab: &[u32],
+fn dfs(des: &Design, sp: &MatSpace, group: &[Vec<u16>], map: &[usize], hubs: &mut Vec<usize>, k: usize, stab: &[u32],
        scratch: &mut Vec<f64>, best: &mut (f64, Vec<usize>), leaves: &mut u64, hist: &mut std::collections::HashMap<i64, u64>) {
+    let hub_pts = map.len();
     if k == hubs.len() {
         *leaves += 1;
-        let (v, _, _) = sp.best_legs(des, hubs, false, scratch);
+        let mapped: Vec<usize> = hubs.iter().map(|&h| map[h]).collect();
+        let (v, _, _) = sp.best_legs(des, &mapped, false, scratch);
         *hist.entry((v * 1e6).round() as i64).or_insert(0) += 1;
         if v > best.0 + 1e-12 {
             *best = (v, hubs.clone());
@@ -470,7 +490,7 @@ fn dfs(des: &Design, sp: &MatSpace, group: &[Vec<u16>], hub_pts: usize, hubs: &m
     for p in 0..hub_pts {
         if let Some(st) = extend(group, stab, p) {
             hubs[k] = p;
-            dfs(des, sp, group, hub_pts, hubs, k + 1, &st, scratch, best, leaves, hist);
+            dfs(des, sp, group, map, hubs, k + 1, &st, scratch, best, leaves, hist);
         }
     }
 }
@@ -786,6 +806,142 @@ pub fn anneal_model(des: &Design, model: &Model, iters: usize, chains: usize, t0
     sols
 }
 
+// ------------------------------------------------------------------------------------ far-leg limit
+
+/// Far-leg (Busemann) limit in spider^j x R^k: the two legs of every edge are sent to infinity in
+/// opposite directions of a geodesic line (Tits-antipodal boundary points), at distance M -> inf.
+/// With hubs fixed, d(leg, h) = M + beta_xi(h) + o(1), so for a subset S of merges
+///   sum_{m in S} b_m -> sum_e w_e max_{line} sum_{m in S} [-beta_{xi+}(h^m_u) - beta_{xi-}(h^m_v)] / delta_m.
+/// A line in the product has unit coefficients (c_1..c_j, c_0 w) and in spider f an ordered pair of
+/// distinct arms (a, a'); with g_a(b,t) = t if b = a else -t (minus the Busemann function of arm a) the
+/// maximum over lines is sqrt(sum_f max(0, A_f)^2 + |B|^2),
+///   A_f = max_{a != a'} sum_{m in S} [g_a(h^m_u) + g_a'(h^m_v)] / delta_m,  B = sum_{m in S} (x^m_u - x^m_v) / delta_m.
+/// Returns (sum_m b_m^+ in the limit, i.e. p*value, best S). `hubs` in design hub order.
+pub fn far_value(des: &Design, model: &Model, hubs: &[CPoint]) -> (f64, u32) {
+    let p = des.p();
+    let nl = des.nlegs();
+    let hb = |m: usize, g: usize| &hubs[des.hub(m, g) - nl];
+    let mut inv = vec![0.0; p];
+    for m in 0..p {
+        let mut dm: f64 = 0.0;
+        for g in 0..des.ngroups[m] {
+            for g2 in g + 1..des.ngroups[m] {
+                dm = dm.max(model.dist(hb(m, g), hb(m, g2)));
+            }
+        }
+        inv[m] = if dm > 1e-12 { 1.0 / dm } else { 0.0 };
+    }
+    let mut best = (0.0, 0u32);
+    for s in 1u32..(1u32 << p) {
+        if (0..p).any(|m| (s >> m) & 1 == 1 && inv[m] == 0.0) {
+            continue;
+        }
+        let mut tot = 0.0;
+        for (e, &(u, v)) in des.edges.iter().enumerate() {
+            let mut sq = 0.0;
+            for (f, &na) in model.arms.iter().enumerate() {
+                let mut af = f64::NEG_INFINITY;
+                for a in 0..na {
+                    for a2 in 0..na {
+                        if a == a2 {
+                            continue;
+                        }
+                        let mut z = 0.0;
+                        for m in 0..p {
+                            if (s >> m) & 1 == 1 {
+                                let hu = hb(m, des.groups[m][u]);
+                                let hv = hb(m, des.groups[m][v]);
+                                let gu = if hu.arm[f] as usize == a { hu.t[f] } else { -hu.t[f] };
+                                let gv = if hv.arm[f] as usize == a2 { hv.t[f] } else { -hv.t[f] };
+                                z += inv[m] * (gu + gv);
+                            }
+                        }
+                        af = af.max(z);
+                    }
+                }
+                if af > 0.0 {
+                    sq += af * af;
+                }
+            }
+            for c in 0..model.k {
+                let mut z = 0.0;
+                for m in 0..p {
+                    if (s >> m) & 1 == 1 {
+                        z += inv[m] * (hb(m, des.groups[m][u]).x[c] - hb(m, des.groups[m][v]).x[c]);
+                    }
+                }
+                sq += z * z;
+            }
+            tot += des.weights[e] * sq.sqrt();
+        }
+        if tot > best.0 + 1e-12 {
+            best = (tot, s);
+        }
+    }
+    best
+}
+
+/// Annealing over hub positions for the far-leg limit (see [`far_value`]). Returns (value per merge,
+/// hubs, S) per chain, best first.
+pub fn anneal_far(des: &Design, model: &Model, iters: usize, chains: usize, t0: f64, t1: f64, seed: u64) -> Vec<(f64, Vec<CPoint>, u32)> {
+    let nh = des.nhubs();
+    let p = des.p() as f64;
+    let mut out: Vec<(f64, Vec<CPoint>, u32)> = (0..chains)
+        .into_par_iter()
+        .map(|c| {
+            let mut rng = SmallRng::seed_from_u64(seed ^ (c as u64 + 13).wrapping_mul(0x9E37_79B9_7F4A_7C15));
+            let mut hubs: Vec<CPoint> = (0..nh).map(|_| model.random_point(&mut rng, 1.0)).collect();
+            let mut cur = far_value(des, model, &hubs).0;
+            let mut best = (cur, hubs.clone());
+            let mut sigma = 0.2;
+            let (mut acc, mut tried) = (0usize, 0usize);
+            for it in 0..iters {
+                let t = t0 * (t1 / t0).powf(it as f64 / iters as f64);
+                let i = rng.gen_range(0..nh);
+                let old = hubs[i];
+                let mut q = old;
+                let mv = rng.gen_range(0..10);
+                if mv < 7 {
+                    for f in 0..model.arms.len() {
+                        q.t[f] = (q.t[f] + sigma * gauss(&mut rng)).max(0.0);
+                    }
+                    for cc in 0..model.k {
+                        q.x[cc] += sigma * gauss(&mut rng);
+                    }
+                } else if mv < 9 && !model.arms.is_empty() {
+                    let f = rng.gen_range(0..model.arms.len());
+                    q.arm[f] = rng.gen_range(0..model.arms[f]) as u8;
+                } else {
+                    q = hubs[rng.gen_range(0..nh)];
+                }
+                hubs[i] = q;
+                let v = far_value(des, model, &hubs).0;
+                tried += 1;
+                if v >= cur || rng.gen::<f64>() < ((v - cur) / t).exp() {
+                    cur = v;
+                    acc += 1;
+                    if v > best.0 + 1e-12 {
+                        best = (v, hubs.clone());
+                    }
+                } else {
+                    hubs[i] = old;
+                }
+                if tried == 500 {
+                    let r = acc as f64 / tried as f64;
+                    sigma *= if r > 0.3 { 1.25 } else { 0.8 };
+                    sigma = sigma.clamp(1e-8, 5.0);
+                    acc = 0;
+                    tried = 0;
+                }
+            }
+            let (v, s) = far_value(des, model, &best.1);
+            (v / p, best.1, s)
+        })
+        .collect();
+    out.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+    out
+}
+
 // ------------------------------------------------------------------------------------ tests
 
 #[cfg(test)]
@@ -844,6 +1000,25 @@ mod tests {
             }
             assert!((v - bf).abs() < 1e-9, "{} {}", v, bf);
         }
+    }
+
+    #[test]
+    fn far_value_orthogonal_delta3() {
+        let des = Design::delta3(3);
+        let m = Model { arms: vec![], k: 6 };
+        let mut hubs = vec![CPoint::default(); 9];
+        for k in 0..3 {
+            for g in 0..3 {
+                let th = 2.0 * std::f64::consts::PI * g as f64 / 3.0;
+                hubs[3 * k + g].x[2 * k] = th.cos() / 3f64.sqrt();
+                hubs[3 * k + g].x[2 * k + 1] = th.sin() / 3f64.sqrt();
+            }
+        }
+        let (v, _) = far_value(&des, &m, &hubs);
+        assert!((v / 3.0 - 3.0 * 3f64.sqrt()).abs() < 1e-9, "{}", v);
+        // the same hubs embedded in tripod x R^6 (radius 0 on the tripod) give the same value
+        let m2 = Model { arms: vec![3], k: 6 };
+        assert!((far_value(&des, &m2, &hubs).0 - v).abs() < 1e-9);
     }
 
     #[test]

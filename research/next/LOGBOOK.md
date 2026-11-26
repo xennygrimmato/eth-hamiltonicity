@@ -2186,3 +2186,16 @@ multiplicative complexity equals the bilinear rank over F₂. No example of a Bo
   takes 11–20 s, LRAT check < 2 s; a satisfiable control returns a counterexample. All 360 non-trivial cubes are
   building. So the finite part looks feasible inside Lean; what remains is the reduction lemmas in Lean (normal form,
   helper count, orbits) linking `¬ HasCircuit 6` to the cube statements.
+
+## 27 Nov: ⟨1,2,3⟩ executor final; my checks on the shared tooling
+
+- Final report: MC(⟨1,2,3⟩ over F₂) = 6. Symmetry group of order 1008 (GL₂ on the middle index, GL₃ on columns; no
+  transposition), checked in Rust (generators) and Python (all 1008 elements); 51 orbits of first-gate planes; with
+  k − 3 helpers: 10 cubes per root at k = 5. k = 5: exact search none (2,829,011 states); 510 cubes UNSAT with verified
+  LRAT (1.14 GB, largest 16.5 MB). k = 4: none / UNSAT (also without orbits). k = 6: circuits found and verified.
+  A truncated proof is rejected by the checker. New files only add an `mm123` branch; `run_mm123.sh` reproduces in ≈ 11.5 min.
+- **My check that the 2×2 results are untouched by the edits to the shared files:** regenerated all 1080 formulas for
+  ⟨2,2,2⟩, k = 6 with the modified `gen_cnf.py` — all 1080 sha256 match `results/sat_k6_results.tsv`; rebuilt the search
+  program and re-ran ⟨2,2,2⟩, k = 5 with and without orbit reduction — same verdicts and the same 10,975 states.
+- Started my own full run of `run_mm123.sh` in the background.
+- The paper still lists ⟨1,2,3⟩ as open; to be updated together with the referee's revisions.

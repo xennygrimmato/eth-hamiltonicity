@@ -324,7 +324,7 @@ one, with hashed keys, so its count is not expected to match.
 **Re-running.**
 
 ```
-./run_mm123.sh [ext_dir]      # needs CaDiCaL rel-2.1.3 and lrat-check built in ext_dir (run_all.sh builds them); ~6 min
+./run_mm123.sh [ext_dir]      # needs CaDiCaL rel-2.1.3 and lrat-check built in ext_dir (run_all.sh builds them); 11.5 min wall on the shared 4-core machine, all hashes identical to results/
 target/release/mc222 mm123 5  # exact search, 51 orbits
 python3 run_sat_mm123.py <cadical> <lrat-check> 3 5   # 510 cubes; out/sat_mm123_k5/results.tsv, checks completeness itself
 ```

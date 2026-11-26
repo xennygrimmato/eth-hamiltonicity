@@ -1421,3 +1421,25 @@ theorem, a construction is not known; it would be the positive control for any s
 - Remaining trust items for Theorem K: Anthropic's thm_cn / C.3 / C.4(a) (their Lean, not built by us); the hand
   steps (substitution, covering, corner lemma — referee-checked, corner lemma also re-derived by the second
   checker's author); the book reduction and calibration (one referee + two independent numerical tests).
+
+## 26 Nov (late, 38): middle cell interim 1 — a spectral threshold; my H23 looks false by this route
+
+From the middle-cell agent (`research/ports/middle/notes.md`, being written):
+- **Kernel lemma [R]:** K(a,b) = 2^{−rank(a−b)} is positive semidefinite on Mat_μ(F₂) (it is Pr_x[(a−b)x = 0]). Hence for
+  every regular graph with second eigenvalue λ and every placement f: E_edges 2^{−rk} ≤ λ + (1−λ)·E_pairs 2^{−rk}.
+  So a spreading placement with edge rank ≤ r needs r ≥ log₂(1/λ): good expanders resist low-rank-gradient
+  placements. Sharp: Cay(Mat_μ, rank ≤ r) has λ ≈ 2^{−r}. (I checked the PSD claim: the kernel is an average of
+  indicators of {ax = bx}.)
+- **Explicit expanders that are not ports if contracting fails [R]:** Cay(SL₃(F₂[x]/(p)), elementary generators),
+  property (T) quotients, 12-regular; placement g ↦ g·W₀ in a Grassmannian gives ratio ≥ (3/16)·log₂ n, the maximal
+  order. Grassmann metrics are pull-backs of scaled ρ_μ. Numerics on SL₂(F_{2^k}), k ≤ 6: ratio 3.0 … 10.5.
+- **Direct form [R]:** a graph with Poincaré constant γ against AN prices and a placement with mean edge rank e and a
+  fraction π of full-rank pairs with γe < πμ gives contracting at (μ, s² = γe/π), without D.2.
+- **Reformulation:** [¬contracting ∧ AN-ports] ⇒ (GE): some bounded-degree family satisfies the rank-Poincaré
+  inequality for all placements into all Mat_μ(F₂). So ¬(GE) ⇒ (AN-ports ⇔ contracting).
+- **Agent's belief: (GE) is TRUE** (random regular graphs; evidence: the threshold lemma, a dimension count, small-set
+  profile) — so the metrics ρ_μ alone will not empty the middle cell. Not proved beyond a low-energy regime.
+- Class caveat stands: the literal cell also contains "ρ_μ is an AN price but not Strassen-spectral".
+H23 [C → doubtful]: AN-ports ⇔ contracting is not reachable through ρ_μ if (GE) holds. New question H24 [C]: (GE) —
+random regular graphs are expanders against the rank metric on all Mat_μ(F₂). Itself a clean metric-geometry
+statement (expanders against buildings of unbounded rank).

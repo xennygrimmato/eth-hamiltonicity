@@ -691,3 +691,15 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   notes, metric-geometry literature, ranked attacks). Lab told to wrap up the AND-count line and report.
 - Parked: the public note (drafted, awaiting the user's decision); the story (done; image generation blocked on
   credits).
+
+### Lab final report (`research/mm/lab/notebook.md`) [N, exact where stated]
+- Every tested route to n²·polylog over F₂ closed with a reason: word tricks (factor w·log n only); packing (bilinear in
+  disguise); thin-product decompositions (rank); twisted convolution (algebraic). No small case shows a gap between
+  functional and bilinear/quadratic cost.
+- 2×2 over F₂: quadratic-Boolean model exactly 7. Unrestricted model (gate reuse, higher-degree intermediates):
+  5 refuted in 0.06 s by a new exact subspace search (`mc_span.c`, calibrated against Morse's published cases);
+  6: 3 of 72 symmetry orbits refuted, 69 left (~1.8 h on 3 cores). Status 6 ≤ MC ≤ 7. No proof object.
+- ⟨1,2,2⟩: exactly 4 = rank. ⟨1,2,3⟩: 5 or 6. Tiny-map sweep partial; no map with a gap.
+- Atlas table recorded earlier. Lab's intuition: a non-algebraic win would need something non-linear AND recursive;
+  no hint of one; the 5% prior for a 2×2 gap looks generous.
+- Leftover cheap job: finish the 69 orbits (settles one instance of the Boyar–Find question). To be run unattended.

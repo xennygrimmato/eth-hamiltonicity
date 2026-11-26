@@ -84,8 +84,9 @@ def test_points(npts=3000):
                         assert spec.misses(box), "point outside not discarded %r" % (s,)
                         continue
                     hits += 1
-                    g = spec.nat(box)
+                    g = spec.G(spec.sigma(spec.coords(box)))   # verbatim form
                     worst = max(worst, abs(mid(g) - spec.M * b))
+                    worst = max(worst, abs(mid(spec.nat(box)) - spec.M * b))   # collected form
                     assert float(g.lo.mid()) <= spec.M * b + 1e-12
         print("points", job, len(pts), "piece hits", hits)
     print("max |G - M Br'| at piece points:", worst)

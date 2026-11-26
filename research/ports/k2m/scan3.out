@@ -42,3 +42,8 @@
 #41 m=3 spread=0.8 w=0.561: flow=0.21314 book=0.213143 pod=0.213143 cut=0.21314 ends=1 D=1.0
 #42 m=3 spread=0.15 w=0.310: flow=0.74211 book=0.742106 pod=0.742106 cut=0.74211 ends=3 D=0.0
 #43 m=3 spread=0.4 w=1.639: flow=0.54549 book=0.545489 pod=0.545489 cut=0.54549 ends=1 D=1.0
+#44 m=4 spread=0.8 w=1.278: flow=0.16959 book=0.169593 pod=0.169593 cut=0.16959 ends=6 D=0.0
+#45 m=3 spread=0.15 w=1.187: flow=0.69228 book=0.831736 pod=0.831736 cut=0.83174 ends=3 D=0.0
+#46 m=3 spread=0.4 w=2.177: flow=0.51370 book=0.515215 pod=0.515215 cut=0.51522 ends=1 D=1.0
+#47 m=3 spread=0.8 w=0.726: flow=0.35874 book=0.358741 pod=0.358741 cut=0.35874 ends=3 D=0.0
+{'total': 48, 'distinct': 0, 'bookltpod': 0, 'cut': 48}

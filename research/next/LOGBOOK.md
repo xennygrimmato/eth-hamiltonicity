@@ -1913,3 +1913,19 @@ reproducible bit for bit. Trust: the CNF encoding and four short lemmas in the R
   below (−0.015 at 1.24, at W₅). Threshold 5/4 consistent.
 - Spec domain minima match the notes (+0.1619, +0.1035, +0.0627 at λ = 0.8, 6/7, 0.9).
 Theorem E: [V, interim]. H25 (threshold 5/4): supported numerically by two independent codes; certificates pending.
+
+## 26 Nov (late, 69): first refined certificate proved by ivcert (independent check still running)
+
+From the certificate executor:
+- **S(9/10):** 10·Br′(σ; 9/10, 6/5) ≥ 0 on all of 𝓕′₁, split into 16 closed pieces (v₃ curved or linear × 8 sign patterns of
+  the pair sums) on each of which the function is smooth; a box is discarded only if a defining inequality is
+  certainly violated on the whole box. 22.5M leaves, ≈270 MB (git-ignored), ≈1000 s under contention. Verified by
+  `ivcheck`; `ivcheck2` still running → not yet confirmed independently.
+- ivcert changes: new problem file `k2m.rs`; a new hook `point_in_domain` in the branch-and-bound core (a box centre
+  with f < c counts as a counterexample only if it is certainly inside the piece). Default true, so existing problems
+  should be unaffected — **I will re-run the earlier certificates to confirm their hashes.**
+- **(CL\*\*₀):** the eight near-origin certificates are proved and verified. The gain test failed next to the origin
+  (cross terms cancel the linear gain); fix: substitute e_k = s_k t_k², which turns the kink into a smooth strict
+  minimum closed by convexity leaves; constants scaled by 13 to be exact floats. Far pieces running.
+- Reduction check: 140k points outside all symmetric images of 𝓕′₁ give min Br′ = +0.0034 (λ = 9/10), +0.0032 (12/13),
+  consistent with Lemma R.

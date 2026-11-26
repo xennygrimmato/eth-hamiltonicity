@@ -308,6 +308,48 @@ class K2Spec:
         X = -Q[0] + Q[1] + Q[2] - E
         return (C1 + C2 + N3 - self.hl * X - self.eta - self.shift).scale(self.M) - self.bound
 
+    def _linear_part(self):
+        """Exact rational coefficients of the linear terms of G (collected from the formula of G term by
+        term) and its constant; the V terms are kept.  G_fast below is G with these terms collected,
+        which avoids the dependency loss of evaluating +-(lam/2)Q twice; selftest_k2 checks
+        G_fast = G = M Br' at points."""
+        if hasattr(self, "_lin"):
+            return self._lin
+        from fractions import Fraction as Fr
+        hl = Fr(self.lam_pq[0], 2 * self.lam_pq[1])
+        coef = [Fr(0)] * 6
+        def addQ(i, w):
+            for idx in K2VERTS[i]:
+                coef[idx] += w
+        addQ(0, -hl)                    # C1' = V1 - (lam/2) Q1
+        addQ(1, hl)                     # C2' = V2 + (lam/2) Q2
+        if self.case == "c":
+            addQ(2, hl)                 # N3' = V3 + (lam/2) Q3
+        const = Fr(-self.eta_pq[0], self.eta_pq[1]) + (1 if self.case == "l" else 0)
+        # -(lam/2) X, X = -Q1 + Q2 + Q3 - sum_k s_k eps_k
+        addQ(0, hl)
+        addQ(1, -hl)
+        addQ(2, -hl)
+        for k, (p, q) in enumerate(K2PAIRS):
+            coef[p] += hl * self.s[k]
+            coef[q] += hl * self.s[k]
+        self._lin = ([Iv(arb(c.numerator) / arb(c.denominator)) for c in coef],
+                     Iv(arb(const.numerator) / arb(const.denominator)))
+        return self._lin
+
+    def G_fast(self, s):
+        coef, const = self._linear_part()
+        c = [cfun(u) for u in s]
+        r = const - self.shift
+        for i, (p, q) in enumerate(K2VERTS):
+            if i == 2 and self.case == "l":
+                continue
+            r = r + ((c[p] + c[q]).sqr() * self.tau2 + (s[p] - s[q]).sqr()).sqrt().scale(0.5)
+        for i in range(6):
+            if coef[i].lo != 0 or coef[i].hi != 0:
+                r = r + coef[i] * s[i]
+        return r.scale(self.M) - self.bound
+
     def gradG_sigma(self, s):
         """Interval gradient of G in sigma over the box, or None if some c or root may vanish."""
         g = [Iv(0)] * 6
@@ -353,7 +395,7 @@ class K2Spec:
         return out
 
     def nat(self, box):
-        return self.G(self.sigma(self.coords(box)))
+        return self.G_fast(self.sigma(self.coords(box)))
 
     def mvf(self, box):
         y = self.coords(box)
@@ -364,7 +406,7 @@ class K2Spec:
         for yi in y:   # a point of the box: the midpoint if Arb computes it exactly, else the lower end
             mi = (yi.lo + yi.hi) / 2
             m.append(mi if (mi.rad() == 0 and yi.lo <= mi <= yi.hi) else yi.lo)
-        val = self.G(self.sigma([Iv(mi) for mi in m]))
+        val = self.G_fast(self.sigma([Iv(mi) for mi in m]))
         for i in range(6):
             val = val + g[i] * Iv(y[i].lo - m[i], y[i].hi - m[i])
         return val

@@ -625,6 +625,7 @@ fn main() {
     let mut threads = 4usize;
     let mut range: Option<(usize, usize)> = None;
     let mut out = format!("circuit_{}_{}.txt", pr.name, k);
+    let mut prefix: Vec<(u8, u8)> = vec![];
     let mut i = 3;
     while i < args.len() {
         match args[i].as_str() {
@@ -636,6 +637,14 @@ fn main() {
             "--roots" => {
                 let v: Vec<usize> = args[i + 1].split(':').map(|x| x.parse().unwrap()).collect();
                 range = Some((v[0], v[1]));
+                i += 1
+            }
+            "--prefix" => {
+                // first gates fixed, as products of linear forms: "a,b;c,d;..." (bit masks over inputs)
+                for g in args[i + 1].split(';') {
+                    let v: Vec<u8> = g.split(',').map(|x| x.parse().unwrap()).collect();
+                    prefix.push((v[0], v[1]));
+                }
                 i += 1
             }
             "--out" => {
@@ -658,7 +667,10 @@ fn main() {
         }
     }
     // roots: first gates (every circuit's first gate is a product of two linear forms)
-    let roots: Vec<((u8, u8), usize)> = if orbits {
+    let roots: Vec<((u8, u8), usize)> = if !prefix.is_empty() {
+        orbits = false;
+        vec![(prefix[0], 1)]
+    } else if orbits {
         check_symmetry(&pr);
         let r = plane_orbits(&pr);
         println!("# symmetry check passed; {} plane orbits, sizes {:?}", r.len(), {
@@ -701,11 +713,12 @@ fn main() {
                     }
                     let ((a, b), _) = roots[r];
                     let mut gens = affine_basis(n);
+                    let aff = affine_basis(n);
                     let lf = |l: u8| {
                         let mut v = Z;
                         for kk in 0..n {
                             if (l >> kk) & 1 == 1 {
-                                vxa(&mut v, &gens[1 + kk]);
+                                vxa(&mut v, &aff[1 + kk]);
                             }
                         }
                         v
@@ -713,6 +726,11 @@ fn main() {
                     let g = vand(&lf(a), &lf(b));
                     gens.push(g);
                     let mut gates = vec![((a as u64) << 1, (b as u64) << 1)];
+                    for &(a2, b2) in prefix.iter().skip(1) {
+                        let g2 = vand(&lf(a2), &lf(b2));
+                        gens.push(g2);
+                        gates.push(((a2 as u64) << 1, (b2 as u64) << 1));
+                    }
                     let s0 = ctx.st.states;
                     let h0 = ctx.st.helpers;
                     let t1 = Instant::now();

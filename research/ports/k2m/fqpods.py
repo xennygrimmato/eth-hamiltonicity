@@ -8,7 +8,7 @@ Also checks: rank_F2(iota(A)) = r * rank_Fq(A) on random A in Mat_2(F_q), and th
 """
 import itertools, random, sys
 
-IRRED = {1: 0b11, 2: 0b111, 3: 0b1011, 4: 0b10011, 5: 0b100101}   # x+1, x^2+x+1, x^3+x+1, x^4+x+1, x^5+x^2+1
+IRRED = {1: 0b11, 2: 0b111, 3: 0b1011, 4: 0b10011, 5: 0b100101, 6: 0b1000011}   # x+1, x^2+x+1, x^3+x+1, x^4+x+1, x^5+x^2+1
 
 def gf_mul(a, b, r):
     p = 0
@@ -96,6 +96,23 @@ def check(r):
         print(f"      admissible further points in Mat_2(F_{q}): {extra}")
     return ok
 
+
+def explicit_family(r):
+    """The explicit family of notes Lemma P: t_0=[[1,0],[0,0]], t_inf=[[0,0],[1,1]], t_1=[[0,1],[0,1]],
+    t_a=[[a+1,1],[a^2+a,a]] for a in F_q minus {0,1}."""
+    q = 1 << r
+    T = [[[1, 0], [0, 0]], [[0, 0], [1, 1]], [[0, 1], [0, 1]]]
+    for a in range(2, q):
+        T.append([[a ^ 1, 1], [gf_mul(a, a, r) ^ a, a]])
+    I = [[1, 0], [0, 1]]
+    ok = len(T) == q + 1
+    for t in T:
+        ok &= rank_f2(iota(t, r)) == r and rank_f2(iota(add(I, t), r)) == r
+    for s_, t in itertools.combinations(T, 2):
+        ok &= rank_f2(iota(add(s_, t), r)) == 2 * r
+    print(f"r={r}: explicit family of Lemma P ({len(T)} matrices): {ok}")
+    return ok
+
 def max_family_mu4():
     """Exhaustive: largest m with n=0, s=W (rk 2), t_i (rk 1, rk(W-t_i)=1, pairwise rk 2) in Mat_2(F_2):
     and in Mat_4(F_2) with W = I_4, t_i of rank 2: clique search (greedy bound only)."""
@@ -114,5 +131,6 @@ def max_family_mu4():
 
 if __name__ == "__main__":
     allok = all(check(r) for r in (1, 2, 3, 4, 5))
+    allok &= all(explicit_family(r) for r in (1, 2, 3, 4, 5, 6))
     max_family_mu4()
     print("ALL OK" if allok else "FAILURE")

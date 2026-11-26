@@ -1749,3 +1749,10 @@ Launched: Lean formalisation (`PortsLean/CLStar.lean`): weighted inequality, K =
 and the K_{2,m} averaging arithmetic.
 Lesson for the log: the hard-looking six-variable inequality fell to one identity once the weighted family was
 considered — generalising (to K_{2,m}) exposed the structure, as I had hoped when assigning P3.
+
+## 26 Nov (late, 57): the six-variable inequality is in Lean (per the executor; rebuild pending)
+
+`PortsLean/CLStar.lean`: `clstar_weighted` (0 < w ≤ 1, K = 1+9/w²) and `clstar` (w = 1, K = 10), no sorry. The informal proof
+is correct. Simplification found: the Cauchy–Schwarz direction (a, b) = (√(1−m²), m) works and needs only K ≥ 9/w²; so
+the K = 9 version follows, and K = 9 is sharp (Φ = √K − 3 at σ = (1, −1, −1, −1, 1, 1)). Targets 3–5 in progress; I will
+rebuild when it is done.

@@ -42,3 +42,33 @@
 #42 m=4 c1=[np.int64(1), np.int64(3), np.int64(2), np.int64(2)] c2=[np.int64(2), np.int64(3), np.int64(1), np.int64(3)] r=[0, 0, 2, 3, 2, 3] w=2 c0=1: flow=0.50000 book=0.500000 pod=0.500000 cut=0.50000 toyoda=None
 #43 m=3 c1=[np.int64(2), np.int64(2), np.int64(2)] c2=[np.int64(1), np.int64(2), np.int64(1)] r=[1, 3, 1] w=2 c0=0: flow=0.71429 book=0.750000 pod=0.750000 cut=0.75000 toyoda=0.750164 TOYODA-MISMATCH
 #44 m=3 c1=[np.int64(3), np.int64(1), np.int64(3)] c2=[np.int64(1), np.int64(2), np.int64(2)] r=[0, 3, 2] w=0 c0=1: flow=1.00000 book=1.000000 pod=1.000000 cut=1.00000 toyoda=1.0
+#45 m=4 c1=[np.int64(3), np.int64(2), np.int64(3), np.int64(2)] c2=[np.int64(2), np.int64(3), np.int64(3), np.int64(3)] r=[2, 2, 1, 3, 2, 3] w=3 c0=0: flow=0.65625 book=0.714286 pod=0.714286 cut=0.71429 toyoda=None
+#46 m=3 c1=[np.int64(2), np.int64(3), np.int64(1)] c2=[np.int64(1), np.int64(2), np.int64(1)] r=[0, 2, 0] w=3 c0=0: flow=0.80000 book=0.800000 pod=0.800000 cut=0.80000 toyoda=0.8
+#47 m=3 c1=[np.int64(1), np.int64(3), np.int64(2)] c2=[np.int64(3), np.int64(2), np.int64(2)] r=[0, 0, 0] w=3 c0=0: flow=1.66667 book=1.666667 pod=1.666667 cut=1.66667 toyoda=1.666667
+#48 m=4 c1=[np.int64(1), np.int64(2), np.int64(2), np.int64(2)] c2=[np.int64(3), np.int64(2), np.int64(1), np.int64(3)] r=[3, 2, 3, 3, 2, 2] w=0 c0=1: flow=0.42857 book=0.428571 pod=0.428571 cut=0.42857 toyoda=None
+#49 m=3 c1=[np.int64(1), np.int64(2), np.int64(3)] c2=[np.int64(2), np.int64(1), np.int64(2)] r=[2, 2, 3] w=2 c0=0: flow=0.60000 book=0.600000 pod=0.600000 cut=0.60000 toyoda=0.6
+#50 m=3 c1=[np.int64(3), np.int64(3), np.int64(3)] c2=[np.int64(3), np.int64(3), np.int64(2)] r=[0, 3, 3] w=0 c0=0: flow=0.83333 book=0.833333 pod=0.833333 cut=0.83333 toyoda=0.833333
+#51 m=4 c1=[np.int64(2), np.int64(3), np.int64(3), np.int64(1)] c2=[np.int64(2), np.int64(1), np.int64(1), np.int64(1)] r=[3, 3, 3, 0, 1, 3] w=1 c0=0: flow=0.28571 book=0.285714 pod=0.285714 cut=0.28571 toyoda=None
+#52 m=3 c1=[np.int64(3), np.int64(2), np.int64(1)] c2=[np.int64(2), np.int64(2), np.int64(2)] r=[3, 0, 1] w=2 c0=0: flow=1.00000 book=1.000000 pod=1.000000 cut=1.00000 toyoda=1.0
+#53 m=3 c1=[np.int64(3), np.int64(1), np.int64(3)] c2=[np.int64(3), np.int64(3), np.int64(1)] r=[2, 3, 1] w=0 c0=0: flow=1.00000 book=1.000000 pod=1.000000 cut=1.00000 toyoda=1.0
+#54 m=4 c1=[np.int64(1), np.int64(1), np.int64(1), np.int64(2)] c2=[np.int64(2), np.int64(1), np.int64(3), np.int64(2)] r=[3, 0, 2, 1, 1, 2] w=1 c0=0: flow=0.40000 book=0.400000 pod=0.400000 cut=0.40000 toyoda=None
+#55 m=3 c1=[np.int64(3), np.int64(3), np.int64(3)] c2=[np.int64(3), np.int64(1), np.int64(1)] r=[3, 0, 2] w=1 c0=0: flow=0.80000 book=0.800000 pod=0.800000 cut=0.80000 toyoda=0.8
+#56 m=3 c1=[np.int64(2), np.int64(3), np.int64(2)] c2=[np.int64(1), np.int64(3), np.int64(3)] r=[2, 2, 0] w=2 c0=0: flow=0.75000 book=0.750000 pod=0.750000 cut=0.75000 toyoda=0.75
+#57 m=4 c1=[np.int64(1), np.int64(3), np.int64(3), np.int64(2)] c2=[np.int64(3), np.int64(3), np.int64(3), np.int64(2)] r=[1, 1, 2, 0, 1, 1] w=1 c0=1: flow=1.00000 book=1.000000 pod=1.000000 cut=1.00000 toyoda=None
+#58 m=3 c1=[np.int64(2), np.int64(1), np.int64(2)] c2=[np.int64(3), np.int64(3), np.int64(1)] r=[2, 0, 2] w=3 c0=0: flow=0.71429 book=0.714286 pod=0.714286 cut=0.71429 toyoda=0.714286
+#59 m=3 c1=[np.int64(3), np.int64(2), np.int64(3)] c2=[np.int64(3), np.int64(2), np.int64(1)] r=[3, 1, 1] w=0 c0=0: flow=1.00000 book=1.000000 pod=1.000000 cut=1.00000 toyoda=1.0
+#60 m=4 c1=[np.int64(1), np.int64(1), np.int64(2), np.int64(1)] c2=[np.int64(3), np.int64(1), np.int64(3), np.int64(3)] r=[3, 3, 3, 2, 0, 3] w=3 c0=0: flow=0.40000 book=0.400000 pod=0.400000 cut=0.40000 toyoda=None
+#61 m=3 c1=[np.int64(2), np.int64(2), np.int64(3)] c2=[np.int64(3), np.int64(2), np.int64(3)] r=[2, 2, 0] w=1 c0=1: flow=1.25000 book=1.250000 pod=1.250000 cut=1.25000 toyoda=1.25
+#62 m=3 c1=[np.int64(2), np.int64(2), np.int64(2)] c2=[np.int64(3), np.int64(3), np.int64(3)] r=[0, 1, 0] w=2 c0=1: flow=2.66667 book=2.666667 pod=2.666667 cut=2.66667 toyoda=2.666667
+#63 m=4 c1=[np.int64(2), np.int64(2), np.int64(3), np.int64(3)] c2=[np.int64(3), np.int64(1), np.int64(2), np.int64(2)] r=[0, 0, 2, 0, 1, 1] w=0 c0=0: flow=1.25000 book=1.250000 pod=1.250000 cut=1.25000 toyoda=None
+#64 m=3 c1=[np.int64(2), np.int64(3), np.int64(3)] c2=[np.int64(2), np.int64(1), np.int64(1)] r=[0, 1, 2] w=3 c0=0: flow=1.00000 book=1.000000 pod=1.000000 cut=1.00000 toyoda=1.0
+#65 m=3 c1=[np.int64(1), np.int64(1), np.int64(2)] c2=[np.int64(2), np.int64(1), np.int64(2)] r=[3, 0, 3] w=3 c0=0: flow=0.33333 book=0.333333 pod=0.333333 cut=0.33333 toyoda=0.333333
+#66 m=4 c1=[np.int64(3), np.int64(3), np.int64(1), np.int64(3)] c2=[np.int64(2), np.int64(1), np.int64(3), np.int64(2)] r=[3, 1, 3, 3, 2, 0] w=3 c0=0: flow=0.50000 book=0.500000 pod=0.500000 cut=0.50000 toyoda=None
+#67 m=3 c1=[np.int64(3), np.int64(2), np.int64(2)] c2=[np.int64(1), np.int64(2), np.int64(2)] r=[2, 1, 2] w=2 c0=0: flow=0.83333 book=0.833333 pod=0.833333 cut=0.83333 toyoda=0.833333
+#68 m=3 c1=[np.int64(2), np.int64(2), np.int64(2)] c2=[np.int64(3), np.int64(1), np.int64(3)] r=[3, 2, 3] w=3 c0=1: flow=0.50000 book=0.500000 pod=0.500000 cut=0.50000 toyoda=0.5
+#69 m=4 c1=[np.int64(1), np.int64(2), np.int64(3), np.int64(2)] c2=[np.int64(3), np.int64(3), np.int64(2), np.int64(3)] r=[3, 1, 2, 3, 2, 2] w=3 c0=0: flow=0.59375 book=0.625000 pod=0.625000 cut=0.62500 toyoda=None
+#70 m=3 c1=[np.int64(2), np.int64(2), np.int64(1)] c2=[np.int64(3), np.int64(2), np.int64(1)] r=[0, 3, 3] w=2 c0=0: flow=0.33333 book=0.333333 pod=0.333333 cut=0.33333 toyoda=0.333333
+#71 m=3 c1=[np.int64(3), np.int64(1), np.int64(2)] c2=[np.int64(2), np.int64(2), np.int64(3)] r=[1, 2, 2] w=0 c0=0: flow=1.00000 book=1.000000 pod=1.000000 cut=1.00000 toyoda=1.0
+#72 m=4 c1=[np.int64(3), np.int64(3), np.int64(2), np.int64(1)] c2=[np.int64(2), np.int64(1), np.int64(1), np.int64(1)] r=[1, 2, 2, 1, 1, 2] w=3 c0=0: flow=0.40000 book=0.400000 pod=0.400000 cut=0.40000 toyoda=None
+#73 m=3 c1=[np.int64(3), np.int64(2), np.int64(3)] c2=[np.int64(1), np.int64(1), np.int64(1)] r=[3, 3, 2] w=0 c0=0: flow=0.60000 book=0.600000 pod=0.600000 cut=0.60000 toyoda=0.6
+#74 m=3 c1=[np.int64(1), np.int64(3), np.int64(2)] c2=[np.int64(2), np.int64(3), np.int64(3)] r=[3, 2, 0] w=2 c0=1: flow=0.60000 book=0.600000 pod=0.600000 cut=0.60000 toyoda=0.6

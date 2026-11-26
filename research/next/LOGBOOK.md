@@ -2174,3 +2174,15 @@ The executor says the old 2×2 results still reproduce — I will confirm by re-
 since it edited the shared generator and search program.
 So in both small formats settled so far (⟨2,2,2⟩: 7; ⟨1,2,3⟩: 6; also ⟨2,2,1⟩: 4) the unrestricted Boolean
 multiplicative complexity equals the bilinear rank over F₂. No example of a Boolean circuit beating bilinear rank.
+
+## 27 Nov: Lean route for the 7-AND-gate theorem — stage 1 done, feasibility looks good
+
+`research/mm/lean-mc222/` (per the executor; my rebuild pending).
+- `MC222/Statement.lean`: functions F₂⁸ → F₂ as `Fin 8 → ZMod 2 → ZMod 2`-valued maps; inputs x_k; targets c_ij;
+  S g j = span of 1, the inputs and the first j gates; `IsCircuit g := ∀ i, ∃ u ∈ S g i, ∃ v ∈ S g i, g i = u * v`;
+  `Computes`; `HasCircuit k`; `MC := sInf {k | HasCircuit k}`. Target: `HasCircuit 7 ∧ ¬ HasCircuit 6`.
+- `MC222/Upper.lean`: `hasCircuit_seven` proved (Strassen), standard axioms only.
+- Feasibility preview: one cube as a single `bv_decide` goal over `BitVec 256` truth tables and `BitVec 16` selectors
+  takes 11–20 s, LRAT check < 2 s; a satisfiable control returns a counterexample. All 360 non-trivial cubes are
+  building. So the finite part looks feasible inside Lean; what remains is the reduction lemmas in Lean (normal form,
+  helper count, orbits) linking `¬ HasCircuit 6` to the cube statements.

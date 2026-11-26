@@ -102,7 +102,4 @@ def Cube (α β : BitVec 16) (h₁ h₂ : Nat) : Prop :=
     (l1 r1 l2 r2 l3 r3 l4 r4 l5 r5 o0 o1 o2 o3 w0 w1 w2 w3 w4 w5 : BitVec 16),
     ¬ CubeOK α β h₁ h₂ G0 G1 G2 G3 G4 G5 l1 r1 l2 r2 l3 r3 l4 r4 l5 r5 o0 o1 o2 o3 w0 w1 w2 w3 w4 w5
 
-/-- The simp set that unfolds a concrete cube into a pure bit-vector formula. -/
-theorem cube_unfold_dummy : True := trivial
-
 end MC222

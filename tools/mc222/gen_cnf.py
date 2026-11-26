@@ -237,7 +237,7 @@ if __name__ == "__main__":
     helper = None
     if "--helpers" in sys.argv:
         hs = sys.argv[sys.argv.index("--helpers") + 1]
-        helper = frozenset(int(t) for t in hs.split(",") if t != "")
+        helper = frozenset(int(t) for t in hs.split(",") if t not in ("", "none"))
     if "--decode" in sys.argv:
         sys.stdout.write(decode(problem, k, root, helper, sys.argv[sys.argv.index("--decode") + 1]))
         sys.exit(0)

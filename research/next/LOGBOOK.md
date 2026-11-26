@@ -1797,3 +1797,16 @@ book may not be needed at all for the averaging; and whether Strassen duality is
 Now machine-checked: (CL\*) and (I) themselves. Still by hand/referee: the book reduction, the calibration
 (Prop. 3.2 / Prop. C), the hull lemma's CAT(0) rigidity, the idempotent family.
 Lean project: 14 files.
+
+## 26 Nov (late, 61): referee interim on K_{2,m} — main items correct
+
+- Lemma P: correct (referee's own GF(2^r) code, r ≤ 5; exactly q+1 members; exhaustive search in Mat₂(F_q), q = 2, 4, 8
+  finds at most q+1 such points). r = 1 handled by μ = max(2r, 3) with a ↦ diag(a, 0).
+- Lemma H_m / Theorem A: correct; every step involves one page or one pair of pages. Optimum correct for all w > 0.
+- Prop. C: correct; 200k random three-page books at five weights, minimum slack +3·10⁻⁷; bracket equals (κw/3)·D·Φ_w to
+  3·10⁻¹⁴; Lean `clstar_weighted` is exactly the inequality used.
+- Theorem B: correct; **the m-page book is not needed** — Theorem 5_{w′} applies directly to five-point subsets (my
+  question). Book minimisation for m = 3–6 reproduces R_m(w) to 10⁻¹⁶.
+- Minor: the table row m = 6 is wrong (R₆(1) = 12/√904 = 0.399114, checked by me, not 0.399557); the duality for
+  non-integer w needs an explicit rational-w plus monotonicity/continuity step (exposition, not a gap).
+- Items 2, 6, 7 pending.

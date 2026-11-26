@@ -1,4 +1,4 @@
-# Tensor rates of the networks K_{2,m}: 3/√10 ≤ f* for the Okamura–Seymour network K_{2,3}, and 2m/√(m²(m−1)²+4w²) ≤ f* in general, with equality unless the contracting hypothesis holds
+# Tensor rates of the networks K_{2,m}: 3/√10 ≤ f* for the Okamura–Seymour network K_{2,3}, and 2m/√(m²(m−1)²+4w²) ≤ f* in general, with equality unless the contracting hypothesis holds; and the exact rate 3/(2+w) in the cut regime
 
 *Draft note, 26 November 2026; revised version. Self-contained. Status tags are defined in §0.3 and collected in
 §8.*
@@ -54,6 +54,18 @@ supply the 2m binary wires u_kv_i, and demand all C(m,2) wires v_iv_j at rate f 
 > 3. *(Comparison.)* Routing achieves exactly 2m/(m(m−1)+2w). The cut bound is min(2/(m−1), m/(⌊m²/4⌋+w)). In
 >    the range of item 1, routing < R_m(w) < cut bound.
 > 4. *(Consequence.)* A protocol over k of rate above R_m(w) implies that contracting holds over k (§5).
+> 5. *(Cut regime, unconditional; Theorem E, §4.4.)* For every field k, f*(K_{2,3}(w); k) = 3/(2+w) for all
+>    w ≥ w₀ and f*(K_{2,4}(w); k) = 4/(4+w) for all w ≥ 2w₀, where the threshold w₀ depends on the support:
+>    - (a) w₀ = w₁ = 1.9134429… (λ₁ = 3/(2+w₁) = 0.7665884…, the real root of 4λ³ − 8λ² + 9λ − 4): proof by hand,
+>      refereed;
+>    - (b) w₀ = 4/3: in addition one computer-assisted six-variable inequality, S(9/10);
+>    - (c) w₀ = 5/4: in addition a second one, (CL\*\*₀), which yields the five-point inequality
+>      13Σ_S ≥ 12Σ_vv + 15D.
+>
+>    Routing gives 3/(3+w) and 4/(6+w).
+
+Item 5 is unconditional: the upper bound is one flattening rank, the lower bound uses only what item K.1 uses. At
+w = 2 the rate is exactly 3/4 (routing 3/5). For 1 < w < 5/4 only bounds are known (§4.4).
 
 For comparison:
 - routing gives exactly 3/4;
@@ -94,13 +106,16 @@ routing classically. (These items were read at the level of abstracts.)
 - **No explicit protocol near 3/√10.** An explicit family above routing is described in §7: rate ≥ 0.83671 with
   exact certificates, and 6/(4+√10) ≈ 0.83772 in the limit under one numerical claim. It is not part of the
   theorems, and its smallest instances are far beyond direct computation. Nothing explicit is known for m ≥ 4.
-- **No unconditional value.** If contracting holds over k, we know only f*(k) ∈ [3/√10, 1], and for K_{2,m}(w)
-  only f* ∈ [R_m(w), cut bound].
+- **Unconditional values only in the cut regime.** What is unconditional: the lower bounds K.1, K_m.1, the cut
+  upper bounds, and the exact values of item K_m.5 (m = 3, 4, w ≥ w₀). What is conditional on the failure of
+  contracting: every exact value below the cut bound, in particular f*(k) = 3/√10. If contracting holds over k, we
+  know only f*(k) ∈ [3/√10, 1], and for K_{2,m}(w) outside item K_m.5 only f* ∈ [proved lower bound, cut bound].
 - **No claim that contracting holds or fails** over any field.
 - **Border protocols** over finite fields, or of exponential approximation degree: nothing is claimed.
 - **Non-uniform demands.** Only the demands of K_{2,m}(w) are treated: one weight on u₁u₂, one rate on all v_iv_j.
-  For m = 3 the lower bound covers w ≤ 1 only; for w > 1 the method fails (§3.3, remark 3). Other demand vectors
-  are different linear tests (§1.2) and are not treated.
+  For m = 3 the lower bound κ(w) covers w ≤ 1 only; for w > 1 Theorem D fails (§3.3, remark 3), the range
+  1 < w < 5/4 is open, and from w₀ on the rate is the cut value (§4.4). Other demand vectors are different linear
+  tests (§1.2); a few are treated in §4.5.
 - **No unconditional algorithm or lower bound in complexity.** Item 3 is an implication between hypotheses.
 
 ### 0.3 Provenance and tags
@@ -117,6 +132,8 @@ The imported facts are used as follows:
 - **Items K.1, K_m.1** use only Strassen 1988 [Str88] and the CAT(0) property of prices: [AN] Theorem C.1
   (`thm_cn`), packaged as Prop. C.3 (`prop_space`), used through Lemma C.4(a).
 - **Items K.2, K_m.2** additionally use `thm_alt_rank_price` (from the proof of Theorem D.2) and Lemma C.4(f).
+- **Item K_m.5** uses the same imports as K.1 and a flattening rank; levels (b), (c) also the interval
+  certificates of §4.4.
 - **Items 1–2 use nothing from OpenAI's papers**; [EG] Thm 4.3 is an alternative source for the CAT(0) input (§1.3).
 - **Item 3** uses the companion note [CE] (`note-contracting-eth.md`), one of whose two routes uses OpenAI results
   (§5).
@@ -127,7 +144,7 @@ Tags:
 - **[L]**: machine-checked in Lean in `research/ports/lean/` (Lean v4.36.0 with Mathlib). The project was rebuilt
   for this version: it compiles with no `sorry`, and `#print axioms` shows only `propext`, `Classical.choice` and
   `Quot.sound`. The Lean statement is named each time.
-- **[IV]**: verified by the interval certifiers of §3.5.
+- **[IV]**: verified by the interval certifiers of §3.5 and §4.4.
 - **[N]**: numerical evidence only.
 - **[AN]**: quoted from [AN].
 - **[cl]**: classical.
@@ -506,7 +523,8 @@ Remarks.
    slice, K ≥ 9), `three_angle` (c ≥ 8), `three_angle_I` (c = 9), `three_angle_corner`. Near 0,
    F₉(θ) = 3 + θᵀQθ + O(|θ|⁴) with Q = (3/4)·Id + (5/4)·J, eigenvalues 3/4, 3/4, 9/2 [P].
 3. *Weights above 1.* At the six corners of §3.4, Φ_w = 3/w − 3 < 0 for w > 1, so neither the statement nor the
-   method extends beyond w = 1.
+   method extends beyond w = 1. The refined calibration of §4.4 repairs the corners and gives the cut regime; the
+   arc 1 < w < 5/4 stays open.
 4. *Another direction in step 3.* The source (k2m/notes.md §3.3) takes sin χ = 3m/√(9+w²); this is also correct
    and is used in §3.4. The direction (√(1−m²), m), as in Lean, needs only K ≥ 9/w². Earlier attempts (hull notes
    §3.5) bounded one pair term at a time; the proof uses one linearisation for all terms and the cyclic telescoping.
@@ -538,28 +556,10 @@ Remarks.
 
 ### 3.5 Independent confirmation by interval arithmetic [IV]
 
-Before Theorem D, (CL*) and (I) were proved by interval arithmetic (`tools/ivcert/`). These certificates now
-confirm the case w = 1 independently.
-
-- *Certificates.* `clstar:rho=0.5` is a bisection tree on [−1,1]⁶ in the coordinates (3.5), with leaves closed by
-  interval tests or excluded; with symmetry pruning it has 92 195 leaves, without 528 970 (this version suffices).
-  Excluded leaves lie in the central cube [−½, ½]⁶, covered by eight orthant certificates `clnear:rho=0.5:s=±±±`
-  that close 0 by a gain test, or in six corner regions {sσ_jk ≥ 15/16, sσ_kj ≥ 15/16}. (I) has its own
-  certificate `hull3` (401 leaves; 1 014 without symmetry).
-- *Corner lemma [P].* With d₁ = 1 − sσ_jk, d₂ = 1 − sσ_kj ∈ [0, 1/16], the vertex terms at j and k are ≥ √d₁/2 and
-  ≥ √d₂/2, and |σ_jk + σ_kj| = 2 − d₁ − d₂, so Φ ≥ (√d₁ + √d₂)/2 − (3/2)(d₁ + d₂) ≥ 0, since 3d ≤ √d for d ≤ 1/9.
-- *Covering [P-ref].* Leaves are rebuilt from the tree, so they cover the domain structurally; the region tests are
-  exact in binary64, since ½ and 15/16 are dyadic (review-fivepoint §6).
-- *Two checkers.* `ivcheck` performs no search but shares the Rust implementation with the prover; the referee
-  checked the encoding of Φ by hand and spot-checked rounding and the gain test. `ivcheck2` is a separate Python
-  implementation with Arb ball arithmetic (python-flint 0.9.0, FLINT 3.6.0) that takes only the box lists, checks
-  the partition and the 94 excluded boxes exactly, re-proves Φ ≥ 0 on the other boxes with its own argument at the
-  origin, and rejects a mutation (Φ − 0.001); it verifies the no-symmetry `clstar`, all `clnear` and `hull3`, and
-  has not been refereed. All twelve files in `tools/ivcert/certs/` report VERIFIED under `ivcheck`.
-- *Trust base of this route.* Binary64 arithmetic with a correctly rounded fma; the Rust source of `ivcert` and its
-  compiler, or the `ivcheck2` stack; the hand steps (sine substitution, orthant cover, corner lemma, gain-test bound
-  in `src/bnb.rs`).
-- *Consistency.* With c = 8 in (I) the certificate does not close at (π/2, π/2, −π/2), where F₈ = 3 exactly.
+Before Theorem D, (CL*) and (I) were proved by interval arithmetic (`tools/ivcert/`: certificates `clstar`, eight
+`clnear` orthants at 0, a hand lemma for six corner regions, and `hull3`), verified by `ivcheck` (same Rust code
+base) and by `ivcheck2` (Python with Arb; not refereed); covering and region tests were refereed (review-fivepoint
+§6). With the hand proof and Lean they are now a redundant confirmation. Details: `ivcert-notes.md` §§0–4.
 
 ### 3.6 Remarks and numerical cross-checks
 
@@ -575,7 +575,7 @@ confirm the case w = 1 independently.
 
 ---
 
-## 4. K_{2,m}, and the proofs of Theorems K and K_m
+## 4. K_{2,m}, the proofs of Theorems K and K_m, and the cut regime
 
 ### 4.1 Averaging over triples [P-ref; arithmetic L]
 
@@ -625,7 +625,7 @@ field only supplies the scalars", and Strassen's theorem holds over every field.
   β = ⌊m²/4⌋, R_m(w) < m/(β+w) iff w < w_c(m) := (m²(m−1)² − 4β²)/(8β), and m(m−1)/6 < w_c(m): w_c(3) = 5/4; for
   m ≥ 4, w_c(m) ≥ (3m−2)(m−2)/8 > m(m−1)/6, since 5m² − 20m + 12 > 0.
 
-**Theorem K_m.4.** Item 2 and §5. ∎
+**Theorem K_m.4.** Item 2 and §5. **K_m.5:** Corollary E (§4.4). ∎
 
 Numbers for w = 1:
 
@@ -652,6 +652,160 @@ The hubs can be taken interior and the exit vectors can be taken vertical, so V_
 Br = −λw < 0; for odd m, Br = 1 − λw. Nearby books with small ρ_i > 0 have unique hubs and still Br < 0 (m = 4,
 w = 1: Br = −0.650, true left side +2.03; review-k2m §7). The cause is parity: m−1 exit vectors at a vertex cannot
 cancel when m−1 is odd. Theorem B avoids the issue.
+
+### 4.4 The cut regime: Theorem E [(a) P-ref; (b), (c) P-ref + IV]
+
+Let λ₁ = 0.7665884… be the real root of 4λ³ − 8λ² + 9λ − 4 and w₁ := (3 − 2λ₁)/λ₁ = 1.9134429…. The three levels
+are (a) w₀ = w₁, (b) w₀ = 4/3, (c) w₀ = 5/4; put λ₀ := 3/(2+w₀) = λ₁, 9/10, 12/13.
+
+> **Theorem E.** For five points of a CAT(0) space (§1.3) and 0 < λ ≤ λ₀: Σ_S ≥ λΣ_vv + (3 − 2λ)D. Equivalently,
+> Σ_S ≥ (3/(2+w))(Σ_vv + wD) for every w ≥ w₀. At level (c) this is (★) 13Σ_S ≥ 12Σ_vv + 15D. Equality holds on
+> the whole family of line metrics (v_i = u₁, v_j = u₂, v_k anywhere on [u₁,u₂]), for every λ; the cut metric of
+> {u₁, v₁} is the case v_k = u₂.
+
+(3 − 2λ = λw at λ = 3/(2+w); smaller λ follow by convexity from λ₀ and (λ, η) = (0, 3), valid as A_i + B_i ≥ D.)
+
+> **Corollary E (unconditional exact rates).** For every field k and each level: f*(K_{2,3}(w); k) = 3/(2+w) for
+> w ≥ w₀, and f*(K_{2,4}(w); k) = 4/(4+w) for w ≥ 2w₀ (3.8268858, 8/3, 5/2). Routing gives 3/(3+w) and 4/(6+w).
+
+Level (a): hand proof below, refereed (review-thmE.md). Levels (b), (c): two certificates [IV] plus Lemma R and
+convexity; the referee checked the implications (item 6), not the certificates.
+
+*Upper bound.* The cut {u₁, v₁} is crossed by three supply wires (u₁v₂, u₁v₃, u₂v₁) and by the demand v₁v₂, v₁v₃
+(rate f) and u₁u₂ (rate wf). Its flattening rank is a spectral point over every field (§6(c)), so (2 + w)f ≤ 3.
+Over all 15 bipartitions the least ratio is min(1, 3/(2+w), 3/w), i.e. 3/(2+w) for w ≥ 1 (review-thmE item 1). For
+K_{2,4}: the cut {u₁, v₁, v₂}, four supply wires against 4 + w (least cut for w ≥ 2). The cut value equals
+κ(w) = 3/√(9+w²) at w = 5/4 and is smaller above (for K_{2,4}: at w = 5/2).
+
+*Proof of Corollary E.* Lower bound: §1.2(d), C.3 and Theorem E (irrational w via rational w′ ↓ w). For K_{2,4}
+apply Theorem E at w′ = w/2 ≥ w₀ to the four triples of v's (each v in three, each pair in two):
+3Σ_S ≥ (3/(2+w′))(2Σ_vv + 4w′D), i.e. Σ_S ≥ (4/(4+w))(Σ_vv + wD). Upper bounds: the cuts. (For m ≥ 5 triples give
+only m/(m(m−1)/3 + w), below the cut bound.) ∎
+
+*Example, w = 2.* f* = 3/4 over every field, against routing 3/5: from n copies of the six binary wires one obtains
+asymptotically 0.75n binary wires on each v_iv_j and 1.5n on u₁u₂, and no more; routing obtains 0.6n and 1.2n.
+
+**Refined calibration.** In §3.2 the angles satisfy cos α_i + cos β_i = λP_i. Since ρ_i ≥ 0, ≥ suffices: any
+p_i, q_i ∈ ℝ² with |p_i|, |q_i| ≤ 1 and
+
+    p_{i,x} + q_{i,x} ≥ λP_i,        p_{i,y} − q_{i,y} = λQ_i                                            (4.1)
+
+may replace (cos α_i, sin α_i), (cos β_i, sin β_i) in (3.4), and the summation of §3.2 gives
+Σ_S − λΣ_vv(Z) − ηD ≥ D·(Σ_i (p_{i,y} + q_{i,y})/2 + (λ/2)(E₁ + E₂) − η). Let sin γ_i = λ cos δ_i, γ_i ∈ [0, π/2)
+(so γ_i = π/2 − ν_i), and N_i := cos((γ_i − |μ_i|)₊); v_i is *linear* if |μ_i| ≥ γ_i (N_i = 1), *curved* otherwise.
+
+> **Proposition C′ [P-ref].** For every book, λ ∈ (0,1) and η: Σ_S − λΣ_vv(Z) − ηD ≥ D·Br′, where
+> Br′ := Σ_i N_i − (λ/2)X − η, X := Σ_i |Q_i| − Σ_{i<j} |ε_ij|.
+
+*Proof.* Meet (4.1) with (p_{i,y} + q_{i,y})/2 = N_i − (λ/2)|Q_i|, where (λ/2)|Q_i| = sin γ_i sin|μ_i|. Curved: the
+angles of §3.2, with (p_y + q_y)/2 = cos γ_i cos μ_i = N_i − sin γ_i sin|μ_i|. If μ_i ≥ γ_i:
+p_i = (0,1), q_i = (√(1 − (1 − λQ_i)²), 1 − λQ_i), giving 1 − λQ_i/2; here 0 ≤ λQ_i < 2, and p_x + q_x ≥ λP_i ⇔
+2Q_i ≥ λ(P_i² + Q_i²) ⇔ sin μ_i ≥ sin γ_i. If μ_i ≤ −γ_i: mirror image. ∎
+
+The bracket of §3.2 is Σ_i cos(γ_i − |μ_i|) − (λ/2)X − η ≤ Br′; the gain is where α_i or β_i would exceed π/2. At the
+six corners of §3.3 remark 3, Br′ = 3 − 2λ − η.
+
+*Sign cases* (σ_ij = sin ψ_ij). (X1) If Q₁, Q₂, Q₃ have one sign (*unfrustrated*), X ≤ 0, as Σ|ε_ij| ≥ |ΣQ_i|.
+(X2) Otherwise, after renumbering and possibly σ ↦ −σ (which preserves N_i, |Q_i|, |ε_ij|), Q₁ ≤ 0 ≤ Q₂, Q₃
+(*frustrated at v₁*). Always, by a + b − |a − b| = 2 min(a,b),
+
+    X = 2 min(−σ₁₂, σ₂₁) + 2 min(−σ₁₃, σ₃₁) − 2(−σ₂₃ − σ₃₂)₊.                                            (4.2)
+
+*One-vertex lemmas.* For exit angles ψ, ψ′ put μ = (ψ+ψ′)/2, d = |ψ−ψ′|/2, sin γ = λ cos d, N = cos((γ−|μ|)₊),
+Q = 2 cos d sin μ, τ = √(1−λ²); so cos γ ≥ τ.
+- (V1) 1 − N ≤ (1−τ)(1 − |Q|/2). For 0 ≤ μ ≤ γ (μ ≥ γ is trivial, μ < 0 symmetric), with t = (1−τ)/λ ∈ (0,1),
+  right minus left is g(μ) = cos γ cos μ + (1−t) sin γ sin μ − τ: concave on [0, γ], g(0) = cos γ − τ ≥ 0,
+  g(γ) = 1 − t sin²γ − τ ≥ (1−τ)(1−λ) ≥ 0.
+- (V2) If μ ≥ 0, then 1 − N ≤ λ²(1 − s), s = sin(μ + d) the larger exit sine (mirror for μ ≤ 0). For 0 ≤ μ ≤ γ
+  let φ = π/2 − d: sin γ = λ sin φ, γ ≤ φ, 1 − s = 2 sin²((φ−μ)/2), 1 − N = 2 sin²((γ−μ)/2), and
+  h(μ) = λ sin((φ−μ)/2) − sin((γ−μ)/2) has h′ ≥ 0 (as 0 ≤ γ−μ ≤ φ−μ) and h(0) ≥ 0, since
+  sin(γ/2) = λ sin(φ/2) cos(φ/2)/cos(γ/2) ≤ λ sin(φ/2).
+
+*Proof of Theorem E, level (a).* D = 0: Σ_vv ≤ Σ_S. Let D > 0, η = 3 − 2λ, 0 < λ ≤ λ₁. By (3.1) and Prop. C′ it
+suffices that Σ_i(1 − N_i) ≤ (λ/2)(4 − X).
+- *Unfrustrated:* X ≤ 0, 1 − N_i ≤ 1 − τ, and 3(1−τ) ≤ 2λ ⇔ λ ≤ 12/13.
+- *Frustrated at v₁:* with ϑ := (1−τ)/(2λ) ∈ (0,1), (4.2) and max(x,y) ≥ ϑx + (1−ϑ)y give
+  (λ/2)(4 − X) ≥ λϑ(2 − |Q₁|) + λ(1−ϑ)[(1−σ₂₁) + (1−σ₃₁)]. By (V1), 1 − N₁ ≤ λϑ(2 − |Q₁|); by (V2) (μ₂, μ₃ ≥ 0),
+  1 − N₂ ≤ λ²(1−σ₂₁) and 1 − N₃ ≤ λ²(1−σ₃₁). The difference is ≥ (λ(1−ϑ) − λ²)[(1−σ₂₁) + (1−σ₃₁)] ≥ 0 iff
+  G(λ) := 2λ(1−λ) − (1−τ) ≥ 0.
+- *The cubic:* G(0) = 0, G′(0) = 2; G(λ) = 0 with λ > 0 forces τ = 1 − 2λ + 2λ² and, squaring,
+  4λ³ − 8λ² + 9λ − 4 = 0, whose derivative has no real root. So G ≥ 0 on (0, λ₁]. ∎
+
+λ₁ is where this argument stops: numerically Br′(·; λ, 3 − 2λ) ≥ 0 on the cube up to λ = 12/13 [N: review-thmE item 3].
+
+**Levels (b) and (c).**
+
+> **Lemma R [P-ref].** Let 0 < λ ≤ 12/13 and η ≤ min(3τ, 3 − 2λ). Then Br′ ≥ 0 on [−1,1]⁶ outside
+> 𝓕′ := {frustrated at some v_i, v_i curved, and another vertex curved}.
+
+*Proof.* Write Br′ = (3 − 2λ − η) + (λ/2)(4 − X) − Σ_i(1 − N_i). Unfrustrated: Br′ ≥ 3τ − η. Frustrated at v₁, v₁
+linear: (V2) at v₂, v₃ and (4.2) give Br′ ≥ 3 − 2λ − η. v₂, v₃ linear: (V1) gives 1 − N₁ ≤
+((1−τ)/2)[(1+σ₁₂) + (1+σ₁₃)] ≤ λ[…], and (λ/2)(4−X) ≥ λ[(1+σ₁₂) + (1+σ₁₃)]. ∎
+
+By the symmetries it remains to prove Br′ ≥ 0 on 𝓕′₁ = {Q₁ ≤ 0, Q₂ ≥ 0, Q₃ ≥ 0, 2|Q₁| ≤ λW₁, 2Q₂ ≤ λW₂},
+W_i = (c_ij + c_ik)² + Q_i², c = √(1−σ²); on curved vertices N_i = ½√(τ²(c_ij + c_ik)² + (σ_ij − σ_ik)²) + (λ/2)|Q_i|.
+Certified [IV] (`ivcert-notes.md` §5):
+- **S(9/10):** Br′(σ; 9/10, 6/5) ≥ 0 on 𝓕′₁ (numerical minimum +0.0627; certified only ≥ 0);
+- **(CL\*\*₀):** Br′(σ; 12/13, 15/13) ≥ 0 on 𝓕′₁, equality at σ = 0.
+
+As 6/5 ≤ 3τ(9/10) and 15/13 = 3τ(12/13), Lemma R, Prop. C′ and (3.1) give Σ_S ≥ (9/10)Σ_vv + (6/5)D and (★); one
+λ₂ covers all smaller λ. Near λ = 12/13 the minimum over 𝓕′ is 3τ − η, at σ = 0 [N] (+0.0158 at λ = 0.92).
+
+*Certificates.* 16 closed pieces (signs of ε_ij; v₃ curved or linear) on which the bracket is smooth where all c > 0.
+The Rust prover `ivcert` closed all of them: 23.3M leaf boxes for S(9/10), 62.1M for (CL\*\*₀), with eight orthant
+certificates at σ = 0. Every certificate was verified by `ivcheck` (same code base) and by `ivcheck2` (Python with
+Arb: own piece test, gradient and origin lemma; reads only the box lists). Both encodings for these two problems
+were written by the same author, in one session, with shared piece and coordinate conventions. A bug in the new code
+of `ivcheck2` (gradient not scaled) was found by a mutation test and fixed before the reported runs. Not refereed.
+
+**Below 5/4.** W5(ℓ, wℓ/3) ⊂ tripod × ℝ has R_w = κ(w) < 3/(2+w) for w < 5/4 (2.1), so CAT(0) geometry cannot give
+the cut value there; numerically the CAT(0) minimum is min(κ(w), 3/(2+w)) at every tested w (two codes: `k2m/wscan.py`,
+review-thmE item 4). For w < 5/4, f* ≤ κ(w) holds only when contracting fails (Corollary H_m),
+and the matching lower bound κ(w) is proved only for w ≤ 1 (Theorem 5_w). For 1 < w < 5/4 the unconditional bound is the chord: valid (λ, η) form a
+convex set containing (κ(1), κ(1)) and (λ₀, 3 − 2λ₀), and f* is at least the λ where the segment meets η = wλ.
+
+| w | proved, level (a) | proved, level (c) | κ(w) | cut 3/(2+w) | routing |
+|---|---|---|---|---|---|
+| 1.1 | 0.9246 | 0.9383 | 0.9389 | 0.9677 | 0.7317 |
+| 1.2 | 0.9018 | 0.9281 | 0.9285 | 0.9375 | 0.7143 |
+| 1.5 | 0.8395 | 0.8571 = cut | 0.8944 | 0.8571 | 0.6667 |
+
+### 4.5 Other pinned networks
+
+For supply G and demand H, f_flow ≤ f_CAT(0) ≤ f*(k) ≤ f_cut, f_CAT(0) the infimum of the ratio over CAT(0)
+configurations (§1.2, C.3). The network is *pinned* if f_CAT(0) is already the infimum over finite subsets of
+(m-pod) × ℝ, which are prices when contracting fails (proof of Corollary H_m); *cut-pinned* if f_CAT(0) = f_cut, so
+that f* = f_cut unconditionally (Corollary E); *two-apex* if every supply wire has an end in {u₁, u₂}.
+
+> **Proposition B (book principle) [P-ref: review-thmE item 7].** For a two-apex network f_CAT(0) is the infimum
+> over m-page books (D = 0 included); it is attained on the closed parameter set, which contains degenerate books
+> (ρ_i = 0, points on the spine), and minimisers are often of this kind.
+
+*Proof.* (3.1) leaves supply terms and D unchanged and only enlarges v_iv_j distances; books are CAT(0)
+(Reshetnyak gluing [BH99, II.11.1]). ∎
+
+> **Proposition T [P-ref: review-thmE item 7].** Let H be r-regular on v₁, …, v_m with a fractional triangle
+> decomposition (x_t ≥ 0, Σ_{t∋e} x_t = 1 for every edge e). For supply K_{2,m}, demand H at rate f and u₁u₂ at wf,
+> 0 < w ≤ mr/6: f_CAT(0) = 2m/√(m²r² + 4w²), attained at W_{m+2}(ℓ, 2wℓ/(mr)); the network is pinned.
+
+*Proof.* Σ_{t∋i} x_t = r/2, Σ_t x_t = mr/6. Summing Theorem 5_{w′}, w′ = 6w/(mr) ≤ 1, with weights x_t:
+(r/2)Σ_S ≥ κ(w′)(Σ_H + (mr/6)w′D), and 2κ(w′)/r = 2m/√(m²r²+4w²). Equality by Cauchy–Schwarz as in (2.1). ∎
+(H = K_m is Theorem B. No non-regular version is stated.) Example: K_{2,6} with octahedron demand (r = 4, x_t = ½),
+w = 1: f_CAT(0) = 12/√580 = 0.498273, routing 6/13, cut 1/2.
+
+*Three distinct values* [N: books; the last two also Toyoda's criterion]: K_{2,5} with pentagon demand, w = 1 (no
+triangles): 5/6, 5/√26 = 0.980581 (at W₇), 1. The five-point instance with supply u₁v₁, u₁v₂ and demand v₁v₂ doubled:
+0.8, 0.965136 (asymmetric book), 1. K_{2,3}(1) plus a supply wire u₁u₂ of capacity ½: 7/8, 0.98675, 1. The optima
+found lie in (pod) × ℝ, so these are pinned [N].
+
+*K_{3,3}* (demand: the six pairs inside the sides; not two-apex): routing 3/4, cut 1. A valid inequality
+Σ_S ≥ λΣ_vv + ηD on five points, applied to the six sub-instances, gives f_CAT(0) ≥ (3λ + η)/4 [P-ref]: 3/√10 by
+Theorem 5, 0.975 at level (b), 51/52 = 0.9808 at level (c); these are unconditional lower bounds on f*.
+
+*Conjectures* (open problem 7). **W** [C; N for m = 3, 4, 5]: on K_{2,m}(w) the CAT(0) minimum of R_w is
+min(R_m(w), m/(⌊m²/4⌋ + w)) for all w; for m = 3 the arc 1 < w < 5/4 is missing. **P** [C; N]: every two-apex network
+has an optimal book with all hubs on the spine, hence is pinned. **K_{3,3}** [C; N]: f_CAT(0) = 1, which would give
+f* = 1 over every field, unconditionally.
 
 ---
 
@@ -777,6 +931,11 @@ accounting, adaptive rounding, all o(n) terms).
 | K.3 | [CE] | Theorem R non-uniform: refereed; uniform: audit; Theorem A: refereed; IM 7.1: not reviewed | arithmetic only (`ThmR.lean`, `ThmA.lean`) | — | — |
 | K.4(a), (b), (c) | [P] ((b) uses [Lan06]) | — | (c): `cut_ineq`, `w5_not_cut_combination`, `cut_v1` | — | ALS floors √(5/8), 0.6695 |
 | §7 family, rate ≥ 0.83671 | [P] (sketch-level write-up) | review-protocol | B = 2 game: `n_star_two_le` | rational certificates B ≤ 32 | limit 0.83772 only [N] |
+| Theorem E (a), w ≥ w₁: Prop. C′, (X1), (X2), (V1), (V2), cubic; Corollary E | [P] | review-thmE (passed) | no | — | books, [−1,1]⁶, five-point searches (referee) |
+| Theorem E (b), w ≥ 4/3 | (a) + Lemma R + convexity [P] | review-thmE item 6 (implications only) | no | S(9/10): ivcert, ivcheck, ivcheck2; 23.3M boxes; both encodings by one author; not refereed | min +0.0627 |
+| Theorem E (c), w ≥ 5/4, (★) | as (b) | as (b) | no | (CL\*\*₀): same tools and caveat; 62.1M boxes | min 0, at σ = 0 |
+| §4.5 Prop. B, Prop. T; K_{3,3} bound (3λ+η)/4 | [P] | review-thmE item 7 | — | — | three-value instances [N] |
+| Conjectures W, P; f_CAT(0)(K_{3,3}) = 1 | [C] | — | — | — | [N] |
 
 **Trust base of item 1.**
 1. [AN] Theorem C.1 (`thm_cn`) and Prop. C.3, with Lemma C.4(a), in the direction price ⇒ CAT(0) embedding. C.4(a)
@@ -796,6 +955,12 @@ accounting, adaptive rounding, all o(n) terms).
 
 For item 2 there is in addition Lemma H_m, refereed twice but not in Lean (Mathlib has no CAT(0) theory).
 
+**Trust base of item K_m.5 (Theorem E).** (a): points 1, 2 above, §3.1, Prop. C′, (X1), (X2), (V1), (V2) and the
+cubic (by hand, one referee, not in Lean), and one flattening rank. (b), (c) add Lemma R (refereed) and the
+certificates: the two encodings of Br′ and 𝓕′₁ (`ivcert` `k2m.rs`, `ivcheck2`) were written by the same author, so the
+checkers are independent in arithmetic and code but not in the reading of the specification; binary64 with
+correctly rounded fma and Rust, or python-flint/Arb. Certificates and code are not refereed.
+
 ---
 
 ## 9. Open problems
@@ -809,16 +974,20 @@ For item 2 there is in addition Lemma H_m, refereed twice but not in Lean (Mathl
 3. **Attainment in 𝒳.** W5(ℓ,ℓ/3) is the unique five-point CAT(0) minimiser (§3.4; not refereed), and the minimum
    over AN prices is attained (§1.2), so f*(k) = 3/√10 ⇔ W5 is an AN price over k (⇔ tripod × ℝ is a price space,
    by the unrefereed direction of §2.3). Whether some point of 𝒳 has R = 3/√10 is not known.
-4. **K_{2,m} beyond the proved range.** For w > m(m−1)/6 (for m = 3: w > 1) the lower bound R_m(w) is not proved,
-   and Theorem D fails there (§3.3, remark 3). Which other networks and demands are pinned by five-point CAT(0)
-   inequalities is open; where six or more points interact, box inequalities do not suffice (§3.6), and one needs
+4. **K_{2,m} beyond the proved range.** For m = 3 the arc 1 < w < 5/4: the lower bound κ(w) is not proved (Theorem D
+   fails there, §3.3 remark 3); only the chord bounds of §4.4 hold. The statement (CL\*\*) of `k2m/notes.md` §5.4
+   (Br′ ≥ 0 on 𝓕′ for 12/13 ≤ λ ≤ 3/√10, η = 3τ; seven variables) would settle it (review-thmE item 6). For m = 4 the gap is 2 < w < 5/2; for m ≥ 5
+   the cut regime needs an m-page version of Theorem E. Which other networks and demands are pinned by five-point CAT(0)
+   inequalities is open (§4.5); where six or more points interact, box inequalities do not suffice (§3.6), and one needs
    the full cone of quadratic CAT(0) inequalities (Andoni–Naor–Neiman 2018, Thm 1.1, as quoted in [Toy24]; [Toy24b]).
 5. **Lean formalisation.** The book reduction and the calibration (elementary real analysis) would complete item 1
-   in Lean from C.3, C.4(a) and Strassen's theorem. Lemma H_m needs a CAT(0) library (or C.4 as axioms).
+   in Lean from C.3, C.4(a) and Strassen's theorem. The same holds for Prop. C′, the one-vertex lemmas (V1), (V2),
+   (X1), (X2) and the cubic of Theorem E. Lemma H_m needs a CAT(0) library (or C.4 as axioms).
    Connecting to [AN]'s `prop_space` and `thm_alt_rank_price` requires building their development.
 6. **Whether contracting decides the rate.** If contracting holds over k, is f*(k) > 3/√10? By uniqueness this
    means that W5 is not an AN price over k (by §2.3, unrefereed: that N5 is not one). Contracting alone does not
    obviously decide it.
+7. **Conjectures W, P and f_CAT(0)(K_{3,3}) = 1** (§4.5); for K_{3,3}, f* ≥ 51/52 is proved at level (c).
 
 ---
 
@@ -871,22 +1040,24 @@ For item 2 there is in addition Lemma H_m, refereed twice but not in Lean (Mathl
 - Network coding preprints cited as context in §0.1: Z. Li, B. Li, "Network coding can beat routing in undirected
   multiple-unicast networks", arXiv:2610.09367; Zhongtian He, "The multiple unicast conjecture is false",
   arXiv:2610.10108; Liu, Que, Li, Li, "On the multiple-unicast conjecture: beyond cut metrics", arXiv:2608.06070.
-- Working files (under `research/ports/`): `hull/notes.md`; `k2m/notes.md` (§§0–4); `protocol/notes.md`,
-  `protocol/certificates/README.md`; `e3/notebook.md`; reviews `review-hull.md`, `review-fivepoint.md`,
-  `review-k2m.md`, `review-protocol.md`; `lean/` (`W5.lean`, `Hull.lean`, `CLStar.lean`, `ProtocolCert.lean`,
-  `NOTES.md`). Interval tools: `tools/ivcert/` (`certs/`), `tools/ivcheck2/`.
+- Working files (under `research/ports/`): `hull/notes.md`; `k2m/notes.md` (§§0–6); `protocol/notes.md`,
+  `protocol/certificates/README.md`; `e3/notebook.md`; `ivcert-notes.md` (§5: certificates of §4.4); reviews
+  `review-hull.md`, `review-fivepoint.md`, `review-k2m.md`, `review-protocol.md`, `review-thmE.md`; `lean/` (`W5.lean`, `Hull.lean`, `CLStar.lean`, `ProtocolCert.lean`,
+  `NOTES.md`). Interval tools: `tools/ivcert/` (`certs/`, `run_k2.sh`), `tools/ivcheck2/` (`run_k2.sh`).
 
 ---
 
 ## Changes in this version
 
-(The previous revision, after `literature-check.md`, changed no mathematical claim.) (1) (CL*) is
-proved analytically (Theorem D, §3.3; Lean `clstar_weighted`, `clstar`), with sharp constants 9 in (3.5) and 8 in
-(I), so item 1 is no longer computer-assisted; the interval material is compressed into §3.5 as a confirmation.
-(2) Theorem K_m for K_{2,m} with weight w on u₁u₂ (§§0.1, 2, 4): weighted calibration, averaging over five-point
-subsets (Lean `k2m_rate`), Lemma P, Lemma H_m, weighted duality §1.2(d) with the referee's fix, corrected m = 6 row,
-and the failed m-page calibration as a remark. (3) The explicit protocols have their own section (§7), with exact
-certificates to B = 32, the closed form of n*(2), and the limit marked as numerical. (4) The zeros of Φ₁ are now
-determined by proof, and uniqueness of the minimiser W5 is derived from them (§3.4; new, not refereed). Trust base,
-status table, weakest points and open problems are updated; the analytic proof of (I) is recorded as solved; the
-undefined tag [D] is gone; the title covers K_{2,m}.
+**This revision.** (1) Theorem E and Corollary E (§4.4; item K_m.5): unconditional exact rates 3/(2+w) on K_{2,3}(w)
+and 4/(4+w) on K_{2,4}(w) in the cut regime, at three levels of support (hand proof, refereed, w ≥ 1.9134; with the
+certificate S(9/10), w ≥ 4/3; with (CL\*\*₀), w ≥ 5/4), with the refined calibration, the sign cases, the one-vertex
+lemmas, Lemma R, the certificates and the chord bounds for 1 < w < 5/4. The remarks of review-thmE.md are applied:
+equality on the whole family of line metrics; "infimum" in Prop. B; no non-regular version of Prop. T; margin
++0.0158 at λ = 0.92. (2) §4.5: Props. B and T, three-value instances, the K_{3,3} lower bounds 0.975 and 51/52, and
+Conjectures W, P and f_CAT(0)(K_{3,3}) = 1. (3) §3.5 compressed (now a third confirmation of (CL\*)). §§0.1–0.3, the
+status table, trust base and open problems are updated; the title is extended.
+
+**Previous revision.** (CL*) proved analytically (Theorem D, Lean), so item 1 stopped being computer-assisted;
+Theorem K_m for K_{2,m}(w) (weighted calibration, averaging, Lemmas P and H_m, weighted duality); the explicit
+protocols in §7 with exact certificates to B = 32; zeros of Φ₁ and uniqueness of W5 (§3.4, not refereed).

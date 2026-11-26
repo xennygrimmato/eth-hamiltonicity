@@ -2014,3 +2014,21 @@ then add the cut-regime theorem to the note.
   author, run by the executor".
 State of the cut regime: f*(K_{2,3}(w)) = 3/(2+w) — w ≥ 1.913: hand proof, refereed; w ≥ 5/4: adds two certificates.
 Launching a writer to add the cut-regime theorem to the note and the overview.
+
+## 26 Nov (late, 76): cut-regime theorem added to the note; overview updated
+
+`research/ports/note-k23-rate.md` (≈12,800 words; title now ends "… and the exact rate 3/(2+w) in the cut regime"):
+new item 5 in the main theorem with levels (a) w ≥ 1.913 (hand proof, refereed), (b) w ≥ 4/3 (+ certificate),
+(c) w ≥ 5/4 (+ second certificate); new §4.4 with the refined calibration, Br′, the one-vertex lemmas, sign cases, the
+cubic, Lemma R, the certificates with the same-author caveat and the fixed checker bug; new §4.5 on pinned networks
+(Props. B and T refereed; three-value instances numerical; Conjectures W, P, K_{3,3}); the interval section for (CL\*)
+cut to one paragraph. `README.md`: rows for the cut regime and the 7-AND-gate result; code table; weak points.
+Writer's own additions, which I checked:
+- K_{3,3}: f* ≥ (3λ+η)/4 from summing the five-point inequality over the six K_{2,3} sub-instances — I re-did the count
+  (each cross wire lies in 2 of the 3 sub-instances per side): 0.975 at level (b), 51/52 at level (c). Correct.
+- Level-(c) chord values for 1 < w < 5/4 — I recomputed 0.9383 at w = 1.1 from the chord between (κ(1), κ(1)) and
+  (12/13, 15/13). Correct. (The valid set of (λ, η) is an intersection of half-planes, hence convex.)
+- "Below 5/4 the cut value is not reached by CAT(0) geometry" is provable, not numerical: W₅(w) has ratio
+  3/√(9+w²) < 3/(2+w) exactly when w < 5/4. My brief was wrong to call it numerical.
+- Equality in Theorem E stated as "holds on the family of line metrics", not as a characterisation.
+Stale status rows remain in `k2m/notes.md` (its author has finished): Theorem E is refereed; cut-pinned range is 5/4.

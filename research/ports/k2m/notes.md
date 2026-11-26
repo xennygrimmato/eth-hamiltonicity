@@ -893,3 +893,17 @@ Remarks.
    it remains to show that equality in (3.1) and (3.4) forces W5).
 6. m ≥ 5 between 5m(m−1)/24 and w_c(m), and the cut regime for m ≥ 5: triples do not suffice; needs an m-page
    version of Theorem E (the refined bracket Br′ with (X1)/(X2)-type bounds for m pages).
+
+---
+
+## Addendum (lead, after the notes were completed)
+
+- Theorem E and Corollary E (§5.2–5.3), Lemma R's implications, Prop. T (regular case) and Prop. B were refereed:
+  `../review-thmE.md` — no gap, no numerical violation. Status rows above that say "not refereed" are superseded.
+- The two certificate specs of §5.4 were certified (`../ivcert-notes.md` §5): S(9/10) and (CL**₀), by the Rust interval
+  prover and verified by its checker and by the Arb-based second checker (both encodings by the same author). So the
+  cut-pinned range of K_{2,3}(w) is w ≥ 5/4 (K_{2,4}: w ≥ 5/2), not only w ≥ 1.91345.
+- Referee corrections: the equality set of Theorem E contains the whole family of line metrics; Prop. B should say
+  "infimum"; the non-regular remark after Prop. T needs a different constant (2|E| in place of mr); the margin at
+  λ = 0.92 is +0.0158.
+

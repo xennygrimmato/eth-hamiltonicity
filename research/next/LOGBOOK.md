@@ -2032,3 +2032,15 @@ Writer's own additions, which I checked:
   3/√(9+w²) < 3/(2+w) exactly when w < 5/4. My brief was wrong to call it numerical.
 - Equality in Theorem E stated as "holds on the family of line metrics", not as a characterisation.
 Stale status rows remain in `k2m/notes.md` (its author has finished): Theorem E is refereed; cut-pinned range is 5/4.
+
+## 26 Nov (late, 77): next step — the calibration in Lean
+
+All earlier agents have finished. The stated weakest point of Theorem K's lower bound is the book reduction and the
+calibration (refereed, numerically tested, not in Lean). Launched a Lean executor with the target: from one explicit
+hypothesis — the comparison inequality dist(v_i, c(t))² ≤ (1−t/D)|v_iu₁|² + (t/D)|v_iu₂|² − t(D−t) that Anthropic's
+Lemma C.4(a) provides — derive the weighted five-point inequality in Lean, using `clstar_weighted`. Staged: (1) the
+calibration given exit data; (2) existence of minimisers and optimality relations; (3) passage from the metric data
+to planar data. If it succeeds, the lower bound of Theorem K_m is machine-checked down to a single imported
+statement (plus Strassen duality, which is not formalised).
+Open decisions for the user (unchanged): building Anthropic's Lean here; whether to keep pushing drafts to the public
+repository; whether/where to announce.

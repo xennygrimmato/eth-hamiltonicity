@@ -1357,3 +1357,24 @@ condition; "min"/"some point" wording; the e3 notebook mentions runs "still in p
 `HullHyps.prop_space` in Hull.lean adds `QuadIneq` to Anthropic's conclusion (harmless, follows from C.4(b)).
 I edited one sentence that could read as a literature claim ("earlier known" → "an earlier step of this project").
 Novelty against the literature on entanglement/tensor network coding has NOT been checked.
+
+## 26 Nov (late, 34): main note v2 written
+
+`research/ports/note-contracting-eth.md` v2 (≈8,000 words, "Changes in v2" at the end).
+- New §5 on characteristic p (C1-OA, C1-AN with the padding fix, Lemma C4, Cor. C5, hypotheses table); new
+  Corollary 1′ (under rWETH or nuWETH no characteristic has ports and contracting fails over every field) — composed
+  from refereed steps, not refereed as a statement.
+- Lean status rewritten for both projects; exact coverage of lean-c1 stated.
+- §3.6 = final uniformity audit. One paragraph each for K_{2,3} and Theorem M1 with the corrected dependency list.
+- I corrected the K_{2,3} paragraph: my brief had said "independent checker"; the checker shares code with the prover.
+Inconsistencies the writer found, to keep in mind:
+- `ThmR.lean` checks Λ² per cut while the referee's count is Λ³ (follows by Λ ↦ Λ^{3/2}; stated in the note).
+- **480 300 is where OpenAI's two conditions first hold together at C₀ = 1, checked directly — not where our sufficient
+  condition 40000(C₀+1)(e+3) ≤ h holds (that needs much larger h).** My earlier summary conflated the two.
+- `ThmR.lean`'s header still cites H ≥ 272 where 235 and 113 suffice.
+- The earlier Theorem R review listed a J.3 hypothesis (4 lg τ′ ≤ (lg v)²) as a check for R(a); it is internal to
+  J.4's proof. Replaced by J.4's own condition.
+- The writer could not see `review-fivepoint.md` (it was written while the writer worked); I checked it exists and
+  fixed the paragraph by hand.
+Weakened in v2: J.3 paraphrased not quoted in full; exact #3-SAT in characteristic 0 via disjoint sparsification is an
+unrefereed combination; the UWETH variant rests on the referee accepting it in the M1 list.

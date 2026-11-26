@@ -571,11 +571,13 @@ no-ports part. (Referee fix:) [HC] Thm 1.1 is weaker than [AN] K.7 by a factor l
 **Tensor rate of K_{2,3}** (companion note `note-k23-rate.md`; sources `hull/notes.md`, `review-hull.md`,
 `review-fivepoint.md`). Let f*(K_{2,3}; k) be the supremum of rates of asymptotic restriction protocols over k from the
 six binary wires u_iv_j of K_{2,3} to the four wires v₁v₂, v₂v₃, v₁v₃, u₁u₂. (i) If the contracting hypothesis fails
-over k, then f*(K_{2,3}; k) ≤ 3/√10; border protocols are included over infinite k [ours-R, review-hull]. (ii)
-Unconditionally, f*(K_{2,3}; k) ≥ 3/√10 over every field [ours; computer-assisted: the reduction to books and the
-calibration were refereed at an interim stage, and one six-variable inequality is certified by interval arithmetic
-with an independent checker]. So under Weak ETH, by Corollary 1, f*(K_{2,3}; k) = 3/√10 exactly over every field of
-characteristic 0. Statements, scope and proofs are in the companion note.
+over k, then f*(K_{2,3}; k) ≤ 3/√10; border protocols of approximation degree 2^{o(n)} are included over infinite k
+[ours-R, review-hull]. (ii) Unconditionally, f*(K_{2,3}; k) ≥ 3/√10 over every field [ours; computer-assisted: the
+reduction to books and the calibration are refereed (review-fivepoint, no gap found), and one six-variable inequality
+is certified by interval arithmetic; the certificate checker re-verifies every box without search but shares its code
+base with the prover, and a second checker in a different arithmetic library is in progress]. So under Weak ETH, by
+Corollary 1, f*(K_{2,3}; k) = 3/√10 exactly over every field of characteristic 0. Statements, scope and proofs are in
+the companion note.
 
 **Conditional circuit lower bounds over F₂.** Our Theorem M1 (`mm/anti/notebook.md`) gives Ω(n²√log n) lower bounds
 for B₂-circuits multiplying n × n matrices over F₂, the Boolean semiring and related products, assuming that some prime

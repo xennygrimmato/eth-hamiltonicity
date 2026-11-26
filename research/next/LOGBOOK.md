@@ -493,3 +493,25 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   must predict a number checkable on another tensor with a known exponent.
 - Reasons to hold the claim itself loosely: refutes Strassen's asymptotic rank conjecture; implies an unadvertised
   superlinear Boolean circuit lower bound; Lean scope claims more than the paper.
+
+### Idea agent final report (`research/mm/ideas-n2.md`, ~740 lines) [reading + own derivations; unreviewed]
+- Algebraic n² is dead (given the release); the bound does not transfer to bits, except for bilinear and quadratic
+  XOR–AND circuits where functional = formal. Functional algorithms do not recurse on blocks.
+- Conditional impossibility: pin A to a permutation matrix → input-dependent routing → Ω(n²√log n) gates for any
+  Boolean circuit multiplying matrices, over any semiring, IF some characteristic has "no ports" (a hypothesis the
+  paper leaves open). The method caps at polylog factors: n^{2+ε} for bits is out of reach of it.
+- A formal-versus-functional separation is already a theorem given the release: "x is exactly a Hamiltonian cycle" is
+  easy as a Boolean function and superpolynomially hard as a formal polynomial over F₂.
+- "n² theorems" available now from the exact rectangular formula: n×√n products in n^{2+o(1)}; fully sparse products
+  in m^{4/3+o(1)}; Zwick APSP at n^{2.5}. ("Atlas", target T4.)
+- Cleanest negative target: polynomial multiplication over F₂ needs Ω(n√log n) Boolean gates under no-ports, tight
+  against the release's upper bound.
+- Our notes, given the flat-hypothesis theorem: flat floors, ρ_× = 1/√2, "no SWAP splitting below Q^{√2}", the K₄
+  floor all become theorems; H6 dead. Still open: attaining 1/√3, K₄, p ≥ 5 merges. New caveat: the 9/4 paper says
+  flat prices are not extremal for the matrix-multiplication triangle (tripod prices beat them), so for ≥ 3 merges the
+  true floor may be ABOVE the flat floor. Whether "contracting" is also true is not settled by this.
+- Correction: Alman–Vassilevska Williams (min,+) exponent appears as 2.9995 in search, not the 2.99942 I wrote
+  (unverified either way).
+- Ranked: T1 impossibility-and-separation package (85% for the conditional form); T2 neutral public note on the hidden
+  corollary; T4 atlas; T5 an actual n²·polylog algorithm over F₂ (< 1%); AND-count gap at 2×2 (5%).
+- Lead's plan: anti executes T1/N6; lab does calibration + atlas + sweep; decide on T2 with the user.

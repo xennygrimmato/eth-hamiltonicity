@@ -2215,3 +2215,28 @@ configurations are prices when contracting fails (m-pod × ℝ is; tripod × ℝ
 proved), how high the supremum goes, and whether the raised floor still beats two merges once the node growth β is
 counted. K₄ is not raised by anything tried. Sent to the theory agent with three questions (β; the supremum over
 proven prices; K₄ versus Δ₃).
+
+## 27 Nov: 3-SAT theory interim 1 — the route is not dead by counting; the floor of 3-nets is the whole question
+
+From the theory agent (`research/sat3/notes.md`):
+- Exponent α′ = log_β(1/ρ*), ρ* the true level value, β the node growth. D1's cap ½·log_β p holds only for fully crossing,
+  "balanced" configurations (balance = vanishing cross terms; that is what gives the flat value E/√p).
+- Product designs all give 1/2: g × g grid with rows + columns (p = 2, β = 2); d-dimensional grids with hyperplane merges
+  (p = d, β = d); with line merges (p = d, β = d/(d−1), unbalanced, flat value √((d−1)/d)) — again exactly 1/2.
+- **p-nets do have more merges than their growth pays for:** AG(2,g) with p of its g+1 parallel classes (p − 2 MOLS; any
+  Latin square for p = 3): K′ = g², K = g, so β = 2 for every p; balanced; flat floor → 1/√p. Window for α′: up to 0.79
+  (p = 3), 1 (p = 4), polynomial saving for p = g + 1. Smallest instances: K₄ with 3 matchings (g = 2), Δ₃, full AG(2,3).
+- [R] In every CAT(0) space, for a quadrilateral o, w, o′, w′: d(m_ow, m_o′w′)² + d(m_ow′, m_o′w)² ≤ ½(d(o,o′)² + d(w,w′)²).
+  Consequences: (1) for two merges the price-method value is ≤ E/√2 for every price, unconditionally (recovers the
+  crossing bound without App. B); (2) K₄'s floor is exactly the flat one; (3) on a full p-net level every price is
+  capped at E/√2·(1+o(1)), so the true floor of a 3-net lies in [1/√3, 1/√2]; (4) for p ≥ 3 an excess term
+  (pairwise variance minus true variance of the p hubs of a node) vanishes in flats and is positive in trees.
+- Exponents (mine): ρ = 1/√3 → 0.792; ρ = 0.6071 → 0.720; ρ = 0.6089 → 0.716; ρ = 1/√2 → 0.5. So even the raised floor
+  found numerically for Δ₃ leaves room above 1/2; the route dies only if the supremum over admissible prices reaches
+  1/√2.
+- Relevant spaces when contracting fails: hulls Π_j (m_j-pod) × ℝⁿ (block-diagonal embedding; the product-of-hulls step
+  is [D]).
+H26 refined: for 3-nets, sup over hull prices ∈ [0.609, 0.707]; H28 [C]: the supremum is strictly below 1/√2 for some
+p-net. If H28 holds and floors are attained (H27), 3-SAT counting improves to 2^{n/(log n)^α}, α > 1/2.
+Forwarded the corrected spec to the executor (stop matrix-vertex runs and K₄; nets AG(2,3), AG(2,4), AG(2,5); general
+trees; growth with the number of factors; a run without the far-leg ansatz).

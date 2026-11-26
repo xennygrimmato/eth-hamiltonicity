@@ -237,17 +237,12 @@ which we have not done, so the per-cut counts remain a reading. **Findings.** (i
 weights satisfy the same `Does`; bounds must be derived from program syntax. (ii) `Ev`, `Does` and `CutD` quantify over
 *accepting* runs only (`NS1/Comp.lean` l. 69), matching the pruned evaluator of Lemma 2.
 
-*Proof of Lemma 1.* Each `guess` costs one step, so the guesses of one cut are at most the steps of its non-word
-phases; the word phase (sΛ steps) is guess-free. One cut at level i (time bound τ_i, k_i ≤ v^64):
-- **Plan:** ≤ (MN)^{C_tree}Λ ≤ τ_iΛ/v^256 guesses (the J.3 proof: "all tables of size (MN)^{C_tree} … are smaller than
-  v^{a₀} and than τ/v^256").
-- **Cut packets:** ≤ k_iΛ pieces, each with ≤ KTΛ/v^300 bits (Prop. J.2), KT ≤ τ_iΛ + K, K ≤ τ_i: at most
-  τ_iΛ³/v^236. (The working notes had Λ²; the referee's count gives Λ³. Λ is "a power of lg v whose exponent may grow
-  a bounded number of times" (p. 51), so the difference is absorbed.)
-- **Per cut:** g_i ≤ 2τ_iΛ³/v^236.
-
-Composition (J.4 proof, p. 55): r = O(α) cuts (Lean: r = 16hα); cut i+1 runs on each of the P_i pieces of time bound
-τ_i, and "P_iτ_i ≤ τ(4Λ²)^i". Guesses add along a run (`compC_guesses`), so
+*Proof of Lemma 1.* Each `guess` costs one step and the word phase is guess-free, so one cut at level i (time bound
+τ_i, k_i ≤ v^64) makes ≤ τ_iΛ/v^256 plan guesses (the J.3 proof: all tables "are smaller than v^{a₀} and than
+τ/v^256") plus ≤ k_iΛ · KTΛ/v^300 cut-packet bits (Prop. J.2; KT ≤ τ_iΛ + K, K ≤ τ_i), so g_i ≤ 2τ_iΛ³/v^236. (The
+working notes had Λ²; the referee's count gives Λ³; the difference is absorbed, Λ being a power of lg v, p. 51.)
+Composition (J.4 proof, p. 55): r = O(α) cuts; cut i+1 runs on each of the P_i pieces of time bound τ_i, and
+"P_iτ_i ≤ τ(4Λ²)^i". Guesses add along a run (`compC_guesses`), so
 
     total ≤ Σ_{i<r} P_i·g_i ≤ 2rΛ³(4Λ²)^r · τ/v^236 ≤ τ/v^235,
 
@@ -285,14 +280,11 @@ leaf has ≤ g guesses and cost ≤ t (`sum_prune_eq`). The link to [AN]'s `Ev` 
 > τ′ := v^{H+235}, and apply Lemma 2.
 
 *Check* (`ThmR.lean`: `v_choice`, `j4_constraints`, `lemma2_cost_le`, `theorem1_exponent`, `polylog_condition`).
-- τ ≤ v^{H+187} and v ≤ 2τ^{1/(H+187)}; so z is τ′-plain and |z|·v^48 ≤ v^{H+235} = τ′.
-- v^H ≤ τ′ ≤ v^{2H}. This needs only **H ≥ 235**; J.4 gives H ≥ 272.
-- With this choice every J.4 constraint holds exactly, with no rounding: τ′/v^235 = v^H, τ′/v^24 = v^{H+211}, and the
-  number of pieces is τ′v²/v^H = v^237.
-- J.4's side condition (lg v)^{2C_cut} ≤ v (α = 2) holds for large v, so **v₀ must be enlarged depending on C_cut**.
-- The cost is at most 2^{(2H+241)v^H}, and its exponent is at most (2H+241)·2^H·τ^{H/(H+187)}. The piece evaluation
-  (2^{v^H} per piece) is of the same order as the run enumeration, not negligible.
-- Small τ are handled by brute force. ∎
+τ ≤ v^{H+187} and v ≤ 2τ^{1/(H+187)}, so z is τ′-plain and |z|·v^48 ≤ τ′. v^H ≤ τ′ ≤ v^{2H} needs only **H ≥ 235** (J.4
+gives 272). Every J.4 constraint holds exactly, with no rounding: τ′/v^235 = v^H, τ′/v^24 = v^{H+211}, pieces = v^237.
+J.4's side condition (lg v)^{2C_cut} ≤ v holds for large v, so **v₀ must be enlarged depending on C_cut**. The cost is
+≤ 2^{(2H+241)v^H}, with exponent ≤ (2H+241)·2^H·τ^{H/(H+187)}; the piece evaluation is of the same order as the run
+enumeration. Small τ: brute force. ∎
 
 ### 3.5 3-SAT, and where characteristic 0 is used [ours-R]
 

@@ -3103,3 +3103,11 @@ Launched, on the user's "continue with what is meaningful":
 - H46: the cap for cyclic designs (prove F_CAT(Δ₃) < 1/√2, or find a placement above the tree records) →
   `research/sat3/cyclic-cap.md`. This decides whether the one remaining window for nesting is real.
 The type-B depth-2 run is still in progress.
+
+**Zero-loss Lemma 5.3 refereed: correct, no gap** (`research/sat3/review-lemma53.md`; own interval-arithmetic
+code: 7380 pairs with m ≤ 120 and 5186 cases with true class sizes, 0 failures; analytic parts re-derived).
+Presentational: state the disc-to-arc domination step once; allow energy 0; rename a clashing κ. So Theorem W
+is exact at every nesting depth for the B.2 certificates.
+**Lemma N in Lean** (`PortsLean/LemmaN.lean`, `research/sat3/lean-lemmaN.md`): `lemmaN` in the paper's form
+(cut chosen before the suppliers), `lemmaN_false_K2`, and the star-lemma arithmetic; standard axioms only;
+rebuilt by the lead (18290 jobs). The tensor restriction of the star lemma is not formalised.

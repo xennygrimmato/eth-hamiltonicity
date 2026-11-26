@@ -293,6 +293,87 @@ theorem lemmaN_false_K2 :
     rw [e0, e1]; simp [Real.dist_eq]
   linarith
 
+/-! ## Bits bookkeeping of the star lemma (`q2-notes.md` §3.3) and Theorem T's arithmetic
+
+Pure arithmetic; the tensor statements of the star lemma (restrictions) are not formalised here. -/
+
+/-- Star lemma (i), per row: in `T_K(2a)` row `v` carries `2a` bits on each of its `K − 1` edges; in
+`⊗_v Star_v(a)` it carries `a(K − 1)` bits as the centre of its own star plus `a` bits as a leaf of each
+of the `K − 1` other stars. The two counts agree. -/
+theorem star_row_bits (K a : ℕ) (v : Fin K) :
+    ∑ _u ∈ univ.erase v, 2 * a = a * (K - 1) + ∑ _u ∈ univ.erase v, a := by
+  simp only [Finset.sum_const, Finset.card_erase_of_mem (mem_univ v), Finset.card_univ,
+    Fintype.card_fin, smul_eq_mul]
+  ring
+
+/-- Star lemma (iv), bits: if `q^{h₀} ≤ 2^a` (`q ≥ 1`), the hosted power `T^{⊗ K h₀}` has
+`K·h₀·log₂ q ≤ K·a` bits per row. -/
+theorem star_hosted_bits (K h₀ a : ℕ) (q : ℝ) (hq : 1 ≤ q) (hqa : q ^ h₀ ≤ (2 : ℝ) ^ a) :
+    (K : ℝ) * h₀ * Real.logb 2 q ≤ (K : ℝ) * a := by
+  have hq0 : 0 < q := by linarith
+  have h1 : (h₀ : ℝ) * Real.logb 2 q ≤ a := by
+    have := Real.logb_le_logb_of_le (b := 2) (by norm_num) (pow_pos hq0 h₀) hqa
+    rwa [Real.logb_pow, Real.logb_pow, Real.logb_self_eq_one (by norm_num), mul_one] at this
+  have hK : (0 : ℝ) ≤ K := Nat.cast_nonneg K
+  calc (K : ℝ) * h₀ * Real.logb 2 q = (K : ℝ) * (h₀ * Real.logb 2 q) := by ring
+    _ ≤ (K : ℝ) * a := mul_le_mul_of_nonneg_left h1 hK
+
+/-- Star lemma, overhead: `T_K(2a)` has `2a(K − 1)` bits per row against at most `K a` hosted, ratio
+`2(K − 1)/K < 2`. -/
+theorem star_overhead (K a : ℕ) (hK : 1 ≤ K) (ha : 1 ≤ a) :
+    (2 * a * ((K : ℝ) - 1)) / ((K : ℝ) * a) = 2 * ((K : ℝ) - 1) / K ∧
+      2 * ((K : ℝ) - 1) / K < 2 := by
+  have hK' : (0 : ℝ) < K := by exact_mod_cast hK
+  have ha' : (0 : ℝ) < a := by exact_mod_cast ha
+  constructor
+  · field_simp
+  · rw [div_lt_iff₀ hK']; linarith
+
+/-- Theorem T, `b₀ = ⌈C₀ w⌉ ≤ 2 C₀ w` once `C₀ w ≥ 1` (i.e. `w/b₀ ≥ 1/(2C₀)`). -/
+theorem ceil_le_two_mul (t : ℝ) (ht : 1 ≤ t) : (⌈t⌉₊ : ℝ) ≤ 2 * t := by
+  have := Nat.ceil_lt_add_one (show (0 : ℝ) ≤ t by linarith)
+  linarith
+
+/-- Theorem T's arithmetic: with `h₀ = ⌊⌊λ/2⌋/b₀⌋` and `h = K·h₀`, if `λ ≥ 2 b₀`, `b₀ ≥ 1` and
+`b₀ ≤ 2 C₀ w`, then `h·K·w ≥ K²λ/(12 C₀)`. (In the notes: `⌊λ/2⌋ ≥ λ/3`, `⌊x/b₀⌋ ≥ x/(2b₀)` for
+`x ≥ b₀`, `w/b₀ ≥ 1/(2C₀)`.) -/
+theorem thmT_arith (K l b₀ : ℕ) (w C₀ : ℝ) (hC : 0 < C₀) (hb : 1 ≤ b₀) (hl : 2 * b₀ ≤ l)
+    (hw : (b₀ : ℝ) ≤ 2 * C₀ * w) :
+    ((K * ((l / 2) / b₀) : ℕ) : ℝ) * K * w ≥ (K : ℝ) ^ 2 * l / (12 * C₀) := by
+  set n := l / 2 with hn
+  set h₀ := n / b₀ with hh₀
+  -- 6 b₀ h₀ ≥ l  (natural numbers)
+  have hnb : b₀ ≤ n := by omega
+  have h3 : l ≤ 3 * n := by omega
+  have hdiv := Nat.div_add_mod n b₀
+  have hmod := Nat.mod_lt n (show 0 < b₀ by omega)
+  have hpos : 1 ≤ h₀ := Nat.div_pos hnb (by omega)
+  have h6 : l ≤ 6 * b₀ * h₀ := by nlinarith
+  have h6r : (l : ℝ) ≤ 6 * b₀ * h₀ := by exact_mod_cast h6
+  have hw0 : 0 ≤ w := by
+    have : (0 : ℝ) < b₀ := by exact_mod_cast hb
+    nlinarith
+  have hK2 : (0 : ℝ) ≤ (K : ℝ) ^ 2 := sq_nonneg _
+  -- h₀ w ≥ l/(12 C₀)
+  have hkey : (l : ℝ) ≤ 12 * C₀ * (h₀ * w) := by
+    have hh : (0 : ℝ) ≤ h₀ := Nat.cast_nonneg _
+    nlinarith
+  rw [ge_iff_le, div_le_iff₀ (by positivity)]
+  push_cast
+  nlinarith [mul_le_mul_of_nonneg_left hkey hK2]
+
 end LemmaN
 
 end
+
+#print axioms LemmaN.core
+#print axioms LemmaN.M_off
+#print axioms LemmaN.sum_cuts_same
+#print axioms LemmaN.sum_pairs
+#print axioms LemmaN.lemmaN
+#print axioms LemmaN.lemmaN_false_K2
+#print axioms LemmaN.star_row_bits
+#print axioms LemmaN.star_hosted_bits
+#print axioms LemmaN.star_overhead
+#print axioms LemmaN.ceil_le_two_mul
+#print axioms LemmaN.thmT_arith

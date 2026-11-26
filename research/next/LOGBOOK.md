@@ -456,3 +456,14 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - New experiment E5: exhaustive sweep of tiny bilinear maps over F₂ (dimensions ≤ 3): does any have general Boolean
   multiplicative complexity below its quadratic complexity? One example = first positive sign; none = evidence against
   the non-algebraic route at the level of AND counts.
+
+### Lab note 3 (E1 answered in the quadratic model) [N, exact]
+- 2×2 matrix product over F₂, quadratic-Boolean model (ANDs of arbitrary affine forms in all 8 inputs, x² = x allowed):
+  multiplicative complexity is exactly 7. Six refuted by exhaustive enumeration of alternating forms (57.3M class
+  pairs; positive controls correct); seven found in 0.1 s. So x² = x buys nothing here. Matches Winograd.
+- Literature: Mirwald–Schnorr prove quadratic circuits optimal only for 1- and 2-output quadratic maps. For ≥ 3
+  outputs, whether higher-degree intermediates can save AND gates is OPEN (the "Boyar–Find question"). An Aug 2026
+  paper (arXiv:2608.30238) settles one instance (4-term binary polynomial multiplication: 9, no gain).
+- So the non-algebraic route, at the level of AND counts, is exactly an open question in the literature, with every
+  settled instance saying "no gain". H11 further weakened.
+- Next: E5 sweep of tiny bilinear maps (exact general complexity), then general 6-AND search for 2×2.

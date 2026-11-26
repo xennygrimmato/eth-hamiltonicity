@@ -2090,3 +2090,16 @@ All four stages done (statements in `research/ports/lean/NOTES.md`, FivePoint se
 4. No derivatives needed for optimality; no hidden hypotheses; D = 0, ρ_i = 0, h_i(t_ij) = 0, A_i = 0 all covered.
 Nothing is running now. Open with the user: public repository policy for drafts; building Anthropic's Lean;
 announcement.
+
+## 27 Nov: paper on the 7-AND-gate result commissioned (user request)
+
+User asked for a paper in the manner of the two labs' recent papers, written by a subagent, with little machine-writing
+filler. I read "our proof" as the result just discussed (2×2 over F₂ needs 7 AND gates); the other two results already
+have draft notes. Told the user there is no Lean proof of this result — the paper must say "computer-verified with
+checked LRAT proofs", not "formalised".
+Writer brief: LaTeX in `research/mm/paper-mc222/` (main.tex, refs.bib, PDF if a TeX engine can be installed — none is
+present); model, theorem, why Winograd's bound does not apply, lemmas with proofs re-derived, both computations with
+exact figures, trust base, provenance statement, open questions; author line left as a placeholder; no model names;
+a CHECKS.md listing what was re-derived and which references were verified. A referee pass will follow.
+Also for the record: I could not open GitHub pages from this container (403 from the proxy), so the public link given
+for the tweet is unverified from here.

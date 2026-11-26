@@ -2516,3 +2516,27 @@ Calibration [N]: crossing = √2 per merge in the plane, in the cone over K₃,�
 the evaluator agrees with the known values. A first version exceeded the proven cap because of a numerical
 degeneracy (coincident hubs); fixed (stable distance formula, guard on δ). Runs on Δ₃ in progress; target > 6
 per merge (ρ > 2/3), cap 6.364.
+
+**Ideas agent finished** (`research/sat3/ideas-threeway.md`). No three-way candidate with a computed value below
+1/√2 survives. Ranked: (1) nested two-way crossings: open, value = sup over CAT(0) placements (agrees with the
+attainment agent's reframing; H40); (2) three-wire fusion on a ladder with count exponent α ∈ [0.631, 0.685):
+no construction; H35 tripod ladder: the third ladder EXISTS in App. B (expansion at X = 1; ranks across the
+third matching cut 1,1,1,2,4,6,10,13,18,21,24,25 for classes (2,12,2,12); exact mod p) but obeys a
+complementary law Σn_k = 2 and gives (2/3)^α = 0.816 on nets: [X] as a gain; H36 Pfaffians: finite version
+[X], Gaussian version not formally covered; H37 direction decomposition: [X] by a counting trap stronger than
+Donoho–Stark (rank × number of pieces ≥ q⁴); sphere laws [X] unless contracting; rewiring covers ≥ 0.816 [X].
+Structure: the three matchings of K₄ are the points 0, ∞, ±1 of P¹ in App. B's polynomial.
+
+**Prior-barriers agent finished** (`research/sat3/prior-barriers.md`). Nothing published by either lab, in
+arXiv:2610.41622 or in follow-ups excludes a net engine with exponent above 1/2, under any hypothesis; nothing
+says it can be done; no improvement of 1/2 has been published as of 26 Nov. Two merges are closed
+unconditionally if OpenAI's flat theorem (EG 1.2) is right. All engines: e(K) ≥ 1/(8√K) in the flat case
+(Anthropic, Prop. E.10), which bounds no exponent of log. (Its synthesis cites our Theorem S thresholds, which
+now carry the uniformity gap.) Correction: `scratchpad/anth/paper.txt` is Anthropic's VP ≠ VNP paper; the ETH
+paper is now at `scratchpad/pb/aneth/paper.txt`.
+- **Q2 (new, H42).** OpenAI's HC Part I (Lemma 3.3 + Thm 3.1) bounds sums of terms each low-rank on its own
+  balanced cut and is blind to the number of merges. If its argument runs with the complete-graph wire tensor
+  as target, then "any oblivious clique-sum engine with exponent above 1/2 ⇒ ports ⇒ Weak ETH fails": the
+  improvement would be as hard as refuting Weak ETH, for all engines. It breaks, or not, at one step (the price
+  of a wire tensor against the star bound); a first-order count is borderline. Agent launched →
+  `research/sat3/q2-notes.md`.

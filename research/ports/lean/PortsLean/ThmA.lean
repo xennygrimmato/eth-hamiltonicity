@@ -132,15 +132,15 @@ lemma arcs_rows (i : Fin N) : ∑ j, arcs h (x h) σ L i j = (h - 1) + L := by
   simp
 
 /-- The translation of F.6 into OA's normalisation for one placement. -/
-lemma core {Z : Type} [PseudoMetricSpace Z] (C₀ e : ℕ → ℝ) (hC : 0 ≤ C₀ h)
+lemma core {Z : Type} [PseudoMetricSpace Z] (C₀ : ℝ)
     (hcard : Fintype.card (U h) = N) (hN : 0 < N)
     (hF : ∀ w : U h → U h → ℝ, IsPrice w →
       (∑ g, ∑ k, w k (g * k) ^ 2) / (Fintype.card (U h) : ℝ) ^ 2 ≤
-        C₀ h * ∑ j, (∑ k, w k (x h j * k) ^ 2) / (Fintype.card (U h) : ℝ))
+        C₀ * ∑ j, (∑ k, w k (x h j * k) ^ 2) / (Fintype.card (U h) : ℝ))
     (D : ℕ) (hD : 0 < D)
     (place : Fin N → Z) (hp : IsPrice (fun a b => dist (place (σ a)) (place (σ b)))) :
     (∑ i, ∑ j, dist (place i) (place j) ^ 2) / Fintype.card (Fin N) ≤
-      (C₀ h * D) * walkEnergy (normalizeArcs (arcs h (x h) σ L) D) place := by
+      (C₀ * D) * walkEnergy (normalizeArcs (arcs h (x h) σ L) D) place := by
   have hFp := hF _ hp
   -- left side
   have hL : (∑ g, ∑ k, dist (place (σ k)) (place (σ (g * k))) ^ 2) =
@@ -176,7 +176,7 @@ lemma core {Z : Type} [PseudoMetricSpace Z] (C₀ e : ℕ → ℝ) (hC : 0 ≤ C
         rw [add_mul, Finset.sum_mul]
         congr 1
         · refine Finset.sum_congr rfl fun j' _ => ?_
-          split_ifs <;> try simp
+          split_ifs <;> simp
         · split_ifs <;> simp [mul_comm]
       simp only [this, Finset.sum_add_distrib]
       rw [Finset.sum_comm]
@@ -196,12 +196,11 @@ lemma core {Z : Type} [PseudoMetricSpace Z] (C₀ e : ℕ → ℝ) (hC : 0 ≤ C
   set WE := walkEnergy (normalizeArcs (arcs h (x h) σ L) D) place
   rw [div_le_iff₀ (by positivity)] at hFp
   rw [div_le_iff₀ hn]
-  calc Q ≤ C₀ h * ((D : ℝ) * WE / (N : ℝ)) * (N : ℝ) ^ 2 := hFp
-    _ = C₀ h * D * WE * (N : ℝ) := by field_simp
+  calc Q ≤ C₀ * ((D : ℝ) * WE / (N : ℝ)) * (N : ℝ) ^ 2 := hFp
+    _ = C₀ * D * WE * (N : ℝ) := by field_simp
 
 end Graph
 
-omit [∀ h, Fintype (U h)] in
 lemma walkEnergy_nonneg {ι Z : Type} [Fintype ι] [PseudoMetricSpace Z] (M : Matrix ι ι ℕ) (D : ℕ)
     (p : ι → Z) : 0 ≤ walkEnergy (normalizeArcs M D) p := by
   unfold walkEnergy normalizeArcs
@@ -241,8 +240,8 @@ theorem theorem_A
   have hD : 0 < 2 ^ e := by positivity
   have hcore := fun (Z : Type) [PseudoMetricSpace Z] (place : Fin (2 ^ s) → Z)
       (hp : IsPrice (fun a b => dist (place (σ a)) (place (σ b)))) =>
-    core (U := U) (x := x) (IsPrice := IsPrice) σ L (fun _ => C₀) hC (card_U h) hN
-      hF (2 ^ e) hD place hp
+    core (U := U) (x := x) (IsPrice := IsPrice) σ L C₀ (card_U h) hN
+      (hF l hl) (2 ^ e) hD place hp
   set thr : ℝ := (s : ℝ) / (10000 * (e + 3))
   have hupgrade : ∀ (Z : Type) [PseudoMetricSpace Z] (place : Fin (2 ^ s) → Z),
       IsPrice (fun a b => dist (place (σ a)) (place (σ b))) →
@@ -250,7 +249,7 @@ theorem theorem_A
         thr * walkEnergy (normalizeArcs H (2 ^ e)) place := by
     intro Z _ place hp
     refine (hcore Z place hp).trans ?_
-    have := walkEnergy_nonneg (U := U) H (2 ^ e) place
+    have := walkEnergy_nonneg H (2 ^ e) place
     push_cast
     exact mul_le_mul_of_nonneg_right hbeats this
   have hscalar : HasPoincareBound ℝ (normalizeArcs H (2 ^ e)) thr := fun y =>

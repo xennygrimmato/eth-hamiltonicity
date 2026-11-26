@@ -3040,3 +3040,21 @@ convexity of the leg functions is tested on finitely many midpoints only. Equali
 equality is impossible at both ends of the symmetric-tripod branch, undecided in between and on the other
 branch. **So F_CAT(Δ₃) < 1/√2 is not proved; Δ₃ stays in [2/3, 1/√2].** A stronger relaxation would need
 constraints tying the two leg functions of an edge to a common line. Notes → `research/sat3/q1-cyclic.md`.
+
+**H45, depth-2 game, type A: no gain on the Z₅ tower level** (`attain-notes.md` §10; scripts `depth2*.py`;
+outputs `attain/out3/`) [N; upper bounds on the certified value for a restricted strategy class].
+| weights | level 1 | with type-A depth 2 | verified improving strategies |
+|---|---|---|---|
+| (½, ½, 0) | 0.638071 | 0.638071 (Theorem W forbids a gain here) | — |
+| (0.48, 0.48, 0.04) | 0.659215 | 0.659215 | 0 |
+| (0.45, 0.45, 0.10) | 0.690931 | 0.690931 | 0 |
+| (⅓, ⅓, ⅓) | 0.773945 | 0.771218 | 36 |
+The game value stays at the two-merge corner, 0.638071; the room down to the CAT(0) record 0.5519 is not
+entered. Δ₃ standalone: 0.89190 → ≤ 0.89102 (one strategy shape; the 36 on Z₅ are the same shape on generic
+triples). The author's argument why this kind of nesting cannot give an exponent gain: a nested piece commits
+to one cut of its first piece and keeps one alignment with a merge, not two.
+Not covered: type B (crossing two hub–hub bonds: the only depth-2 move where both first pieces keep an
+alignment each), a third wire depending on the first angle, depth ≥ 3, continuous splits, Z₇.
+**Launched:** an executor for the type-B game on Z₅ (and Δ₃, Z₇ if time) → `attain-notes.md` §11,
+`attain/out4/`. With the Q1 agent's negative result on the cap side, this is the last open computation on
+H45.

@@ -1,1 +1,3 @@
 net 5 full w=(0.45, 0.45, 0.1): E=300, classes=12, first-edge reps=6; level-1 h1/E = 0.690931
+  round 0: coarse candidates 12, verified 12, true violations 0, largest 0.00000 (coarse 0.00187)
+RESULT 5 full w=(0.45, 0.45, 0.1): h1/E = 0.690931  h2A/E = 0.690931  (verified strategies added: 0)

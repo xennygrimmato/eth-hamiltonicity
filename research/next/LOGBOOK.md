@@ -3058,3 +3058,25 @@ alignment each), a third wire depending on the first angle, depth ≥ 3, continu
 **Launched:** an executor for the type-B game on Z₅ (and Δ₃, Z₇ if time) → `attain-notes.md` §11,
 `attain/out4/`. With the Q1 agent's negative result on the cap side, this is the last open computation on
 H45.
+
+## 27 Nov: the 7-AND-gate paper prepared for a Hexagon deposit
+
+- `research/mm/paper-mc222/REPRODUCE.md`: exact commands for every computational claim (methods A and B,
+  the validation cases, ⟨1,2,3⟩, the Lean proof), with expected outputs, times and disk needs.
+- Tested from a fresh clone, with CaDiCaL rel-2.1.3 and drat-trim cloned and built from scratch:
+  `run_all.sh` 19 min 47 s and `run_mm123.sh` 7 min 57 s, both exit 0; every one of the 1080 (and
+  204 + 510) recorded cubes reproduced with identical CNF and LRAT sha256 (`tools/mc222/compare_results.py`);
+  per-orbit state counts of both exact searches identical to the records; one cube checked by hand with
+  the bare commands, and a truncated proof rejected. Lean: `research/mm/lean-mc222/check_axioms.sh` (new)
+  passes on the from-source rebuild; the elan install and Mathlib cache download were not repeated from a
+  fresh clone (disk). One machine, one toolchain: reproducibility, not independence.
+- Paper: links now point to the repository's current name (`xennygrimmato/math`) at commit e46c4bb, which
+  contains the guide and the two new checkers (the code described by the paper is unchanged since
+  aef111e; only additions); new Appendix A "Reproduction checklist"; 14 pages. Tag `mc222-v1` → e46c4bb.
+- Hexagon package (`research/mm/paper-mc222/hexagon/`): `build_package.sh` (fills the author line, packs
+  main.tex + refs.bib + main.bbl + anc/ with the Python pipeline and the recorded results, compiles the
+  archive exactly as packed, bundles Lean and Rust sources as an optional formal artifact), `metadata.json`
+  (all form fields; MSC codes checked against Hexagon's catalogue), `abstract.txt`, `SUBMIT.md` (decisions
+  for the submitter, web-form steps, API alternative). Hexagon accepts only Mathlib, Palomar, Prove2.me and
+  Tau Ceti as formalization links, so the Lean proof is cited through the repository.
+- Not done: the deposit itself (needs the submitter's ORCID sign-in and attestations).

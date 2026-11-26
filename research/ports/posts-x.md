@@ -128,9 +128,9 @@ Reply with links:
 
 ```text
 Lean proof (the statement is in Statement.lean next to it; build with lake build):
-https://github.com/xennygrimmato/eth-hamiltonicity/blob/aef111eb9bcac4f32267dc730c0098be3a4b5179/research/mm/lean-mc222/MC222/Main.lean
+https://github.com/xennygrimmato/math/blob/e46c4bbc0c297c842d44aa511ae63fc2c19e48fd/research/mm/lean-mc222/MC222/Main.lean
 Outside pipeline, the 1080 proof hashes and ./run_all.sh:
-https://github.com/xennygrimmato/eth-hamiltonicity/tree/aef111eb9bcac4f32267dc730c0098be3a4b5179/tools/mc222
+https://github.com/xennygrimmato/math/tree/e46c4bbc0c297c842d44aa511ae63fc2c19e48fd/tools/mc222
 ```
 
 ### 1(b) Thread

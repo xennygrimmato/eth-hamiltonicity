@@ -104,7 +104,7 @@ posts link the mc222 README instead.
 ### 1(a) Long post
 
 ```text
-Over F₂, multiplying two 2×2 matrices takes exactly 7 AND gates, even when XOR gates are free and the circuit may compute any Boolean functions along the way. So Strassen's 7 multiplications are optimal in this Boolean model too.
+Over F₂, multiplying two 2×2 matrices needs exactly 7 AND gates, even with free XOR gates and arbitrary Boolean intermediate values. So Strassen's 7 is optimal in this model too. Shown with a SAT solver: 1080 instances, all unsatisfiable, each with a machine-checked proof.
 
 Strassen (1969) multiplies 2×2 matrices with 7 multiplications instead of 8. That 7 is the least possible was proved in 1971 (Hopcroft–Kerr, Winograd), for algorithms in which each multiplication is a product of two linear forms in the matrix entries.
 
@@ -133,7 +133,7 @@ https://github.com/xennygrimmato/math/tree/8039282656870eedcf4a25697d28626682def
 ### 1(b) Thread
 
 ```text
-1/4 Over F₂, multiplying two 2×2 matrices needs exactly 7 AND gates when XOR gates are free and intermediate values may be any Boolean functions. So Strassen's 7 is optimal in this Boolean model. Found and checked by AI agents; not yet reviewed by a human.
+1/4 Over F₂, multiplying two 2×2 matrices needs exactly 7 AND gates, even with free XORs and arbitrary Boolean intermediate values. So Strassen's 7 is optimal here too. Shown by SAT: 1080 instances, all UNSAT, each with a machine-checked proof. Not yet human-reviewed.
 ```
 
 ```text
@@ -141,7 +141,7 @@ https://github.com/xennygrimmato/math/tree/8039282656870eedcf4a25697d28626682def
 ```
 
 ```text
-3/4 Evidence: the search for a 6-gate circuit, after symmetry reduction, is 1080 SAT instances. All are unsatisfiable, each with an LRAT proof checked by a separate checker. An independent exact search agrees. A re-run gave identical hashes.
+3/4 How: after symmetry reduction, a 6-gate circuit would have to satisfy one of 1080 SAT instances. CaDiCaL refutes each and writes an LRAT proof, which a separate checker verifies. An independent exact search agrees. All of it was run by AI agents.
 ```
 
 ```text

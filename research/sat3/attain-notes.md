@@ -15,7 +15,8 @@ Prop. B.3, Lemma C.4. Engine: `research/engine3-open-door.md` §1.3–1.7 (class
 
 Scripts (`research/sat3/attain/`): `game1.py` (level-1 game, one LP per weight vector), `game1sym.py` (the same with
 translation symmetry), `inspect1.py` (optimal designs), `lemmaS.py` (depth-2 game in products of pods and lines, conic
-duality), `lemmaS_step.py` (stepwise Steiner crossing inequality on random parents). Outputs in `attain/out2/`.
+duality), `lemmaS_step.py` (stepwise Steiner crossing inequality on random parents; `TIE=1` for degenerate parents). Outputs
+in `attain/out2/` (`attain/out/` holds a first run made with a bug in the constant of finite wires; ignore it).
 
 ---
 
@@ -31,11 +32,11 @@ duality), `lemmaS_step.py` (stepwise Steiner crossing inequality on random paren
 | Sra's nested identity (Lemma 4.2), Khoruzhii's lemma | statements about PT rank = max_i min_cut; the engine needs min_w max_i ⟨w, c⟩; nested terms control 2 of the 2^{k−1} cuts; nothing for nets | [D] |
 | Majdoddin Prop. 4.23 | does not apply as a theorem (it charges a bundle-local piece only under its own merge); its mechanism is the reason above | [D] |
 | Weak duality, depth 1 | every metric with B.3 (in particular every CAT(0) placement) bounds every level-1 cover | [R] (Theorem W1) |
-| Weak duality, all depths, Euclidean placements | every crossing-generated cover of any nesting depth has a term costing ≥ λ(L−H_k)/δ_k under every merge at once; no spectral point, no hypothesis, no count of terms | [D] (Theorem W2) |
-| Weak duality, all depths, CAT(0) placements | NOT proved. Reduces to a Steiner crossing inequality (Lemma S), true in Hilbert space, open in CAT(0) spaces; the obvious linearised form is false in a tripod | [C]; §5.4 |
-| Numerical test of Lemma S | stepwise form on random parents in ℝ³, tripod × ℝ, tripod × ℝ², tripod × tripod: no violation (worst gap ≥ 0 up to solver tolerance); depth-2 game on three wires: no violation | [N]; §5.5 |
-| Unconditional window for crossing-generated covers on 3-nets, any depth | [1/√3, 1/√2] | [D] |
-| P4 | the adversary of level 1 at the two-merge corner is the flat orthogonal-simplex metric (CAT(0), a price under FH); the Q1 agent reports a CAT(0) space (filtrations of F₂^N) in which F₂^m-nets have value exactly 1/√2 and which is a price if contracting fails | [D], its claim, unreviewed |
+| Lemma S (Steiner crossing inequality) | in every CAT(0) space: after crossing two wires of a network with free hubs there is an N for which neither child is below the parent's Steiner value | [D], proof in §5.3 |
+| **Theorem W** (weak duality, all depths) | for every placement in a CAT(0) space, every crossing-generated cover with certified costs, of any nesting depth, has a term costing ≥ λ(L−H_k)/δ_k − o under every merge at once; no spectral point, no hypothesis, no count of terms | [D], §5.3; to be refereed |
+| Numerical test of Lemma S | stepwise form on ≈ 2200 parents in ℝ³ and products of tripods and lines, incl. degenerate ones; depth-2 game with all 15 second crossings: no violation, tight cases on the circle | [N]; §5.5 |
+| Floor for the crossing-generated family, any depth | F_CAT(configuration): ≥ 1/√3 on 3-nets, ≥ 2/3 on Δ₃, ≥ 0.6124 on nets of F₃^M, F₄^M; = 1/√2 on nets of F₂^m if the Q1 placement stands: there the family is stuck at the two-merge value | [D] |
+| P4 | the adversary of level 1 at the two-merge corner is the flat orthogonal-simplex metric; nesting cannot beat any CAT(0) placement (Theorem W); the Q1 agent reports a CAT(0) space (filtrations of F₂^N) in which F₂^m-nets have value exactly 1/√2 and which is a price if contracting fails | [D]; the placement is the Q1 agent's claim, unreviewed |
 
 No value below 1/√2 was found on nets of growing order. No construction.
 
@@ -292,11 +293,10 @@ Two facts hold in every metric space [R]:
   optimal π of (5.1); a wire (u,v) then has length ≤ [leg-to-own-hub distances] + δ_k[π(u) ≠ π(v)], and the wires at a
   leg carry its λ bits.)
 
-So a metric space X bounds a cover as soon as the adversary can keep **v_X(W) ≥ λL − o(λ)** down to some leaf. With
-fixed positions for the auxiliary parties the quantity ℓ(W, pos) is easy to keep (B.3 suffices, at every depth), but
-then (S2) fails: a hub created for a row cut and later evaluated under the column merge sits at the wrong hub point,
-and in every good placement |R_r C_c| is of order δ. The intrinsic potential is v, and its behaviour under (M1) is the
-issue.
+So a metric space X bounds a cover as soon as the adversary can keep **v_X(W) ≥ λL − o(λ)** down to some leaf. (With
+fixed positions for the auxiliary parties the quantity ℓ(W, pos) is easy to keep, by B.3 alone, but then (S2) fails:
+a hub created for a row cut and later evaluated under the column merge sits at the wrong hub point. The intrinsic
+potential is v; its behaviour under (M1) is Lemma S, §5.3.)
 
 ### 5.2 Theorem W1 (depth 1, every metric with B.3) [R]
 
@@ -333,105 +333,144 @@ the two old ones: ℓ does not decrease **for every position**, hence v does not
 For level 1 the LP of §2 gives the exact value, so W1 is only the statement that the dual solutions coming from
 metrics are valid; it is the base case of the following.
 
-### 5.3 Theorem W2 (all depths, Euclidean placements) [D]
+### 5.3 Lemma S and Theorem W (all depths, every CAT(0) placement) [D]
 
-**Lemma 5.3 (Steiner crossing inequality in Hilbert space) [D].** Let the legs of W lie in a Hilbert space 𝓗 and let
-(a,c;p), (b,d;q) be two wires of W, between any parties. There are r, r′ ≥ 0 with r² + r′² ≤ 2(p²+q²) such that
-v(W^c) ≥ v(W) for every bond ≥ r and v(W^b) ≥ v(W) for every bond ≥ r′.
+**Lemma S (Steiner crossing inequality).** Let X be a CAT(0) space (geodesic; completeness is not used), W a wire
+system with legs in X, and (a,c;p), (b,d;q) two wires of W between any parties (legs or auxiliary). Let r_c be the
+least bond for which the c-child has v_X(W^c) ≥ v_X(W), and r_b the same for the b-child. Then
 
-*Proof.* Positions may be restricted to the affine hull of the legs (projection does not increase lengths), so the
-problem is finite-dimensional. Sum-of-norms duality (Fenchel–Rockafellar; the primal is finite and continuous
-everywhere, so there is no gap and the dual optimum is attained):
+    r_c² + r_b² ≤ 2(p²+q²),   0 ≤ r_c, r_b ≤ p+q.
 
-    v(W) = max { Σ_{wires} ⟨F_w, P_u[u leg] − P_v[v leg]⟩ :  F_w ∈ 𝓗, |F_w| ≤ β_w,  Σ_{w: u_w = y} F_w − Σ_{w: v_w = y} F_w = 0 for every auxiliary y }.
+So there are (r,r′) on the circle such that, after re-optimising the positions of **all** auxiliary parties, neither
+child is below the parent.
 
-Let F be optimal, f₁, f₂ its values on the two wires, and r = |f₁+f₂|, r′ = |f₁−f₂|; r² + r′² = 2(|f₁|²+|f₂|²) ≤ 2(p²+q²).
-For W^c put f₁ on (a,o) and on (o′,c), f₂ on (b,o) and (o′,d), f₁+f₂ on (o,o′), and keep F elsewhere: capacities and
-equilibrium at o, o′ hold, the equilibrium at a, b, c, d and the terms at legs are unchanged, so this is feasible for
-W^c with the same value. For W^b put f₁ on (a,w), (w′,c), f₂ on (b,w′), (w,d), and f₁−f₂ on (w,w′). ∎
+*Proof.* Write rest(pos) for the total length of the wires of W other than the two, as a function of the positions
+of the auxiliary parties, and v = v_X(W). The c-child with bond r has value ≥ v iff
+rest(pos) + p|a o| + q|b o| + p|c o′| + q|d o′| + r|oo′| ≥ v for all positions (pos, o, o′); for o = o′ this holds by the
+triangle inequality, so
 
-**Theorem W2.** Let P be a placement of the configuration in a Hilbert space. For every crossing-generated cover with
-certified costs, of any depth, there is a leaf with, for every merge k at once,
+    r_c = sup over (pos¹, o ≠ o′) of N₁/|oo′|,   N₁ = v − rest(pos¹) − (p|a¹o| + q|b¹o| + p|c¹o′| + q|d¹o′|),
+    r_b = sup over (pos², w ≠ w′) of N₂/|ww′|,   N₂ = v − rest(pos²) − (p|a²w| + q|d²w| + q|b²w′| + p|c²w′|)
 
-    cost_k(W_leaf) ≥ λ(L − H_k)/δ_k − (number of crossings on the branch)·ε·diam(P),      ε as in Lemma 5.2.
+(a¹ = pos¹(a), or the fixed point if a is a leg; negative suprema are replaced by 0). N₁ ≤ p|a¹c¹| + q|b¹d¹| − (…) ≤
+(p+q)|oo′| gives r_c ≤ p+q. Fix two configurations and a₁, a₂ ≥ 0, not both 0; put λ₁ = a₁/|oo′|, λ₂ = a₂/|ww′|,
+Λ = λ₁+λ₂, t = λ₂/Λ, and interpolate everything along geodesics:
 
-*Proof.* The adversary answers each (M1) with the N of Lemma 5.2 for the (r,r′) of Lemma 5.3 computed from an optimal
-dual of the current system; v does not decrease except by the discretisation loss (a bond smaller by ε lowers v by at
-most ε·diam, since the optimal positions may be taken in the convex hull of the legs). (S1), (S2). ∎
+    pos^t(y) = γ_t(pos¹(y), pos²(y)) for every auxiliary y;   β_x = γ_t(o,w), β_v = γ_t(o′,w′), β_y = γ_t(o,w′), β_u = γ_t(o′,w).
 
-Remarks.
-- No spectral point, no FH/EP, no bound on the number of terms: the statement is combinatorial. Under FH (or OpenAI's
-  Euclidean prices [K-unverified]) it is a special case of the price method, which bounds *all* covers.
-- Consequences [D]: crossing-generated covers of any depth have value ≥ 1/√2 on every balanced two-merge
-  configuration and ≥ 1/√3 on 3-nets, unconditionally; ≥ 0.4714 on K₄, ≥ 0.5774 on Δ₃. Sra's nested identity
-  is inside the class, so in the engine game it is subject to the same floors.
-- The class matters: W2 says nothing about covers using true ranks below the certificates of B.2.
+(i) The metric of a CAT(0) space is convex along pairs of geodesics (C.4(a)), and rest is a positive combination of
+distances between interpolated or fixed points: rest(pos^t) ≤ (1−t)rest(pos¹) + t·rest(pos²).
+(ii) pos^t is a configuration of the parent: rest(pos^t) + p|a^t c^t| + q|b^t d^t| ≥ v.
+(iii) The same convexity: (1−t)|a¹o| + t|a²w| ≥ |a^t β_x|, (1−t)|b¹o| + t|b²w′| ≥ |b^t β_y|, (1−t)|c¹o′| + t|c²w′| ≥ |c^t β_v|,
+(1−t)|d¹o′| + t|d²w| ≥ |d^t β_u|.
+(iv) |a^t c^t| ≤ |a^t β_x| + |β_xβ_v| + |β_v c^t| and |b^t d^t| ≤ |b^t β_y| + |β_yβ_u| + |β_u d^t|.
+Hence
+λ₁N₁ + λ₂N₂ = Λ[v − (1−t)rest(pos¹) − t·rest(pos²)] − Λ[(1−t)(legs of Z¹) + t(legs of Z²)]
+ ≤ Λ[p|a^tc^t| + q|b^td^t|] − Λ[p|a^tβ_x| + p|c^tβ_v| + q|b^tβ_y| + q|d^tβ_u|] ≤ Λ[p|β_xβ_v| + q|β_yβ_u|]
+ ≤ Λ√(p²+q²)·(|β_xβ_v|² + |β_yβ_u|²)^{1/2} ≤ Λ√(p²+q²)·(2(1−t)²|oo′|² + 2t²|ww′|²)^{1/2} = √(2(p²+q²))·|a|,
+the last inequality being the two-bimedian inequality (`notes.md` Prop. 3.1) for o, w, o′, w′. Taking suprema over the
+two configurations, a₁r_c + a₂r_b ≤ √(2(p²+q²))|a| for all a ≥ 0. ∎
 
-### 5.4 Lemma S: the statement that would give all depths in CAT(0) spaces [C]
+Lemma 5.1 is the case in which the four ends are legs. The step that has no analogue in a potential with fixed hub
+positions is (ii): one does not look for one N that is good at the parent's optimum; one interpolates the two bad
+child configurations, and the interpolated configuration is again a parent configuration.
 
-**Lemma S (Steiner crossing inequality in X).** For every wire system W with legs in X and every two wires
-(a,c;p), (b,d;q) of W there are r, r′ ≥ 0, r² + r′² ≤ 2(p²+q²), with v_X(W^c) ≥ v_X(W) for bond ≥ r and v_X(W^b) ≥ v_X(W) for
-bond ≥ r′.
+**Theorem W (weak duality for crossing-generated covers).** Let P be a placement of a configuration (nodes, merges,
+edges with λ bits) in a CAT(0) space X. For every crossing-generated cover with certified costs (§5.1), of any nesting
+depth, there is a leaf with, for every merge k at once,
 
-If Lemma S holds in X then Theorem W2 holds for placements in X, with the same proof. If the four ends are legs it is
-(B) (Lemma 5.1). When some ends are auxiliary, their optimal positions move with N, and (B) at one configuration is
-not enough. What I know:
+    cost_k(W_leaf) ≥ [ λ(L − H_k) − D·Σ_{crossings s on the branch} ε(p_s, q_s) ] / δ_k,
 
-1. **Hilbert space:** true (Lemma 5.3). The proof is linear duality; the good N is read off the parent's dual forces.
-2. **A reduction in CAT(0) spaces [D].** Let z* be a minimiser of the parent in the positions of a, b, c, d (rest
-   re-optimised: R(z) convex). First variation with both ends moving is exact in CAT(0) spaces (one-end formula plus
-   convexity and continuity of angles), so optimality of z* gives, for every other z₁,
-   R(z₁) ≥ v − p·L₁(α₁,γ₁) − q·L₂(β₁,η₁), where L₁(x,x′) = |α*γ*| − |α*x| cos∠_{α*}(γ*,x) − |γ*x′| cos∠_{γ*}(α*,x′) is the
-   linearised length of the first wire. Lemma S would follow from the *linearised crossing inequality*
-   p|xo| + q|yo| + p|x′o′| + q|y′o′| + r|oo′| ≥ p·L₁(x,x′) + q·L₂(y,y′) (and the b-form with r′), with (r,r′) depending on
-   the base wires only.
-3. **The linearised inequality is false [R].** Tripod with centre O; base wires O → γ* (arm 1), O → η* (arm 2).
-   For o on arm 3 at distance t and o′ = O: L₁ = L₂ = t = |oo′|, so r ≥ p+q. For w on arm 3 at distance t → 0 and
-   w′ on arm 1 at distance s: L₁(w,w′) = t+s, L₂(w′,w) = s−t, so r′ ≥ p+q. Then r² + r′² = 2(p+q)² > 2(p²+q²).
-4. **But this is not a counterexample to Lemma S.** The reduction uses, for each of a and b separately, the worst
-   first-order behaviour of the rest-function R; in the example it needs R to decrease at rate q when b moves into
-   arm 3 *and* when b moves into arm 1, which contradicts the convexity of R along the geodesic arm 1 – O – arm 3. In
-   the explicit networks I tried at the branch point (hubs with three legs on the three arms, both wires leaving from
-   hubs at O) the thresholds are (r, r′) = (p+q, |p−q|) or (|p−q|, p+q): on the circle. The correct condition is on the
-   pair (directional derivative of R, crossing geometry) at a branch point, i.e. Lemma S on the tangent cone, and
-   the argument is circular.
-5. **Products of pods and lines [D].** A pod is isometric to a subset of (ℝ^m, ℓ₁); 0-extension on a tree is exact
-   by minimum cuts, and (granting a minimax exchange between positions and the ℓ₂-weights of the factors) the
-   Steiner value in a product of pods equals the Steiner value in the Banach space E = ℓ₂-sum of the blocks (ℝ^m, ℓ₁)
-   with the legs on the pods; in any case v_E ≤ v_X. In E duality is linear again: flows F_w ∈ E* = ℓ₂(ℓ_∞), ‖F_w‖_* ≤ β_w.
-   The parallelogram law fails in ℓ₂(ℓ_∞), so the proof of Lemma 5.3 does not carry over: in the path
-   ℓ –(p+q)– h, h –p– c, h –q– d on a tripod the image of the parent's optimal flow is infeasible for the b-child at
-   r′ = p−q, and the child's optimum uses the two halves of the second wire with different flows. The child has more
-   dual freedom than the image of the parent's dual. Whether it always has enough is Lemma S for E with legs on X.
-6. **What a failure would mean.** By Thm 4.3 of `notes.md` [D] every finite subset of a product of pods and lines
-   is a price if contracting fails; for a price the leaf bound holds for all covers. So a wire system game in
-   pod × ℝ in which every leaf of some finite crossing-generated cover has v_X < λL − (log of the number of terms)·scale
-   would show that this finite set is not a price, hence contracting. This is the only place in this note where
-   something large could happen; the test of §5.5 is aimed at it.
+D = diameter of the set of leg points, ε as in Lemma 5.2 (ε(p,q) = o(p+q)). In particular, for covers of bounded
+depth whose crossings use classes of size → ∞, the level value is ≥ λ|E|·(price value of P) − o(λ|E|).
 
-### 5.5 Numerical tests [N]
+*Proof.* v(W₀) = λL (S1). The adversary answers a crossing of (a,c;p), (b,d;q) in the current system W with an N such
+that b_c(N) ≥ r_c − ε and b_b(N) ≥ r_b − ε (Lemma S, Lemma 5.2; the cover's trivial cap p+q is harmless because
+r_c, r_b ≤ p+q). Whichever cut and whichever further (M0) moves the cover makes, v drops by at most ε·D: near-optimal
+positions may be projected to the closed convex hull of the leg points (projections onto convex sets are 1-Lipschitz
+in CAT(0) spaces, and that hull has diameter D), so a bond smaller by ε costs at most ε·D. The other realisations of
+Ψ_N available in the class (single hub, the cut ac|bd, trivial bonds) never lower v, by the triangle inequality. At
+the leaf, (S2). ∎
 
-Both tests work in the Banach relaxation E (so "no violation" is rigorous up to solver accuracy for the pod
-products themselves, and a violation would have to be confirmed in X by explicit positions). Conic programmes,
-Clarabel through cvxpy.
+What the theorem is and is not.
+- It is unconditional: no spectral point, no FH/EP, no contracting hypothesis, no bound on the number of terms.
+- Its class is "everything generated from Prop. B.2 with its rank certificates, Lemma A.3, routing and nesting":
+  AN App. B levels, the level-1 game of §2, Khoruzhii's two-piece form (a coarsening), Sra's Lemma 4.2 nesting
+  (crossing of hub–hub bonds) are inside. Covers that use true ranks of the Ψ_N below the certificates, or any identity
+  not generated by B.2, are outside; for those the bound is the ordinary price method and needs the placement to be
+  a price.
+- It only gives the inequality "value ≥ sup over CAT(0) placements". Nothing says that nested covers attain it
+  (in the K_{2,3} protocol problem the explicit level-1 protocols stay below the CAT(0) bound).
+- A second proof for Hilbert space, by duality (it shows where the adversary's N comes from): v(W) = max of
+  Σ ⟨F_w, constants⟩ over flows F_w ∈ 𝓗 with |F_w| ≤ β_w in equilibrium at the auxiliary parties; with f₁, f₂ the optimal
+  flows on the two wires take r = |f₁+f₂|, r′ = |f₁−f₂| (parallelogram law), and the children inherit feasible flows
+  (f₁+f₂, resp. f₁−f₂, on the bond).
 
-**(a) Stepwise Lemma S on random parents** (`lemmaS_step.py`): hubs h₁, h₂ (identified in 30% of the cases, joined
-by a wire in 40% of the rest), each attached to 1–3 finite legs (30% of them with pod coordinate at the branch
-point), random bits in [0.2, 1.5]; crossed wires (h₁,c;p), (h₂,d;q) with c, d legs or a third hub with 2–3 legs.
-gap = 1 − (r_c² + r_b²)/(2(p²+q²)), r_c, r_b the least bonds with child ≥ parent (one conic programme each).
+**Consequences [D].** With F_X(config) the supremum of price values over placements in spaces of class X:
+1. every crossing-generated cover of any depth has level value ≥ F_CAT − o(1) ≥ F_flat: ≥ 1/√2 on balanced
+   two-merge configurations, ≥ 1/√3 on 3-nets, ≥ 0.4714 on K₄, ≥ 2/3 on Δ₃ (nine tripods, `notes.md` Thm 5.2 — a CAT(0)
+   placement, here used without any price hypothesis), ≥ 0.6124 on 3-nets of F₃^M, F₄^M (subgroup tripods);
+2. with the Q1 agent's placement (§6) F_CAT = 1/√2 on generic edges of 3-nets of F₂^m, so **on these nets the
+   crossing-generated family is stuck at exactly the two-merge value 1/√2 at every nesting depth**: three merges do not
+   help this family at all. This uses only that the filtration space is CAT(0), not that it is a price.
+3. Sra's nested identity, evaluated in the engine game, obeys the same floors.
 
-RESULTS_STEP
+### 5.4 What went wrong on the way (kept for the referee)
 
-**(b) Depth-2 game on three wires** (`lemmaS.py`): wires 1, 2, 3 between legs (far legs: lines through the origin
-with random arms and weights; finite legs: random points, 30% of pod coordinates at the branch point). Step 1 crosses
-wires 1, 2; at step 2 the cover may stop or cross **any** two of the six wires of the resulting system (15 options,
-among them the bond with wire 3 = Sra's nesting, and pairs sharing a hub); the adversary wins a subtree iff some
-(ρ, ρ′) on the second circle makes both leaves ≥ T. R_c, R_b = least first bonds for which the adversary wins against
-all options; margin = 1 − (R_c² + R_b²)/(2(p²+q²)).
+- A potential with **fixed** positions of the auxiliary hubs is non-decreasing by B.3 alone, at every depth, but
+  the leaf step (S2) fails: a hub created for a row cut and evaluated under the column merge sits at the wrong hub
+  point. My first note claimed weak duality on that basis; withdrawn.
+- **Linearising at the parent optimum is false [R].** With z* a parent minimiser, first variation (exact in CAT(0) for
+  both ends moving) reduces Lemma S to p|xo| + q|yo| + p|x′o′| + q|y′o′| + r|oo′| ≥ p·L₁(x,x′) + q·L₂(y,y′) with
+  L₁(x,x′) = |α*γ*| − |α*x| cos∠_{α*}(γ*,x) − |γ*x′| cos∠_{γ*}(α*,x′). In a tripod with both base wires starting at the centre
+  (O → arm 1, O → arm 2) this needs r ≥ p+q (o on arm 3, o′ = O) and r′ ≥ p+q (w on arm 3 near O, w′ on arm 1): off the
+  circle. It is not a counterexample to Lemma S: it would need the rest-function to decrease when b moves into arm 3
+  and when b moves into arm 1, against its convexity along arm 1 – O – arm 3.
+- **Products of pods as Banach spaces.** A pod embeds in (ℝ^m, ℓ₁) and 0-extension on a tree is exact, so Steiner values
+  in a product of pods can be computed in E = ℓ₂-sum of the (ℝ^m, ℓ₁) (v_E ≤ v_X always), with linear duality: flows in
+  ℓ₂(ℓ_∞). There the parallelogram law fails and the image of the parent's optimal flow can be infeasible for a child
+  (path ℓ –(p+q)– h, h –p– c, h –q– d on a tripod, b-child at r′ = p−q), yet the child has other feasible flows. This is
+  the formulation used for the numerical test.
 
-RESULTS_GAME
+### 5.5 Numerical tests of Lemma S [N] (run before the proof was found; they agree with it)
 
-Calibration in ℝ³: margin = 0 up to the bisection tolerance (−8·10⁻⁶), R_c = |f₁+f₂|, the binding option is "stop".
+Conic programmes (Clarabel through cvxpy) in the Banach relaxation E of products of pods and lines; "no violation"
+is then rigorous for the pod products up to solver accuracy.
+
+**(a) Stepwise form on random parents** (`lemmaS_step.py`): hubs h₁, h₂ (identified in 30% of the cases, joined by a
+wire in 40% of the rest), each attached to 1–3 finite legs (30% with pod coordinates at the branch point), bits in
+[0.2, 1.5]; crossed wires (h₁,c;p), (h₂,d;q), c, d legs or a third hub with 2–3 legs.
+gap = 1 − (r_c² + r_b²)/(2(p²+q²)), thresholds computed with a slack 10⁻⁶(1+|v|) on the parent value.
+
+| space | parents | min gap | gaps < 10⁻³ (tight cases) | negative |
+|---|---|---|---|---|
+| ℝ³ | 300 | 8.8·10⁻⁶ | 4 | 0 |
+| tripod × ℝ | 300 | 3.4·10⁻⁶ | 7 | 0 |
+| tripod × ℝ² | 300 | 8.4·10⁻⁶ | 4 | 0 |
+| tripod × tripod | 300 | 3.3·10⁻⁶ | 13 | 0 |
+| tripod, degenerate ("tie") parents: integer bits, unit positions | 347 | 2.6·10⁻⁶ | 40 | 0 |
+| tripod × ℝ, tie | 253 | 4.1·10⁻⁶ | 12 | 0 |
+| tripod × tripod, tie | 235 | 3.0·10⁻⁶ | 5 | 0 |
+| tripod × tripod × ℝ, tie | 205 | 4.0·10⁻⁶ | 6 | 0 |
+
+(The positive minimum is the slack; the tight cases have r_c² + r_b² = 2(p²+q²) to 10⁻⁵.)
+
+**(b) Depth-2 game on three wires** (`lemmaS.py`): step 1 crosses wires 1, 2; at step 2 the cover may stop or cross
+any two of the six wires of the resulting system (15 options, among them the bond with wire 3 = Sra's nesting and
+pairs sharing a hub); the adversary wins a subtree iff some (ρ,ρ′) on the second circle makes both leaves ≥ T.
+R_c, R_b = least first bonds for which the adversary wins against all options; margin = 1 − (R_c²+R_b²)/(2(p²+q²)).
+
+| space, legs | instances | min margin | max (R − depth-1 threshold) |
+|---|---|---|---|
+| ℝ³, far legs (calibration) | 2 | −8·10⁻⁶ | 5·10⁻⁶ |
+| tripod × ℝ, far legs (lines through the origin) | 13 | −9·10⁻⁶ | 6·10⁻⁶ |
+| tripod × tripod, far legs | 9 | −8·10⁻⁶ | 7·10⁻⁶ |
+| tripod × ℝ, finite legs | 9 | +1·10⁻⁶ | 8·10⁻⁶ |
+| tripod × tripod, finite legs | 9 | +0.15 | 8·10⁻⁶ |
+
+(Tolerance of the bisection: 2·10⁻⁵.) With far legs through one point the game is exactly tight, as in Hilbert
+space; in every instance the nested options require no larger bond than depth 1. No candidate violation; nothing to
+confirm in exact arithmetic.
 
 ---
 

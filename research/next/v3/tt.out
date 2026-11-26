@@ -1,0 +1,13 @@
+tips and {0, I, g} have the distance table of tripod x tripod (arms 1/sqrt 2): True  (g <-> permutation (1, 2, 0))
+
+unit arms; book x line reference: 2.82843, book x l_2: 2.73423, target 8/3 = 2.66667
+T x T, second-factor sites at radii [0.35]                       sites  7  max delta(tips) = 2.82844   6/U = 2.12131
+T x T, second-factor sites at radii [0.25, 0.5]                  sites 10  max delta(tips) = 2.84233   6/U = 2.11094
+T x T, second-factor sites at radii [0.2, 0.4, 0.8]              sites 13  max delta(tips) = 2.83110   6/U = 2.11932
+T x T, + midpoints of the arms                                   sites 10  max delta(tips) = 2.82844   6/U = 2.12131
+T x T, + six off-axis sites                                      sites 13  max delta(tips) = 2.82844   6/U = 2.12131
+T x T x R, second-factor radius 0.30, line sites +-0.30          sites  9  max delta(tips) = 2.79131   6/U = 2.14953
+T x T x R, second-factor radius 0.25, line sites +-0.35          sites  9  max delta(tips) = 2.79531   6/U = 2.14645
+T x T x R, second-factor radius 0.35, line sites +-0.25          sites  9  max delta(tips) = 2.79531   6/U = 2.14645
+T x T x T, radius 0.25 in factors 2 and 3                        sites 10  max delta(tips) = 2.79726   6/U = 2.14496
+T x T x T, radius 0.35 in factors 2 and 3                        sites 10  max delta(tips) = 2.79597   6/U = 2.14595

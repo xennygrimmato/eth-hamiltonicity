@@ -1,0 +1,11 @@
+rank-one graph: degree 9, eigenvalues {-3.0: 6, 1.0: 9, 9.0: 1}
+  least eigenvalue < -2, so the 1 / sqrt 2 metric is not Euclidean (centred Gram = P(I + A/2)P)
+rank-two pairs: 48; classes under 'opposite diagonals of a flat unit square': 1
+  one class => one common midpoint m, at distance 1/sqrt 2 from all 16 points; rank-one pairs subtend a right angle at m
+K_{2,3} table {0, I, tips}: squared distances
+ [[0 2 1 1 1]
+ [2 0 1 1 1]
+ [1 1 0 2 2]
+ [1 1 2 0 2]
+ [1 1 2 2 0]]
+  centred Gram eigenvalues [-0.2 -0.   1.   1.   1. ] (negative => not Euclidean)

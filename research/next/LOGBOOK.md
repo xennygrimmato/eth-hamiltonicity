@@ -436,3 +436,21 @@ Asked by the user: push on the Satisfiability Hypothesis and on Orthogonal Vecto
 
 ### Running (as of this entry)
 - none
+
+## 26 Nov 2026, last entry: structure of ρ₂ and the limit of the ω test (`v3/notebook.md` §4–§7) [unreviewed]
+
+- Any CAT(0) space containing ρ₂ has one point at distance 1/√2 from all sixteen matrices; rank-two pairs are
+  antipodal through it, rank-one pairs span flat quarter-planes [R; `centre.py` N]. ρ₂ is the metric "1 on edges, √2
+  on non-edges" of the rank-one graph (eigenvalues 9, 1⁹, (−3)⁶): the neighbours of a vertex in a CAT(0) cube complex.
+- Tips and {0, I, g} span tripod × tripod (`RankTwo.lean` `tips_table`, `axis_table`, `cross_table` [L]).
+- Smallest non-Euclidean sub-table: five sites, K_{2,3}. If it is a price then ω ≥ 3/√2 [R].
+- H13 tested and not supported [N]: tripod factors in the spine act like line factors (tripod × tripod 2.8284,
+  tripod × tripod × line 2.7913, tripod³ 2.796). The bound stays at 2.7342 against 8/3. Closing the gap needs an
+  inequality beyond monotone, submodular, flat law, convexity.
+- OpenAI's Lean challenge files for 24 Nov state end theorems only; the intermediate statements used here (flat law
+  on patches, submodularity, tripod principle, port graphs) are quoted from the manuscripts.
+- New open family [C]: for which graphs Γ is the metric "1 on edges, √2 on non-edges" a price? First open case K_{2,3}.
+
+### Running (as of this entry)
+- none
+

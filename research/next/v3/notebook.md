@@ -19,6 +19,9 @@ matrix multiplication exponent" (all 24 Nov 2026). c1 = `research/vpvnp/c1/noteb
 | C | At μ = 2 the dichotomy is one finite question: the contracting hypothesis holds at μ = 2 iff the rank metric ρ₂ on the 16 matrices is not a price. (c1 had this for μ ≥ 3.) | R + N |
 | D | ρ₂ is {0} ∪ [3]×[3] ∪ S₃ with an explicit table. Around each rank-two pair there are six flat pages; three of them form a book (tripod × segment). | L + R |
 | E | tripod × line a price geometry ⇒ ω ≥ 3/√2. tripod × ℓ₂ ⇒ ω ≥ 2.1944. So price geometries are closed under products with a line only if ω > 2.12. | R, from K |
+| G | In any CAT(0) space containing ρ₂ there is one point m at distance 1/√2 from all sixteen matrices. Rank-two pairs are antipodal through m, rank-one pairs span flat right-angled sectors. So ρ₂ is the set of unit axis points of the all-right cone over the rank-one graph: the neighbours of a vertex in a CAT(0) cube complex. | R + N |
+| H | Smallest non-Euclidean sub-table: five sites, the table of K_{2,3} (0, I and three tips). It alone forces the book and ω ≥ 3/√2. | R + L |
+| I | No improvement on 2.7342 from richer forced structure: in the linear programmes, tripod factors in the spine act like line factors. With a heuristic reason why chains of this kind cannot do better. H13 looks out of reach of the elementary axioms. | N; reason not a proof |
 | F | Correction to v2 and to my earlier claim: the eight points 0, I, hexagon do not force a cone of angle 3π. They also sit in tripod × tripod × line. Only the six flat sectors are forced. | L + N |
 
 Chain (Figure `fig_book.png`, panel c):
@@ -116,6 +119,22 @@ Where the pieces live (`RankTwo.lean` `apex_embeds`, `H8_embeds`, `diag_cells_mi
 - H₈ = {0, I, E₁..E₆} embeds there too, with I ↦ (centre, centre, +1/√2). H₈ is not Euclidean (Gram eigenvalue −¼).
 - The embedding does not extend to all of ρ₂. ρ₂ lies in the building of GL₄(F₂((t))) (c1 §2), not in this product.
 
+**One centre for all sixteen points** [R; `centre.py` N; `RankTwo.lean` `tips_table`, `axis_table`, `cross_table` L].
+Two rank-two pairs {a,b}, {c,d} whose four cross differences have rank one are the diagonals of a flat unit square,
+so they have the same midpoint. This relation connects all 48 rank-two pairs (`centre.py`: one class). Hence there is
+a single point m with |m, a| = 1/√2 for every matrix a; rank-two pairs are antipodal through m; and for a rank-one
+pair {a,b}, choosing c with rk(a−c) = 2, rk(b−c) = 1 makes the triangle a, b, c flat, so the sector at m is a flat
+quarter-plane. (In c1's building picture m is the vertex [L₀].)
+
+So ρ₂ is the metric "1 on the edges, √2 on the non-edges" of the rank-one graph Γ on Mat₂(F₂) (16 vertices, degree
+9, adjacency eigenvalues 9, 1⁹, (−3)⁶), realised as the points at distance 1/√2 along the axes of the cone over the
+all-right flag complex of Γ. That is the neighbourhood of a vertex in a CAT(0) cube complex with link Flag(Γ).
+For any graph the same metric is Euclidean when the least eigenvalue is ≥ −2 (regular case); here it is −3.
+
+Inside it: the tips E₁, E₃, E₅ and the points 0, I, g (g of order three) are two independent triples with all cross
+pairs adjacent, an induced K_{3,3}. They span tripod × tripod, with the tips as the tips of the first factor
+(`tt.py` checks the table). The four matrices 0, I, g, g² (the field F₄) are pairwise antipodal: a 4-star.
+
 **Correction.** I said earlier that H₈ forces a cone of total angle 3π at m, times a line. That is one model. The
 product model above is another, and there the bisectors of opposite sectors are at angle π/2, not π. Only the six
 flat sectors and the pairwise angles of the six rays are forced. The v2 notebook's row 3 stands; the reduction
@@ -160,6 +179,14 @@ Reading.
   M's lower bound D*(a) = Σa_i − 1/Σ(1/a_i) everywhere on the grid; the ratio is 1.0253 at equal arms and tends to 1
   only when an arm degenerates.
 
+Limit of the method [N + R]. `tt.py`: in tripod × tripod the optimum of the linear programme is 2.8284, the value for
+tripod × line; tripod × tripod × line gives 2.7913 and tripod³ gives 2.796, against 2.7894 for tripod × plane. A
+tripod factor in the spine is worth one line. Reason: the chain evaluates the marginal cost of a tip only against a
+flat part of the spine set, and the cost of the spine set is at least that of its flat part, so nothing is gained
+over a Euclidean spine; and among Euclidean spines a set with constant support function is optimal, which gives
+2.7342. This is an argument about chains of this shape, supported by the linear programmes on up to 13 sites, not a proof for
+all site sets. I expect that a bound below 8/3 needs an inequality outside {monotone, submodular, flat law, convexity}.
+
 Checks that failed to improve the bound [N]: the six-page structure with sites at the tips and on the spine gives the
 same optimum as three pages (`hexbook.py`, linear programme over all axioms); in tripod × line the linear programme
 with up to 12 sites gives [8/3, 2√2] for the tips under ω = 9/4 and is feasible (`book.py`).
@@ -175,29 +202,41 @@ spaces (G). Their product need not be: the argument of §5 uses only the patch [
 P proves closure under products only for a subclass and only when there are no ports (Thm "Product theorem"). The
 above shows why that is hard: closure of all price geometries under products with a line would prove ω > 2.12.
 
-The smallest undecided table has four sites: m, P₁, P₃, P₄ with |mP_i| = 1, |P₁P₃| = |P₁P₄| = 2,
+The smallest undecided sub-table of ρ₂ has five sites: 0, I and three tips, the table of K_{2,3} (two sites √2
+apart, three sites pairwise √2 apart, all cross distances 1). It is not Euclidean (`centre.py`, Gram eigenvalue
+−0.2). In a CAT(0) space it forces the common midpoint and the three flat half-squares, so
+**if this five-site table is a price then ω ≥ 3/√2.**
+
+With the midpoint as a site there is a four-site version: m, P₁, P₃, P₄ with |mP_i| = 1, |P₁P₃| = |P₁P₄| = 2,
 |P₃P₄| = 2 sin(θ/2), 0 < θ < π. It is neither Euclidean nor a tree metric, it embeds in tripod × line (`embed.py`),
 and A's random-point extension (Prop. A.8) cannot produce it from its three outer sites.
 
 ## 7. What would decide it [C]
 
-1. **A better upper bound on δ(tips) in the hull of ρ_μ.** Below 8/3 per arm it contradicts M's tripod principle and
-   proves the contracting hypothesis in OpenAI's world; below 2.530 it does so against the pre-October bound
-   ω < 2.3713. The hull has far more flat pieces than the book (cubes of every frame; 2^k + 1 pairwise opposite tips
-   in Mat_{2k} from projections over F_{2^k}). One-step chains cannot beat 2.7342 (the optimum over spine sets is
-   attained by a constant). Multi-step chains through neighbouring pages, or sites off the pages, are untested
-   because distances between such sites are not forced by the metric of ρ_μ alone.
+1. **A new inequality for shared labels.** The gap is 2.7342 against 8/3. The elementary axioms are exhausted
+   (§5), so closing it needs a tensor inequality that bounds δ from above on non-flat sets, for instance a product
+   rule for δ on tripod × Euclidean space, or it needs M's lower bound to be improved on books. Below 8/3 per arm
+   proves the contracting hypothesis given ω ≤ 9/4; below 2.530 proves it against the pre-October bound ω < 2.3713.
 2. **Ports ⇒ contracting?** Would make the two dichotomies equal.
-3. **Is ρ₂ a price?** Sixteen parties. By c1's cover characterisation this asks whether the complete network on
+3. **Is the five-site table of K_{2,3} a price? Is ρ₂?** Five and sixteen parties. By c1's cover characterisation this asks whether the complete network on
    Mat₂(F₂) has an asymptotically cheaper cover in ρ₂-weighted bond length.
 
-My estimate: the margin 2.19 against 2.25 is thin enough that route 1 is worth a serious attempt, and if ω = 9/4 is
-right the two numbers may be related. I do not have a guess which way it goes.
+4. **Which graphs Γ give a price?** For a graph Γ let A(Γ) be the metric 1 on edges, √2 on non-edges. Complete graphs
+   and graphs with least eigenvalue ≥ −2 give Euclidean tables; edgeless graphs give stars. ρ₂ = A(rank-one graph).
+   K_{2,3} is the first open case and K_{3,3} (tripod × tripod) the next.
+
+My estimate: I no longer expect the elementary axioms to decide it. The margin between 2.19 and 2.25 is real under
+those axioms. I do not have a guess which way the hypothesis goes.
 
 ## 8. Files
 
-`rank2.py` (model, μ = 2 equality case, graph identity), `embed.py` (embeddings), `book.py` and `hexbook.py` (linear
+`rank2.py` (model, μ = 2 equality case, graph identity), `embed.py` (embeddings), `centre.py` (common midpoint,
+spectrum, K_{2,3} table), `tt.py` (tripod × tripod), `book.py` and `hexbook.py` (linear
 programmes; need `../v2/cone.py`), `bookbound.py` (table of §5), `tripod_scan.py`, `figures.py`, `fig_book.png`,
 outputs `*.out`. Lean: `RankTwo.lean`, `Book.lean`, `GraphRank.lean`; build with
 `cd lean && lake build EthFollowup.Spectral.RankTwo EthFollowup.Spectral.Book EthFollowup.Spectral.GraphRank`.
 `#print axioms` gives `[propext, Classical.choice, Quot.sound]` or fewer.
+
+Status of the quoted statements. OpenAI's Lean challenge files for the 24 November papers state the end theorems
+(`MatrixExponent.lean`, `ArithmeticHierarchy.lean`, …). I did not find separate challenge statements for the flat
+law on patches, submodularity, the tripod principle or the port graphs, so those are quoted from the manuscripts.

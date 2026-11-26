@@ -139,4 +139,29 @@ theorem H8_embeds : ∀ s t : Site, inH8 s → inH8 t →
 theorem diag_cells_misplaced : ∀ i : Fin 3,
     distSq4 (pos none) (pos (some (some (i, i)))) = 4 ∧ rk (add one (cell i i)) = 2 := by decide
 
+/-! ### Two tripods at right angles
+
+The cells `(0,1), (1,2), (2,0)` ("tips") are pairwise at rank-distance two, and so are `0`, `I` and the matrix
+`g` of order three with `g x_i = x_{i+1}`; every tip is at rank-distance one from each of `0, I, g`.
+In a CAT(0) space this table forces `tripod × tripod` (see `research/next/v3/notebook.md`, §4).
+The five points `0, I` and the tips are the table of the complete bipartite graph `K_{2,3}`. -/
+
+def tip (i : Fin 3) : M2 := cell i (i + 1)
+
+/-- The matrix `(0 1; 1 1)`, of order three. -/
+def g3 : M2 := (false, true, true, true)
+
+def axisPt : Fin 3 → M2
+  | 0 => zero | 1 => one | 2 => g3
+
+theorem tips_table : ∀ i j : Fin 3, rk (add (tip i) (tip j)) = if i = j then 0 else 2 := by decide
+
+theorem axis_table : ∀ i j : Fin 3, rk (add (axisPt i) (axisPt j)) = if i = j then 0 else 2 := by decide
+
+theorem cross_table : ∀ i j : Fin 3, rk (add (tip i) (axisPt j)) = 1 := by decide
+
+/-- Every nonzero difference has rank one or two: `ρ₂` is the metric "1 on the edges, √2 on the non-edges" of
+the graph whose edges are the pairs with a difference of rank one (nine neighbours, six non-neighbours). -/
+theorem rk_pos : ∀ x : M2, x ≠ zero → rk x = 1 ∨ rk x = 2 := by decide
+
 end EthFollowup.Spectral.RankTwo

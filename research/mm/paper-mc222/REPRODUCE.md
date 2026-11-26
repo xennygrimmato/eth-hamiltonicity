@@ -15,13 +15,13 @@ commit adds this guide and two small checking scripts.
 | claim | checked by | trusted | time here | disk |
 |---|---|---|---|---|
 | MC(⟨2,2,2⟩) ≤ 7 (Strassen's circuit is correct) | `verify_circuit.py`, and Lean | Python, or the Lean kernel | seconds | — |
-| MC(⟨2,2,2⟩) ≥ 7, method A: exact search over 72 orbit roots | `tools/mc222` (Rust) | the paper's lemmas N1–N3, `src/main.rs`, the Rust compiler | 8 min on 4 cores | < 1 GB |
-| MC(⟨2,2,2⟩) ≥ 7, method B: 1080 SAT cubes, every LRAT proof checked | `gen_cnf.py`, CaDiCaL 2.1.3, `lrat-check` | lemmas N1–N3 and H, `gen_cnf.py`, `orbits.py`, `lrat-check.c`; **not** CaDiCaL | 15–25 min on 4 cores | ≈ 0.1 GB at a time (proofs are deleted after checking) |
+| MC(⟨2,2,2⟩) ≥ 7, method A: exact search over 72 orbit roots | `tools/mc222` (Rust) | the paper's lemmas N1–N3, `src/main.rs`, the Rust compiler | 8–9 min on 4 cores | < 1 GB |
+| MC(⟨2,2,2⟩) ≥ 7, method B: 1080 SAT cubes, every LRAT proof checked | `gen_cnf.py`, CaDiCaL 2.1.3, `lrat-check` | lemmas N1–N3 and H, `gen_cnf.py`, `orbits.py`, `lrat-check.c`; **not** CaDiCaL | about 10 min on 3 workers | ≈ 0.2 GB at a time (proofs are deleted after checking) |
 | MC(⟨2,2,2⟩) = 7 in Lean (`MC222.mc_eq_seven : MC = 7`) | `research/mm/lean-mc222` | Lean kernel + Lean compiler and runtime (365 compiled Boolean evaluations) | 75 min on 4 cores (loaded machine) | ≈ 25 GB |
-| MC(⟨1,2,3⟩) = 6 (Theorem 1.2; not in Lean) | `tools/mc222`, both methods | as for methods A and B | 12 min | < 1 GB |
+| MC(⟨1,2,3⟩) = 6 (Theorem 1.2; not in Lean) | `tools/mc222`, both methods | as for methods A and B | 8 min | < 1 GB |
 
 The validation cases of the paper's Table 2 (problems with known multiplicative complexity) run
-first, inside `run_all.sh`.
+first, inside `run_all.sh`. All of §2 and §3 together took 28 minutes from a fresh clone (§6).
 
 ## 1. Requirements
 
@@ -236,7 +236,24 @@ All steps of §2, §2.1 and §3 were run from a fresh clone of the repository at
 with CaDiCaL and drat-trim cloned and built from scratch by `run_all.sh`, on the machine described
 in §1. The results are recorded below.
 
-FRESH-RUN-RESULTS
+Run on 26 November 2026 from a fresh clone, with nothing reused from earlier runs:
+
+| step | result | time (wall) |
+|---|---|---|
+| `run_all.sh`: build CaDiCaL rel-2.1.3 and lrat-check from fresh clones, build the Rust search | built | included below |
+| validation cases, both methods (Table 2 of the paper) | every case as in Table 2; every circuit found re-checked `OK` | included below |
+| Python orbit representatives | 72 orbits, sizes as recorded | included below |
+| method A, k = 6 | `no circuit with <= 6 AND gates`, 3 547 604 states; the state count of each of the 72 orbits identical to `results/exact_k6_orbits.log` | 513 s |
+| method B, k = 6 | 1080 of 1080 cubes UNSAT, every LRAT proof `VERIFIED`; 0.26 h solver CPU, 0.06 h check CPU, 5.41 GB of LRAT in total | — |
+| `compare_results.py`, k = 6 | all 1080 recorded cubes reproduced: same verdicts, same sizes and sha256 of every CNF and LRAT proof | seconds |
+| whole of `run_all.sh` | exit status 0 | 19 min 47 s |
+| `run_mm123.sh` | 51 representatives identical in Rust and Python; method A `no circuit with <= 5 AND gates`, 2 829 011 states, per-orbit counts identical to the record; 6-AND circuit `OK`; 204 (k = 4) and 510 (k = 5) cubes UNSAT with verified proofs | 7 min 57 s |
+| `compare_results.py`, ⟨1,2,3⟩ | k = 4 and k = 5 reproduced byte for byte | seconds |
+| §2.1 by hand | CNF `8561c7e2…`, LRAT `3854bd00…`, `c VERIFIED`; truncated proof `c NOT VERIFIED` | seconds |
+| §2.2 | `OK: … 7 AND gates, all 256 inputs, 4 outputs correct` | seconds |
+
+The machine had 4 cores shared with other jobs. With three workers the proofs on disk take at most about
+0.2 GB at a time (the largest single proof is 54 MB); `run_sat.py` deletes each one after checking it.
 
 The Lean build of §5 was tested by deleting every build product of the MC222 library and running
 `lake build` from source on the same machine (75 min, 18426 jobs, the axiom list above, no

@@ -144,7 +144,7 @@ class Driver:
             row[G.ecls[e]] += b
         return LL, p1, q1, p2, q2, C1, C2, priced, row, u
 
-    def typeB_round(self, stoponly=False, ncoarse=17, max_verify=400):
+    def typeB_round(self, stoponly=False, ncoarse=17, max_verify=2000):
         G = self.G
         yE = np.ascontiguousarray(G.y[G.ecls])
         t0 = time.time()
@@ -175,15 +175,20 @@ class Driver:
         self.say(f"  type-B coarse grid ({ncoarse}x{ncoarse} + level-1 maximisers): {len(stage2)} strategies pass [{t2-t1:.0f}s]"
                  + (f"; largest coarse violation/bit {stage2[0][0]:.5f}" if stage2 else ""))
         # stage 3: certified bracket by branch and bound, then row
-        added = 0; nver = 0; worst_gap = 0.0; rows = []
-        for (vio, i, j, t1i, t2i, ui) in stage2[:max_verify]:
-            LL, p1, q1, p2, q2, C1, C2, priced, row, u = self.strategy(i, j, t1i, t2i, ui)
-            lo, hi, a1, a2, nev = B.F_bnb(LL, p1, q1, p2, q2, C1, C2, G.w, G.g, 32, 1e-7, 400000,
-                                          self.PT[i, t1i], self.PT[j, t2i])
-            nver += 1; worst_gap = max(worst_gap, hi - lo)
-            tv = (priced - hi) / (1 + u)
-            if tv > TOL:
-                rows.append((tv, row, hi, (i, j, t1i, t2i, ui, lo, hi, a1, a2, priced)))
+        added = 0; worst_gap = 0.0; rows = []
+        todo = stage2[:max_verify]
+        nver = len(todo)
+        if todo:
+            arr = np.array([(i, j, t1i, t2i, ui) for (_, i, j, t1i, t2i, ui) in todo], dtype=np.int64)
+            BR = B.bnb_batch(self.LAB, self.EA, self.EB, self.PE, arr[:, 0].copy(), arr[:, 1].copy(), arr[:, 2].copy(),
+                             arr[:, 3].copy(), arr[:, 4].copy(), self.PC, self.PT, TG, UG, G.w, G.g, 1e-6, 300000)
+            for m, (_, i, j, t1i, t2i, ui) in enumerate(todo):
+                lo, hi, a1, a2, nev = BR[m]
+                LL, p1, q1, p2, q2, C1, C2, priced, row, u = self.strategy(i, j, t1i, t2i, ui)
+                worst_gap = max(worst_gap, hi - lo)
+                tv = (priced - hi) / (1 + u)
+                if tv > TOL:
+                    rows.append((tv, row, hi, (i, j, t1i, t2i, ui, lo, hi, a1, a2, priced)))
         for (tv, row, hi, info) in rows:
             self.add_row(row, hi); added += 1
             self.best.append((tv, info))

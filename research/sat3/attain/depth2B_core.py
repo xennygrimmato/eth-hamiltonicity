@@ -414,3 +414,19 @@ def F_bnb(LL, p1, q1, p2, q2, C1, C2, w, g, n0, tol, maxeval, th1star, th2star):
     if hi < lo + tol:
         hi = lo + tol
     return lo, hi, a1, a2, nev
+
+
+@njit(cache=True, parallel=True)
+def bnb_batch(LAB, EA, EB, PE, QI, QJ, S1, S2, SU, PC, PT, TG, UG, w, g, tol, maxeval):
+    """certified brackets for a batch of strategies (QI, QJ pair indices; S1, S2, SU split indices)."""
+    n = QI.shape[0]
+    out = np.empty((n, 5))
+    for m in prange(n):
+        i = QI[m]; j = QJ[m]; t1i = S1[m]; t2i = S2[m]; u = UG[SU[m]]
+        e1, e1p = PE[i, 0], PE[i, 1]; e2, e2p = PE[j, 0], PE[j, 1]
+        LL = labels8(LAB, EA[e1], EA[e1p], EB[e1], EB[e1p], EA[e2], EA[e2p], EB[e2], EB[e2p])
+        p1 = TG[t1i]; q1 = 1.0 - p1; p2 = u * TG[t2i]; q2 = u * (1.0 - TG[t2i])
+        C1 = PC[i, t1i].copy(); C2 = PC[j, t2i] * u
+        lo, hi, a1, a2, nev = F_bnb(LL, p1, q1, p2, q2, C1, C2, w, g, 32, tol, maxeval, PT[i, t1i], PT[j, t2i])
+        out[m, 0] = lo; out[m, 1] = hi; out[m, 2] = a1; out[m, 3] = a2; out[m, 4] = nev
+    return out

@@ -1,0 +1,9 @@
+(a) 0 and the nine rank-one matrices in T x T x R: max error in squared distance 4.4e-16
+(b) H_8 in T x T x R: max error 4.4e-16
+    H_8 centred Gram eigenvalues: min -0.2500 (negative => not Euclidean)
+    rho_2 centred Gram eigenvalues: [-0.5 -0.5 -0.5 -0.5 -0.5 -0.5 -0.   1.5  1.5  1.5  1.5  1.5  1.5  1.5
+  1.5  1.5]
+(c) best fit of another invertible matrix to the nine cells inside T x T x R (grid search): max error 0.500 (> 0: no place)
+(d) theta = 0.524: |mP| = 1.000 1.000 1.000, |P1P3| = 2.000, |P1P4| = 2.000, |P3P4| = 0.5176 (2 sin(theta/2) = 0.5176)
+(d) theta = 1.571: |mP| = 1.000 1.000 1.000, |P1P3| = 2.000, |P1P4| = 2.000, |P3P4| = 1.4142 (2 sin(theta/2) = 1.4142)
+(d) theta = 2.500: |mP| = 1.000 1.000 1.000, |P1P3| = 2.000, |P1P4| = 2.000, |P3P4| = 1.8980 (2 sin(theta/2) = 1.8980)

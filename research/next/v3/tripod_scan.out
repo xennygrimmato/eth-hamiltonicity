@@ -1,0 +1,8 @@
+min over arms of U/D* = 1.00013 at arms (np.float64(0.02), np.float64(6.0), 1.0)
+arms (1, 1, 1)      U = 2.73423  D* = 2.66667  ratio 1.02534  perimeter/U = 2.19440
+arms (1, 1, 0.5)    U = 2.29943  D* = 2.25000  ratio 1.02197  perimeter/U = 2.17445
+arms (1, 1, 0.1)    U = 2.02827  D* = 2.01667  ratio 1.00575  perimeter/U = 2.07073
+arms (1, 0.5, 0.5)  U = 1.83998  D* = 1.80000  ratio 1.02221  perimeter/U = 2.17393
+arms (1, 1, 3)      U = 4.65591  D* = 4.57143  ratio 1.01848  perimeter/U = 2.14781
+arms (1, 1, 10)     U = 11.61450  D* = 11.52381  ratio 1.00787  perimeter/U = 2.06638
+arms (1, 3, 3)      U = 6.51339  D* = 6.40000  ratio 1.01772  perimeter/U = 2.14942

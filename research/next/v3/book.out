@@ -1,0 +1,7 @@
+one-step bound 3 sqrt(1+t^2) - t at t = 1/sqrt 8: 2.8284;  8/3 = 2.6667;  ball lemma in T x l_2: 2.7342
+tips + centre                                        sites  4, forced   13, ineq     70: delta(tips) in [2.0000, 3.0000]
++ spine points at +-1/sqrt8                          sites  6, forced   55, ineq    455: delta(tips) in [2.0000, 2.8284]
+  same, with omega = 9/4                             sites  6, forced   55, ineq    475: delta(tips) in [2.6667, 2.8284]
++ five spine points, omega                           sites  8, forced  223, ineq   2906: delta(tips) in [2.6667, 2.8284]
++ six midpoints tip-spine, omega, 3-leg convexity    sites 12, forced 1351, ineq  99227: delta(tips) in [2.6667, 2.8284]
+X_4(pi/2) + mirror images + spine, omega             sites  9, forced  295, ineq  10056: delta(tips) in [2.4142, 2.6441]

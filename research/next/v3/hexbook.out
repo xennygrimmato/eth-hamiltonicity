@@ -1,0 +1,9 @@
+mean width checks: cube 3.000000 (3), square 2.000000 (2), regular tetrahedron side 1: 1.824520
+tips P1, P3, P5 at distance r = 1/sqrt2 from the spine; perimeter 3 sqrt2 = 4.2426
+configuration                                              max delta(tips)   => omega >=
+three pages (book), spine points at +-[0.25]               2.00000           2.12132
+three pages (book), spine points at +-[0.25, 0.5]          2.00000           2.12132
+three pages (book), spine points at +-[0.15, 0.3, 0.5]     2.00434           2.11672
+six pages, spine points at +-[0.25]                        2.00000           2.12132
+six pages, spine points at +-[0.25, 0.5]                   2.00000           2.12132
+six pages, spine points at +-[0.15, 0.3, 0.5]              2.00434           2.11672

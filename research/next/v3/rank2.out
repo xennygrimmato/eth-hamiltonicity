@@ -1,0 +1,11 @@
+ranks: {0: 1, 1: 9, 2: 6}
+model {0} u [3]x[3] u S_3 with the stated distance table: True
+hexagon of I: cells [(0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1)] (the off-diagonal cells)
+each hexagon cell has {2} rank-one neighbours in the hexagon; opposite cell is W + I: True
+hexagon is one 6-cycle: True [(1, 0), (1, 2), (0, 2), (0, 1), (2, 1), (2, 0)]
+equal-sum system: 12 equations, rank 8  => solution space of dimension 1 (constants)
+chi_V = -1 exactly on rank-one W with rk(V - W) = 1: True
+the six characters chi_V are distinct: True
+largest |tau_V| allowed by the midpoint inequalities: 0.00e+00  (0 => rank-two squared distances are all exactly 2)
+mu = 2: dim(graph a + graph b) - mu = rk(a - b) on 256 pairs: True
+mu = 3: dim(graph a + graph b) - mu = rk(a - b) on 20000 pairs: True

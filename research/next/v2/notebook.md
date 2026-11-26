@@ -16,6 +16,9 @@ re-checked.
 | 5 | The elementary price axioms (monotone, submodular, flat law, midpoint convexity, ω ≤ 9/4) are consistent on cones over circles of length 3π and 4π. They give the window [8/3, 3] for a tripod. | N; tripod window L |
 | 6 | Cones over high-girth cubic graphs exceed the graph's own Euclidean Poincaré constant, by a factor growing from 1.25 (Petersen) to 2.23 (Tutte 12-cage). These, not cones over circles, are the candidates that could break ports. | N |
 
+Later note (v3): `../v3/notebook.md` shows that the contracting hypothesis implies ports, and that its failure forces
+ω ≥ 2.194. The rank-metric and building facts used in §4 and §6 are from `research/vpvnp/c1/notebook.md`.
+
 Sharpened question (§6): **are all tensor cost geometries within bounded (average) distortion of Hilbert space?**
 Yes would give ports and the contracting hypothesis at once. Every example known today is within √2.
 

@@ -402,3 +402,37 @@ Asked by the user: push on the Satisfiability Hypothesis and on Orthogonal Vecto
 
 ### Running (as of this entry)
 - none
+
+## 26 Nov 2026, later: contracting hypothesis, ports and ω (`v3/notebook.md`) [unreviewed]
+
+### Results
+- Theorem A [R from K]: Anthropic's contracting hypothesis implies OpenAI's ports. OpenAI's port graphs need only a
+  "Grassmann gap", and the gap follows from the contracting hypothesis through a ↦ graph(a)
+  (`GraphRank.lean`, dim(graph f + graph g) = dim V + rank(f − g) [L]). The converse is open.
+- Theorem B [R from K; two steps L]: if the contracting hypothesis fails, ω ≥ 2e^{z²/2} = 2.1944 (z = Φ⁻¹(2/3)); if
+  the rank metric on Mat₂(F₂) is a price, ω ≥ 3/√2. Mechanism: the rank metric forces a book (three pairwise flat
+  pages on a spine) times cubes; sharing a label among the three tips is then cheap (`Book.lean`, `book_bound` [L];
+  OpenAI's ball lemma); and perimeter ≤ ω·δ.
+- Hence ω < 2.1944 ⇒ contracting ⇒ ports, with μ = 2 if ω < 2.1213. Under ω = 2 both dichotomies are decided.
+  Under OpenAI's ω = 9/4 the test is passed with a 2.5% margin (2.7342 against the tripod bound 8/3).
+- Proposition C [R + N]: at μ = 2, the contracting hypothesis holds iff ρ₂ (16 points) is not a price. Extends c1's
+  Prop. 1 from μ ≥ 3.
+- Structure of ρ₂ [L]: {0} ∪ [3]×[3] ∪ S₃; hexagons; H₈ and the apex over the grid embed in
+  tripod × tripod × line (`RankTwo.lean`).
+- Corollary E [R from K]: tripod × line a price geometry ⇒ ω ≥ 3/√2; tripod × ℓ₂ ⇒ ω ≥ 2.1944.
+
+### Corrections
+- Withdrawn: "H₈ forces a cone of angle 3π". It also embeds in tripod × tripod × line. Only six flat sectors are
+  forced. The reduction to "no 3π cone point" is replaced by Proposition C.
+
+### Hypotheses
+- H13 [C]: in the hull of the rank metrics the shared-label rate of some tripod is below 8/3 per arm. Would prove
+  the contracting hypothesis given ω ≤ 9/4. Untested beyond one-step chains (which stop at 2.7342).
+- H12 unchanged.
+
+### To verify
+- That OpenAI's port-graph appendix uses nothing beyond the Grassmann gap (read once).
+- The flat law on convex Euclidean patches and the perimeter inequality, against OpenAI's Lean statements.
+
+### Running (as of this entry)
+- none

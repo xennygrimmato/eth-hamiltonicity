@@ -103,6 +103,9 @@ pub struct AlsResult<T: Scalar> {
     pub rel_residual: f64,
     pub maps: Vec<DMatrix<T>>,
     pub history: Vec<f64>,
+    /// max Frobenius norm of the maps after each sweep (border diagnostic: residual -> 0 while
+    /// norms -> infinity suggests a degeneration, not a restriction)
+    pub norm_history: Vec<f64>,
     pub max_map_norm: f64,
     pub start: usize,
 }
@@ -117,6 +120,7 @@ pub fn als_run<T: Scalar>(net: &Network, target: &Tensor<T>, o: &AlsOpts, start:
     let tn = target.norm2().sqrt();
     let tmats: Vec<DMatrix<T>> = (0..np).map(|p| target.matricize(&[p]).0).collect();
     let mut hist = vec![];
+    let mut nhist = vec![];
     let mut reg = o.reg0;
     let mut res = f64::INFINITY;
     for _sweep in 0..o.sweeps {
@@ -152,13 +156,14 @@ pub fn als_run<T: Scalar>(net: &Network, target: &Tensor<T>, o: &AlsOpts, start:
             *m *= T::sc(s);
         }
         hist.push(res);
+        nhist.push(maps.iter().map(|m| m.norm()).fold(0.0, f64::max));
         reg = (reg * o.reg_decay).max(o.reg_min);
         if res < o.tol {
             break;
         }
     }
     let max_map_norm = maps.iter().map(|m| m.norm()).fold(0.0, f64::max);
-    AlsResult { rel_residual: res, maps, history: hist, max_map_norm, start }
+    AlsResult { rel_residual: res, maps, history: hist, norm_history: nhist, max_map_norm, start }
 }
 
 /// Parallel multistart ALS; results sorted by residual.

@@ -20,6 +20,15 @@ fn run<T: Scalar>(s: &Network, d: &Network, o: &AlsOpts) {
     let pick: Vec<String> = [0usize, h.len() / 10, h.len() / 4, h.len() / 2, 3 * h.len() / 4, h.len() - 1]
         .iter().map(|&i| format!("{}:{:.2e}", i, h[i.min(h.len() - 1)])).collect();
     println!("  history(best) {:?}", pick);
+    let nh = &best.norm_history;
+    let pickn: Vec<String> = [0usize, h.len() / 10, h.len() / 4, h.len() / 2, 3 * h.len() / 4, h.len() - 1]
+        .iter().map(|&i| format!("{}:{:.2e}", i, nh[i.min(nh.len() - 1)])).collect();
+    println!("  max-norm history(best) {:?}", pickn);
+    // border diagnostic: slope of log residual vs log norm over the second half
+    let k0 = h.len() / 2; let k1 = h.len() - 1;
+    if k1 > k0 && nh[k1] > nh[k0] * 1.01 {
+        println!("  d log(res)/d log(norm) over 2nd half = {:.3}", (h[k1].ln() - h[k0].ln()) / (nh[k1].ln() - nh[k0].ln()));
+    }
 }
 
 fn main() {

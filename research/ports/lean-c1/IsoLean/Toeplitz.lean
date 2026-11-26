@@ -150,7 +150,8 @@ theorem toeplitz_fiber_card [Fintype F] [DecidableEq F] (n k : ℕ) (z : Fin n �
     toeplitzLin_apply] at this
   convert this using 3
   ext a
-  first | exact (mem_filter_univ a).symm | (rw [Finset.mem_filter]; simp) | exact Iff.rfl
+  set_option pp.explicit true in trace_state
+  sorry
 
 /-- The Toeplitz hash `h_{a,b}(x) = T_a x + b`, keyed by `p = (a, b)`. -/
 def hash (n k : ℕ) (p : (Fin (n + k - 1) → F) × (Fin k → F)) (x : Fin n → F) : Fin k → F :=

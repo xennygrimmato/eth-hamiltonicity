@@ -1,0 +1,108 @@
+\begin{thebibliography}{10}
+
+\bibitem{AlderStrassen26}
+A.~Alder and V.~Strassen.
+\newblock Automated lower bounds for bilinear complexity over finite fields.
+\newblock arXiv:2603.07280, 2026.
+
+\bibitem{CaDiCaL2}
+Armin Biere, Tobias Faller, Katalin Fazekas, Mathias Fleury, Nils Froleyks, and
+  Florian Pollitt.
+\newblock {CaDiCaL} 2.0.
+\newblock In {\em Computer Aided Verification ({CAV} 2024)}, volume 14681 of
+  {\em Lecture Notes in Computer Science}, pages 133--152. Springer, 2024.
+
+\bibitem{BoyarFind18}
+Joan Boyar and Magnus~Gausdal Find.
+\newblock Multiplicative complexity of vector valued {B}oolean functions.
+\newblock {\em Theoretical Computer Science}, 720:36--46, 2018.
+\newblock arXiv:1407.6169.
+
+\bibitem{BoyarPeraltaPochuev00}
+Joan Boyar, Ren{\'e} Peralta, and Denis Pochuev.
+\newblock On the multiplicative complexity of {B}oolean functions over the
+  basis $(\wedge,\oplus,1)$.
+\newblock {\em Theoretical Computer Science}, 235(1):43--57, 2000.
+
+\bibitem{CruzFilipe17}
+Lu{\'i}s Cruz-Filipe, Marijn J.~H. Heule, Warren~A. Hunt, Matt Kaufmann, and
+  Peter Schneider-Kamp.
+\newblock Efficient certified {RAT} verification.
+\newblock In {\em Automated Deduction ({CADE} 26)}, volume 10395 of {\em
+  Lecture Notes in Computer Science}. Springer, 2017.
+
+\bibitem{HopcroftKerr71}
+John~E. Hopcroft and Leslie~R. Kerr.
+\newblock On minimizing the number of multiplications necessary for matrix
+  multiplication.
+\newblock {\em SIAM Journal on Applied Mathematics}, 20(1):30--36, 1971.
+
+\bibitem{MirwaldSchnorr92}
+Roland Mirwald and Claus-Peter Schnorr.
+\newblock The multiplicative complexity of quadratic {B}oolean forms.
+\newblock {\em Theoretical Computer Science}, 102(2):307--328, 1992.
+
+\bibitem{Morse26}
+Gregory Morse.
+\newblock Unrestricted {B}oolean multiplicative complexity of four-term binary
+  polynomial multiplication: rational places, {H}asse jets, and the failure of
+  nonlinear feedback.
+\newblock arXiv:2608.30238, 2026.
+\newblock Submitted 31 August 2026; with a Lean~4 formalization.
+
+\bibitem{SDMF149}
+{Slop Dealer Research}.
+\newblock A lower bound on multiplicative complexity of $2\times2$ matrix
+  multiplication over {F2} ({MF-149}).
+\newblock \url{https://slopdealer.com/research/papers/mf-149/}, 2026.
+\newblock Published 4 September 2026; machine-generated, unrefereed; accessed
+  26 November 2026.
+
+\bibitem{SDMF180}
+{Slop Dealer Research}.
+\newblock Multiplicative complexity bounds for $2\times2$ matrix multiplication
+  over {GF(2)} ({MF-180}).
+\newblock \url{https://slopdealer.com/research/papers/mf-180/}, 2026.
+\newblock Published 4 September 2026; machine-generated, unrefereed; accessed
+  26 November 2026.
+
+\bibitem{SDML088}
+{Slop Dealer Research}.
+\newblock Search scale barrier for unrestricted 6-{AND} {XAG} decision of
+  {$M_2(F_2)$} ({ML-088}).
+\newblock \url{https://slopdealer.com/research/papers/ml-088/}, 2026.
+\newblock Published 4 September 2026; machine-generated, unrefereed; accessed
+  26 November 2026.
+
+\bibitem{Stoffelen16}
+Ko~Stoffelen.
+\newblock Optimizing {S}-box implementations for several criteria using {SAT}
+  solvers.
+\newblock In {\em Fast Software Encryption ({FSE} 2016)}, volume 9783 of {\em
+  Lecture Notes in Computer Science}, pages 140--160. Springer, 2016.
+
+\bibitem{Strassen69}
+Volker Strassen.
+\newblock Gaussian elimination is not optimal.
+\newblock {\em Numerische Mathematik}, 13:354--356, 1969.
+
+\bibitem{Strassen73}
+Volker Strassen.
+\newblock Vermeidung von {D}ivisionen.
+\newblock {\em Journal f{\"u}r die reine und angewandte Mathematik},
+  264:184--202, 1973.
+
+\bibitem{Wetzler14}
+Nathan Wetzler, Marijn J.~H. Heule, and Warren~A. Hunt.
+\newblock {DRAT-trim}: efficient checking and trimming using expressive clausal
+  proofs.
+\newblock In {\em Theory and Applications of Satisfiability Testing ({SAT}
+  2014)}, volume 8561 of {\em Lecture Notes in Computer Science}. Springer,
+  2014.
+
+\bibitem{Winograd71}
+Shmuel Winograd.
+\newblock On multiplication of $2\times 2$ matrices.
+\newblock {\em Linear Algebra and its Applications}, 4(4):381--388, 1971.
+
+\end{thebibliography}

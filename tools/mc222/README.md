@@ -31,9 +31,9 @@ the model below: S_j = span{1, inputs, G_1..G_j}, XOR and constants free.
 | degree-1 polynomial product, 2+2 inputs (MC 3) | k=2 none, k=3 found ✓ | k=2 UNSAT, k=3 SAT ✓ |
 | degree-2 polynomial product, 3+3 inputs (MC 6) | k=5 none, k=6 found ✓ | k=5 UNSAT (60 s), k=6 SAT (9 s) ✓ |
 | ⟨2,2,1⟩ matrix–vector (MC 4) | k=3 none, k=4 found ✓ | k=3 UNSAT, k=4 SAT ✓ |
-| 2×2 MM, k=5 | none (72 orbits, 75 states; also without orbit reduction: all 10795 first gates, 10943 states) | root 0 UNSAT (5 s) |
+| 2×2 MM, k=5 | none (72 orbits, 75 states; also without orbit reduction: all 10795 first gates, 10975 states with the committed code; an earlier build that kept its cache of failed states across roots reported 10943) | root 0 UNSAT (5 s) |
 | 2×2 MM, k=7 | found when Strassen's first 2 or 3 products are fixed (0.7 s) | SAT from scratch inside the cube H={0,1,2} (77 s) |
-| **2×2 MM, k=6** | **none**: 72/72 orbits, 3 546 906 states, 6.6 min wall on 4 shared cores (`results/exact_k6_orbits.log`) | **all 1080 cubes UNSAT, every LRAT proof VERIFIED**: 0.33 h solver CPU, 0.08 h check CPU, 5.41 GB of LRAT in total, largest single proof 54 MB (`results/sat_k6_results.tsv`) |
+| **2×2 MM, k=6** | **none**: 72/72 orbits, 3 547 604 states, 462 s wall on 4 shared cores with the committed code (`results/exact_k6_orbits.log`, from the re-run; an earlier build that kept its cache of failed states across roots on one thread reported 3 546 906 states in 397 s, same verdict) | **all 1080 cubes UNSAT, every LRAT proof VERIFIED**: 0.33 h solver CPU, 0.08 h check CPU, 5.41 GB of LRAT in total, largest single proof 54 MB (`results/sat_k6_results.tsv`) |
 
 Every circuit that was found, by either method, was re-checked by `verify_circuit.py`.
 That script evaluates the circuit on all 2ⁿ inputs and compares the outputs with the target
@@ -169,7 +169,7 @@ gate i ∉ H, a coefficient vector expressing g_i as a member of W_i at all 256 
 (lemma H).
 
 Without cubes, the instance for root 0 had not finished after 275 s. With cubes, each one
-takes 0.1–15 s.
+takes 0.03–17 s.
 
 **Proofs.** CaDiCaL writes text LRAT (`--lrat=true --binary=false`) and `lrat-check`
 verifies it. A negative test was run: a truncated proof gives `NOT VERIFIED`. Proofs are

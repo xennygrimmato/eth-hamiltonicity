@@ -1568,3 +1568,15 @@ only if the game maximum over term types is at all-middle ([N]; the value is nei
 K_{2,3} note updated: scope bullet, status-table row and open problem 1 now describe the family and its status.
 Follow-up launched: exact rational certificates for the bucket games (finite check: for each of the B³ types a
 rational mixture with all six edge loads below a rational bound, with rank bounds rounded up).
+
+## 26 Nov (late, 46): exact certificates for the protocol game; I ran the verifier
+
+`research/ports/protocol/certificates/` (cert_B{2,4,8,16}.json, `verify.py`: 153 lines, only fractions/json/math).
+I ran `verify.py` on all four: OK. Exact maximum loads: n*(2) ≤ 1.2029076090 (rate ≥ 0.83131904), n*(4) ≤ 1.2018754980,
+n*(8) ≤ 1.1986027020, n*(16) ≤ 1.1964314390 (rate ≥ 0.83581889). Worst type is the middle bucket each time.
+Square roots replaced by rational upper bounds (checked by squaring); rounding up is sound because loads are monotone
+in the rank bounds. The two LP implementations agree per type (difference 4·10⁻¹⁰ = the rounding). The certificates
+use the more restrictive routing model.
+So "an explicit asymptotic protocol family on K_{2,3} with rate ≥ 0.8358 > 3/4" rests on: AN Prop. B.2 and Lemma A.3
+(their Lean, not built by us), the construction (one referee), and exact arithmetic for the game. K_{2,3} note updated.
+Pending from the same executor: dual for B = 2, B = 32/64, a Lean version.

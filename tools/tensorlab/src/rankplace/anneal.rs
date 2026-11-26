@@ -61,6 +61,8 @@ pub struct ChainResult {
     pub f: Vec<u64>,
     pub accepted: u64,
     pub secs: f64,
+    /// index into the `inits` list of run_chains (0 for a direct call of anneal)
+    pub init: usize,
 }
 
 /// (pdir, edir) from scratch, in parallel.
@@ -370,6 +372,7 @@ pub fn anneal(g: &Graph, mu: usize, obj: Objective, opts: &Opts, f0: Vec<u64>) -
         f: best.1,
         accepted,
         secs: start.elapsed().as_secs_f64(),
+        init: 0,
     }
 }
 
@@ -402,7 +405,9 @@ pub fn run_chains(g: &Graph, mu: usize, obj: Objective, opts: &Opts, inits: &[In
             let mut o = opts.clone();
             o.seed = opts.seed.wrapping_mul(1_000_003).wrapping_add(c as u64);
             let f0 = make_init(&inits[c % inits.len()], g.n, mu, o.seed);
-            anneal(g, mu, obj, &o, f0)
+            let mut r = anneal(g, mu, obj, &o, f0);
+            r.init = c % inits.len();
+            r
         })
         .collect();
     res.sort_by(|a, b| b.value.partial_cmp(&a.value).unwrap_or(std::cmp::Ordering::Equal));

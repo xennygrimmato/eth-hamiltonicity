@@ -14,6 +14,30 @@
 use std::time::Instant;
 use tensorlab::rankplace::{anneal::*, cut, f2, graph::*, groups, spectral, verify};
 
+/// Annealing options with overrides from the environment: RP_T0, RP_T1, RP_CYCLES, RP_BALL (prob. of ball moves).
+fn opts(iters: u64, seed: u64) -> Opts {
+    let mut o = Opts { iters, seed, ..Default::default() };
+    let env = |k: &str| std::env::var(k).ok().and_then(|v| v.parse::<f64>().ok());
+    if let Some(x) = env("RP_T0") {
+        o.t0 = x;
+    }
+    if let Some(x) = env("RP_T1") {
+        o.t1 = x;
+    }
+    if let Some(x) = env("RP_CYCLES") {
+        o.cycles = x as usize;
+    }
+    if let Some(x) = env("RP_BALL") {
+        o.p_moves[3] = x;
+    }
+    o
+}
+
+/// Embed a mu-placement into Mat_mu2 (mu2 >= mu): the layout already does this (zero padding).
+fn embed(f: &[u64]) -> Vec<u64> {
+    f.to_vec()
+}
+
 fn out_dir() -> String {
     std::env::var("RANKPLACE_OUT").unwrap_or_else(|_| "../../research/ports/middle/data/rankplace".to_string())
 }
@@ -51,21 +75,30 @@ fn info(g: &Graph) -> GraphInfo {
 fn study(g: &Graph, gi: &GraphInfo, mus: &[usize], iters: u64, chains: usize, extra: &[(String, usize, Vec<u64>)]) -> f64 {
     let mut best_all = 0.0f64;
     let mut best_save: Option<(usize, Vec<u64>, String)> = None;
+    let mut prev: Option<Vec<u64>> = None;
     for &mu in mus {
         let t = Instant::now();
-        let inits = vec![Init::Random { rank: 1 }, Init::Random { rank: 0 }, Init::Cut(gi.cut.side.clone()), Init::Random { rank: 2 }];
-        let opts = Opts { iters, seed: 1000 + mu as u64, ..Default::default() };
-        let res = run_chains(g, mu, Objective::Ratio, &opts, &inits, chains);
+        let mut inits = vec![Init::Random { rank: 1 }, Init::Random { rank: 0 }, Init::Cut(gi.cut.side.clone()), Init::Random { rank: 2 }];
+        // chains 4, 5 (if present) start from the best placement of the previous (smaller) mu, embedded
+        if let Some(p) = &prev {
+            inits.push(Init::Given(embed(p)));
+            inits.push(Init::Given(embed(p)));
+        }
+        let o = opts(iters, 1000 + mu as u64);
+        let res = run_chains(g, mu, Objective::Ratio, &o, &inits, chains);
         let b = &res[0];
         let rep = verify::verify(g, &b.f, gi.l2, gi.lmin);
         let vals: Vec<f64> = res.iter().map(|r| r.ratio).collect();
         let worst = vals.iter().cloned().fold(f64::MAX, f64::min);
+        // best chain among random starts (inits 0, 1, 3), i.e. without the cut or the smaller-mu seed
+        let best_rand = res.iter().filter(|r| r.init == 0 || r.init == 1 || r.init == 3).map(|r| r.ratio).fold(0.0, f64::max);
         println!(
-            "| {} | {} | {} | {:.4} | {:.4} | {:.4}{} | {} | {:.4} | {:.3} | {:.3} | {:.3} | {:.4} | {} | {:.1} |",
+            "| {} | {} | {} | {:.4} | {:.4} | {:.4}{} | {} | {:.4} | {:.3} | {:.3} | {:.3} | {:.4} | {:.4} | {} | {:.1} |",
             g.name, g.n, g.d, gi.l2, 1.0 / (1.0 - gi.l2), gi.cut.ratio, if gi.cut.exact { "" } else { "*" }, mu, b.ratio,
-            b.ratio / gi.cut.ratio, rep.epairs, rep.eedges, worst, if rep.kernel_ok { "ok" } else { "VIOLATED" }, t.elapsed().as_secs_f64()
+            b.ratio / gi.cut.ratio, rep.epairs, rep.eedges, best_rand, worst, if rep.kernel_ok { "ok" } else { "VIOLATED" }, t.elapsed().as_secs_f64()
         );
         assert!(rep.kernel_ok, "kernel inequality violated: {}", rep.summary());
+        prev = Some(b.f.clone());
         if b.ratio > best_all {
             best_all = b.ratio;
             best_save = Some((mu, b.f.clone(), verify::placement_json(g, mu, &b.f, &rep, &format!("\"beta_cut\":{},\"lambda2\":{}", gi.cut.ratio, gi.l2))));
@@ -73,13 +106,13 @@ fn study(g: &Graph, gi: &GraphInfo, mus: &[usize], iters: u64, chains: usize, ex
     }
     for (label, mu, f0) in extra {
         let t = Instant::now();
-        let opts = Opts { iters, seed: 77, ..Default::default() };
-        let res = run_chains(g, *mu, Objective::Ratio, &opts, &[Init::Given(f0.clone())], chains);
+        let o = opts(iters, 77);
+        let res = run_chains(g, *mu, Objective::Ratio, &o, &[Init::Given(f0.clone())], chains);
         let b = &res[0];
         let rep = verify::verify(g, &b.f, gi.l2, gi.lmin);
         let (r0, _, _) = evaluate(g, f0);
         println!(
-            "| {} (from {label}, start {:.4}) | {} | {} | {:.4} | {:.4} | {:.4} | {} | {:.4} | {:.3} | {:.3} | {:.3} | - | {} | {:.1} |",
+            "| {} (from {label}, start {:.4}) | {} | {} | {:.4} | {:.4} | {:.4} | {} | {:.4} | {:.3} | {:.3} | {:.3} | - | - | {} | {:.1} |",
             g.name, r0, g.n, g.d, gi.l2, 1.0 / (1.0 - gi.l2), gi.cut.ratio, mu, b.ratio, b.ratio / gi.cut.ratio, rep.epairs, rep.eedges,
             if rep.kernel_ok { "ok" } else { "VIOLATED" }, t.elapsed().as_secs_f64()
         );
@@ -95,8 +128,8 @@ fn study(g: &Graph, gi: &GraphInfo, mus: &[usize], iters: u64, chains: usize, ex
 }
 
 fn header() {
-    println!("| graph | n | d | λ₂ | 1/(1−λ₂) | β_cut | μ | best ratio | ratio/β_cut | E_pairs | E_edges | worst chain | kernel | s |");
-    println!("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
+    println!("| graph | n | d | λ₂ | 1/(1−λ₂) | β_cut | μ | best ratio | ratio/β_cut | E_pairs | E_edges | best random-start chain | worst chain | kernel | s |");
+    println!("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
 }
 
 fn bench() {

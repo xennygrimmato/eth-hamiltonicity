@@ -719,7 +719,7 @@ the CN inequality.)
 | K.4(b) bond 2 border over ℂ | [P], uses [Lan06] | — | no | — | ALS floor 0.6695 |
 | K.4(c) ℓ₁ ⇒ R ≥ 1; cut {v₁} gives 1 | [P] | — | `cut_ineq`, `w5_not_cut_combination`, `cut_v1` | — | — |
 | Flow 3/4 | [P] | — | `flow_bound` | — | — |
-| Explicit protocols above 3/4 | [D] family at rate ≥ 0.8313 (`protocol/notes.md`) | review-protocol: no fatal gap; limit 0.8377 only numerical | — | — | float LPs; none found single-shot at D_s ≤ 5 (none can exist from this construction below wire dimension ≈ 2⁵⁰) |
+| Explicit protocols above 3/4 | [D] family at rate ≥ 0.8313 (`protocol/notes.md`) | review-protocol: no fatal gap; limit 0.8377 only numerical | — | exact rational game certificates (B = 2…16) | none found single-shot at D_s ≤ 5 (none can exist from this construction below wire dimension ≈ 2⁵⁰) |
 
 ---
 
@@ -734,9 +734,12 @@ the CN inequality.)
      parties hold the term index as a GHZ index, which costs O(1) supply copies per block. The required supply is
      the value of a finite zero-sum game.
    - *Rates.* For B buckets per pair the rate is 1/n*(B), with n*(2) = 1.20291 and n*(16) = 1.19643 from
-     floating-point linear programs (two independent implementations): rate ≥ 0.8313, and ≥ 0.8358. The limit is
+     linear programs (two independent floating-point implementations): rate ≥ 0.8313, and ≥ 0.8358. The limit is
      6/(4+√10) ≈ 0.83772 if the game's maximum over term types is at the all-middle type, which is supported only
-     numerically. Exact rational certificates for the linear programs have not been produced.
+     numerically. Exact rational certificates now exist for B = 2, 4, 8, 16 (`protocol/certificates/`; a standalone
+     verifier using only exact fractions checks, for every term type, an explicit mixture with all six edge loads
+     below c_B; square roots are rounded up, which only raises loads): n*(2) ≤ 1.2029076090 and
+     n*(16) ≤ 1.1964314390, so the rate is ≥ 0.83131 and ≥ 0.83581 exactly.
    - *This is the ceiling for the method without nesting:* the minimum of R over five-point metrics satisfying the
      triangle inequalities and all instances of [AN, Prop. B.3] on the five parties is the same 0.8377 (numerical).
    - *Sizes.* With the proved rank bounds the first instances above 3/4 have demand wires of dimension about 2¹²⁸

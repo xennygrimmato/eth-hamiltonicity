@@ -29,11 +29,9 @@ pub fn rank(mut x: u64) -> u32 {
         ($i:expr) => {{
             let p = (x >> (8 * $i)) & 0xFF;
             r += (p != 0) as u32;
-            // m = 0x01 in every later row byte that contains the lowest set bit of p
-            let lsb = p & p.wrapping_neg();
-            let t = x & lsb.wrapping_mul(LSB_BYTES);
+            let b = (p | 0x100).trailing_zeros();
             let later = LSB_BYTES << (8 * ($i + 1));
-            let m = (t.wrapping_add(0x7F7F_7F7F_7F7F_7F7F) >> 7) & later;
+            let m = (x >> b) & later;
             x ^= m.wrapping_mul(p);
         }};
     }
@@ -53,12 +51,46 @@ pub fn rank(mut x: u64) -> u32 {
 #[inline]
 pub fn ranks_against(b: u64, f: &[u64], out: &mut [u8]) -> i64 {
     let mut s = 0i64;
-    for (o, &x) in out.iter_mut().zip(f.iter()) {
-        let r = rank(b ^ x);
-        *o = r as u8;
+    let n = f.len();
+    let full = n / 8 * 8;
+    for c in (0..full).step_by(8) {
+        let mut x = [0u64; 8];
+        for l in 0..8 {
+            x[l] = b ^ f[c + l];
+        }
+        let r = rank8(x);
+        for l in 0..8 {
+            out[c + l] = r[l] as u8;
+            s += r[l] as i64;
+        }
+    }
+    for w in full..n {
+        let r = rank(b ^ f[w]);
+        out[w] = r as u8;
         s += r as i64;
     }
     s
+}
+
+/// Eight ranks at once (lane-parallel form of [`rank`], vectorises with AVX-512).
+#[inline(always)]
+pub fn rank8(mut x: [u64; 8]) -> [u64; 8] {
+    let mut r = [0u64; 8];
+    for i in 0..7 {
+        let later = LSB_BYTES << (8 * (i + 1));
+        for l in 0..8 {
+            let p = (x[l] >> (8 * i)) & 0xFF;
+            r[l] += (p != 0) as u64;
+            let lsb = p & p.wrapping_neg();
+            let t = x[l] & lsb.wrapping_mul(LSB_BYTES);
+            let m = (t.wrapping_add(0x7F7F_7F7F_7F7F_7F7F) >> 7) & later;
+            x[l] ^= m.wrapping_mul(p);
+        }
+    }
+    for l in 0..8 {
+        r[l] += ((x[l] >> 56) != 0) as u64;
+    }
+    r
 }
 
 #[inline]
@@ -249,6 +281,11 @@ mod tests {
             for _ in 0..20000 {
                 let a = random_matrix(&mut rng, mu);
                 assert_eq!(rank(a), rank_ref(a), "{}", to_string(a, mu));
+                let xs = [a, a ^ 1, a ^ 0x300, 0, a, a ^ (1 << 63), a ^ 0xFF00, a ^ 0x8000_0000];
+                let r8 = rank8(xs);
+                for l in 0..8 {
+                    assert_eq!(r8[l] as u32, rank_ref(xs[l]));
+                }
                 let r1 = random_rank_le(&mut rng, mu, 2);
                 assert_eq!(rank(r1), rank_ref(r1));
                 assert!(rank(r1) <= 2);

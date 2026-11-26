@@ -1540,3 +1540,17 @@ it is a hypothesis of the theorem.
 - M0, monotonicity, kernel lemma, Prop. S (exactly tight on Cay(Mat_μ(F₂), rank one)), 4.2(a),(b),(c),(e): correct.
 Status of the middle-cell results: Theorem M0, kernel lemma + Prop. S ([L] too), Theorem M2 — [V] by one referee.
 (GE) remains open; experiments running.
+
+## 26 Nov (late, 44): referee interim on the protocol — my main worry is answered
+
+- Sum → single restriction: correct. The cover index is the whole word in B^{3K}, held coherently by all five parties
+  as a GHZ index: T = (⊗_p Σ_w A_{p,w} ⊗ e_w*)(S^{⊗n′} ⊗ GHZ_M). A five-party GHZ₂ is a restriction of a spanning tree
+  of four binary wires, hence of S; cost ⌈3K log₂ B⌉ extra copies of S — O(1) per block against Θ(κ√n₀): negligible
+  for fixed B as n₀ → ∞.
+- Ranks are used term by term on bucket tensors (rank ≤ sum of bounds), each with its own hub network; the rank of a
+  product across a cut is never needed. Time-sharing is a tensor product over blocks: legitimate.
+- The matrix reading in the agent's script matches Anthropic's Lean `matM` exactly.
+- Independent LP: all-middle = (4+√10)/6; bucketed values for B = 2, 4, 8, 16: 1.20291, 1.20188, 1.19860, 1.19643.
+  **So a rate ≥ 0.8358 is backed by finitely many (float) LPs; the limit 0.83772 rests on a numerical claim** (the game
+  maximum over term types is at all-middle; referee's 17³ grid + 40 local searches agree).
+- Full report to follow.

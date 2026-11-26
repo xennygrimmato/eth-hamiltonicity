@@ -72,7 +72,16 @@ fn dz<const N: usize, T: Scalar<N>>(h: T, rj: T, sj: T, rk: T, sk: T) -> T {
             I::new(-1.0, 1.0)
         };
         let t = h * T::cst(tau);
-        return g(t).c1_only();
+        // value: also d^Z >= line distance and d^Z <= g(t) for t = h, -h, 0
+        let mut up = f64::INFINITY;
+        for x in [g(h).val(), g(-h).val(), g(T::cf(0.0)).val()] {
+            if x.is_valid() {
+                up = up.min(x.hi);
+            }
+        }
+        let lw = line.val();
+        let lo = if lw.is_valid() { lw.lo } else { f64::NEG_INFINITY };
+        return g(t).c1_only().meet_val(I::new(lo, up));
     }
     // P may vanish. Every minimiser of the convex g over [-h, h] lies in clamp(hull(s_j, s_k), -h, h)
     // (y* is a convex combination of s_j, s_k when P > 0; for P = 0 the unconstrained minimisers are

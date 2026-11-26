@@ -45,7 +45,7 @@ impl Default for Opts {
             t1: 0.005,
             cycles: 1,
             max_edge_rank: None,
-            p_moves: [0.25, 0.35, 0.2, 0.05, 0.13, 0.02],
+            p_moves: [0.25, 0.35, 0.2, 0.02, 0.16, 0.02],
             ball_radius_max: 2,
             seed: 1,
         }
@@ -121,6 +121,7 @@ struct State<'a> {
     pdir: i64,
     edir: i64,
     buf: Vec<u8>,
+    buf2: Vec<u8>,
     delta: Vec<i32>,
     mark: Vec<u32>,
     stamp: u32,
@@ -133,7 +134,7 @@ impl<'a> State<'a> {
         let esum: Vec<i64> = (0..n).map(|u| g.nb(u).iter().map(|&w| f2::rank(f[u] ^ f[w as usize]) as i64).sum()).collect();
         let pdir = row.iter().sum();
         let edir = esum.iter().sum();
-        State { g, mu, f, row, esum, pdir, edir, buf: vec![0; n], delta: vec![0; n], mark: vec![0; n], stamp: 0 }
+        State { g, mu, f, row, esum, pdir, edir, buf: vec![0; n], buf2: vec![0; n], delta: vec![0; n], mark: vec![0; n], stamp: 0 }
     }
 
     /// Evaluate replacing f[v] by b: returns (new pdir, new edir, new row[v], new esum[v]) or None if
@@ -159,8 +160,9 @@ impl<'a> State<'a> {
 
     fn accept_vertex(&mut self, v: usize, b: u64, np: i64, ne_tot: i64, nr: i64, ne: i64) {
         let a = self.f[v];
-        for ((rw, &bw), &fw) in self.row.iter_mut().zip(self.buf.iter()).zip(self.f.iter()) {
-            *rw += bw as i64 - f2::rank(a ^ fw) as i64;
+        f2::ranks_against(a, &self.f, &mut self.buf2);
+        for ((rw, &bw), &ow) in self.row.iter_mut().zip(self.buf.iter()).zip(self.buf2.iter()) {
+            *rw += bw as i64 - ow as i64;
         }
         // the w = v term above added 0 - rank(a ^ a) = 0
         for &w in self.g.nb(v) {
@@ -201,13 +203,13 @@ impl<'a> State<'a> {
         for &w in ball {
             let w = w as usize;
             let (fw, tw) = (self.f[w], t(self.f[w]));
+            f2::ranks_against(tw, &self.f, &mut self.buf);
+            f2::ranks_against(fw, &self.f, &mut self.buf2);
             let mut dw = 0i32;
             for u in 0..g.n {
-                if self.mark[u] != st {
-                    let x = f2::rank(tw ^ self.f[u]) as i32 - f2::rank(fw ^ self.f[u]) as i32;
-                    dw += x;
-                    self.delta[u] += x;
-                }
+                let x = (self.buf[u] as i32 - self.buf2[u] as i32) * (self.mark[u] != st) as i32;
+                dw += x;
+                self.delta[u] += x;
             }
             self.delta[w] = dw;
             dp += dw as i64;

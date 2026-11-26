@@ -37,6 +37,8 @@ pub trait Scalar<const N: usize>:
     fn c1_only(self) -> Self {
         self
     }
+    /// Intersect the value enclosure with another valid enclosure of the same quantity.
+    fn meet_val(self, v: I) -> Self;
     /// Enclosure of the value.
     fn val(&self) -> I;
     /// Value and (sin, cos) at once (saves work for jets).
@@ -73,6 +75,10 @@ impl<const N: usize> Scalar<N> for I {
     #[inline]
     fn from_enclosure(v: I) -> I {
         v
+    }
+    fn meet_val(self, v: I) -> I {
+        let m = self.meet(&v);
+        if m.is_valid() && m.lo <= m.hi { m } else { INVALID }
     }
     #[inline]
     fn val(&self) -> I {
@@ -200,6 +206,11 @@ impl<const N: usize> Scalar<N> for Jet1<N> {
     }
     fn from_enclosure(v: I) -> Self {
         Jet1 { v, d: [INVALID; N] }
+    }
+    fn meet_val(self, v: I) -> Self {
+        let mut r = self;
+        r.v = <I as Scalar<N>>::meet_val(self.v, v);
+        r
     }
     fn val(&self) -> I {
         self.v
@@ -365,6 +376,11 @@ impl<const N: usize> Scalar<N> for Jet2<N> {
     }
     fn c1_only(self) -> Self {
         Jet2 { v: self.v, d: self.d, h: [[INVALID; N]; N] }
+    }
+    fn meet_val(self, v: I) -> Self {
+        let mut r = self;
+        r.v = <I as Scalar<N>>::meet_val(self.v, v);
+        r
     }
     fn val(&self) -> I {
         self.v

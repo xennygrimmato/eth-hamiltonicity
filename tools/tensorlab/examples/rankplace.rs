@@ -113,6 +113,14 @@ fn bench() {
         }
         let ns = t.elapsed().as_nanos() as f64 / (100.0 * 65536.0);
         println!("rank mu={mu}: {ns:.2} ns per rank(a^b) (checksum {s})");
+        let mut out = vec![0u8; v.len()];
+        let t = Instant::now();
+        let mut s2 = 0i64;
+        for i in 0..100 {
+            s2 += f2::ranks_against(v[i], &v, &mut out);
+        }
+        let ns = t.elapsed().as_nanos() as f64 / (100.0 * 65536.0);
+        println!("  batched ranks_against: {ns:.2} ns per rank (checksum {s2})");
     }
     for n in [128usize, 1024] {
         let g = random_regular(n, 4, 1);

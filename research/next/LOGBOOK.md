@@ -2396,3 +2396,24 @@ implying the theorem, no failed proof check.
   "four lemmas" → five; 24 prose edits. Optional: a human proof of MC ≥ 6 via Mirwald–Schnorr.
 To do (lower priority than 3-SAT): one revision pass when the Lean proof completes — referee fixes, the Lean theorem
 (the abstract's "no proof assistant" sentence becomes false), and ⟨1,2,3⟩ = 6 as a second result.
+
+## 27 Nov: prior work on three merges — arXiv:2610.41622 read in full (interim from the barriers agent)
+
+R. Majdoddin, "Lowered crossover points of Anthropic's subexponential 3-SAT algorithm" (30 Oct 2026). Unconditional;
+tools: pigeonhole on flattening rank, quantum functionals, a 4-party rank inequality.
+- Does NOT bound the exponent of log at 1/2. Thm 4.13: grid algorithms have exponent ≤ 1. Thm 4.12: balanced homogeneous
+  two-merge algorithms, exponent ≤ 3 ("artefact"). Prop. 4.8: any two-merge identity has ρ ≥ 1/2. Open problem: close
+  ρ ∈ [1/2, 1/√2] at K = 4. So no type-(A) barrier there; our window is explicitly open.
+- **It already looks at three merges and nets** (§4.8): AG(2,3) with rows/columns/diagonals, AG(2,4). Its class has a
+  condition (L3) — a merge is usable only if every configuration meets at most two of its groups — and net
+  configurations are outside it: "the class leaves one door open". So the observation that nets escape is partly
+  anticipated; our contribution is the node-growth count (β = 2 for every p), the floors under ¬contracting, and the
+  bimedian cap.
+- **Prop. 4.23 (proved): on the 6-edge net configuration of AG(2,3), every block identity with k-local pieces (products
+  over bundles) has ρ = 1.** Argued, not proved: pair-product pieces cannot go below 1/2 on AG(2,4). Left open:
+  "pieces coupling different bundles, hyperedges under the merge"; "below 1/2 one would need identities beyond those
+  we know".
+Effect on today's hypotheses: **H29 and H30 (covers built as products of two-way crossing pieces) are probably dead by
+Prop. 4.23** — pending a check that its cost model matches ours (table sizes under L3 vs rank across hub cuts with
+time-sharing). New filter F4: a three-way identity on a net must couple different bundles. Sent to both attainment
+agents.

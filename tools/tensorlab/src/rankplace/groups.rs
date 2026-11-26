@@ -341,6 +341,31 @@ impl SlGroup {
     }
 }
 
+/// Cayley graph of the additive group Mat_mu(F_2) (n = 2^{mu^2}) with generators `gens` (byte-row
+/// matrices; all rank-one matrices if `gens` is empty). Vertex i is the matrix whose row r is bits
+/// mu*r .. mu*r+mu of i. Returns the graph and the identity placement f(i) = matrix i.
+pub fn mat_cayley(mu: usize, gens: &[u64], name: &str) -> (Graph, Vec<u64>) {
+    assert!(mu * mu <= 16);
+    let n = 1usize << (mu * mu);
+    let to_mat = |i: usize| (0..mu).fold(0u64, |a, r| a | ((((i >> (mu * r)) & ((1 << mu) - 1)) as u64) << (8 * r)));
+    let to_idx = |a: u64| (0..mu).fold(0usize, |i, r| i | ((((a >> (8 * r)) & ((1 << mu) - 1)) as usize) << (mu * r)));
+    let gens: Vec<u64> = if gens.is_empty() {
+        let mut g = vec![];
+        for x in 1..(1u8 << mu) {
+            for y in 1..(1u8 << mu) {
+                g.push(f2::outer(x, y));
+            }
+        }
+        g
+    } else {
+        gens.to_vec()
+    };
+    let gi: Vec<usize> = gens.iter().map(|&a| to_idx(a)).collect();
+    let adj: Vec<u32> = (0..n).flat_map(|i| gi.iter().map(move |&s| (i ^ s) as u32)).collect();
+    let f = (0..n).map(to_mat).collect();
+    (Graph { n, d: gens.len(), adj, name: name.to_string() }, f)
+}
+
 /// PGL_2(F_q) elements, normalised projectively.
 pub struct Pgl2 {
     pub q: u64,

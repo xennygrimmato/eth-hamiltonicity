@@ -38,6 +38,20 @@ def test_sqrt_rank():
     assert abs(max(d) - math.sqrt(2)) < 1e-12
 
 
+def test_rankplace():
+    assert tl.rp_rank(0x0102) == 2 and tl.rp_rank(0x0101) == 1
+    n, d, adj = tl.rp_random_regular(20, 3, 1)
+    l2, lmin = tl.rp_spectrum(n, d, adj)
+    bc, side, exact = tl.rp_beta_cut(n, d, adj)
+    assert exact and bc <= 1 / (1 - l2) + 1e-9
+    res = tl.rp_anneal(n, d, adj, 3, iters=20000, chains=2)
+    rep = tl.rp_verify(n, d, adj, res[0][4], l2, lmin)
+    assert rep["kernel_ok"] and abs(rep["ratio"] - res[0][1]) < 1e-9
+    n, d, adj, mu, f = tl.rp_sl_cayley(2, 3, 0b1011)
+    assert n == 504 and mu == 6
+    assert abs(tl.rp_evaluate(n, d, adj, f)[0] - 3.738095238095238) < 1e-9
+
+
 if __name__ == "__main__":
     for name, f in list(globals().items()):
         if name.startswith("test_"):

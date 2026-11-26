@@ -131,3 +131,28 @@ fn evaluators_agree_with_plain_floats() {
         let _ = c.bound();
     }
 }
+
+#[test]
+fn book_w5_exact_and_numeric_agreement() {
+    use ivcert::bnb::{eval_point, Problem};
+    use ivcert::problems::book::Book;
+    let b = Book::from_name("book").unwrap();
+    let w5 = [3.0, 3.0, 3.0, 0.0, 0.0, 0.0];
+    assert_eq!(eval_point(&b, &w5), ivcert::interval::I::point(0.0));
+    // a non-W5 book: v_j = (1, 0.5), (2, -3), (0.5, 4); compare with a direct float computation
+    let x: [f64; 6] = [1.0, 2.0, 0.5, 0.5, -3.0, 4.0];
+    let v = |j: usize| -> (f64, f64) { (x[j], x[3 + j]) };
+    let dz = |a: (f64, f64), c: (f64, f64)| {
+        // brute-force min over t in [-1,1]
+        (0..=200000)
+            .map(|k| -1.0 + 2.0 * k as f64 / 200000.0)
+            .map(|t| (a.0.hypot(a.1 - t)) + (c.0.hypot(c.1 - t)))
+            .fold(f64::INFINITY, f64::min)
+    };
+    let num: f64 = (0..3).map(|j| v(j).0.hypot(v(j).1 + 1.0) + v(j).0.hypot(v(j).1 - 1.0)).sum();
+    let den = 2.0 + dz(v(0), v(1)) + dz(v(0), v(2)) + dz(v(1), v(2));
+    let g = 10f64.sqrt() * num - 3.0 * den;
+    let iv = eval_point(&b, &x);
+    assert!((iv.mid() - g).abs() < 1e-6, "{g} {iv:?}");
+    let _ = b.bound();
+}

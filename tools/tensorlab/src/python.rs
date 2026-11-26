@@ -1,6 +1,6 @@
 //! PyO3 bindings: module `tensorlab`. Distances are flat lists in pair order (0,1),(0,2),...
 use crate::metric::{self, Constraint, Metric};
-use crate::{k23, models, opt, restrict, tensor};
+use crate::{k23, models, opt, rankplace, restrict, tensor};
 use num_complex::Complex64;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
@@ -163,6 +163,114 @@ fn network_dense(nparties: usize, wires: Vec<(usize, usize, usize)>) -> (Vec<usi
     (t.shape, t.data)
 }
 
+// ---------------- rankplace ----------------
+// Graphs are passed as (n, d, adj) with adj the flat neighbour list (length n*d, each edge twice).
+// Placements are lists of u64 (byte-row bit-packed mu x mu matrices over F_2, mu <= 8).
+
+fn rp_graph(n: usize, d: usize, adj: Vec<u32>) -> PyResult<rankplace::graph::Graph> {
+    if adj.len() != n * d {
+        return Err(pyo3::exceptions::PyValueError::new_err("adj must have length n*d"));
+    }
+    Ok(rankplace::graph::Graph { n, d, adj, name: "py".into() })
+}
+
+/// Rank over F_2 of a bit-packed matrix (row i = byte i, column j = bit j).
+#[pyfunction]
+fn rp_rank(x: u64) -> u32 {
+    rankplace::f2::rank(x)
+}
+
+/// Random d-regular simple connected graph -> (n, d, adj).
+#[pyfunction]
+fn rp_random_regular(n: usize, d: usize, seed: u64) -> (usize, usize, Vec<u32>) {
+    let g = rankplace::graph::random_regular(n, d, seed);
+    (g.n, g.d, g.adj)
+}
+
+/// Cayley graph of SL_m(F_2[x]/(p)) with generators e_ab(1), e_ab(x) -> (n, d, adj, mu, f) where f is the
+/// conjugated-projection placement (j = k/2) if m*k <= 8, else empty.
+#[pyfunction]
+fn rp_sl_cayley(m: usize, k: usize, modulus: u32) -> (usize, usize, Vec<u32>, usize, Vec<u64>) {
+    let gr = rankplace::groups::sl_elementary(m, k, modulus);
+    let (mu, f) = if m * k <= 8 { gr.conj_projection_placement((k / 2).max(1)) } else { (0, vec![]) };
+    (gr.graph.n, gr.graph.d, gr.graph.adj, mu, f)
+}
+
+/// LPS graph X^{p,q} -> (n, d, adj).
+#[pyfunction]
+fn rp_lps(p: u64, q: u64) -> (usize, usize, Vec<u32>) {
+    let g = rankplace::groups::lps(p, q).graph;
+    (g.n, g.d, g.adj)
+}
+
+/// (lambda_2, lambda_min) of the normalised adjacency matrix.
+#[pyfunction]
+fn rp_spectrum(n: usize, d: usize, adj: Vec<u32>) -> PyResult<(f64, f64)> {
+    let s = rankplace::spectral::spectrum(&rp_graph(n, d, adj)?);
+    Ok((s.lambda2, s.lambda_min))
+}
+
+/// beta_cut: (ratio, side, exact) (exact for n <= 24).
+#[pyfunction]
+fn rp_beta_cut(n: usize, d: usize, adj: Vec<u32>) -> PyResult<(f64, Vec<bool>, bool)> {
+    let g = rp_graph(n, d, adj)?;
+    let s = rankplace::spectral::spectrum(&g);
+    let c = rankplace::cut::beta_cut(&g, s.vec2.as_deref());
+    Ok((c.ratio, c.side, c.exact))
+}
+
+/// (ratio, E_pairs, E_edges) of a placement.
+#[pyfunction]
+fn rp_evaluate(n: usize, d: usize, adj: Vec<u32>, f: Vec<u64>) -> PyResult<(f64, f64, f64)> {
+    Ok(rankplace::anneal::evaluate(&rp_graph(n, d, adj)?, &f))
+}
+
+/// Parallel annealing. objective: "ratio" | "lagrange" (uses gamma) | "pairs" (use with max_edge_rank).
+/// f0: optional start placement (otherwise random rank-one starts). Returns [(value, ratio, E_pairs, E_edges, f)], best first.
+#[pyfunction]
+#[pyo3(signature = (n, d, adj, mu, objective="ratio", gamma=1.0, max_edge_rank=None, iters=200000, chains=4, seed=1, f0=None))]
+#[allow(clippy::too_many_arguments)]
+fn rp_anneal(py: Python<'_>, n: usize, d: usize, adj: Vec<u32>, mu: usize, objective: &str, gamma: f64, max_edge_rank: Option<u32>,
+    iters: u64, chains: usize, seed: u64, f0: Option<Vec<u64>>) -> PyResult<Vec<(f64, f64, f64, f64, Vec<u64>)>> {
+    use rankplace::anneal::{run_chains, Init, Objective, Opts};
+    let g = rp_graph(n, d, adj)?;
+    let obj = match objective {
+        "ratio" => Objective::Ratio,
+        "lagrange" => Objective::Lagrange(gamma),
+        "pairs" => Objective::Pairs,
+        _ => return Err(pyo3::exceptions::PyValueError::new_err("objective: ratio | lagrange | pairs")),
+    };
+    let init = match f0 {
+        Some(f) => Init::Given(f),
+        None if max_edge_rank.is_some() => Init::Given(vec![0; n]),
+        None => Init::Random { rank: 1 },
+    };
+    let opts = Opts { iters, seed, max_edge_rank, ..Default::default() };
+    let res = py.allow_threads(|| run_chains(&g, mu, obj, &opts, &[init], chains));
+    Ok(res.into_iter().map(|r| (r.value, r.ratio, r.epairs, r.eedges, r.f)).collect())
+}
+
+/// Kernel inequality and consequences (a)-(c) for a placement, given lambda_2 and lambda_min.
+#[pyfunction]
+fn rp_verify<'py>(py: Python<'py>, n: usize, d: usize, adj: Vec<u32>, f: Vec<u64>, lambda2: f64, lambda_min: f64) -> PyResult<Bound<'py, PyDict>> {
+    let r = rankplace::verify::verify(&rp_graph(n, d, adj)?, &f, lambda2, lambda_min);
+    let out = PyDict::new_bound(py);
+    out.set_item("ratio", r.ratio)?;
+    out.set_item("epairs", r.epairs)?;
+    out.set_item("eedges", r.eedges)?;
+    out.set_item("max_edge", r.max_edge)?;
+    out.set_item("hist_pairs", r.hist_pairs)?;
+    out.set_item("hist_edges", r.hist_edges)?;
+    out.set_item("kernel", r.kernel)?;
+    out.set_item("kernel_ok", r.kernel_ok)?;
+    out.set_item("lambda2_lower", r.lambda2_lower)?;
+    out.set_item("cons_a", r.cons_a)?;
+    out.set_item("cons_b", r.cons_b)?;
+    out.set_item("cons_c", r.cons_c)?;
+    out.set_item("cut_cone_ratio", r.cut_cone_ratio)?;
+    Ok(out)
+}
+
 #[pymodule]
 fn tensorlab(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(pairs, m)?)?;
@@ -177,5 +285,14 @@ fn tensorlab(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(cut_table, m)?)?;
     m.add_function(wrap_pyfunction!(als, m)?)?;
     m.add_function(wrap_pyfunction!(network_dense, m)?)?;
+    m.add_function(wrap_pyfunction!(rp_rank, m)?)?;
+    m.add_function(wrap_pyfunction!(rp_random_regular, m)?)?;
+    m.add_function(wrap_pyfunction!(rp_sl_cayley, m)?)?;
+    m.add_function(wrap_pyfunction!(rp_lps, m)?)?;
+    m.add_function(wrap_pyfunction!(rp_spectrum, m)?)?;
+    m.add_function(wrap_pyfunction!(rp_beta_cut, m)?)?;
+    m.add_function(wrap_pyfunction!(rp_evaluate, m)?)?;
+    m.add_function(wrap_pyfunction!(rp_anneal, m)?)?;
+    m.add_function(wrap_pyfunction!(rp_verify, m)?)?;
     Ok(())
 }

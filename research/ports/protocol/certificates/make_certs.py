@@ -9,7 +9,7 @@ solution is rationalised (weights to denominator <= 10^7, renormalised exactly, 
 recomputed from the exact demands), and c_B is set to the exact maximum load over all types, so that
 verify.py passes by construction; verify.py recomputes everything independently of this script.
 """
-import sys, json, itertools
+import sys, json, itertools, gzip
 from fractions import Fraction as F
 import numpy as np
 from scipy.optimize import linprog
@@ -99,7 +99,11 @@ def main(B):
     assert c >= exact
     data = {'B': B, 'c': str(c), 'units': 'Q = log2 D2 = 1, P = 1/3; loads in these units per block',
             'float_game_value_with_rounded_ranks': worst_float, 'types': types}
-    with open('cert_B%d.json' % B, 'w') as f:
+    name = 'cert_B%d.json' % B
+    opener = open
+    if B >= 32:                       # large files are gzipped; verify.py reads both
+        name, opener = name + '.gz', gzip.open
+    with opener(name, 'wt') as f:
         json.dump(data, f, separators=(',', ':'))
     print('B', B, 'float max', worst_float, 'exact max load', float(exact), 'c', c)
 

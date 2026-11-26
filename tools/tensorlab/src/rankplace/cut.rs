@@ -218,3 +218,69 @@ mod tests {
         assert!((cut_ratio(g.n, g.d, ex.side.iter().filter(|&&b| b).count(), cut_size(&g, &ex.side)) - ex.ratio).abs() < 1e-12);
     }
 }
+
+/// Several good, mostly distinct cuts (annealing with different seeds; the first is the best known).
+pub fn good_cuts(g: &Graph, best: &CutResult, k: usize, seed: u64) -> Vec<Vec<bool>> {
+    let iters = (100 * g.n as u64).clamp(100_000, 5_000_000);
+    let mut out = vec![best.side.clone()];
+    let res: Vec<(f64, Vec<bool>)> = (0..(2 * k) as u64)
+        .into_par_iter()
+        .map(|c| {
+            let mut r = SmallRng::seed_from_u64(seed + 1000 * c);
+            let init: Vec<bool> = (0..g.n).map(|_| r.gen::<bool>()).collect();
+            sa_cut(g, init, iters, seed + 31 * c)
+        })
+        .collect();
+    let mut res = res;
+    res.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+    for (_, s) in res {
+        let comp: Vec<bool> = s.iter().map(|&b| !b).collect();
+        if out.iter().all(|o| *o != s && *o != comp) {
+            out.push(s);
+        }
+        if out.len() >= k {
+            break;
+        }
+    }
+    out
+}
+
+/// Cuts read off a placement: S_{x,y} = {v : y^T f(v) x = 1}. Since Pr_{x,y}[y^T M x = 1] = (1 - 2^{-rk M})/2,
+/// the metric 1 - 2^{-D_f} is an average of these cut metrics, so the best S_{x,y} has cut ratio at least
+/// E_pairs(1-2^{-D}) / E_edges(1-2^{-D}). Tries all (x, y) for mu <= 6, else `samples` random pairs.
+pub fn cuts_from_placement(g: &Graph, mu: usize, f: &[u64], samples: usize, seed: u64) -> CutResult {
+    let mut pairs = vec![];
+    if mu <= 6 {
+        for x in 1u8..(1u8 << mu) {
+            for y in 1u8..(1u8 << mu) {
+                pairs.push((x, y));
+            }
+        }
+    } else {
+        let mut rng = SmallRng::seed_from_u64(seed);
+        for _ in 0..samples {
+            pairs.push((super::f2::random_vec(&mut rng, mu), super::f2::random_vec(&mut rng, mu)));
+        }
+    }
+    let best = pairs
+        .par_iter()
+        .map(|&(x, y)| {
+            let side: Vec<bool> = f
+                .iter()
+                .map(|&a| {
+                    let mut b = 0u32;
+                    for i in 0..mu {
+                        if (y >> i) & 1 == 1 {
+                            b ^= ((((a >> (8 * i)) & 0xFF) as u8) & x).count_ones() & 1;
+                        }
+                    }
+                    b == 1
+                })
+                .collect();
+            let s = side.iter().filter(|&&b| b).count();
+            let r = if s == 0 || s == g.n { 0.0 } else { cut_ratio(g.n, g.d, s, cut_size(g, &side)) };
+            (r, side)
+        })
+        .reduce(|| (0.0, vec![]), |a, b| if b.0 > a.0 { b } else { a });
+    CutResult { ratio: best.0, side: best.1, exact: false }
+}

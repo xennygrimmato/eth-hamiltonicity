@@ -1580,3 +1580,19 @@ use the more restrictive routing model.
 So "an explicit asymptotic protocol family on K_{2,3} with rate ≥ 0.8358 > 3/4" rests on: AN Prop. B.2 and Lemma A.3
 (their Lean, not built by us), the construction (one referee), and exact arithmetic for the game. K_{2,3} note updated.
 Pending from the same executor: dual for B = 2, B = 32/64, a Lean version.
+
+## 26 Nov (late, 47): certificates executor final; Lean certificate for the two-bucket game [L]; all re-run by me
+
+- Certificates for B = 2, 4, 8, 16, 32 (`research/ports/protocol/certificates/`): best c₃₂ = 1.195153569, **rate ≥ 0.83671**.
+  I ran `verify.py` on B = 2 and B = 32 (32 768 types): OK; and `verify_dual_B2.py`: n*(2) ≥ 1.2029076080.
+  So 1.2029076080 ≤ n*(2) ≤ 1.2029076090.
+- New closed form [D, symbolic check by the executor]: n*(2) = 29/27 + 11√10/270, a root of 270x² − 580x + 307; worst type
+  is the acyclic one; the optimal mixture has α = 7/18 − √10/90, γ = 5/9 − 13√10/90.
+- Sequence (float, with the order-12 symmetry): n*(8…128) = 1.1986027, 1.1964314, 1.1951536, 1.1944556, 1.1940901; gap to
+  (4+√10)/6 ≈ 0.048/B; extrapolation 1.193725. Worst type is always the bucket next to the middle, acyclic orientation;
+  the cyclic version has value exactly (4+√10)/6. Consistent with the conjectured limit 6/(4+√10); still [N].
+- Lean: `PortsLean/ProtocolCert.lean`, theorem `n_star_two_le` — every type in {0,1}³ has a well-formed certificate
+  entry with all six edge loads ≤ c = 1.20292 < 4/3, and √(10/9) ≤ ρ̂. Proved by `decide +kernel` on rationals (kernel
+  evaluation; no `native_decide`, no sorry — the one grep hit is the header comment saying so). I rebuilt the project:
+  18276 jobs, success. It certifies the game arithmetic only, not the tensor construction.
+- Lean project now has 12 files.

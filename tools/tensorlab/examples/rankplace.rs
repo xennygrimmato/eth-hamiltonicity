@@ -61,6 +61,7 @@ struct GraphInfo {
     l2: f64,
     lmin: f64,
     cut: cut::CutResult,
+    cuts: Vec<Vec<bool>>,
 }
 
 fn info(g: &Graph) -> GraphInfo {
@@ -68,7 +69,8 @@ fn info(g: &Graph) -> GraphInfo {
     let sp = spectral::spectrum(g);
     let c = cut::beta_cut(g, sp.vec2.as_deref());
     eprintln!("  [{}] lambda2={:.5} lmin={:.4} beta_cut={:.4}{} ({:.1}s)", g.name, sp.lambda2, sp.lambda_min, c.ratio, if c.exact { "" } else { "(lb)" }, t.elapsed().as_secs_f64());
-    GraphInfo { l2: sp.lambda2, lmin: sp.lambda_min, cut: c }
+    let cuts = cut::good_cuts(g, &c, 8, 99);
+    GraphInfo { l2: sp.lambda2, lmin: sp.lambda_min, cut: c, cuts }
 }
 
 /// Ratio search on one graph for several mu; prints one markdown row per mu.
@@ -78,26 +80,36 @@ fn study(g: &Graph, gi: &GraphInfo, mus: &[usize], iters: u64, chains: usize, ex
     let mut prev: Option<Vec<u64>> = None;
     for &mu in mus {
         let t = Instant::now();
-        let mut inits = vec![Init::Random { rank: 1 }, Init::Random { rank: 0 }, Init::Cut(gi.cut.side.clone()), Init::Random { rank: 2 }];
-        // chains 4, 5 (if present) start from the best placement of the previous (smaller) mu, embedded
-        if let Some(p) = &prev {
-            inits.push(Init::Given(embed(p)));
-            inits.push(Init::Given(embed(p)));
-        }
+        // chain c starts from inits[c % 8]: 0, 1, 3 random; 2 best cut; 4, 6 direct sums of good cuts;
+        // 5, 7 the best placement of the previous (smaller) mu, embedded (or more cut sums)
+        let diag = Init::Diag(gi.cuts.clone());
+        let mut rot = gi.cuts.clone();
+        rot.rotate_left(1);
+        let diag2 = Init::Diag(rot);
+        let pv = match &prev {
+            Some(p) => Init::Given(embed(p)),
+            None => Init::Cut(gi.cut.side.clone()),
+        };
+        let inits = vec![Init::Random { rank: 1 }, Init::Random { rank: 0 }, Init::Cut(gi.cut.side.clone()), Init::Random { rank: 2 }, diag, pv.clone(), diag2, pv];
         let o = opts(iters, 1000 + mu as u64);
         let res = run_chains(g, mu, Objective::Ratio, &o, &inits, chains);
         let b = &res[0];
         let rep = verify::verify(g, &b.f, gi.l2, gi.lmin);
+        // cuts read off the best placement (a check on the beta_cut lower bound)
+        let xy = cut::cuts_from_placement(g, mu, &b.f, 3000, 5);
         let vals: Vec<f64> = res.iter().map(|r| r.ratio).collect();
         let worst = vals.iter().cloned().fold(f64::MAX, f64::min);
-        // best chain among random starts (inits 0, 1, 3), i.e. without the cut or the smaller-mu seed
+        // best chain among random starts (inits 0, 1, 3), i.e. without any cut or smaller-mu seed
         let best_rand = res.iter().filter(|r| r.init == 0 || r.init == 1 || r.init == 3).map(|r| r.ratio).fold(0.0, f64::max);
         println!(
-            "| {} | {} | {} | {:.4} | {:.4} | {:.4}{} | {} | {:.4} | {:.3} | {:.3} | {:.3} | {:.4} | {:.4} | {} | {:.1} |",
+            "| {} | {} | {} | {:.4} | {:.4} | {:.4}{} | {} | {:.4} | {:.3} | {:.3} | {:.3} | {:.4} | {:.4} | {:.4} / {:.4} | {} | {:.1} |",
             g.name, g.n, g.d, gi.l2, 1.0 / (1.0 - gi.l2), gi.cut.ratio, if gi.cut.exact { "" } else { "*" }, mu, b.ratio,
-            b.ratio / gi.cut.ratio, rep.epairs, rep.eedges, best_rand, worst, if rep.kernel_ok { "ok" } else { "VIOLATED" }, t.elapsed().as_secs_f64()
+            b.ratio / gi.cut.ratio, rep.epairs, rep.eedges, best_rand, worst, xy.ratio, rep.cut_cone_ratio, if rep.kernel_ok { "ok" } else { "VIOLATED" }, t.elapsed().as_secs_f64()
         );
         assert!(rep.kernel_ok, "kernel inequality violated: {}", rep.summary());
+        if xy.ratio > gi.cut.ratio + 1e-9 {
+            println!("  NOTE: a cut S_xy read off the placement beats the beta_cut lower bound: {:.4} > {:.4}", xy.ratio, gi.cut.ratio);
+        }
         prev = Some(b.f.clone());
         if b.ratio > best_all {
             best_all = b.ratio;
@@ -112,7 +124,7 @@ fn study(g: &Graph, gi: &GraphInfo, mus: &[usize], iters: u64, chains: usize, ex
         let rep = verify::verify(g, &b.f, gi.l2, gi.lmin);
         let (r0, _, _) = evaluate(g, f0);
         println!(
-            "| {} (from {label}, start {:.4}) | {} | {} | {:.4} | {:.4} | {:.4} | {} | {:.4} | {:.3} | {:.3} | {:.3} | - | - | {} | {:.1} |",
+            "| {} (from {label}, start {:.4}) | {} | {} | {:.4} | {:.4} | {:.4} | {} | {:.4} | {:.3} | {:.3} | {:.3} | - | - | - | {} | {:.1} |",
             g.name, r0, g.n, g.d, gi.l2, 1.0 / (1.0 - gi.l2), gi.cut.ratio, mu, b.ratio, b.ratio / gi.cut.ratio, rep.epairs, rep.eedges,
             if rep.kernel_ok { "ok" } else { "VIOLATED" }, t.elapsed().as_secs_f64()
         );
@@ -127,9 +139,111 @@ fn study(g: &Graph, gi: &GraphInfo, mus: &[usize], iters: u64, chains: usize, ex
     best_all
 }
 
+/// Graph from a spec: rr d n seed | named NAME | lps p q | sl m k [modulus-binary] | slrand m k count seed |
+/// psl2rand q count seed | mat mu count seed | cycle n | torus a b. Returns the graph and, for the
+/// families with one, the structured placement (label, mu, f) (mu <= 8 only).
+fn graph_from_spec(sp: &[String]) -> (Graph, Vec<(String, usize, Vec<u64>)>) {
+    let p = |i: usize| sp[i].parse::<u64>().unwrap();
+    let mut st = vec![];
+    let g = match sp[0].as_str() {
+        "rr" => random_regular(p(2) as usize, p(1) as usize, p(3)),
+        "named" => named(&sp[1]).unwrap(),
+        "lps" => groups::lps(p(1), p(2)).graph,
+        "sl" => {
+            let (m, k) = (p(1) as usize, p(2) as usize);
+            let md = if sp.len() > 3 { u32::from_str_radix(&sp[3], 2).unwrap() } else { groups::default_modulus(k) };
+            let gr = groups::sl_elementary(m, k, md);
+            if m * k <= 8 {
+                for j in 1..=(k / 2).max(1) {
+                    let (mu, f) = gr.conj_projection_placement(j);
+                    st.push((format!("conjproj j={j}"), mu, f));
+                }
+            }
+            gr.graph
+        }
+        "slrand" => {
+            let (m, k, c, s) = (p(1) as usize, p(2) as usize, p(3) as usize, p(4));
+            let f = groups::Gf2k::new(k, groups::default_modulus(k));
+            let gens = groups::random_gens(&f, m, c, s);
+            groups::sl_cayley(f, m, gens, &format!("SL{m}(F{})_rand{c}_s{s}", 1 << k)).graph
+        }
+        "psl2rand" => groups::psl2_random(p(1), p(2) as usize, p(3)).graph,
+        "mat" => {
+            let (mu, c, s) = (p(1) as usize, p(2) as usize, p(3));
+            use rand::{rngs::SmallRng, SeedableRng};
+            let mut rng = SmallRng::seed_from_u64(s);
+            let mut gens: Vec<u64> = vec![];
+            while gens.len() < c {
+                let x = f2::random_rank_one(&mut rng, mu);
+                if !gens.contains(&x) {
+                    gens.push(x);
+                }
+            }
+            let (g, f) = groups::mat_cayley(mu, &gens, &format!("MatCay{mu}_r1x{}_s{s}", if c == 0 { "all".to_string() } else { c.to_string() }));
+            st.push((format!("identity mu={mu}"), mu, f));
+            g
+        }
+        "cycle" => cycle(p(1) as usize),
+        "torus" => torus(p(1) as usize, p(2) as usize),
+        x => panic!("unknown graph spec {x}"),
+    };
+    assert!(g.is_symmetric() && g.is_connected(), "{}: not symmetric/connected", g.name);
+    (g, st)
+}
+
+fn split_spec(a: &[String]) -> (Vec<String>, Vec<String>) {
+    let k = a.iter().position(|x| x == "--").expect("spec -- params");
+    (a[1..k].to_vec(), a[k + 1..].to_vec())
+}
+
+/// Gradient-bounded search: maximise E_pairs D subject to D <= r on every edge. One row per r.
+fn grad_study(g: &Graph, l2: f64, lmin: f64, mu: usize, rs: &[u32], iters: u64, chains: usize, structured: &[(String, usize, Vec<u64>)]) {
+    let n = g.n;
+    let mut lip = vec![0.0; 9];
+    let samp = n.min(200);
+    for u in 0..samp {
+        let dist = g.bfs(u * (n / samp));
+        for r in 1..9usize {
+            lip[r] += dist.iter().map(|&x| (mu as f64).min((r as u32 * x) as f64)).sum::<f64>() / n as f64;
+        }
+    }
+    for &r in rs {
+        let t = Instant::now();
+        let mut o = opts(iters, 31 + r as u64);
+        o.max_edge_rank = Some(r);
+        let mut inits = vec![Init::Given(vec![0; n])];
+        for (_, m2, f) in structured {
+            if *m2 == mu && max_edge_rank(g, f) <= r {
+                inits.push(Init::Given(f.clone()));
+            }
+        }
+        let res = run_chains(g, mu, Objective::Pairs, &o, &inits, chains);
+        let b = &res[0];
+        let rep = verify::verify(g, &b.f, l2, lmin);
+        let from0 = res.iter().filter(|x| x.init == 0).map(|x| x.epairs).fold(0.0, f64::max);
+        // commutative baseline: the same search restricted to diagonal (Boolean) placements
+        let mut od = o.clone();
+        od.diag_only = true;
+        let resd = run_chains(g, mu, Objective::Pairs, &od, &[Init::Given(vec![0; n])], chains);
+        let diag = resd[0].epairs;
+        println!(
+            "| {} | {n} | {} | {:.4} | {:.2} | {mu} | {r} | {:.4} | {:.4} | {:.4} | {:.3} | {:.3} | {:.3} | {:?} | {} | {:.1} |",
+            g.name, g.d, l2, (1.0 / l2).log2(), b.epairs, from0, diag, b.eedges, b.epairs / b.eedges.max(1e-12), lip[r as usize] / samp as f64,
+            &rep.hist_pairs[..=mu], if rep.kernel_ok { "ok" } else { "VIOLATED" }, t.elapsed().as_secs_f64()
+        );
+        assert!(rep.kernel_ok);
+        save(&format!("grad_{}_mu{mu}_r{r}", g.name), &verify::placement_json(g, mu, &b.f, &rep, &format!("\"r\":{r},\"lambda2\":{l2}")));
+    }
+}
+
+fn grad_header() {
+    println!("| graph | n | d | λ₂ | log₂(1/λ₂) | μ | r | max E_pairs | from-zero chains | diagonal-only (Boolean) max | E_edges | ratio | r·d_G bound (min μ) | pair-rank histogram | kernel | s |");
+    println!("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
+}
+
 fn header() {
-    println!("| graph | n | d | λ₂ | 1/(1−λ₂) | β_cut | μ | best ratio | ratio/β_cut | E_pairs | E_edges | best random-start chain | worst chain | kernel | s |");
-    println!("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
+    println!("| graph | n | d | λ₂ | 1/(1−λ₂) | β_cut | μ | best ratio | ratio/β_cut | E_pairs | E_edges | best random-start chain | worst chain | best S_xy cut / cut-cone ratio of 1−2^(−D) | kernel | s |");
+    println!("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
 }
 
 fn bench() {
@@ -258,6 +372,7 @@ fn main() {
             study(&gr.graph, &gi, &mus, iters, chains, &extra);
         }
         "cayley" => {
+            let mut structured: Option<(String, usize, Vec<u64>)> = None;
             let (g, rest) = match a[1].as_str() {
                 "lps" => (groups::lps(a[2].parse().unwrap(), a[3].parse().unwrap()).graph, 4),
                 "slrand" => {
@@ -268,6 +383,22 @@ fn main() {
                     (gr.graph, 6)
                 }
                 "psl2rand" => (groups::psl2_random(a[2].parse().unwrap(), a[3].parse().unwrap(), a[4].parse().unwrap()).graph, 5),
+                "mat" => {
+                    // Cay(Mat_mu(F_2), +) with `count` random rank-one generators (0 = all rank-one matrices)
+                    let (mu, c, s): (usize, usize, u64) = (a[2].parse().unwrap(), a[3].parse().unwrap(), a[4].parse().unwrap());
+                    use rand::{rngs::SmallRng, SeedableRng};
+                    let mut rng = SmallRng::seed_from_u64(s);
+                    let mut gens: Vec<u64> = vec![];
+                    while gens.len() < c {
+                        let x = f2::random_rank_one(&mut rng, mu);
+                        if !gens.contains(&x) {
+                            gens.push(x);
+                        }
+                    }
+                    let (g, f) = groups::mat_cayley(mu, &gens, &format!("MatCay{mu}_r1x{}_s{s}", if c == 0 { "all".to_string() } else { c.to_string() }));
+                    structured = Some((format!("identity placement mu={mu}"), mu, f));
+                    (g, 5)
+                }
                 _ => panic!(),
             };
             assert!(g.is_symmetric());
@@ -275,9 +406,16 @@ fn main() {
             let iters: u64 = a[rest].parse().unwrap();
             let chains: usize = a[rest + 1].parse().unwrap();
             let mus: Vec<usize> = list(&a[rest + 2]);
+            assert!(g.is_connected(), "generators do not generate");
             let gi = info(&g);
+            let mut extra = vec![];
+            if let Some((label, mu, f)) = structured {
+                let rep = verify::verify(&g, &f, gi.l2, gi.lmin);
+                println!("  structured {label}: {}", rep.summary());
+                extra.push((label, mu, f));
+            }
             header();
-            study(&g, &gi, &mus, iters, chains, &[]);
+            study(&g, &gi, &mus, iters, chains, &extra);
         }
         "nonexp" => {
             let (g, rest) = match a[1].as_str() {
@@ -293,40 +431,13 @@ fn main() {
             study(&g, &gi, &mus, iters, chains, &[]);
         }
         "em3" => {
+            // em3 d n seed mu rs iters chains
             let d: usize = a[1].parse().unwrap();
             let n: usize = a[2].parse().unwrap();
             let s: u64 = a[3].parse().unwrap();
-            let mu: usize = a[4].parse().unwrap();
-            let rs: Vec<u32> = list(&a[5]);
-            let iters: u64 = a[6].parse().unwrap();
-            let chains: usize = a[7].parse().unwrap();
             let g = random_regular(n, d, s);
             let sp = spectral::spectrum(&g);
-            // graph-metric bound: an r-Lipschitz placement has D <= min(mu, r d_G)
-            let mut lip = vec![0.0; 9];
-            let samp = n.min(200);
-            for u in 0..samp {
-                let dist = g.bfs(u);
-                for r in 1..9usize {
-                    lip[r] += dist.iter().map(|&x| (mu as f64).min((r as u32 * x) as f64)).sum::<f64>() / n as f64;
-                }
-            }
-            for &r in &rs {
-                let t = Instant::now();
-                let opts = Opts { iters, seed: 31 + r as u64, max_edge_rank: Some(r), ..Default::default() };
-                // feasible starts: constant, and the identity-like "copy neighbour" growth happens through moves
-                let res = run_chains(&g, mu, Objective::Pairs, &opts, &[Init::Given(vec![0; n])], chains);
-                let b = &res[0];
-                let rep = verify::verify(&g, &b.f, sp.lambda2, sp.lambda_min);
-                let worst = res.iter().map(|x| x.epairs).fold(f64::MAX, f64::min);
-                println!(
-                    "| {} | {n} | {d} | {:.4} | {:.2} | {mu} | {r} | {:.4} | {:.4} | {:.3} | {:.3} | {:.3} | {:?} | {} | {:.1} |",
-                    g.name, sp.lambda2, (1.0 / sp.lambda2).log2(), b.epairs, worst, b.eedges, rep.max_edge as f64, lip[r as usize] / samp as f64,
-                    &rep.hist_pairs[..=mu], if rep.kernel_ok { "ok" } else { "VIOLATED" }, t.elapsed().as_secs_f64()
-                );
-                assert!(rep.kernel_ok);
-                save(&format!("em3_{}_mu{mu}_r{r}", g.name), &verify::placement_json(&g, mu, &b.f, &rep, &format!("\"r\":{r},\"lambda2\":{}", sp.lambda2)));
-            }
+            grad_study(&g, sp.lambda2, sp.lambda_min, a[4].parse().unwrap(), &list(&a[5]), a[6].parse().unwrap(), a[7].parse().unwrap(), &[]);
         }
         "em4" => {
             let k: usize = a[1].parse().unwrap();
@@ -363,6 +474,51 @@ fn main() {
                 gr.graph.name, gr.n(), gr.graph.d, sp.lambda2, sp.history.iter().map(|x| (x * 1e6).round() / 1e6).collect::<Vec<_>>(), sp.lambda_min,
                 0.75 - 2f64.powi(1 - 3 * j as i32), (ke - kp) / (1.0 - kp), ee, ep, hist, t.elapsed().as_secs_f64()
             );
+        }
+        // generic forms:  gstudy SPEC -- iters chains mus ;  glagr SPEC -- mu iters gammas chains ;
+        //                 ggrad SPEC -- mu rs iters chains
+        "gstudy" => {
+            let (spec, par) = split_spec(&a);
+            let (g, st) = graph_from_spec(&spec);
+            eprintln!("  {} n = {} d = {}", g.name, g.n, g.d);
+            let gi = info(&g);
+            for (label, mu, f) in &st {
+                let rep = verify::verify(&g, f, gi.l2, gi.lmin);
+                println!("  structured {label} (mu={mu}): {}", rep.summary());
+            }
+            header();
+            study(&g, &gi, &list(&par[2]), par[0].parse().unwrap(), par[1].parse().unwrap(), &st);
+        }
+        "glagr" => {
+            let (spec, par) = split_spec(&a);
+            let (g, st) = graph_from_spec(&spec);
+            let gi = info(&g);
+            let mu: usize = par[0].parse().unwrap();
+            let iters: u64 = par[1].parse().unwrap();
+            let gammas: Vec<f64> = list(&par[2]);
+            let chains: usize = par[3].parse().unwrap();
+            println!("| graph | μ | γ | best Lagrangian | ratio of that placement | E_pairs | E_edges | best ratio over chains | β_cut | s |");
+            println!("|---|---|---|---|---|---|---|---|---|---|");
+            for &gm in &gammas {
+                let t = Instant::now();
+                let o = opts(iters, 5);
+                let res = run_chains(&g, mu, Objective::Lagrange(gm), &o, &[Init::Random { rank: 1 }, Init::Random { rank: 0 }, Init::Cut(gi.cut.side.clone()), Init::Diag(gi.cuts.clone())], chains);
+                let b = &res[0];
+                let br = res.iter().map(|r| r.ratio).fold(0.0, f64::max);
+                println!("| {} | {mu} | {gm} | {:.4} | {:.4} | {:.4} | {:.4} | {:.4} | {:.4} | {:.1} |", g.name, b.value, b.ratio, b.epairs, b.eedges, br, gi.cut.ratio, t.elapsed().as_secs_f64());
+            }
+            for (label, m2, f) in &st {
+                let (r, ep, ee) = evaluate(&g, f);
+                println!("  structured {label} (mu={m2}): ratio {r:.4}, E_pairs {ep:.4}, E_edges {ee:.4}; Lagrangian at each gamma: {:?}",
+                    gammas.iter().map(|gm| ((ep - gm * ee) * 1e4).round() / 1e4).collect::<Vec<_>>());
+            }
+        }
+        "ggrad" => {
+            let (spec, par) = split_spec(&a);
+            let (g, st) = graph_from_spec(&spec);
+            let sp = spectral::spectrum(&g);
+            grad_header();
+            grad_study(&g, sp.lambda2, sp.lambda_min, par[0].parse().unwrap(), &list(&par[1]), par[2].parse().unwrap(), par[3].parse().unwrap(), &st);
         }
         _ => panic!("unknown command"),
     }

@@ -53,6 +53,8 @@ pub struct Report {
     pub cons_a: (bool, bool),
     pub cons_b: (bool, bool),
     pub cons_c: (bool, bool, f64),
+    /// E_pairs(1-2^{-D}) / E_edges(1-2^{-D}): a lower bound on beta_cut (this metric is in the cut cone)
+    pub cut_cone_ratio: f64,
 }
 
 pub fn mean_kernel(h: &[u64], k: u32) -> f64 {
@@ -108,6 +110,7 @@ pub fn report_from_hist(hp: &[u64], he: &[u64], lambda2: f64, lambda_min: f64) -
         cons_a: (ha, ca),
         cons_b: (hb, cb),
         cons_c: (hc, cc, bound_c),
+        cut_cone_ratio: (1.0 - kp) / (1.0 - ke),
     }
 }
 

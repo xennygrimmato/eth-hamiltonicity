@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Standalone exact verifier for the bucket-game certificates (notes.md, section 2.3).
 
-    python3 verify.py cert_B2.json [cert_B4.json ...]
+    python3 verify.py cert_B2.json [cert_B4.json ... cert_B32.json.gz]
 
 Uses only the standard library (fractions, json, math).  No LP solver.
 
@@ -32,7 +32,7 @@ options for each pair and rational routing fractions.  The verifier checks nonne
 normalisation, that every option is well formed, recomputes all six edge loads exactly, and
 checks max load <= c (the claimed bound in the file).  It prints the exact max load.
 """
-import sys, json, math
+import sys, json, math, gzip
 from fractions import Fraction as F
 
 P, Q = F(1, 3), F(1)
@@ -124,7 +124,7 @@ def check_type(tau, entry, bk):
 
 
 def verify(path):
-    with open(path) as f:
+    with (gzip.open(path, 'rt') if path.endswith('.gz') else open(path)) as f:
         data = json.load(f)
     B = data['B']
     c = F(data['c'])
@@ -141,8 +141,9 @@ def verify(path):
                     worst, wt = m, tau
     assert len(types) == B ** 3
     ok = worst <= c
-    print('%s: B = %d, %d types, exact max load = %s ~ %.10f at type %s; claimed c = %s ~ %.10f: %s'
-          % (path, B, B ** 3, worst, float(worst), wt, c, float(c), 'OK' if ok else 'FAIL'))
+    ws = str(worst) if len(str(worst)) < 40 else '(%d-digit fraction)' % len(str(worst.denominator))
+    print('%s: B = %d, %d types, exact max load = %s ~ %.12f at type %s; claimed c = %s: %s'
+          % (path, B, B ** 3, ws, float(worst), wt, c, 'OK' if ok else 'FAIL'))
     if ok:
         print('   => n*(%d) <= %.10f, rate >= %.10f > 3/4' % (B, float(c), 1 / float(c)))
     return ok and c < F(4, 3)

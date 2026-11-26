@@ -35,19 +35,22 @@ pub struct Opts {
     pub p_moves: [f64; 6],
     pub ball_radius_max: u32,
     pub seed: u64,
+    /// restrict to diagonal matrices (Boolean / Hamming placements: the commutative baseline)
+    pub diag_only: bool,
 }
 
 impl Default for Opts {
     fn default() -> Self {
         Opts {
             iters: 200_000,
-            t0: 1.0,
-            t1: 0.005,
+            t0: 0.3,
+            t1: 0.02,
             cycles: 1,
             max_edge_rank: None,
             p_moves: [0.25, 0.35, 0.2, 0.02, 0.16, 0.02],
             ball_radius_max: 2,
             seed: 1,
+            diag_only: false,
         }
     }
 }
@@ -273,6 +276,10 @@ pub fn anneal(g: &Graph, mu: usize, obj: Objective, opts: &Opts, f0: Vec<u64>) -
         cum[i] = acc;
     }
     let maxr = opts.max_edge_rank;
+    let dmask = f2::identity(mu);
+    if opts.diag_only {
+        assert!(st.f.iter().all(|&a| a & !dmask == 0), "diag_only needs a diagonal start");
+    }
     let mut accepted = 0u64;
     let cycles = opts.cycles.max(1);
     let per = opts.iters / cycles as u64;
@@ -300,8 +307,13 @@ pub fn anneal(g: &Graph, mu: usize, obj: Objective, opts: &Opts, f0: Vec<u64>) -
                 if ball.len() * 2 > n {
                     continue;
                 }
-                let rr = f2::random_rank_one(&mut rng, mu);
-                let kind = rng.gen_range(0..3);
+                let mut rr = f2::random_rank_one(&mut rng, mu);
+                let mut kind = rng.gen_range(0..3);
+                if opts.diag_only {
+                    let i = rng.gen_range(0..mu);
+                    rr = f2::unit(i, i);
+                    kind = 0;
+                }
                 let (i, j) = (rng.gen_range(0..mu), rng.gen_range(0..mu));
                 let tf: Box<dyn Fn(u64) -> u64> = match kind {
                     0 => Box::new(move |a| a ^ rr),
@@ -336,6 +348,7 @@ pub fn anneal(g: &Graph, mu: usize, obj: Objective, opts: &Opts, f0: Vec<u64>) -
                     4 => a ^ f2::random_rank_le(&mut rng, mu, 2),
                     _ => f2::random_matrix(&mut rng, mu),
                 };
+                let b = if opts.diag_only { b & dmask } else { b };
                 if b == a {
                     continue;
                 }
@@ -383,6 +396,8 @@ pub enum Init {
     Random { rank: usize },
     /// f(v) = E_11 on the side S of a cut
     Cut(Vec<bool>),
+    /// f(v) = diag(1[v in S_1], ..., 1[v in S_mu]) (a direct sum of cut placements)
+    Diag(Vec<Vec<bool>>),
     Given(Vec<u64>),
 }
 
@@ -393,6 +408,9 @@ pub fn make_init(init: &Init, n: usize, mu: usize, seed: u64) -> Vec<u64> {
             .map(|_| if *rank == 0 { f2::random_matrix(&mut rng, mu) } else { f2::random_rank_le(&mut rng, mu, *rank) })
             .collect(),
         Init::Cut(s) => s.iter().map(|&b| if b { 1u64 } else { 0 }).collect(),
+        Init::Diag(cuts) => (0..n)
+            .map(|v| cuts.iter().take(mu).enumerate().fold(0u64, |a, (i, s)| if s[v] { a | f2::unit(i, i) } else { a }))
+            .collect(),
         Init::Given(f) => f.clone(),
     }
 }
@@ -436,6 +454,14 @@ mod tests {
                 }
             }
         }
+    }
+    #[test]
+    fn diag_only_stays_diagonal() {
+        let g = random_regular(40, 4, 2);
+        let opts = Opts { iters: 20000, max_edge_rank: Some(2), diag_only: true, ..Default::default() };
+        let r = anneal(&g, 6, Objective::Pairs, &opts, vec![0; g.n]);
+        assert!(r.f.iter().all(|&a| a & !f2::identity(6) == 0));
+        assert!(max_edge_rank(&g, &r.f) <= 2 && r.epairs > 0.0);
     }
     #[test]
     fn finds_cut_value_on_petersen() {

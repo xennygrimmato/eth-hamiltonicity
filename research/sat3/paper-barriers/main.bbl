@@ -1,0 +1,101 @@
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }
+% \MRhref is called by the amsart/book/proc definition of \MR.
+\providecommand{\MRhref}[2]{%
+  \href{http://www.ams.org/mathscinet-getitem?mr=#1}{#2}
+}
+\providecommand{\href}[2]{#2}
+\begin{thebibliography}{10}
+
+\bibitem{BO16}
+Christine Bessenrodt and Ken Ono, \emph{Maximal multiplicative properties of
+  partitions}, Ann. Comb. (2016); arXiv:1403.3352, 2016.
+
+\bibitem{BH99}
+Martin~R. Bridson and Andr{\'e} Haefliger, \emph{Metric spaces of non-positive
+  curvature}, Grundlehren der mathematischen Wissenschaften, vol. 319,
+  Springer, 1999.
+
+\bibitem{AnthropicETH}
+{Claude (Anthropic)}, \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, Preprint
+  dated 26~October 2026, unrefereed. Paper and Lean formalisation in the
+  repository \url{https://github.com/anthropics/formal-math}, folder
+  \texttt{eth}; Hexagon record hexagon:2610.00577, 2026.
+
+\bibitem{AnthropicVP}
+\bysame, \emph{{VP} $\ne$ {VNP} over every field}, Preprint, November 2026,
+  unrefereed; Lean formalisation in the repository
+  \url{https://github.com/anthropics/formal-math}, folder \texttt{vp-vnp};
+  Hexagon record hexagon:2611.00954. The paper states that no human
+  mathematician has checked the proofs, 2026.
+
+\bibitem{deBrito26}
+Carlos Stein~Naves de~Brito, \emph{The partition exponent in the graded pieces
+  of the {C}laude {3-SAT} algorithm is optimal for pieces of that shape},
+  Hexagon preprint hexagon:2610.00692v1, 31~October 2026,
+  \url{https://hexagonmath.org/abs/2610.00692}, 2026.
+
+\bibitem{Lean4}
+Leonardo de~Moura and Sebastian Ullrich, \emph{The {L}ean 4 theorem prover and
+  programming language}, Automated Deduction -- CADE 28, Lecture Notes in
+  Comput. Sci., vol. 12699, Springer, 2021, pp.~625--635.
+
+\bibitem{Fradj26}
+Mohamed Fradj, \emph{Thermodynamic saturation and prescribed window barriers
+  for {K}leinian-code graded spaces}, Hexagon preprint hexagon:2611.00627,
+  19~November 2026, \url{https://hexagonmath.org/abs/2611.00627}, 2026.
+
+\bibitem{Kho26}
+Kirill Khoruzhii, \emph{Crossing decomposition for subquadratic noncommutative
+  circuits}, Lemmata repository, v1 2~November 2026, last revised 4~November
+  2026, \url{https://lemmata.iol.berlin/crossing-decomposition}, 2026.
+
+\bibitem{Maj26}
+Ruhollah Majdoddin, \emph{Lowered crossover points of {A}nthropic's
+  subexponential {3-SAT} algorithm}, arXiv:2610.41622v1, 30~October 2026, 2026.
+
+\bibitem{OpenAIHC}
+{OpenAI}, \emph{Circuit lower bounds for {H}amiltonian cycle and the
+  permanent}, Preprint dated 24~November 2026, unrefereed; repository
+  \url{https://github.com/openai/math}, folder \texttt{preprints}, 2026.
+
+\bibitem{OpenAIEG}
+\bysame, \emph{Euclidean geometry in the asymptotic spectrum of tensors},
+  Preprint dated 24~November 2026, unrefereed; repository
+  \url{https://github.com/openai/math}, folder \texttt{preprints}, 2026.
+
+\bibitem{OpenAIETH}
+\bysame, \emph{The {E}xponential {T}ime {H}ypothesis is false}, Preprint dated
+  17~October 2026, revised 25~October 2026, unrefereed. Paper and Lean
+  formalisation in the repository \url{https://github.com/openai/math}, folder
+  \texttt{preprints}, 2026.
+
+\bibitem{OpenAIIM}
+\bysame, \emph{The logarithmic exponent of integer multiplication on tapes},
+  Preprint dated 24~November 2026, unrefereed; repository
+  \url{https://github.com/openai/math}, folder \texttt{preprints}, 2026.
+
+\bibitem{Sra26}
+Suvrit Sra, \emph{Euclidean tensor prices and sharp multiquadratic composition
+  bounds}, Hexagon preprint hexagon:2611.01066, 25~November 2026,
+  \url{https://hexagonmath.org/abs/2611.01066}, 2026.
+
+\bibitem{Mathlib20}
+{The mathlib Community}, \emph{The {L}ean mathematical library}, Proc. 9th ACM
+  SIGPLAN International Conference on Certified Programs and Proofs (CPP), ACM,
+  2020, pp.~367--381.
+
+\bibitem{Repo}
+Vaibhav Tulsyan, \emph{Research notes, referee reports, scripts and {L}ean
+  sources for this paper}, Repository
+  \url{https://github.com/xennygrimmato/math}, folders \texttt{research/sat3}
+  and \texttt{research/ports}; the commit is given in
+  Section~\ref{sec:provenance}, 2026.
+
+\bibitem{Tul26barrier}
+\bysame, \emph{What the {ETH} refutations do not give: barriers for the
+  counting engines, with machine-checked lemmas}, Hexagon preprint
+  hexagon:2611.00149, 6~November 2026,
+  \url{https://hexagonmath.org/abs/2611.00149}, 2026.
+
+\end{thebibliography}

@@ -3111,3 +3111,10 @@ is exact at every nesting depth for the B.2 certificates.
 **Lemma N in Lean** (`PortsLean/LemmaN.lean`, `research/sat3/lean-lemmaN.md`): `lemmaN` in the paper's form
 (cut chosen before the suppliers), `lemmaN_false_K2`, and the star-lemma arithmetic; standard axioms only;
 rebuilt by the lead (18290 jobs). The tensor restriction of the star lemma is not formalised.
+
+**Barrier paper drafted** (`research/sat3/paper-barriers/`: `main.tex`, `main.pdf` 16 pages, `CHECKS.md` with
+every statement, its source and status). Order: CAT(0) inequalities and the cap; Theorem A; the price barrier
+(Theorems B, C, D′ with its narrow class; target E_D); Theorem W as a barrier for a proof method; Theorem T
+conditional on OpenAI's theorems; what is open (cyclic nets, true vs certified costs, non-algebraic
+algorithms); limitations; Lean statements. Type-B numbers are from raw outputs and marked unrefereed. A
+referee pass on the paper is launched.

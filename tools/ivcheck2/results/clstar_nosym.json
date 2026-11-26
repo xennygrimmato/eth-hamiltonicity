@@ -52,12 +52,14 @@
     "lemma": 0,
     "nat": 520956,
     "mvf": 6852,
+    "outside": 0,
     "bisect": 1068
    },
    "closed_pieces": {
     "lemma": 0,
     "nat": 523326,
-    "mvf": 8186
+    "mvf": 8186,
+    "outside": 0
    },
    "extra_splits": 2636,
    "max_extra_depth": 5,
@@ -65,8 +67,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 7.99,
-   "time_bounds_s": 13.26
+   "time_parse_s": 7.56,
+   "time_bounds_s": 6.3
   }
  ],
  "overall": "VERIFIED"

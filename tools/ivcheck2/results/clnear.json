@@ -64,12 +64,14 @@
     "lemma": 3330,
     "nat": 3199,
     "mvf": 0,
+    "outside": 0,
     "bisect": 2079
    },
    "closed_pieces": {
     "lemma": 3330,
     "nat": 15323,
-    "mvf": 5169
+    "mvf": 5169,
+    "outside": 0
    },
    "extra_splits": 15214,
    "max_extra_depth": 7,
@@ -77,8 +79,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.16,
-   "time_bounds_s": 2.59
+   "time_parse_s": 0.11,
+   "time_bounds_s": 1.07
   },
   {
    "cert": "clnear_rho0.5_s++-.cert",
@@ -128,12 +130,14 @@
     "lemma": 5089,
     "nat": 4236,
     "mvf": 0,
+    "outside": 0,
     "bisect": 2360
    },
    "closed_pieces": {
     "lemma": 5089,
     "nat": 14843,
-    "mvf": 4433
+    "mvf": 4433,
+    "outside": 0
    },
    "extra_splits": 12680,
    "max_extra_depth": 6,
@@ -141,8 +145,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.24,
-   "time_bounds_s": 2.12
+   "time_parse_s": 0.14,
+   "time_bounds_s": 0.92
   },
   {
    "cert": "clnear_rho0.5_s+-+.cert",
@@ -192,12 +196,14 @@
     "lemma": 5036,
     "nat": 4204,
     "mvf": 0,
+    "outside": 0,
     "bisect": 2361
    },
    "closed_pieces": {
     "lemma": 5036,
     "nat": 14828,
-    "mvf": 4454
+    "mvf": 4454,
+    "outside": 0
    },
    "extra_splits": 12717,
    "max_extra_depth": 6,
@@ -205,8 +211,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.21,
-   "time_bounds_s": 2.1
+   "time_parse_s": 0.18,
+   "time_bounds_s": 0.95
   },
   {
    "cert": "clnear_rho0.5_s+--.cert",
@@ -256,12 +262,14 @@
     "lemma": 4943,
     "nat": 4106,
     "mvf": 0,
+    "outside": 0,
     "bisect": 2375
    },
    "closed_pieces": {
     "lemma": 4943,
     "nat": 14864,
-    "mvf": 4498
+    "mvf": 4498,
+    "outside": 0
    },
    "extra_splits": 12881,
    "max_extra_depth": 6,
@@ -269,8 +277,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.2,
-   "time_bounds_s": 2.38
+   "time_parse_s": 0.14,
+   "time_bounds_s": 1.04
   },
   {
    "cert": "clnear_rho0.5_s-++.cert",
@@ -320,12 +328,14 @@
     "lemma": 4943,
     "nat": 4106,
     "mvf": 0,
+    "outside": 0,
     "bisect": 2375
    },
    "closed_pieces": {
     "lemma": 4943,
     "nat": 14864,
-    "mvf": 4498
+    "mvf": 4498,
+    "outside": 0
    },
    "extra_splits": 12881,
    "max_extra_depth": 6,
@@ -333,8 +343,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.25,
-   "time_bounds_s": 2.65
+   "time_parse_s": 0.15,
+   "time_bounds_s": 0.99
   },
   {
    "cert": "clnear_rho0.5_s-+-.cert",
@@ -384,12 +394,14 @@
     "lemma": 5036,
     "nat": 4204,
     "mvf": 0,
+    "outside": 0,
     "bisect": 2361
    },
    "closed_pieces": {
     "lemma": 5036,
     "nat": 14828,
-    "mvf": 4454
+    "mvf": 4454,
+    "outside": 0
    },
    "extra_splits": 12717,
    "max_extra_depth": 6,
@@ -397,8 +409,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.25,
-   "time_bounds_s": 2.42
+   "time_parse_s": 0.14,
+   "time_bounds_s": 0.99
   },
   {
    "cert": "clnear_rho0.5_s--+.cert",
@@ -448,12 +460,14 @@
     "lemma": 5089,
     "nat": 4236,
     "mvf": 0,
+    "outside": 0,
     "bisect": 2360
    },
    "closed_pieces": {
     "lemma": 5089,
     "nat": 14843,
-    "mvf": 4433
+    "mvf": 4433,
+    "outside": 0
    },
    "extra_splits": 12680,
    "max_extra_depth": 6,
@@ -461,8 +475,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.17,
-   "time_bounds_s": 2.28
+   "time_parse_s": 0.15,
+   "time_bounds_s": 0.97
   },
   {
    "cert": "clnear_rho0.5_s---.cert",
@@ -512,12 +526,14 @@
     "lemma": 3330,
     "nat": 3199,
     "mvf": 0,
+    "outside": 0,
     "bisect": 2079
    },
    "closed_pieces": {
     "lemma": 3330,
     "nat": 15323,
-    "mvf": 5169
+    "mvf": 5169,
+    "outside": 0
    },
    "extra_splits": 15214,
    "max_extra_depth": 7,
@@ -525,8 +541,8 @@
    "failed_pieces": [],
    "problems": [],
    "verdict": "VERIFIED",
-   "time_parse_s": 0.13,
-   "time_bounds_s": 2.66
+   "time_parse_s": 0.11,
+   "time_bounds_s": 1.15
   }
  ],
  "overall": "VERIFIED"

@@ -1999,3 +1999,18 @@ With the refereed Theorem E, Lemma R and the convexity argument: **f*(K_{2,3}(w)
 Lemma R (referee checked the implications, see review-thmE §6), and the imported CAT(0) theorem.
 To do when the executor hands back: re-run the original (CL\*) suites to confirm the tool changes left them intact;
 then add the cut-regime theorem to the note.
+
+## 26 Nov (late, 75): certificate executor final; original suites re-run and intact
+
+- Final report on S(9/10) and (CL\*\*₀): 40 certificates (23.3M + 62.1M leaves, 950 MB, git-ignored), all accepted by
+  `ivcheck` and `ivcheck2`; coverage script passes; mutation tests reject shifted statements; `run_k2.sh` in both tools.
+  Independence caveat (same author for both encodings; they agree to 2·10⁻¹⁴ at random points) stated in the write-up
+  (`research/ports/ivcert-notes.md` §5). Not checked there: Lemma R and Prop. C′ (the referee did), and the margin.
+- **My re-run after the tool changes:** `tools/ivcert/run_proofs.sh` → 12 certificates VERIFIED, sha256 unchanged from
+  the first run (three spot hashes compared); `cargo test`: 10 + 9 pass; `tools/ivcheck2/run_all.sh` → OVERALL VERIFIED for
+  the three-angle certificate, the eight central certificates and the main six-variable certificate; twelve corner
+  faces proved. So the new hook in the prover core and the checker fix did not disturb the (CL\*) verification.
+- I have not re-run the 40 new certificates myself (about 1.5 h of machine time); their status is "two checkers, one
+  author, run by the executor".
+State of the cut regime: f*(K_{2,3}(w)) = 3/(2+w) — w ≥ 1.913: hand proof, refereed; w ≥ 5/4: adds two certificates.
+Launching a writer to add the cut-regime theorem to the note and the overview.

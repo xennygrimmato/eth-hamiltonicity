@@ -1066,3 +1066,35 @@ Notes: `research/ports/c1d1/notes.md`. Unrefereed, nothing run.
 - Decision: build the 61-file closure and define the guess count against the real definitions (EvG / DoesG,
   guess-freeness of deterministic combinators, costs of pickB and bitsB, additivity under compC), then estimate the
   rest. Top priority for the Lean executor.
+
+## 26 Nov (late, 16): three reviews in; K_{2,3} rate pinned numerically; note draft; one permission block
+
+**Hull lemma: passed review [V]** (`research/ports/review-hull.md`). For any field k: ¬contracting over k ⇒ N5 a price
+⇒ every finite subset of the diamond (incl. W₅) a price ⇒ every restriction protocol on K_{2,3} over k has rate
+≤ 3/√10 (border protocols included over infinite fields). "ρ₃ is a price when contracting fails" is the Lean theorem
+`thm_alt_rank_price` (Paper/Alternative.lean:706). Edits requested: add the missing rate-bound section; any char-0
+field, not just ℚ.
+
+**f_CAT5 = 3/√10 [N]** (tensorlab; Toyoda's theorem confirmed from arXiv:1907.09074v2, Thm 1.3). 1000/1000 multistarts;
+minimiser W₅; active constraints = three box inequalities at t = s = 1/2 with multiplier 2√10; no triangle active.
+Products of 2 and 3 trees and the Heawood cone agree. The f_Q minimiser violates box inequalities.
+- So, numerically: **f*(K_{2,3}) ≥ 3/√10 unconditionally** (Strassen duality + prices are CAT(0)), and
+  **= 3/√10 whenever contracting fails**. A global proof is missing. My three-line idea (CN at the midpoint of u₁u₂ +
+  triangle through it) is refuted numerically (ratio ≈ 0.81) [X]. Hull agent is on the proof.
+- [R] demand (2,2,2,1) at bond dimension 2 is impossible even as a border restriction.
+
+**C1: passed review [V]** (`research/ports/review-c1.md`). C1-OA, Lemma C4, Cor. C5 hold; C1-AN holds with the
+padding fix, conditional on Theorem R. No hidden divisions in AN §§G–J (App. M: only ½ in Prop. E.1). Corrections:
+"same formula for δ" (η depends on the characteristic); Theorem M1's list = rWETH (or nuWETH/UWETH/⊕₂WETH with disjoint
+branching), HC 13.1, IM §7, MM Lemma 4.1, our Lemmas E and P — and the B₂-circuit bounds need only *some* prime
+without ports; p = 2 only for part (a). The earlier Theorem R review wrongly passed Cor. 1′ (#3-SAT mod p). Theorem D's
+averaging is right (needs E_C ≥ 1 stated); the win-win it relies on was not re-checked here.
+
+**Note draft** `research/ports/note-contracting-eth.md` (≈7,300 words): Theorems R (uniform by audit), A, B,
+Corollary 1, dependency tables. I rebuilt all four Lean files (18260 jobs, success; no sorry). Needs a v2 with the
+refereed C1 and hull results.
+
+**Permission block.** The Lean executor fetched the Mathlib cache for Anthropic's pin but its `lake build` of
+Anthropic's sources was denied by the permission classifier, twice. Not retried. Fallback in progress: guess count on
+a faithful copied fragment of NS1/Machine.lean. Finding: `Gives`/`Does` do not imply guess-freeness, so every guess
+bound must be re-derived syntax-directedly. → ask the user whether to permit the real build.

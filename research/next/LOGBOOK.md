@@ -638,3 +638,21 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   as references). Blocked: the provided key authenticates but the account has no credits (HTTP 402 on every model).
 - Network coding: the conjecture refuted in Oct 2026 is the Li–Li multiple-unicast conjecture for undirected networks
   (arXiv:2610.20079; independently 2610.09367 and 2610.10108). Unrefereed.
+
+### Anti: the impossibility theorems written (`research/mm/anti/notebook.md` §3) [R, given OpenAI's papers; unreviewed]
+- THEOREM S (shifts): under variable-count Weak ETH, polynomial multiplication over F₂, integer multiplication, and
+  cyclic shift by an input amount each need Ω(n√log n) fan-in-2 Boolean gates. Uses ONLY printed statements of
+  OpenAI's integer-multiplication paper (Thm 7.1, Lemma 8.2, the §7.1 price bound). Ours: the circuit embedding, a
+  pinning lemma, an XOR fold turning a·x^t into a rotation, averaging over shifts. Dichotomy form stated.
+  Tight for F₂[x]: OpenAI's upper bound n(log n)^α for every α > 1/2, so the log-exponent of Boolean polynomial
+  multiplication over F₂ would be exactly 1/2 under Weak ETH. By-product, unconditional given their upper bound:
+  cyclic shift by a binary amount in O(n(log n)^{1/2+ε}) gates, beating the barrel shifter.
+- THEOREM M (matrices): Ω(n²√log n) gates for products over F₂, Boolean, (min,+), integers; also unitriangular inverse,
+  transitive closure, squaring. Two versions: M1 = Lemma 4.1 as printed + some prime without ports; M2 = Weak ETH +
+  Lemma 4.1 read for characteristic 0 (anti checked its proof uses no finiteness). Needs the lemma's entropy step
+  because there are n destinations for n² wires. Sanity: permutation × matrix has O(n² log n) circuits.
+- Lead's reduction idea (distinctness → matrix multiplication, to use the Lean statement directly): KILLED [X]. One-hot
+  permutation matrices are too wasteful an encoding (N² cells for the hard narrow-record instances), and permutation
+  products realise too few routings, so radix pipelines need Ω(n/log n) products. Mixed reductions not excluded.
+- Corollary A now rests on the Lean statement: s > N(w^η − 2)/4 − 1, every finite field, no hypotheses.
+- Constants differ between anti (÷4, ÷16) and the note (÷3): different size measures; to reconcile before publishing.

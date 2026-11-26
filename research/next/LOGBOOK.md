@@ -1988,3 +1988,14 @@ with no hypothesis.** Routing gives 3/(3+w) and 4/(6+w). (At w = 2: 3/4 against 
   constant (not used); "minimum" → "infimum" in Prop. B; one recorded margin missed σ = 0 (+0.0158 not +0.0163 at 0.92).
 Combined with the certificates: threshold 4/3 now has two checkers (same author for both encodings); threshold 5/4
 awaits the second checker.
+
+## 26 Nov (late, 74): (CL\*\*₀) verified by both checkers
+
+All 24 certificates (62.1M leaves) accepted by ivcert, `ivcheck` and `ivcheck2`; the coverage script confirms they cover
+𝓕′₁ including the central cube via the eight near-origin orthants. ivcheck2 closed 1 412 leaves by its own origin lemma
+on [−1/16, 1/16]⁶; 3771 s. Write-up: `research/ports/ivcert-notes.md` §5.
+With the refereed Theorem E, Lemma R and the convexity argument: **f*(K_{2,3}(w)) = 3/(2+w) for all w ≥ 5/4** and
+**f*(K_{2,4}(w)) = 4/(4+w) for all w ≥ 5/2**, unconditionally, modulo: the two certificates (both checkers by one author),
+Lemma R (referee checked the implications, see review-thmE §6), and the imported CAT(0) theorem.
+To do when the executor hands back: re-run the original (CL\*) suites to confirm the tool changes left them intact;
+then add the cut-regime theorem to the note.

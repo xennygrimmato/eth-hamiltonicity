@@ -47,8 +47,8 @@ theorem ratio_strict (ℓ h : ℝ) (hpos : 0 < 6 * ℓ + 2 * h) (hne : h ≠ ℓ
     rw [Real.sqrt_mul (by norm_num), show (36 : ℝ) = 6 ^ 2 by norm_num, Real.sqrt_sq (by norm_num)]]
   apply Real.sqrt_lt_sqrt (sq_nonneg _)
   rw [mul_pow, Real.sq_sqrt (by norm_num)]
-  have : 0 < (ℓ - 3 * h) ^ 2 := by
-    apply pow_pos_of_ne_zero' ; intro h0; apply hne; linarith
+  have hne' : ℓ - 3 * h ≠ 0 := by intro h0; apply hne; linarith
+  have : 0 < (ℓ - 3 * h) ^ 2 := by positivity
   nlinarith
 
 /-! ## 2. The five-point metric W5 (ℓ = 3, h = 1, i.e. h = ℓ/3) -/
@@ -78,8 +78,7 @@ lemma sqrt10_bounds : (3 : ℝ) < √10 ∧ √10 < 10 / 3 := by
 theorem w5_sums : sumT w5 = 20 ∧ sumS w5 = 6 * √10 := by
   constructor <;>
   · simp only [sumT, sumS, Fin.sum_univ_five, w5, demand, supply, isV]
-    norm_num
-    ring
+    norm_num <;> ring
 
 /-- `R(W5) = 6√10/20 = 3/√10 = √(9/10) < 1`. -/
 theorem w5_ratio : sumS w5 / sumT w5 = √(9 / 10) ∧ sumS w5 < sumT w5 := by
@@ -106,13 +105,25 @@ theorem w5_metric :
 
 /-! ## 3. Cuts: every cut metric has `Σ_S ≥ Σ_T`; hence W5 is not in the cut cone -/
 
-/-- The cut metric of `A ⊆ Fin 5`, with values in `ℕ`. -/
-def cutN (A : Finset (Fin 5)) (i j : Fin 5) : ℕ := if (i ∈ A ↔ j ∈ A) then 0 else 1
+/-- The cut metric of the side `p : Fin 5 → Bool`, with values in `ℕ`. -/
+def cutB (p : Fin 5 → Bool) (i j : Fin 5) : ℕ := if p i = p j then 0 else 1
 
-def sumTN (A : Finset (Fin 5)) : ℕ := ∑ i, ∑ j, if demand i j then cutN A i j else 0
-def sumSN (A : Finset (Fin 5)) : ℕ := ∑ i, ∑ j, if supply i j then cutN A i j else 0
+def sumTB (p : Fin 5 → Bool) : ℕ := ∑ i, ∑ j, if demand i j then cutB p i j else 0
+def sumSB (p : Fin 5 → Bool) : ℕ := ∑ i, ∑ j, if supply i j then cutB p i j else 0
 
-theorem cutN_ineq : ∀ A : Finset (Fin 5), sumTN A ≤ sumSN A := by decide
+theorem cutB_ineq_five : ∀ a b c d e : Bool, sumTB ![a, b, c, d, e] ≤ sumSB ![a, b, c, d, e] := by
+  decide
+
+theorem cutB_ineq (p : Fin 5 → Bool) : sumTB p ≤ sumSB p := by
+  have : p = ![p 0, p 1, p 2, p 3, p 4] := by funext i; fin_cases i <;> rfl
+  rw [this]; exact cutB_ineq_five _ _ _ _ _
+
+/-- The cut metric of `A ⊆ Fin 5`. -/
+def cutN (A : Finset (Fin 5)) (i j : Fin 5) : ℕ := cutB (fun i => decide (i ∈ A)) i j
+def sumTN (A : Finset (Fin 5)) : ℕ := sumTB (fun i => decide (i ∈ A))
+def sumSN (A : Finset (Fin 5)) : ℕ := sumSB (fun i => decide (i ∈ A))
+
+theorem cutN_ineq (A : Finset (Fin 5)) : sumTN A ≤ sumSN A := cutB_ineq _
 
 /-- The cut metric as a real function. -/
 def cut (A : Finset (Fin 5)) (i j : Fin 5) : ℝ := (cutN A i j : ℝ)
@@ -121,9 +132,9 @@ def cut (A : Finset (Fin 5)) (i j : Fin 5) : ℝ := (cutN A i j : ℝ)
 theorem cut_ineq (A : Finset (Fin 5)) : sumT (cut A) ≤ sumS (cut A) := by
   have h := cutN_ineq A
   have eT : sumT (cut A) = (sumTN A : ℝ) := by
-    simp only [sumT, sumTN, cut]; push_cast; rfl
+    simp only [sumT, sumTN, sumTB, cut, cutN]; push_cast; rfl
   have eS : sumS (cut A) = (sumSN A : ℝ) := by
-    simp only [sumS, sumSN, cut]; push_cast; rfl
+    simp only [sumS, sumSN, sumSB, cut, cutN]; push_cast; rfl
   rw [eT, eS]; exact_mod_cast h
 
 /-- Hence for every nonnegative combination of cut metrics `Σ_S ≥ Σ_T`, while W5 has `Σ_S < Σ_T`:
@@ -147,7 +158,8 @@ theorem w5_not_cut_combination (c : Finset (Fin 5) → ℝ) (hc : ∀ A, 0 ≤ c
   linarith [w5_ratio.2]
 
 /-- The cut `{v₁}` attains ratio 1, so the cut upper bound for the rate is exactly 1. -/
-theorem cut_v1 : sumTN {0} = 2 ∧ sumSN {0} = 2 := by decide
+theorem cut_v1 : sumTB ![true, false, false, false, false] = 2 ∧
+    sumSB ![true, false, false, false, false] = 2 := by decide
 
 /-! ## 4. Flow lower bound 3/4: `3 Σ_T d ≤ 4 Σ_S d` for every pseudometric -/
 

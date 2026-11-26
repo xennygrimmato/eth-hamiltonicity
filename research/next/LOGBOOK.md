@@ -2044,3 +2044,13 @@ to planar data. If it succeeds, the lower bound of Theorem K_m is machine-checke
 statement (plus Strassen duality, which is not formalised).
 Open decisions for the user (unchanged): building Anthropic's Lean here; whether to keep pushing drafts to the public
 repository; whether/where to announce.
+
+## 26 Nov (late, 78): the calibration is in Lean (stage 1; per the executor, rebuild pending)
+
+`PortsLean/FivePoint/Calibration.lean`, theorem `book_calibration` (w > 0): given the six exit sines with |s| ≤ 1, the bounds
+Z_ij ≤ ρ_i√(1−s_ij²) + (a_i − y_ij)s_ij + ρ_j√(1−s_ji²) + (a_j − y_ij)s_ji, and the first-order condition in the combined form
+(D/2)|s_ij + s_ji| ≤ (y_ij − D/2)(s_ij + s_ji), it concludes
+κ(Z₁₂+Z₁₃+Z₂₃+wD) + (κw/3)·D·Φ(1+9/w², 3/w)(s) ≤ Σ_i√(ρ_i²+a_i²) + Σ_i√(ρ_i²+(a_i−D)²), κ = 3/√(9+w²).
+No sign conditions on ρ, a, D needed. Calibrating vectors are algebraic (no trigonometry); only |p|, |q| ≤ 1 is used,
+which also covers the degenerate case. No discrepancy with the note's §3.2. Stages 2 (minimisers and optimality) and
+3 (metric reduction) in progress.

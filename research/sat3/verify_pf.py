@@ -103,3 +103,50 @@ def check(path):
 if __name__ == '__main__':
     allok = all([check(p) for p in sys.argv[1:]])
     print('ALL OK' if allok else 'SOME MISMATCH')
+
+
+def far_to_finite(J, M):
+    """Build an explicit finite configuration from a far-leg JSON (hubs + merge subset S): every edge's legs
+    are put at distance M along the optimal geodesic line (recomputed here from scratch)."""
+    des = design(J['design'])
+    arms, k, hubs = J['arms'], J['k'], J['hubs']
+    E = len(des['edges']); p = len(des['groups']); S = [m for m in range(p) if (J['S'] >> m) & 1]
+    off = []; o = 0
+    for g in des['groups']:
+        off.append(o); o += max(g) + 1
+    H = lambda m, g: hubs[off[m] + g]
+    inv = []
+    for m, g in enumerate(des['groups']):
+        r = max(g) + 1
+        dm = max(model_dist(H(m, i), H(m, j)) for i in range(r) for j in range(i + 1, r))
+        inv.append(1 / dm)
+    legs = []
+    for e, (u, v) in enumerate(des['edges']):
+        coef, choice = [], []
+        for f, na in enumerate(arms):
+            best = (-1e18, None)
+            for a in range(na):
+                for a2 in range(na):
+                    if a == a2: continue
+                    z = 0
+                    for m in S:
+                        hu, hv = H(m, des['groups'][m][u]), H(m, des['groups'][m][v])
+                        z += inv[m] * ((hu['t'][f] if hu['arm'][f] == a else -hu['t'][f]) + (hv['t'][f] if hv['arm'][f] == a2 else -hv['t'][f]))
+                    if z > best[0]: best = (z, (a, a2))
+            coef.append(max(best[0], 0)); choice.append(best[1])
+        B = [sum(inv[m] * (H(m, des['groups'][m][u])['x'][c] - H(m, des['groups'][m][v])['x'][c]) for m in S) for c in range(k)]
+        nrm = math.sqrt(sum(x * x for x in coef) + sum(x * x for x in B))
+        lu = {'arm': [ch[0] for ch in choice], 't': [M * x / nrm for x in coef], 'x': [M * x / nrm for x in B]}
+        lv = {'arm': [ch[1] for ch in choice], 't': [M * x / nrm for x in coef], 'x': [-M * x / nrm for x in B]}
+        legs += [lu, lv]
+    return des, legs + hubs
+
+
+def check_far(path, Ms=(1e2, 1e4, 1e6)):
+    J = json.load(open(path))
+    for M in Ms:
+        des, pts = far_to_finite(J, M)
+        b = bvec(des, pts, model_dist)
+        val = sum(max(0, x) for x in b) / len(b)
+        print('%-50s M=%g  value(py, finite) = %.6f  far value(rust) = %.6f  b = %s' % (path.split('/')[-1], M, val, J['value'], [round(x, 6) for x in b]))
+    return abs(val - J['value']) < 1e-4

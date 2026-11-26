@@ -1,0 +1,4 @@
+restart 0: 2.684893
+restart 3: 2.732051
+restart 12: 2.814149
+restart 13: 2.828427

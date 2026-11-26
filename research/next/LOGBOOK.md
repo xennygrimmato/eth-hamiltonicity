@@ -2199,3 +2199,19 @@ multiplicative complexity equals the bilinear rank over F₂. No example of a Bo
   program and re-ran ⟨2,2,2⟩, k = 5 with and without orbit reduction — same verdicts and the same 10,975 states.
 - Started my own full run of `run_mm123.sh` in the background.
 - The paper still lists ⟨1,2,3⟩ as open; to be updated together with the referee's revisions.
+
+## 27 Nov: floors of multi-merge pieces — first numbers; tree products raise the Δ₃ floor [N]
+
+From the executor (`research/sat3/s3-experiments.md`). Value = (Σ_m b_m⁺)/p per merge, larger = higher floor.
+- Two-merge crossing: Euclid √2; products tree × flat, tree × tree: exactly √2, never more; single tree and √rank on
+  Mat_μ(F₂) (exhaustive μ = 2, 3; annealed to 6): exactly 1.0. The matrix VERTEX sets are weak because √rk is the square
+  root of a metric (far legs carry no information) — c1d1's spec S3 was wrong to expect them to reproduce the flat
+  value. The relevant non-Euclidean prices are hull configurations (tree × flat).
+- K₄ with three matchings (flat 2√2, ρ = 0.4714): nothing tried beats flat.
+- **Δ₃ (flat 3√3 = 5.196, ρ = 0.5774): tripod × tripod gives 5.4641 = 2 + 2√3 (ρ = 0.6071); tripod × ℝ⁴ gives 5.4798
+  (ρ = 0.6089).** Verified by an independent evaluation on explicit finite configurations.
+So H26 is confirmed in kind for Δ₃: non-Euclidean CAT(0) configurations raise the floor above 1/√3. Open: whether these
+configurations are prices when contracting fails (m-pod × ℝ is; tripod × ℝ^k, k ≥ 2, and tripod × tripod are not
+proved), how high the supremum goes, and whether the raised floor still beats two merges once the node growth β is
+counted. K₄ is not raised by anything tried. Sent to the theory agent with three questions (β; the supremum over
+proven prices; K₄ versus Δ₃).

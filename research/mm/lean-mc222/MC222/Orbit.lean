@@ -37,7 +37,7 @@ theorem compL_xN (s : List Nat) (j : Nat) :
     compL s (xN j) = if j < 8 then lin (row s j) else 0 := by
   funext p
   by_cases h : j < 8
-  · simp [compL_apply, xN, h, sig]
+  · simp only [compL_apply, xN, h, dite_true, if_true]; rfl
   · simp [compL_apply, xN, h]
 
 theorem compL_combF (s : List Nat) (a : BitVec 16) (v : Nat → Fn) :
@@ -165,6 +165,8 @@ theorem compL_computes (s : List Nat) (hs : s ∈ sigmas) (g : Fin 6 → Fn) (hc
 def six (a b α β : BitVec 16) : Bool :=
   (α == a && β == b) || (α == b && β == a) || (α == a && β == (a ^^^ b)) ||
   (α == (a ^^^ b) && β == a) || (α == b && β == (a ^^^ b)) || (α == (a ^^^ b) && β == b)
+
+instance (l r : BitVec 16) : Decidable (Ech l r) := by unfold Ech; infer_instance
 
 /-- Some map of the list sends the pair `(a, b)` onto a basis of a representative plane. -/
 def coveredBy (a b : BitVec 16) : Bool :=

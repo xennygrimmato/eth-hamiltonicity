@@ -2491,3 +2491,28 @@ unless stated):
   statement as a template for an auditable exponent claim.
 - Novelty: nothing pre-empts MC(2×2, F₂) = 7, the K_{2,m} rates or 3/√10.
 - Correction to our 4 Nov note `research/hexagon-related.md`: the site's JSON API is readable without sign-in.
+
+**Attainment agent, note 1: the level-1 three-class crossing game is computed, and a reframing.**
+- Majdoddin's Prop. 4.23 does not apply to our game as a theorem (his cost model does not charge a piece under
+  merges for which it is not local; ours does), but H29 in the form "level-1 crossing covers + adaptive merge"
+  is dead anyway [N]: on 3-nets the level-1 value equals the two-merge value (0.6036, 0.6243, 0.6381 at
+  g = 3, 4, 5, → 1/√2), and the value increases away from the two-merge corner (uniform weights → ≈ 0.8).
+  A crossing piece evaluated under the third merge costs more than raw. Δ₃ standalone: 0.8929 (a small new
+  upper bound, irrelevant for towers).
+- **Reframing [D, to be written as a theorem and refereed].** Weak duality at every nesting depth: every CAT(0)
+  metric is a potential that survives every crossing-cover step. So crossing-generated covers have value in
+  [F_CAT, 1/√2], F_CAT = sup over ALL CAT(0) placements of the level's price value (no price-realisability, no
+  hypothesis on contracting). **H40:** F_CAT(3-nets) = 1/√2. If true: crossing-generated covers of any nesting
+  depth (including Sra-type nesting) cannot beat exponent 1/2 on nets, unconditionally. If false: F_CAT names
+  the room. Known: F_CAT ∈ [0.6124, 0.7071] on large F₂^M-nets, ≥ 2/3 on Δ₃.
+- Division of labour: attainment agent writes the weak-duality theorem; Q1 agent owns the geometry of F_CAT.
+
+**Lead's candidate for F_CAT: cones over graphs (H41).** Euclidean cones over metric graphs with all cycles
+≥ 2π are CAT(0) and sit between pods (link discrete) and planes (link a circle); m-pod × m-pod is the cone over
+K_{m,m} with edges π/2; Ã₂-building-like complexes are cones over incidence graphs of projective planes with
+edges π/3, and the lines of the 3-net of AG(2,q) are vertices of that graph. New reusable evaluator
+`research/sat3/cone/coneprod.py` (products of such cones; far-leg value; generalises `podprod.py`).
+Calibration [N]: crossing = √2 per merge in the plane, in the cone over K₃,₃ and in pod × pod (the cap), so
+the evaluator agrees with the known values. A first version exceeded the proven cap because of a numerical
+degeneracy (coincident hubs); fixed (stable distance formula, guard on δ). Runs on Δ₃ in progress; target > 6
+per merge (ρ > 2/3), cap 6.364.

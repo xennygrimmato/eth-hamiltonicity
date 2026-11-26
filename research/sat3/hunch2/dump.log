@@ -1,0 +1,4 @@
+dims 3 3 CRT ok True integer identity sum_N Psi_N = sign*perm tensor, sign = 1 ; RHS mod 2 nonzero entries: 9 = d1*d2 = 9
+dims 5 5 CRT ok True integer identity sum_N Psi_N = sign*perm tensor, sign = 1 ; RHS mod 2 nonzero entries: 25 = d1*d2 = 25
+dims 9 9 CRT ok True integer identity sum_N Psi_N = sign*perm tensor, sign = 1 ; RHS mod 2 nonzero entries: 81 = d1*d2 = 81
+dims 4 8 CRT ok True integer identity sum_N Psi_N = sign*perm tensor, sign = 1 ; RHS mod 2 nonzero entries: 32 = d1*d2 = 32

@@ -147,9 +147,12 @@ fn limit_cmd(a: &[String]) {
             }
             let f = net.pod01(&lab, net.p());
             seedvals.push((net.phi(&f), h.len()));
-            starts.push(f);
+            starts.push((net.phi(&f), f));
         }
         seedvals.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+        // best seeds first; PF_NOSTART: random chains only
+        starts.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+        let starts: Vec<TreeFactor> = if std::env::var("PF_NOSTART").is_ok() { vec![] } else { starts.into_iter().map(|x| x.1).collect() };
         println!("subgroup seeds (Phi, |H|): {:?}", seedvals.iter().map(|(v, h)| format!("{:.6}/{}", v, h)).collect::<Vec<_>>());
         let r = anneal_limit(&net, nv, iters, chains, 0.05, 1e-6, seed, &starts);
         let v = r[0].0;

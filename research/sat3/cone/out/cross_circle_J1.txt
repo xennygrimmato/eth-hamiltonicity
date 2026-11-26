@@ -1,0 +1,6 @@
+restart 0: 1.414214
+RESULT cross circle:12 J=1 subdiv=1: per merge 1.414214  rho=0.707107  (flat 0.7071, cap 0.7071)  b_k=[1.4142 1.4142]
+vert:
+ [[10  7  6  3]] 
+rho:
+ [[813.225  217.903    0.8133   0.8133]]

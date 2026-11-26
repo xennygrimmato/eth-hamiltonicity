@@ -1,0 +1,6 @@
+restart 0: 1.366025
+RESULT cross heawood J=1 subdiv=1: per merge 1.366025  rho=0.683013  (flat 0.7071, cap 0.7071)  b_k=[1.7321 1.    ]
+vert:
+ [[11  8  7  3]] 
+rho:
+ [[0.0165 0.0165 0.5838 0.    ]]

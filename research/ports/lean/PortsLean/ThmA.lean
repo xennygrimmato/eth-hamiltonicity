@@ -142,13 +142,14 @@ lemma core {Z : Type} [PseudoMetricSpace Z] (C₀ e : ℕ → ℝ) (hC : 0 ≤ C
     (∑ i, ∑ j, dist (place i) (place j) ^ 2) / Fintype.card (Fin N) ≤
       (C₀ h * D) * walkEnergy (normalizeArcs (arcs h (x h) σ L) D) place := by
   have hFp := hF _ hp
-  set w : U h → U h → ℝ := fun a b => dist (place (σ a)) (place (σ b))
   -- left side
-  have hL : (∑ g, ∑ k, w k (g * k) ^ 2) = ∑ i, ∑ j, dist (place i) (place j) ^ 2 := by
+  have hL : (∑ g, ∑ k, dist (place (σ k)) (place (σ (g * k))) ^ 2) =
+      ∑ i, ∑ j, dist (place i) (place j) ^ 2 := by
     rw [Finset.sum_comm]
-    have : ∀ k, (∑ g, w k (g * k) ^ 2) = ∑ b, w k b ^ 2 := fun k =>
+    have : ∀ k, (∑ g, dist (place (σ k)) (place (σ (g * k))) ^ 2) =
+        ∑ b, dist (place (σ k)) (place (σ b)) ^ 2 := fun k =>
       Fintype.sum_equiv (Equiv.mulRight k) _ _ (fun _ => rfl)
-    simp only [this, w]
+    simp only [this]
     rw [← Equiv.sum_comp σ.symm]
     simp only [Equiv.apply_symm_apply]
     refine Finset.sum_congr rfl fun i _ => ?_
@@ -156,7 +157,7 @@ lemma core {Z : Type} [PseudoMetricSpace Z] (C₀ e : ℕ → ℝ) (hC : 0 ≤ C
     simp
   -- walk energy
   have hW : (D : ℝ) * walkEnergy (normalizeArcs (arcs h (x h) σ L) D) place =
-      ∑ j, ∑ k, w k (x h j * k) ^ 2 := by
+      ∑ j, ∑ k, dist (place (σ k)) (place (σ (x h j * k))) ^ 2 := by
     unfold walkEnergy normalizeArcs arcs
     rw [Finset.mul_sum]
     have hD' : (D : ℝ) ≠ 0 := by exact_mod_cast hD.ne'
@@ -171,34 +172,32 @@ lemma core {Z : Type} [PseudoMetricSpace Z] (C₀ e : ℕ → ℝ) (hC : 0 ≤ C
           (∑ j' : Fin (h - 1), if j = σ (x h j' * σ.symm i) then dist (place j) (place i) ^ 2 else 0) +
           (if i = j then (L : ℝ) * dist (place j) (place i) ^ 2 else 0) := by
         intro j
-        rw [mul_div_cancel₀ _ hD' |>.symm ▸ rfl]
         field_simp
         rw [add_mul, Finset.sum_mul]
         congr 1
         · refine Finset.sum_congr rfl fun j' _ => ?_
-          split_ifs <;> simp
-        · split_ifs <;> simp
+          split_ifs <;> try simp
+        · split_ifs <;> simp [mul_comm]
       simp only [this, Finset.sum_add_distrib]
       rw [Finset.sum_comm]
       simp
     simp only [this]
-    rw [Finset.sum_comm, ← Equiv.sum_comp σ]
+    rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun j' _ => ?_
     rw [← Equiv.sum_comp σ]
     refine Finset.sum_congr rfl fun k _ => ?_
-    simp [w, dist_comm]
-  rw [hL] at hFp
-  rw [← hW] at hFp ⊢
+    simp [dist_comm]
+  rw [hL, ← Finset.sum_div, ← hW] at hFp
   have hn : (0 : ℝ) < Fintype.card (U h) := by rw [hcard]; exact_mod_cast hN
-  rw [Fintype.card_fin, ← hcard]
+  rw [Fintype.card_fin]
+  have hc : (Fintype.card (U h) : ℝ) = N := by exact_mod_cast hcard
+  rw [hc] at hFp hn
+  set Q := ∑ i, ∑ j, dist (place i) (place j) ^ 2
+  set WE := walkEnergy (normalizeArcs (arcs h (x h) σ L) D) place
   rw [div_le_iff₀ (by positivity)] at hFp
   rw [div_le_iff₀ hn]
-  have hWE := hFp
-  calc (∑ i, ∑ j, dist (place i) (place j) ^ 2)
-      ≤ C₀ h * ((D : ℝ) * walkEnergy (normalizeArcs (arcs h (x h) σ L) D) place) /
-          (Fintype.card (U h) : ℝ) * (Fintype.card (U h) : ℝ) ^ 2 := hWE
-    _ = C₀ h * D * walkEnergy (normalizeArcs (arcs h (x h) σ L) D) place *
-          (Fintype.card (U h) : ℝ) := by field_simp
+  calc Q ≤ C₀ h * ((D : ℝ) * WE / (N : ℝ)) * (N : ℝ) ^ 2 := hFp
+    _ = C₀ h * D * WE * (N : ℝ) := by field_simp
 
 end Graph
 
@@ -235,7 +234,8 @@ theorem theorem_A
   have hrows : ∀ i, ∑ j, H i j = 2 ^ e := by
     intro i
     have := degExp_lt h
-    rw [arcs_rows]; omega
+    show ∑ j, arcs h (x h) σ (2 ^ e - (h - 1)) i j = 2 ^ e
+    rw [arcs_rows]; exact Nat.add_sub_cancel' this.le
   have hsymm : ∀ i j, H i j = H j i := arcs_symm σ L (x_invol h)
   have hN : 0 < 2 ^ s := by positivity
   have hD : 0 < 2 ^ e := by positivity

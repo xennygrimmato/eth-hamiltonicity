@@ -887,3 +887,24 @@ Report: `research/ports/review-theoremAB.md`. The referee could not break "contr
   time (needed for the uniform statement).
 - Action: asked the Lean executor to scope a machine-checked guess count against Anthropic's Lean (define guess count
   on their program syntax; additivity under `compC`; bound for `dealProg`).
+
+## 26 Nov (late, 5): referee final on Theorem R — survives with fixes [V]; uniformity open
+
+Report: `research/ports/review-theoremR.md`.
+- **Proved and reviewed (non-uniform form):** contracting over a char-0 field ⇒ 3-SAT ∈ DTIME(2^{n^{1−δ}})/poly,
+  δ < 187/(5H+187) ≈ 0.121 at H = 272. Contradicts non-uniform Weak ETH. Uses Anthropic §§F–J only.
+- **Uniform form: gap, plausible.** `thm_onecut` builds G from witnesses `TT` (from `thm_tree`, via `prop_pieces`) and
+  `pc` that Lean only shows to exist, and whose specs include uncheckable sum identities. Paper prose says the
+  constructions are explicit (l.2781–2785, l.3135–3136). Not verified in the Lean proofs. → audit launched.
+- Guess count recomputed against Lean: ≤ 2rΛ³(4Λ²)^r·τ/v²³⁶ ≤ τ/v²³⁵. Any total τ/v^{48+g} gives ρ = H/(H+g).
+- 3-SAT encoding, char 0, Nullstellensatz: correct. ψ need not be injective; constant table is non-explicit but
+  n-independent.
+- No clash with K.6. Contracting is used only through the laws (G.2).
+- Stronger consequence than the notebook states: subexponential *counting* for nondeterministic linear time.
+- Corollary 2 (engine optimality under Weak ETH) NOT checked; depends on review-link and the flat-floor theorem.
+- Recipe for a Lean check: `guesses` field on the run record of `Ev`; guess-aware `DoesG`; `CutDG` = `CutD` + guess
+  bound threaded through `thm_onecut_program` (g = nS·X + mm·bd·ub), `thm_cut_compose` (g₁ + P₁·g₂), `thm_cut`.
+
+**State of the headline.** "Anthropic's contracting case contradicts (non-uniform) Weak ETH" now has two independent
+routes, each refereed once: Theorem A (via OpenAI HC 4.2 + IM 7.1) and Theorem R (Anthropic only).
+**Launching:** uniformity audit of `thm_tree`/`prop_pieces`; first draft of the note.

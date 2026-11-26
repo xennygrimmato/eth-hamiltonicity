@@ -31,7 +31,7 @@ The five findings that matter most are collected in §0. Parts 1–6 follow the 
    and AN's contracting inequality D(μ) ≤ s·D(1), s² < μ, are the same inequality: Mat_μ(F₂) is the big cell of
    the Grassmannian of μ-planes in F₂^{2μ} (a ↦ graph of a), and rk(a−b) = dim(Γ_a+Γ_b) − μ. (Part 2.)
 3. **[D] The Izeki–Nayatani route to ports is closed unless contracting holds.** If √rk on Mat_μ(F₂) is a price
-   for all μ, the class of spectral spaces has Izeki–Nayatani invariant tending to 1 (I get δ ≥ 1 − 8/μ), and it
+   for all μ, the class of spectral spaces has Izeki–Nayatani invariant tending to 1 (I get δ ≥ 1 − 4/(μ−1), §3.3), and it
    contains the square-root snowflake of a genuine expander Cayley graph (rank-one generators, spectral gap ≥ 1/2,
    degree 2^{2μ}, order 2^{μ²}) whose nonlinear Poincaré constant is μ ≈ 2·log n/log d: exactly the borderline rate
    of HC Theorem 4.2. So "spectral gap ⇒ nonlinear gap" fails for spectral targets in that case. (Parts 3–4.)
@@ -308,8 +308,8 @@ So **contracting over k ⇔ ρ_μ is not a price over k for some μ ⇔ ρ_μ is
 > metrics of vertex sets of the Bruhat–Tits building of GL_{2μ}(F₂((t))) (c1 §2), not embeddable in Hilbert space
 > (c1 §4, x5) and not tree metrics (they contain unit squares).
 
-Proof of (i): ρ_μ not a price ⇒ ρ_{μ′} not a price for all μ′ ≥ μ ⇒ contracting fails to fail at μ′ ≥ 3, i.e.
-by D.2/D.3 contracting holds ⇒ Theorem A. (ii): M5 ⊂ Mat₂(F₂) with the restricted metric (x5 [N]: checked exactly),
+Proof of (i): ρ_μ not a price ⇒ ρ_{μ′} not a price for all μ′ ≥ μ, in particular for some μ′ ≥ 3 ⇒ (by AN D.2
+and D.3: if contracting failed, ρ_{μ′} would be a price) contracting holds ⇒ Theorem A. (ii): M5 ⊂ Mat₂(F₂) with the restricted metric (x5 [N]: checked exactly),
 and a restriction of a price is a price, so M5 not a price ⇒ ρ₂ not a price. This is the claim of
 `ideas-dichotomy.md` Idea 2, with the same direction; it is correct. (iii) is the contrapositive plus IM 7.1.
 A caution on (i) at μ = 2: "ρ₂ is not a price" gives "ρ₃ is not a price" by pull-back, and it is the latter that
@@ -421,3 +421,123 @@ Constructions of prices, and whether they reach M5:
 | Rescaling, convex hulls, ultralimits | preserve the class but create nothing non-Euclidean from flats and trees: the closure of {Hilbert, trees} under these is {Hilbert spaces, ℝ-trees} |
 | Valued prices / Gauss lift (MM §5–6): prices over a field with a valuation | the natural source of building-like geometry (lattices in F₂((t))^n are exactly c1's L_a). MM uses them only to produce trees under its strict-saving hypothesis. Whether a valued price over F((t)) induces an ordinary price on lattice classes with the building metric is the most promising constructive question [C] |
 | Non-constructive: "not a price ⇒ contracting ⇒ ports ⇒ contradiction" | the only known route (OA proved flats this way, with cube exclusion supplying a second ingredient). With Weak ETH as the contradiction it is Theorem B(iii) |
+
+---
+
+## Part 3. What is known in metric geometry
+
+### 3.1 Definitions
+
+For a finite regular graph G and a metric space Y, the nonlinear spectral gap is
+λ₁(G,Y) = inf over non-constant placements of (edge energy)/(pair energy), with squared distances; G_n is an
+expander family with respect to Y if λ₁(G_n,Y) is bounded below. Ports = "some bounded-degree family is an
+expander family with respect to the whole class X_χ, uniformly".
+
+### 3.2 Results (exact pointers; search results noted where I could not open the paper)
+
+1. **Gromov's cones; Kondo.** [K] Gromov ("Random walk in random groups", GAFA 2003) noted that the Euclidean
+   cone over a graph of girth g, with edges rescaled to length 2π/g, is CAT(0), so large-girth expanders are not
+   expanders with respect to their own cones. Kondo ("CAT(0) spaces and expanders", Math. Z. 271 (2012)) built the
+   first complete CAT(0) space with Izeki–Nayatani invariant δ = 1, containing such configurations. (I confirmed
+   by search that Kondo's is cited as the first δ = 1 example, e.g. in Toyoda arXiv:1102.0729; I did not open
+   Math. Z.) In such a cone, edge energy ≈ (2π/g)² and pair energy ≈ 4, so the Poincaré constant is ≈ g² ≈ (log n)²:
+   the largest possible.
+2. **Mendel–Naor**, "Expanders with respect to Hadamard spaces and random graphs", Duke Math. J. 164 (2015),
+   arXiv:1306.5434. [K, abstract]: there is a Hadamard space X and a sequence of 3-regular graphs that are
+   expanders with respect to X, although random regular graphs are almost surely not expanders with respect to X.
+   So for one Hadamard space the answer depends on the graph family: "is an expander in the classical sense" is
+   neither necessary nor sufficient information. This is the template for the cell {not contracting, ports}.
+3. **Mendel–Naor**, "Nonlinear spectral calculus and super-expanders", Publ. IHÉS 119 (2014). [K] The zig-zag
+   iteration with Cesàro averages: a class of spaces for which (i) Cesàro averaging of walks improves the Poincaré
+   constant ("nonlinear spectral calculus", true in Hadamard spaces via barycentres) and (ii) one base graph has a
+   small enough constant, admits bounded-degree expanders. HC Lemma 4.1 + Theorem 4.2 and EG §11.1.3 are this
+   argument with explicit constants; EG cites [20, Cor. 1.9], [21, Thm 1.13(V), §8], [22, Thm 3.4].
+4. **Izeki–Nayatani invariant.** [K] Izeki–Nayatani, "Combinatorial harmonic maps and discrete-group actions on
+   Hadamard spaces", Geom. Dedicata 114 (2005). For a finitely supported probability measure ν on a complete
+   CAT(0) space Y with barycentre b: δ(ν) = inf over maps φ: supp ν → Hilbert space with ‖φ(p)‖ = d(p,b) and
+   ‖φ(p)−φ(q)‖ ≤ d(p,q) of ‖∫φ dν‖²/∫‖φ‖² dν; δ(Y) = sup_ν δ(ν) ∈ [0,1]. Theorem (as quoted in Toyoda,
+   arXiv:1102.0729, Prop. 3.3): (1−δ(Y))·μ₁(G) ≤ λ₁(G,Y) ≤ μ₁(G), where μ₁ is the scalar gap. (One survey quotes
+   an extra factor 1/2 on the left; the constant should be checked in the original before use.) Hence: if
+   δ(Y) ≤ c < 1 for every Y in a class, **every** classical expander family is an expander family for the class.
+5. **Values.** [K] δ = 0 for Hilbert spaces and for trees (Izeki–Nayatani 2005; the search confirms "δ < 1" for
+   Hilbert spaces, Hadamard manifolds, trees, CAT(0) cube complexes and Bruhat–Tits buildings, and δ ≤ 1/2 for
+   CAT(0) cube complexes (Fujiwara–Toyoda, arXiv:1012.4147); the exact value 0 for trees/Hilbert is from the
+   original paper and standard). For the building of SL₃(ℚ₂): δ ≤ 0.4122, and the method gives a bound above 1/2
+   for SL₃(ℚ_p), p ≥ 3 (Izeki–Nayatani, quoted in the survey arXiv:math/0612736). δ is stable under ℓ₂ products
+   and limits (δ(X×Y) ≤ max; Izeki–Kondo–Nayatani).
+6. **Toyoda.** [K] "CAT(0) spaces on which a certain type of singularity is bounded" (arXiv:1010.1963): δ(Y) < 1
+   if the family of spaces of directions (tangent cones) of Y is Gromov–Hausdorff precompact. "Fixed point
+   property for a CAT(0) space which admits a proper cocompact group action" (arXiv:1102.0729): a geodesically
+   complete CAT(0) space with a proper cocompact isometric action has δ < 1, so every expander family is an
+   expander family with respect to it. Both are statements about ONE space of bounded local complexity. Neither is
+   uniform over buildings of growing rank.
+7. **Izeki–Kondo–Nayatani**, "Fixed-point property of random groups" (Ann. Global Anal. Geom. 2009) and "N-step
+   energy of maps and fixed-point property of random groups" (arXiv:1210.5829): random groups fix points in all
+   CAT(0) spaces with δ ≤ C < 1; extended to a class including all Hadamard manifolds.
+8. **Strong property (T).** [K] V. Lafforgue (Duke 2008; J. Topol. Anal. 2009): SL₃ over a non-archimedean local
+   field has strong Banach property (T); the expanders from its lattices do not coarsely embed in uniformly convex
+   Banach spaces. de la Salle; de Laat–de la Salle (arXiv:1401.3611, 1705.03296, 2303.01405): strong (T) and fixed
+   points on uniformly convex Banach spaces for higher-rank groups and lattices. These give super-expanders for
+   Banach targets. I found no statement giving expanders with respect to all Euclidean buildings of all ranks, or
+   with respect to all CAT(0) spaces of some non-compact local type.
+9. **All Hadamard spaces at once.** I did not find a citable theorem that no bounded-degree family is an expander
+   family with respect to all Hadamard spaces simultaneously. For large-girth families it is item 1. In general it
+   is [C] (HC Theorem 4.2 reduces it to: every bounded-degree graph has Poincaré constant ≥ c log n against some
+   Hadamard space). It is not needed below.
+
+### 3.3 Two derivations that locate the spectral class [D]
+
+**(a) Buildings of growing rank have δ → 1, and classical expanders fail against them.** Let Y be any complete
+CAT(0) space containing (Mat_μ(F₂), ρ_μ) isometrically, e.g. (after scaling by √2) the Bruhat–Tits building of
+GL_{2μ}(F₂((t))) by c1 §2 [K-ours]. Let ν be uniform on Mat_μ(F₂), b its barycentre.
+
+- Every 1-Lipschitz map φ of (Mat_μ(F₂), ρ_μ) into a Hilbert space has E‖φ(a)−φ(a′)‖² ≤ 2 for independent
+  uniform a, a′. (Fourier on F₂^{μ²} as in c1 §4: the energy at frequency B is weighted by 1/2 for uniform
+  differences and by p₁(rk B) > 1/4 for rank-one differences, and rank-one differences have ‖·‖² ≤ 1.) So
+  Var φ ≤ 1.
+- E d(a,b)² ≥ E ρ_μ(a,a′)²/4 ≥ (μ−1)/4 by the triangle inequality (the mean rank of a uniform matrix exceeds μ−1).
+- Hence ‖Eφ‖² = E‖φ‖² − Var φ ≥ E d(a,b)² − 1 and δ(Y) ≥ δ(ν) ≥ 1 − 4/(μ−1).
+
+So **the Bruhat–Tits buildings of GL_n(F₂((t))) have Izeki–Nayatani invariant → 1 as n → ∞** (each one has δ < 1 by
+Toyoda). Equivalently: the Cayley graph Cay(Mat_μ(F₂), rank-one matrices) has scalar spectral gap ≥ 1/2 (every
+nontrivial character sees more than 1/4 of the generators with sign −1) but nonlinear Poincaré constant
+E ρ²/1 ≈ μ against the building. I have not found this in the literature; it is elementary and should be
+checked for novelty before being claimed.
+
+**(b) The borderline is hit exactly.** For G_μ = Cay(Mat_μ(F₂), rank-one): n = 2^{μ²}, d ≈ 2^{2μ},
+β = μ ≈ 2·log n/log d. For the Grassmann graph J of m-planes in F₂^{2m} with σ_m: β = m ≈ log n/log d as well
+(n ≈ 2^{m²}, d ≈ 2^{m}). In the tangent cone at a vertex (the Euclidean cone over the spherical building of
+GL_N(F₂)): nested subspaces of dimensions k, k+1 near N/2 are at angle ≈ 2/√N, generic pairs of half-dimensional
+subspaces are nearly opposite; again β ≈ N ≈ 2 log n/log d. HC Theorem 4.2 says that without ports every graph has
+β ≥ c·log n/log(d+1). So **if these building metrics are prices, the dense graphs attached to them already have
+the no-ports growth rate, with the right dependence on the degree.** This is a snowflake phenomenon: ρ_μ is the
+square root of the graph metric of G_μ, so pair energy/edge energy = mean graph distance ≈ diameter ≈ log n/log d.
+In a Hilbert space the square root of a graph metric can be isometric only for graphs that are poor expanders
+(the cube); in a building it happens for a graph with spectral gap 1/2.
+
+**(c) What this does not give.** Ports needs only ONE bounded-degree family. Item 2 (Mendel–Naor) shows that a
+space defeating classical expanders can still admit expanders. So (a)–(b) do not prove "not contracting ⇒ no
+ports". The missing statement is purely metric:
+
+> **Question Q-build [open, metric geometry].** Is there a bounded-degree family of graphs that is a uniform
+> expander family with respect to all Bruhat–Tits buildings of GL_n(F₂((t))), n → ∞ (or with respect to the
+> metrics σ_m, all m)? If NO: contracting ⇔ ports, and ports ⇔ "some ρ_μ is not a price". If YES: the cell
+> {not contracting, ports} cannot be excluded by these metrics alone.
+
+A sanity check [D]: Anthropic's own graphs (U_h with the h−1 elementary generators, placed by g ↦ g·U₀ on the big
+cell) have pair energy ≈ h/4 and edge energy ≤ 1 in σ, i.e. β = Θ(h) = Θ(√log n) at degree h−1. That matches the
+form of AN F.6 (β ≤ C₀(h−1)), so these graphs do not separate the cases either.
+
+### 3.4 The decisive question, restated
+
+Which Hadamard spaces are spectral? After Parts 2–3:
+
+- If some σ_m (equivalently some ρ_μ) is NOT spectral: ports (Prop. 11.2′ / Theorem A). No Izeki–Nayatani
+  argument is needed; the zig-zag iteration does it.
+- If all σ_m are spectral: δ(X_χ) = 1, the Izeki–Nayatani route is closed, and ports ⇔ a positive answer to a
+  Q-build-type question for the full (unknown) class X_χ.
+
+So H14 of our LOGBOOK ("if every spectral space has δ bounded below 1, ordinary expanders are ports") is true but
+its hypothesis is equivalent to something at least as strong as contracting, and the sharper statement is
+Theorem A. The brief's alternative "some spectral space contains cones over expanders coarsely ⇒ no ports" is
+right as stated; what Weak ETH is known to force is weaker (the buildings), see Part 4.

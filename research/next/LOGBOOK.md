@@ -743,3 +743,18 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   contracting-case lower bound.
 - H16 [C]: contracting is false over ℚ (i.e. Weak ETH-type hardness wins), and the provable content is the
   implication "contracting ⇒ fast 3-SAT" on Anthropic's footing.
+
+### Ports strategist, interim 3: metric geometry (`research/ports/ideas-ports.md` §3) [K + one new derivation, unreviewed]
+- Literature: Kondo (first CAT(0) space with Izeki–Nayatani invariant 1); Mendel–Naor 2015 (classical expansion is
+  neither necessary nor sufficient against Hadamard spaces; their zig-zag with Cesàro averages is what OpenAI's
+  certificate implements); Izeki–Nayatani inequality; δ = 0 for trees and Hilbert space, ≤ 0.4122 for the SL₃(ℚ₂)
+  building, ≤ 1/2 for cube complexes; nothing uniform in the rank.
+- New (elementary, unreviewed): any CAT(0) space containing √rank on Mat_μ(F₂) has Izeki–Nayatani invariant
+  ≥ 1 − 4/(μ−1). So buildings of GL_n(F₂((t))) have invariant → 1 as n grows, and the rank-one Cayley graph on
+  Mat_μ(F₂) has nonlinear Poincaré constant ≈ μ ≈ 2 log n/log d against them — exactly the growth OpenAI's theorem
+  says every graph has when there are no ports.
+- H14 resolved: the Izeki–Nayatani route to ports is not independent. It works only if some √rank metric is not a
+  price, and then Theorem A already gives ports. If all are prices, the spectral class has invariant 1.
+- Missing for "contracting ⇔ ports": Q-build — is there a bounded-degree family that expands against the buildings of
+  GL_n(F₂((t))) for all n at once? Not decidable from classical expansion. Anthropic's graphs sit at Θ(√log n) in
+  both worlds and do not separate the cases.

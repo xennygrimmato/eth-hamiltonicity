@@ -869,3 +869,21 @@ Report: `research/ports/review-theoremAB.md`. The referee could not break "contr
   B.3 (validity in all CAT(0) spaces only conjectured) and constraints on non-wire tensors. → possible later probe.
 - Weakest link is imported: AN F.6, OA HC 4.2, and for 3-SAT the OA chain HC 13.1 → IM 7.1 — which is exactly what
   Theorem R (rebase) would remove, if Lemma 1 survives its own referee.
+
+## 26 Nov (late, 4): referee interim on Theorem R — Lemma 1 holds after small fixes
+
+- Paper text supports the guess count: J.3 proof l.3130–3143 ("All of this is deterministic except for the guesses";
+  plan ≤ τΛ/v²⁵⁶ steps; cut packets kΛ·τΛ/v³⁰⁰). Exponents 256 and 300 are the paper's (Table 2); 235/236 are ours.
+- The referee went to Anthropic's Lean: the one-cut program is `dealProg` = `dealF`; its only guess constructs are
+  `pickB` and `bitsB`; the s-dependent phases (`wordB`, `partStep`) contain no guess; `compC` adds none.
+- Robust: even the coarse bound from the J.3 *statement* gives ≈ τ/v¹⁹¹, i.e. ρ = H/(H+143). Exponents
+  ρ = H/(H+187), δ < 187/(5H+187) recomputed and confirmed.
+- Fixes: a power of Λ; "every run" → prune the run tree at g guesses and t steps.
+- **New weakest point: uniformity.** Lean takes the plan structure from `thm_tree` (Nonempty) and pieces from
+  `prop_pieces`; their specs include sum identities that cannot be checked by an algorithm. Unless those witnesses are
+  explicit constructions, Theorem R gives 3-SAT with poly-size advice (contradicting non-uniform Weak ETH), not a
+  uniform algorithm.
+- H18 status: Lemma 1 [V, interim]. H20 [C]: the witnesses of `thm_tree`/`prop_pieces` are constructible in poly(v)
+  time (needed for the uniform statement).
+- Action: asked the Lean executor to scope a machine-checked guess count against Anthropic's Lean (define guess count
+  on their program syntax; additivity under `compC`; bound for `dealProg`).

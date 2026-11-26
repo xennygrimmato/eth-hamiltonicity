@@ -3085,3 +3085,10 @@ H45.
 - Final pin: the paper, its Appendix A and the X draft cite commit 847247eee74fa403e6f7564fe31f62b00b84e68b of xennygrimmato/math (guide
   pinned by commit; tools/mc222 and research/mm/lean-mc222 differ from aef111e only by the three added
   checker files).
+
+**H45, type B (executor, interim) [N]: no gain near the corner on the Z₅ net.** At w = (0.48, 0.48, 0.04)
+the type-B depth-2 value (crossing two hub–hub bonds) is 0.659215 = level 1; no strategy improves on it,
+and none even passes the filter where the adversary plays the level-1 maximisers and the third angle is
+maximised exactly (maximum violation 0). Coverage: 270 orbits of first pieces × 44 850 second pairs × 75
+splits. Positive control on Δ₃ at uniform weights: 0.939002 → 0.925198 (better than type A's 0.929966);
+at (½, ½, 0) on Δ₃ nothing. Other weight vectors running.

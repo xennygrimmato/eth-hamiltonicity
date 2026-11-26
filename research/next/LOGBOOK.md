@@ -1554,3 +1554,17 @@ Status of the middle-cell results: Theorem M0, kernel lemma + Prop. S ([L] too),
   **So a rate ≥ 0.8358 is backed by finitely many (float) LPs; the limit 0.83772 rests on a numerical claim** (the game
   maximum over term types is at all-middle; referee's 17³ grid + 40 local searches agree).
 - Full report to follow.
+
+## 26 Nov (late, 45): explicit protocol passes review, with one correction [V]
+
+`research/ports/review-protocol.md`: no fatal gap. Correction: what is proved is rate ≥ 1/n*(B) for each finite bucket
+count B (n*(2) = 1.2029076 → 0.83132; n*(16) = 1.19643 → 0.8358), from floating-point LPs; the limit 6/(4+√10) holds
+only if the game maximum over term types is at all-middle ([N]; the value is neither convex nor concave in the ranks).
+- Crossing identity matches Lean `prop_identity`/`matM`, integer, every field; A.3 with hubs at real parties fine;
+  GHZ index and time-sharing fine; all lower-order terms accounted.
+- Class sizes confirmed (log₂ D₁ = 42.555, log₂ D₂ = 127.807; rate 0.75291); "first above 3/4" is the first point of a
+  one-parameter scan, with a 0.4% margin resting on float LPs.
+- Not refereed: notes §3.3 (nesting heuristics), §4.
+K_{2,3} note updated: scope bullet, status-table row and open problem 1 now describe the family and its status.
+Follow-up launched: exact rational certificates for the bucket games (finite check: for each of the B³ types a
+rational mixture with all six edge loads below a rational bound, with rank bounds rounded up).

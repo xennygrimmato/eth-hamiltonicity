@@ -259,7 +259,10 @@ pub fn anneal(g: &Graph, mu: usize, obj: Objective, opts: &Opts, f0: Vec<u64>) -
     let mut rng = SmallRng::seed_from_u64(opts.seed);
     let mut st = State::new(g, mu, f0);
     let mut cur = value(obj, n, g.d, st.pdir, st.edir);
+    // best placement, stored lazily: while at_best the current state is the best one, and it is copied
+    // only when an accepted move leaves it without improving
     let mut best = (cur, st.f.clone(), st.pdir, st.edir);
+    let mut at_best = false;
     let mut cum = [0.0; 6];
     let tot: f64 = opts.p_moves.iter().sum();
     let mut acc = 0.0;
@@ -274,6 +277,10 @@ pub fn anneal(g: &Graph, mu: usize, obj: Objective, opts: &Opts, f0: Vec<u64>) -
     for cyc in 0..cycles {
         if cyc > 0 {
             // restart the cycle from the best placement found so far
+            if at_best {
+                best.1.copy_from_slice(&st.f);
+                at_best = false;
+            }
             st = State::new(g, mu, best.1.clone());
             cur = best.0;
         }
@@ -304,6 +311,10 @@ pub fn anneal(g: &Graph, mu: usize, obj: Objective, opts: &Opts, f0: Vec<u64>) -
                 if let Some((np, ne)) = st.try_ball(&ball, &*tf, maxr) {
                     let nv = value(obj, n, g.d, np, ne);
                     let ok = nv >= cur || rng.gen::<f64>() < ((nv - cur) / t).exp();
+                    if ok && at_best && nv <= best.0 {
+                        best.1.copy_from_slice(&st.f);
+                        at_best = false;
+                    }
                     st.finish_ball(&ball, &*tf, ok, np, ne);
                     if ok {
                         cur = nv;
@@ -329,6 +340,10 @@ pub fn anneal(g: &Graph, mu: usize, obj: Objective, opts: &Opts, f0: Vec<u64>) -
                 if let Some((np, ne_tot, nr, ne)) = st.try_vertex(v, b, maxr) {
                     let nv = value(obj, n, g.d, np, ne_tot);
                     if nv >= cur || rng.gen::<f64>() < ((nv - cur) / t).exp() {
+                        if at_best && nv <= best.0 {
+                            best.1.copy_from_slice(&st.f);
+                            at_best = false;
+                        }
                         st.accept_vertex(v, b, np, ne_tot, nr, ne);
                         cur = nv;
                         accepted += 1;
@@ -336,9 +351,15 @@ pub fn anneal(g: &Graph, mu: usize, obj: Objective, opts: &Opts, f0: Vec<u64>) -
                 }
             }
             if cur > best.0 {
-                best = (cur, st.f.clone(), st.pdir, st.edir);
+                best.0 = cur;
+                best.2 = st.pdir;
+                best.3 = st.edir;
+                at_best = true;
             }
         }
+    }
+    if at_best {
+        best.1.copy_from_slice(&st.f);
     }
     let nn = (n * n) as f64;
     ChainResult {

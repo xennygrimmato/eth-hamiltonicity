@@ -51,22 +51,9 @@ pub fn rank(mut x: u64) -> u32 {
 #[inline]
 pub fn ranks_against(b: u64, f: &[u64], out: &mut [u8]) -> i64 {
     let mut s = 0i64;
-    let n = f.len();
-    let full = n / 8 * 8;
-    for c in (0..full).step_by(8) {
-        let mut x = [0u64; 8];
-        for l in 0..8 {
-            x[l] = b ^ f[c + l];
-        }
-        let r = rank8(x);
-        for l in 0..8 {
-            out[c + l] = r[l] as u8;
-            s += r[l] as i64;
-        }
-    }
-    for w in full..n {
-        let r = rank(b ^ f[w]);
-        out[w] = r as u8;
+    for (o, &x) in out.iter_mut().zip(f.iter()) {
+        let r = rank(b ^ x);
+        *o = r as u8;
         s += r as i64;
     }
     s

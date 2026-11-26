@@ -49,9 +49,11 @@ Item 1 says that tensor restriction beats routing on these five parties by at le
 
 - **Scope of the theorem.** f* is the rate of exact asymptotic restriction, with uniform demand on the four
   wires. Item 1 is non-constructive.
-- **No explicit protocol.** No explicit protocol of rate above 3/4 is known. Item 1 comes from Strassen's
-  duality theorem, which proves that protocols exist and does not construct them. Numerical searches (§4.6) found
-  nothing above 3/4 at the sizes tried.
+- **No explicit protocol near 3/√10.** Item 1 comes from Strassen's duality theorem, which proves that protocols
+  exist and does not construct them. Numerical searches (§4.6) found nothing above 3/4 at the sizes tried. After this
+  note was drafted, an explicit asymptotic family with rate above 3/4 was derived from the crossing identity of [AN]
+  (rate ≥ 0.8313, and 6/(4+√10) ≈ 0.8377 in the limit under one numerical claim); see open problem 1. It is not part
+  of Theorem K, and its smallest instances are far beyond direct computation.
 - **No unconditional value.** If contracting holds over k, we know only f*(k) ∈ [3/√10, 1].
 - **No claim that contracting holds or fails** over any field.
 - **Border protocols.** Nothing is claimed for border protocols over finite fields, or over infinite fields
@@ -717,15 +719,31 @@ the CN inequality.)
 | K.4(b) bond 2 border over ℂ | [P], uses [Lan06] | — | no | — | ALS floor 0.6695 |
 | K.4(c) ℓ₁ ⇒ R ≥ 1; cut {v₁} gives 1 | [P] | — | `cut_ineq`, `w5_not_cut_combination`, `cut_v1` | — | — |
 | Flow 3/4 | [P] | — | `flow_bound` | — | — |
-| Explicit protocols above 3/4 | none known | — | — | — | none found single-shot at D_s ≤ 5 |
+| Explicit protocols above 3/4 | [D] family at rate ≥ 0.8313 (`protocol/notes.md`) | review-protocol: no fatal gap; limit 0.8377 only numerical | — | — | float LPs; none found single-shot at D_s ≤ 5 (none can exist from this construction below wire dimension ≈ 2⁵⁰) |
 
 ---
 
 ## 8. Open problems
 
-1. **Explicit protocols above 3/4.** Item 1 guarantees restrictions T^{⊗m} ≤ S^{⊗(n+o(n))} for every rate below
-   3/√10, but none is known above 3/4. A search for an exact or border protocol at a rate in (3/4, 3/√10) (for
-   example 16 → 13) is the natural first target. Existence is guaranteed there only asymptotically. Above 3/√10, a
+1. **Explicit protocols between 0.8377 and 3/√10.** Item 1 guarantees restrictions T^{⊗m} ≤ S^{⊗(n+o(n))} for every
+   rate below 3/√10. What is known explicitly (`protocol/notes.md`; refereed once, `review-protocol.md`):
+   - *Construction.* Split the u₁u₂ demand into three factors, pair each with one wire v_iv_j, and apply the crossing
+     identity [AN, Prop. B.2] to each pair: the pair is a sum of polynomially many integer tensors whose log-ranks
+     across the two crossing cuts satisfy r² + r′² ≤ 2(p²+q²). By [AN, Lemma A.3] each term is a restriction of a
+     three-wire network through u₁ or through u₂. Over many blocks the realisation is chosen per term; all five
+     parties hold the term index as a GHZ index, which costs O(1) supply copies per block. The required supply is
+     the value of a finite zero-sum game.
+   - *Rates.* For B buckets per pair the rate is 1/n*(B), with n*(2) = 1.20291 and n*(16) = 1.19643 from
+     floating-point linear programs (two independent implementations): rate ≥ 0.8313, and ≥ 0.8358. The limit is
+     6/(4+√10) ≈ 0.83772 if the game's maximum over term types is at the all-middle type, which is supported only
+     numerically. Exact rational certificates for the linear programs have not been produced.
+   - *This is the ceiling for the method without nesting:* the minimum of R over five-point metrics satisfying the
+     triangle inequalities and all instances of [AN, Prop. B.3] on the five parties is the same 0.8377 (numerical).
+   - *Sizes.* With the proved rank bounds the first instances above 3/4 have demand wires of dimension about 2¹²⁸
+     per block; at class dimensions up to 5 × 5 the middle terms have full rank (exact computation), so the
+     construction gives no gain at any size reachable by dense computation.
+   Open: explicit families with rates in (0.8377, 3/√10), which need the construction nested (a finite-depth form of
+   [AN, Lemma C.2] with explicit constants); a proof of the all-middle claim; smaller instances. Above 3/√10, a
    protocol over a field of characteristic 0 would imply Contracting there (§5).
 2. **An analytic proof of (I).** Show that three points z_i on the half-ellipse x² + y²/10 = 1, x ≥ 0 satisfy
    |z₁+z₂| + |z₁+z₃| + |z₂+z₃| ≥ 6. Facts and failed attempts:

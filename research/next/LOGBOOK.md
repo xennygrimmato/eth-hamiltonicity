@@ -2377,3 +2377,22 @@ generation for three-way identities with the known filters; → `research/sat3/i
 Already running on 3-SAT: Q1 (is 1/√2 reached by admissible prices — a barrier theorem if yes); the referee on the
 floors; the executor's optimiser for the large-net limit problem.
 Lower priority, still running: Lean proof of the 7-AND-gate theorem (cube build), referee on that paper.
+
+## 27 Nov: referee on the 7-AND-gate paper — minor revision; framing stands
+
+`research/mm/paper-mc222/REVIEW.md`. No error in a lemma, no unjustified constraint in the encoding, no prior result
+implying the theorem, no failed proof check.
+- Lemmas 4.1–4.3, 4.5, 4.6 re-proved. Encoding matches the lemmas line by line. Independent brute force on toy targets
+  of the referee's own choosing (quadratic and cubic maps on 4–5 variables) agrees with the Rust search, the CNF
+  generator and the union over cubes in every case, including first gates that are reducers.
+- Three more cubes regenerated: hashes match, proofs verify; a damaged proof is rejected. The results table covers
+  72 × 15 exactly. (864 distinct proof hashes: 216 pairs of trivial cubes coincide.)
+- **Literature: no theorem equating multiplicative and quadratic complexity for three or more quadratic forms over F₂**
+  (Boyar–Find §2.1, §5 and the 2026 preprint both call it open); no statement that the value is 7.
+- Corrections: a wrong author on one reference (arXiv:2603.07280 is by one author, not the two cited); stale figures
+  in §5 after the commit pin changed; a wrong section number; "independent" overclaimed twice (the two programs share
+  the lemmas; my re-run used the same scripts on the same machine, so hash agreement shows determinism, not
+  independence); four wording gaps in lemmas; trusted base must list the driver scripts and the checker's parser;
+  "four lemmas" → five; 24 prose edits. Optional: a human proof of MC ≥ 6 via Mirwald–Schnorr.
+To do (lower priority than 3-SAT): one revision pass when the Lean proof completes — referee fixes, the Lean theorem
+(the abstract's "no proof assistant" sentence becomes false), and ⟨1,2,3⟩ = 6 as a second result.

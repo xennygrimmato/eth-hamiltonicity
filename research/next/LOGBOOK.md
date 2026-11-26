@@ -2883,3 +2883,29 @@ generic s^k = 1 − 1/(2T) for every class; full-level values and edge counts ma
 (m = 2, 3, 4), q = 3 (p = 3, 4), q = 4 (p = 5). Every step of the cap's proof is tight on X₄ and E_D (only
 slack: convexity, 3.39/T). Minor: "on every set of generic edges … which is the cap" holds for balanced sets
 only. Items 3–6 (price version, Theorem D′, the 8-wire target, negative results) still to come.
+
+**Referee on the Q1 notes, final** (`research/sat3/review-q1.md`; own code throughout).
+- Correct: the space (item 1); Theorem A [R] (placement reaches the cap, all q, m ≥ 2); Cor. 2.2 (quotients);
+  **Theorem B** (if contracting fails, every finite subset of the filtration space over F_{2^s} is a price;
+  rests only on `thm_alt_rank_price`; the gluing works because the map is needed only on the finite set and
+  each pair is measured inside its own common cube; the earlier product-hull theorem is a special case);
+  the 8-wire target E_D (balanced, fully crossing, b_k = 8/√2 for all six D); Lemma 6.1, Remark 3.4, the dead
+  cone values.
+- **Wrong as stated: Prop. 6.2** (cyclic nets have no realisation with skew node-planes): a step needs
+  C₀ ∩ D₂ = 0. Counterexample over F₂⁴; 192 such configurations, all with two coinciding hubs at a node.
+  Repair: assume each node's hub spaces are pairwise transversal. So for cyclic nets, realisations with
+  coinciding hubs are not excluded.
+- **Narrower than claimed: Theorem D′.** The tiling by X₄ is right (1, 28, 560 copies), X₄ and X_q(P) are
+  balanced, and D1's averaging goes through, but only for engines whose pieces are chosen per copy (term sets
+  that are products over copies). Not covered: one identity per whole level with arbitrary terms (Theorem S's
+  own class), pieces on whole translation classes. Replacement for Theorem S: tower form for per-copy engines
+  with threshold 1/2; per-level form for whole-level identities with λ₀ depending on g.
+- Price statements need characteristic-2 buildings: nets over F_{2^s} with 2^s ≥ p − 1; odd q is open as a
+  price statement (fine as a CAT(0) statement).
+- The author is applying the corrections to `q1-notes.md`.
+
+**Where the true-cost barrier now stands [R per referee, conditional].** If contracting fails over k, then for
+every g = 2^m and every ε > 0, every family of covers of the order-g three-merge level tensor of F₂^m over k
+with 2^{o(λ)} pieces per configuration has level value ≥ (1/√2 − c/g − ε)·E·λ for λ ≥ λ₀(g, ε), c < 1.13.
+Equivalently: a three-merge piece family on one fixed net of F₂^m (or on the 8-wire configuration E_D) with
+value below that bound proves contracting, hence power-saving 3-SAT.

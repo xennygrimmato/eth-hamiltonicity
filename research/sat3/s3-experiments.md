@@ -291,6 +291,51 @@ Commands:
     exactly (unit test `cone_calibration`).
 - Calibration: crossing in the plane (circle:8), in C(K₃,₃) and in pods → √2 per merge.
 
+
+### One-factor reduction (lemma, with proof) [R]
+
+**Lemma (one factor suffices).**
+- Setting:
+  - a design with edges e (weights w_e) and p merges;
+  - a family 𝓕 of CAT(0) factor spaces, closed under relabelling hubs by design automorphisms;
+  - hubs placed in an ℓ₂-product X = Π_f X_f of members of 𝓕;
+  - legs sent to infinity along geodesic lines.
+- In a single factor f let:
+  - s_{e,f} ≥ 0 be the best far-leg saving of edge e, summed over merges with unit weights:
+    s_{e,f} = max over lines of Σ_k [−β₊(h^k_u) − β₋(h^k_v)], clipped at 0;
+  - D̄_f be the mean over merges k and same-merge hub pairs of d_f².
+- Then the far-leg value per merge satisfies
+
+  (1/p) Σ_k b_k ≤ (1/p)√(E·Γ_𝓕),
+
+  with Γ_𝓕 = sup_f S_f/D̄_f, S_f = Σ_e w_e s_{e,f}², and E = Σ_e w_e (unit weights here).
+- If the design's automorphism group acts transitively on the edges and on the merges (Δ₃, K₄, the crossing), and
+  transitively on same-merge hub pairs, the bound is attained, with all b_k equal, by the ℓ₂-product of the
+  orbit of an optimal single factor.
+
+*Proof.*
+1. Upper bound.
+   - In a product the Busemann function of a line with unit coefficients (c_f) is Σ_f c_f β_f.
+   - For an edge, the optimal line therefore gives Σ_k (saving)_k/δ = (1/δ)·√(Σ_f s_{e,f}²) (Cauchy–Schwarz over
+     factors, coefficients c_f ∝ s_{e,f}). This uses a common δ; with different δ_k use δ_min, which only
+     enlarges the bound.
+   - Summing over e with Cauchy–Schwarz again: Σ_e √(Σ_f s²) ≤ √E·√(Σ_f S_f) ≤ √E·√(Γ Σ_f D̄_f).
+   - Finally δ² = max_{k, pairs} Σ_f d_f² ≥ mean_{k, pairs} Σ_f d_f² = Σ_f D̄_f.
+   - So (1/p)Σ_k b_k ≤ (1/p)√(E·Γ).
+2. Attainment.
+   - Take the product of the |G| copies f∘γ, γ ∈ G, of one factor.
+   - Every edge then has Σ_γ s²_{γe} = (|G|/E)·S_f by edge-transitivity.
+   - Every same-merge hub pair has Σ_γ d² = |G|·D̄_f by transitivity on pairs, so all δ_k coincide.
+   - Then both Cauchy–Schwarz steps are equalities.
+   - The per-merge values coincide because G is transitive on merges and the product is G-invariant.
+∎
+
+**Corollaries.**
+- Mixing factor types cannot beat the best single type.
+- For designs that are not edge-transitive (full nets), (1/p)√(EΓ) is still an upper bound for products of copies
+  of the family. The orbit product attains (1/p)Σ_O|O|√(mean_O s²/D̄) (the "sym" values above, O = edge orbits).
+- The same argument applies verbatim to Φ of the limit model.
+
 **Δ₃, one cone, Γ.**
 - Run: 200k steps × 16 chains seeded (three hubs of one node at three mutually far vertices, radius 1) + 8
   random-only chains.
@@ -313,12 +358,25 @@ Commands:
 
 **Limit model, one cone** (`$B cone limit:Q:3 GRAPH SUBDIV 100000 8 7`; log `data/cone_camp2.log`):
 
-CONE_LIMIT
+| Q | link (subdivision) | best Φ | level |
+|---|---|---|---|
+| Z₄, Z₂² | pods:3; K₃,₃ (s2); Heawood (s2); Heawood + 3 points (s2); GQ(2,2) (s2) | 27/8 | 0.6124 |
+| Z₄ | PG(2,3) (s1) | 3.2075 | 0.5970 |
+| Z₅ | pods:3; K₃,₃ (s2); Heawood (s2) | 3.36 | 0.6110 |
+| Z₈ | pods:3; K₃,₃ (s2); Heawood (s2) | 3.28125 | 0.6038 |
+
+For Z₈ the cone annealer is seeded only with the point labelling, so it stays at that labelling's 3.28125. The
+tree search with subgroup seeds gets 27/8 there (§5). This is a search weakness, not a property of the cones.
 
 **Free links.** These are random metric graphs whose base-edge lengths are annealed under girth ≥ 2π (moves that
 violate it are rejected), with hubs and directions at subdivision vertices:
 
-CONE_FREE
+| target | free link (N₀ vertices, edges, extra points; subdivision 2) | girth of the optimum | best | value |
+|---|---|---|---|---|
+| Δ₃ | (8, 10), (10, 14), (8, 10, +3), (12, 16), 2 seeds each | 6.46–7.67 | Γ = 36 in all 8 runs | 6.000 |
+| limit Z₄ | (8, 10, +3), (10, 12) | 6.46, 7.35 | Φ = 27/8 | 0.6124 |
+
+Log: `data/cone_camp3.log`. Nothing exceeds the tree-product values.
 
 ## 6. Summary
 

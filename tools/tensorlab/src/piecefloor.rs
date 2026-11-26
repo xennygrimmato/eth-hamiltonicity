@@ -3008,7 +3008,7 @@ pub fn anneal_filt(des: &Design, fs: &FiltSpace, target: &str, iters: usize, cha
                     8 => pl.r[h] = if rng.gen::<bool>() { pl.c[h].max(0.0) } else { pl.c[h] + 1.0 },
                     9 if allow_hyp => pl.kind[h] ^= 1,
                     10..=11 if allow_c => pl.c[h] = (pl.c[h] + sigma * gauss(&mut rng)).min(pl.r[h]),
-                    12 if allow_c => pl.c[h] = if rng.gen::<bool>() { 0.0 } else { pl.r[h] - 1.0 },
+                    12 if allow_c => pl.c[h] = if rng.gen::<bool>() { 0.0f64.min(pl.r[h]) } else { pl.r[h] - 1.0 },
                     _ => {
                         let h2 = rng.gen_range(0..nh);
                         pl.pt.swap(h, h2);

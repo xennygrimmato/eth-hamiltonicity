@@ -720,3 +720,26 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - Lead's follow-up: with c1's reduction (contracting ⇔ √rank on Mat_μ(F₂) is not a price for some μ ≥ 3) this gives a
   finite test for a faster 3-SAT algorithm; asked for exact statements and review status.
 - H15 [C]: "the metric √rank on 3×3 binary matrices is not a tensor price over ℚ" ⇒ 3-SAT in 2^{v^{1−δ}}.
+
+### Ports strategist, interim 2 (`research/ports/ideas-ports.md` §2) [D from both labs' texts; with a referee now]
+- THEOREM A: contracting over k ⇒ ports in the characteristic of k. Anthropic's Thm F.6 gives a Poincaré constant
+  C₀(h−1) on an (h−1)-regular graph of order 2^{h(h−1)/2}; OpenAI's certificate threshold is ≥ h(h−1)/(20000(log₂h+4));
+  the first is below the second for large h. Strategist read the certificate's proof line by line. Independent check:
+  OpenAI's own Prop. 11.2 proof shows "no uniform gap ⇒ the Grassmann metric √(dim(U+V) − m) is spectral", and
+  Mat_μ(F₂) is the big cell of that Grassmannian: the same inequality as contracting.
+- THEOREM B (finite test): if √rank on Mat_μ(F₂) for some μ ≥ 2 (16 or 512 points), or the five-point set M5, is NOT a
+  price over ℚ, then 3-SAT is in 2^{O(v^{1−δ})}. Under Weak ETH these building-type metrics ARE prices over ℚ.
+  Caveat: the object is finite, the decision is not; only the algorithm side has a machine-checkable certificate
+  (one cheaper cover).
+- Cells: {contracting, no ports} impossible. OpenAI's unconditional permanent bound ≈ Anthropic's contracting-case
+  bound. The ports algorithm is a piece family obeying all our flat floors; it wins by restoring bounded degree at
+  constant cost so the √ trade iterates log-many times. Our floors do not bear on ports.
+- No LP/SDP over known necessary conditions can exclude M5 or ρ₃ (they sit in a Euclidean building). Only a new
+  tensor identity can.
+- RE-BASING SKETCH: Anthropic's Thm J.4 alone may give, under contracting, fast 3-SAT with no OpenAI input.
+- Lead's actions: executor "rebase" (Opus) to prove or refute contracting ⇒ fast 3-SAT from Anthropic's paper alone,
+  with the corollary "Weak ETH ⇒ flat hypothesis in characteristic 0, independent of OpenAI"; referee (Opus) on
+  Theorems A and B, attacking the class containment, the growing degree, and any tension with Anthropic's
+  contracting-case lower bound.
+- H16 [C]: contracting is false over ℚ (i.e. Weak ETH-type hardness wins), and the provable content is the
+  implication "contracting ⇒ fast 3-SAT" on Anthropic's footing.

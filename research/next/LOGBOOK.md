@@ -1028,3 +1028,16 @@ Notes: `research/ports/c1d1/notes.md`. Unrefereed, nothing run.
   false while the bound 3/√10 under ¬contracting stands. Executor asked to compute it by cutting planes.
 - Launched: referee on C1 (isolation in characteristic p); Lean project `research/ports/lean-c1` for Toeplitz
   pairwise independence and the isolation bound.
+
+## 26 Nov (late, 13): Theorem R arithmetic in Lean [L, conditional]
+
+`research/ports/lean/PortsLean/ThmR.lean`: 10 theorems, sorry-free, standard axioms. Nothing breaks.
+- Cleaner parameters: v := ⌈τ^{1/(H+187)}⌉, τ′ := v^{H+235}; all J.4 constraints hold exactly. τ′ ≤ v^{2H} needs only
+  H ≥ 235.
+- Cost 2^g(t + P·2^{v^H}·v^H) ≤ 2^{(2H+241)v^H}, exponent ≤ (2H+241)·2^H·τ^{H/(H+187)}. Piece brute force and run
+  enumeration are balanced (both 2^{v^H}); 187 = 235 − 48.
+- δ: α* = 187/(5H+187), balance identity proved; for each δ < α* an admissible α exists (needs H > 112.2).
+- Unstated side conditions found: v₀ must grow with C_cut ((lg v)^{2C_cut} ≤ v); α < 1/4.
+- Lemma 1 arithmetic proved from per-cut bounds. The per-cut guess count itself is still read from the J.3 proof.
+- Cost model assumed the guess bound on every run; the referee's pruning fix needs it on accepting runs only. Asked
+  the executor to restate accordingly.

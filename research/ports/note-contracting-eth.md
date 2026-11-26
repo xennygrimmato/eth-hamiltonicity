@@ -1,6 +1,6 @@
 # The contracting case of the tensor-price dichotomy contradicts the weak exponential-time hypothesis
 
-*First full draft, 26 November 2026. Working title. Not for circulation until the uniformity audit (§7.1) is in.*
+*First full draft, 26 November 2026. Working title.*
 
 ---
 
@@ -11,14 +11,16 @@ field k, the *flat* or the *contracting* hypothesis holds (AN Def. 2.1 = Def. D.
 We show that the contracting case has an algorithmic consequence, which the paper does not mention. If the contracting
 hypothesis holds over a field of characteristic 0, then 3-SAT on n variables can be decided deterministically in time
 2^{O(n^{1−δ})}·poly for some δ > 0. We give this in two ways.
-- **Theorem R** uses only [AN] and classical facts. It is proved with poly(n)-size advice. Whether the advice can be
-  removed is under audit.
-- **Theorem A** passes through OpenAI's "ports" property [EG, HC] and OpenAI's IM Theorem 7.1. It gives a uniform
-  algorithm, but rests on OpenAI's results.
+- **Theorem R** uses only [AN] and classical facts. Its status differs by form:
+  - The form with poly(n)-size advice has been refereed.
+  - That the advice can be computed, so that the algorithm is uniform, rests on an audit of [AN]'s Lean proof terms by
+    one reader (§3.6).
+- **Theorem A** passes through OpenAI's "ports" property [EG, HC] and OpenAI's IM Theorem 7.1.
 
 **Theorem B** reduces the hypothesis to finite metric objects. **Corollary 1** follows: under the weak exponential-time
 hypothesis (Weak ETH), the contracting hypothesis fails over every field of characteristic 0, and so (by `thm_alt`) the
-flat hypothesis holds there. This does not use OpenAI's theorem that flats exist (EG Thm 1.2).
+flat hypothesis holds there. This does not use OpenAI's theorem that flats exist (EG Thm 1.2). Via Theorem R it uses no
+OpenAI result at all.
 
 **What we do not show.**
 - We do not claim that the contracting hypothesis holds or that it fails.
@@ -178,8 +180,8 @@ order 2^s and degree 2^e, with threshold s/(10000(e+3)). It carries an extra hyp
 
 ### 3.1 Statement
 
-> **Theorem R (non-uniform form).** Suppose the contracting hypothesis holds over a field k of characteristic 0. Let H be
-> the constant of [AN] Thm J.4, and fix any δ < 187/(5H + 187).
+> **Theorem R.** Suppose the contracting hypothesis holds over a field k of characteristic 0. Let H be the constant of
+> [AN] Thm J.4, and fix any δ < 187/(5H + 187).
 >
 > (a) **Counting a single plain instance.** There is a deterministic procedure that, for every τ-plain instance z of
 > [AN]'s program model with |z| ≤ τ, computes sum(z) with 2^{O(τ^{H/(H+187)})}·poly(τ) operations in A. In characteristic
@@ -188,15 +190,18 @@ order 2^s and degree 2^e, with threshold s/(10000(e+3)). It carries an extra hyp
 > (b) **3-SAT.** There is a deterministic algorithm that decides 3-SAT on n variables in 2^{O(n^{1−δ})}·poly(input
 > length) bit operations.
 >
-> In both parts the algorithm consists of
-> - one fixed machine,
-> - a fixed finite table of constants, which is known to exist but is not explicit, and
-> - an advice string of length poly(n) (respectively poly(τ)): the cutting program G_v of J.4 at the relevant scale v.
+> In both parts the algorithm is one fixed machine together with a finite table of constants. The table does not depend
+> on n, and it is known to exist but is not explicit (§3.6).
 
-> **Theorem R^u (uniform form). [PLACEHOLDER: to be set by the uniformity audit, `review-uniformity.md`, which did not
-> exist when this draft was written.]** If the audit confirms that the constructions inside `thm_tree` (H.2) and
-> `prop_pieces` are explicit given (v, laws, tower), then the advice is computable from v in time 2^{poly(v)}, and (a)
-> and (b) hold with no advice. If it does not, only the non-uniform form stands. §7.1 says what is at stake.
+**Status of Theorem R.**
+- The *non-uniform form* is refereed (review-theoremR). In that form the cutting program G_v of J.4, of size
+  ≤ v^H = poly(n), is supplied as advice.
+- Computing G_v from v, which gives the uniform statement above, rests on the uniformity audit (review-uniformity, §3.6).
+  That audit is a reading of [AN]'s Lean proof terms by one reader, and its central step is a meta-level argument, not a
+  Lean theorem.
+
+> **Remark R′ (non-uniform form, refereed fallback).** Without the audit, (a) and (b) hold for an algorithm that also
+> receives the advice string G_v of length poly(n), respectively poly(τ).
 
 For H = 272 the bound on δ would be about 0.121, but H is not explicit.
 
@@ -319,7 +324,11 @@ Thm 7.1. The referee checked its counting.
 - P fails on an unsatisfied clause. Otherwise it accepts with weight 1 and an empty tally.
 - z_j is τ₀-plain with τ₀ = O(n + m_j log n), and |z_j| = O(m_j log n). Put L = O(n^{1+4α} log n), so that both are at
   most L.
-- sum(z_j) = 2^e·#SAT(F_j)·1_A, where e = 2^{⌈log n⌉} − n is the number of padding leaves.
+- sum(z_j) = 2^e·#SAT(F_j)·1_A, where e = 2^{⌈log n⌉} − n is the number of padding leaves. In characteristic 0 the
+  factor is harmless.
+- Alternatively, P can make the padding leaves non-free by failing unless each is 0. This costs O(n) deterministic
+  steps and gives e = 0 and sum(z_j) = #SAT(F_j)·1_A. This variant is [ours], not refereed, and it matters only in
+  positive characteristic (§9).
 
 **Characteristic 0.**
 - By `exists_setting`, A ⊂ k is a finitely generated ℤ-algebra. Since char k = 0, A ⊗ ℚ ≠ 0.

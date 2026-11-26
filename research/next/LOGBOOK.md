@@ -1526,3 +1526,17 @@ E_pairs = 2.292, λ₂ = 0.80.
 - `propS_rank`, `propS_rank_pow`: Proposition S for any f : V → Matrix (Fin m) (Fin n) (ZMod 2).
 Not formalised: that the second eigenvalue of a symmetric A gives the quadratic-form hypothesis (Courant–Fischer);
 it is a hypothesis of the theorem.
+
+## 26 Nov (late, 43): middle-cell notes pass review, with tagging and wording fixes [V]
+
+`research/ports/review-middle.md`. No fatal gap; every [R] statement checked holds with its constants.
+- Fixes: (1) "¬(GE) ⇒ (AN-ports ⇔ contracting)" is tagged [R] but its ⇐ direction is Theorem A; the OA version of M0
+  and C_OA ⇒ P_OA rest on OpenAI text the referee could not check. (2) The LPS degree-≥18 claim follows from 4.2(c),
+  not (a) ((a) at r = 1 needs p ≥ 62); "the window is empty for cubic graphs" is literally false (e < 0.085).
+  (3) "Edge ranks ≤ 1" is in Grassmann units; as F₂-rank placements the edge ranks are ≈ 2 log₂ n — the ratio is
+  scale-free so the bound stands.
+- Theorem M2 confirmed with independent code: SL₃(F₄) exact (n = 60 480): E_edges = 0.5, E_pairs = 2.2917, λ₂ = 0.8005;
+  SL₃(F₈ … F₆₄) sampled: E_pairs = 2.91, 5.18, 5.88, 8.16 against the claimed 2, 5, 5, 8. Ratio ≥ 6j − 2 is nearly tight.
+- M0, monotonicity, kernel lemma, Prop. S (exactly tight on Cay(Mat_μ(F₂), rank one)), 4.2(a),(b),(c),(e): correct.
+Status of the middle-cell results: Theorem M0, kernel lemma + Prop. S ([L] too), Theorem M2 — [V] by one referee.
+(GE) remains open; experiments running.

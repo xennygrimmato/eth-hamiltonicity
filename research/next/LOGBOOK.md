@@ -792,3 +792,16 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   implies ports, hence 2^{n^{1−δ}}.
 - Route E: E3 compute the Okamura–Seymour tensor rate ("tensor coding always attains the cut bound" would imply
   contracting, hence fast 3-SAT).
+
+### Rebase executor, task 1 (Anthropic's contracting case read precisely) [K quoted; D]
+- Anthropic's §2.4: "Steps 1 to 4 prove, with no circuit and no permanent, that every computation of a nondeterministic
+  program with weighted runs can be cut into short pieces, which a fast program lists." So the first half of the
+  contracting case is UNCONDITIONAL on circuits: F.6, G.2, H.2, J.2–J.4, K.4–K.6. Only K.3 and K.7 use the assumed
+  permanent circuit.
+- Thm J.4 (under contracting): some program of size ≤ v^H cuts (τ, s) into (v^H, v^{H−32}) with ≤ τv²/v^H pieces in
+  ≤ τ/v^24 steps. Model: nondeterministic programs on binary trees; the Lean statement is existential.
+- GAP found in the strategist's sketch: used as a black box, J.4's step bounds make run-enumeration worse than brute
+  force for 3-SAT. Proposed fix from the printed proof of J.3: the cutting program makes only ~τ/v^235 guesses, the
+  rest of its steps being deterministic. With that, the executor says the theorem goes through; details pending.
+- Open points for the lead to watch: existential (non-uniform?) statement; the guess-count reading is from a proof,
+  not a stated theorem.

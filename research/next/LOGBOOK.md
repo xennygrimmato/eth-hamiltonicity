@@ -2981,3 +2981,24 @@ for crossing-generated covers (for other circle-covering identities the defect o
 - `attain-notes.md` corrected after the referee: "certified level value" throughout; the class enlarged to
   circle-covering crossing identities; leg invariant; completion; table row; triangle case; the window
   [1/√2 − 1.121/(g+1), level-1 value] in place of "stuck at exactly 1/√2".
+
+## 27 Nov: what is left open, and the last live route
+
+**Executor (interim) [N].** Final limit table for one general tree: Φ = 27/8 (0.6124) at best for quotients
+Z₄, Z₂², Z₈, Z₂³, Z₂×Z₄, Z₁₂, Z₄², Z₂⁴; 10/3 for Z₃, Z₆, Z₉, Z₃²; 84/25 for Z₅. 4-nets, odd quotients only: Z₃ and
+Z₃² 16/3, Z₅ 5.12, Z₇ 240/49. Finite records for cyclic nets: Z₄-net 0.5410, Z₅-net 0.5519. Filtration-space
+model in Rust (`piecefloor::FiltSpace`; hubs at points or hyperplanes at free levels; exact far-leg optimum
+over all frames); unit test reproduces Theorem A (0.482843, 0.582516). **Δ₃ in C₃(F₂) and C₃(F₃): Γ = 35.9999,
+8/8 chains: again exactly the tree-product value 6, never above.** Larger ranks and the Z₄, Z₅ nets running.
+
+**H45 (the last live route to an improvement).** Theorem W is exact, so on any net the certified value of
+nested crossing covers is ≥ F_CAT. On nets of F_q^m (m ≥ 2) F_CAT → 1/√2: closed. On CYCLIC nets (prime order:
+AG(2,p) with three classes) no placement beats tree products (limit 0.5857; Δ₃ 2/3) and every richer model
+lands on the same values. If F_CAT(cyclic) < 1/√2 is true, there is room for a depth-≥2 nested cover on
+cyclic nets with certified value below 1/√2, and a certified value is a true upper bound on cost: that would
+be an actual improvement of the exponent 1/2 (by Theorem T it would imply ports, if OpenAI's bound is right).
+Prior odds: low (1–2%); both outcomes are results.
+- Q1 agent resumed: prove a cap for Δ₃ (is F_CAT(Δ₃) = 2/3?) and for cyclic nets, by a finite relaxation over
+  metrics satisfying all CN/four-point inequalities, or find a better placement → `research/sat3/q1-cyclic.md`.
+- Attainment agent resumed: the depth-2 certified game on the nets of Z₅, Z₇ (or its dual, the maximum over
+  formal prices for the depth-2 move set): does depth 2 buy anything over depth 1 on a cyclic net?

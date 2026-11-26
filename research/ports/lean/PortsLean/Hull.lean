@@ -63,6 +63,14 @@ theorem ranks_two :
 
 /-! ## (b) Equality in the quadrilateral inequality -/
 
+/-- In characteristic 2, `a − b = b − a`. -/
+lemma sub_comm2 (a b : M2) : a - b = b - a := by
+  ext i j
+  simp only [Matrix.sub_apply]
+  generalize a i j = x
+  generalize b i j = y
+  revert x y; decide
+
 /-- The √rank metric. -/
 noncomputable def rho (a b : M2) : ℝ := √((a - b).rank)
 
@@ -71,14 +79,11 @@ so `|n s|² + |t_i t_j|² = |n t_i|² + |t_i s|² + |s t_j|² + |t_j n|²` (= 4)
 theorem quad_equality (ti tj : M2) (hi : ti.rank = 1 ∧ (s0 - ti).rank = 1)
     (hj : tj.rank = 1 ∧ (s0 - tj).rank = 1) (hij : (ti - tj).rank = 2) :
     rho n0 s0 ^ 2 + rho ti tj ^ 2 = rho n0 ti ^ 2 + rho ti s0 ^ 2 + rho s0 tj ^ 2 + rho tj n0 ^ 2 := by
-  have r1 : (n0 - s0).rank = 2 := by
-    have := ranks_two.2.2.2
-    rwa [show n0 - s0 = -(s0 - n0) by abel, Matrix.rank_neg]
-  have r2 : (n0 - ti).rank = 1 := by rw [show n0 - ti = -ti by simp [n0], Matrix.rank_neg]; exact hi.1
-  have r3 : (ti - s0).rank = 1 := by rw [show ti - s0 = -(s0 - ti) by abel, Matrix.rank_neg]; exact hi.2
+  have r1 : (n0 - s0).rank = 2 := by rw [sub_comm2]; exact ranks_two.2.2.2
+  have r2 : (n0 - ti).rank = 1 := by rw [sub_comm2]; simpa [n0] using hi.1
+  have r3 : (ti - s0).rank = 1 := by rw [sub_comm2]; exact hi.2
   have r4 : (tj - n0).rank = 1 := by simpa [n0] using hj.1
   simp only [rho, r1, r2, r3, r4, hij, hj.2]
-  rw [Real.sq_sqrt (by norm_num), Real.sq_sqrt (by norm_num), Real.sq_sqrt (by norm_num)]
   norm_num
 
 /-- The CAT(0) quadrilateral inequality, as an explicit hypothesis on a metric space
@@ -157,10 +162,10 @@ theorem w5_in_diamond (ℓ : ℝ) (h0 : 0 ≤ ℓ) (hℓ : ℓ ≤ c) :
     rw [show (ℓ + ℓ) ^ 2 + (0:ℝ) ^ 2 = (2 * ℓ) ^ 2 by ring, Real.sqrt_sq (by linarith)]
   · intro i
     simp only [dTP, dTri, vP, uP]
-    split_ifs <;> · congr 1; simp [abs_of_nonneg h0]; ring
+    split_ifs <;> · congr 1; simp [abs_of_nonneg h0] <;> ring
   · intro i
     simp only [dTP, dTri, vP, uP]
-    split_ifs <;> · congr 1; simp [abs_of_nonneg h0]; ring
+    split_ifs <;> · congr 1; simp [abs_of_nonneg h0] <;> ring
   · simp only [dTP, dTri, uP, if_true, sub_self, abs_zero]
     rw [show (0:ℝ) ^ 2 + (1 * (ℓ / 3) - -1 * (ℓ / 3)) ^ 2 = (2 * (ℓ / 3)) ^ 2 by ring,
       Real.sqrt_sq (by linarith)]

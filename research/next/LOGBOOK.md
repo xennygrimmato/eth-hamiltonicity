@@ -927,3 +927,21 @@ From the char-p agent (`research/ports/c1d1/notes.md`):
   the Anthropic route may fail exactly at p = 2 — the case Theorem M needs. Asked for the source of 2^e and the same
   check on the OpenAI route. H21 [C]: the encoding can be made exactly parsimonious (e = 0).
 - 6-gate search: shard 0 of 3 done, no circuit in its orbits.
+
+## 26 Nov (late, 7): hull lemma claimed TRUE [D] — K_{2,3} becomes a real test
+
+From the hull agent (`research/ports/hull/notes.md`), re-derived twice by it, not yet refereed:
+- N5 := {0, I, e11, e21+e22, e12+e22} ⊂ Mat_2(F₂) under √rank is √(graph metric of K_{2,3}):
+  |0 I| = |t_i t_j| = √2, |0 t_i| = |I t_i| = 1. **I checked the ten ranks by hand: correct.**
+- Each quadrilateral (0, t_i, I, t_j) has sides 1 and diagonals √2 = equality in the CAT(0) quadrilateral inequality,
+  hence a flat square (AN C.4(b),(f) + filling as in D.2 Step 8). The three squares share the diagonal [0, I]; their
+  union is the diamond {|x|+|σ| ≤ 1/√2} ⊂ tripod × ℝ, which contains W₅.
+- So: ¬contracting over k ⇒ ρ₃ a price ⇒ ρ₂ ⊇ N5 a price ⇒ W₅ a price ⇒ **f*(K_{2,3}; k) ≤ 3/√10 ≈ 0.94868.**
+- Falsifiable form: an asymptotic K_{2,3} protocol over ℚ with rate > 3/√10 ⇒ contracting over ℚ ⇒ ports ⇒ fast 3-SAT.
+- My reading of the soft spot: "W₅ ⊂ convex hull of N5 in the price space ⇒ W₅ is a price" (do interior points of
+  the price space pull back to prices? the agent cites AN Prop. C.3). To be refereed.
+- H19 sharpened: under Weak ETH (even non-uniform, via Theorem R), no K_{2,3} tensor protocol over ℚ beats 3/√10.
+  Open: is f* = 3/√10 exactly under ¬contracting (needs R ≥ 3/√10 on all five-point CAT(0) sets)?
+- Sent to the library executor: certify f_Q; scan small supply/demand instances on 5 parties for the largest gap
+  between the N5/W₅ bound and the cut bound; protocol search on those. Sent to the Lean executor: rank table, the
+  equality case, the tripod × ℝ model, and an explicit hypothesis structure for the rigidity step.

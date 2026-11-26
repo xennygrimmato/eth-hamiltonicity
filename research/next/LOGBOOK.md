@@ -2626,3 +2626,34 @@ scripts and exact integer tensors in `research/sat3/hunch2/`).
   two merges live on a rectangle (the level-1 piece) [R]. So Sra-type nesting gives nothing new on nets unless
   evaluated through multi-group realisations, which is the depth-2 game.
 - Next: exact numerical test of Lemma S at depth 2 in tripod × ℝ and tripod × tripod (attainment agent).
+
+## 27 Nov: Q1 answered for nets of F₂^m: the CAT(0) floor reaches the cap 1/√2
+
+**Claim (Q1 agent; [D], proof complete but unrefereed; arithmetic re-derived by the lead by hand and checked
+by `research/sat3/q1_verify.py`).** For the 3-net of F₂^m (g = 2^m) there is an explicit CAT(0) placement with
+value (g−2)/(√2(g+1)) + 1/(g+1) in all three merges simultaneously: 0.483, 0.583, 0.641, 0.674 at
+g = 4, 8, 16, 32, → 1/√2. So F_CAT = 1/√2 − Θ(1/g): H40 holds for these nets, with explicit g-dependence and no
+limit in λ.
+- Space: real filtrations of V = F_q^N, i.e. (cone over the spherical building of GL_N(F_q)) × ℝ; distance =
+  Euclidean distance of levels in a common adapted basis. CAT(0) by standard theorems.
+- Placement: V = F₂² ⊕ F₂^m. Hub of class x ∈ {e1, e2, e1+e2} with value y: the point ⟨(x, y)⟩. Node (r, c): the
+  plane W = graph of the 2-column matrix, containing exactly its three hubs. All hubs pairwise at distance √2.
+  Legs of a generic edge (W ∩ W′ = 0): the filtration (W at level (1+T)/2, W+R at 0, V at −T/2) and its mirror.
+  Then |x, hub|² = T² + 1/2 for all three hubs of the node, |xy| = 2T + 1, saving → 1 = δ/√2 for k = 1, 2, 3
+  at once. Mechanism: a far point can be equidistant from all points of a projective line (a pod) while four
+  points in general position span a flat regular tetrahedron.
+- Price version [D]: if contracting fails, every finite subset of this space is a price (rank metric + cube
+  fillings by C.4(f) + gluing), so the three-merge price floor on nets of F₂^m is 1/√2 − O(1/g): with the cap,
+  the window [0.6124, 0.7071) CLOSES for these nets (per level, liminf in λ at fixed g; the uniformity gap of
+  Theorem S remains for tower statements). Same for p-nets with slopes in a subfield F_q, p ≤ q + 1.
+- Reading: on nets of F₂^m, any three-merge piece family with value below 1/√2 − c/g on one fixed net would
+  prove contracting, hence power-saving 3-SAT. There is no "moderate" improvement of the exponent 1/2 on these
+  nets by price-compatible means: either nothing or contracting.
+- Not covered: cyclic groups, Δ₃ (Z₃), nets whose slopes generate the big field. Odd q with m ≥ 2: the
+  agent's message is ambiguous; asked.
+- H41 [X]: cones over the incidence graph of the net or of PG(2,q) with hubs at line vertices give Φ = 9/4
+  resp. 1: rank 2 is too small, the dimension must grow with g. The lead's candidate family was the right
+  kind of space (cone over a spherical building) in the wrong rank.
+- With the attainment agent's note 2: IF Lemma S (H43) holds in this space, nested crossing covers of every
+  depth are stuck at 1/√2 − O(1/g) on these nets unconditionally.
+- Next: referee on `q1-notes.md` when written.

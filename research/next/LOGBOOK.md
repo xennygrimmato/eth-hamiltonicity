@@ -618,3 +618,14 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - Lead's idea passed to anti: reduce list distinctness to matrix multiplication (radix passes = data-dependent 0/1
   matrix times a record matrix) to get the matrix lower bound from the Lean statement directly, without Weak ETH or
   Lemma 4.1. May lose too many log factors; to be worked out.
+
+### Story written (`research/mm/story-nine-fourths.md`, three figures) [exposition; unreviewed]
+- Built on the six-people / three-teams picture, re-framed honestly as "matching switches" with simple pieces that are
+  added and subtracted (no coins, no probability). Strassen's 7 worked so one block can be checked by hand.
+- 9 = links crossing the 3|3 split of six people; 8 = best split that keeps teams of two whole; 16×16 multiplication
+  has 4 links per team pair; exponent 8/4 = 2 versus 9/4. Claim in one sentence: teaming up never saves the ninth bit.
+- Says plainly that there is no simple picture for the lower bound; gives the dichotomy and the parcel-routing floor;
+  boxes for "what this picture hides" and "why experts will be cautious". Six-tweet thread included.
+- Lead checked: Strassen formulas correct; all three figures render; counts 9 and 8 visible in figure 2.
+- Technical note extended: limits of the tripod picture (§13), the mechanism (§14), the team-size formula and
+  predictions (§15).

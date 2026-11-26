@@ -2115,3 +2115,21 @@ Softenings it made, all correct: no "2^(n^0.88)" (δ ≈ 0.121 only at the small
 H, which is not explicit) — my morning summary to the user stated 0.88 too flatly; "flat holds under weak ETH" is not
 news by itself since OpenAI claims flat outright — what result 2 adds is that contracting fails; the refereed form of
 Theorem R uses advice; "no assumptions" for the weighted rate still uses Anthropic's CAT(0) lemma.
+
+## 27 Nov: paper on the 7-AND-gate result drafted; referee and a small extension launched
+
+`research/mm/paper-mc222/` (main.tex, refs.bib, main.pdf — 10 pages; CHECKS.md). TeX Live installed via apt. I read the
+first three pages: abstract states the theorem and says plainly that nothing is formalised in a proof assistant;
+Strassen's seven products over F₂ checked by me against the standard identities; a section on why homogenisation does
+not transfer the classical bound (x₁x₂·x₁x₂ = x₁x₂), without claiming that Boolean circuits ever beat quadratic ones.
+Writer's findings, acted on:
+- The committed exact-search log came from an earlier build (cache of failed states kept across roots): 3,546,906
+  states vs 3,547,604 with the committed code. Replaced `tools/mc222/results/exact_k6_orbits.log` by the log of my
+  re-run and corrected three figures in the README (commit c3b3a73); the paper's repository link now pins that commit.
+- README lemma H, step 5 silently used S_{i−1} ⊆ W_i; the paper normalises first. README's N1 lacked one argument.
+- Added by the writer: "the first gate is a helper" (why 720 of the 1080 cubes are trivial); a short proof that F₄
+  multiplication has value 3.
+Launched: (1) an adversarial referee on the paper (lemmas, faithfulness of the encoding incl. a toy problem the
+authors did not tune on, regenerating cubes, prior work — in particular whether a general theorem already implies
+the result, prose); (2) an executor to settle ⟨1,2,3⟩ at k = 5 with the same tooling (MC ∈ {5, 6}); a 5-gate circuit
+there would be a Boolean circuit beating bilinear rank.

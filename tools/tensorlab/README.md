@@ -42,6 +42,7 @@ python python/f2sat.py                                 # exact F_2 restriction b
 | `tensor` | `Tensor<T>` for `T = f64 / Complex64` with labelled axes: permute, matricise, `contract` (pairwise tensordot), `apply` a local map, `flattening_rank`; `Network` = EPR wire network (parties, wires (p,q,dim)), `dense()` graph tensor, `cut_log_rank`. |
 | `restrict` | `contract_all` (greedy network contraction), `apply_maps`, `environment`, `als_multistart` (parallel ALS with decaying Tikhonov regularisation, gauge balancing, residual and norm histories), `lm_refine` (Levenberg–Marquardt on all maps jointly, real case), `residual_dense` (independent check through the dense S), `cut_check` / `cut_table` (flattening-rank necessary conditions). |
 | `restrict` (border) | `border_multistart(net, T, K, h, opts)`: maps polynomial in ε of degree K, target ε^h T; `border_check` evaluates (⊗A(ε))S/ε^h through the dense S at given ε (the only trustworthy test, see Caveats). |
+| `rankplace` | placements V(G) → Mat_μ(F₂) (μ ≤ 8, bit-packed), rank-metric Poincaré ratios vs cuts and λ₂; see the section below. |
 | `k23` | the K_{2,3} instance: parties u1,u2,v1,v2,v3 = 0..4, weights, `w5(l,h)`. |
 | `python/f2sat.py` | exact F_2 restriction search for tiny wire networks (Tseitin AND + XOR chains, CaDiCaL via python-sat), with an independent evaluator `verify_f2`. |
 
@@ -49,6 +50,42 @@ Python API (all distances as flat lists in pair order): `pairs, pair_index, metr
 sqrt_rank_f2, k23_w5, k23_weights, min_ratio(n, num, den, families, starts, seed, keep)`,
 `min_ratio_tree_products, cut_table, als(nparties, supply, demand, starts, sweeps, complex, seed, reg0)`,
 `network_dense`. Families: `"triangle", "euler", "reshetnyak", "box"`.
+
+## rankplace (rank-metric placements on graphs)
+
+`rankplace` studies placements f: V(G) → Mat_μ(F₂), μ ≤ 8, and the ratio β(f) = E_pairs D_f / E_edges D_f,
+D_f(u,v) = rank(f(u) − f(v)) (pairs: ordered, diagonal included; edges: uniform), against cut metrics and
+spectral bounds (research/ports/middle/notes.md §4, §5, §9). Submodules: `f2` (one matrix per u64, row i = byte i,
+branch-free rank), `graph` (random d-regular, cycles, tori, named cubic graphs), `groups` (GF(2^k), Cayley graphs
+of SL₂/SL₃(F₂[x]/(p)) with elementary or random generators, LPS X^{p,q} via PGL₂/PSL₂(F_q), Cay(Mat_μ(F₂),+)
+with rank-one generators, structured placements g ↦ gW and g ↦ M_g P M_g⁻¹), `spectral` (dense / Lanczos λ₂),
+`cut` (β_cut exact for n ≤ 24, else sweeps + annealing; cuts S_xy = {v : yᵀf(v)x = 1} read off a placement),
+`anneal` (parallel simulated annealing with exact incremental updates; objectives ratio / Lagrangian /
+E_pairs under an edge-rank bound; optional diagonal-only = Boolean baseline), `verify` (kernel inequality
+of Proposition S for k = 1, 2, 3, consequences (a)–(c), spectral bound (e), JSON output).
+
+```bash
+# build the driver for this machine (about 1.7x faster than the portable build)
+RUSTFLAGS="-C target-cpu=native" CARGO_TARGET_DIR=target/native cargo build --release --example rankplace
+B=target/native/release/examples/rankplace
+$B bench
+$B named 400000 2,3,4                              # small cubic graphs, exact beta_cut
+$B em1 3 64,128 1,2 2,3,4,6 1000000 8              # random cubic graphs: d ns seeds mus iters chains
+$B control sl3 2 200000 4 6                        # SL3(F4): structured placement, search from random and from it
+$B gstudy lps 5 13 -- 300000 8 2,3,4               # generic: SPEC -- iters chains mus
+$B glagr mat 3 0 1 -- 3 400000 1.6,1.9 4           # Lagrangian sweep: SPEC -- mu iters gammas chains
+$B ggrad rr 8 256 1 -- 8 1,2,3,4 400000 8          # gradient-bounded: SPEC -- mu rs iters chains
+$B em4 3 1011 300                                  # lambda_2 of Cay(SL3(F8)) by Lanczos (n = 16.5M)
+python3 ../../research/ports/middle/check_placement.py ../../research/ports/middle/data/rankplace/*.json
+```
+Graph SPECs: `rr d n seed | named NAME | lps p q | sl m k [modulus] | slrand m k count seed | psl2rand q count seed |
+mat mu count seed | cycle n | torus a b`. Placements go to `$RANKPLACE_OUT` (default
+`research/ports/middle/data/rankplace`). Python: `rp_rank, rp_random_regular, rp_sl_cayley, rp_lps, rp_spectrum,
+rp_beta_cut, rp_evaluate, rp_anneal, rp_verify` (graphs as (n, d, flat adjacency list)).
+
+Caveat: the annealer is a local search. It reliably finds cut-type optima seeded by good cuts and small
+non-commutative improvements of them, but it does **not** rediscover rigid algebraic placements from random starts
+(see the calibration in research/ports/middle/experiments.md); values are lower bounds on β_ρ.
 
 ## Caveats
 

@@ -1596,3 +1596,19 @@ Pending from the same executor: dual for B = 2, B = 32/64, a Lean version.
   evaluation; no `native_decide`, no sorry — the one grep hit is the header comment saying so). I rebuilt the project:
   18276 jobs, success. It certifies the game arithmetic only, not the tensor construction.
 - Lean project now has 12 files.
+
+## 26 Nov (late, 48): rank-placement experiments interim — the search is too weak to decide anything yet
+
+From the `rankplace` executor (module in `tools/tensorlab`; 26 Rust tests + Python smoke pass).
+- Structured controls reproduce the notes: SL₂(F₈) ratio 3.738; SL₃(F₄) (n = 60 480) ratio 4.583.
+- E-M4 done: λ₂(SL₃(F₄)) = 0.8005; λ₂(SL₃(F₈)), n = 16 482 816, = 0.8773 (Lanczos). Both far above the notes' bound 0.5.
+- **Calibration is poor.** On SL₃(F₄) random-start chains reach 1.11 and cut-start chains 2.54, against 4.58 for the
+  structured placement. On Cay(Mat₃(F₂), rank one) the identity gives 2.23, β_cut = 1.53, search from scratch ≤ 1.79.
+  The annealer recovers the identity from a 90%-randomised start: it refines structure but does not nucleate it.
+- Heawood: 27/14 = 1.929 at μ = 3 (notes had 1.75; β_cut 1.714) — a Fano-plane linear structure.
+- Random graphs, n ≤ 512: best found always equals β_cut. **Given the calibration, this is weak evidence for (GE):**
+  the search would also miss structured placements if they existed. The earlier β_cut heuristic was too weak and has
+  been strengthened; E-M1 is being rerun.
+- What would make the experiment informative: a search that nucleates linear structure (e.g. placements parametrised
+  by F₂-linear maps / module structures, or algebraic ansätze), or exact small cases (which rays of MET₆/MET₇ are rank
+  metrics).

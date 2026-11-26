@@ -76,9 +76,13 @@ fn info(g: &Graph) -> GraphInfo {
 /// Ratio search on one graph for several mu; prints one markdown row per mu.
 fn study(g: &Graph, gi: &GraphInfo, mus: &[usize], iters: u64, chains: usize, extra: &[(String, usize, Vec<u64>)]) -> f64 {
     let mut best_all = 0.0f64;
+    let mut best_mu = 0usize;
+    let mut xy_cuts: Vec<Vec<bool>> = vec![];
     let mut best_save: Option<(usize, Vec<u64>, String)> = None;
     let mut prev: Option<Vec<u64>> = None;
-    for &mu in mus {
+    // RP_ONLY_STRUCTURED=1: skip the random/cut-start runs (only the runs from structured placements)
+    let skip = std::env::var("RP_ONLY_STRUCTURED").is_ok();
+    for &mu in mus.iter().filter(|_| !skip) {
         let t = Instant::now();
         // chain c starts from inits[c % 8]: 0, 1, 3 random; 2 best cut; 4, 6 direct sums of good cuts;
         // 5, 7 the best placement of the previous (smaller) mu, embedded (or more cut sums)
@@ -97,6 +101,9 @@ fn study(g: &Graph, gi: &GraphInfo, mus: &[usize], iters: u64, chains: usize, ex
         let rep = verify::verify(g, &b.f, gi.l2, gi.lmin);
         // cuts read off the best placement (a check on the beta_cut lower bound)
         let xy = cut::cuts_from_placement(g, mu, &b.f, 3000, 5);
+        if xy.ratio > 0.0 {
+            xy_cuts.push(xy.side.clone());
+        }
         let vals: Vec<f64> = res.iter().map(|r| r.ratio).collect();
         let worst = vals.iter().cloned().fold(f64::MAX, f64::min);
         // best chain among random starts (inits 0, 1, 3), i.e. without any cut or smaller-mu seed
@@ -113,12 +120,32 @@ fn study(g: &Graph, gi: &GraphInfo, mus: &[usize], iters: u64, chains: usize, ex
         prev = Some(b.f.clone());
         if b.ratio > best_all {
             best_all = b.ratio;
+            best_mu = mu;
             best_save = Some((mu, b.f.clone(), verify::placement_json(g, mu, &b.f, &rep, &format!("\"beta_cut\":{},\"lambda2\":{}", gi.cut.ratio, gi.l2))));
         }
     }
+    // RP_PERTURB=p: replace a fraction p of the structured placement by random matrices first (basin test)
+    let perturb = std::env::var("RP_PERTURB").ok().and_then(|v| v.parse::<f64>().ok()).unwrap_or(0.0);
     for (label, mu, f0) in extra {
         let t = Instant::now();
-        let o = opts(iters, 77);
+        let mut f0 = f0.clone();
+        let label = if perturb > 0.0 {
+            use rand::{rngs::SmallRng, Rng, SeedableRng};
+            let mut rng = SmallRng::seed_from_u64(99);
+            for x in f0.iter_mut() {
+                if rng.gen::<f64>() < perturb {
+                    *x = f2::random_matrix(&mut rng, *mu);
+                }
+            }
+            format!("{label}, {:.0}% randomised", perturb * 100.0)
+        } else {
+            label.clone()
+        };
+        let f0 = &f0;
+        // structured starts are annealed cold (the default schedule melts them; calibration on Cay(Mat_3, rank one))
+        let mut o = opts(iters, 77);
+        o.t0 = o.t0.min(0.01);
+        o.t1 = o.t1.min(0.0005);
         let res = run_chains(g, *mu, Objective::Ratio, &o, &[Init::Given(f0.clone())], chains);
         let b = &res[0];
         let rep = verify::verify(g, &b.f, gi.l2, gi.lmin);
@@ -128,14 +155,33 @@ fn study(g: &Graph, gi: &GraphInfo, mus: &[usize], iters: u64, chains: usize, ex
             g.name, r0, g.n, g.d, gi.l2, 1.0 / (1.0 - gi.l2), gi.cut.ratio, mu, b.ratio, b.ratio / gi.cut.ratio, rep.epairs, rep.eedges,
             if rep.kernel_ok { "ok" } else { "VIOLATED" }, t.elapsed().as_secs_f64()
         );
+        let xy = cut::cuts_from_placement(g, *mu, &b.f, 3000, 5);
+        if xy.ratio > 0.0 {
+            xy_cuts.push(xy.side.clone());
+        }
         if b.ratio > best_all {
             best_all = b.ratio;
+            best_mu = *mu;
             best_save = Some((*mu, b.f.clone(), verify::placement_json(g, *mu, &b.f, &rep, &format!("\"beta_cut\":{},\"lambda2\":{},\"start\":\"{label}\"", gi.cut.ratio, gi.l2))));
         }
     }
     if let Some((mu, _, js)) = best_save {
         save(&format!("{}_best_mu{mu}", g.name), &js);
     }
+    // final beta_cut lower bound: the cut search, and the cuts S_xy read off the best placements, polished
+    let mut bc = gi.cut.ratio;
+    let mut bc_src = "cut search";
+    for (i, side) in xy_cuts.into_iter().enumerate() {
+        let (r, _) = cut::polish(g, side, (5_000 * g.n as u64).clamp(100_000, 20_000_000), 3 + i as u64);
+        if r > bc + 1e-12 {
+            bc = r;
+            bc_src = "S_xy cut of a placement, polished";
+        }
+    }
+    println!(
+        "SUMMARY | {} | {} | {} | {:.4} | {:.4} | {:.4}{} | {:.4} | {} | {:.4} | {} |",
+        g.name, g.n, g.d, gi.l2, 1.0 / (1.0 - gi.l2), bc, if gi.cut.exact { " (exact)" } else { "" }, best_all, best_mu, best_all / bc, bc_src
+    );
     best_all
 }
 
@@ -437,6 +483,7 @@ fn main() {
             let s: u64 = a[3].parse().unwrap();
             let g = random_regular(n, d, s);
             let sp = spectral::spectrum(&g);
+            grad_header();
             grad_study(&g, sp.lambda2, sp.lambda_min, a[4].parse().unwrap(), &list(&a[5]), a[6].parse().unwrap(), a[7].parse().unwrap(), &[]);
         }
         "em4" => {

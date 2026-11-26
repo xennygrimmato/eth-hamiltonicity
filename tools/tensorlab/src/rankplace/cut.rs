@@ -37,7 +37,7 @@ pub struct CutResult {
 /// Exact maximum, n <= 30.
 pub fn beta_cut_exact(g: &Graph) -> CutResult {
     let n = g.n;
-    assert!(n <= 30 && n >= 2);
+    assert!(n <= 32 && n >= 2);
     let free = n - 1; // vertex n-1 always outside S
     let t = free.min(6);
     let low = free - t;
@@ -106,7 +106,12 @@ pub fn sweep(g: &Graph, order: &[usize]) -> (f64, usize) {
     best
 }
 
-fn sa_cut(g: &Graph, mut side: Vec<bool>, iters: u64, seed: u64) -> (f64, Vec<bool>) {
+fn sa_cut(g: &Graph, side: Vec<bool>, iters: u64, seed: u64) -> (f64, Vec<bool>) {
+    sa_cut_t(g, side, iters, 0.03, 1e-4, seed)
+}
+
+/// Annealing on single-vertex flips, objective ln(cut ratio), geometric schedule t0 -> t1.
+pub fn sa_cut_t(g: &Graph, mut side: Vec<bool>, iters: u64, t0: f64, t1: f64, seed: u64) -> (f64, Vec<bool>) {
     let n = g.n;
     let mut rng = SmallRng::seed_from_u64(seed);
     let mut s = side.iter().filter(|&&b| b).count();
@@ -114,7 +119,6 @@ fn sa_cut(g: &Graph, mut side: Vec<bool>, iters: u64, seed: u64) -> (f64, Vec<bo
     let val = |s: usize, e: i64| if s == 0 || s == n || e == 0 { f64::NEG_INFINITY } else { cut_ratio(n, g.d, s, e as usize).ln() };
     let mut cur = val(s, e);
     let mut best = (cur, side.clone());
-    let (t0, t1) = (0.05f64, 1e-4f64);
     for it in 0..iters {
         let t = t0 * (t1 / t0).powf(it as f64 / iters as f64);
         let v = rng.gen_range(0..n);
@@ -189,12 +193,27 @@ pub fn beta_cut_heuristic(g: &Graph, fiedler: Option<&[f64]>, chains: usize, ite
     CutResult { ratio: best.0, side: best.1, exact: false }
 }
 
+/// Exact for n <= 32 (Gray code over 2^(n-1) subsets), else the heuristic with 50000 n flips per chain
+/// (capped at 2e8), 8 chains. The heuristic value is a lower bound; tuning on random cubic graphs (n = 512)
+/// showed it still creeping up by ~2% when the budget is quadrupled.
 pub fn beta_cut(g: &Graph, fiedler: Option<&[f64]>) -> CutResult {
-    if g.n <= 24 {
+    if g.n <= 32 {
         beta_cut_exact(g)
     } else {
-        let iters = (200 * g.n as u64).clamp(200_000, 20_000_000);
+        let iters = (50_000 * g.n as u64).clamp(1_000_000, 200_000_000);
         beta_cut_heuristic(g, fiedler, 8, iters, 12345)
+    }
+}
+
+/// Polish a given cut by low-temperature annealing (used on cuts read off placements).
+pub fn polish(g: &Graph, side: Vec<bool>, iters: u64, seed: u64) -> (f64, Vec<bool>) {
+    let s0 = side.iter().filter(|&&b| b).count();
+    let r0 = if s0 == 0 || s0 == g.n { 0.0 } else { cut_ratio(g.n, g.d, s0, cut_size(g, &side)) };
+    let (r, s) = sa_cut_t(g, side.clone(), iters, 0.003, 1e-5, seed);
+    if r >= r0 {
+        (r, s)
+    } else {
+        (r0, side)
     }
 }
 
@@ -221,7 +240,7 @@ mod tests {
 
 /// Several good, mostly distinct cuts (annealing with different seeds; the first is the best known).
 pub fn good_cuts(g: &Graph, best: &CutResult, k: usize, seed: u64) -> Vec<Vec<bool>> {
-    let iters = (100 * g.n as u64).clamp(100_000, 5_000_000);
+    let iters = (10_000 * g.n as u64).clamp(100_000, 50_000_000);
     let mut out = vec![best.side.clone()];
     let res: Vec<(f64, Vec<bool>)> = (0..(2 * k) as u64)
         .into_par_iter()

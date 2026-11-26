@@ -12,3 +12,5 @@ import PortsLean.RankKernel
 import PortsLean.ProtocolCert
 import PortsLean.CLStar
 import PortsLean.FivePoint
+import PortsLean.Bimedian
+import PortsLean.LemmaS

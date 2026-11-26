@@ -1378,6 +1378,47 @@ pub fn tree_dbar(des: &Design, f: &TreeFactor) -> f64 {
 /// Edge orbits for AG(2,q) designs: direction classes of edges, merged under the semilinear maps of
 /// GF(q)^2 that permute the merge classes. For other designs every edge is in orbit 0.
 pub fn edge_orbits(des: &Design) -> Vec<usize> {
+    if let Some(qn) = des.name.strip_prefix("net-") {
+        // orbits of difference vectors (dr, dc) up to sign under (x,y)->(y,x), (x,y)->(x,x-y) and, for cyclic
+        // Q, multiplication by units
+        let q = QGroup::new(qn);
+        let m = q.m;
+        let idx = |x: usize, y: usize| x * m + y;
+        let mut lab: Vec<usize> = (0..m * m).collect();
+        let units: Vec<usize> = if q.dims.len() == 1 { (1..m).filter(|&a| (1..m).any(|b| (a * b) % m == 1)).collect() } else { vec![1] };
+        let find = |lab: &Vec<usize>, mut x: usize| { while lab[x] != x { x = lab[x]; } x };
+        loop {
+            let mut ch = false;
+            for x in 0..m {
+                for y in 0..m {
+                    let mut imgs = vec![idx(y, x), idx(x, q.lin(1, -1, x, y)), idx(q.neg[x], q.neg[y])];
+                    for &a in &units {
+                        imgs.push(idx((x * a) % m, (y * a) % m));
+                    }
+                    for j in imgs {
+                        let (r1, r2) = (find(&lab, idx(x, y)), find(&lab, j));
+                        if r1 != r2 {
+                            let mn = r1.min(r2);
+                            lab[r1] = mn;
+                            lab[r2] = mn;
+                            ch = true;
+                        }
+                    }
+                }
+            }
+            if !ch {
+                break;
+            }
+        }
+        return des
+            .edges
+            .iter()
+            .map(|&(u, v)| {
+                let (r1, c1, r2, c2) = (u / m, u % m, v / m, v % m);
+                find(&lab, idx(q.lin(1, -1, r2, r1), q.lin(1, -1, c2, c1)))
+            })
+            .collect();
+    }
     let q = match des.name.strip_prefix("AG2-") {
         Some(r) => r.split('-').next().unwrap().parse::<usize>().unwrap(),
         None => return vec![0; des.edges.len()],
@@ -2755,6 +2796,8 @@ fn filt_d2(pa: usize, ra: f64, pb: usize, rb: f64) -> f64 {
 ///  direct single-factor average (Σ_k b_k)/p, direct min_k b_k), with b_k = Σ_e s^k_e / delta_k at the
 /// per-edge optimum of Σ_k s^k/delta_k.
 pub struct FiltScores {
+    /// symmetrised-product value (1/p) Σ_O |O| sqrt(mean_O c^2 / Dbar) (orbits from edge_orbits)
+    pub sym: f64,
     pub gamma: f64,
     pub cs: f64,
     pub avg: f64,
@@ -2797,10 +2840,21 @@ pub fn filt_scores(des: &Design, fs: &FiltSpace, pl: &FiltPlacement, cache: &mut
     };
     let ones = vec![1.0; p];
     let mut s = 0.0;
-    for &(u, v) in &des.edges {
+    let orbits = edge_orbits(des);
+    let no = orbits.iter().max().unwrap() + 1;
+    let mut osq = vec![0.0; no];
+    let mut ocnt = vec![0usize; no];
+    for (e, &(u, v)) in des.edges.iter().enumerate() {
         let (c, _) = eval(u, v, &ones);
         s += c * c;
+        osq[orbits[e]] += c * c;
+        ocnt[orbits[e]] += 1;
     }
+    let sym = if db > 1e-14 {
+        (0..no).filter(|&o| ocnt[o] > 0).map(|o| ocnt[o] as f64 * (osq[o] / ocnt[o] as f64 / db).sqrt()).sum::<f64>() / p as f64
+    } else {
+        0.0
+    };
     let gamma = if db > 1e-14 { s / db } else { 0.0 };
     let cs = (des.edges.len() as f64 * gamma).sqrt() / p as f64;
     let (mut avg, mut minb, mut b) = (0.0, 0.0, vec![0.0; p]);
@@ -2815,7 +2869,7 @@ pub fn filt_scores(des: &Design, fs: &FiltSpace, pl: &FiltPlacement, cache: &mut
         avg = b.iter().map(|x| x.max(0.0)).sum::<f64>() / p as f64;
         minb = b.iter().cloned().fold(f64::INFINITY, f64::min);
     }
-    FiltScores { gamma, cs, avg, minb, b }
+    FiltScores { sym, gamma, cs, avg, minb, b }
 }
 
 /// Annealing over hub points and levels in C_N(q). target: "gamma" (CS / orbit value) or "min" (direct min_k b_k)
@@ -2825,9 +2879,10 @@ pub fn anneal_filt(des: &Design, fs: &FiltSpace, target: &str, iters: usize, cha
                    starts: &[FiltPlacement]) -> Vec<(f64, FiltPlacement)> {
     let nh = des.nhubs();
     let np = fs.pts.len();
-    let direct = target != "gamma";
+    let direct = target != "gamma" && target != "sym";
     let score = |sc: &FiltScores| match target {
         "gamma" => sc.gamma,
+        "sym" => sc.sym,
         "min" => sc.minb,
         _ => sc.avg,
     };
@@ -3118,7 +3173,8 @@ mod tests {
     #[test]
     fn filtrations_q1_values() {
         // q1-notes Theorem A: F_2^2 (g = 4) and F_2^3 (g = 8) nets: min_k b_k / E >= 0.4828, 0.5825
-        for (m, target) in [(2usize, 0.4828f64), (3, 0.5825)] {
+        let ms: Vec<(usize, f64)> = if std::env::var("PF_SLOW").is_ok() { vec![(2, 0.4828), (3, 0.5825)] } else { vec![(2, 0.4828)] };
+        for (m, target) in ms {
             let des = Design::group_net(if m == 2 { "2x2" } else { "2x2x2" });
             let fs = FiltSpace::new(2, m + 2, 200_000, 1);
             assert!(fs.exhaustive);

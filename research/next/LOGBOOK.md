@@ -2798,3 +2798,22 @@ a cost model for three-way hubs (worth at most 8/9 per level; hub-level floors 0
 0.5926 Δ₃ when contracting fails). Proposed next step (Observation 3.1): compute the common-label rate of three
 tips of the √rank pod under the price of `thm_alt_rank_price`; contact with OpenAI's tripod bound would give
 ω ≥ 9/4 from "contracting fails" alone. Not started.
+
+**Lemma S core and the weighted bimedian inequality are in Lean** (`research/ports/lean/PortsLean/Bimedian.lean`,
+`LemmaS.lean`; note `research/sat3/lean-lemmaS.md`). Rebuilt by the lead: 18288 jobs, no `sorry`, no
+`native_decide`; axioms printed by the lead for `bimedian_weighted`, `dist_interp_le`, `lemmaS_core`,
+`lemmaS_interp`, `circle_of_sSup`, `lemmaS_inner`: propext, Classical.choice, Quot.sound only.
+- `bimedian_weighted`: |β_xβ_v|² + |β_yβ_u|² ≤ 2(1−t)²|oo′|² + 2t²|ww′|² from six instances of the weighted CN
+  inequality, on any pseudometric space. `bimedian_half` is Prop. 3.1 of the sat3 notes (now [L]).
+- `dist_interp_le`: convexity of the distance along two "geodesics" is DERIVED from six CN instances (through
+  the auxiliary point γ_t(x₁, y₂)), so it is not a hypothesis.
+- `lemmaS_interp`: for any interpolation γ satisfying CN against every point (every CAT(0) space with its
+  geodesics), a₁N₁/|oo′| + a₂N₂/|ww′| ≤ √(2(p²+q²))·√(a₁²+a₂²), with two hypotheses left: (h_rest) the rest of
+  the network is convex under interpolation, and (h_parent) the interpolated configuration costs ≥ v.
+  `circle_of_sSup`: hence r_c² + r_b² ≤ 2(p²+q²) for the suprema. `lemmaS_inner`: instantiated in real inner
+  product spaces (non-vacuous; CN and the bimedian inequality are equalities there).
+- Not formalised: the Steiner value as an infimum over hub positions (the identification of r_c with "the
+  least bond for which the child is not below the parent"), and the wire-by-wire reduction of h_rest. One
+  silent step of the paper proof became an explicit hypothesis (the parent inequality for the child's own
+  positions, used for r ≤ p + q and the coincident-hub case); it holds when v is the Steiner value.
+- No step of the paper proof failed formally.

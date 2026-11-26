@@ -252,9 +252,43 @@ fn cone_cmd(a: &[String]) {
     eprintln!("elapsed {:.2}s", t.elapsed().as_secs_f64());
 }
 
+/// filt DESIGN Q N TARGET ITERS CHAINS [SEED] [MAXFRAMES]   hubs at points of PG(N-1, q) with levels; TARGET gamma|sym|avg|min
+fn filt_cmd(a: &[String]) {
+    let t = Instant::now();
+    let des = Design::by_name(&a[2]).unwrap();
+    let q: usize = a[3].parse().unwrap();
+    let n: usize = a[4].parse().unwrap();
+    let target = a[5].as_str();
+    let iters: usize = a[6].parse().unwrap();
+    let chains: usize = a[7].parse().unwrap();
+    let seed: u64 = a.get(8).map(|s| s.parse().unwrap()).unwrap_or(1);
+    let maxf: usize = a.get(9).map(|s| s.parse().unwrap()).unwrap_or(100_000);
+    let fs = FiltSpace::new(q, n, maxf, seed);
+    let r = anneal_filt(&des, &fs, target, iters, chains, 0.05, 1e-6, seed, &[]);
+    let mut cache = Default::default();
+    let sc = filt_scores(&des, &fs, &r[0].1, &mut cache, true);
+    let e = des.total_weight();
+    println!("filt {} over F_{}^{} ({} points, {} frames{}) target {} iters={} chains={} time {:.1}s", des.name, q, n, fs.pts.len(), fs.nframes,
+             if fs.exhaustive { ", all" } else { ", SAMPLED" }, target, iters, chains, t.elapsed().as_secs_f64());
+    println!("BEST: sym rho {:.6} (value {:.6})  CS rho {:.6}  Gamma {:.6}  single-factor avg rho {:.6}  min_k b_k/E {:.6}  b = {}",
+             sc.sym / e, sc.sym, sc.cs / e, sc.gamma, sc.avg / e, sc.minb / e, fmt_b(&sc.b));
+    let q2: Vec<String> = r.iter().map(|x| format!("{:.5}", x.0)).collect();
+    println!("chains ({}): {:?}", target, q2);
+    let pts: Vec<String> = r[0].1.pt.iter().map(|&i| format!("{:?}", fs.pts[i])).collect();
+    println!("hub points {:?}\nlevels {:?}", pts, r[0].1.r.iter().map(|x| (x * 1e4).round() / 1e4).collect::<Vec<_>>());
+    save(&format!("filt_{}_q{}_n{}_{}_s{}", des.name, q, n, target, seed),
+         format!("{{\"design\":\"{}\",\"q\":{},\"n\":{},\"sym\":{},\"cs\":{},\"gamma\":{},\"avg\":{},\"min\":{},\"points\":[{}],\"levels\":{:?}}}",
+                 des.name, q, n, sc.sym, sc.cs, sc.gamma, sc.avg, sc.minb, pts.join(","), r[0].1.r));
+    eprintln!("elapsed {:.2}s", t.elapsed().as_secs_f64());
+}
+
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     let cmd = a.get(1).map(|s| s.as_str()).unwrap_or("help");
+    if cmd == "filt" {
+        filt_cmd(&a);
+        return;
+    }
     if cmd == "cone" {
         cone_cmd(&a);
         return;

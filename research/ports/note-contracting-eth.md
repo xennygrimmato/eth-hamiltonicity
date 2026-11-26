@@ -513,16 +513,18 @@ price is an asymptotic question.
 
 ## 6. Corollaries, the case table, and the permanent bounds
 
-> **Corollary 1.** Let k be a field of characteristic 0.
-> (a) Under Weak ETH, the contracting hypothesis fails over k. This uses Theorem A and [IM] 7.1, hence OpenAI's results,
-> but not [EG] Thm 1.2.
-> (a′) Under nu-Weak ETH, the same follows from Theorem R alone. With Theorem R^u (placeholder) it would follow under
-> Weak ETH from [AN] alone.
-> (b) In either case, by `thm_alt` in its proved form ¬Contracting K ⇒ Flat K, the flat hypothesis holds over k, and ρ_μ
-> is an [AN] price over k for every μ (Theorem B(iv)).
+> **Corollary 1.** Let k be a field of characteristic 0. Under Weak ETH:
+> (a) the contracting hypothesis fails over k;
+> (b) hence, by `thm_alt` in its proved form ¬Contracting K ⇒ Flat K, the flat hypothesis holds over k, and ρ_μ is an
+> [AN] price over k for every μ (Theorem B(iv)).
+>
+> Part (a) has two independent proofs with different dependencies:
+> - **via Theorem R:** [AN] and classical facts only. The uniformity of the algorithm rests on the audit (§3.6). Under
+>   nu-Weak ETH, Remark R′ gives (a) with fully refereed steps.
+> - **via Theorem A and [IM] 7.1:** this uses OpenAI's results, but not [EG] Thm 1.2.
 
-*Proof.* Contrapositive of Theorem R, respectively Corollary A′, applied to k itself. Both hypotheses are per field
-(D.1: "two hypotheses on the field k"), so no transfer between fields is needed. ∎ [ours-R]
+*Proof.* Take the contrapositive of Theorem R, respectively of Corollary A′, applied to k itself. Both hypotheses are per
+field (D.1: "two hypotheses on the field k"), so no transfer between fields is needed. ∎ [ours-R]
 
 Corollary 1 is a conditional proof of [AN]'s flat hypothesis in characteristic 0. It does not use OpenAI's [EG] Thm 1.2
 ("Over every field there is a spectral flat of every positive finite dimension"), which would give the flat hypothesis
@@ -534,7 +536,7 @@ attached to the cell it concerns.
 
 | Cell | Possible? | 3-SAT consequence | Permanent / HC bounds that apply |
 |---|---|---|---|
-| contracting, ports | Not excluded by anything either lab proves [ours-R, review-AB §6]. In char 0 it contradicts Weak ETH. | char 0: 2^{O(v^{1−δ})} decision (Theorem R non-uniform; Cor. A′ uniform) | [AN] K.7: 2^{c(log m)²/log log m}. [HC] 12.2 [OA]: L^{[N]}_F(HC_N) > 2^{N^ε} |
+| contracting, ports | Not excluded by anything either lab proves [ours-R, review-AB §6]. In char 0 it contradicts Weak ETH. | char 0: 2^{O(v^{1−δ})} decision (Theorem R; Cor. A′) | [AN] K.7: 2^{c(log m)²/log log m}. [HC] 12.2 [OA]: L^{[N]}_F(HC_N) > 2^{N^ε} |
 | contracting, no ports | **Impossible** (Theorem A) | — | — |
 | not contracting, ports | Not excluded | char 0: 2^{O(v^{1−δ})} decision via [IM] 7.1 only | [AN]: flat-case bound E.11. [HC] 12.2 [OA] |
 | not contracting, no ports | Not excluded. In char 0 it is forced by Weak ETH. | none from these sources | [AN] E.11 / Thm 1.1: 2^{c(log m)^{4/3}}. [HC] Thm 1.1 [OA]: exp(c(log N)²/(log log N)²) |
@@ -548,8 +550,8 @@ changes them.
 
 - **[AN].** Theorem 1.1 is m^{c(log m)^{1/3}} = 2^{c(log m)^{4/3}}, and it comes from the flat case. The contracting-case
   bound K.7 is 2^{c(log m)²/log log m}. [AN] says "The exponent 1/3 comes from the flat case alone" (p. 59).
-  - Under Weak ETH (via OpenAI) or nu-Weak ETH (via [AN] alone), the contracting case does not occur in characteristic
-    0. So K.7 then holds vacuously there, and the operative bound is the flat-case one.
+  - Under Weak ETH, the contracting case does not occur in characteristic 0 (Corollary 1). So K.7 then holds vacuously
+    there, and the operative bound is the flat-case one.
   - Conversely, by Theorem A, wherever [AN]'s contracting case occurs, [HC] 12.2 applies too, giving 2^{N^ε}. This is
     much stronger than K.7, but it is conditional on [HC] 12.2.
 - **[HC].** The ports branch (12.2) is excluded in characteristic 0 by Weak ETH. OpenAI says so itself ([IM] 7.1). So
@@ -593,9 +595,11 @@ We built neither lab's Lean. "Lean-backed" means a Lean statement exists per the
 | Lemma 2, pruned enumeration | yes, with the pruning fix (review-R §2) |
 | Theorem R(a) exponent | yes, recomputed (review-R §2) |
 | Theorem R(b): encoding, char 0, δ | yes (review-R §3) |
-| Uniformity (Theorem R^u) | **open**: gap per review-R §4; audit pending |
+| Uniformity of Theorem R | by audit (review-uniformity): one reader of the Lean proof terms; meta-level argument, not machine-checked |
+| Theorem R parameter bookkeeping | Lean file `PortsLean/ThmR.lean` (no `sorry`) covers the exponent arithmetic and the Lemma 1 sums, with J.4 and Lemma 1 as hypotheses. Not refereed; we have not confirmed that it builds |
 | Turing-machine reading of R(a) | no |
-| Theorem A and its Lean side condition | yes (review-AB §§1–3, 9) |
+| Theorem A | yes (review-AB §§1–3, 9). The deduction is machine-checked in `PortsLean/ThmA.lean`, conditional on four hand-transcribed hypotheses (§4) |
+| Size condition 40000(C₀+1)(e+3) ≤ h | found by the Lean check; supersedes review-AB §3's single condition |
 | Theorem B (i)–(iv) | yes, with the AN-price fix (review-AB §5) |
 | Corollary 1 | yes (review-R §6; review-AB §9) |
 | Case table, bound comparison | yes, with wording fixes (review-AB §7) |

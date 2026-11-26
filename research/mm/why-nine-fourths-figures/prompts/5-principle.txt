@@ -1,0 +1,15 @@
+PAGE CONTENT
+
+Title (in the rounded box at the top): "the key inequality: the tripod principle"
+
+Panel 1 (top, biggest panel): one large formula in the centre, written very clearly:
+
+    D ≥ (a₁ + a₂ + a₃) − 1 / (1/a₁ + 1/a₂ + 1/a₃)
+
+Draw the second part as one big fraction: "1" on top, and "1/a₁ + 1/a₂ + 1/a₃" underneath the fraction bar. The first part "(a₁ + a₂ + a₃)" is highlighted orange. The big fraction is highlighted pink.
+- An arrow from the orange part to a note: "the cost of routing through the hub"
+- An arrow from the pink part to a note: "minus the parallel resistance of the three arms"
+
+Panel 2 (bottom left): the Y-shaped tripod with a hub in the middle and arms labelled a₁, a₂, a₃. A small stick figure stands at the hub with a megaphone. Caption: "routing through the hub costs a₁ + a₂ + a₃"
+
+Panel 3 (bottom right): a simple electrical doodle of three resistors (zigzag lines) wired in parallel, labelled a₁, a₂, a₃. A stick figure next to it says in a speech bubble: "wait, resistors?!" A second speech bubble replies: "yep! it's the same formula as three resistors in parallel"

@@ -1,0 +1,21 @@
+PAGE CONTENT
+
+Title (in the rounded box at the top): "plug in equal arms of length 1"
+
+Panel 1 (top): a Y-shaped tripod with a hub in the middle and three arms of equal length, with a stick figure at the end of each arm. Each arm is labelled "1". Caption: "all three arms have length 1"
+
+Panel 2 (middle left): heading "the perimeter". Below it:
+
+    2 × (1 + 1 + 1) = 6
+
+Panel 3 (middle right): heading "the label's rate D". Below it:
+
+    D = 3 − 1/3 = 8/3
+
+with a small note and arrow pointing at the "1/3": "parallel resistance of three arms of length 1"
+
+Panel 4 (bottom, wide, the punchline): heading "the ratio". Below it, written very large:
+
+    6 ÷ 8/3 = 9/4
+
+Write 8/3 and 9/4 as stacked fractions. Highlight the "9/4" in pink and draw little stars around it. A stick figure next to it cheers with arms up and says: "there it is!"

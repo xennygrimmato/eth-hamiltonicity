@@ -1,0 +1,19 @@
+PAGE CONTENT
+
+Title (in the rounded box at the top): "why 9/4?"
+
+Panel 1 (top, wide): a stick figure with a thought bubble showing two small grids of squares being multiplied (two little matrices with a "×" between them). The stick figure's speech bubble says: "multiplying two n × n matrices costs about n^ω steps. what is ω?" (write ω as the Greek letter omega, as a superscript on n).
+
+Panel 2 (middle, the biggest panel): a huge hand-lettered equation in the centre:
+
+    9/4 = 2 × 9/8
+
+Write 9/4 and 9/8 as stacked fractions. Highlight the "2" in orange and the "9/8" in pink.
+- An arrow from the "2" to a note: "the old answer, from flat geometry"
+- An arrow from the "9/8" to a note: "the best possible discount when three parties share one label"
+
+Panel 3 (bottom left): a small boxed note with the heading "where does 9/8 come from?" and underneath, the formula:
+
+    1 − (1/3)² = 8/9
+
+Panel 4 (bottom right): the same stick figure looking excited, with a speech bubble: "let's draw it!" and a small doodle of a triangle next to them.

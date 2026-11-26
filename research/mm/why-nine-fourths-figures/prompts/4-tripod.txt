@@ -1,0 +1,20 @@
+PAGE CONTENT
+
+Title (in the rounded box at the top): "draw the triangle as a tripod"
+
+Panel 1 (top left): a plain triangle with a stick figure at each corner. Caption: "the triangle"
+
+Panel 2 (top right): the same three corners with stick figures, but now the sides are gone. Instead there is a dot in the middle labelled "hub" and three straight arms going from the hub out to the three corners, like a letter Y. The arms are coloured orange, pink and purple and labelled "a₁", "a₂" and "a₃" (the letter a with small subscripts 1, 2, 3). Caption: "the tripod: three arms meeting at a hub"
+Between panel 1 and panel 2 draw a big arrow labelled "same thing!"
+
+Panel 3 (middle, wide): a stick figure walking along one arm to the hub and then out along another arm, with a dashed path. Text: "to get from one corner to another, go through the hub". Then a list of the three sides:
+    side = a₁ + a₂
+    side = a₂ + a₃
+    side = a₁ + a₃
+Caption: "any triangle's sides can be written this way"
+
+Panel 4 (bottom, wide, highlighted): the formula, written large:
+
+    perimeter = 2(a₁ + a₂ + a₃)
+
+with a small note and arrow: "every arm gets used twice"

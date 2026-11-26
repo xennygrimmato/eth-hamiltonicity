@@ -1,0 +1,23 @@
+PAGE CONTENT
+
+Title (in the rounded box at the top): "equal arms are the best case"
+
+Panel 1 (top left): a lopsided Y-shaped tripod with one very long arm and two short arms. A stick figure next to it looks unimpressed. Caption: "lopsided arms: smaller ratio"
+
+Panel 2 (top right): a balanced Y-shaped tripod with three equal arms. A stick figure next to it looks happy. Caption: "equal arms: the biggest ratio"
+
+Panel 3 (middle, wide): heading "why?". Text: "the parallel resistance is at most one ninth of the total arm length". Below it the formula:
+
+    parallel resistance ≤ (a₁ + a₂ + a₃) / 9
+
+and a small note: "(arithmetic mean vs harmonic mean)"
+
+Panel 4 (bottom, wide, highlighted): text: "so the ratio can never exceed". Below it, written large:
+
+    2 ÷ (1 − 1/9) = 9/4
+
+and underneath, a little smaller:
+
+    9/4 = 2 × 9/8
+
+Write 1/9, 9/4 and 9/8 as fractions. Highlight both "9/4" in pink.

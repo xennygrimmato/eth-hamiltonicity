@@ -1,0 +1,13 @@
+Draw one page of a hand-drawn programming/maths zine in the style of "drawings jvns" (drawings.jvns.ca, Julia Evans' wizard zines comics).
+
+Style rules:
+- Looks drawn by hand with a black felt-tip pen on a plain white page. Slightly wobbly lines, nothing computer-perfect.
+- All text is neat, friendly, hand-lettered handwriting (mostly lowercase), large and easy to read.
+- A big hand-lettered title at the top inside a hand-drawn rounded box.
+- The page is split into a few hand-drawn panels/boxes with thick wobbly black borders.
+- Simple stick-figure people with round heads, dot eyes and a small smile, with speech bubbles and thought bubbles.
+- Little hand-drawn arrows pointing from notes to the things they explain.
+- Limited flat colour: black ink plus a few highlights in warm pink, orange and light purple (highlighter-style fills behind key words, coloured lines in diagrams). No gradients, no shading, no photorealism, no 3D.
+- Curious, cheerful, plain-spoken tone.
+- Spell every word exactly as given. Write every formula and number exactly as given, with nothing added. Do not add extra text, logos, signatures, URLs or page numbers.
+- Portrait page.

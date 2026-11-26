@@ -1,0 +1,13 @@
+PAGE CONTENT
+
+Title (in the rounded box at the top): "how much does the label cost?"
+
+Panel 1 (top): the unit tripod (Y shape, hub in the middle, three arms each labelled "1") with the pink "term #t" ticket floating above the hub and a price tag with a question mark "D = ?". Caption: "the perimeter is 6, so ω = 6 ÷ D. everything depends on the price D"
+
+Panel 2 (middle, wide, biggest panel): a horizontal hand-drawn number line for D going from 2 on the left to 3 on the right, with three marked points:
+- at the left end, "D = 2": a note below says "as cheap as one wire" and a big label above says "ω = 3"
+- at the right end, "D = 3": a note below says "no cheaper than broadcasting from the hub" and a big label above says "ω = 2"
+- in between, at two thirds of the way from left to right, "D = 8/3": highlighted in pink with a star, a big label above says "ω = 9/4"
+(ω is the Greek letter omega. Write 8/3 and 9/4 as fractions.)
+
+Panel 3 (bottom): a stick figure pointing up at the pink star, with a speech bubble: "the claim is that the truth is 8/3". A second, smaller stick figure with a thought bubble: "a cheaper label means a slower algorithm!"

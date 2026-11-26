@@ -1,0 +1,15 @@
+PAGE CONTENT
+
+Title (in the rounded box at the top): "an algorithm is one shared label"
+
+Panel 1 (top): a stick figure at a chalkboard. On the chalkboard is written: "product = term 1 + term 2 + ... + term r". Speech bubble: "a fast algorithm writes the product as a sum of r simple terms"
+
+Panel 2 (middle, biggest panel): the same triangle of three stick figures as before (signs: "input A", "input B", "output C"). In the middle of the triangle there is one big ticket, highlighted in pink, that says "term #t". All three stick figures are looking at the ticket, with dotted lines from each of them to it. Caption: "which term are we on? that is a single label that all three parties read"
+
+Panel 3 (bottom left): the pink ticket with a little price tag hanging off it that says "D". Text: "the label has a rate D: its price per bit"
+
+Panel 4 (bottom right): a highlighted box with the heading "the exponent is the ratio" and below it the formula, written large:
+
+    ω ≥ perimeter ÷ D
+
+(ω is the Greek letter omega.)

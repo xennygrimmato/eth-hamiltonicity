@@ -1,0 +1,17 @@
+PAGE CONTENT
+
+Title (in the rounded box at the top): "matrix multiplication is a triangle"
+
+Panel 1 (top, biggest panel): a large hand-drawn triangle. At each corner stands a stick figure holding a small sign:
+- top corner sign: "output C"
+- bottom-left corner sign: "input A"
+- bottom-right corner sign: "input B"
+Each side of the triangle is drawn as a wavy coloured wire (one orange, one pink, one purple). Label the three wires:
+- the wire between "input A" and "input B": "index j"
+- the wire between "input B" and "output C": "index k"
+- the wire between "input A" and "output C": "index i"
+A caption under the triangle: "there are three parties: the two inputs and the output"
+
+Panel 2 (bottom left): two stick figures holding the two ends of one wire, like a tin-can telephone. Caption: "each pair shares one index, like a wire between them"
+
+Panel 3 (bottom right): a small triangle with a little ruler drawn next to one side. Text: "give every wire a length." Below it, in a highlighted box: "cost of the tensor = the triangle's perimeter"

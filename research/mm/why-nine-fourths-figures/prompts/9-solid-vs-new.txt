@@ -1,0 +1,11 @@
+PAGE CONTENT
+
+Title (in the rounded box at the top): "what is solid, and what is new?"
+
+Panel 1 (top left), with a small heading tag "solid": a stick figure holding up a sign that says "D ≥ 8/3". Text: "this is the algorithm side. it is October's upper bound in geometric form, and it comes from polynomial multiplication"
+
+Panel 2 (top right), with a small heading tag "new!" highlighted in pink: a stick figure holding up a sign that says "D = 8/3". Text: "the two-day-old claim: 8/3 is actually attained." A thought bubble from a second stick figure: "the proof goes by contradiction, so it gives no intuition for the number"
+
+Panel 3 (middle, wide), with a small heading tag "if it is true...": a tall tower of blocks labelled "Strassen's conjecture" wobbling, with a stick figure looking up at it nervously. Text: "it refutes a well-known conjecture of Strassen about a class of tensors that includes matrix multiplication. that conjecture is a large part of why people believed ω = 2" (ω is the Greek letter omega.)
+
+Panel 4 (bottom, wide), with a small heading tag "still open": a stick figure scratching their head next to a doodle of three zigzag resistors in parallel. Speech bubble: "is parallel resistance a real mechanism, or just the shape of the formula?"

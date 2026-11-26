@@ -253,6 +253,34 @@ fn main() {
                  format!("{{\"design\":\"{}\",\"space\":\"fartree\",\"k\":{},\"value\":{},\"S\":{},\"factors\":[{}],\"x\":{:?}}}",
                          des.name, k, v, r[0].2, fj.join(","), tm.x));
         }
+        ("onetree", Some(des)) => {
+            // onetree DESIGN NV ITERS CHAINS [SEED] [sym|gamma]
+            let nv: usize = a[3].parse().unwrap();
+            let iters: usize = a[4].parse().unwrap();
+            let chains: usize = a[5].parse().unwrap();
+            let seed: u64 = a.get(6).map(|s| s.parse().unwrap()).unwrap_or(1);
+            let sym = a.get(7).map(|s| s == "sym").unwrap_or(false);
+            let orb = edge_orbits(&des);
+            let no = orb.iter().max().unwrap() + 1;
+            let sizes: Vec<usize> = (0..no).map(|o| orb.iter().filter(|&&x| x == o).count()).filter(|&c| c > 0).collect();
+            let starts: Vec<TreeFactor> = if std::env::var("PF_NOSTART").is_ok() { vec![] } else { (0..des.nnodes).map(|v| node_pod(&des, v)).collect() };
+            let pod0 = node_pod(&des, 0);
+            let mut c = vec![];
+            let (g0, s0, cs0) = one_tree_scores(&des, &pod0, &orb, &mut c);
+            let r = anneal_one_tree(&des, nv, iters, chains, 0.05, 1e-6, seed, sym, &starts);
+            let e = des.total_weight();
+            println!("{} one tree, {} vertices, target {}, iters={} chains={}  time {:.1}s  edge orbits {:?}", des.name, nv, if sym { "sym" } else { "gamma" }, iters, chains, t.elapsed().as_secs_f64(), sizes);
+            println!("node-pod start: Gamma {:.6}  sym value {:.6} (rho {:.6})  CS bound {:.6} (rho {:.6})", g0, s0, s0 / e, cs0, cs0 / e);
+            println!("BEST: Gamma {:.6}  sym value {:.6} (rho {:.6})  CS bound {:.6} (rho {:.6})   flat {:.6} (rho {:.6})  cap E/sqrt2 {:.6}",
+                     r[0].0, r[0].1, r[0].1 / e, r[0].2, r[0].2 / e, des.flat_value(), des.flat_value() / e, e / 2f64.sqrt());
+            let q: Vec<String> = r.iter().take(16).map(|x| format!("{:.4}/{:.4}", x.0, x.1)).collect();
+            println!("top chains (Gamma/sym): {:?}", q);
+            let f = &r[0].3;
+            println!("tree: parent {:?}\n      len {:?}\n      hub vertex {:?}", f.parent, f.len.iter().map(|x| (x * 1e4).round() / 1e4).collect::<Vec<_>>(), f.hv);
+            save(&format!("onetree_{}_n{}_{}_s{}", des.name, nv, if sym { "sym" } else { "gamma" }, seed),
+                 format!("{{\"design\":\"{}\",\"space\":\"onetree\",\"gamma\":{},\"sym\":{},\"cs\":{},\"parent\":{:?},\"len\":{:?},\"hv\":{:?}}}",
+                         des.name, r[0].0, r[0].1, r[0].2, f.parent, f.len, f.hv));
+        }
         _ => {
             println!("usage: see the header of examples/piecefloor.rs");
         }

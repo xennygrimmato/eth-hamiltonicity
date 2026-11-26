@@ -2263,3 +2263,12 @@ yet excludes 1/√3 (exponent 0.79). Three cheap runs sent to the executor: chec
 general trees on Δ₃; Γ for full 3-net levels on AG(2,g), g = 3, 4, 5, 7.
 Next, once numbers are in: referee the product-of-hulls statement; then the attainment question (H27) becomes the
 main problem.
+
+## 27 Nov: I reproduced MC(⟨1,2,3⟩ over F₂) = 6 [N‑rig]
+
+`tools/mc222/run_mm123.sh`, my run, exit 0: exact search k = 5, 51/51 roots, no circuit, 2,829,011 states (same count as
+the executor's); k = 4 none; a 6-gate circuit found and verified on all 256 inputs; Python and Rust give the same 51
+orbit representatives (sizes sum to 10 795); SAT: 204 cubes at k = 4 and 510 cubes at k = 5, all UNSAT with checked LRAT
+proofs (1.14 GB at k = 5); **all 510 formula hashes and proof hashes identical to the executor's record.**
+Also confirmed earlier today: the 1080 formulas of the 2×2 case regenerate with identical hashes from the modified
+generator.

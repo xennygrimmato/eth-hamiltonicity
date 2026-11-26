@@ -213,7 +213,9 @@ impl Design {
                         dm = dm.max(d(self.hub(m, g), self.hub(m, g2)));
                     }
                 }
-                if dm <= 1e-12 {
+                // guard against cancellation: L and H_m are sums of distances of size up to L, so
+                // (L - H_m) has absolute error ~ 1e-15 L; require delta_m >= 1e-7 * L / E
+                if dm <= 1e-12 || dm < 1e-7 * l / self.edges.len() as f64 {
                     0.0
                 } else {
                     (l - h[m]) / dm
@@ -686,7 +688,7 @@ pub fn anneal_hubs_exact(des: &Design, sp: &MatSpace, iters: usize, chains: usiz
 
 // ------------------------------------------------------------------------------------ continuous models
 
-pub const MAXF: usize = 6;
+pub const MAXF: usize = 9;
 pub const MAXK: usize = 8;
 
 /// l2 product of spiders (arms[f] arms each; a point is (arm, radius) per spider) and R^k.
@@ -1282,6 +1284,276 @@ pub fn pods_to_trees(model: &Model, hubs: &[CPoint]) -> TreeModel {
     TreeModel { factors, k, x }
 }
 
+// ------------------------------------------------------------------------------------ one-tree reduction
+
+/// Edge savings of ONE tree factor (all merges, no delta normalisation):
+/// s_e = max(0, max_{r+, r-} sum_k [d(r+,r-) - d(r+, h^k_u) - d(r-, h^k_v)]), ray roots at any vertex.
+pub fn tree_savings(des: &Design, f: &TreeFactor, cost: &mut Vec<f64>) -> Vec<f64> {
+    let p = des.p();
+    let nl = des.nlegs();
+    let n = f.n();
+    let nn = des.nnodes;
+    cost.resize(nn * n, 0.0);
+    for u in 0..nn {
+        for r in 0..n {
+            let mut c = 0.0;
+            for m in 0..p {
+                let hv = f.hv[des.hub(m, des.groups[m][u]) - nl];
+                c += f.dist[hv * n + r];
+            }
+            cost[u * n + r] = c;
+        }
+    }
+    let w = p as f64;
+    des.edges
+        .iter()
+        .map(|&(u, v)| {
+            let cu = &cost[u * n..u * n + n];
+            let cv = &cost[v * n..v * n + n];
+            let mut a = 0.0f64;
+            for r in 0..n {
+                let row = &f.dist[r * n..r * n + n];
+                let mut by = f64::NEG_INFINITY;
+                for r2 in 0..n {
+                    let t = w * row[r2] - cv[r2];
+                    if t > by {
+                        by = t;
+                    }
+                }
+                a = a.max(by - cu[r]);
+            }
+            a
+        })
+        .collect()
+}
+
+/// Dbar = mean over merges k and pairs of hubs of merge k of d^2.
+pub fn tree_dbar(des: &Design, f: &TreeFactor) -> f64 {
+    let nl = des.nlegs();
+    let n = f.n();
+    let mut tot = 0.0;
+    for m in 0..des.p() {
+        let r = des.ngroups[m];
+        let mut s = 0.0;
+        for g in 0..r {
+            for g2 in g + 1..r {
+                let d = f.dist[f.hv[des.hub(m, g) - nl] * n + f.hv[des.hub(m, g2) - nl]];
+                s += d * d;
+            }
+        }
+        tot += s / (r * (r - 1) / 2) as f64;
+    }
+    tot / des.p() as f64
+}
+
+/// Edge orbits for AG(2,q) designs: direction classes of edges, merged under the semilinear maps of
+/// GF(q)^2 that permute the merge classes. For other designs every edge is in orbit 0.
+pub fn edge_orbits(des: &Design) -> Vec<usize> {
+    let q = match des.name.strip_prefix("AG2-") {
+        Some(r) => r.split('-').next().unwrap().parse::<usize>().unwrap(),
+        None => return vec![0; des.edges.len()],
+    };
+    let add = |a: usize, b: usize| if q == 4 { a ^ b } else { (a + b) % q };
+    const T4: [[usize; 4]; 4] = [[0, 0, 0, 0], [0, 1, 2, 3], [0, 2, 3, 1], [0, 3, 1, 2]];
+    let mul = |a: usize, b: usize| if q == 4 { T4[a][b] } else { (a * b) % q };
+    let neg = |a: usize| if q == 4 { a } else { (q - a) % q };
+    // projective direction index: normalise (dx,dy) so the first nonzero coordinate is 1
+    let inv = |a: usize| (1..q).find(|&b| mul(a, b) == 1).unwrap();
+    let norm = |dx: usize, dy: usize| -> (usize, usize) {
+        if dx != 0 {
+            let i = inv(dx);
+            (1, mul(dy, i))
+        } else {
+            (0, 1)
+        }
+    };
+    let dir = |(u, v): (usize, usize)| {
+        let (x1, y1, x2, y2) = (u / q, u % q, v / q, v % q);
+        norm(add(x2, neg(x1)), add(y2, neg(y1)))
+    };
+    // directions of the merge classes: a class is a set of parallel lines; take two nodes in one group
+    let mut mdirs = vec![];
+    for g in &des.groups {
+        let a = (0..q * q).find(|&v| g[v] == g[0] && v != 0).unwrap();
+        mdirs.push(dir((0, a)));
+    }
+    let frob = |a: usize| if q == 4 { mul(a, a) } else { a };
+    let mut maps = vec![];
+    for a in 0..q {
+        for b in 0..q {
+            for c in 0..q {
+                for d in 0..q {
+                    if add(mul(a, d), neg(mul(b, c))) == 0 {
+                        continue;
+                    }
+                    for fr in [false, true] {
+                        if fr && q != 4 {
+                            continue;
+                        }
+                        let ap = move |(x, y): (usize, usize)| {
+                            let (x, y) = if fr { (frob(x), frob(y)) } else { (x, y) };
+                            (add(mul(a, x), mul(b, y)), add(mul(c, x), mul(d, y)))
+                        };
+                        let mut ok = true;
+                        for &md in &mdirs {
+                            let (x, y) = ap(md);
+                            if !mdirs.contains(&norm(x, y)) {
+                                ok = false;
+                            }
+                        }
+                        if ok {
+                            maps.push((a, b, c, d, fr));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // union-find over directions
+    let dirs: Vec<(usize, usize)> = std::iter::once((0, 1)).chain((0..q).map(|m| (1, m))).collect();
+    let mut lab: Vec<usize> = (0..dirs.len()).collect();
+    loop {
+        let mut ch = false;
+        for &(a, b, c, d, fr) in &maps {
+            for (i, &(x, y)) in dirs.iter().enumerate() {
+                let (x, y) = if fr { (frob(x), frob(y)) } else { (x, y) };
+                let img = norm(add(mul(a, x), mul(b, y)), add(mul(c, x), mul(d, y)));
+                let j = dirs.iter().position(|&z| z == img).unwrap();
+                let m = lab[i].min(lab[j]);
+                if lab[i] != m || lab[j] != m {
+                    lab[i] = m;
+                    lab[j] = m;
+                    ch = true;
+                }
+            }
+        }
+        if !ch {
+            break;
+        }
+    }
+    des.edges.iter().map(|&e| lab[dirs.iter().position(|&z| z == dir(e)).unwrap()]).collect()
+}
+
+/// (Gamma = sum_e s_e^2 / Dbar, symmetrised-product value per merge
+///  (1/p) sum_O |O| sqrt(mean_{e in O} s_e^2 / Dbar), Cauchy-Schwarz bound (1/p) sqrt(E Gamma)).
+pub fn one_tree_scores(des: &Design, f: &TreeFactor, orbits: &[usize], cost: &mut Vec<f64>) -> (f64, f64, f64) {
+    let s = tree_savings(des, f, cost);
+    let db = tree_dbar(des, f);
+    if db < 1e-14 {
+        return (0.0, 0.0, 0.0);
+    }
+    let g: f64 = s.iter().map(|x| x * x).sum::<f64>() / db;
+    let no = orbits.iter().max().unwrap() + 1;
+    let mut cnt = vec![0usize; no];
+    let mut sq = vec![0.0; no];
+    for (e, &o) in orbits.iter().enumerate() {
+        cnt[o] += 1;
+        sq[o] += des.weights[e] * s[e] * s[e];
+    }
+    let p = des.p() as f64;
+    let sym: f64 = (0..no).filter(|&o| cnt[o] > 0).map(|o| cnt[o] as f64 * (sq[o] / cnt[o] as f64 / db).sqrt()).sum::<f64>() / p;
+    let cs = (des.edges.len() as f64 * g).sqrt() / p;
+    (g, sym, cs)
+}
+
+/// Annealing over ONE tree (nv vertices; hubs at vertices) maximising Gamma (`target_sym` false) or the
+/// symmetrised-product value (true). Returns (gamma, sym, cs, tree), best first.
+pub fn anneal_one_tree(des: &Design, nv: usize, iters: usize, chains: usize, t0: f64, t1: f64, seed: u64, target_sym: bool,
+                       starts: &[TreeFactor]) -> Vec<(f64, f64, f64, TreeFactor)> {
+    let nh = des.nhubs();
+    let orbits = edge_orbits(des);
+    let mut out: Vec<(f64, f64, f64, TreeFactor)> = (0..chains)
+        .into_par_iter()
+        .map(|c| {
+            let mut rng = SmallRng::seed_from_u64(seed ^ (c as u64 + 19).wrapping_mul(0x9E37_79B9_7F4A_7C15));
+            let mut f = if !starts.is_empty() && c % 2 == 0 {
+                let mut s = starts[(c / 2) % starts.len()].clone();
+                while s.parent.len() < nv {
+                    let v = s.parent.len();
+                    s.parent.push(rng.gen_range(0..v));
+                    s.len.push(0.0);
+                }
+                s.recompute();
+                s
+            } else {
+                TreeFactor::random(&mut rng, nv, nh)
+            };
+            let mut cost = vec![];
+            let score = |f: &TreeFactor, cost: &mut Vec<f64>| {
+                let (g, s, _) = one_tree_scores(des, f, &orbits, cost);
+                if target_sym { s } else { g }
+            };
+            let mut cur = score(&f, &mut cost);
+            let mut best = (cur, f.clone());
+            let mut sigma = 0.2;
+            let (mut acc, mut tried) = (0usize, 0usize);
+            let n = f.n();
+            for it in 0..iters {
+                let t = t0 * (t1 / t0).powf(it as f64 / iters as f64) * best.0.max(1e-9);
+                let old = f.clone();
+                let sub = rng.gen_range(0..10);
+                if sub < 5 {
+                    let v = rng.gen_range(1..n);
+                    f.len[v] = (f.len[v] + sigma * gauss(&mut rng)).max(0.0);
+                } else if sub < 6 {
+                    let v = rng.gen_range(1..n);
+                    f.len[v] = if rng.gen::<bool>() { 0.0 } else { f.len[v] * (0.5 * gauss(&mut rng)).exp() };
+                } else if sub < 8 {
+                    let h = rng.gen_range(0..nh);
+                    f.hv[h] = if rng.gen::<bool>() { rng.gen_range(0..n) } else { f.hv[rng.gen_range(0..nh)] };
+                } else {
+                    let v = rng.gen_range(1..n);
+                    let np = rng.gen_range(0..n);
+                    if !f.is_ancestor(v, np) {
+                        f.parent[v] = np;
+                    }
+                }
+                f.recompute();
+                let v = score(&f, &mut cost);
+                tried += 1;
+                if v >= cur || rng.gen::<f64>() < ((v - cur) / t).exp() {
+                    cur = v;
+                    acc += 1;
+                    if v > best.0 + 1e-12 {
+                        best = (v, f.clone());
+                    }
+                } else {
+                    f = old;
+                }
+                if tried == 500 {
+                    let r = acc as f64 / tried as f64;
+                    sigma *= if r > 0.3 { 1.25 } else { 0.8 };
+                    sigma = sigma.clamp(1e-8, 5.0);
+                    acc = 0;
+                    tried = 0;
+                }
+            }
+            let (g, s, cs) = one_tree_scores(des, &best.1, &orbits, &mut cost);
+            (g, s, cs, best.1)
+        })
+        .collect();
+    if target_sym {
+        out.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+    } else {
+        out.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+    }
+    out
+}
+
+/// The node-tripod (theory agent): the p hubs of node `node` on arms 0..p-1 at radius 1, all others at the centre.
+pub fn node_pod(des: &Design, node: usize) -> TreeFactor {
+    let nh = des.nhubs();
+    let nl = des.nlegs();
+    let mut arm = vec![0usize; nh];
+    let mut t = vec![0.0; nh];
+    for m in 0..des.p() {
+        let h = des.hub(m, des.groups[m][node]) - nl;
+        arm[h] = m;
+        t[h] = 1.0;
+    }
+    TreeFactor::pod(&arm, &t)
+}
+
 // ------------------------------------------------------------------------------------ tests
 
 #[cfg(test)]
@@ -1403,6 +1675,27 @@ mod tests {
                 }
             }
         }
+    }
+
+    #[test]
+    fn one_tree_node_pod_delta3() {
+        let des = Design::delta3(3);
+        let f = node_pod(&des, 0);
+        let mut c = vec![];
+        let (g, sym, cs) = one_tree_scores(&des, &f, &edge_orbits(&des), &mut c);
+        assert!((g - 36.0).abs() < 1e-9 && (sym - 6.0).abs() < 1e-9 && (cs - 6.0).abs() < 1e-9, "{} {} {}", g, sym, cs);
+        // nine node-tripods as a 9-factor pod product: 6 per merge
+        let nh = des.nhubs();
+        let mut hubs = vec![CPoint::default(); nh];
+        for node in 0..9 {
+            for m in 0..3 {
+                let h = des.hub(m, des.groups[m][node]) - des.nlegs();
+                hubs[h].arm[node] = m as u8;
+                hubs[h].t[node] = 1.0;
+            }
+        }
+        let m = Model { arms: vec![3; 9], k: 0 };
+        assert!((far_value(&des, &m, &hubs).0 / 3.0 - 6.0).abs() < 1e-9);
     }
 
     #[test]

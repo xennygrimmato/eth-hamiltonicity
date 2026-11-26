@@ -13,3 +13,4 @@ orbit 12 (17,136): none  states so far 506822
 orbit 13 (18,73): none  states so far 549024
 orbit 14 (1,24): none  states so far 591280
 orbit 15 (6,17): none  states so far 633480
+orbit 16 (6,98): none  states so far 675661

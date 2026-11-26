@@ -352,3 +352,36 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 
 ### Running (as of this entry)
 - none
+
+## 26 Nov 2026
+
+### Survey of the labs' repositories (lead)
+- Anthropic `formal-math`: no change since 23 Nov (zeta23, 3sum-apsp, eth, vp-vnp).
+- OpenAI `math`, 24 Nov: nine new manuscripts. Family 379, "Euclidean tensor geometry":
+  - "Euclidean geometry in the asymptotic spectrum of tensors": over any field, tensor prices exist for sites in a
+    real Hilbert space, a shared bit costing the distance. Lean. This reads as the FLAT HYPOTHESIS of Anthropic's
+    VP ≠ VNP paper, proved. To be confirmed against the exact statement before we rely on it.
+  - "The matrix multiplication exponent is nine fourths": ω = 9/4 EXACTLY over every field (matching lower bound;
+    rank and border rank of ⟨n,n,n⟩ ≥ n^{9/4}; dual exponent 1/2; exact rectangular formula). Lean statement
+    `square_exponent : formalOmega F 1 1 1 = 9/4` for division-free straight-line programs with formal correctness.
+  - Permanent / Hamiltonian cycle: exp(c(log N)²/(log log N)²) gates (this bound not formalised).
+  - VP ≠ VNP via grid state sums; Fourier transform N(log N)^{1/2+o(1)}; integer multiplication
+    n(log n)^{1/2+o(1)}; an exponential sunflower bound.
+  - Family 380: strongly polynomial linear programming (Smale's 9th problem); polynomial Hirsch disproved.
+- Google DeepMind: nothing new found for November; latest is the Aug 2026 AlphaEvolve bound ω < 2.371177.
+- Reddit is not reachable by the search tool; Hacker News and Latent Space carry the discussion. No expert reading
+  of the 24 Nov manuscripts is public yet.
+
+### Consequences (hypotheses, to be checked)
+- User's new target, an n² matrix multiplication algorithm: if OpenAI's claim holds, impossible for arithmetic
+  circuits over ANY field. What remains is non-algebraic computation over finite fields (word RAM, Boolean circuits,
+  functional rather than formal correctness).
+- H1 (flat case holds, engine's pieces optimal) would become a theorem via the reviewed win-win. The swap-splitting
+  problem recommended on 24 Nov would be answered: the circle is the limit. Do not assert until the statement is
+  checked.
+
+### Running
+- `research/mm/verify-nine-fourths.md` (Opus): build OpenAI's Lean proof, audit the statement, check consistency
+  with known bounds, list what the theorem does not cover.
+- `research/mm/ideas-n2.md` (Fable): map of open models for n² matrix multiplication; ranked targets; consequences
+  for our notes.

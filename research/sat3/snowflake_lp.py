@@ -15,6 +15,7 @@ from verify_pf import design
 
 name = sys.argv[1]; starts = int(sys.argv[2]) if len(sys.argv) > 2 else 20
 mode = sys.argv[3] if len(sys.argv) > 3 else 'both'
+Sarg = sys.argv[4] if len(sys.argv) > 4 else None  # merges kept in the objective, e.g. '01'
 des = design({'crossing': 'crossing', 'k4': 'K4', 'delta3': 'Delta3'}[name])
 E = len(des['edges']); nl = 2 * E
 hub = {}; o = nl
@@ -29,11 +30,13 @@ c = np.zeros(len(pairs))
 p = len(des['groups'])
 for e, (u, v) in enumerate(des['edges']):
     w = des['w'][e]
-    c[ix(2*e, 2*e+1)] += w * p
+    Sm = [int(ch) for ch in Sarg] if Sarg else list(range(p))
+    c[ix(2*e, 2*e+1)] += w * len(Sm)
     for m, g in enumerate(des['groups']):
+        if m not in Sm: continue
         c[ix(2*e, hub[(m, g[u])])] -= w
         c[ix(2*e+1, hub[(m, g[v])])] -= w
-hubpairs = [ix(hub[(m, i)], hub[(m, j)]) for m, g in enumerate(des['groups']) for i in range(max(g)+1) for j in range(i+1, max(g)+1)]
+hubpairs = [ix(hub[(m, i)], hub[(m, j)]) for m, g in enumerate(des['groups']) if m in Sm for i in range(max(g)+1) for j in range(i+1, max(g)+1)]
 tri = []
 for a, b, cc in itertools.combinations(range(n), 3):
     for (x, y, z) in ((a, b, cc), (a, cc, b), (b, cc, a)):
@@ -69,5 +72,5 @@ for s in range(starts):
         if viol > -1e-6 and val > best + 1e-9:
             best = val; bq = r.x
     print(s, round(val, 6), r.success, flush=True)
-print('BEST per-merge value (sum (L-H_m))/p with delta<=1:', best, 'mode', mode)
+print('BEST per-merge value (sum_{m in S} (L-H_m))/p with delta<=1:', best, 'mode', mode, 'S', Sarg)
 np.save(__file__.rsplit('/', 1)[0] + '/data/snowflake_%s_%s.npy' % (name, mode), bq)

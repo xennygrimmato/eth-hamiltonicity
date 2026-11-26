@@ -14,6 +14,8 @@ Guess bounds cannot be read off `Does`/`Gives` (e.g. `ite guess id fail` gives o
 output yet guesses once), so every bound below is syntax-directed.
 -/
 
+set_option linter.deprecated false
+
 namespace NS1G
 
 open NS1
@@ -125,13 +127,13 @@ theorem fail (x : Tree) : GB θ .fail x 0 := ⟨_, EvG.fail x, by simp⟩
 theorem guess (x : Tree) : GB θ .guess x 1 := ⟨_, EvG.guess x, by simp⟩
 
 theorem hd (h : GB θ F x g) : GB θ (.hd F) x g :=
-  let ⟨l, h1, h2⟩ := h; ⟨_, EvG.hd h1, by simpa using h2⟩
+  let ⟨_, h1, h2⟩ := h; ⟨_, EvG.hd h1, fun u hu => by obtain ⟨r, hr, rfl⟩ := List.mem_map.1 hu; exact h2 r hr⟩
 theorem tl (h : GB θ F x g) : GB θ (.tl F) x g :=
-  let ⟨l, h1, h2⟩ := h; ⟨_, EvG.tl h1, by simpa using h2⟩
+  let ⟨_, h1, h2⟩ := h; ⟨_, EvG.tl h1, fun u hu => by obtain ⟨r, hr, rfl⟩ := List.mem_map.1 hu; exact h2 r hr⟩
 theorem theta (h : GB θ F x g) : GB θ (.theta F) x g :=
-  let ⟨l, h1, h2⟩ := h; ⟨_, EvG.theta h1, by simpa using h2⟩
+  let ⟨_, h1, h2⟩ := h; ⟨_, EvG.theta h1, fun u hu => by obtain ⟨r, hr, rfl⟩ := List.mem_map.1 hu; exact h2 r hr⟩
 theorem mul (h : GB θ F x g) : GB θ (.mul F) x g :=
-  let ⟨l, h1, h2⟩ := h; ⟨_, EvG.mul h1, by simpa using h2⟩
+  let ⟨_, h1, h2⟩ := h; ⟨_, EvG.mul h1, fun u hu => by obtain ⟨r, hr, rfl⟩ := List.mem_map.1 hu; exact h2 r hr⟩
 
 theorem cons (hF : GB θ F x g) (hG : GB θ G x g') : GB θ (.cons F G) x (g + g') := by
   obtain ⟨la, a1, a2⟩ := hF
@@ -237,10 +239,10 @@ theorem pickB_guesses (xs : List Tree) : GB θ pickB (.cons pickB.code (listT xs
   induction xs with
   | nil =>
     have := GB.ite (θ := θ) (b := .ite .guess (.hd (.tl .id)) (.run (.hd .id) (.cons (.hd .id) (.tl (.tl .id)))))
-      (c := .fail) (g' := 0) (g'' := 0) (GB.tl (GB.id _))
+      (c := .fail) (g' := 0) (g'' := 0) (GB.tl (GB.id (.cons pickB.code (listT []))))
       (fun r hr hne => by
-        rw [evl_dt (Dt.tl (Dt.id _)), List.mem_singleton] at hr
-        subst hr; exact absurd rfl hne)
+        rw [evl_dt (Dt.tl (Dt.id (.cons pickB.code (listT [])))), List.mem_singleton] at hr
+        subst hr; exact absurd (by simp [Run.det, listT, Tree.tl]) hne)
       (fun _ _ _ => GB.fail _)
     simpa [pickB] using this
   | cons y ys ih =>
@@ -269,10 +271,10 @@ theorem foldB_guesses {step : Fm} {Inv : List Tree → Tree → Prop} {d : Tree 
   induction xs generalizing σ with
   | nil =>
     have := GB.ite (θ := θ) (g' := 0) (g'' := 0) (b := .run (.hd .id) (.cons (.hd .id) (.cons (lett (.cons (.hd (.tl (.tl .id))) (.hd (.tl .id))) step)
-        (.tl (.tl (.tl .id)))))) (GB.tl (GB.tl (GB.id _)))
+        (.tl (.tl (.tl .id)))))) (GB.tl (GB.tl (GB.id (.cons (foldB step).code (.cons σ (listT []))))))
       (fun r hr hne => by
-        rw [evl_dt (Dt.tl (Dt.tl (Dt.id _))), List.mem_singleton] at hr
-        subst hr; exact absurd rfl hne)
+        rw [evl_dt (Dt.tl (Dt.tl (Dt.id (.cons (foldB step).code (.cons σ (listT [])))))), List.mem_singleton] at hr
+        subst hr; exact absurd (by simp [Run.det, listT, Tree.tl]) hne)
       (fun _ _ _ => GB.hd (GB.tl (GB.id _)))
     simpa [foldB] using this
   | cons y ys ih =>

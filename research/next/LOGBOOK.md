@@ -1105,3 +1105,11 @@ bound must be re-derived syntax-directedly. → ask the user whether to permit t
 h(y) = t, times 4^k, equals 2^{(n+k−1)+k}; `hash_pairwise_F2'` gives the count as 2^{n−1}. Indexing as in the notes,
 (T_a)_{j,i} = a_{n−1+j−i}, a ∈ F^{n+k−1}. Surjectivity of a ↦ T_a z for z ≠ 0 holds over any field. No sorry (per the
 executor; I have not rebuilt this project). The notes' statement is correct. Next: the isolation bound.
+
+## 26 Nov (late, 18): isolation bound in Lean [L]
+
+`research/ports/lean-c1/IsoLean/Isolation.lean` (per the executor; not rebuilt by me): for a finite family with uniform
+marginals and pairwise independence at the target y₀, M²·#U ≥ |H|·(NM − N² + N); if M ≤ 4N ≤ 3M then 16·#U ≥ 3|H|.
+So the constant is 3/16 on the wider window [M/4, 3M/4]; the notes' window [M/4, M/2] is a corollary.
+Break found: the marginal condition does not follow from the pairwise one when |S| = 1 and must be assumed separately
+(Toeplitz with a uniform offset b has it). Notes' Lemma C3 is correct as stated. Next: composition with Toeplitz.

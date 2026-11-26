@@ -385,3 +385,14 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   with known bounds, list what the theorem does not cover.
 - `research/mm/ideas-n2.md` (Fable): map of open models for n² matrix multiplication; ranked targets; consequences
   for our notes.
+
+### Change of plan (user, 26 Nov)
+- Verifier stopped at the user's request; we take the 9/4 claim as given and work scrappily: try → feedback → update.
+- Running now:
+  - `research/mm/ideas-n2.md` (Fable): map of models where n² is still open; ranked targets.
+  - `research/mm/lab/` (Opus, "lab"): fast experiments. E1 Boolean vs bilinear cost of 2×2 over F₂ (is 6 AND gates
+    possible?); E2 word-RAM baselines; E3 integer packing; E4 lookup-table identities.
+  - `research/mm/why-nine-fourths.md` (Fable): a geometric intuition for 9/4 (triangle perimeter 6 over shared-label
+    rate 8/3 at a tripod), with a figure and tweet versions.
+- H11 [C]: over F₂, computing the product as a function (non-bilinear circuits) can beat bilinear rank at some small
+  size. E1 tests the smallest case. If no gap shows at any reachable size, the non-algebraic route is weaker than hoped.

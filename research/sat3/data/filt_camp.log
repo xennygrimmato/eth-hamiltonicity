@@ -1,0 +1,12 @@
+net-4 one tree, 18 vertices, target sym, iters=60000 chains=8  time 18.4s  edge orbits [48, 24, 48]
+node-pod start: Gamma 324.000000  sym value 64.924992 (rho 0.541042)  CS bound 65.726707 (rho 0.547723)
+BEST: Gamma 324.000000  sym value 64.924992 (rho 0.541042)  CS bound 65.726707 (rho 0.547723)   flat 61.653938 (rho 0.513783)  cap E/sqrt2 84.852814
+net-5 one tree, 18 vertices, target sym, iters=60000 chains=8  time 36.5s  edge orbits [150, 150]
+node-pod start: Gamma 840.000000  sym value 165.579008 (rho 0.551930)  CS bound 167.332005 (rho 0.557773)
+BEST: Gamma 840.000000  sym value 165.579008 (rho 0.551930)  CS bound 167.332005 (rho 0.557773)   flat 157.313218 (rho 0.524377)  cap E/sqrt2 212.132034
+filt Delta3 over F_2^3 (7 points, 28 frames, all) target gamma iters=20000 chains=8 time 130.7s
+BEST: sym rho 0.666666 (value 5.999992)  CS rho 0.666666  Gamma 35.999901  single-factor avg rho 0.444843  min_k b_k/E 0.444485  b = [4.005188, 4.000369, 4.005201]
+chains (gamma): ["35.99990", "35.99990", "35.99987", "35.99985", "35.99982", "35.99981", "35.99981", "35.99973"]
+filt Delta3 over F_3^3 (13 points, 234 frames, all) target gamma iters=20000 chains=8 time 1069.0s
+BEST: sym rho 0.666666 (value 5.999991)  CS rho 0.666666  Gamma 35.999897  single-factor avg rho 0.444988  min_k b_k/E 0.444204  b = [3.997840, 4.011035, 4.005807]
+chains (gamma): ["35.99990", "35.99987", "35.99983", "35.99981", "35.99978", "35.99974", "35.99972", "35.99964"]

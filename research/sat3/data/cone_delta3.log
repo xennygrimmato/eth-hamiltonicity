@@ -1,0 +1,102 @@
+cone delta3 over pods:3/s1 (n = 3, girth inf) iters=200000 chains=16 time 3.5s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+chains: ["36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000"]
+single factor (unsymmetrised) b = [4.000000, 4.000000, 4.000000]  (min 4.0000)
+wrote ../../research/sat3/data/cone_delta3_pods-3_s1_seed5.json
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+cone delta3 over pods:6/s1 (n = 6, girth inf) iters=200000 chains=16 time 3.5s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+chains: ["36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000"]
+single factor (unsymmetrised) b = [4.000000, 4.000000, 4.000000]  (min 4.0000)
+wrote ../../research/sat3/data/cone_delta3_pods-6_s1_seed5.json
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+cone delta3 over circle:12/s1 (n = 12, girth 6.2832) iters=200000 chains=16 time 4.1s
+seed score 26.196152 (value per merge (1/p)sqrt(E Gamma) 5.118218);  BEST score (Gamma or Phi) = 27.000000   value per merge (1/p)sqrt(E Gamma) = 5.196152
+chains: ["27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000"]
+single factor (unsymmetrised) b = [0.000000, 0.000000, 6.000000]  (min 0.0000)
+wrote ../../research/sat3/data/cone_delta3_circle-12_s1_seed5.json
+seed score 26.196152 (value per merge (1/p)sqrt(E Gamma) 5.118218);  BEST score (Gamma or Phi) = 27.000000   value per merge (1/p)sqrt(E Gamma) = 5.196152
+cone delta3 over circle:24/s1 (n = 24, girth 6.2832) iters=200000 chains=16 time 5.3s
+seed score 27.000000 (value per merge (1/p)sqrt(E Gamma) 5.196152);  BEST score (Gamma or Phi) = 27.000000   value per merge (1/p)sqrt(E Gamma) = 5.196152
+chains: ["27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000", "27.0000"]
+single factor (unsymmetrised) b = [0.000000, 0.000000, 6.000000]  (min 0.0000)
+wrote ../../research/sat3/data/cone_delta3_circle-24_s1_seed5.json
+seed score 27.000000 (value per merge (1/p)sqrt(E Gamma) 5.196152);  BEST score (Gamma or Phi) = 27.000000   value per merge (1/p)sqrt(E Gamma) = 5.196152
+cone delta3 over kmm:3/s2 (n = 15, girth 6.2832) iters=200000 chains=16 time 5.6s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+chains: ["36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000"]
+single factor (unsymmetrised) b = [4.000000, 4.000000, 4.000000]  (min 4.0000)
+wrote ../../research/sat3/data/cone_delta3_kmm-3_s2_seed5.json
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+cone delta3 over kmm:3/s4 (n = 33, girth 6.2832) iters=200000 chains=16 time 7.6s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+chains: ["36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000"]
+single factor (unsymmetrised) b = [4.000000, 4.000000, 4.000000]  (min 4.0000)
+wrote ../../research/sat3/data/cone_delta3_kmm-3_s4_seed5.json
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+cone delta3 over kmm:4/s2 (n = 24, girth 6.2832) iters=200000 chains=16 time 8.5s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+chains: ["36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000"]
+single factor (unsymmetrised) b = [4.000000, 4.000000, 4.000000]  (min 4.0000)
+wrote ../../research/sat3/data/cone_delta3_kmm-4_s2_seed5.json
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+cone delta3 over heawood/s1 (n = 14, girth 6.2832) iters=200000 chains=16 time 5.5s
+seed score 31.500000 (value per merge (1/p)sqrt(E Gamma) 5.612486);  BEST score (Gamma or Phi) = 33.175266   value per merge (1/p)sqrt(E Gamma) = 5.759797
+chains: ["33.1753", "33.1753", "33.1753", "33.1753", "33.1753", "33.1753", "33.1753", "33.1753", "33.1722", "33.1720", "33.1713", "33.1629", "33.1614", "33.1485", "33.1485", "33.1484"]
+single factor (unsymmetrised) b = [5.000000, 3.000000, 3.464153]  (min 3.0000)
+wrote ../../research/sat3/data/cone_delta3_heawood_s1_seed5.json
+seed score 31.500000 (value per merge (1/p)sqrt(E Gamma) 5.612486);  BEST score (Gamma or Phi) = 33.175266   value per merge (1/p)sqrt(E Gamma) = 5.759797
+cone delta3 over heawood/s2 (n = 35, girth 6.2832) iters=200000 chains=16 time 11.1s
+seed score 32.892305 (value per merge (1/p)sqrt(E Gamma) 5.735181);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+chains: ["36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000"]
+single factor (unsymmetrised) b = [4.000000, 4.000000, 4.000000]  (min 4.0000)
+wrote ../../research/sat3/data/cone_delta3_heawood_s2_seed5.json
+seed score 32.892305 (value per merge (1/p)sqrt(E Gamma) 5.735181);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+cone delta3 over heawood/s4 (n = 77, girth 6.2832) iters=200000 chains=16 time 21.8s
+seed score 34.392305 (value per merge (1/p)sqrt(E Gamma) 5.864495);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+chains: ["36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000"]
+single factor (unsymmetrised) b = [4.000000, 4.000000, 4.000000]  (min 4.0000)
+wrote ../../research/sat3/data/cone_delta3_heawood_s4_seed5.json
+seed score 34.392305 (value per merge (1/p)sqrt(E Gamma) 5.864495);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+cone delta3 over heawood+pods:3/s2 (n = 38, girth 6.2832) iters=200000 chains=16 time 20.1s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+chains: ["36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000"]
+single factor (unsymmetrised) b = [4.000000, 4.000000, 4.000000]  (min 4.0000)
+wrote ../../research/sat3/data/cone_delta3_heawood+pods-3_s2_seed5.json
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+cone delta3 over pg3/s1 (n = 26, girth 6.2832) iters=200000 chains=16 time 11.2s
+seed score 31.500000 (value per merge (1/p)sqrt(E Gamma) 5.612486);  BEST score (Gamma or Phi) = 33.175266   value per merge (1/p)sqrt(E Gamma) = 5.759797
+chains: ["33.1753", "33.1753", "33.1753", "33.1753", "33.1753", "33.1753", "33.1753", "33.1753", "33.1753", "33.1753", "33.1689", "33.1682", "33.1643", "33.1485", "33.1485", "33.1484"]
+single factor (unsymmetrised) b = [5.000000, 3.464418, 3.000000]  (min 3.0000)
+wrote ../../research/sat3/data/cone_delta3_pg3_s1_seed5.json
+seed score 31.500000 (value per merge (1/p)sqrt(E Gamma) 5.612486);  BEST score (Gamma or Phi) = 33.175265   value per merge (1/p)sqrt(E Gamma) = 5.759797
+cone delta3 over pg3/s2 (n = 78, girth 6.2832) iters=200000 chains=16 time 69.2s
+seed score 32.892305 (value per merge (1/p)sqrt(E Gamma) 5.735181);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+chains: ["36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000"]
+single factor (unsymmetrised) b = [4.000000, 4.000000, 4.000000]  (min 4.0000)
+wrote ../../research/sat3/data/cone_delta3_pg3_s2_seed5.json
+seed score 32.892305 (value per merge (1/p)sqrt(E Gamma) 5.735181);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+cone delta3 over gq22/s1 (n = 30, girth 6.2832) iters=200000 chains=16 time 10.2s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+chains: ["36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000"]
+single factor (unsymmetrised) b = [4.000000, 4.000000, 4.000000]  (min 4.0000)
+wrote ../../research/sat3/data/cone_delta3_gq22_s1_seed5.json
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+cone delta3 over gq22/s2 (n = 75, girth 6.2832) iters=200000 chains=16 time 34.6s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+chains: ["36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000"]
+single factor (unsymmetrised) b = [4.000000, 4.000000, 4.000000]  (min 4.0000)
+wrote ../../research/sat3/data/cone_delta3_gq22_s2_seed5.json
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+cone delta3 over gq22+pods:3/s2 (n = 78, girth 6.2832) iters=200000 chains=16 time 63.2s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+chains: ["36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000"]
+single factor (unsymmetrised) b = [4.000000, 4.000000, 4.000000]  (min 4.0000)
+wrote ../../research/sat3/data/cone_delta3_gq22+pods-3_s2_seed5.json
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+cone delta3 over kmm:3+pods:3/s2 (n = 18, girth 6.2832) iters=200000 chains=16 time 10.5s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+chains: ["36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000", "36.0000"]
+single factor (unsymmetrised) b = [4.000000, 4.000000, 4.000000]  (min 4.0000)
+wrote ../../research/sat3/data/cone_delta3_kmm-3+pods-3_s2_seed5.json
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000

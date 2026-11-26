@@ -7,3 +7,23 @@ BEST value = 1.333333  rho = 0.222222  (flat 2.828427)  hit by 16/16 chains
 b = [4.000000, -5.656854, -6.381341]
 distinct chain values (top 12): ["1.3333"]
 == k4 mu=4
+BEST value = 2.000000  rho = 0.333333  (flat 2.828427)  hit by 1/16 chains
+b = [4.000000, 2.000000, -5.227149]
+distinct chain values (top 12): ["2.0000", "0.0000"]
+== k4 mu=5
+BEST value = 2.000000  rho = 0.333333  (flat 2.828427)  hit by 1/16 chains
+b = [4.000000, 2.000000, -8.485281]
+distinct chain values (top 12): ["2.0000", "0.0000"]
+== k4 mu=6
+BEST value = 2.000000  rho = 0.333333  (flat 2.828427)  hit by 1/16 chains
+b = [-3.452252, 2.000000, 4.000000]
+distinct chain values (top 12): ["2.0000", "0.0000"]
+== delta3 mu=2
+BEST value = 3.000000  rho = 0.333333  (flat 5.196152)  hit by 7/16 chains
+b = [-3.485281, 9.000000, -5.828427]
+distinct chain values (top 12): ["3.0000", "2.7071", "2.4142"]
+== delta3 mu=3
+== delta3 mu=4
+BEST value = 0.000000  rho = 0.000000  (flat 5.196152)  hit by 16/16 chains
+b = [-9.647605, -8.517782, -6.878315]
+distinct chain values (top 12): ["0.0000"]

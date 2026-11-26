@@ -1,0 +1,18 @@
+cone limit:4:3 over pods:3/s1 (n = 3, girth inf) iters=100000 chains=8 time 6.6s
+seed score 3.375000 (level sqrt(Phi)/p 0.612372);  BEST score (Gamma or Phi) = 3.375000   level sqrt(Phi)/p = 0.612372
+cone limit:4:3 over kmm:3/s2 (n = 15, girth 6.2832) iters=100000 chains=8 time 17.7s
+seed score 3.375000 (level sqrt(Phi)/p 0.612372);  BEST score (Gamma or Phi) = 3.375000   level sqrt(Phi)/p = 0.612372
+cone limit:4:3 over heawood/s2 (n = 35, girth 6.2832) iters=100000 chains=8 time 62.5s
+seed score 3.212019 (level sqrt(Phi)/p 0.597404);  BEST score (Gamma or Phi) = 3.375000   level sqrt(Phi)/p = 0.612372
+cone limit:4:3 over heawood+pods:3/s2 (n = 38, girth 6.2832) iters=100000 chains=8 time 126.5s
+seed score 3.375000 (level sqrt(Phi)/p 0.612372);  BEST score (Gamma or Phi) = 3.375000   level sqrt(Phi)/p = 0.612372
+cone limit:4:3 over gq22/s2 (n = 75, girth 6.2832) iters=100000 chains=8 time 324.9s
+seed score 3.375000 (level sqrt(Phi)/p 0.612372);  BEST score (Gamma or Phi) = 3.375000   level sqrt(Phi)/p = 0.612372
+cone limit:4:3 over pg3/s1 (n = 26, girth 6.2832) iters=100000 chains=8 time 65.2s
+seed score 3.140625 (level sqrt(Phi)/p 0.590727);  BEST score (Gamma or Phi) = 3.207501   level sqrt(Phi)/p = 0.596983
+cone limit:2x2:3 over pods:3/s1 (n = 3, girth inf) iters=100000 chains=8 time 5.0s
+seed score 3.375000 (level sqrt(Phi)/p 0.612372);  BEST score (Gamma or Phi) = 3.375000   level sqrt(Phi)/p = 0.612372
+cone limit:2x2:3 over kmm:3/s2 (n = 15, girth 6.2832) iters=100000 chains=8 time 14.1s
+seed score 3.375000 (level sqrt(Phi)/p 0.612372);  BEST score (Gamma or Phi) = 3.375000   level sqrt(Phi)/p = 0.612372
+cone limit:2x2:3 over heawood/s2 (n = 35, girth 6.2832) iters=100000 chains=8 time 53.0s
+seed score 3.212019 (level sqrt(Phi)/p 0.597404);  BEST score (Gamma or Phi) = 3.375000   level sqrt(Phi)/p = 0.612372

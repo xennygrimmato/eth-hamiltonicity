@@ -379,9 +379,98 @@ violate it are rejected), with hubs and directions at subdivision vertices:
 
 Log: `data/cone_camp3.log`. Nothing exceeds the tree-product values.
 
+## 5c. The space of filtrations 𝒞_N(q) = Cone(building of GL_N(F_q)) × ℝ (coordinator request, after §5b)
+
+**Model** (q1-notes §1; `piecefloor::{FiltSpace, filt_edge, filt_scores, anneal_filt, q1_placement}`; driver `$B filt`).
+- Hubs are two-level filtrations "U at level a, V at level c" (a ≥ c), with U a point or a hyperplane of PG(N−1,q).
+  - a and c are continuous; the type and the point are discrete.
+  - Note: this is points and hyperplanes only. Subspaces of intermediate dimension and filtrations with more
+    levels are not implemented.
+- Legs: an exact far-leg optimum along ±d in a common apartment (frame f).
+- [R] Entry levels of the flag of the ray F^{f,Td}:
+  - a point contributes S_d(ℓ) = min_{supp_f ℓ} d (q1 Lemma 1.4);
+  - a hyperplane ker φ contributes S_d(H) = Σd − max_{supp*_f φ} d;
+  - so a hub contributes (a−c)S_d(U) + c·Σd.
+- Every term is concave in d, so max_{|d|=1} of the edge saving is the distance from 0 to a convex hull. It is
+  computed by Wolfe's min-norm-point algorithm with a separable linear oracle, then maximised over all frames
+  (unordered bases up to scaling, all enumerated; or sampled when there are too many, which still gives a valid
+  lower bound).
+- Hub distances: d² = i(a−b)² + (k−i)(a−c′)² + (k′−i)(c−b)² + (N−k−k′+i)(c−c′)², with i = dim(U∩U′).
+
+**Checks.**
+- [N] Hub terms against exact filtration distances (q1_verify.dist) at T = 1e5 over 300 random frames, hubs and
+  levels: max error 9.5e-5 (= O(1/T)).
+- [N] d² formula: exact to 4e-15 over 500 random pairs. Script: `research/sat3/check_filt_terms.py`.
+- [N] In N = 2 the point and hyperplane encodings agree (unit test).
+- [N] Γ recomputed independently in plain Python (explicit hull vertices + NNLS) for the saved F₂ configurations:
+  agrees (`verify_pf.check_filt`).
+- [N] **Q1 Theorem A reproduced** (unit test `filtrations_q1_values`):
+  - F₂² net, all 120 edges: balanced value 0.482843 (840 frames);
+  - F₂³ net, 2016 edges: 0.582516 (83 328 frames, 300 s, run with `PF_SLOW=1`).
+  - "Balanced" = the merge average. It is attained by the GL-orbit symmetrisation, or by the tie choices on
+    rank-one edges. The per-edge argmax used for min_k breaks those ties arbitrarily (min_k 0.433, 0.569).
+  - g = 16 (N = 6) was not run: 6.7·10⁷ frame candidates, and the restricted-frame mode is not implemented.
+
+**Runs.** Commands are `$B filt DESIGN q N TARGET ITERS 8 1 [MAXFRAMES]`; logs `data/filt_camp.log` and
+`data/filt_camp2.log`.
+
+| design | space | frames | steps × chains | best | ρ (sym) | record compared with |
+|---|---|---|---|---|---|---|
+| Δ₃ | C₃(F₂) | 28 | 20k × 8 | Γ = 35.99990 | 0.666666 | 2/3 (Γ = 36) |
+| Δ₃ | C₃(F₃) | 234 | 20k × 8 | Γ = 35.99990 | 0.666666 | 2/3 |
+| Δ₃ | C₃(F₄) | 1120 | 2.5k × 8 | Γ = 34.455 | 0.6522 | 2/3 (under-converged) |
+| Δ₃ | C₄(F₂) | 840 | 4k × 8 | Γ = 33.750 | 0.6455 | 2/3 (under-converged: contains C₃(F₂)) |
+| Δ₃ | C₅(F₂), sampled 1500 | — | 1.5k × 8 | Γ = 32.790 | 0.6363 | 2/3 |
+| Δ₃ | C₄(F₃), sampled 1500 | — | 1.5k × 8 | Γ = 33.161 | 0.6398 | 2/3 |
+| K₄ | C₃(F₂), C₄(F₂) | 28, 840 | 5k, 3k × 8 | Γ = 12 (8/8) | 0.471405 | 0.4714 (theorem) |
+| net of Z₄ (120 edges, orbits 48 + 24 + 48) | C₃(F₂) / C₃(F₃) | 28 / 234 | 1.5k / 600 × 8 | sym 64.245 / 63.684 | 0.5354 / 0.5307 | trees 0.5410 (CS 0.5477) |
+| net of Z₅ (300 edges) | C₃(F₂) | 28 | 800 × 8 | sym 158.05 | 0.5268 | trees 0.5519 (CS 0.5578) |
+
+**Reading.**
+- No filtration-space placement beat any record.
+- Δ₃ in C₃(F₂) and C₃(F₃): every chain converges to Γ = 36 from below (35.9999), i.e. the tree value 6 per merge
+  again.
+- The larger spaces (C₃(F₄), C₄(F₂), C₅, C₄(F₃)) ran far shorter (minutes instead of tens of minutes) and stop
+  below 36. They contain the C₃(F₂) optimum, so these are under-converged searches. They do not show that
+  nothing better exists there.
+- Cyclic nets: the short filtration runs stay below the tree records.
+- Limitations: point and hyperplane hubs only; small N; short runs on the expensive spaces.
+
 ## 6. Summary
 
-SUMMARY
+Directions: all values are LOWER bounds on the cost of the best piece (larger = higher floor). "Record" means the
+best value found by any search here.
+
+1. **Calibration (crossing).**
+   - Euclid and products of trees give 1/√2.
+   - √rank placements in Mat_μ(F₂) give exactly 1/2: exhaustive at μ = 2, 3; annealing at μ ≤ 6.
+   - The reason [R]: √rk is the square root of a metric, so far legs carry no information.
+   - The spec's "unit square reproduces 2‖λ‖₂" is false.
+2. **K₄.**
+   - Mat₂ exhaustive: 1/3.
+   - Euclid, products of trees, cones and filtration spaces: exactly √2/3 = flat, never more (consistent with the
+     theory agent's CAT(0) theorem).
+3. **Δ₃.**
+   - Euclid: 3√3 (ρ 0.5774).
+   - √rank raw placements: ≤ 4.
+   - Products of trees: **6 per merge (ρ 2/3)**, an explicit, independently verified configuration (nine
+     node-tripods, b = (6,6,6)). It beats the Euclidean value.
+   - The one-tree reduction (lemma in §5b) and searches over single general trees (Γ = 36 from random starts),
+     cones over 15 link graphs including free girth-constrained links, and filtration spaces C₃(F₂), C₃(F₃) all
+     land on exactly 6, never above.
+   - Cap 9/√2 = 6.364 (theory).
+4. **Full 3-nets AG(2,g), g = 3, 4, 5** (one tree, symmetrised). ρ = 0.5202, 0.5410, 0.5519, against flat 0.4979,
+   0.5138, 0.5244. The node-pod is the best tree found.
+5. **Large-net limit.**
+   - Φ = 27/8 (level 0.6124) is the best over all quotients tried: Z₂..Z₁₂, Z₂ᵏ (k ≤ 4), Z₃², Z₄², Z₂ × Z₄.
+   - It is exhaustive within {0,1}-pods with ≤ 4 arms for Z₃, Z₄, Z₂², and the best of the annealing beyond that.
+   - Cones over graphs reproduce the same values.
+   - p = 4: 1/√3 at index 3 (Z₃, Z₃²); Z₅ 0.5657; Z₇ 0.5533. Characteristic-2 quotients are not valid 4-nets.
+6. **Nothing exceeded any record** in any model. The numbers say "these searches found nothing": they are not proofs.
+   The calibration in §1 shows that the raw-matrix annealer can fail (K₄, μ = 3), while the tree, cone and limit
+   optimisers recover every known optimum from random starts.
+7. **Price status.** Whether tree-product or filtration sets are prices when contracting fails is a theory
+   question (notes §4, q1-notes §3). No claim is made here.
 
 ## Log
 
@@ -391,3 +480,8 @@ SUMMARY
 - 19:00: theory agent corrections; general trees, AG designs.
 - 19:10: nine tripods verified (6); one-tree Γ = 36; AG table.
 - 19:20: limit problem: reproduction, exhaustive pods, quotient scan.
+- 19:45–20:30: cones over graphs (one-factor reduction), free links, limit with cones.
+- 20:30–21:30: filtration space C_N(q); Q1 values reproduced; runs on Δ₃, K₄ and cyclic nets.
+- Notes on the data folder: four early cone JSON files with a non-JSON edge format were deleted (their values are in
+  `data/cone_delta3.log` / `cone_camp2.log`). `data/anneal_Delta3_mu4_s4.json` is the annealer failure (value 0)
+  quoted in §1.

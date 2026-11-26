@@ -1,0 +1,40 @@
+cone delta3 over free (n = 18, girth 7.3455) iters=150000 chains=8 time 14.4s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+free link base edges: [(0, 1, 10.0), (3, 2, 10.0), (7, 1, 3.9555), (6, 5, 9.2271), (0, 3, 10.0), (4, 6, 6.2266), (3, 7, 1.353), (4, 1, 10.0), (1, 6, 10.0), (0, 5, 8.283)]
+cone delta3 over free (n = 18, girth 6.8472) iters=150000 chains=8 time 12.3s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+free link base edges: [(6, 7, 1.7629), (0, 1, 1.9422), (5, 0, 3.4527), (4, 0, 2.9487), (6, 2, 3.3325), (3, 5, 0.9426), (0, 3, 2.452), (3, 4, 2.0611), (5, 7, 1.7856), (4, 1, 2.8206)]
+cone delta3 over free (n = 24, girth 6.4566) iters=150000 chains=8 time 29.3s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+free link base edges: [(7, 0, 6.0883), (3, 9, 1.7492), (4, 7, 8.31), (6, 2, 8.7761), (4, 5, 10.0), (6, 4, 9.2497), (5, 6, 10.0), (9, 2, 7.6252), (8, 0, 2.3052), (2, 4, 9.123), (0, 1, 3.0294), (2, 8, 10.0), (0, 3, 10.0), (9, 4, 5.5816)]
+cone delta3 over free (n = 24, girth 6.8778) iters=150000 chains=8 time 21.9s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+free link base edges: [(7, 2, 3.2624), (3, 8, 1.1269), (0, 1, 1.9422), (6, 3, 2.1955), (9, 6, 1.1058), (0, 9, 1.3566), (5, 0, 2.9487), (0, 7, 0.8384), (4, 7, 2.5147), (3, 7, 1.4955), (2, 8, 1.6558), (8, 5, 3.4441), (5, 7, 3.0907), (8, 9, 2.6778)]
+cone delta3 over free (n = 21, girth 7.3455) iters=150000 chains=8 time 12.3s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+free link base edges: [(0, 1, 1.7562), (3, 2, 2.8055), (7, 1, 1.289), (6, 5, 2.187), (0, 3, 3.0165), (4, 6, 2.6307), (3, 7, 2.2583), (4, 1, 3.4931), (1, 6, 2.0326), (0, 5, 1.3698)]
+cone delta3 over free (n = 21, girth 6.8472) iters=150000 chains=8 time 10.7s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+free link base edges: [(6, 7, 1.7629), (0, 1, 1.9422), (5, 0, 3.4527), (4, 0, 2.9487), (6, 2, 3.3325), (3, 5, 0.9426), (0, 3, 2.452), (3, 4, 2.0611), (5, 7, 1.7856), (4, 1, 2.8206)]
+cone delta3 over free (n = 28, girth 7.6687) iters=150000 chains=8 time 31.8s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+free link base edges: [(8, 0, 9.6568), (4, 5, 3.9528), (1, 3, 3.8961), (10, 7, 8.3501), (7, 2, 6.036), (9, 7, 8.1643), (11, 1, 7.273), (11, 2, 9.8175), (0, 5, 10.0), (1, 6, 6.1449), (10, 6, 7.2324), (7, 4, 9.1078), (5, 11, 10.0), (9, 5, 9.3876), (0, 11, 9.0503), (1, 2, 9.819)]
+cone delta3 over free (n = 28, girth 6.5423) iters=150000 chains=8 time 32.7s
+seed score 36.000000 (value per merge (1/p)sqrt(E Gamma) 6.000000);  BEST score (Gamma or Phi) = 36.000000   value per merge (1/p)sqrt(E Gamma) = 6.000000
+free link base edges: [(9, 2, 3.2624), (4, 7, 3.1115), (1, 0, 2.1178), (11, 7, 1.1058), (7, 0, 3.4527), (2, 6, 0.8348), (9, 0, 2.7851), (0, 5, 2.7865), (7, 3, 1.6502), (9, 3, 3.3325), (5, 1, 1.8919), (8, 0, 2.299), (11, 0, 1.9839), (6, 5, 2.7015), (8, 10, 1.7856), (10, 11, 2.2745)]
+cone limit:5:3 over pods:3/s1 (n = 3, girth inf) iters=60000 chains=8 time 4.1s
+seed score 3.360000 (level sqrt(Phi)/p 0.611010);  BEST score (Gamma or Phi) = 3.360000   level sqrt(Phi)/p = 0.611010
+cone limit:5:3 over kmm:3/s2 (n = 15, girth 6.2832) iters=60000 chains=8 time 14.2s
+seed score 3.360000 (level sqrt(Phi)/p 0.611010);  BEST score (Gamma or Phi) = 3.360000   level sqrt(Phi)/p = 0.611010
+cone limit:5:3 over heawood/s2 (n = 35, girth 6.2832) iters=60000 chains=8 time 55.9s
+seed score 3.214256 (level sqrt(Phi)/p 0.597612);  BEST score (Gamma or Phi) = 3.360000   level sqrt(Phi)/p = 0.611010
+cone limit:8:3 over pods:3/s1 (n = 3, girth inf) iters=60000 chains=8 time 17.9s
+seed score 3.281250 (level sqrt(Phi)/p 0.603807);  BEST score (Gamma or Phi) = 3.281250   level sqrt(Phi)/p = 0.603807
+cone limit:8:3 over kmm:3/s2 (n = 15, girth 6.2832) iters=60000 chains=8 time 104.9s
+seed score 3.281250 (level sqrt(Phi)/p 0.603807);  BEST score (Gamma or Phi) = 3.281250   level sqrt(Phi)/p = 0.603807
+cone limit:8:3 over heawood/s2 (n = 35, girth 6.2832) iters=60000 chains=8 time 479.0s
+seed score 3.175761 (level sqrt(Phi)/p 0.594022);  BEST score (Gamma or Phi) = 3.281250   level sqrt(Phi)/p = 0.603807
+cone limit:4:3 over free (n = 21, girth 7.3455) iters=60000 chains=8 time 71.9s
+seed score 3.375000 (level sqrt(Phi)/p 0.612372);  BEST score (Gamma or Phi) = 3.375000   level sqrt(Phi)/p = 0.612372
+cone limit:4:3 over free (n = 22, girth 6.4566) iters=60000 chains=8 time 84.9s
+seed score 3.375000 (level sqrt(Phi)/p 0.612372);  BEST score (Gamma or Phi) = 3.375000   level sqrt(Phi)/p = 0.612372

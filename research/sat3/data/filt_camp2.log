@@ -1,0 +1,27 @@
+filt Delta3 over F_2^4 (15 points, 840 frames, all) target gamma iters=4000 chains=8 time 118.8s
+BEST: sym rho 0.645494 (value 5.809445)  CS rho 0.645494  Gamma 33.749655  single-factor avg rho 0.461745  min_k b_k/E 0.333887  b = [4.731472, 4.730671, 3.004980]
+chains (gamma): ["33.74966", "33.59843", "33.34908", "33.25815", "33.19733", "33.19544", "33.04786", "32.68968"]
+filt K4 over F_2^3 (7 points, 28 frames, all) target gamma iters=5000 chains=8 time 2.8s
+BEST: sym rho 0.471405 (value 2.828427)  CS rho 0.471405  Gamma 12.000000  single-factor avg rho 0.000000  min_k b_k/E 0.000000  b = [0.000000, 0.000000, 0.000000]
+chains (gamma): ["12.00000", "12.00000", "12.00000", "12.00000", "12.00000", "12.00000", "12.00000", "12.00000"]
+filt K4 over F_2^4 (15 points, 840 frames, all) target gamma iters=3000 chains=8 time 58.3s
+BEST: sym rho 0.471405 (value 2.828427)  CS rho 0.471405  Gamma 12.000000  single-factor avg rho 0.447542  min_k b_k/E 0.435927  b = [2.615562, 2.817972, 2.622231]
+chains (gamma): ["12.00000", "12.00000", "12.00000", "12.00000", "12.00000", "12.00000", "12.00000", "12.00000"]
+filt net-4 over F_2^3 (7 points, 28 frames, all) target sym iters=1500 chains=8 time 10.3s
+BEST: sym rho 0.535374 (value 64.244894)  CS rho 0.541080  Gamma 316.188483  single-factor avg rho 0.328709  min_k b_k/E 0.307373  b = [36.884737, 39.884900, 41.565517]
+chains (sym): ["64.24489", "64.21576", "64.09328", "63.95511", "63.84836", "63.84133", "61.70861", "61.65394"]
+filt Delta3 over F_4^3 (21 points, 1120 frames, all) target gamma iters=2500 chains=8 time 39.7s
+BEST: sym rho 0.652204 (value 5.869840)  CS rho 0.652204  Gamma 34.455023  single-factor avg rho 0.494601  min_k b_k/E 0.467688  b = [4.521578, 4.209192, 4.623470]
+chains (gamma): ["34.45502", "34.43206", "34.38989", "34.33352", "33.88870", "33.82930", "33.73155", "33.54579"]
+filt Delta3 over F_2^5 (31 points, 1500 frames, SAMPLED) target gamma iters=1500 chains=8 time 129.7s
+BEST: sym rho 0.636251 (value 5.726260)  CS rho 0.636251  Gamma 32.790054  single-factor avg rho 0.492424  min_k b_k/E 0.489046  b = [4.404743, 4.401411, 4.489298]
+chains (gamma): ["32.79005", "32.78301", "32.65491", "32.65049", "32.52848", "32.52299", "32.50358", "32.48075"]
+filt Delta3 over F_3^4 (40 points, 1500 frames, SAMPLED) target gamma iters=1500 chains=8 time 93.9s
+BEST: sym rho 0.639840 (value 5.758564)  CS rho 0.639840  Gamma 33.161061  single-factor avg rho 0.464676  min_k b_k/E 0.348083  b = [3.132747, 4.670730, 4.742761]
+chains (gamma): ["33.16106", "33.12888", "33.05260", "32.99663", "32.98514", "32.95581", "32.78759", "32.34184"]
+filt net-5 over F_2^3 (7 points, 28 frames, all) target sym iters=800 chains=8 time 10.9s
+BEST: sym rho 0.526817 (value 158.045183)  CS rho 0.529789  Gamma 757.827382  single-factor avg rho 0.337669  min_k b_k/E 0.306171  b = [119.663145, 92.387208, 91.851381]
+chains (sym): ["158.04518", "157.31322", "157.31322", "157.31322", "157.31322", "157.31322", "157.31322", "157.31322"]
+filt net-4 over F_3^3 (13 points, 234 frames, all) target sym iters=600 chains=8 time 15.6s
+BEST: sym rho 0.530703 (value 63.684328)  CS rho 0.535675  Gamma 309.903048  single-factor avg rho 0.347451  min_k b_k/E 0.269580  b = [32.349564, 50.939790, 41.792954]
+chains (sym): ["63.68433", "63.63230", "61.88707", "61.67666", "61.65394", "61.65394", "61.65394", "61.65394"]

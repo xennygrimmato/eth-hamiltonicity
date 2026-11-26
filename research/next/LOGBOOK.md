@@ -3002,3 +3002,11 @@ Prior odds: low (1–2%); both outcomes are results.
   metrics satisfying all CN/four-point inequalities, or find a better placement → `research/sat3/q1-cyclic.md`.
 - Attainment agent resumed: the depth-2 certified game on the nets of Z₅, Z₇ (or its dual, the maximum over
   formal prices for the depth-2 move set): does depth 2 buy anything over depth 1 on a cyclic net?
+
+**Executor finished** (`research/sat3/s3-experiments.md` with the one-factor lemma and all tables;
+`tools/tensorlab` piecefloor: 37+2 Rust tests, 7 Python tests pass). Nothing beat any record.
+Filtration-space runs (hubs = a point or a hyperplane at a free level; exact far legs over frames):
+Δ₃ in C₃(F₂), C₃(F₃): Γ = 35.9999 (2/3 again; all chains from below); C₃(F₄) 34.46, C₄(F₂) 33.75, C₅(F₂) 32.79,
+C₄(F₃) 33.16 (short, under-converged runs: C₄(F₂) contains the C₃(F₂) optimum). K₄: exactly 0.471405. Net of Z₄:
+0.5354, 0.5307 (tree record 0.5410). Net of Z₅: 0.5268 (tree record 0.5519). Limitations: no subspaces of
+intermediate dimension, at most two levels per hub, N ≤ 5.

@@ -33,8 +33,10 @@ v_i v_j at rate f and the wire u₁u₂ at rate w·f (w > 0 real; w = 1 is the u
 | 7 | **Theorem K_m.** f*(K_{2,m}(w); k) ≥ R_m(w) for every field k, m ≥ 3, 0 < w ≤ m(m−1)/6; equality if Contracting(k) fails. Flow value 2m/(m(m−1)+2w) < R_m(w) < cut bound. | [R] = 3 + 6 + Strassen (§4) |
 | 8 | The direct m-page calibration cancels all lengths, but its scalar inequality is false for even m ≥ 4 (all w) and for odd m ≥ 5 at larger w. | [X] (§3.6), explicit counterexample |
 | 9 | Book principle: for two-apex networks the minimum over CAT(0) configurations equals the minimum over m-page books. | [R] modulo Reshetnyak gluing [BH99 II.11.1] (§3.1, §6) |
-| 10 | Weights above the proved range, refined calibration, cut regime. | §5 ([R] parts, [N], [C], certificate spec) |
-| 11 | Which other networks are pinned. | §6 |
+| 10 | **Theorem E / Corollary E (cut regime, unconditional).** Five CAT(0) points, w ≥ w₁ = 1.91345: Σ_S ≥ (3/(2+w))(Σ_vv + wD). Hence f*(K_{2,3}(w); k) = 3/(2+w) for w ≥ w₁ and f*(K_{2,4}(w); k) = 4/(4+w) for w ≥ 2w₁, every field, no hypothesis; routing gives 3/(3+w), 4/(6+w). | [R] (§5.2–5.3: refined calibration Prop. C′, bounds (X1),(X2), one-vertex lemmas (V1),(V2)); not yet refereed |
+| 10a | Lemma R: outside the hard region 𝓕′ the refined bracket is ≥ 0 for every (λ,η) of the conjectured region. | [R] (§5.4) |
+| 10b | Conjecture W (valid region = ellipse ∩ cut half-plane), (CL\*\*), (★): 13Σ_S ≥ 12Σ_vv + 15D; statements S(λ₂). | [C], [N]; certificate spec in §5.4 (S(9/10): six variables, margin +0.063, no zeros) |
+| 11 | P2: pinned / cut-pinned networks; book principle; Prop. T (triangle-decomposable demands on K_{2,m}); Conjecture P; instances. | §6: [R] / [N] / [C] as marked |
 | 12 | Three-angle inequality (I) with the sharp constant 8. | [R] (§7) |
 
 ---

@@ -1897,3 +1897,19 @@ Launched: referee on §§5–7; an executor certifying S(9/10) and (CL\*\*₀) w
 - **all 1080 CNF hashes and all 1080 LRAT proof hashes are identical to the executor's record.**
 Lab notebook updated. Status: MC(⟨2,2,2⟩ over F₂) = 7 [N‑rig]: three implementations, two methods, proof objects
 reproducible bit for bit. Trust: the CNF encoding and four short lemmas in the README, `lrat-check`.
+
+## 26 Nov (late, 68): referee interim on Theorem E — proof checks line by line; no violation
+
+- Cut bound: all 15 bipartitions recounted; {u₁, v₁} is crossed by 3 supply wires and 2 + w of demand; minimum cut for
+  w ≥ 1; crosses the W₅-type value at w = 5/4 exactly. Flow LP: 3/(3+w) (0.6 at w = 2). K_{2,4}: cut {u₁, v₁, v₂} gives
+  4/(4+w), minimum for w ≥ 2.
+- Prop. C′ (refined calibration) re-derived: lengths cancel; only ρ_i ≥ 0 is dropped, with the right sign. 60k random
+  books with the referee's own code (86% with a hub at a spine end): true value − bound ≥ +10⁻⁴; adversarial search
+  finds the gap tight (−2·10⁻¹⁵), never negative.
+- Br′ ≥ 0 on the cut line: the one-vertex lemmas, the sign cases and the cubic are correct (λ₁ = 0.7665884,
+  w₁ = 1.9134429). Numerically the bracket's minimum is 0 for λ up to 12/13 and −0.0373 at λ = 0.93 (at σ = 0): so the
+  bracket holds up to 12/13 (w = 5/4) and λ₁ is only where the hand proof stops.
+- Five-point minimum over three-page books equals the cut value for w = 2, 1.92, 1.5, 1.3, 1.26, 1.25 and is negative
+  below (−0.015 at 1.24, at W₅). Threshold 5/4 consistent.
+- Spec domain minima match the notes (+0.1619, +0.1035, +0.0627 at λ = 0.8, 6/7, 0.9).
+Theorem E: [V, interim]. H25 (threshold 5/4): supported numerically by two independent codes; certificates pending.

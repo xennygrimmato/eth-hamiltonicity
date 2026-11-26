@@ -185,3 +185,29 @@ fn book_hull_convexity_near_w5() {
     assert_eq!(lb_hullconvex(&p, &big, &w5, &toks), 0.0);
     eprintln!("PD cover of the big box: {} tokens", toks.len());
 }
+
+#[test]
+fn k2_pieces() {
+    // one central orthant of (CL**_0) proves and checks (equality at 0 closed by the convexity test)
+    let name = "k2near:lam=12/13:eta=15/13:case=c:s=---:t=0.5";
+    let path = tmp("k2near.cert");
+    let r = prove_by_name(name, opts(50), Some(&path)).unwrap();
+    assert!(r.proved, "{name}: {}", r.summary);
+    assert!(check_by_name(name, &path).is_ok());
+    // tightened bound: not provable (equality at 0)
+    let mut o = opts(40);
+    o.max_fail = 5;
+    let r = prove_by_name("k2near:lam=12/13:eta=15/13:case=c:s=---:t=0.5:c=1e-6", o, None).unwrap();
+    assert!(!r.proved);
+    // outside the piece f is negative (e.g. at the box centre (-1/2,0,..,0) of the first split), which
+    // must not be reported as a counterexample: only centres certainly inside the piece count
+    let mut o = opts(6);
+    o.max_fail = 1_000_000;
+    let r = prove_by_name("k2far:lam=9/10:eta=6/5:case=c:s=+-+", o, None).unwrap();
+    assert!(!r.proved && !r.counterexamples.iter().any(|s| s.starts_with("COUNTEREXAMPLE")));
+    // a false bound above the true minimum 10 * 0.06272 of the S(9/10) piece is refuted
+    let mut o = opts(60);
+    o.max_fail = 1;
+    let r = prove_by_name("k2far:lam=9/10:eta=6/5:case=l:s=+++:c=0.7", o, None).unwrap();
+    assert!(!r.proved && r.counterexamples.iter().any(|s| s.starts_with("COUNTEREXAMPLE")), "{}", r.summary);
+}

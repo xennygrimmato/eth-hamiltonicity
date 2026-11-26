@@ -3118,3 +3118,17 @@ every statement, its source and status). Order: CAT(0) inequalities and the cap;
 conditional on OpenAI's theorems; what is open (cyclic nets, true vs certified costs, non-algebraic
 algorithms); limitations; Lean statements. Type-B numbers are from raw outputs and marked unrefereed. A
 referee pass on the paper is launched.
+
+## 27 Nov (late): back to the main problem (a faster 3-SAT algorithm)
+
+Three attacks on what the barriers leave open:
+- H47: use the new filtration-space fact against the dichotomy itself. If contracting fails, the whole cone
+  over the building is a price space; prices must also satisfy multi-party constraints (common-label rates,
+  OpenAI's tripod inequality, ranks of non-wire tensors). A violated constraint on the filtration space would
+  PROVE contracting, hence power-saving 3-SAT; a realisation by explicit tensors (e.g. graph states, whose
+  cut ranks are F₂ ranks) would prove it fails. → `research/sat3/dichotomy-attack.md`.
+- H44 (now funded): the true asymptotic ranks of the crossing pieces, on the two controlled cuts and on the
+  third cut / four-group cost; redo the level-1 game with true costs. → `research/sat3/true-costs.md`.
+- Ideas round 2: routes outside every barrier (non-algebraic algorithms, short wires, other reduction
+  targets, designs with node growth above 2), with kill tests. → `research/sat3/ideas-round2.md`.
+Still running: H46 (cap for cyclic designs), type-B depth-2 game, referee of the barrier paper.

@@ -86,28 +86,31 @@
 \keywords{Exponential Time Hypothesis, \#3-SAT, tensor networks, asymptotic spectrum, CAT(0) spaces, spherical buildings, nets, Lean~4}
 
 \begin{abstract}
-In October 2026 Anthropic and OpenAI each claimed a deterministic algorithm that counts the
-satisfying assignments of a 3-CNF on $n$ variables in time $2^{O(n/\sqrt{\log n})}$. Anthropic's
-algorithm is a recursion on clique sums whose levels merge the nodes in one of two ways, and the
-exponent $1/2$ comes from a level factor $1/\sqrt2$. Levels built on $p$-nets of $\F_q^m$ have the
-same node growth and $p$ merges, so they could give a smaller factor. We state four results that
-explain why this does not happen with the present methods, each with its hypotheses and its status.
+In October 2026 Anthropic and OpenAI each claimed, in unrefereed preprints, a deterministic
+algorithm that counts the satisfying assignments of a 3-CNF on $n$ variables in time
+$2^{O(n\log\log n/\sqrt{\log n})}$. Anthropic's algorithm is a recursion on clique sums whose levels
+merge the nodes in one of two ways, and the exponent $1/2$ comes from a level factor $1/\sqrt2$.
+Levels built on $p$-nets of $\F_q^m$ have the same node growth and $p$ merges, so they could give a
+smaller factor. We state four results that bound what the present methods give on such levels, each
+with its hypotheses and status; (1) supplies the geometry, (2)--(4) are the three barriers.
 (1) The space of real filtrations of $\F_q^N$, a CAT(0) space, carries a placement of the $p$-net
 of $\F_q^m$ ($m\ge2$, $g=q^m$) of value at least $1/\sqrt2-O(1/g)$, and a two-bimedian inequality
 shows that no placement in any CAT(0) space has value above $\sqrt{g/(2(g+1))}$. (2) If Anthropic's
 contracting hypothesis fails over a field $k$, every finite subset of this space over $\F_{2^s}$ is
-a price over $k$; hence every identity over $k$ for a net level with $2^{o(\lambda)}$ terms has a
-piece whose true cost is at least $1/\sqrt2-c/g$ per bit under every merge at once for large $\lambda$, and an identity
-for one fixed eight-wire configuration that stays below $1/\sqrt2$ by a constant would prove the
-contracting hypothesis. (3) For covers generated from crossing identities by nesting, at every
-depth, a Steiner crossing inequality valid in all CAT(0) spaces shows that the certified cost of
-some term is at least the value of every CAT(0) placement; this is a barrier for a proof method,
-not for the tensors. (4) Conditionally on two unrefereed theorems of OpenAI, a straight-line program
-for the clique polynomial whose exponent beats $1/2$ in the long-wire regime gives ports in
-characteristic $0$ and a power-saving algorithm for 3-SAT. Cyclic nets, the difference between true
-and certified costs, and non-algebraic algorithms remain open; we report the numerical evidence.
-The mathematics, proofs, code and text were produced by AI systems, the referees were AI agents,
-and no person has checked the proofs.
+a price over $k$; hence every identity over $k$ with $2^{o(\lambda)}$ terms for the level of a net over
+$\F_{2^s}$ has a piece of true cost at least $1/\sqrt2-c/g$ per bit under every merge at once, for
+$\lambda$ large depending on $g$; and such identities for one fixed eight-wire configuration with all
+terms below $1/\sqrt2$ by a constant, as $\lambda\to\infty$, would prove the contracting hypothesis.
+(3) For covers generated from Anthropic's crossing identity by routing and nesting, at every depth, a
+Steiner crossing inequality valid in all CAT(0) spaces shows that the certified cost of some term is
+at least the value of every CAT(0) placement: a barrier for a proof method, not for the tensors.
+(4) If an unrefereed theorem of OpenAI holds, every straight-line program computing the clique
+polynomial over a field whose characteristic has no ports needs $2^{cK^2\lambda/\sqrt{\log K}}$ gates
+for large even $K$ and $\lambda\ge CK(\log K)^{3/2}$; with a second one, such programs over $\Q$ with
+log-exponent above $1/2$ would give a deterministic power-saving algorithm for 3-SAT. Cyclic nets,
+true versus certified costs and non-algebraic algorithms remain open. No lower bound for 3-SAT is
+claimed. The mathematics, proofs, code and text were produced by AI systems, the referees were AI
+agents, and no person has checked the proofs.
 \end{abstract}
 
 \maketitle
@@ -118,8 +121,8 @@ and no person has checked the proofs.
 
 \subsection{The exponent one half}
 Anthropic~\cite{AnthropicETH} and OpenAI~\cite{OpenAIETH} each claimed in October 2026 a
-deterministic algorithm for \#3-SAT on $n$ variables in time $2^{O(n/\sqrt{\log n})}$. Both claims
-are unrefereed. Anthropic's algorithm reduces the count to clique sums: $K$ nodes, $\lambda$ bits
+deterministic algorithm for \#3-SAT on $n$ variables in time $2^{O(n\log\log n/\sqrt{\log n})}$
+($2^{O(n/\sqrt{\log n})}$ on formulas with $O(n)$ clauses). Both claims are unrefereed. Anthropic's algorithm reduces the count to clique sums: $K$ nodes, $\lambda$ bits
 on every edge, an arbitrary table at every node. One level of its recursion partitions the nodes of
 a clique on $K'$ nodes into $K$ groups in one of two ways (rows or columns of a $g\times g$ grid), and
 writes the product of the edge wires as a sum of $2^{o(\lambda)}$ terms, each cheap under one of the
@@ -141,8 +144,8 @@ so $\beta=2$ for every $p$, and the flat floor alone would allow $\alpha'=\tfrac
 for three merges. The question is the true floor $\rho^*$ of net levels.
 
 \subsection{Results}
-We consolidate one day's results on this question, refereed by AI agents, into four statements,
-ordered by strength of hypothesis. Here $g=q^m$ is the order of the net and the value of a placement
+We collect the results obtained on this question on 26--27 November 2026, refereed by AI agents,
+in four statements. Here $g=q^m$ is the order of the net and the value of a placement
 is the lower bound per edge bit that the price method extracts from it (\cref{sec:setting}).
 
 \begin{enumerate}[label=(\arabic*)]
@@ -151,30 +154,38 @@ every set of $p\ge2$ slopes, the $p$-net of $\F_q^m$ has a placement in the spac
 filtrations of $\F_q^{m+2}$, a CAT(0) space, of value at least
 $1/\sqrt2-((q+1)/\sqrt2-1)/(g+1)$. No placement in any CAT(0) space has value above
 $\sqrt{g/(2(g+1))}$. On every balanced set of generic edges both bounds equal $1/\sqrt2$. No
-hypothesis is used.
+hypothesis is used for these CAT(0) statements; that they bound every price rests on Anthropic's
+Proposition~C.3 (\cref{imp:AN}(a)).
 \item \emph{The price barrier (\cref{sec:price}).} If the contracting hypothesis of~\cite{AnthropicVP}
 fails over $k$, every finite subset of the filtration space over $\F_{2^s}$ is a price over $k$. On
 nets of $\F_2^m$ every identity over $k$ for the level tensor with $2^{o(\lambda)}$ terms then has a
 piece of true cost at least $(1/\sqrt2-1.13/(g+1)-\eps)\lambda$ per edge, under all three merges at
 once, for $\lambda\ge\lambda_0(g,\eps)$. Contrapositively, identities for one fixed configuration of
-eight wires ($E_D$) whose pieces all stay below $(1/\sqrt2-\eta)8\lambda$ under some merge would
-prove the contracting hypothesis, hence a power-saving algorithm for 3-SAT.
+eight wires ($E_D$), for $\lambda\to\infty$ with $2^{o(\lambda)}$ pieces, whose pieces all stay below
+$(1/\sqrt2-\eta)8\lambda$ under some merge would prove the contracting hypothesis over $k$, hence a
+power-saving algorithm for 3-SAT by Theorem~R or Theorem~C1-AN (\cref{sec:prices}).
 \item \emph{Theorem W (\cref{sec:thmW}).} For every placement in a CAT(0) space and every cover
 generated from circle-covering crossing identities by routing and nesting, some term has certified
-cost at least the placement's bound under every merge at once. With the zero-loss lemma
-(\cref{lem:zeroloss}, refereed after the other results) this holds exactly at all depths. Certified costs are upper
-bounds on true costs, so Theorem~W is a barrier for a proof method.
+cost at least the placement's bound under every merge at once, up to the covering defects of the
+identities used on its branch. By the zero-loss lemma (\cref{lem:zeroloss}, refereed after the other
+results) Anthropic's crossing identity has defect $0$, so for covers built from it the bound holds
+exactly at all depths. Certified costs are upper bounds on true costs, so Theorem~W is a barrier for
+a proof method.
 \item \emph{Theorem T (\cref{sec:thmT}).} If OpenAI's Theorem~3.1 of~\cite{OpenAIHC} holds as
 printed, every straight-line program computing the clique polynomial $f_{K,\lambda}$ as a polynomial
 identity, over a field whose characteristic has no ports, needs $2^{cK^2\lambda/\sqrt{\log K}}$ gates
-for large even $K$ and $\lambda\ge CK(\log K)^{3/2}$. With OpenAI's Theorem~7.1 of~\cite{OpenAIIM}, such
-an algorithm over $\Q$ with $e(K)\sqrt{\log K}\to0$ would give 3-SAT in time $2^{O(v^{1-\delta})}$.
+for large even $K$ and $\lambda\ge CK(\log K)^{3/2}$, with unspecified absolute constants. With OpenAI's
+Theorem~7.1 of~\cite{OpenAIIM}, a clique-sum algorithm over $\Q$ given by such programs, with exponent
+$e(K)$ (\cref{sec:thmT}) satisfying $e(K)\sqrt{\log K}\to0$ along even $K$, would give 3-SAT in
+deterministic time $2^{O(v^{1-\delta})}$.
 \end{enumerate}
 
 Statements (1) and (2) concern the price method, which bounds true costs; (1) bounds what any price
-can prove and supplies the extremal geometry, and (2) turns that geometry into a lower bound when
-contracting fails. Statement (3) needs no hypothesis but bounds only certified costs. Statement (4)
-covers all algebraic algorithms in its regime, but rests on unrefereed work of another group.
+can prove (through \cref{imp:AN}(a)) and supplies the extremal geometry, and (2) turns that geometry
+into a lower bound on true costs when contracting fails. Statement (3) needs no hypothesis but bounds
+only certified costs. Statement (4) covers every straight-line program that computes $f_{K,\lambda}$ as
+a polynomial, in its regime, but rests on unrefereed work of another group; it says nothing about
+algorithms that are correct only on bounded integer tables.
 \Cref{sec:open} lists what is open, and \cref{sec:limits} the limitations.
 
 \subsection{Status of each claim}\label{sec:status}
@@ -287,7 +298,7 @@ then $\sqrt{\rk(a-b)}$ is a price over $k$ on $\Mat_\mu(\F_2)$ for every $\mu\ge
 
 The contracting hypothesis has an algorithmic consequence. By Theorem~R of
 \src{research/ports/note-contracting-eth.md}~\S3 (refereed by an AI referee in its form with advice; the
-uniform form rests on an audit of Anthropic's Lean proof terms by one reader), contracting over a
+uniform form rests on an audit of Anthropic's Lean proof terms by one AI reader, nothing built), contracting over a
 field of characteristic $0$ gives a deterministic algorithm for 3-SAT in time
 $2^{O(n^{1-\delta})}\mathrm{poly}$; in characteristic $p$ the same note gives a randomised one
 (Theorem~C1-AN there). We call such algorithms \emph{power-saving}.
@@ -325,8 +336,8 @@ w{w'}^2 .
 \end{proposition}
 
 \begin{proof}
-Put $m=\gamma_t(o,w)$, $m'=\gamma_t(o',w')$. By~\eqref{eq:CN} for $m'$ against $m$, and then for $m$
-against $o'$ and against $w'$,
+Put $m=\gamma_t(o,w)$, $m'=\gamma_t(o',w')$. By~\eqref{eq:CN} with $z=m$ on the geodesic from $o'$ to
+$w'$, and then with $z=o'$ and $z=w'$ on the geodesic from $o$ to $w$,
 \begin{align*}
 \dd m{m'}^2&\le(1-t)\dd m{o'}^2+t\dd m{w'}^2-t(1-t)\dd{o'}{w'}^2\\
 &\le(1-t)^2\dd o{o'}^2+t^2\dd w{w'}^2+t(1-t)\bigl[\dd w{o'}^2+\dd o{w'}^2-\dd ow^2-\dd{o'}{w'}^2\bigr].
@@ -342,7 +353,8 @@ Lean statements, \lean{bimedian_weighted} and \lean{bimedian_inner_eq}.
 \begin{theorem}[two-merge cap; \stP]\label{thm:cap2}
 Let a configuration with two merges be balanced, and let $E_k$ be the number of edges crossing merge
 $k$. For every placement in a CAT(0) space, $b_1+b_2\le\sqrt{E(E_1+E_2)}$. In particular a balanced,
-fully crossing configuration has $\min(b_1,b_2)\le E/\sqrt2$, and no price over any field proves more.
+fully crossing configuration has $\min(b_1,b_2)\le E/\sqrt2$, and by \cref{imp:AN}(a) no price over any
+field proves more.
 \end{theorem}
 
 \begin{proof}
@@ -366,7 +378,8 @@ $b_1+b_2=\sum_e\sum_k\lambda_ks^k_e\le\Lambda\sum_e\dd{\beta(n)}{\beta(n')}\le\s
 \begin{corollary}[the cap on $p$-nets; \stP]\label{cor:cap}
 For every placement of the full level of a $p$-net of order $g$ in a CAT(0) space,
 $\tfrac1p\sum_kb_k\le\sqrt{E\,E_\times/2}$ with $E_\times=Eg/(g+1)$ the number of edges crossing one
-merge. So every price, under any hypothesis, gives value at most $\sqrt{g/(2(g+1))}<1/\sqrt2$.
+merge. So, by \cref{imp:AN}(a), every price, under either hypothesis, gives value at most
+$\sqrt{g/(2(g+1))}<1/\sqrt2$.
 \end{corollary}
 
 \begin{proof}
@@ -493,7 +506,7 @@ $z(a)$ and $z(a')$, ``$W$ at level $\tfrac12$'' and ``$W'$ at level $\tfrac12$''
 $1=\delta/\sqrt2$. The $q+1$ hubs of $a$ are pairwise at distance $\sqrt2$ with common midpoint $z(a)$,
 and $x_e$ is equidistant from all of them. A tree cannot do this: a far point is equidistant from
 the tips of a tripod only above its centre. The flats of $\cC_{m+2}(q)$ have dimension $m+2$; for
-$m=1$ any two node planes meet, and then $\sum_ks^k_e\le\sqrt2$ for every edge
+$m=1$ any two node planes meet, and then, with hubs at points, $\sum_ks^k_e\le\sqrt2$ for every edge
 (\src{q1-notes.md} Lemma~6.1, \stR).
 \end{remark}
 
@@ -514,7 +527,9 @@ Count the generic fraction.
 (\src{review-q1.md}~\S2, scratch scripts listed there) gives, at $T=10^4$, saving $0.999950$ on every
 generic edge and $\min_kb_k/E=0.48279,0.58247,0.64111$ for $(q,m)=(2,2),(2,3),(2,4)$ against the formula
 $0.48284,0.58252,0.64115$ and the caps $0.63246,0.66667,0.68599$; the edge counts
-match~\eqref{eq:counts}. An independent Rust implementation reproduces $0.482843$ and $0.582516$
+match~\eqref{eq:counts}. An independent Rust implementation reproduces $0.482843$ and $0.582516$ for
+$g=4,8$ as the average $\frac1{pE}\sum_kb_k$ over the merges; its per-edge tie-breaking on rank-one edges
+gives $\min_kb_k/E=0.433$ and $0.569$ instead, so it checks the formula only in the averaged form
 (\src{s3-experiments.md}~\S5c).
 
 % =====================================================================
@@ -545,8 +560,8 @@ $[0,1]^N$, and filling one coordinate at a time (segment filling from the flat-r
 \src{notes.md} Lemma~4.1, \stR) gives an isometric embedding $\Phi_f:[0,1]^N\to Y$ with
 $\Phi_f(1_S)=j(\langle f_i:i\in S\rangle)$. \emph{Step 5.} A point of $\mathcal P$ with chain
 $0\subsetneq V_1\subsetneq\dots\subsetneq V_k=V$ and levels $1\ge s_1>\dots>s_k\ge0$ has, in every adapted
-$f$, the level vector $(1-s_1)1_0+\sum_j(s_j-s_{j+1})1_{V_j}$ ($s_{k+1}=0$), a convex combination of the
-chain vertices with coefficients independent of $f$. Two isometric embeddings of a Euclidean simplex
+$f$, the level vector $(1-s_1)1_{\{0\}}+\sum_j(s_j-s_{j+1})1_{V_j}$ ($s_{k+1}=0$; $1_U\in\{0,1\}^N$ is the vertex
+of the coordinate subspace $U$, so $1_{\{0\}}=0$), a convex combination of the chain vertices with coefficients independent of $f$. Two isometric embeddings of a Euclidean simplex
 into a CAT(0) space that agree on the vertices agree everywhere (induction on the dimension, by
 uniqueness of geodesics), so $\Phi(p):=\Phi_f(x)$ does not depend on $f$. \emph{Step 6.} For $p,p'\in\mathcal
 P$ the basis chosen for the pair is adapted to both, so $\dd{\Phi(p)}{\Phi(p')}=d(p,p')$, and the pull-back
@@ -603,10 +618,12 @@ $D\in\GL_2(\F_2)$.
 (a) If a coset $a''+\mathrm{Hom}(\F_q^2,S')$ contains $a$ and $a'$, then $\operatorname{im}(a-a')\subseteq S'$, so
 $S'=S$. Inside the coset, line membership and rank are computed as in $\cN(q,2,P)$ after choosing
 coordinates on $S$. (b) Let $G,G'$ be lines of classes $x\ne x'$ meeting in $n_0$. Write
-$y=n_0+u\varphi_x^{\top}$ and $z=n_0+u'\varphi_{x'}^{\top}$ with $\varphi_x$ vanishing on $x$; then $y-z$ is
-invertible iff $u,u'$ are independent, which gives $|\GL_2(\F_q)|=\deg n_0$ ordered pairs.
-(c) For $y=n_0+u\varphi_x^\top\in G$ the condition $y+D\in G'$ reads $u\,\varphi_x(x')=Dx'$, which has
-exactly one solution; $\deg n_0=1$. Full crossing holds because $Dx\ne0$ for $x\ne0$.
+$y=n_0+u\varphi_x^{\top}$ and $z=n_0+u'\varphi_{x'}^{\top}$ with $u,u'\in\F_q^2$ and $\varphi_x$ a nonzero linear
+form vanishing on $x$; then $y-z$ is invertible iff $u,u'$ are independent, which gives
+$(q^2-1)(q^2-q)=|\GL_2(\F_q)|=\deg n_0$ ordered pairs.
+(c) Here $q=2$. For $y=n_0+u\varphi_x^\top\in G$ the condition $y+D\in G'$ reads $u\,\varphi_x(x')=Dx'$
+(signs do not matter in characteristic $2$), which has exactly one solution since $\varphi_x(x')\ne0$;
+$\deg n_0=1$. Full crossing holds because $Dx\ne0$ for $x\ne0$.
 \end{proof}
 
 The referee confirmed the partition numerically for $g=4,8,16$ ($1$, $28$, $560$ copies of $48$ edges,
@@ -615,8 +632,8 @@ eight-wire values $b_k=5.656851$ for all six $D$ at $T=10^6$ against $8/\sqrt2=5
 (\src{review-q1.md}~\S\S4--5, \stN).
 
 \begin{corollary}[the positive target; \stR; \cond{\cref{imp:AN}(a),(d)}]\label{cor:target}
-If contracting fails over $k$, the price floor of $E_D$ is exactly $8\lambda/\sqrt2$ per merge and that of
-$X_4$ is $48\lambda/\sqrt2$. Contrapositively: a sequence $\lambda\to\infty$ of identities
+If contracting fails over $k$, the price floor of $E_D$ (the best bound per merge that prices over $k$
+give through \cref{prop:price}) is exactly $8\lambda/\sqrt2$ per merge and that of $X_4$ is $48\lambda/\sqrt2$. Contrapositively: a sequence $\lambda\to\infty$ of identities
 $\sum_iA_i=\zeta f_{E_D}$ over $k$ with $2^{o(\lambda)}$ pieces, each with $\min_kc_k(A_i)\le
 (1/\sqrt2-\eta)8\lambda$ for a fixed $\eta>0$, proves the contracting hypothesis over $k$, hence a
 power-saving algorithm for 3-SAT (Theorem~R in characteristic $0$, Theorem~C1-AN in characteristic
@@ -658,7 +675,8 @@ Earlier thresholds $0.7075$ and $0.79$ for whole-level classes remain conjectura
 (\src{review-sat3.md} item~5).
 
 \subsection{Tree products}\label{sec:trees}
-Before \cref{thm:A}, the best price floors came from products of trees, which are prices when
+Before \cref{thm:A}, the best price floors came from products of trees: every finite subset of a finite
+$\ell^2$-product of spaces $\mathbb T_m\times\R$, $\mathbb T_m$ the $m$-pod with infinite arms, is a price when
 contracting fails (\src{notes.md} Thm.~4.3, \stR, \cond{\cref{imp:AN}(a),(d)}). In a product of nine
 tripods, one per node of $\Delta_3$ with the three hubs of that node on the three arms and all other hubs
 at the centre, $b=(6,6,6)$, so $\rho_{\Delta_3}\ge2/3$ when contracting fails (\src{notes.md}
@@ -666,7 +684,9 @@ Thm.~5.2, \stR). For 3-nets of $\F_2^M$ and $\F_4^M$, a subgroup tripod of index
 quotient gives $\Phi=27/8$ and the limit value $\tfrac12\sqrt{3/2}=0.6124$ (\src{notes.md} Thm.~5.4,
 \stR; the transfer holds for $\F_2^M,\F_3^M,\F_4^M$). The exact finite-$g$ values $0.5410,0.5729,0.5915$
 at $g=4,8,16$ lie below the flat value for $g\le8$ (\src{review-sat3.md}~4(iii), \stN). For nets of $\F_q^m$
-with $m\ge2$ \cref{thm:A} supersedes these values. For cyclic groups and $\Delta_3$ they remain the best known.
+with $m\ge2$ \cref{thm:A} supersedes these values as CAT(0) values for every $q$, and as price floors
+(\cref{thm:C}) for $q=2^s$ only; for odd $q$ \cref{thm:A} gives no price statement. For cyclic groups
+and $\Delta_3$ they remain the best known.
 
 % =====================================================================
 \section{Theorem W: certified costs of nested crossing covers}\label{sec:thmW}
@@ -768,8 +788,9 @@ $0$ by the $\max$ is covered by the case $a_1=0$ or $a_2=0$). With $a=(r_c,r_b)$
 The step without an analogue for fixed hub positions is (ii): instead of looking for one bond that is
 good at the parent's optimum, the proof interpolates two bad child configurations, and the interpolation
 is again a configuration of the parent. The referee's random tests (\src{review-thmW.md}~\S2, \stN) found
-no violation in more than $650$ instances in $\R^2$, $\R^3$ and metric trees, including the degenerate
-shapes, and found violations of size $0.59$ in the $\ell^1$ and $\ell^\infty$ planes, which are not CAT(0).
+no violation beyond the bisection tolerance in $503$ instances ($150$ in $\R^2$, $100$ in $\R^3$, $253$ in star
+trees with three or four arms), including the degenerate shapes, and found violations of size up to about $0.59$
+among $240$ instances in the $\ell^1$ and $\ell^\infty$ planes, which are not CAT(0).
 
 \subsection{The zero-loss lemma}
 Let $P(E)=\sum_{m\le E/2}p(m)$, $f(E)=\log_2((E+1)P(E))$, and for classes $\Sigma_1,\Sigma_2$ of symbols of
@@ -781,22 +802,27 @@ For every $(r,r')$ with $r^2+r'^2=2(\beta_1^2+\beta_2^2)$ and $0\le r,r'\le\beta
 $N\in\{0,\dots,\Theta\}$ with $f(N)\ge r'$ and $f(\Theta-N)\ge r$.
 \end{lemma}
 
-The written proof has three parts: an analytic argument for $\max(m_1,m_2)\ge31$ from the two-sided bound
+The written proof consists of an analytic argument for $\max(m_1,m_2)\ge31$ from the two-sided bound
 $(\sqrt3/(12n))(1\mp n^{-1/2})e^{\mu(n)}\lessgtr p(n)$, $\mu(n)=(\pi/6)\sqrt{24n-1}$, which goes back to
-Lehmer and is quoted in the form given by Bessenrodt and Ono~\cite{BO16} (checked against that source);
-an exact computation of $(E+1)P(E)\ge\exp(\kappa\sqrt{E+1/2})$, $\kappa=\pi/\sqrt3$, for $44\le E<800$; and
-an exact check of all $7260$ pairs $1\le m_1\le m_2\le120$ (scripts \src{attain/zeroloss.py}). When the other
+Lehmer and is quoted in the form given by Bessenrodt and Ono~\cite{BO16} (the notes record a check of
+this form against that source; the source text is not in the repository, and both referees took the bound
+as given); an exact integer computation, against a $60$-digit evaluation of the right side, of
+$(E+1)P(E)\ge\exp(\kappa\sqrt{E+1/2})$, $\kappa=\pi/\sqrt3$, for $44\le E<800$, followed by an analytic
+argument for $E\ge800$; and a check of all $7260$ pairs $1\le m_1\le m_2\le120$ in $60$-digit floating-point
+arithmetic without an error bound (script \src{attain/zeroloss.py}). When the other
 reports were written this lemma had not been refereed. A separate AI referee has since checked it
 (\src{review-lemma53.md}) and found it correct, with presentational repairs: state once that the arc statement
 implies the same statement for every point of the disc $r^2+r'^2\le2(\beta_1^2+\beta_2^2)$ in the box
 $[0,\beta_1+\beta_2]^2$ (such a point is dominated coordinatewise by a point of the arc), allow energy $0$, and
 distinguish the constant $\kappa=\pi/\sqrt3$ from the constant of Anthropic's Lemma~B.1. That referee recomputed the
-finite parts in interval arithmetic (all $7380$ pairs $0\le m_1\le m_2\le120$, no failure) and took the quoted
+finite parts with exact integers and rigorous interval arithmetic (all $7380$ pairs $0\le m_1\le m_2\le120$,
+$m_2\ge1$, no failure) and took the quoted
 bound as given. Earlier, the referee of Theorem~W had computed the exact discretisation loss with the true
 partition counts and the true largest classes: zero for all $11\,175$ pairs of even energies up to $300$ and on a
 grid up to $1200$ (\src{review-thmW.md}~\S3, \stN). Without \cref{lem:zeroloss} the refereed
 discretisation lemma (\src{attain-notes.md} Lemma~5.2) gives a loss $\eps(\beta_1,\beta_2)=o(\beta_1+\beta_2)$
-per crossing, but at least $\kappa/\ln2\approx2.6$ bits.
+per crossing, but its bound is at least $\kappa_{\mathrm B}/\ln2\approx2.6$ bits per crossing, where
+$\kappa_{\mathrm B}$ is the constant of Anthropic's Lemma~B.1 (not the $\kappa$ above).
 
 \subsection{Theorem W}
 
@@ -826,7 +852,8 @@ never lower $v$. At the leaf apply (S2).
 inherits from its derivation: rank certificates of the crossing identities, routing networks,
 identification and nesting. That is an upper bound on the true cost $c_k(t_{\text{leaf}})$, and Theorem~W says
 nothing about $c_k(t_{\text{leaf}})$. It is a barrier for a proof method: an analysis whose cost bounds come only
-from these certificates cannot certify a level value below $\Fcat$. The gap is real. For the classes
+from these certificates cannot certify a level value below $\Fcat$. Certificates and true costs do
+differ. For the classes
 $(2,12),(2,12)$ ($\Theta=48$) the piece $\Psi_4$ has true rank $7$ across $ad|bc$ against the certificate
 $20$, and $\Psi_{24}$ has rank $15$ across the third cut $ac|bd$ against the trivial $25$ (referee's exact
 computation, \src{review-thmW.md}~\S1, \stN). The true cost minimises over all networks on the groups, not
@@ -836,9 +863,10 @@ $\{(0,0)\}$ do not cover the arc: circle covering is the operative hypothesis, a
 Anthropic's rectangle level.
 
 \begin{corollary}[\stR; uses \cref{lem:zeroloss}]\label{cor:Wnets}
-On the $p$-net of $\F_q^m$, $m\ge2$, every crossing-generated cover has certified level value at least
+On the $p$-net of $\F_q^m$, $m\ge2$, every crossing-generated cover whose crossings use Anthropic's
+identity (or any identity of covering defect $0$) has certified level value at least
 $1/\sqrt2-((q+1)/\sqrt2-1)/(g+1)$, for every prime power $q$, including odd $q$, with no hypothesis on
-$k$. On $\Delta_3$ it is at least $2/3$ (nine tripods). Level-1 covers belong to the class, so the best
+$k$. For identities of positive defect \cref{thm:W} gives the same bound minus its defect term. On $\Delta_3$ it is at least $2/3$ (nine tripods). Level-1 covers belong to the class, so the best
 certified value is at most the two-merge rectangle value, which tends to $1/\sqrt2$; for the 3-net of $\F_2^2$ the window
 is $[0.4828,0.6243]$.
 \end{corollary}
@@ -863,7 +891,7 @@ $(1/\sqrt2,1/\sqrt2,3/2)$ per bit. Hence $\langle w,c\rangle\ge1/\sqrt2$ for all
 when the weight of the third merge is $0$.
 \end{proposition}
 
-\begin{table}[h]
+\begin{table}[ht]
 \small
 \begin{tabular}{@{}lrcccc@{}}
 \toprule
@@ -878,7 +906,8 @@ $\Delta_3$ alone & 9 & 0.9085 & -- & 0.9183 & 0.9395\\
 \bottomrule
 \end{tabular}
 \caption{Level-one certified game values $h(w)/|E|$ (\stN; \texttt{\small attain/game1.py}; the referee
-reproduced the $K_4$ and AG$(2,3)$ entries with an independent LP).}\label{tab:level1}
+reproduced, with an independent LP, the $K_4$ and AG$(2,3)$ entries at $w=(\tfrac12,\tfrac12,0)$ and at uniform
+$w$).}\label{tab:level1}
 \end{table}
 
 With two merges the game returns exactly the rectangle value for every $g$, and $h$ increases away from
@@ -932,9 +961,11 @@ both suppliers at the centre. In OpenAI's comparison a term of rank $R$ on a bal
 as sites and suppliers $y_0,y_1$, is charged $\lambda(K-1)\sum_id(x_i,y_{b(i)})+d(y_0,y_1)\log R$, and the
 target $T_K$ costs $\lambda\sum_{u<v}d(x_u,x_v)$. By \cref{lem:N} the first is at least the second for the
 cut of the lemma, for every choice of suppliers, in every spectral space and with or without ports
-(\stP). So pricing $T_K$ with one site per row proves nothing, not even $R>1$. In particular the inequality
+(\stP). So pricing $T_K$ with one site per row proves nothing, not even $R>1$. In particular, for $K$ sites at distance $1$ from a base point and suppliers on each balanced cut $\ell$
+with total leg saving $\sigma_\ell=\sum_i(1-d(x_i,y_{b(i)}))$, the inequality
 $\sum_{u<v}(2-d(x_u,x_v))\le(1-\delta)(K-1)\min_\ell\sigma_\ell$ with $\delta>0$, proposed as a missing lemma in
-\src{prior-barriers.md}~\S5.3, fails in every metric space unless $\min_\ell\sigma_\ell\le0$ (\stP; the
+\src{prior-barriers.md}~\S5.3, fails in every metric space unless $\min_\ell\sigma_\ell\le0$, since \cref{lem:N}
+gives $\sum_{u<v}(2-d(x_u,x_v))\ge(K-1)\sigma_\ell$ on its cut (\stP; the
 literal question of that note has a negative answer).
 
 \subsection{Restriction to OpenAI's tensor}
@@ -977,10 +1008,12 @@ absolute $c_T>0$.
 \end{theorem}
 
 \begin{proof}[Sketch]
-Take $d=K$ and OpenAI's $T_d$, $b_0=\lceil\log_2q_0\rceil$, $a=h_0b_0$ with $h_0=\lfloor\lfloor\lambda/2\rfloor/b_0\rfloor\ge1$.
-\Cref{lem:star}(iv) gives $T_K(\lambda)\ge T_d^{\otimes h}$ row-wise with $h=Kh_0$. By \cref{lem:L} a circuit for
+Take $d=K$ and OpenAI's $T_d$, whose side is $q_0=2^{\lceil C_0w\rceil}$ for an absolute $C_0$
+(\cite{OpenAIHC}, proof of Cor.~3.2), so $b_0=\lceil\log_2q_0\rceil=\lceil C_0w\rceil$; put $a=h_0b_0$ with
+$h_0=\lfloor\lfloor\lambda/2\rfloor/b_0\rfloor\ge1$, which needs $\lambda\ge\lambda_0(K)=2b_0$.
+\Cref{lem:star}(iv) shows that $T_K(\lambda)$ restricts row-wise to $T_d^{\otimes h}$ with $h=Kh_0$. By \cref{lem:L} a circuit for
 $f_{K,\lambda}$ gives one for $f_{T_d^{\otimes h}}$ with at most $K2^{\lambda(K-1/2)}$ extra gates, and
-\cref{imp:HC} bounds the latter by $\exp(chKw/\sqrt m)$. The arithmetic $\lfloor\lambda/2\rfloor\ge\lambda/3$,
+\cref{imp:HC} bounds the size of the latter from below by $\exp(chKw/\sqrt m)$. The arithmetic $\lfloor\lambda/2\rfloor\ge\lambda/3$,
 $\lfloor x/b_0\rfloor\ge x/(2b_0)$ and $w/b_0\ge1/(2C_0)$ gives $hKw/\sqrt m\ge K^2\lambda/(12C_0\sqrt m)$; the
 extra gates are negligible once $c_TK/\sqrt m>1$. A second form avoids the extra gates by applying the
 row-wise maps inside OpenAI's proof, whose first step uses the target only through a property preserved
@@ -990,7 +1023,10 @@ by row-wise linear maps.
 An \emph{oblivious algebraic} algorithm is one that, for each $(\lambda,B)$, is a straight-line program in
 the table entries (over $\Z$, with constants and divisions by fixed non-zero integers) whose output equals
 $f_{K,\lambda}$ as a polynomial identity. Anthropic's engine is of this kind (\src{q2-notes.md}~\S5, re-read by
-the referee).
+the referee). Following Def.~4 of~\cite{AnthropicETH}, the algorithm achieves the exponent $e=e(K)$ at $K$ if
+for all $\lambda,B\ge1$ it uses at most $C\cdot2^{eK^2\lambda}(B+\lambda)^C$ operations on tables with entries
+below $2^B$, with $C$ depending on $K$ and $e$ only; the log-exponent of \cref{sec:intro} corresponds to
+$e(K)=(\log K)^{-\alpha'}$.
 
 \begin{corollary}[\stR; \cond{\cref{imp:HC,imp:IM}}]\label{cor:T2}
 If an oblivious algebraic clique-sum algorithm over $\Q$ has $e(K)\sqrt{\log K}\to0$ along a sequence of even
@@ -1010,8 +1046,9 @@ $e(K)\sqrt{\log K}\to0$ along even $K$ would give 3-SAT in deterministic time $2
 variable-count Weak ETH. Nothing is claimed in positive characteristic, for algorithms that are correct only
 on bounded integer tables, for non-algebraic algorithms, or for wires shorter than $C\cdot K(\log K)^{3/2}$.
 
-In a tower with $\beta=2$ and level factors $\rho_j$, Theorem~T forces the geometric mean of the $\rho_j$ to
-be at least $1/\sqrt2$ in the limit. This is the cap of \cref{cor:cap} and the value of the two-merge engine;
+Under the hypotheses of Theorem~T (no ports, \cref{imp:HC}), in a tower with $\beta=2$ and level factors
+$\rho_j$ realised as polynomial-identity programs, Theorem~T forces the geometric mean of the $\rho_j$ to
+be at least $1/\sqrt2$ in the limit (\src{q2-notes.md}~\S4, \stR). This is the cap of \cref{cor:cap} and the value of the two-merge engine;
 Theorem~T makes no per-level price statement and does not answer whether a price reaches $1/\sqrt2$ on
 3-nets of cyclic groups. The referee rechecked the arithmetic of the three steps of OpenAI's proof that carry
 the bound and found no error, but did not verify its Theorems~5.1 and 6.1, Lemma~7.3 or \S\S9--10
@@ -1057,15 +1094,15 @@ symmetric-tripod branch and is undecided in between (\stU).
 \end{itemize}
 
 \subsection{Depth-two certified games}
-By \cref{thm:W} the certified value of nested covers on a cyclic net can drop at most to $\Fcat$, which is
-unknown there. At the two-merge corners no depth helps, because the flat placement already gives the level-one
+By \cref{thm:W} the certified value of nested covers built from Anthropic's identity on a cyclic net cannot
+drop below $\Fcat$, which is unknown there. At the two-merge corners no depth helps, because the flat placement already gives the level-one
 value. The certified depth-two game was computed on $\Delta_3$ and on the $\Z_5$ net for two strategy types
 (\stN; upper bounds for restricted strategy classes, every added strategy verified by an accurate evaluation).
 Type~A crosses the bond of a level-one piece with a third wire and may stop or nest adaptively
 (\src{attain-notes.md}~\S10, outputs \src{attain/out3/}). Type~B crosses two hub--hub bonds (executor runs,
 outputs \src{attain/out4/}; not yet written up in the notes and not refereed).
 
-\begin{table}[h]
+\begin{table}[ht]
 \small
 \begin{tabular}{@{}llccc@{}}
 \toprule
@@ -1100,7 +1137,7 @@ on nested pieces, and whether true ranks below the certificates (\cref{sec:thmW}
 \item \emph{Odd $q$.} Whether $\sqrt{\rk}$ on $\Mat_\mu(\F_3)$, or $\tau$ on $\mathrm{Sub}(\F_3^N)$, is a price when
 contracting fails is open; for nets of $\F_3^m$ only the certified statement holds.
 \item \emph{The $O(1/g)$ window.} For $q=2$ the deficit of $\Fcat$ below $1/\sqrt2$ lies between
-$0.354/(g+1)$ and $1.121/(g+1)$; within placements with these hubs the rank-one edges cannot do better.
+$0.354/(g+1)$ (the cap, to first order in $1/g$) and $1.121/(g+1)$ (the placement); within placements with these hubs the rank-one edges cannot do better.
 \item \emph{A rate.} A quantitative form of \cref{imp:AN}(d) would make \cref{cor:perlevel} uniform in $g$
 and extend \cref{thm:Dprime} to whole-level identities.
 \item \emph{Non-algebraic algorithms.} Branching on table values, hashing and instance-adaptive algorithms
@@ -1118,14 +1155,15 @@ stated class: per-copy engines (\cref{thm:Dprime}), single net levels (\cref{cor
 covers with certified costs (\cref{thm:W}), or straight-line programs in the long-wire regime (\cref{thm:T}).
 \item The price barrier rests on Anthropic's Lean statement \lean{thm_alt_rank_price} and Proposition~C.3, from
 a paper that no person has refereed; the consequence for 3-SAT rests on Theorem~R, whose uniform form rests on
-an audit by one reader.
+an audit by one AI reader.
 \item Theorem T rests on OpenAI's HC Theorem~3.1, which is unrefereed and outside OpenAI's formalised scope;
 its constants are unspecified, so no explicit pair $(K,\lambda)$ can be named at which a small circuit would
 decide anything.
 \item The exactness of Theorem W at all depths rests on \cref{lem:zeroloss}, which was refereed by one AI agent
 after the other results and which uses a quoted two-sided bound for the partition function.
 \item The hypotheses ``contracting fails'' and ``no ports'' are used in different statements. We do not know
-whether either holds; if contracting holds, 3-SAT is power-saving by Theorem~R, and the barriers become moot.
+whether either holds; if contracting holds, 3-SAT has a power-saving algorithm by Theorem~R (characteristic
+$0$) or Theorem~C1-AN (characteristic $p$, randomised), and the price barriers become moot.
 \item All referees were AI agents, the numerical checks ran on one machine, and no person has checked the proofs
 or the code.
 \end{itemize}
@@ -1134,24 +1172,27 @@ or the code.
 \section{Related work}\label{sec:related}
 % =====================================================================
 
-Two-merge barriers are now numerous. Majdoddin~\cite{Maj26} defines a rewrite-and-merge class containing
+Several papers give barriers for two merges. Majdoddin~\cite{Maj26} defines a rewrite-and-merge class containing
 Anthropic's recursion and bounds the rate of two balanced homogeneous merges; his Proposition~4.23 charges a piece
 that is local for one merge only under that merge, so it is not a barrier for the game of \cref{sec:thmW}, where
 such pieces have certified costs under every merge. De Brito~\cite{deBrito26} shows that the exponent $1/2$ is
-optimal for graded pieces of Anthropic's shape, and Fradj~\cite{Fradj26} proves window costs above $1/\sqrt2$ for
-code-graded spaces. Sra~\cite{Sra26} proves, conditionally on OpenAI's Euclidean price theorem, the two-merge floor
+optimal for graded pieces of Anthropic's shape, and Fradj~\cite{Fradj26} proves central-window costs at least
+$1/\sqrt2+\eta_J-C_Jm^{-1/2}$, with an unevaluated $\eta_J>0$, for isotropic Kleinian-code graded spaces at fixed
+density. Sra~\cite{Sra26} proves, conditionally on OpenAI's Euclidean price theorem, the two-merge floor
 $1/\sqrt2$ at finite sizes; \cref{thm:cap2} gives the corresponding cap from CAT(0) geometry alone. His nested
 identity attains $1/\sqrt k$ on $k$ independent wires with all $2^{k-1}$ transversal cuts; on a net its terms are
-certified across two of the cuts only, and it lies in the class of \cref{thm:W}. None of these papers treats three
-merges or nets. Our earlier paper~\cite{Tul26barrier} gives barriers for named network models of the counting
+certified across two of the cuts only, and it lies in the class of \cref{thm:W}. None of these papers proves a
+statement for three merges or for nets; Majdoddin discusses three merges as open (his \S4.8). Our earlier paper~\cite{Tul26barrier} gives barriers for named network models of the counting
 engines. OpenAI's \cite{OpenAIEG}, \S11.1, derives ports from a uniform contracting gap on the $\F_2$-Grassmannian;
-the filtration space of \cref{sec:thmA} contains the Grassmannian as its $0/1$ points.
+the $0/1$ points of the filtration space of \cref{sec:thmA} are the subspaces, so it contains every
+Grassmannian of $\F_q^N$.
 
 % =====================================================================
 \section{The Lean statements}\label{sec:lean}
 % =====================================================================
 
-The files \src{research/ports/lean/PortsLean/Bimedian.lean} and \src{LemmaS.lean} (Lean v4.36.0 with Mathlib)
+The files \src{research/ports/lean/PortsLean/Bimedian.lean} and \src{research/ports/lean/PortsLean/LemmaS.lean}
+(Lean v4.36.0 with Mathlib)
 work in an arbitrary \lean{PseudoMetricSpace}; Mathlib has no CAT(0) class, so a point $\gamma_t(x,y)$ enters only
 through instances of~\eqref{eq:CN}, the predicate \texttt{CN t x y m z}. Formalised:
 \lean{PortsLean.Bimedian.bimedian_weighted} (\cref{prop:bimedian} from six CN instances) and
@@ -1173,18 +1214,20 @@ by averaging exactly over all balanced cuts (\lean{LemmaN.core}, \lean{LemmaN.su
 as \lean{LemmaN.lemmaN_false_K2}. For the star lemma only the bit counts and the arithmetic of the proof of
 \cref{thm:T} are formalised (\lean{LemmaN.star_row_bits}, \lean{LemmaN.star_hosted_bits},
 \lean{LemmaN.star_overhead}, \lean{LemmaN.thmT_arith}); the row-wise restrictions are not. Nothing else of this
-paper is formalised. We checked on 27 November 2026 that the three files contain no \texttt{sorry}, and
-\texttt{\#print axioms} gives \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound} for the fourteen theorems
+paper is formalised. We checked that the three files contain no \texttt{sorry}, and
+\texttt{\#print axioms} (run against the built library with \texttt{lake env lean}) gives \lean{propext},
+\lean{Classical.choice} and \lean{Quot.sound} for the seventeen theorems
 that we printed: \lean{bimedian_weighted}, \lean{bimedian_half}, \lean{dist_interp_le}, \lean{bimedian_inner_eq},
 \lean{lemmaS_core}, \lean{lemmaS_interp}, \lean{lemmaS_inner}, \lean{circle_of_linear}, \lean{circle_of_sSup},
-\lean{Nc_le}, \lean{lemmaN}, \lean{lemmaN_false_K2}, \lean{star_overhead} and \lean{thmT_arith}.
+\lean{Nc_le}, \lean{Nb_le}, \lean{lemmaN}, \lean{core}, \lean{sum_cuts_same}, \lean{lemmaN_false_K2},
+\lean{star_overhead} and \lean{thmT_arith}.
 
 % =====================================================================
 \section{How this paper was produced}\label{sec:provenance}
 % =====================================================================
 
 The mathematics, the proofs, the code, the Lean files and the text of this paper were produced by AI systems
-under the author's direction, in one day of work recorded in the repository notes. Each main note was checked by a
+under the author's direction, on 26--27 November 2026, as recorded in the repository notes. Each main note was checked by a
 separate AI agent acting as referee, with its own scripts; the reports are \src{review-q1.md},
 \src{review-sat3.md}, \src{review-thmW.md}, \src{review-q2.md} and \src{review-lemma53.md}, and their corrections are
 included above. The

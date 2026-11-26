@@ -7,6 +7,19 @@
 \providecommand{\href}[2]{#2}
 \begin{thebibliography}{10}
 
+\bibitem{AnthropicETH}
+{Anthropic}, \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, Preprint dated
+  26~October 2026, unrefereed. Paper and Lean formalisation in the repository
+  \url{https://github.com/anthropics/formal-math}, folder \texttt{eth}; Hexagon
+  record hexagon:2610.00577, 2026.
+
+\bibitem{AnthropicVP}
+\bysame, \emph{{VP} $\ne$ {VNP} over every field}, Preprint, November 2026,
+  unrefereed; Lean formalisation in the repository
+  \url{https://github.com/anthropics/formal-math}, folder \texttt{vp-vnp};
+  Hexagon record hexagon:2611.00954. The paper states that no human
+  mathematician has checked the proofs, 2026.
+
 \bibitem{BO16}
 Christine Bessenrodt and Ken Ono, \emph{Maximal multiplicative properties of
   partitions}, Ann. Comb. (2016); arXiv:1403.3352, 2016.
@@ -15,19 +28,6 @@ Christine Bessenrodt and Ken Ono, \emph{Maximal multiplicative properties of
 Martin~R. Bridson and Andr{\'e} Haefliger, \emph{Metric spaces of non-positive
   curvature}, Grundlehren der mathematischen Wissenschaften, vol. 319,
   Springer, 1999.
-
-\bibitem{AnthropicETH}
-{Claude (Anthropic)}, \emph{A $2^{o(n)}$ time algorithm for {3-SAT}}, Preprint
-  dated 26~October 2026, unrefereed. Paper and Lean formalisation in the
-  repository \url{https://github.com/anthropics/formal-math}, folder
-  \texttt{eth}; Hexagon record hexagon:2610.00577, 2026.
-
-\bibitem{AnthropicVP}
-\bysame, \emph{{VP} $\ne$ {VNP} over every field}, Preprint, November 2026,
-  unrefereed; Lean formalisation in the repository
-  \url{https://github.com/anthropics/formal-math}, folder \texttt{vp-vnp};
-  Hexagon record hexagon:2611.00954. The paper states that no human
-  mathematician has checked the proofs, 2026.
 
 \bibitem{deBrito26}
 Carlos Stein~Naves de~Brito, \emph{The partition exponent in the graded pieces

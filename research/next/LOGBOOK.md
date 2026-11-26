@@ -442,3 +442,17 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - Discrepancy to reconcile: the agent says the paper proves only 1/2 ≤ α ≤ 2/3; OpenAI's Lean scope note states
   α = 1/2 and the exact rectangular formula as Lean theorems. Asked the agent to say which is claimed where.
 - If ω = 9/4, Strassen's asymptotic rank conjecture for tight tensors is false.
+
+### Lab note 2 (E3 packing closed) [N + R]
+- Exact minimum 1-D monomial packing of ⟨n,n,n⟩: product length 11 at n = 2 and 41 at n = 3 (n³ = 8, 27). Stride
+  packing needs ~2n³ slots, so with fast integer multiplication the total is n³·polylog, worse than Four-Russians.
+- Obstruction: monomial packing into a commutative product is a triple-product embedding into an abelian group
+  (Cohn–Umans forces length ≥ n³); any LINEAR packing is a restriction of polynomial multiplication, so it is a
+  bilinear algorithm in disguise and needs length ≥ n^{9/4}/O(1) under the claim. Only loophole: non-linear read-out
+  (carries, comparisons). E3 dropped. [X]
+- The lead's Mirwald–Schnorr shortcut gives only 4 for 2×2 and 9 for 3×3: useless. [X]
+- Lead's expectation: in the quadratic-Boolean model the 2×2 answer is 7 (Winograd 1971), and quadratic algorithms can
+  never beat rank/2. A gap can only live in circuits with AND gates on higher-degree intermediates.
+- New experiment E5: exhaustive sweep of tiny bilinear maps over F₂ (dimensions ≤ 3): does any have general Boolean
+  multiplicative complexity below its quadratic complexity? One example = first positive sign; none = evidence against
+  the non-algebraic route at the level of AND counts.

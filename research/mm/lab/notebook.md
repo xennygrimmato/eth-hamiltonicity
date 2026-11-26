@@ -34,3 +34,26 @@ Scripts: `mc_sat.py` (E1 exact MC via SAT + CEGAR on input rows), `e2_wordram.py
   genuinely different source than packing bits into words. (This is the Ω-side statement:
   any word-RAM algorithm with w = O(log n) is a Boolean circuit of size ~ ops·w·polylog, so it
   inherits whatever Boolean circuit lower bound holds.)
+
+## E3. Kronecker / polynomial packing
+- Idea: one big-integer (= univariate polynomial) product computing all n² inner products.
+- Ran `e3_pack.py pack`: z3 search for the smallest exponent range L of a *monomial* packing
+  (A_ik ↦ z^{α(i,k)}, B_kj ↦ z^{β(k,j)}, C_ij read off at one coefficient, no garbage may land on
+  a read-off coefficient; garbage may alias garbage). Exact minimum:
+  n=2: L=6, product length 11 (n³ = 8). n=3: L=21, product length 41 (n³ = 27), 179 s.
+  `e3_pack.py scale`: standard stride packing (A stride 2n−1, B stride n(2n−1), slot width
+  log n + 2 bits), verified up to n = 128; B-integer has ≈ 2.5·n³·log n bits as expected.
+- Result: packing length grows like ≈ 1.5 n³ at n=2,3; the stride construction is ~2n³ slots.
+  With n·polylog integer multiplication the bit complexity is n³·polylog: worse than M4RM.
+- General obstruction (two sentences):
+  (i) Monomial packing into ANY commutative product is exactly a triple-product-property
+  embedding into an abelian group / Z-interval, and Cohn–Umans' abelian bound |S||T||U| ≤ |G|
+  forces length ≥ n³ (data above: 11 ≥ 8, 41 ≥ 27).
+  (ii) Even non-monomial linear packings (arbitrary linear pre/post-maps, garbage allowed to
+  alias) make ⟨n,n,n⟩ a restriction of univariate polynomial multiplication of length D, whose
+  rank is O(D) (2D−1 over big fields, O(D) over F₂ via Chudnovsky/Shparlinski–Tsfasman–Vladut);
+  hence D ≥ rank(⟨n,n,n⟩)/O(1) ≥ n^{9/4}/O(1) under the claimed theorem. So packing is
+  just a bilinear algorithm in disguise and cannot beat 9/4. The only loophole is a packing whose
+  read-out is *non-linear* (carries, overflow, comparisons), which is no longer "Kronecker".
+- Changes: kill E3 as a route. 2-D (bivariate) packing is still a commutative group algebra
+  (Z²), same obstruction.

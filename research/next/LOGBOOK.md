@@ -1756,3 +1756,18 @@ considered — generalising (to K_{2,m}) exposed the structure, as I had hoped w
 is correct. Simplification found: the Cauchy–Schwarz direction (a, b) = (√(1−m²), m) works and needs only K ≥ 9/w²; so
 the K = 9 version follows, and K = 9 is sharp (Φ = √K − 3 at σ = (1, −1, −1, −1, 1, 1)). Targets 3–5 in progress; I will
 rebuild when it is done.
+
+## 26 Nov (late, 58): independent recheck of the 7-AND-gate claim — second implementation agrees [N ×2]
+
+`tools/mc222` (written without reading `mc_span.c`), per its executor:
+- Method 1: exact Rust search over the chain of spaces S_j = span{1, x, g₁..g_j}; failed states memoised by their exact
+  canonical RREF basis (no hashing). Symmetry generators checked by computer; 72 plane orbits for the first gate, sizes
+  summing to 10 795 — the same orbit count as the first search, obtained independently.
+- Validation, each found circuit re-checked by a separate script on all inputs: F₄ mult (2 none / 3 found), 2-term
+  polynomial product (2 / 3), ⟨2,2,1⟩ (3 / 4), 3-term polynomial product (5 / 6), matrix product k = 5 none (with and
+  without orbit reduction), k = 7 found with Strassen's first products fixed.
+- **Matrix product k = 6: all 72 orbits "none" in 6.6 min (3.5M states).** The first search took hours; this one is
+  both exact (no hash collisions) and far faster.
+- Method 2: its own SAT encoding with CaDiCaL agrees on all small cases; the k = 6 run with LRAT proof checking is
+  in progress — that would give a proof object.
+Status of MC(⟨2,2,2⟩ over F₂) = 7: two independent exact searches agree; proof object pending.

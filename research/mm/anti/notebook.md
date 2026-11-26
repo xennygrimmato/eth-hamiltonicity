@@ -555,3 +555,90 @@ wide-routing route (Lemma 4.1 or [Int]), and the **Weak-ETH dichotomy remains th
 needed is an unconditional lower bound for *wide* single-permutation routing, e.g. `Tagged.Hard` with payload
 `word W`, W ≥ 2^w — the Lean `Hard` explicitly says "Only square payloads at powers of two are required".
 
+---
+
+## Step 4. Comparison with what was known [L]
+
+| Result | Model | Bound | Conditional? |
+|---|---|---|---|
+| Raz, STOC 2002 / SICOMP 32(5) 2003, "On the complexity of matrix product" | arithmetic circuits over ℝ/ℂ with coefficients of absolute value ≤ 1 | Ω(n² log n) | no, but restricted model |
+| Raz–Shpilka, SICOMP 2003 | bounded-depth circuits with arbitrary gates (any function per gate) | n²·λ_d(n), λ_d slowly growing | no; bounded depth |
+| Shpilka, FOCS 2001 / SICOMP 2003, "Lower bounds for matrix product" | bilinear/quadratic circuits over F₂ (resp. F_p) | 3n² − o(n²) (resp. (2.5 + 1.5/(p³−1))n²) | no; algebraic |
+| Bläser, FOCS 1999 | bilinear rank, any field | 5/2·n² − 3n | no; algebraic |
+| Pratt 1975; Paterson 1975; Mehlhorn–Galil 1976 | monotone circuits, Boolean product | n³ ANDs | no; monotone |
+| Pippenger–Valiant 1976 (shifting graphs) | routing by vertex-disjoint paths (no coding) | Ω(n log n) for all cyclic shifts | no; no coding |
+| Afshani–Freksen–Kamma–Larsen, ICALP 2019 | Boolean circuits, bounded fan-in **and fan-out** | Ω(n log n) for integer multiplication | yes: network coding conjecture |
+| Farhadi–Hajiaghayi–Larsen–Shi, STOC 2019 | external-memory sorting (and sorting circuits) | Ω(n log n)-type | yes: network coding conjecture |
+| Asharov–Lin–Shi, SODA 2021 | Boolean circuits | sorting k-bit keys in o(n log n) for small k | upper bound; shows NCC-type bounds need long keys |
+| [MM] (release) | formal arithmetic circuits | ⌈n^{9/4}/2⌉ nonscalar gates | given release |
+| [Int] (release) | multitape TMs | Ω(n√log n) for integer multiplication | Weak ETH |
+| — | **general Boolean circuits, matrix multiplication** | **nothing above the trivial Θ(n²)** (I know of no superlinear bound; Shpilka's paper lists "Can matrix product be computed by a circuit of size O(n²)?" as open) | — |
+
+Rows from memory except Raz (confirmed by search: ECCC TR02-012, SICOMP 32(5) 2003) and Shpilka (confirmed:
+arXiv cs/0201001, ECCC TR01-060). Treat the rest as [L, unchecked details].
+
+**Positioning of our statements (honest).**
+- Theorem S / M are, as far as I know, the first superlinear lower bounds for multiplication problems in the
+  **general Boolean circuit model** (unbounded fan-out, any basis, coding allowed) under a *complexity-theoretic*
+  hypothesis (Weak ETH) rather than the network coding conjecture, which is a combinatorial conjecture about
+  information flow. They are the √log analogues of AFKL (log there), with AFKL's fan-out restriction removed.
+- They are conditional on (a) the release being correct — unrefereed, two days old; (b) Weak ETH (or no ports in
+  some characteristic); (c) for matrices, [MM] Lemma 4.1 (paper-only) and, on the Weak-ETH route, its char-0
+  reading (H1₀).
+- Corollary A is conditional only on (a), and is backed by a Lean statement (as read). It is the strongest claim:
+  first superlinear B₂-circuit lower bound for an explicit function (in AC⁰). Before the release the record was
+  3.1n − o(n) (Li–Yang 2022).
+- None of this approaches n^{2+ε}: the method gives polylog factors at most (ideas-n2 §3.3), and the matrix bound is
+  really a bound on routing n rows by a data-given permutation, a sub-problem of cost ≤ n² log n.
+
+## Step 5. Upper bounds for calibration [K + L]
+
+Boolean-circuit size of n×n multiplication:
+- Over F₂: a bilinear algorithm over F₂ of rank R at side n₀ recurses to B₂-circuits of size O(n^{log_{n₀} R}); with
+  the release's exponent over every field ([MM] Thm 1.1, upper bound due to Amanov–van den Berg–Zuiddam [5]):
+  **n^{9/4+o(1)}**. Before the release: n^{ω+o(1)}, ω < 2.3714 [L: Alman–Duan–Vassilevska Williams–Xu–Xu–Zhou 2024].
+  Polylog savings at the leaves (table lookup; ideas-n2 §4(a)) are invisible under the o(1).
+- Boolean semiring: via integer products with O(log n)-bit entries, n^{9/4+o(1)}. Combinatorial: n³/2^{Ω(√log n)}-type.
+- (min,+): no subcubic-by-a-power circuit from the release; the RAM algorithms quoted in ideas-n2 §4(d) are
+  n^{3−c} for tiny c.
+- Sub-problems: P_π·B ≤ O(n² log n) (3.5); matrix–vector Θ(n²).
+
+**The gap for F₂ (and Boolean):**
+  c·n²·√(log n)  ≤  B₂-size(MM_n over F₂)  ≤  n^{9/4+o(1)},
+lower bound under Weak ETH + (H1₀) (or Lemma 4.1 + a prime without ports); trivially ≥ n² unconditionally.
+For polynomial multiplication over F₂: c·n√(log n) ≤ size ≤ C_α n(log n)^α (α > 1/2) — closed in the log exponent.
+For integer multiplication: c·n√(log n) ≤ size ≤ O(n log n).
+
+## Step 6. Plain statements
+
+**Tweet-length paragraph.** If OpenAI's 24 Nov network bounds hold, then "matrix multiplication in n² operations"
+is impossible even for bit-level algorithms, by a √log n factor: either 3-SAT on v variables can be solved in time
+2^{v^{0.999}} (a breakthrough far beyond OpenAI's own ETH refutation, which saves only a √log in the exponent), or
+every Boolean circuit multiplying two n×n matrices over F₂ — or Boolean, or (min,+) matrices — needs at least
+c·n²·√(log n) gates. The hard core is just moving n rows by a permutation that is part of the input. The same
+dichotomy gives c·n√(log n) for multiplying polynomials over F₂ or integers, and there it is tight up to
+(log n)^ε, because the release also gives n(log n)^{1/2+ε} circuits. This says nothing about n^{2.01}: the true
+bit complexity of matrix multiplication is somewhere between n²√(log n) and n^{9/4}.
+
+**Three sentences for the story agent.** OpenAI's new results imply that no bit-level algorithm can multiply
+matrices with "just n²" operations — unless 3-SAT has a dramatically faster algorithm than anyone, including
+OpenAI, has found (time 2^{v^{1−δ}}). The penalty is modest, a factor √(log n), and it comes from the cost of
+shuffling rows into a data-dependent order, not from arithmetic. For multiplying polynomials over F₂ the same
+penalty is matched by an upper bound, so there the answer is essentially exact: n·√(log n) bit operations.
+
+---
+
+## Summary of theorems and exactly what they use
+
+| # | Statement | Printed statements used (verbatim in this notebook) | Extra hypothesis | Our argument |
+|---|---|---|---|---|
+| A | B₂-size(LD_N) > N(w^η − 2)/4 − 1 = Ω(N (log N)^η), direct sum for t ≤ 2^{w^{1+η}}; also unambiguous/parity circuits | Lean `manyList_full` (= [MM] Thm 2.2, wider t) | none (every finite field) | Lemma E |
+| S1–S3 | F₂[x]-mult, integer mult, cyclic shift (binary or one-hot amount): ≥ c n√log n gates | [Int] Thm 7.1, Lemma 8.2, §7.1 price bound | variable-count Weak ETH | Lemma E, Lemma P, XOR fold, shift averaging |
+| S-dich. | Weak ETH fails (2^{O(v^{1−δ})} 3-SAT) **or** S1–S3 | same | none | contrapositive |
+| M1 | MM over F₂ / Boolean / (min,+) / b-bit integers / rectangular / batched (+ inverse, closure, squaring): ≥ c n²√log n − O(n²) | [MM] Lemma 4.1 | some prime has no ports | Lemma E, Lemma P, P_π B |
+| M2 | same | [MM] Lemma 4.1 read for char 0 (H1₀); [Int] Thm 7.1 | Weak ETH | same |
+| M-dich. | Weak ETH fails **or** M | same | (H1₀) | contrapositive |
+| neg. | No near-linear reduction distinctness/Tag(h,h) → MM by permutation-matrix products | — | — | density + S_n≀S₂ counting (§3.7) |
+
+Not proved: any bound in the ports case from Theorem 2.2 directly (missing: wide-record Tag lower bound); any
+n^{2+ε}; exponent above 1/2 on the log.

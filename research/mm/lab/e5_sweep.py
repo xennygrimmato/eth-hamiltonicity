@@ -55,13 +55,16 @@ def quad_sat(T, a, b, k, formal):
                 s.add_xor_clause([AND(g[o][j], P[j][u][u]) for j in range(k)], False)
     return s.solve()[0]
 
+TL = 120.0
 def mc_sat(T, a, b, k):
+    """returns True/False, or None if the time limit was hit"""
     c = len(T); n = a + b
     def f(bits):
         return [sum(bits[u] & bits[a + v] for u in range(a) for v in range(b) if T[o][u][v]) & 1 for o in range(c)]
     if k == 0:
         return all(f(bits) == [0] * c for bits in itertools.product([0, 1], repeat=n))
-    E = Enc(n, c, k, f, threads=1)
+    E = Enc(n, c, k, f, threads=1, time_limit=TL)
+    E.add_symmetry(first_fixed=False)
     rows = list(itertools.product([0, 1], repeat=n))
     for r in rows:
         E.add_row(r)   # all 2^n rows: exact
@@ -83,7 +86,12 @@ def analyse(T, a, b):
     R = minimize(lambda k: rank_sat(T, a, b, k), 0, a * b)
     Qf = minimize(lambda k: quad_sat(T, a, b, k, True), (R + 1) // 2, R)
     Qb = minimize(lambda k: quad_sat(T, a, b, k, False), 0, Qf)
-    MC = minimize(lambda k: mc_sat(T, a, b, k), 0, Qb)
+    # general MC: prove UNSAT for k = Qb-1 directly (UNSAT at Qb-1 implies UNSAT below, by monotonicity:
+    # an extra AND gate can always be wasted). Report 'MC=Qb' if UNSAT, '<=Qb-1' if SAT, '?' if timeout.
+    if Qb == 0:
+        return R, Qf, Qb, '0'
+    r = mc_sat(T, a, b, Qb - 1)
+    MC = str(Qb) if r is False else (f"<={Qb-1}!" if r else f">=?(timeout at {Qb-1})")
     return R, Qf, Qb, MC
 
 def structured():
@@ -137,8 +145,8 @@ if __name__ == '__main__':
     for name, (a, b, T) in items:
         t0 = time.time()
         R, Qf, Qb, MC = analyse(T, a, b)
-        flag = ' <-- MC<Qb' if MC < Qb else (' <-- Qb<Qf' if Qb < Qf else '')
-        gaps += MC < Qb
+        flag = ' <-- MC<Qb' if MC.startswith('<=') else (' <-- Qb<Qf' if Qb < Qf else '')
+        gaps += MC.startswith('<=')
         print(f"{name} {a} {b} {len(T)} | {R} {Qf} {Qb} {MC} | {time.time()-t0:.1f}s{flag}", flush=True)
         res.append(dict(name=name, a=a, b=b, c=len(T), R=R, Qf=Qf, Qb=Qb, MC=MC))
     json.dump(res, open(f'e5_res_{seed}_{nrand}.json', 'w'))

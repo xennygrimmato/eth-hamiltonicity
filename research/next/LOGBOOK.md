@@ -666,3 +666,28 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   not already state it. Main risk: Theorem 2.2 / the Lean build being wrong, which the note says outright.
 - Lead read the draft in full: neutral, accurate to what we know, three good questions for experts (the sharpest: a
   linear-size ⊕-circuit for distinctness would refute Theorem 2.2). Ready for the user's decision on posting.
+
+### Anti final report (`research/mm/anti/notebook.md`) [R given OpenAI's release; unreviewed]
+- Headline dichotomy as logged above; log-exponent 1/2 from the routing lemmas. Theorem S (shifts) rests only on
+  printed statements; Theorem M (matrices) also on reading Lemma 4.1 in characteristic 0 (anti checked its proof uses
+  no finiteness). Covers F₂, Boolean, (min,+), b-bit integers, rectangular, batches, unitriangular inverse, transitive
+  closure, squaring. The method is capped at O(n² log n): it bounds the sub-problem "permutation × matrix".
+- Ports case not covered. Prior art: bounded-coefficient Ω(n² log n) (Raz), 3n² bilinear over F₂ (Shpilka), 5/2·n²
+  rank (Bläser), conditional bounds via the (now refuted) network coding conjecture. No superlinear bound for general
+  Boolean circuits was known.
+
+### User: "focus on more important results" — lead's choice of focus: THE PORTS QUESTION
+- One open question in OpenAI's release decides both things the user cares about most:
+  PORTS in characteristic 0 ⇒ 3-SAT in 2^{O(v^{1−δ})} (their integer-multiplication paper, Thm 7.1);
+  NO PORTS ⇒ tight lower bounds with log-exponent 1/2 (our Theorems S and M become unconditional given the release).
+- "Ports" = expanders with respect to the nonpositively curved spaces realised by tensor prices. This looks parallel to
+  Anthropic's "contracting hypothesis" (a Poincaré-type inequality for prices on Mat_μ(F₂)); our c1/b2/w1 work is
+  about exactly which metrics are prices. H13 [C]: ports and contracting are two forms of one question, and our
+  notes on which metrics are prices are the right tools.
+- H14 [C]: if every spectral space has Izeki–Nayatani invariant bounded below 1 (flats, trees, buildings, products),
+  ordinary expanders are ports and the fast 3-SAT algorithm follows. Conversely Weak ETH forces a "wild" spectral
+  space in characteristic 0.
+- Actions: Fable strategist on `research/ports/ideas-ports.md` (statements, dictionary with Anthropic's paper and our
+  notes, metric-geometry literature, ranked attacks). Lab told to wrap up the AND-count line and report.
+- Parked: the public note (drafted, awaiting the user's decision); the story (done; image generation blocked on
+  credits).

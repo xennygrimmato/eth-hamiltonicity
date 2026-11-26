@@ -25,9 +25,9 @@ def matmul_targets(p, q, r):
     return n, len(outs), f
 
 class Enc:
-    def __init__(self, n, m, k, f, threads=4, quad=False):
+    def __init__(self, n, m, k, f, threads=4, quad=False, time_limit=None):
         self.n, self.m, self.k, self.f = n, m, k, f
-        self.s = pycryptosat.Solver(threads=threads)
+        self.s = pycryptosat.Solver(threads=threads) if time_limit is None else pycryptosat.Solver(threads=threads, time_limit=time_limit)
         self.nv = 0
         new = self.new
         # gate input coefficients

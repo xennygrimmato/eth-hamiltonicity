@@ -2272,3 +2272,15 @@ orbit representatives (sizes sum to 10 795); SAT: 204 cubes at k = 4 and 510 cub
 proofs (1.14 GB at k = 5); **all 510 formula hashes and proof hashes identical to the executor's record.**
 Also confirmed earlier today: the 1080 formulas of the 2×2 case regenerate with identical hashes from the modified
 generator.
+
+## 27 Nov: Δ₃ — nine node-tripods give exactly 6 per merge; Γ = 36 over general trees [N]
+
+Executor: (a) confirmed independently (finite-M values 5.9136, 5.99914, 5.999991, 6.000000 at M = 10², 10⁴, 10⁶, 10⁸; Rust
+unit test). (b) Γ over one general finite tree (10–21 vertices, annealed lengths, topology and hub positions): 36.000000
+in every run, 32/32 random starts; nothing above. So the tree-product floor on Δ₃ looks like exactly ρ = 2/3 [N].
+(c) full 3-nets on AG(2,g), g = 3, 4, 5, 7 running.
+Asked the theory agent for a proof of Γ ≤ 36 on trees and to start on attainment for the asymptotic regime; my own
+suggestion to test [C]: for the cyclic Latin square the three classes are x, y, x + y, so a three-way crossing identity
+might come from objects indexed by triples of partitions with an additive constraint (Littlewood–Richardson
+coefficients, Knutson–Tao hives) — the two-merge identity comes from Frobenius symbols, i.e. two coordinates. To be
+checked against the earlier no-go catalogue.

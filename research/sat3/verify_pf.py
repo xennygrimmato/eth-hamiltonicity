@@ -150,3 +150,60 @@ def check_far(path, Ms=(1e2, 1e4, 1e6)):
         val = sum(max(0, x) for x in b) / len(b)
         print('%-50s M=%g  value(py, finite) = %.6f  far value(rust) = %.6f  b = %s' % (path.split('/')[-1], M, val, J['value'], [round(x, 6) for x in b]))
     return abs(val - J['value']) < 1e-4
+
+
+def ag_design(q, p):
+    """AG(2,q) with all edges and the first p parallel classes (same conventions as Design::ag)."""
+    T4 = [[0, 0, 0, 0], [0, 1, 2, 3], [0, 2, 3, 1], [0, 3, 1, 2]]
+    add = (lambda a, b: a ^ b) if q == 4 else (lambda a, b: (a + b) % q)
+    mul = (lambda a, b: T4[a][b]) if q == 4 else (lambda a, b: (a * b) % q)
+    def f(s, v):
+        x, y = divmod(v, q)
+        return x if s == 0 else y if s == 1 else add(y, mul(s - 1, x))
+    edges = [(i, j) for i in range(q * q) for j in range(i + 1, q * q)]
+    return dict(edges=edges, w=[1] * len(edges), groups=[[f(s, v) for v in range(q * q)] for s in range(p)])
+
+
+def check_onetree(path):
+    """Recompute Gamma = sum_e s_e^2 / Dbar for a one-tree JSON from scratch (tree distances by DFS,
+    savings by brute force over ray-root pairs)."""
+    J = json.load(open(path))
+    name = J['design']
+    if name.startswith('AG2-'):
+        _, q, p = name.split('-'); des = ag_design(int(q), int(p[1:]))
+    else:
+        des = design(name)
+    par, ln, hv = J['parent'], J['len'], J['hv']
+    n = len(par)
+    adj = [[] for _ in range(n)]
+    for v in range(1, n):
+        adj[v].append((par[v], ln[v])); adj[par[v]].append((v, ln[v]))
+    D = [[0.0] * n for _ in range(n)]
+    for s in range(n):
+        st = [(s, 0.0)]; seen = {s}
+        while st:
+            v, d = st.pop(); D[s][v] = d
+            for w, l in adj[v]:
+                if w not in seen: seen.add(w); st.append((w, d + l))
+    off = []; o = 0
+    for g in des['groups']:
+        off.append(o); o += max(g) + 1
+    H = lambda m, g: hv[off[m] + g]
+    p = len(des['groups'])
+    S = 0.0
+    for (u, v) in des['edges']:
+        best = 0.0
+        for a in range(n):
+            for b in range(n):
+                z = sum(D[a][b] - D[a][H(m, g[u])] - D[b][H(m, g[v])] for m, g in enumerate(des['groups']))
+                best = max(best, z)
+        S += best * best
+    Db = 0.0
+    for m, g in enumerate(des['groups']):
+        r = max(g) + 1
+        prs = [(i, j) for i in range(r) for j in range(i + 1, r)]
+        Db += sum(D[H(m, i)][H(m, j)] ** 2 for i, j in prs) / len(prs)
+    Db /= p
+    G = S / Db
+    print('%-50s Gamma(py) = %.6f  Gamma(rust) = %.6f  CS value = %.6f  %s' % (path.split('/')[-1], G, J['gamma'],
+          math.sqrt(len(des['edges']) * G) / p, 'OK' if abs(G - J['gamma']) < 1e-6 * max(1, G) else 'MISMATCH'))

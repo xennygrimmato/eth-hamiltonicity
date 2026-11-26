@@ -3028,3 +3028,15 @@ toolchain: reproducibility, not independent confirmation. Paper and README updat
   hub–hub bonds, adaptive choice of the third wire, depth 3. All values are far above the floor 2/3.
 - Not a tower level. On the Z₅ net the two-merge corner already sits on its floor (0.638071), so a gain needs
   an interior weight vector whose depth-2 value drops from 0.69–0.77 to below 0.638. Sweep running.
+
+**H45, cap side (Q1 agent, step 1) [N + R lemma]: the finite CAT(0) relaxation does not go below the cap on
+Δ₃.** Convex programme over squared distances on hubs + auxiliary points with every CN / variance / convexity
+/ Lipschitz constraint valid in CAT(0) (reduced by the 108 automorphisms; up to 1665 points, 488k
+inequalities): Σ_k b_k ≤ 19.0919 = 27/√2 at every refinement, i.e. exactly the cap. Diagnosis: the weakness is
+in the leg functions, not the metric: even with all CN inequalities forced to equalities (Euclidean point
+set) the bound stays at the cap although the true flat value is 9√3. Lemma [R]: if the hull of the hubs is
+flat, the value is at most the flat value wherever the legs are; the relaxation cannot see this because
+convexity of the leg functions is tested on finitely many midpoints only. Equality analysis by hand: exact
+equality is impossible at both ends of the symmetric-tripod branch, undecided in between and on the other
+branch. **So F_CAT(Δ₃) < 1/√2 is not proved; Δ₃ stays in [2/3, 1/√2].** A stronger relaxation would need
+constraints tying the two leg functions of an edge to a common line. Notes → `research/sat3/q1-cyclic.md`.

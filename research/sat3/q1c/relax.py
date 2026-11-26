@@ -74,6 +74,7 @@ def act(pt, hm):
     if pt[0] == 'h': return ('h',) + hm[pt[1:]]
     if pt[0] == 'm': return canon_mid(act(pt[1], hm), act(pt[2], hm))
     if pt[0] == 'b': return canon_bar([act(x, hm) for x in pt[1:]])
+    if pt[0] == 'z': return ('z',) + tuple(sorted((act(x, hm) for x in pt[1:]), key=repr))
     raise ValueError
 
 def close(points, G):
@@ -83,7 +84,7 @@ def close(points, G):
             S.add(act(p, hm))
     return S
 
-def solve(net, extra_points, deltas=(1.0, 1.0, 1.0), verbose=True, solver='CLARABEL', lazy_triangle=0):
+def solve(net, extra_points, deltas=(1.0, 1.0, 1.0), verbose=True, solver='CLARABEL', lazy_triangle=0, zero_pairs=(), cross=None, cn_eq=False):
     t0 = time.time()
     G = net.group()
     hubs = [('h',) + h for h in net.hubs]
@@ -93,7 +94,7 @@ def solve(net, extra_points, deltas=(1.0, 1.0, 1.0), verbose=True, solver='CLARA
     while changed:
         changed = False
         for p in list(pts):
-            if p[0] in 'mb':
+            if p[0] in 'mbz':
                 for x in p[1:]:
                     if x not in pts: pts.add(x); changed = True
     pts = sorted(pts, key=lambda p: (len(repr(p)), repr(p)))
@@ -148,8 +149,20 @@ def solve(net, extra_points, deltas=(1.0, 1.0, 1.0), verbose=True, solver='CLARA
                 co = [(Dv(z, i), 1.0), (Dv(x, v), 0.25)]
                 if z != x: co.append((Dv(z, x), -0.5))
                 if z != v: co.append((Dv(z, v), -0.5))
-                add(co, 0.0)
+                add(co, 0.0, eq=cn_eq)
             add([(Fv(e0, i), 1.0), (Fv(e0, x), -0.5), (Fv(e0, v), -0.5)], 0.0)
+        if p[0] == 'z':
+            for xa, va in itertools.combinations(p[1:], 2):
+                x, v = idx[xa], idx[va]
+                add([(Dv(x, i), 1.0), (Dv(x, v), -0.25)], 0.0, eq=True)
+                add([(Dv(v, i), 1.0), (Dv(x, v), -0.25)], 0.0, eq=True)
+                for z in range(N):
+                    if z == i: continue
+                    co = [(Dv(z, i), 1.0), (Dv(x, v), 0.25)]
+                    if z != x: co.append((Dv(z, x), -0.5))
+                    if z != v: co.append((Dv(z, v), -0.5))
+                    add(co, 0.0)
+                add([(Fv(e0, i), 1.0), (Fv(e0, x), -0.5), (Fv(e0, v), -0.5)], 0.0)
         if p[0] == 'b':
             xs = [idx[x] for x in p[1:]]; r = len(xs)
             for z in range(N):
@@ -165,6 +178,13 @@ def solve(net, extra_points, deltas=(1.0, 1.0, 1.0), verbose=True, solver='CLARA
     for k in range(3):
         for v1, v2 in itertools.combinations(range(net.g), 2):
             add([(Dv(idx[('h', k, v1)], idx[('h', k, v2)]), 1.0)], deltas[k] ** 2)
+    for (p, q) in zero_pairs:
+        add([(Dv(idx[p], idx[q]), 1.0)], 0.0)
+    if cross is not None:          # optional: prescribe an upper bound on cross-class hub distances
+        for k, l in itertools.combinations(range(3), 2):
+            for v1 in range(net.g):
+                for v2 in range(net.g):
+                    add([(Dv(idx[('h', k, v1)], idx[('h', l, v2)]), 1.0)], cross ** 2)
     obj = np.zeros(nx)
     for (e, n) in ends:
         for k in range(3):

@@ -1,0 +1,7 @@
+TRIPOD branch with z-points, level 3
+points 1665, group 108, D-orbits 13722, f-orbits 336, setup 9.1s
+vars 27780, ineq 488085, eq 61, build 30.3s
+/home/user/eth-hamiltonicity/research/sat3/q1c/relax.py:219: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  val = prob.solve(solver=solver, verbose=False)
+  solve 0: status optimal_inaccurate, bound on sum_k b_k = 19.091883  (per merge 6.363961; |E| = 9), tri 0, 235.2s
+  triangle violations: 601392 orbits-types, max 2.1308; adding 400

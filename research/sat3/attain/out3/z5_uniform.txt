@@ -1,1 +1,3 @@
 net 5 full w=(0.333333, 0.333333, 0.333334): E=300, classes=12, first-edge reps=6; level-1 h1/E = 0.773945
+  round 0: coarse candidates 108, verified 108, true violations 36, largest 0.01909 (coarse 0.01358)
+  round 0: 36 verified depth-2 strategies in the LP -> h2A/E = 0.771218

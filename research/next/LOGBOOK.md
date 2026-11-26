@@ -853,3 +853,19 @@ quantifier line-up, Theorem R arithmetic, W₅. (3) Adversarial referee on Lemma
 - Lean toolchain is up (Lean 4.36.0 + prebuilt Mathlib) in `research/ports/lean`; scaffold committed (6c5e38d).
 - Running in total: library/E3 executor, Lean executor, referee on Theorem R, referee on Theorems A/B, the two above,
   and the 6-gate search (niced).
+
+## 26 Nov (late, 3): referee final on Theorems A/B — Theorem A stands [V]
+
+Report: `research/ports/review-theoremAB.md`. The referee could not break "contracting over k ⇒ ports in char k" (85%).
+- Fixes to carry into any write-up: (1) Lean `exists_logarithmic_placement` has the extra hypothesis `scalar`
+  (satisfiable: finite subsets of a line are prices, AN C.3); (2) with the Lean constant the arithmetic condition is
+  h/(log₂h + 4) > 40000·C₀ after loop padding; (3) Theorem B(iii): Weak ETH gives Anthropic prices, not Strassen
+  spectral points; (4) "one cheaper cover" → "a family of covers with exponential saving"; (5) the cell "ports
+  algorithm is a piece family obeying flat floors" is heuristic; (6) bound comparison differs by log log in the
+  exponent and in circuit model.
+- Numerical check [N]: spectral gap of the walk on U_h, h = 3..7: gap·(h−1) = 0.586, 0.291, 0.200, 0.156, 0.132,
+  consistent with gap ~ 1/h as F.6 needs for real-valued placements. A 1/h² gap would have refuted contracting.
+- LP/SDP no-go holds for metric-only CAT(0)-valid inequalities; two classes are NOT covered: the crossing inequality
+  B.3 (validity in all CAT(0) spaces only conjectured) and constraints on non-wire tensors. → possible later probe.
+- Weakest link is imported: AN F.6, OA HC 4.2, and for 3-SAT the OA chain HC 13.1 → IM 7.1 — which is exactly what
+  Theorem R (rebase) would remove, if Lemma 1 survives its own referee.

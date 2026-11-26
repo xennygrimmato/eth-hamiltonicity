@@ -2475,3 +2475,19 @@ crossing lemma" (4 Nov), an exterior-algebra version of App. B. The same paper h
 - Why it matters anyway: nesting couples different wires jointly and is not a product of bundle-local pieces, so
   the Prop. 4.23 no-go does not obviously cover it. H39 [open]: nested crossings on a 3-net or on Δ₃ (merges with
   g groups, not two sides). Sent to the attainment and ideas agents; H32 sent to the Q1 agent.
+
+**Survey of Hexagon finished** (`research/sat3/hexagon-survey.md`; 1638 records 1 Sep – 26 Nov screened, nine
+papers read). Nothing there improves the 3-SAT exponent, proves it optimal, or settles contracting/flat or
+ports; every engine barrier is about two merges or grids. Usable items (all third-party, AI-generated, no Lean
+unless stated):
+- 2611.01066 Lemma 4.2 (nested k-wire identity; see above) and its base case, Khoruzhii's integral crossing lemma.
+- 2611.01066 Thm 3.2: a conditional two-merge floor 1/√2; cite next to our bimedian result.
+- 2611.00627: Kleinian-code-graded spaces have window cost ≥ 1/√2 + η (strict gap): one more two-merge filter.
+- 2611.00994: a "two-site uncrossing" evaluation of non-wire tensors under Euclidean prices (relevant to the
+  attainment gap; sent to the attainment and triangle agents). 2611.00972 Lemma 2.1: CAT(0) realisations by
+  midpoint insertion.
+- Lean: NativeTrust (kernel re-proof of `native_decide` facts; could remove two axioms from our MC = 7 proof);
+  F₂ matrix-multiplication rank checkers in Lean (rank of 3×3 is 23); a 13-line Mathlib-only Turing-machine time
+  statement as a template for an auditable exponent claim.
+- Novelty: nothing pre-empts MC(2×2, F₂) = 7, the K_{2,m} rates or 3/√10.
+- Correction to our 4 Nov note `research/hexagon-related.md`: the site's JSON API is readable without sign-in.

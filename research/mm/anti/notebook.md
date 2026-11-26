@@ -244,3 +244,242 @@ STOC 2022), (3 + 1/86)n (Find–Golovnev–Hirsch–Kulikov, FOCS 2016), 3n (Blu
 holds, is the first, and for a function in AC⁰ ∩ (size N log N). As the idea agent says, this is the release's
 most checkable claim in classical vocabulary; either it is a major corollary or Theorem 2.2 is where an error sits.
 
+---
+
+## Step 3. Corollary B: routing lower bounds for multiplication problems
+
+### 3.0 The extra ingredient found here: Weak ETH ⇒ no ports in characteristic 0 [K]
+
+Source [Int] = "The logarithmic exponent of integer multiplication on tapes" (family 379), pdftotext of `paper.pdf`.
+
+**Definition (verbatim, [Int] §1).** "The assumption for the converse is variable-count Weak ETH. It says that for no
+fixed 0 < δ < 1 can a deterministic algorithm decide 3-SAT on v variables in time 2^{O(v^{1−δ})} times a polynomial
+in the input length [41, 52]. For example, a running time of 2^{O(v/log v)} is compatible with this hypothesis."
+[Int] also says it "is equivalent to the Stearns–Hunt hypothesis for CNF satisfiability [41, Theorem 2.4].
+Subexponential algorithms for 3-SAT [16, 46] refute the original Exponential Time Hypothesis [33] and are
+compatible with this weaker assumption."
+
+*Status in-world.* Family 378 ("The Exponential Time Hypothesis is False") counts k-CNF solutions in
+(n+m)^{O_k(1)}·2^{n/(log n)^{1/2+o(1)}} [K, CONTENTS.md]. That refutes ETH but is compatible with variable-count
+Weak ETH. **Weak ETH fails exactly if some deterministic algorithm decides 3-SAT in 2^{O(v^{1−δ})}·poly(L) for a
+fixed δ > 0** — e.g. 2^{v^{0.999}}. Saving only a polylog or 2^{√log}-type factor in the exponent (2^{v/(log v)^c})
+does not refute it.
+
+**Theorem 7.1 of [Int] (verbatim).** "(Expansion and 3-SAT). If characteristic zero admits ports, then for some δ > 0
+a deterministic algorithm decides 3-SAT on v variables in 2^{O(v^{1−δ})} bit operations times a polynomial in the
+input length. In particular, under variable-count Weak ETH, characteristic zero does not admit ports."
+
+**Lemma 8.2 of [Int] (verbatim, the parts used).** "(Short edges and distant terminals). Assume Weak ETH. Let a
+multigraph have P₀ vertices, maximum degree D, and edge widths at most Db. For all sufficiently large P₀ there is a
+placement in some X ∈ 𝒳 and a point o ∈ X with the following properties. Write P for the least power of two at
+least P₀. All constants below depend only on D.
+  S ≤ C_D·b·P/√(log P),  (8.2)
+  E_{a∈A, t∈B} (d(x_a, x_t) − 1)² ≤ C_D·P/(N log P),  (8.3)
+[...] Here A, B are any two lists of N vertices distinct within each list, the draws from the two lists are
+independent and uniform [...]. These bounds are uniform over the lists". Here S is the supply price (8.1):
+"S = Σ_{e=uv} q_e d(x_u, x_v)" with q_e the width of edge e.
+
+**Price bound of [Int] §7.1 (verbatim).** "Place each vertex u at x_u in a member of 𝒳. Applying the vertex tables
+as local maps to the product of the edge wires gives the contraction. Tables at coincident sites can be applied
+jointly. It follows by monotonicity and additivity of the price that any product of equality wires obtained in this
+way costs at most Σ_{e=uv} q_e d(x_u, x_v)." And: "a q-bit wire between two sites at distance d costs qd." 𝒳 is "the
+class of complete CAT(0) spaces carrying compatible spectral prices for rational tensors"; networks are "rational
+tensor networks" (tables with rational entries).
+
+Remark [R]. The proof of Lemma 8.2 uses Weak ETH only through Theorem 7.1 ("Under Weak ETH (Theorem 7.1), the
+logarithmic obstruction [49, Theorem 4.2] [...] applies to 𝒳 (a class of Hadamard spaces without ports)"). So
+everything below holds under the weaker hypothesis "characteristic 0 has no ports"; Weak ETH is the printed route to
+it.
+
+### 3.1 Pinning lemma (our argument) [R]
+
+**Lemma P.** Let Net be a trivalent network (over Q, or over any field) whose exterior bits are partitioned into
+X (inputs, |X| = r), Y (outputs, |Y| = r) and Z (control). Suppose that for each π in a family Π of bijections X → Y
+there is z_π ∈ {0,1}^Z such that Net(x, y, z_π) = ∏_{i∈X} [y_{π(i)} = x_i] for all x, y. Attach to each control
+position z an arity-1 vertex with table e_{z_π(z)}. Then for each π ∈ Π the resulting network Net_π
+(a) has the same graph and the same exterior positions X ∪ Y for every π — only the leaf tables depend on π;
+(b) is trivalent and has size(Net_π) = size(Net) (|Z| new vertices, |Z| fewer exterior bits);
+(c) represents exactly the product of the r wires (x_i, y_{π(i)}).
+*Proof.* Contracting e_b against a position is evaluation at b. ∎
+
+This is how an **input-dependent** routing enters: π is encoded in input bits (the control Z), the topology is
+fixed, and only tables vary — exactly the hypothesis form of [MM] Lemma 4.1 ("for every permutation in the support of
+a distribution, some choice of vertex tables realizes the r independent wires") and the way [MM] itself applies it
+("pin each list's tags to a uniform permutation"). A fixed π (|Π| = 1) gives nothing — correctly, since then the map
+is free wiring. Output positions that must be 0 on the family (high bits of integer outputs, ∞-flags) are pinned the
+same way with e₀; unneeded outputs are closed with ≡1 leaves (Σ_y [y = f] = 1).
+
+### 3.2 Theorem S (shifts: polynomial and integer multiplication) — printed statements only [R]
+
+**Routing lemma for cyclic families (our argument from [Int] Lemma 8.2 + §7.1).** Assume variable-count Weak ETH.
+There are c > 0 and r₀ such that for r ≥ r₀: if a trivalent rational network with exterior bits X = {x_0..x_{r−1}},
+Y = {y_0..y_{r−1}}, Z, has the property of Lemma P for Π = {all r cyclic shifts i ↦ i + s mod r}, then
+size(Net) ≥ c·r·√(log r).
+
+*Proof.* Take Net_s from Lemma P. Give each exterior bit its own equality leaf (arity 2; one wire, one exterior
+position); call the leaves a_i (on x_i) and t_j (on y_j). This at most doubles the size and keeps degree ≤ 3, all
+widths 1, and the graph is the same for all s. Let P₀ = number of vertices, P its power-of-two ceiling; P₀ ≥ 2r.
+Suppose P₀ ≤ ε r √(log r). Apply [Int] Lemma 8.2 to this graph (D = 3, b = 1) with lists A = (a_i), B = (t_j),
+N = r. By (8.3), E_{A×B}(d − 1)² ≤ C·P/(r log P) ≤ 2Cε√(log r)/log P ≤ 2Cε/√(log r) → 0, so E_{A×B} d ≥ 1/2 for
+large r. For each s, Net_s represents ⊗_i wire(a_i, t_{i+s}), so by the §7.1 price bound and "a 1-bit wire costs its
+distance", Σ_i d(x_{a_i}, x_{t_{i+s}}) ≤ S. Averaging over s: (i, i+s) with i, s uniform is uniform on A × B, so
+r·E_{A×B} d ≤ S. With (8.2): r/2 ≤ C·P/√(log P) ≤ 2Cε r √(log r)/√(log P) ≤ 2Cε r (as P ≥ r). For ε < 1/(4C) this is
+false. Hence P₀ > ε r √(log r), and size(Net) ≥ P₀/2 − O(1) ≥ c r √(log r). ∎
+
+Why this uses only printed statements: Lemma 8.2 already controls *all pairs* (product law on A × B), and the cyclic
+family makes the demand law equal to that product law (q = r). For matrices this fails; see 3.3.
+
+**Theorem S1 (polynomial multiplication over F₂, conditional form).** Assume variable-count Weak ETH. Every
+B₂-circuit computing the product of two polynomials of degree < n over F₂ (inputs a, b ∈ F₂ⁿ, outputs the 2n − 1
+coefficients) has at least c·n√(log n) gates, for an absolute c > 0 and all large n.
+
+*Proof.* Let C have s gates. Add n − 1 XOR gates computing d_j = c_j ⊕ c_{j+n} (j ≤ n−2), d_{n−1} = c_{n−1}, i.e.
+a·b mod (xⁿ − 1). Lemma E(a) (over Q) gives a network for [d = a·b mod (xⁿ−1)] with X = a, Y = d, Z = b, volume
+≤ 16(s + n) + 4·2n + 4n. For b = x^t (one-hot e_t), c = a·x^t has c_{i+t} = a_i and other c_j = 0; the window
+[t, t+n−1] contains exactly one of j, j+n for each j ≤ n−2, and contains n−1; so d_{(i+t) mod n} = a_i: the cyclic
+shift by t. The routing lemma with r = n gives 16(s+n) + 12n ≥ c'n√(log n). ∎
+
+**Theorem S2 (integer multiplication).** Same hypothesis and conclusion for B₂-circuits multiplying two n-bit
+integers (full 2n-bit product). *Proof.* Identical with b = 2^t: a·2^t has no carries, bits c_{i+t} = a_i, so the
+same XOR fold gives the cyclic rotation. ∎
+
+**Theorem S3 (cyclic shift with binary shift amount).** Same hypothesis: every B₂-circuit computing
+(a, t) ↦ rot_t(a), a ∈ {0,1}ⁿ, t ∈ {0..n−1} in binary (n a power of 2), has ≥ c·n√(log n) gates. *Proof.* Pin the
+⌈log₂ n⌉ bits of t (Z = t). ∎ So the one-hot versus binary encoding of the shift is immaterial for the lower bound;
+it also is for upper bounds up to O(n) (one-hot decoder of log n bits: O(n) gates; one-hot to binary encoder: O(n)).
+
+**Theorem S-dichotomy (unconditional, given the release).** For a fixed absolute c > 0, at least one holds:
+(i) 3-SAT on v variables is decidable deterministically in 2^{O(v^{1−δ})}·poly(L) bit operations for some fixed
+    δ > 0 (variable-count Weak ETH fails); indeed characteristic 0 admits ports, which implies (i) by [Int] Thm 7.1;
+(ii) for all large n, every B₂-circuit for F₂[x]-multiplication of length n, for n-bit integer multiplication, and
+    for cyclic shifting (one-hot or binary amount) has ≥ c·n√(log n) gates.
+*Proof.* Contrapositive of S1–S3 via [Int] Thm 7.1 and the remark in 3.0. ∎
+
+**Exact list of printed statements used by S1–S3 and the dichotomy.** [Int] Theorem 7.1; [Int] Lemma 8.2 ((8.2),
+(8.3)); [Int] §7.1 price bound and wire price. Nothing from [MM]. Our own: Lemma E, Lemma P, the XOR fold, the
+averaging-over-shifts computation.
+
+**Tightness.** [FT] Theorem 7.1 (verbatim): "For every α > 1/2, a division-free circuit over K computes the 2n − 1
+coefficients of the product of two length-n polynomials in O_α(n(1 + log n)^α) binary additions, subtractions and
+multiplications. The count includes multiplication by prescribed scalars and the implied constant is uniform over all
+fields K." Lean-formalised ("Lean proves an O_ε(n(1+log n)^{1/2+ε}) upper bound using integer-coefficient circuits
+that specialize to every field", 379.md). Over K = F₂ every gate is XOR or AND, so **B₂-size(F₂[x]-mult) ≤
+C_α n(log n)^α**. Hence under Weak ETH:
+  c·n·(log n)^{1/2} ≤ B₂-size(F₂[x]-multiplication, length n) ≤ C_α·n·(log n)^α for every α > 1/2 —
+the logarithmic exponent of Boolean polynomial multiplication over F₂ is exactly 1/2 [R].
+Corollary [R, unconditional from FT Thm 7.1]: cyclic shift by a binary amount has B₂-circuits of size
+O_α(n(log n)^α) (decode t, multiply by x^t, fold), beating the textbook barrel shifter's n log n; with S3 its log
+exponent is exactly 1/2 under Weak ETH.
+Integer multiplication: the release gives a multitape TM in n(log n)^{1/2+o(1)} (Lean); converting to circuits costs
+a log factor (oblivious simulation, [L] Pippenger–Fischer 1979), so the circuit upper bound I can state is
+O(n log n) [L: Harvey–van der Hoeven, Ann. Math. 2021; that their method yields Boolean circuits of that size is
+from memory, check]. Gap: n√log n ≤ size ≤ n log n (or n(log n)^{1/2+o(1)} if the tape algorithm is made a circuit
+without loss — not claimed by the release).
+
+### 3.3 Theorem M (matrix products) — uses Lemma 4.1's entropy step [R]
+
+The reduction (Lemma E + Lemma P). Let C be a B₂-circuit with s gates computing MM_n over R. Lemma E(a): a network
+for [C = A·B] of volume ≤ 16s + 4·2n² + 4n² = 16s + 12n². Control Z = bits of A; inputs X = bits of B; outputs
+Y = bits of C. For π ∈ S_n let A = P_π with (P_π)_{a,i} = [a = π(i)]. Then (P_π B)_{a,j} = B_{π^{-1}(a), j} over F₂
+(one nonzero term), over the Boolean semiring (one true disjunct), over (min,+) with P_π having 0 on the support and
++∞ elsewhere (encoding ∞ by a flag bit), and over Z with 0/1 encodings (pin the higher output bits to 0). So the
+pinned network realizes r = n²·b wires (b = payload bits per entry) from bit (i, j, ·) to (π(i), j, ·). With π
+uniform on S_n, each input's destination is uniform on the q = n positions of its column: **q = n while r = n²**.
+
+**Why Lemma 8.2 of [Int] is not enough here.** The demand law µ (uniform input, destination uniform in its column)
+has density r/q = n relative to the product law on A × B, so (8.3) only gives
+E_µ(d − 1)² ≤ n·C P/(n² log P) = C P/(n log P), which is not small when P ≈ n²√log n. One needs a placement adapted
+to µ itself. That is exactly what [MM] Lemma 4.1's proof does with the graph-entropy bound and minimax:
+"The graph entropy bound [43, Corollary 5.2] [...] gives H_ν(Y|X) ≤ C(1 + β_ν) [...] Every pair has ν-mass at most
+2/(rq), so H_ν(Y|X) ≥ log₂(q/2). It follows that β_ν ≥ c log q [...] Bilinear minimax [...] gives a single D = d²
+∈ K for which E_ν D ≥ c log q for every such law."
+
+**Theorem M1 (conditional form, route 1: as printed).** Assume [MM] Lemma 4.1 and that some prime p has no ports
+(take k = F_p). Then there is c > 0 such that for all n ≥ 2 every B₂-circuit computing the n×n product over F₂, or
+over the Boolean semiring, has at least c·n²√(log n) − n² gates. More generally:
+ (a) every trivalent F_p-network representing [C = AB] has size ≥ c n²√(log n); in particular unambiguous and
+     (p = 2) parity-nondeterministic circuits;
+ (b) (min,+) with entries in {0..2^b − 1} ∪ {∞}: ≥ c n² b √(log n) − O(n² b) gates — superlinear in the input size
+     n²(b+1) by √log n for every b ≥ 1;
+ (c) integer matrices with b-bit entries and full outputs: ≥ c n² b √(log n) − O(n²(b + log n)); this exceeds the
+     I/O size n²(2b + log n) only when b ≫ √(log n) (trivial for 0/1 integer matrices);
+ (d) rectangular n×n by n×m: ≥ c·nm√(log n) − O(n² + nm); J independent products: ≥ c·J n²√(log n) − O(Jn²);
+ (e) via fixed embeddings (pins and ≡1 closures, [R] one line each): inverse of 3n×3n unitriangular matrices over
+     F₂ (the (1,3) block of [[I,A,0],[0,I,B],[0,0,I]]⁻¹ is AB), transitive closure of 3n-vertex digraphs (three-layer
+     graph), F₂-matrix squaring of 2n×2n matrices ([[0,A],[0... ]] trick: [[0,A],[B... ]] — use [[0,A,0],[0,0,B],
+     [0,0,0]]² whose (1,3) block is AB).
+*Proof.* Size(Net_π) = size(Net) ≤ 16s + 12n² by Lemma P(b); Lemma 4.1 with r = n² (resp. n²b, nm, Jn²), q = n.
+For (b),(c) the extra output bits are pinned by e₀ (Lemma P remark). ∎
+
+**Theorem M2 (conditional form, route 2: Weak ETH).** Assume variable-count Weak ETH and that [MM] Lemma 4.1 holds
+for a field of characteristic 0 (reading (H1₀) below). Then the conclusions of M1 hold (with networks over Q in (a)).
+
+**Theorem M-dichotomy.** Under (H1₀): either 3-SAT has a deterministic 2^{O(v^{1−δ})}·poly(L) algorithm for some
+δ > 0, or every B₂-circuit multiplying n×n matrices over F₂ (or Boolean, or (min,+)) has Ω(n²√(log n)) gates.
+In words: **flat n² bit operations for matrix multiplication is impossible unless 3-SAT is solvable in time
+2^{v^{1−δ}}.**
+
+**(H1₀), stated exactly.** [MM] Lemma 4.1 reads "Let the field have no ports", without "finite"; it sits in §4 of
+a paper that fixed "a finite field k" in §2. Its proof uses: closure of the class of Hadamard spectral spaces under
+isometry, rescaling, closed convex subspaces, pointed ultralimits ([MM] §3, stated for "a field"); "[43, Theorem 6.1]
+gives a subclass with the same properties and no ports, closed also under finite ℓ₂ products"; "[43, Corollary
+5.2]". [43] states these for every characteristic: "If χ has no ports, Theorem 6.1 gives a subclass of X_χ that still
+has no ports and is closed under finite ℓ₂ products, positive rescaling, closed convex subspaces and pointed
+ultralimits" (§2.3); Cor. 5.2 is for "a class of Hadamard spaces without ports" with no field condition; [43] works
+explicitly in characteristic 0 ("For characteristic zero, specialization to a suitable prime..."), and [Int] runs the
+same machinery over Q. I checked that no step of the printed proof uses finiteness of the field. So (H1₀) is a
+reading of a printed proof, not a new claim; I rate the risk low but it *is* a reading, which is why M2 is listed
+separately from M1 and from the printed-only Theorem S.
+
+**What M needs beyond the papers' proved statements.** M1: nothing beyond [MM] Lemma 4.1 as printed, plus the open
+hypothesis "some prime has no ports". M2/dichotomy: [Int] Thm 7.1 (printed) plus (H1₀). Our own: Lemma E, Lemma P,
+the semiring check of P_π B.
+
+### 3.4 The crux: input-dependent routing — checked
+
+- The permutation must be *data*: it is the matrix A (n² bits, of which only the n log₂ n bits of π vary on the
+  family). A fixed π is wiring and costs 0; Lemma 4.1 with q = 1 gives nothing — consistent.
+- Lemma 4.1 allows tables to depend on π and needs a single topology: Lemma P gives exactly that.
+- Correlation: the n² destinations are all functions of one π (strongly correlated). Lemma 4.1 uses only the
+  marginal law of each destination ("µ be the joint law of a uniform input and its random destination"; "every pair
+  has ν-mass at most 2/(rq)"). Uniform marginal on q = n outputs holds. ✓
+- Exactness: P_π B is exactly a product of wires; for any non-permutation A it is not, so we never use other A.
+- The bound is really a bound for the sub-problem (P, B) ↦ PB ("move n records of n bits by a permutation given as
+  data").
+
+### 3.5 Sanity check: the sub-problem is easy, so the method caps at n² log n [R + L]
+
+- P_π B in O(n² log n) gates: encode each column of P (one-hot → ⌈log₂ n⌉-bit index π(i), O(n) gates per column by a
+  tree, O(n²) total); sort the records (π(i), B_i) by key with an AKS network ([L] O(n log n) comparators), each
+  comparator O(log n) for the key and O(n) for the conditional swap of the payload: O(n² log n). Output row a = B_{π⁻¹(a)}.
+  (Batcher instead of AKS: O(n² log² n).)
+- Matrix–vector product over F₂: Θ(n²) (input size n²; n² AND + XOR). Nothing to prove.
+- Hence **c n²√(log n) ≤ size(P_π·B) ≤ C n² log n**: the matrix theorem is tight for the routing sub-problem up to
+  √(log n) at most. Under the network coding conjecture the sub-problem would need n² log n [C, by the
+  Afshani–Freksen–Kamma–Larsen argument], so the remaining √log is the gap between Lemma 4.1 and NCC.
+- For shifts the bound is tight up to (log n)^ε (3.2).
+
+### 3.6 The ports case: not covered, and what is missing [R + C]
+
+If **all** characteristics have ports, Weak ETH fails (by [Int] Thm 7.1, char 0 having ports gives the 3-SAT
+algorithm). So the only world in which our matrix bound has no proof from the release is a world with a
+2^{v^{1−δ}} 3-SAT algorithm. Still, can the unconditional Theorem 2.2 (both cases) give a matrix bound directly?
+- One would need a reduction from D_w^{⊗t} or Tag(h,h)^{⊗t} to MM_n with n² = O(t·n_w) and overhead o(t n_w w^σ).
+  I found none, and the obvious routes fail for a reason that looks structural:
+  1. A one-hot permutation matrix has N² bits for N log N bits of tags; to keep the overhead linear in the payload
+     the records must be ≈ N bits wide. So MM naturally implements Tag(h, W) with W ≈ 2^h: **one** permutation, wide
+     records.
+  2. The ports-case proof consumes Tag(h,h) tests with **independent** permutations per h-bit payload. Forcing all
+     n/h chunks of a row to share one permutation is a *restriction* of Tag(h,h)^{⊗n/h}; a restriction of a hard
+     tensor can be easy — wrong direction.
+  3. Getting m independent permutations from products costs a factor m: C = Σ_l A_l B_l with B_l supported on column
+     block l realises m independent row permutations of n×(n/m) blocks, but needs an n × mn by mn × n product, i.e.
+     m square products. Reaching h-bit payloads (m = n/h) multiplies the cost by n/h.
+- Missing statement (would suffice): "in a characteristic with ports, vol(Tag(h, W)) ≥ c·2^h·W·h^γ for some γ > 0
+  and all W ≥ 2^h" (wide single-permutation routing), or a version of the descent [42, Prop. 14.1] with wide Tag
+  gates. [C]: the paper itself shows (Thm 16.1(2)) that wide Tag(h,w), w ≥ h^a, would become O(n w h^ζ) if ω < 9/4,
+  i.e. it treats wide routing as the kind of thing compression can make cheap; I would not bet that wide routing is
+  hard in port characteristics.
+- γ: our exponent is γ = 1/2, from Lemma 4.1 / Lemma 8.2. It is **not** Theorem 2.2's σ. Do not write (log n)^σ for
+  matrices.
+

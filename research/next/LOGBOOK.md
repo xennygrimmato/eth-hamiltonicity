@@ -629,3 +629,12 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - Lead checked: Strassen formulas correct; all three figures render; counts 9 and 8 visible in figure 2.
 - Technical note extended: limits of the tripod picture (§13), the mechanism (§14), the team-size formula and
   predictions (§15).
+
+### User guidance and requests (26 Nov)
+- "Anthropic's proofs are much more reliable; but read both labs' papers." Weighting adopted: Anthropic's VP ≠ VNP and
+  ETH results are the firmer base; OpenAI's 24 Nov family (ω = 9/4, Euclidean prices, network lower bound) is taken as
+  given for exploration but flagged wherever a result of ours depends on it. Anthropic has made no claim about ω.
+- Visual explanation via an image-generation API: prompts for six panels prepared (using our own accurate diagrams
+  as references). Blocked: the provided key authenticates but the account has no credits (HTTP 402 on every model).
+- Network coding: the conjecture refuted in Oct 2026 is the Li–Li multiple-unicast conjecture for undirected networks
+  (arXiv:2610.20079; independently 2610.09367 and 2610.10108). Unrefereed.

@@ -252,10 +252,11 @@ Commands:
 | Z₃ | 4 | 16/3 | 0.5774 = 1/√3 | index-3 tripod (theory formula) | 8/8 |
 | Z₃² | 4 | 16/3 | 0.5774 | index-3 | seeded |
 | Z₅ | 4 | 5.12 | 0.5657 | point | 5/8 |
+| Z₇ | 4 | 4.898 = 240/49 | 0.5533 | point | 4/8 |
 | Z₂, Z₄, Z₂² | 4 | 8 (= cap) | — | **invalid**: slopes 1 and −1 are not transversal in characteristic 2 (two merges coincide mod 2), not a net | |
 
 - Annealing: 100k–150k steps × 8 chains on a tree of 16 vertices; Z₁₂ took 507 s.
-- Logs: `data/limscan2.log`, `data/limscan3.log`.
+- Logs: `data/limscan2.log`, `data/limscan3.log`, `data/limscan4.log` (Z₄², Z₂⁴, p = 4).
 - Seeds: every subgroup labelling (classes of H on arm k+1, radius 1; Φ of every seed printed in the log).
 - Moves: single hub, coset move (q + ⟨g⟩ of one or all merges to one vertex), edge length, prune-and-regraft.
 - No quotient exceeded 27/8. The maximum over the subgroup family is θ = 1/4, Φ = 3(1−θ)(1+2θ).

@@ -1,6 +1,17 @@
 # sat3 / attainment: the three-class crossing game on nets, and what nested crossing covers can and cannot do
 
-Working notes, 26 Nov 2026. Nothing here is committed, machine-checked or refereed.
+Working notes, 26 Nov 2026. Nothing here is committed.
+
+**Referee.** §5 (Theorem W, Lemma S, the class), §1.2, §1.3 and §2 were refereed: `sat3/review-thmW.md`. Lemma S stands
+[R there]; its core is in Lean (`ports/lean/PortsLean/Bimedian.lean`, `LemmaS.lean`; note `sat3/lean-lemmaS.md`).
+Changes made after the report: (1) Theorem W and everything derived from it is a statement about **certified** costs
+and is now worded so ("certified level value"; new paragraph in §5.3); (2) the class is enlarged to all
+circle-covering crossing identities — Khoruzhii's identity is a different identity, not a coarsening of B.2, and is
+inside for that reason; (3) the leg invariant is repaired (§5.1); (4) the accumulation of ε over a branch: Theorem W
+is now stated with zero loss, by a new zero-loss lemma (Lemma 5.3, proved for all energies from a quoted two-sided
+bound on p(n) plus exact finite computations, `attain/zeroloss.py`), and with the ε-form as fallback; (5) completeness
+in the projection step; table §1.2 row "four different groups" (S = p+q+min(p,q)) and §2.2 (3/2 at p = q); the
+triangle case in §1.3; "stuck at exactly 1/√2" replaced by the window with its O(1/g) width.
 
 Tags: **[R]** proved here in full from the cited inputs; **[D]** derived here, proof written, unreviewed;
 **[N]** numerical (script named); **[K]** quoted; **[K-unverified]** quoted from third-party texts nobody here has
@@ -15,7 +26,8 @@ Prop. B.3, Lemma C.4. Engine: `research/engine3-open-door.md` §1.3–1.7 (class
 
 Scripts (`research/sat3/attain/`): `game1.py` (level-1 game, one LP per weight vector), `game1sym.py` (the same with
 translation symmetry), `inspect1.py` (optimal designs), `lemmaS.py` (depth-2 game in products of pods and lines, conic
-duality), `lemmaS_step.py` (stepwise Steiner crossing inequality on random parents; `TIE=1` for degenerate parents). Outputs
+duality), `lemmaS_step.py` (stepwise Steiner crossing inequality on random parents; `TIE=1` for degenerate parents),
+`zeroloss.py`, `zeroloss_sample.py` (the finite parts of the zero-loss lemma, 60-digit arithmetic). Outputs
 in `attain/out2/` (`attain/out/` holds a first run made with a bug in the constant of finite wires; ignore it).
 
 ---
@@ -33,9 +45,10 @@ in `attain/out2/` (`attain/out/` holds a first run made with a bug in the consta
 | Majdoddin Prop. 4.23 | does not apply as a theorem (it charges a bundle-local piece only under its own merge); its mechanism is the reason above | [D] |
 | Weak duality, depth 1 | every metric with B.3 (in particular every CAT(0) placement) bounds every level-1 cover | [R] (Theorem W1) |
 | Lemma S (Steiner crossing inequality) | in every CAT(0) space: after crossing two wires of a network with free hubs there is an N for which neither child is below the parent's Steiner value | [D], proof in §5.3 |
-| **Theorem W** (weak duality, all depths) | for every placement in a CAT(0) space, every crossing-generated cover with certified costs, of any nesting depth, has a term costing ≥ λ(L−H_k)/δ_k − o under every merge at once; no spectral point, no hypothesis, no count of terms | [D], §5.3; to be refereed |
+| **Theorem W** (weak duality for certified costs, all depths) | for every placement in a CAT(0) space, every crossing-generated cover, of any nesting depth, has a term whose **certified** cost is ≥ λ(L−H_k)/δ_k under every merge at once; no spectral point, no hypothesis, no count of terms, no error term (zero-loss lemma). It bounds the realisation inherited from the derivation, not the true D1 cost of the leaf tensor | [D], §5.3; refereed (`review-thmW.md`), Lemma S in Lean |
+| Zero-loss lemma (Lemma 5.3) | for all classes of B.2 some N has certified bonds dominating any point of the circle arc: no ε per crossing | [D]: analytic for max energy ≥ 62 from the quoted Lehmer/Bessenrodt–Ono bounds [K, checked for n ≤ 10⁴], exact computation below (`zeroloss.py`) |
 | Numerical test of Lemma S | stepwise form on 2800 parents in ℝ³ and products of tripods and lines, incl. degenerate ones; depth-2 game with all 15 second crossings: no violation, tight cases on the circle | [N]; §5.5 |
-| Floor for the crossing-generated family, any depth | F_CAT(configuration): ≥ 1/√3 on 3-nets, ≥ 2/3 on Δ₃, ≥ 0.6124 on nets of F₃^M, F₄^M; = 1/√2 on nets of F₂^m if the Q1 placement stands: there the family is stuck at the two-merge value | [D] |
+| Floor for the **certified** level value of the crossing-generated family, any depth | F_CAT(configuration): ≥ 1/√3 on 3-nets, ≥ 2/3 on Δ₃, ≥ 0.6124 on nets of F₃^M, F₄^M; on nets of F₂^m, if the Q1 placement stands, ≥ 1/√2 − 1.121/(g+1), against the level-1 value → 1/√2: the window closes only as g → ∞ (g = 4: 0.4828 against 0.6243) | [D] |
 | P4 | the adversary of level 1 at the two-merge corner is the flat orthogonal-simplex metric; nesting cannot beat any CAT(0) placement (Theorem W); the Q1 agent reports a CAT(0) space (filtrations of F₂^N) in which F₂^m-nets have value exactly 1/√2 and which is a price if contracting fails | [D]; the placement is the Q1 agent's claim, unreviewed |
 
 No value below 1/√2 was found on nets of growing order. No construction.
@@ -90,15 +103,15 @@ same for (a,d | b,c), A_3 for (a,c | b,d). Table (a ≁ c and b ≁ d under k, e
 | a ∼ d, b ∼ c ("aligned for cut b") | min(r′, p+q) |
 | a ∼ b only (three groups) | min(p+q, min(p,q) + r, 2 min(p,q) + r′) |
 | a ∼ d only | min(p+q, min(p,q) + r′, 2 min(p,q) + r) |
-| four different groups | min(p + q + 2min(p,q), 2 min(p,q) + min(r, r′)) |
+| four different groups | min(p + q + min(p,q), 2 min(p,q) + min(r, r′)) |
 | a ∼ c, b ∼ d (both wires internal) | 2 min(p,q) — against raw 0 |
 
 A pair is aligned for cut c under k and for cut b under k′ iff a,b,c,d is a (k,k′)-rectangle with the two wires as its
 diagonals. On a 3-net the rectangle partner of a generic edge for (rows, columns) has the reflected slope, and under
 the third class its four nodes lie in four different groups (three, if the partner is a diagonal-class edge). So:
 
-- for a rectangle piece the cost vector is (r, r′, ≥ 2min(p,q) + min(r,r′)): **under the third merge the piece costs
-  more than the raw wires** (raw = p+q). The last row is the K₄ case: the X_j-crossing of K₄ costs up to 2 under the
+- for a rectangle piece the cost vector is (r, r′, min(p+q+min(p,q), 2min(p,q) + min(r,r′))): **under the third merge
+  the piece costs more than the raw wires** (raw = p+q; at p = q the certified third cost is 3p, i.e. 3/2 per bit). The last row is the K₄ case: the X_j-crossing of K₄ costs up to 2 under the
   merge to which both its edges are internal, where the raw wires cost 0. This is what `sat3/notes.md` Cor. 3.3 calls
   "no price sees the cost of a crossing piece across the merge that contains both its edges".
 - pairs that are aligned for one merge only (e.g. two Δ₃-edges from different anti-diagonals: aligned for one class,
@@ -116,8 +129,10 @@ different merges, every cell (intersection of a side of one with a side of the o
 merges, i.e. in one node. So A lives on at most four nodes forming a rectangle, with bundles of parallel edges: it is
 the level-1 rectangle piece. If three cuts are aligned with three merges, the cells are single nodes with sign vectors
 in {±}³, any two nodes share at most one line, so the vectors differ pairwise in ≥ 2 places: at most four nodes,
-pairwise collinear in the three classes: (r,c), (r,c′), (r′,c′), (r′,c) with r−c = r′−c′ and r−c′ = r′−c, i.e.
-2(c−c′) = 0. This is a K₄ of the net; it exists only if G has 2-torsion, and all its six edges are merge-class edges. ∎
+pairwise collinear in the three classes. Three nodes: a triangle of the net (two in a row, two in a column, two on a
+diagonal), which exists in every Latin square. Four nodes: (r,c), (r,c′), (r′,c′), (r′,c) with r−c = r′−c′ and
+r−c′ = r′−c, i.e. 2(c−c′) = 0: a K₄ of the net, which exists only if G has 2-torsion. In both cases all edges among the
+nodes are merge-class edges. ∎
 
 Consequence: every identity whose terms are "rank one across one transversal two-sided cut" (PT-rank identities,
 §4.2) produces, on a net, nothing beyond rectangle pieces unless its terms are evaluated through non-aligned,
@@ -189,7 +204,7 @@ order), and the rectangle design has value min over pairs of classes of √(w_k�
 
 ### 2.2 Why [R]
 
-For a rectangle piece the adversary's θ = π/4 gives (1/√2, 1/√2, ≥ 1 + 1/√2) per bit of raw 1. For any weights
+For a rectangle piece the adversary's θ = π/4 gives (1/√2, 1/√2, 3/2) per bit of raw 1 (certified costs, p = q). For any weights
 ⟨w, c⟩ ≥ (w_k + w_{k′})/√2 + w_{k″} ≥ 1/√2 with equality only at w_{k″} = 0. Splitting the bits of an edge among the three
 rectangle types is worse for the same reason. The same holds for p-nets with any p: a rectangle piece is cheap for two
 of the p merges only. So **the third class cannot help any cover built from pieces that are cheap for two merges and
@@ -243,42 +258,62 @@ What is left is nesting (§5) or pieces that are not built from two-way crossing
   1/√k" holds in the PT measure; for the engine game nothing below the two-merge value follows.
 - **Coordinator's check confirmed [D].** The configuration is the cross-polytope a_i = c + t e_i, b_i = c − t e_i with
   hyperplane classes of normal ε: it sits in AG(k,g), node growth β = k, value 1/√k, exponent log_k √k = 1/2.
-- **On nets**: §1.3. The nested identity is inside the class of §5 (crossing applied to a hub–hub bond), so Theorem W
+- **On nets**: §1.3. Khoruzhii's identity is not a coarsening of B.2 (it comes from a fermionic Fock-space identity,
+  its pieces are not sums of the Ψ_N); it is a circle-covering crossing identity in the sense of §5.1, and Sra's
+  nesting crosses two hub–hub bonds with it. Both are inside the class of §5, so Theorem W
   applies to it: evaluated in the engine game it can never go below the flat floor.
 
 ---
 
-## 5. Weak duality: what is proved, and the lemma that is missing
+## 5. Weak duality for certified costs: Theorem W
 
 ### 5.1 The class of covers
 
 Parties: the legs, and a set Aux of auxiliary parties created at will. A **wire system** W is a finite list of wires
-(u, v; β), β bits, between parties, in which the wires at each leg carry exactly the leg's bits in total (a leg is
-never used as a hub; use an auxiliary party instead). W₀ = the edges. GT(W) is its graph tensor.
+(u, v; β), β bits, between parties, with the
+
+**Leg invariant.** The wires at each leg carry exactly the leg's λ bits in total. A leg is never used as a hub and a
+wire at a leg is never enlarged. This is a normalisation, not a restriction [R, referee]: a leg wire (ℓ,y;M) with
+M > λ is a restriction of ⟨2^λ⟩_{ℓz}⟨2^M⟩_{zy} with a new auxiliary z, and a hub identified with a leg ℓ is a restriction
+of an auxiliary z joined to ℓ by a λ-bit wire (z applies ℓ's map); with π(z) = π(ℓ) in (5.1) the leaf cost is unchanged,
+and v is unchanged. So "enlarge at a leg" and "hub at a leg" mean: route through an auxiliary party placed at the
+leg's group.
+
+W₀ = the edges. GT(W) is the graph tensor of W.
 
 Moves (each replaces a wire system by one or several wire systems, and the tensor on the legs it stands for by a
 cover whose members are restrictions of the new graph tensors):
 
 - (M0) split a wire into wires of smaller bits; route a wire through an auxiliary party ((u,v;β) → (u,y;β), (y,v;β),
-  Lemma A.2); increase bits; identify two auxiliary parties.
+  Lemma A.2); increase the bits of a wire between auxiliary parties; identify two auxiliary parties.
 - (M1) **crossing**: choose two wires (a,c;p), (b,d;q) between any parties (legs or auxiliary: a hub–hub bond is
-  allowed, which is Sra's nesting). For every N = 0…Θ the system W_N^{cut}, cut ∈ {c, b} chosen by the cover
-  depending on N, is W without the two wires plus
-  cut c: (a,o;p), (b,o;q), (c,o′;p), (d,o′;q), (o,o′; b_c(N));   cut b: (a,w;p), (d,w;q), (b,w′;q), (c,w′;p), (w,w′; b_b(N)),
-  with new auxiliary o, o′ (w, w′) and the **certified** bonds b_c(N) = log₂((Θ−N+1)P(Θ−N)), b_b(N) = log₂((N+1)P(N))
-  of Prop. B.2, or any larger numbers. (Coarsenings such as Khoruzhii's two pieces are covers by sums of the Ψ_N
-  with bonds at least these; the "third cut" and single-hub realisations are (M0)-consequences of the trivial bounds.)
+  allowed, which is Sra's nesting) and a **circle-covering crossing identity** for them: an identity writing
+  ⟨2^p⟩_{ac}⟨2^q⟩_{bd} as a sum of pieces i, each with certified log-ranks (ρ_i, ρ′_i) across ab|cd and ad|bc, such that the
+  boxes [0,ρ_i] × [0,ρ′_i] cover the arc {r² + r′² = 2(p²+q²)} ∩ [0,p+q]² (up to a stated ε ≥ 0). For every piece i the cover
+  chooses a cut, and the new system is W without the two wires plus
+  cut c: (a,o;p), (b,o;q), (c,o′;p), (d,o′;q), (o,o′; ρ_i);   cut b: (a,w;p), (d,w;q), (b,w′;q), (c,w′;p), (w,w′; ρ′_i),
+  with new auxiliary o, o′ (w, w′), bonds as certified or larger, capped at p+q if the cover wishes.
+  Instances: **Prop. B.2** with b_c(N) = log₂((Θ−N+1)P(Θ−N)), b_b(N) = log₂((N+1)P(N)) (circle covering with ε = 0:
+  Lemma 5.3); **Khoruzhii's two-piece identity** (= Sra's (CR)), pieces R, C with certified bonds (log₂ r, p+q) and
+  (p+q, log₂ r), log₂ r ≈ √(p²+q²): every point of the arc has min(r_c, r_b) ≤ √(p²+q²), so the two boxes cover it (ε =
+  the lower-order terms of his count, not checked here); any sum Σ_{N∈S} Ψ_N with the sum of the certificates.
+  The "third cut" ac|bd with its trivial 2min(p,q) bits and single-hub realisations are (M0)-consequences of the
+  trivial bounds.
+- Sums and regroupings of leaves, certified by direct-sum networks, are allowed: the certified cost of a sum is at
+  least that of each summand [referee §4].
 
-By induction (a cover of a tensor restricts to a cover of each of its restrictions) a tree of moves of depth m writes
+By induction (a cover of a tensor restricts to a cover of each of its restrictions) a tree of moves writes
 f = Σ_leaves t_leaf with t_leaf a restriction of GT(W_leaf). **Nesting depth** = the largest number of (M1) moves on a
-branch. A leaf is evaluated under a merge k chosen at the leaf, at the certified cost
+branch. A leaf is evaluated under a merge k chosen at the leaf, at the **certified cost**
 
     cost_k(W) = min over π: Aux → groups of k of  Σ_{wires} β·[π(u) ≠ π(v)]      (π = the group of the node on legs),   (5.1)
 
 a 0-extension: every auxiliary party is executed at some group of the merge. c_k(t_leaf) ≤ cost_k(W_leaf) [R: push
-forward along π]. A *crossing-generated cover with certified costs* is such a tree with its costs (5.1). Level 1
-(§2) is depth 1 with hubs at groups. Not in the class: realisations that use the true ranks of the Ψ_N where these
-are smaller than the certificates of B.2, and any identity that is not produced by B.2.
+forward along π] — an **upper** bound on the true D1 cost. The **certified level value** of a cover is
+max_leaf min_k cost_k(W_leaf)/(λ|E|). A *crossing-generated cover with certified costs* is such a tree with its costs
+(5.1). Level 1 (§2) is depth 1 with hubs at groups. Not in the class: covers that are not trees of moves; identities
+that are not circle-covering crossing identities for two wires; and — the main limitation, see the paragraph after
+Theorem W — any evaluation of a leaf tensor by a network other than the one inherited from its derivation.
 
 **Placements.** A placement P of the configuration in a metric space X: a point for every leg and a point o^k_G for
 every group of every merge. L = Σ_e |e⁺e⁻|, H_k = Σ_legs |ℓ o^k(ℓ)|, δ_k = max_{G≠G′} |o^k_G o^k_{G′}|, b_k = (L − H_k)/δ_k,
@@ -321,6 +356,48 @@ ln|Σ_i| ≤ ln P(e_i) ≤ κ√e_i: 2(p²+q²) ≤ κ′²Θ. Take N = min(Θ, 
 N > N₀ it is at most r′η̄(N₀); the same for Θ − N. So ε ≤ κ′(1 + √N₀) + (p+q)·η̄(N₀) for every N₀. ∎
 (Only the certificates' lower bounds b ≥ log₂P are used; the factor N+1 in the certificate and the cover's trivial
 cap p+q are harmless, the latter because the thresholds of Lemma 5.1 and Lemma S are ≤ p+q.)
+
+**Lemma 5.3 (zero loss for the certificates of B.2) [D; exact computations in `attain/zeroloss.py`].**
+Let Σ₁, Σ₂ be classes of energies e₁ = 2m₁, e₂ = 2m₂ (m_i ≥ 1), p = log₂|Σ₁|, q = log₂|Σ₂|, Θ = 2(e₁+e₂), and
+f(E) = log₂((E+1)P(E)), so that b_b(N) = f(N), b_c(N) = f(Θ−N). For every (r, r′) with r² + r′² = 2(p²+q²) and
+0 ≤ r, r′ ≤ p+q there is N ∈ {0,…,Θ} with f(N) ≥ r′ and f(Θ−N) ≥ r. So Lemma 5.2 holds with ε = 0.
+
+*Inputs.* P(E) = Σ_{m ≤ E/2} p(m) (symbols of energy 2m ↔ partitions of m), |Σ_i| ≤ p(m_i); κ = π/√3, κ′ = κ/ln 2 = 2.61676;
+(K1) p(m) ≤ e^{π√(2m/3)} for m ≥ 0, and (K2) the two-sided bound
+(√3/(12n))(1 − 1/√n) e^{μ(n)} < p(n) < (√3/(12n))(1 + 1/√n) e^{μ(n)}, μ(n) = (π/6)√(24n−1), n ≥ 1
+[K: Lehmer 1938 in the form of Bessenrodt–Ono 2016, eq. (2.1), checked against the source on 27 Nov by the coordinating session: Bessenrodt–Ono, "Maximal multiplicative properties of partitions", arXiv:1403.3352 (Ann. Comb. 2016), in the proof of Theorem 2.1, the displayed inequality after Theorem 2.2, stated for every positive integer n with μ(n) = (π/6)√(24n−1), in exactly this form (it is the display before their (2.1), not (2.1) itself);
+N: verified here for 1 ≤ n ≤ 10⁴]. (K1) follows from (K2).
+
+*Step 1: (Z′) (E+1)P(E) ≥ exp(κ√(E+½)) for every integer E ≥ E₀ = 44.* For 44 ≤ E < 800: exact integers against a
+60-digit evaluation, smallest ratio 1.0075 [N, exact]; the last failure of (Z′) is E = 43. For E ≥ 800, E ∈ {2M, 2M+1},
+M ≥ 400, J = ⌊√M⌋: by (K2), P(E) ≥ Σ_{j ≤ J} p(M−j) ≥ (J+1)(4√3·M)^{−1}(1 − (M−J)^{−1/2}) e^{μ(M−J)}, so
+(E+1)P(E)·e^{−μ(M−J)} ≥ c₁√M with c₁ = (1 − (M−√M)^{−1/2})/(2√3) ≥ 0.27386, while
+κ√(2M+3/2) − μ(M−J) = π(19/36 + 2J/3)/(√(2M/3+½) + √(2(M−J)/3 − 1/36)) ≤ c₂ := (π/√6)(1 + 19/(24√M))(1 − M^{−1/2} − (24M)^{−1})^{−1/2} ≤ 1.36803.
+c₁√M increases and c₂ decreases with M, and ln(0.27386·20) = 1.7006 > 1.36803. (Cross-check: no failure of (Z′) for
+800 ≤ E < 20000 by direct computation.) Equivalently **f(E)² ≥ κ′²(E + ½) for E ≥ 44**.
+
+*Step 2: the case max(m₁,m₂) ≥ 31.* Put a_i = κ′√(2m_i), so p ≤ a₁, q ≤ a₂ by (K1) and κ′²Θ = 2(a₁²+a₂²) ≥ 2(p²+q²) =: R².
+Let S = κ′²Θ − (p+q)² ≥ 2(a₁² − p²) + 2(a₂² − q²). For the larger m, (K2) gives p ≤ a − d with
+d ≥ d₀(m) = log₂(4√3·m/(1 + m^{−1/2})), hence S ≥ 2d₀(m)·a = 2d₀(m)κ′√(2m) ≥ κ′²(E₀ + ½) for every m ≥ 31 (checked for
+31 ≤ m < 2000; the left side increases). Also Θ ≥ 2E₀. Now fix (r, r′) on the arc and let N be the least integer
+with f(N) ≥ r′; it exists because f(Θ)² ≥ f(Θ−E₀)² ≥ κ′²(Θ − E₀ + ½) ≥ κ′²Θ − S = (p+q)² ≥ r′².
+- N = 0: f(Θ) ≥ p+q ≥ r.
+- 1 ≤ N ≤ E₀: f(Θ−N) ≥ f(Θ−E₀) ≥ p+q ≥ r (f is non-decreasing).
+- N > E₀: f(N−1) < r′ ≤ p+q, and N−1 ≥ E₀ gives κ′²(N − ½) ≤ f(N−1)² < (p+q)² = κ′²Θ − S, so Θ − N > S/κ′² − ½ ≥ E₀ and
+  f(Θ−N)² ≥ κ′²(Θ − N + ½) = κ′²Θ − κ′²(N − ½) > R² − r′² = r².
+
+*Step 3: the case max(m₁,m₂) ≤ 30.* The property is monotone in (p,q) at fixed Θ (a point of the arc of (p̃,q̃) ≤ (p,q)
+is dominated by a point of the arc of (p,q): take x ∈ [max(r,|p−q|), min(√(R²−r′²), p+q)], which is non-empty). So it
+suffices to take p = log₂p(m₁), q = log₂p(m₂), which dominate every class. For these, the exact finite criterion
+(for every N in the range: f(Θ−N) ≥ p+q or f(Θ−N)² ≥ R² − max(f(N−1), |p−q|)²) was verified in 60-digit arithmetic
+for all 7260 pairs 1 ≤ m₁ ≤ m₂ ≤ 120: no failure [N, exact]. ∎
+(Cross-check of Step 2: the same criterion on 120 pairs with m up to 1500, `zeroloss_sample.py`: no failure, smallest
+margin among the pairs where the cap is not reached 2806 squared bits. The certificates are far from tight.)
+
+Status: the proof is complete given (K2). What is proved by hand: Steps 1 (E ≥ 800) and 2. What is computed: (Z′) on
+44 ≤ E < 800, the threshold m ≥ 31, and Step 3 (m ≤ 120, four times the needed range). What is quoted: (K2). The
+referee's independent computation (`refW/disc_loss.py`: loss 0 for all pairs of energies ≤ 300 and on a grid to 1200,
+with the true largest classes) agrees. For circle-covering identities other than B.2 the ε of the identity remains.
 
 **Theorem W1.** Let d be a pseudometric on legs and hubs satisfying (B) and the triangle inequality (for instance the
 restriction of a CAT(0) placement). For every crossing-generated cover of depth 1 in which the crossed wires are edge
@@ -377,45 +454,67 @@ Lemma 5.1 is the case in which the four ends are legs. The step that has no anal
 positions is (ii): one does not look for one N that is good at the parent's optimum; one interpolates the two bad
 child configurations, and the interpolated configuration is again a parent configuration.
 
-**Theorem W (weak duality for crossing-generated covers).** Let P be a placement of a configuration (nodes, merges,
-edges with λ bits) in a CAT(0) space X. For every crossing-generated cover with certified costs (§5.1), of any nesting
-depth, there is a leaf with, for every merge k at once,
+**Theorem W (weak duality for the certified costs of crossing-generated covers).** Let P be a placement of a
+configuration (nodes, merges, edges with λ bits) in a CAT(0) space X. For every crossing-generated cover (§5.1) there
+is a leaf with, for every merge k at once,
 
-    cost_k(W_leaf) ≥ [ λ(L − H_k) − D·Σ_{crossings s on the branch} ε(p_s, q_s) ] / δ_k,
+    cost_k(W_leaf) ≥ [ λ(L − H_k) − D·Σ_{crossings s on the branch} ε_s ] / δ_k,
 
-D = diameter of the set of leg points, ε as in Lemma 5.2 (ε(p,q) = o(p+q)). In particular, for covers of bounded
-depth whose crossings use classes of size → ∞, the level value is ≥ λ|E|·(price value of P) − o(λ|E|).
+where ε_s is the covering defect of the crossing identity used at s and D the diameter of the set of leg points.
+- For covers whose crossings use Prop. B.2: ε_s = 0 (Lemma 5.3), so **cost_k(W_leaf) ≥ λ(L − H_k)/δ_k exactly, for any
+  nesting depth, any number of crossings on a branch and any number of terms.** This rests on Lemma 5.3, i.e. on the
+  quoted bound (K2) and the finite computations listed there.
+- Without Lemma 5.3 (ε_s = ε(p_s,q_s) ≥ κ′ bits from Lemma 5.2) the bound is non-trivial only for branches with o(λ)
+  crossings; "any depth" does **not** follow from Lemma 5.2 alone [referee, item 5].
+- For other circle-covering identities ε_s is whatever their certificates give.
+Hence the certified level value of the cover is ≥ (price value of P) − (D/λ|E|δ)·Σε.
 
-*Proof.* v(W₀) = λL (S1). The adversary answers a crossing of (a,c;p), (b,d;q) in the current system W with an N such
-that b_c(N) ≥ r_c − ε and b_b(N) ≥ r_b − ε (Lemma S, Lemma 5.2; the cover's trivial cap p+q is harmless because
-r_c, r_b ≤ p+q). Whichever cut and whichever further (M0) moves the cover makes, v drops by at most ε·D: near-optimal
-positions may be projected to the closed convex hull of the leg points (projections onto convex sets are 1-Lipschitz
-in CAT(0) spaces, and that hull has diameter D), so a bond smaller by ε costs at most ε·D. The other realisations of
-Ψ_N available in the class (single hub, the cut ac|bd, trivial bonds) never lower v, by the triangle inequality. At
-the leaf, (S2). ∎
+*Proof.* v(W₀) = λL (S1). The adversary answers a crossing of (a,c;p), (b,d;q) in the current system W with a piece
+whose box contains (r_c − ε, r_b − ε) (Lemma S and circle covering; the cover's cap p+q is harmless because
+r_c, r_b ≤ p+q). If ε = 0 neither child is below the parent, whichever cut is chosen. If ε > 0: pass to the
+completion of X (CAT(0), same Steiner values by density); near-optimal positions may be projected to the closed
+convex hull of the leg points (nearest-point projections onto closed convex sets of a complete CAT(0) space are
+1-Lipschitz; the hull has diameter ≤ D because closed balls are convex), so a bond smaller by ε lowers v by at most
+ε·D. The other realisations available in the class (single hub, the cut ac|bd, trivial bonds, (M0) moves, sums) never
+lower v, by the triangle inequality. At the leaf, (S2) with the leg invariant. ∎
 
-What the theorem is and is not.
-- It is unconditional: no spectral point, no FH/EP, no contracting hypothesis, no bound on the number of terms.
-- Its class is "everything generated from Prop. B.2 with its rank certificates, Lemma A.3, routing and nesting":
-  AN App. B levels, the level-1 game of §2, Khoruzhii's two-piece form (a coarsening), Sra's Lemma 4.2 nesting
-  (crossing of hub–hub bonds) are inside. Covers that use true ranks of the Ψ_N below the certificates, or any identity
-  not generated by B.2, are outside; for those the bound is the ordinary price method and needs the placement to be
-  a price.
-- It only gives the inequality "value ≥ sup over CAT(0) placements". Nothing says that nested covers attain it
-  (in the K_{2,3} protocol problem the explicit level-1 protocols stay below the CAT(0) bound).
-- A second proof for Hilbert space, by duality (it shows where the adversary's N comes from): v(W) = max of
+**What Theorem W bounds, plainly.** It bounds cost_k(W_leaf): the cost of the realisation that the leaf inherits
+from its derivation (rank certificates of the crossing identities, Lemma A.3 networks, routing, identification,
+nesting). This is an upper bound on the true D1 cost c_k(t_leaf) of the leaf tensor, and Theorem W says nothing about
+c_k(t_leaf). It is a barrier for a **proof method** — any engine analysis whose cost bounds come only from B.2-type
+certificates, A.3 networks, routing, identification and nesting cannot certify a level value below F_CAT — and not a
+barrier for the tensors. The gap is real: for classes (2,12), (2,12) (dimension 5, Θ = 48) the piece Ψ₄ has true rank
+7 across ad|bc against the certificate 20, and Ψ₂₄ has rank 15 across the third cut ac|bd against the trivial 25
+[R, referee's exact computation `refW/psi_ranks.py`; `ports/protocol` §1.3]; and the D1 cost of a leaf tensor minimises
+over all networks on the groups, not only over the inherited one. True costs are bounded from below only through
+prices: `q1-notes.md` Theorem B (refereed): if contracting fails, on nets of F₂^m the true level value is
+≥ 1/√2 − c/g. In that statement Theorem W is not needed.
+
+What else the theorem is and is not.
+- It is unconditional: no spectral point, no FH/EP, no contracting hypothesis, no bound on the number of terms. The
+  last point is not vacuous: a rank-one decomposition is not generated by the moves (its boxes are {(0,0)} and do not
+  cover the arc); circle covering is the operative hypothesis, and the theorem is tight on the rectangle (App. B).
+- Inside the class: AN App. B levels, the level-1 game of §2, Khoruzhii's two-piece identity (a different identity,
+  inside by circle covering), Sra's Lemma 4.2 nesting (crossing of hub–hub bonds with it).
+- It only gives the inequality "certified value ≥ sup over CAT(0) placements". Nothing says that nested covers attain
+  it (in the K_{2,3} protocol problem the explicit level-1 protocols stay below the CAT(0) bound).
+- The bimedian step of Lemma S needs only the CN inequality [referee §2]; `notes.md` Prop. 3.1 is that computation.
+- A second proof for Hilbert space, by duality (it shows where the adversary's piece comes from): v(W) = max of
   Σ ⟨F_w, constants⟩ over flows F_w ∈ 𝓗 with |F_w| ≤ β_w in equilibrium at the auxiliary parties; with f₁, f₂ the optimal
-  flows on the two wires take r = |f₁+f₂|, r′ = |f₁−f₂| (parallelogram law), and the children inherit feasible flows
-  (f₁+f₂, resp. f₁−f₂, on the bond).
+  flows on the two wires take r = |f₁+f₂|, r′ = |f₁−f₂| (parallelogram law), and the children inherit feasible flows.
 
-**Consequences [D].** With F_X(config) the supremum of price values over placements in spaces of class X:
-1. every crossing-generated cover of any depth has level value ≥ F_CAT − o(1) ≥ F_flat: ≥ 1/√2 on balanced
-   two-merge configurations, ≥ 1/√3 on 3-nets, ≥ 0.4714 on K₄, ≥ 2/3 on Δ₃ (nine tripods, `notes.md` Thm 5.2 — a CAT(0)
-   placement, here used without any price hypothesis), ≥ 0.6124 on 3-nets of F₃^M, F₄^M (subgroup tripods);
-2. with the Q1 agent's placement (§6) F_CAT = 1/√2 on generic edges of 3-nets of F₂^m, so **on these nets the
-   crossing-generated family is stuck at exactly the two-merge value 1/√2 at every nesting depth**: three merges do not
-   help this family at all. This uses only that the filtration space is CAT(0), not that it is a price.
-3. Sra's nested identity, evaluated in the engine game, obeys the same floors.
+**Consequences [D]** (all for **certified** level values of crossing-generated covers, any depth, B.2 certificates;
+F_X(config) = supremum of price values over placements in spaces of class X):
+1. certified level value ≥ F_CAT ≥ F_flat: ≥ 1/√2 on balanced two-merge configurations, ≥ 1/√3 on 3-nets, ≥ 0.4714 on K₄,
+   ≥ 2/3 on Δ₃ (nine tripods, `notes.md` Thm 5.2 — a CAT(0) placement, used here without any price hypothesis),
+   ≥ 0.6124 on 3-nets of F₃^M, F₄^M (subgroup tripods);
+2. with the Q1 placement (§6; value (g−2)/(√2(g+1)) + 1/(g+1) on all edges of the 3-net of F₂^m, g = 2^m) the certified
+   level value of the family is ≥ 1/√2 − (3/√2 − 1)/(g+1) = 1/√2 − 1.121/(g+1), and ≤ the level-1 value (two-merge
+   rectangle value). **Both tend to 1/√2; for finite g there is a window of width O(1/g)** (g = 4: 0.4828 against
+   0.6243). So three merges cannot bring the certified value of this family below 1/√2 − O(1/g). This uses only that
+   the filtration space is CAT(0), not that it is a price; at finite leg distance T the placement consists of actual
+   points and Theorem W applies for each T, then T → ∞.
+3. Sra's nested identity, evaluated in the engine game with its certificates, obeys the same floors.
 
 ### 5.4 What went wrong on the way (kept for the referee)
 
@@ -482,7 +581,8 @@ confirm in exact arithmetic.
   rows and columns, far legs): CAT(0), and a price under FH. At uniform weights level 1 has value ≈ 0.77 and the
   binding dual solutions are not metrics of the price type at all (the third-merge cost of a rectangle piece is
   ≥ raw, a constraint no price sees). So level 1 is stuck for a reason that has nothing to do with the geometry.
-- **Depth ≥ 2.** By Theorem W every depth has value ≥ F_CAT(configuration), unconditionally, and ≤ the level-1 value.
+- **Depth ≥ 2.** By Theorem W every depth has certified value ≥ F_CAT(configuration), unconditionally, and the
+  best certified value is ≤ the level-1 value.
   I did not compute a depth-2 game on a net: for nets with F_CAT = 1/√2 there is nothing to find, and for the others
   the design space (which hub–hub bonds to cross with which wires, evaluated under which later merge) is large;
   §1.3 shows that nested pieces certified by aligned cuts reduce to rectangles, so a gain could only come from
@@ -491,27 +591,30 @@ confirm in exact arithmetic.
   filtrations of F₂^N (cone over the spherical building of GL_N(F₂), times ℝ; CAT(0) unconditionally) carries a
   placement of value exactly 1/√2 on generic edges, with the equality structure of §7, and that every finite subset
   of it is a price when contracting fails. If the placement stands, then for 3-nets of F₂^m:
-  (i) **crossing-generated covers of every depth are stuck at exactly 1/√2** (Theorem W; needs only CAT(0));
+  (i) **the certified level value of crossing-generated covers of every depth is in
+  [1/√2 − 1.121/(g+1), level-1 value], both ends → 1/√2** (Theorem W; needs only CAT(0)); this is a statement
+  about what the certificates can prove, not about the true costs of the terms;
   (ii) if moreover its price claim stands and contracting fails, **no engine of any kind** with three net merges
-  has level value below 1/√2 (price method, all covers): Q1 of `notes.md` is answered for these nets and the window
+  has true level value below 1/√2 − c/g (price method, all covers; `q1-notes.md` Theorem B, refereed): Q1 of `notes.md` is answered for these nets and the window
   closes at exponent 1/2; (iii) if contracting holds, 3-SAT is power-saving by other means.
   Nets of Z₃^m, Z_p^m, Z₄ are not covered by that construction (its message: no realisation for Z₃). There the
   floors are the tree-product ones (0.6124 for F₃^M, F₄^M; 0.5857 for cyclic groups by the referee's correction of
   `notes.md`), valid for crossing-generated covers unconditionally (Theorem W) and for all covers when contracting
   fails; the window up to 0.7071 is open, and by §2.2 it cannot be entered by pieces that are "cheap for two merges,
   raw or worse for the third".
-- **Can the levels converge below 1/√2?** For F₂^m-nets: no (given the Q1 placement). In general the nested
-  crossing family cannot go below F_CAT, and nothing computed here suggests that it goes below the level-1 value
+- **Can the levels converge below 1/√2?** For F₂^m-nets, as far as certified values go: no (given the Q1 placement),
+  up to the O(1/g) window. In general the certified value of the nested crossing family cannot go below F_CAT, and nothing computed here suggests that it goes below the level-1 value
   at all: in the depth-2 tests of §5.5 the nested options never forced the adversary to a larger bond than depth 1.
-- **So which way is the barrier question settled?** For the crossing-generated family on F₂^m-nets: there is a
-  barrier at exponent 1/2, and its extremal metric is a genuine CAT(0) placement. Whether that metric is a price is
+- **So which way is the barrier question settled?** For the crossing-generated family on F₂^m-nets, in terms of
+  certified costs: there is a barrier at exponent 1/2, and its extremal metric is a genuine CAT(0) placement. Whether that metric is a price is
   the Q1 agent's claim and decides the statement for all covers.
 
 **Addendum (after the hand-back; the Q1 agent's correction of scope, its claims, unreviewed; `sat3/q1-notes.md`).**
 The filtration construction works over every finite field F_q (V = F_q² ⊕ F_q^m, hubs = points ⟨(x,y)⟩, nodes = graphs
 of a ∈ Mat_{m×2}(F_q); the filtration space of F_q^N is CAT(0) for every q), and pulls back along quotients
 Γ → F_q^m with F_CAT(net of Γ) ≥ (1/√2)(1 − q^{−m})(1 − q^{1−m}). So the sentences above that exclude Z₃^m, Z_p^m, Z₄ are
-superseded: with Theorem W, crossing-generated covers are stuck at 1/√2 on the 3-nets of Z_p^m (m ≥ 2, any prime p),
+superseded: with Theorem W, the certified level value of crossing-generated covers is ≥ 1/√2 − O(1/g) on the 3-nets of
+Z_p^m (m ≥ 2, any prime p),
 and of Z_4^m, Z_n^m, Z_p × Z_p in the limit. Not covered: cyclic groups (hence Δ₃ and K₄), perfect groups, Latin
 squares that are not group tables; there the floors of this note stand (Δ₃: 2/3; cyclic: 0.5857) and the window to
 0.7071 is open. Its proposed finite testbed for a depth-2 computation: the translation class E_D of the order-4 net
@@ -563,8 +666,8 @@ The Q1 agent's space realises (a)–(c) with branching along every segment [hub,
 1. **Referee** for §5 (weakest points first): (a) Lemma S — the identification of r_c as a supremum, steps (i)–(iv),
    the use of `notes.md` Prop. 3.1; (b) the class of §5.1: is every realisation a cover can certify from B.2 + A.3
    really one of the moves, and is (5.1) the right leaf cost (legs never used as hubs; the bits at a leg);
-   (c) Lemma 5.2 (uniformity of ln P(E) ≥ (κ − o(1))√E in the middle range, the additive loss near the ends) and the
-   accumulation of ε over a branch with many crossings; (d) §1.3. A Lean statement of Lemma S is short: CAT(0) space,
+   (c) Lemma 5.3 (zero loss): check the quoted bound (K2) against Lehmer / Bessenrodt–Ono, rerun `zeroloss.py`, and
+   the case analysis of Step 2; (d) §1.3. [Done once: `review-thmW.md`; (c) is new since that report.] A Lean statement of Lemma S is short: CAT(0) space,
    finite weighted graph with some vertices fixed, the two children, the inequality r_c² + r_b² ≤ 2(p²+q²).
 2. **Referee for the Q1 placement** (CAT(0)-ness of the filtration space, the placement, the value on generic
    edges, the far-leg limit in the normalisation of §5.1). Theorem W turns it into an unconditional statement about

@@ -2966,3 +2966,18 @@ correct deduction from OpenAI's HC Thm 3.1 as printed, and that theorem is the o
   positive characteristic, for bounded-table-only algorithms, for non-algebraic algorithms, or for shorter
   wires. Lemma N (K ≥ 4), E2, E3 and the star lemma are unconditional.
 - The author is applying the corrections.
+
+**Zero-loss lemma (attain-notes Lemma 5.3) [D; new, no second reader yet].** With f(E) = log₂((E+1)P(E)) and
+Θ = 2(e₁+e₂): for every point (r, r′) of the arc r² + r′² = 2(p² + q²), r, r′ ≤ p + q, some N has f(N) ≥ r′ and
+f(Θ − N) ≥ r. So the B.2 certificates lose nothing per crossing and Theorem W is exact at every nesting depth
+for crossing-generated covers (for other circle-covering identities the defect of that identity remains).
+- Proof: f(E)² ≥ κ′²(E + ½) for E ≥ 44 (by hand for E ≥ 800 from a two-sided bound on p(n); exact computation
+  for 44 ≤ E < 800, smallest ratio 1.0075; fails at E = 43); a three-case argument for maximal energy ≥ 62;
+  exact computation of all 7260 pairs with m ≤ 120 below that.
+- Quoted input: (√3/(12n))(1 ∓ 1/√n)e^{μ(n)} bounds p(n) for every n ≥ 1, μ(n) = (π/6)√(24n−1). The author
+  wrote it from memory; the lead checked it against the source (Bessenrodt–Ono, arXiv:1403.3352, proof of
+  Thm 2.1: exactly this form, for every positive integer n) and reran `attain/zeroloss.py` (no failures;
+  bound verified numerically for n ≤ 10⁴).
+- `attain-notes.md` corrected after the referee: "certified level value" throughout; the class enlarged to
+  circle-covering crossing identities; leg invariant; completion; table row; triangle case; the window
+  [1/√2 − 1.121/(g+1), level-1 value] in place of "stuck at exactly 1/√2".

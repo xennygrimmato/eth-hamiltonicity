@@ -1041,3 +1041,15 @@ Notes: `research/ports/c1d1/notes.md`. Unrefereed, nothing run.
 - Lemma 1 arithmetic proved from per-cut bounds. The per-cut guess count itself is still read from the J.3 proof.
 - Cost model assumed the guess bound on every run; the referee's pruning fix needs it on accepting runs only. Asked
   the executor to restate accordingly.
+
+## 26 Nov (late, 14): referee interim on C1 — items 1–4 correct
+
+- HC 13.1 as printed has no 3-CNF hypothesis; needs a closed bit network, volume = tensors + wires, degree ≤ s^{1/20}.
+  XOR/AND/equality/pin tables allowed; fan-out via equality trees keeps degree ≤ 3. Wording fix: in characteristic p
+  the constants lie in a fixed finite extension F_{p^r} (prime field for prime-field choices); same count mod p.
+- Parsimony: with a fixed, x ↦ T_a x is linear, so the multiplication circuit is an XOR-only straight-line program of
+  size O(n log n loglog n), no divisions, every wire a function of x.
+- Toeplitz pairwise independence for every k ≥ 1 (indices 0..n+k−2); VV ≥ 3/16 on q ∈ [1/4, 1/2]; 16v rounds give
+  success ≥ 1 − e^{−3}, one-sided.
+- Leaves are tested separately; sound and complete.
+- Pending: item 5 (hidden divisions in AN §§G–J), 6 (C4), 7 (Theorem M1 dependency list), 8 (Theorem D).

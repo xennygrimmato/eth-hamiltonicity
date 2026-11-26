@@ -357,6 +357,60 @@ pub enum Constraint {
     Reshetnyak { plus: [usize; 2], minus: [usize; 2], prod: [usize; 2] },
     /// Linear: sum coef_k d[k] <= 0.
     Linear { coef: Vec<(usize, f64)> },
+    /// Gromov-Sturm weighted quadruple ("box") inequalities for the cyclic order x,y,z,w, all
+    /// t,s in [0,1] at once: g = -min_{t,s} Q(t,s) <= 0 with
+    /// Q = (1-t)(1-s)|xy|^2 + t(1-s)|yz|^2 + ts|zw|^2 + (1-t)s|wx|^2 - t(1-t)|xz|^2 - s(1-s)|yw|^2.
+    /// p = pair indices of [xy, yz, zw, wx, xz, yw]. (Toyoda 2020: for <= 5 points these, over
+    /// all quadruples, characterise subsets of CAT(0) spaces.)
+    BoxQ { p: [usize; 6] },
+}
+
+/// Exact minimum of the box quadratic over [0,1]^2 given squared distances
+/// q = [xy, yz, zw, wx, xz, yw]^2. Returns (t, s, Q_min).
+pub fn box_min(q: &[f64; 6]) -> (f64, f64, f64) {
+    let [a, b, c, d, e, f] = *q;
+    let qf = |t: f64, s: f64| {
+        (1.0 - t) * (1.0 - s) * a + t * (1.0 - s) * b + t * s * c + (1.0 - t) * s * d - t * (1.0 - t) * e
+            - s * (1.0 - s) * f
+    };
+    // Q = a + t(-a+b-e) + s(-a+d-f) + ts(a-b+c-d) + e t^2 + f s^2
+    let (lt, ls, m) = (-a + b - e, -a + d - f, a - b + c - d);
+    let mut best = (0.0, 0.0, qf(0.0, 0.0));
+    let mut consider = |t: f64, s: f64| {
+        if (0.0..=1.0).contains(&t) && (0.0..=1.0).contains(&s) {
+            let v = qf(t, s);
+            if v < best.2 {
+                best = (t, s, v);
+            }
+        }
+    };
+    for &(t, s) in &[(1.0, 0.0), (0.0, 1.0), (1.0, 1.0)] {
+        consider(t, s);
+    }
+    // edges: t fixed in {0,1}: quadratic in s: f s^2 + (ls + m t) s ; s fixed: e t^2 + (lt + m s) t
+    for &t in &[0.0, 1.0] {
+        if f > 0.0 {
+            consider(t, -(ls + m * t) / (2.0 * f));
+        }
+    }
+    for &s in &[0.0, 1.0] {
+        if e > 0.0 {
+            consider(-(lt + m * s) / (2.0 * e), s);
+        }
+    }
+    // interior: [2e m; m 2f][t;s] = [-lt;-ls]
+    let det = 4.0 * e * f - m * m;
+    if det.abs() > 1e-300 {
+        let t = (-lt * 2.0 * f + ls * m) / det;
+        let s = (-ls * 2.0 * e + lt * m) / det;
+        consider(t, s);
+    }
+    best
+}
+
+/// Coefficients of the squared distances [xy,yz,zw,wx,xz,yw] in Q(t,s).
+pub fn box_coef(t: f64, s: f64) -> [f64; 6] {
+    [(1.0 - t) * (1.0 - s), t * (1.0 - s), t * s, (1.0 - t) * s, -t * (1.0 - t), -s * (1.0 - s)]
 }
 
 impl Constraint {
@@ -371,6 +425,10 @@ impl Constraint {
                     - 2.0 * d[prod[0]] * d[prod[1]]
             }
             Constraint::Linear { coef } => coef.iter().map(|(k, c)| c * d[*k]).sum(),
+            Constraint::BoxQ { p } => {
+                let q = [d[p[0]].powi(2), d[p[1]].powi(2), d[p[2]].powi(2), d[p[3]].powi(2), d[p[4]].powi(2), d[p[5]].powi(2)];
+                -box_min(&q).2
+            }
         }
     }
     /// Gradient added into `g` scaled by `s`.
@@ -404,6 +462,15 @@ impl Constraint {
                     g[*k] += s * c;
                 }
             }
+            Constraint::BoxQ { p } => {
+                // Danskin: gradient of -Q at the minimiser
+                let q = [d[p[0]].powi(2), d[p[1]].powi(2), d[p[2]].powi(2), d[p[3]].powi(2), d[p[4]].powi(2), d[p[5]].powi(2)];
+                let (t, u, _) = box_min(&q);
+                let c = box_coef(t, u);
+                for k in 0..6 {
+                    g[p[k]] -= s * c[k] * 2.0 * d[p[k]];
+                }
+            }
         }
     }
     /// Degree of homogeneity (1 or 2).
@@ -428,6 +495,10 @@ impl Constraint {
             Constraint::Reshetnyak { plus, minus, prod } => format!(
                 "resh: {}^2+{}^2 <= {}^2+{}^2+2*{}*{}",
                 nm(plus[0]), nm(plus[1]), nm(minus[0]), nm(minus[1]), nm(prod[0]), nm(prod[1])
+            ),
+            Constraint::BoxQ { p } => format!(
+                "box: cycle {}-{}-{}-{} (diagonals {},{})",
+                nm(p[0]), nm(p[1]), nm(p[2]), nm(p[3]), nm(p[4]), nm(p[5])
             ),
             Constraint::Linear { coef } => {
                 let terms: Vec<String> = coef.iter().map(|(k, c)| format!("{:+}*{}", c, nm(*k))).collect();
@@ -464,6 +535,45 @@ pub fn euler_family(n: usize) -> Vec<Constraint> {
                     for (x, y, z, w) in [(a, b, c, e), (a, b, e, c), (a, c, b, e)] {
                         // cycle x-y-z-w-x, diagonals xz, yw
                         v.push(Constraint::Euler { diag: [p(x, z), p(y, w)], sides: [p(x, y), p(y, z), p(z, w), p(w, x)] });
+                    }
+                }
+            }
+        }
+    }
+    v
+}
+
+/// Box (weighted quadruple) inequalities: 3 cyclic orders per 4-set (the family is invariant under
+/// the dihedral symmetries of the cycle with (t,s) relabelled).
+pub fn box_family(n: usize) -> Vec<Constraint> {
+    let mut v = vec![];
+    let p = |i, j| pair_index(n, i, j);
+    for a in 0..n {
+        for b in a + 1..n {
+            for c in b + 1..n {
+                for e in c + 1..n {
+                    for (x, y, z, w) in [(a, b, c, e), (a, b, e, c), (a, c, b, e)] {
+                        v.push(Constraint::BoxQ { p: [p(x, y), p(y, z), p(z, w), p(w, x), p(x, z), p(y, w)] });
+                    }
+                }
+            }
+        }
+    }
+    v
+}
+
+/// Box inequalities for all 24 orderings of each 4-set (redundant; for checking).
+pub fn box_family_all_orders(n: usize) -> Vec<Constraint> {
+    let mut v = vec![];
+    let p = |i, j| pair_index(n, i, j);
+    for a in 0..n {
+        for b in a + 1..n {
+            for c in b + 1..n {
+                for e in c + 1..n {
+                    let q = [a, b, c, e];
+                    for pm in permutations4() {
+                        let (x, y, z, w) = (q[pm[0]], q[pm[1]], q[pm[2]], q[pm[3]]);
+                        v.push(Constraint::BoxQ { p: [p(x, y), p(y, z), p(z, w), p(w, x), p(x, z), p(y, w)] });
                     }
                 }
             }
@@ -551,6 +661,24 @@ mod tests {
         assert!(m.max_violation(&euler_family(5)).0 <= 1e-12);
         assert!(m.max_violation(&reshetnyak_family(5)).0 <= 1e-12);
         assert!(m.euclidean_gram_min_eig() > -1e-12);
+    }
+    #[test]
+    fn box_examples() {
+        // Toyoda Example 1.2: satisfies the quadrilateral inequality but not the box inequality.
+        let r3 = 3f64.sqrt();
+        let m = Metric::new(4, vec![1.0, r3, r3, 1.0, r3, 1.0]); // 01,02,03,12,13,23
+        assert!(m.max_violation(&euler_family(4)).0 <= 1e-12);
+        assert!(m.max_violation(&box_family(4)).0 > 1e-6);
+        let pts = vec![vec![0.0, 0.0], vec![1.0, 0.3], vec![0.2, 2.0], vec![-1.0, 0.5], vec![0.7, -0.8]];
+        let e = Metric::euclidean(&pts);
+        assert!(e.max_violation(&box_family_all_orders(5)).0 <= 1e-12);
+        // brute-force grid agrees with exact minimiser
+        let q = [1.0, 2.0, 0.5, 3.0, 2.5, 1.7];
+        let (_, _, v) = box_min(&q);
+        let mut g = f64::INFINITY;
+        for i in 0..=400 { for j in 0..=400 { let (t, s) = (i as f64 / 400.0, j as f64 / 400.0);
+            let c = box_coef(t, s); g = g.min((0..6).map(|k| c[k] * q[k]).sum()); } }
+        assert!(v <= g + 1e-12 && g - v < 1e-4);
     }
     #[test]
     fn rank_f2() {

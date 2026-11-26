@@ -347,27 +347,54 @@ Thm 7.1. The referee checked its counting.
 
 In general, if the total guesses are τ/v^{48+g}, one gets δ < g/(5H+g).
 
-### 3.6 Uniformity: the present status
+### 3.6 Uniformity
 
-The algorithm needs G_v for the one scale v determined by n. |G_v| ≤ v^H = poly(n), so the non-uniform form needs no
-further argument [ours-R].
+The algorithm needs G_v for the one scale v determined by n. |G_v| ≤ v^H = poly(n), so Remark R′ needs no further
+argument [ours-R].
 
-For the uniform form [ours-R, review-theoremR §4], `thm_onecut` assembles G from `obtain`ed witnesses. They fall into
-two groups.
-- **Witnesses with decidable finite specifications.** A fixed machine can find these by search within the time budget:
-  - the subgroup chain of `exists_chain`;
-  - the words, the injective codes and the bijections χ ↦ χ̂;
-  - the SLP tables, once their function is fixed.
-- **Witnesses whose specifications contain value identities over all inputs.** These cannot be found by search: the plan
-  structure TT from `thm_tree` (H.2) and `pc` in `prop_pieces`. Uniformity needs these constructions to be explicit
-  given (v, laws, tower).
+**The referee's concern** (review-theoremR §4). `thm_onecut` assembles G from `obtain`ed witnesses. Some of these have
+decidable finite specifications: the subgroup chain, words, codes, bijections and SLP tables. A fixed machine can find
+them by search. But the specifications of the plan structure TT (`thm_tree`, H.2) and of `pc` (`prop_pieces`, J.2)
+contain value identities quantified over all inputs, and these cannot be checked by search.
 
-The paper's prose says they are:
+**The audit** (review-uniformity, one reader, by reading the proof terms; nothing built). It finds four things.
+
+1. **TT and pc are structure literals.** They are built in `exists_thinTrees` (`Paper/Tree.lean`, l. 1468–1512) and in
+   `prop_pieces` (`Paper/Pieces.lean`, l. 765–801).
+   - Their data fields are explicit functions of a few small combinatorial witnesses.
+   - Their `value` fields are *theorems*, proved for every choice of those witnesses that meets its spec:
+     `tree_value`, Tree.lean l. 1511; `prop_pieces_identity` and `lem_runnet`, Pieces.lean l. 862–882.
+   - The `Nonempty` wrapper of `thm_tree` is packaging.
+2. **Every remaining v-dependent witness has a finite, decidable spec**, and the obvious algorithms produce it in
+   poly(v). These are: the subgroup chain, host maps, short words for routes, an embedding, a bijection, a sorted move
+   order, a bounded law choice, codes and tags, and the SLP and its instruction decomposition.
+   - The crudest search costs 2^{O(v^{2C_p+1} log v)}. Here C_p is the constant of `prop_pieces`, and H ≥ 288·C_p
+     (`Paper/Cuts.lean`, l. 122–127, 466–469).
+   - So every search fits inside the 2^{O(v^H)} budget of Theorem R(a).
+3. **Nothing depends on the input z.** `CutD` is a statement about a fixed G, `∀ z, z.size ≤ s → …`.
+4. **The contracting hypothesis enters only through `exists_laws`.** It produces a finite law table that does not depend
+   on n or v.
+
+**The constant table.** It contains:
+- h, θ, and generators of A;
+- the laws, with a fixed enumeration;
+- the universal automaton;
+- finitely many evaluator programs;
+- the integers a, e, C_p, a₀, C, H, C₀, v₀;
+- the images ψ(θ) in the number field.
+
+None of these depends on n. Some come from ineffective existence proofs (Strassen duality), but that affects only
+explicitness, not uniformity.
+
+**Caveat.** The claim "the proofs remain valid for any spec-satisfying choice" is a meta-level parametricity argument.
+`Classical.choose` is opaque, so a proof can use a chosen object only through its spec. This is not itself a Lean
+theorem. A Lean-checked uniform statement needs a mechanical refactoring, listed in §8. The audit names one thing to
+watch during that refactoring: no proof may unfold a specific enumeration (`Fintype.equivFin`, `Fintype.ofFinite`)
+beyond its spec.
+
+The paper's prose is consistent with the audit:
 - H.2: "the groups, the words, the cosets and the maps χ ↦ χ̂ are constants of the program";
-- "Packets are assigned … by their number in a fixed order";
 - J.3: "rules such as ranks in a fixed enumeration decide which packet goes where".
-
-Neither we nor our referee have checked this in the Lean. Hence the placeholder in Theorem R^u.
 
 ---
 
@@ -403,13 +430,35 @@ Neither we nor our referee have checked this in the Lean. Hence the placeholder 
 **Lean form, and the `scalar` hypothesis (referee fix).** If one cites `exists_logarithmic_placement` instead of the
 paper's Thm 4.2, two adjustments are needed.
 - **Padding.** Pad G_h with holding arcs to degree 2^e, e = ⌈log₂ h⌉. This at most doubles the constant.
-- **Constants.** With s = h(h−1)/2, the requirement 2C₀(h−1) < s/(10000(e+3)) holds once h/(log₂h + 4) > 40000·C₀.
+- **Constants.** With s = h(h−1)/2, two inequalities are needed:
+  - 2C₀(h−1) < s/(10000(e+3));
+  - OpenAI's separate hypothesis `large`: 10000(e+3) ≤ s.
+
+  The condition 40000(C₀+1)(e+3) ≤ h suffices for both, and it holds for all large h.
+
+  The single condition h/(log₂h + 4) > 40000·C₀ stated in review-theoremAB §3 does not by itself give `large`. For
+  example, it holds at h = 2 when C₀ = 0. The referee noted separately that `large` holds for large h, so the conclusion
+  is unaffected. The Lean check below records the counterexample (`ThmAArith.lean`, l. 128ff.).
 - **The `scalar` hypothesis.** The Lean theorem has an extra hypothesis `scalar`: the same Poincaré bound for
   real-valued placements of the padded graph.
   - It holds here because finite subsets of a line are [AN] prices over every field, so F.6 applies to them. This is
     [ours, internal note b2 §3(ii), from AN Prop. C.3 and Lemma C.4(a)]. It also follows from [EG] Thm 1.1 [OA].
   - The paper version needs no such hypothesis, since ℝ ∈ X_χ ([HC §2.3]).
 - The order 2^{h(h−1)/2} is a power of 2, and G_h is connected, as `PortZero` requires.
+
+**Machine-checked deduction.** The deduction of Theorem A in characteristic 0 is checked in our own Lean file
+`research/ports/lean/PortsLean/ThmA.lean`, together with `ThmAArith.lean`.
+- The main statement is `theorem_A : Contracting → PortZero`. The files contain no `sorry` and no `axiom`, and use only
+  the standard axioms.
+- It is *conditional* on four statements, transcribed by hand from the two labs' Lean sources and taken as explicit
+  hypotheses:
+  - F.6;
+  - OpenAI's logarithmic-placement theorem, including `large` and `scalar`;
+  - the containment of OpenAI spectral targets in [AN] prices;
+  - "finite subsets of lines are [AN] prices".
+- It also assumes two facts about U_h(F₂): its order, and that the generators are involutions.
+- The labs' objects are opaque predicates in our file. Our file is not linked to the labs' Lean developments, so whether
+  the transcriptions are faithful has been checked by reading only.
 
 **What Corollary A′ rests on.** [IM] Thm 7.1, hence [HC] Thm 13.1 and [EG] §§12–13. We have not reviewed these. A Lean
 counterpart exists: `middle_count_bridge`, with no `sorry` in that directory by grep. We did not build it.
@@ -422,12 +471,13 @@ counterpart exists: `middle_count_bridge`, with no `sorry` in that directory by 
 > (i) **Sharp form** [AN-p]. For each μ ≥ 3 and each field k: the contracting inequality fails at μ (no s with 1 ≤ s,
 > s² < μ works for all prices on Mat_μ(F₂)) **iff** ρ_μ = √rk is an [AN] price on Mat_μ(F₂) over k.
 > (ii) If for some μ ≥ 2 the metric ρ_μ is not an [AN] price over ℚ, then the contracting hypothesis holds over ℚ (at
-> μ = max(μ, 3)). Hence the conclusions of Theorem R (non-uniform) and of Corollary A′ (uniform) hold.
+> max(μ, 3)). Hence the conclusions of Theorem R and of Corollary A′ hold.
 > (iii) The same holds if the five-point set M5 = {0, I, e₁₁, e₂₂, e₁₁+e₁₂} ⊂ Mat₂(F₂), with the restricted metric, is
 > not an [AN] price over ℚ. Its squared distances are 2 on the pairs 0–I, e₁₁–e₂₂ and (e₁₁+e₁₂)–e₂₂, and 1 on the
 > other seven pairs.
-> (iv) **Contrapositive.** Under Weak ETH (via Theorem A) or nu-Weak ETH (via Theorem R), the metric ρ_μ is an [AN]
-> price over every field of characteristic 0, for every μ, and so is M5.
+> (iv) **Contrapositive.** Under Weak ETH, the metric ρ_μ is an [AN] price over every field of characteristic 0, for
+> every μ, and so is M5. This follows via Theorem R, or via Theorem A with [IM] 7.1. Under nu-Weak ETH it follows via
+> Remark R′.
 
 *Proof.*
 - **(i) ⇐.** If ρ_μ is a price, then D(r)² = r·D(1)², so D(μ) = √μ·D(1). This exceeds s·D(1) for every s < √μ.

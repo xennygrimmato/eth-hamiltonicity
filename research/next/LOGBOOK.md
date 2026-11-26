@@ -1733,3 +1733,19 @@ From the K_{2,m} agent (`research/ports/k2m/notes.md`, being written):
 - Lab notebook (7 AND gates): literature status added by me.
 - The writer hedged wherever the check had only seen an abstract or snippet; several of the check's suggested
   sentences were reworded (list in its report).
+
+## 26 Nov (late, 56): (CL\*) has a six-line analytic proof — I checked it by hand [R]
+
+From the K_{2,m} agent. For σ ∈ [−1,1]⁶, 0 < w ≤ 1, K = 1+9/w²: Φ_w ≥ 0. Proof: with m = max|σ|, V = Σ_i|σ_ij−σ_ik|,
+E = Σ|σ_ij+σ_ji|: (1) hexagon identity 2σ₁₂ = (σ₁₂−σ₁₃)+(σ₁₃+σ₃₁)−(σ₃₁−σ₃₂)−(σ₃₂+σ₂₃)+(σ₂₃−σ₂₁)+(σ₂₁+σ₁₂) ⇒ V+E ≥ 2m;
+(2) c ≥ √(1−m²); (3) Cauchy–Schwarz with sin χ = 3m/√(9+w²): Φ_w + 3 ≥ 3cos χ√(1−m²) + (3m/(2w))(V+E) ≥ 3(1−m²) + 3m²/w ≥ 3.
+**My check:** expanded the identity (it is 2σ₁₂; brackets are the three vertex differences and three pair sums);
+√K·sin χ = 3m/w; (3/(2w))E ≥ (3m/(2w))E since m ≤ 1; cos χ = √(1−9m²/(9+w²)) ≥ √(1−m²). Correct.
+Consequences: the interval certificates (two checkers) become independent confirmation rather than the proof;
+Theorem K.1 and the K_{2,m} bounds are computer-free given AN C.3/C.4(a) + Strassen + the calibration; the
+three-angle inequality holds with constant 8 in place of 9 (sharp, [N]). The uniform-m argument cannot reach w > 1
+[X] (bracket negative at the corners); a refined calibration for 1 < w ≤ 5/4 is open.
+Launched: Lean formalisation (`PortsLean/CLStar.lean`): weighted inequality, K = 9 version, algebraic form of (I),
+and the K_{2,m} averaging arithmetic.
+Lesson for the log: the hard-looking six-variable inequality fell to one identity once the weighted family was
+considered — generalising (to K_{2,m}) exposed the structure, as I had hoped when assigning P3.

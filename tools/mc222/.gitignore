@@ -1,0 +1,7 @@
+target/
+out/
+proofs/
+*.cnf
+*.drat
+*.lrat
+__pycache__/

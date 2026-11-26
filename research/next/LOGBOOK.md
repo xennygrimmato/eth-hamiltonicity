@@ -2849,3 +2849,27 @@ Referee on Theorem W (`research/sat3/review-thmW.md` in progress), interim verdi
   1,1,1,2,4,6,10,… across the third matching cut). Is the gap asymptotic? If contracting fails it cannot give
   a level value below 1/√2 on F₂^m nets (prices), so an asymptotic gap that large would itself prove
   contracting. Worth an exact computation on the 8-wire target E_D.
+
+**Q2 agent finished** (`research/sat3/q2-notes.md`, scripts `research/sat3/q2/`). Final form:
+- **Theorem T [D; conditional on OpenAI's HC Thm 3.1, unrefereed and not formalised].** No ports in the
+  characteristic of F ⇒ for large even K and λ ≥ Θ(K (log K)^{3/2}), every arithmetic circuit (also border,
+  degree component) for the clique polynomial f_{K,λ} has ≥ 2^{c·K²λ/√log K} gates. Proof by the "star lemma"
+  (the complete-graph wire tensor is a product of stars with rotating centres, and restricts row-locally to
+  K·h₀ copies of any K-row tensor; overhead 2(K−1)/K in bits per row) plus HC Lemma 3.3 and Thm 3.1.
+  (The notes call the star lemma "Lemma S"; it is not the Steiner Lemma S of the attainment notes.)
+- **Cor. T2.** An algebraic clique engine with exponent α > 1/2 ⇒ ports ⇒ (IM Thm 7.1, characteristic 0)
+  3-SAT in 2^{O(v^{1−δ})}. With the dichotomy, in characteristic 0: contracting ⇒ ports ⇒ power-saving; not
+  contracting and ports ⇒ power-saving; no ports ⇒ α ≤ 1/2. So in every case an algebraic clique engine
+  beating 1/2 gives power-saving 3-SAT, and under Weak ETH the exponent 1/2 is optimal for this class.
+- It meets, not evades, the per-level cap: for β = 2 towers e(K) ≥ c/√log K says the geometric mean of level
+  values is ≥ 1/√2. It is a global argument (one bipartition per term of the whole circuit), so the
+  uniformity gap of Theorem S does not arise. It makes Q1 unnecessary for the barrier but does not answer it:
+  a single level below 1/√2 is not excluded, a tower of them is.
+- Not covered: non-algebraic or value-dependent algorithms; short wires (λ ≪ K); 3-SAT algorithms that do not
+  pass through clique sums; the converse (ports ⇒ an engine).
+- Unconditional by-products: Lemma N (the direct pricing route is dead in every metric space); Euclidean
+  wire-end placements give at most K^{3/2}-type savings (so Anthropic's Prop. E.10 is optimal for Euclidean
+  prices up to the constant); OpenAI's HC Cor. 3.2 is tight (Anthropic's engine attains it).
+- `prior-barriers.md` now carries a correction banner. Referee launched → `research/sat3/review-q2.md`
+  (first questions: does HC Thm 3.1 say what is used; is Anthropic's clique polynomial the polynomial HC
+  bounds; do the three uses of "ports" compose).

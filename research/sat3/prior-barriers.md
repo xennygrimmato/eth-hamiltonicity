@@ -1,5 +1,10 @@
 # prior-barriers: is exponent > 1/2 of log n already excluded (or promised) by published work?
 
+> **Correction, 27 Nov.** §0 item 3, §5.2 and §5.3 below are superseded by `q2-notes.md`: the metric statement
+> "Q2" of §5.3 is false in every metric space (Lemma N there), and the dismissal of the restriction route in
+> the last paragraph of §5.3 was wrong: OpenAI's HC Thm 3.1 does transfer to the clique wire tensor, by
+> restriction with rotating star centres (Theorem T there, conditional on HC Thm 3.1; at a referee).
+
 Reader's report, 26 Nov 2026. Nothing here is committed, machine-checked or refereed.
 
 Tags: **[K]** quoted from a source, with location; **[R]** proved here in full (short); **[D]** derived here,

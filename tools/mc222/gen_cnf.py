@@ -10,7 +10,8 @@ Circuit model (see README for the normalisations and their proofs):
   output t: target_t = e_t + sum_k ell_{t,k} x_k + sum_i lam_{t,i} g_i  (all coefficients free).
 Optional: --root a,b fixes gate 0 to the product of the linear forms with input masks a, b.
 
-usage: gen_cnf.py <problem> <k> [--root a,b] [--helper p] > file.cnf
+usage: gen_cnf.py <problem> <k> [--root a,b] [--helpers i,j,..] > file.cnf
+       (--helpers: 0-based indices of the only gates allowed to be non-reducing)
        gen_cnf.py <problem> <k> [--root a,b] --decode solver_output > circuit.txt
 """
 import sys
@@ -163,17 +164,17 @@ def encode(problem, k, root=None, helper=None):
         Lv, Rv = lin_shared(Ls), lin_shared(Rs)
         G.append([f.and_(Lv[p], Rv[p]) for p in range(N)])
     if helper is not None:
-        # structural cube (README, "helper/reducer lemma"): gate 0 and gate `helper` are the only
-        # gates allowed outside A+T+span(earlier helpers); every other gate i must satisfy
-        # g_i = e + sum ell_k x_k + sum mu_t target_t + alpha g_0 + beta g_helper (beta only if helper < i).
+        # structural cube (README, "helper/reducer lemma"): the gates in the set `helper` are the
+        # only gates allowed outside A+T+span(earlier helpers); every other gate i must satisfy
+        # g_i = e + sum ell_k x_k + sum mu_t target_t + sum_{j in helper, j<i} alpha_j g_j.
         tv = [[bool(ft(pts[p])) for p in range(N)] for ft in fs]
-        for i in range(1, k):
-            if i == helper:
+        for i in range(k):
+            if i in helper:
                 continue
             e0 = f.var()
             ell = [f.var() for _ in range(n)]
             mu = [f.var() for _ in fs]
-            hs = [0] + ([helper] if helper < i else [])
+            hs = [j for j in sorted(helper) if j < i]
             al = [f.var() for _ in hs]
             X = [False] * N
             for p in range(1, N):
@@ -234,8 +235,9 @@ if __name__ == "__main__":
         a, b = sys.argv[sys.argv.index("--root") + 1].split(",")
         root = (int(a), int(b))
     helper = None
-    if "--helper" in sys.argv:
-        helper = int(sys.argv[sys.argv.index("--helper") + 1])
+    if "--helpers" in sys.argv:
+        hs = sys.argv[sys.argv.index("--helpers") + 1]
+        helper = frozenset(int(t) for t in hs.split(",") if t != "")
     if "--decode" in sys.argv:
         sys.stdout.write(decode(problem, k, root, helper, sys.argv[sys.argv.index("--decode") + 1]))
         sys.exit(0)

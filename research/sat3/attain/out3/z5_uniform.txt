@@ -1,3 +1,11 @@
 net 5 full w=(0.333333, 0.333333, 0.333334): E=300, classes=12, first-edge reps=6; level-1 h1/E = 0.773945
   round 0: coarse candidates 108, verified 108, true violations 36, largest 0.01909 (coarse 0.01358)
   round 0: 36 verified depth-2 strategies in the LP -> h2A/E = 0.771218
+  round 1: coarse candidates 36, verified 36, true violations 0, largest 0.00000 (coarse 0.00404)
+   strategy (violation, e, e', e'', t, s, val): (np.float64(0.019092039303642006), (0, 8), (6, 15), (5, 18), 0.5, 1.0, np.float64(1.8599312368682244))
+   strategy (violation, e, e', e'', t, s, val): (np.float64(0.019092039303642006), (0, 8), (2, 18), (3, 15), 0.5, 1.0, np.float64(1.8599312368682244))
+   strategy (violation, e, e', e'', t, s, val): (np.float64(0.019092039303642006), (0, 7), (6, 20), (1, 5), 0.5, 1.0, np.float64(1.8599312368682244))
+   strategy (violation, e, e', e'', t, s, val): (np.float64(0.019092039303642006), (0, 7), (1, 12), (2, 6), 0.5, 1.0, np.float64(1.8599312368682244))
+   strategy (violation, e, e', e'', t, s, val): (np.float64(0.019091619098193124), (0, 9), (5, 24), (4, 6), 0.5, 1.0, np.float64(1.8599316570736733))
+   strategy (violation, e, e', e'', t, s, val): (np.float64(0.019091619098193124), (0, 9), (4, 10), (3, 5), 0.5, 1.0, np.float64(1.8599316570736733))
+RESULT 5 full w=(0.333333, 0.333333, 0.333334): h1/E = 0.773945  h2A/E = 0.771218  (verified strategies added: 36)

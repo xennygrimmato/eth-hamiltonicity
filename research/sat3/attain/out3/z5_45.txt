@@ -1,0 +1,1 @@
+net 5 full w=(0.45, 0.45, 0.1): E=300, classes=12, first-edge reps=6; level-1 h1/E = 0.690931

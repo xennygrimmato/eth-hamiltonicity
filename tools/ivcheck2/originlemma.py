@@ -170,3 +170,71 @@ if __name__ == "__main__":
     print("hull3", prove_hull3(float(sys.argv[1]) if len(sys.argv) > 1 else 0.125, 4), time.time() - t0)
     t0 = time.time()
     print("clnear", prove_clnear(float(sys.argv[2]) if len(sys.argv) > 2 else 0.125, 4, 3), time.time() - t0)
+
+
+# ----------------------------------------------------------------- k2near -------------------------
+def k2near_symbolic(lam):
+    """V(a, e) = sum_i 1/2 sqrt(tau^2 (c_ij + c_ik)^2 + (s_ij - s_ik)^2), tau^2 = 1 - lam^2 (exact)."""
+    a = sp.symbols("a12 a13 a23", real=True)
+    e = sp.symbols("e12 e13 e23", real=True)
+    s12, s21 = a[0] + e[0], e[0] - a[0]
+    s13, s31 = a[1] + e[1], e[1] - a[1]
+    s23, s32 = a[2] + e[2], e[2] - a[2]
+    t2 = 1 - lam ** 2
+    c = lambda u: sp.sqrt(1 - u ** 2)
+    V = lambda u, v: sp.sqrt(t2 * (c(u) + c(v)) ** 2 + (u - v) ** 2) / 2
+    return a, e, V(s12, s13) + V(s21, s23) + V(s31, s32)
+
+
+def prove_k2near(lam_pq, eta_pq, r, nH, nL):
+    """Br' >= 0 on G = [-r, r]^6 in (a, e) coordinates (k2m notes §5.4, job (CL**_0)).
+
+    Everywhere N_i >= C_i (notes §5.4: N = C or 1, C <= 1), and C_i - (lam/2)|Q_i| = V_i, so
+    Br' >= Br := V(a, e) + (lam/2) E - eta with E = sum_k |s_ij + s_ji| = 2 sum_k |e_k|.
+      * g(a) = V(a, 0): g(0) = 3 tau and 3 tau - eta >= 0 is checked exactly; g is even in a (the flip
+        sigma -> -sigma maps (a, 0) to (-a, 0), V invariant), so grad g(0) = 0; its Hessian is positive
+        definite on [-r, r]^3 (Sylvester on sub-boxes), so g(a) >= 3 tau >= eta;
+      * L_k = sup_G |dV/de_k| < lam (Arb enclosures on sub-boxes of G);
+      * mean value theorem along (a, 0) -> (a, e) inside G:
+        Br >= (g(a) - eta) + sum_k (lam - L_k)|e_k| >= 0."""
+    lam = sp.Rational(*lam_pq)
+    eta = sp.Rational(*eta_pq)
+    a, e, Vs = k2near_symbolic(lam)
+    zero = {x: 0 for x in list(a) + list(e)}
+    v0 = sp.nsimplify(sp.simplify(Vs.subs(zero)))
+    tau = sp.sqrt(1 - lam ** 2)
+    assert sp.simplify(v0 - 3 * tau) == 0
+    margin = sp.simplify(3 * tau - eta)
+    if not (margin >= 0):
+        return False, {"stage": "g(0) - eta < 0"}
+    g = Vs.subs({x: 0 for x in e})
+    assert sp.simplify(g.subs({x: -x for x in a}, simultaneous=True) - g) == 0
+    Hf = [[to_arb_func(a, sp.diff(g, a[i], a[j]))[0] for j in range(3)] for i in range(3)]
+    worst = None
+    cH = 0
+    for b in _subboxes(r, nH, 3):
+        H = [[Hf[i][j](*b) for j in range(3)] for i in range(3)]
+        ok, mins = sylvester_pd(H)
+        cH += 1
+        if not ok:
+            return False, {"stage": "hessian", "failed_box": [str(x) for x in b]}
+        lo = min(m.lower() for m in mins)
+        worst = lo if worst is None or lo < worst else worst
+    args = list(a) + list(e)
+    dVf = [to_arb_func(args, sp.diff(Vs, e[k]))[0] for k in range(3)]
+    L = [arb(0)] * 3
+    cL = 0
+    for b in _subboxes(r, nL, 6):
+        for k in range(3):
+            v = dVf[k](*b)
+            if not v.is_finite():
+                return False, {"stage": "L", "failed_box": [str(x) for x in b]}
+            u = abs(v).upper()
+            if u > L[k]:
+                L[k] = u
+        cL += 1
+    lam_a = arb(lam_pq[0]) / arb(lam_pq[1])
+    ok = all(Lk < lam_a for Lk in L)
+    return ok, {"r": r, "nH": nH, "hessian_subboxes": cH, "min_minor_lower": str(worst),
+                "nL": nL, "L_subboxes": cL, "L": [str(x) for x in L], "lam": "%d/%d" % lam_pq,
+                "3tau-eta": str(margin)}

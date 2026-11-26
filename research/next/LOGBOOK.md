@@ -1885,3 +1885,15 @@ Launched: referee on §§5–7; an executor certifying S(9/10) and (CL\*\*₀) w
   m = 1 the dropped cosine terms force all c = 0 — consistent. Still needs a referee before being relied on.
 - Not yet in the note: Theorem E (unconditional exact rate at heavy weights) — under review.
 - Stale lines the writer found in `lean/NOTES.md` and `k2m/notes.md` (status rows) — to tidy.
+
+## 26 Nov (late, 67): I re-ran the full 7-AND-gate verification — reproduces exactly
+
+`tools/mc222/run_all.sh` (with the executor's pinned CaDiCaL 2.1.3 and lrat-check builds), exit 0:
+- all validation cases as reported (both methods; every found circuit re-checked on all inputs);
+- Python orbit computation: 72 orbits, sizes summing to 10 795;
+- exact search, k = 6: 72/72 roots, found = false, 3 547 604 states, 462 s (state count differs slightly from the
+  executor's run because memoisation order depends on thread scheduling);
+- SAT: 1080 cubes needed, 1080 verified UNSAT with checked LRAT proofs; solver 0.59 h CPU, checking 0.13 h; 5.41 GB;
+- **all 1080 CNF hashes and all 1080 LRAT proof hashes are identical to the executor's record.**
+Lab notebook updated. Status: MC(⟨2,2,2⟩ over F₂) = 7 [N‑rig]: three implementations, two methods, proof objects
+reproducible bit for bit. Trust: the CNF encoding and four short lemmas in the README, `lrat-check`.

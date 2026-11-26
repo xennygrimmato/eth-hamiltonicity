@@ -51,6 +51,13 @@ pub trait Problem<const N: usize>: Sync + Send {
     fn excluded_note(&self) -> String {
         String::new()
     }
+    /// Return true only if the point certainly lies in the problem's true domain (where f >= c is
+    /// claimed). Used by the prover only, to decide whether f(x) < c at a box centre is a genuine
+    /// counterexample; a false return just means the box is split further. Default: the domain is
+    /// the whole box `domain()`.
+    fn point_in_domain(&self, _x: &[f64; N]) -> bool {
+        true
+    }
     /// Coordinates forming the "linear block" L of the gain test (see `lb_gain_h`).
     fn linear_block(&self) -> [bool; N] {
         [false; N]
@@ -637,7 +644,7 @@ impl<'a, const N: usize, P: Problem<N>> Ctx<'a, N, P> {
         // counterexample check at the centre: f(c) < bound proved by exact evaluation
         let c = center(b);
         let fc = eval_point(self.p, &c);
-        if fc.is_valid() && fc.hi < self.c {
+        if fc.is_valid() && fc.hi < self.c && self.p.point_in_domain(&c) {
             return Err(self.fail(b, Some((c, fc))));
         }
         if depth >= self.opt.max_depth {

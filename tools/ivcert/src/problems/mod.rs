@@ -3,6 +3,7 @@
 pub mod book;
 pub mod clstar;
 pub mod hull3;
+pub mod k2m;
 pub mod testfns;
 
 use std::collections::BTreeMap;

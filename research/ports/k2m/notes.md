@@ -792,7 +792,8 @@ other): each cross wire lies in 4 of them, each inside pair in 3 + 1: 4Σ_S ≥ 
 (In general f_CAT(0)(K_{3,3}) ≥ (3λ+η)/4 for every (λ,η) ∈ 𝒱₃; the proved part of 𝒱₃ gives its maximum 3/√10 at w = 1; S(9/10) of §5.4 would give 0.975 and (★) 51/52 = 0.9808.) Upper bound 1 from the cut {u₁, v₁}. The natural
 product configuration (tripod × tripod, u's on the legs of one factor, v's on the legs of the other) has
 R = 3/(2√2) = 1.0607 > 1; every metric of negative type (trees, Euclidean, ℓ₁) has R ≥ 1 because Σ c_ic_j d_ij ≤ 0
-for c = ±1 on the two sides. Numerics: see `k33.py` (results recorded in §8).
+for c = ±1 on the two sides. Numerics (§8): no configuration below 1 found; [C] f_CAT(0)(K_{3,3}) = 1, which would
+make K_{3,3} cut-pinned with f* = 1 unconditionally against routing 3/4.
 
 ---
 
@@ -841,6 +842,14 @@ Remarks.
   f_flow = f_book = f_pod = f_cut within 10⁻⁶ (small integer data are almost always flow-tight), and for m = 3 the
   book value agrees with the Toyoda five-point optimisation (`tensorlab.min_ratio`, families triangle + box) up to
   the local optimiser's error (one start set stopped at 0.750164 against 0.75). `scan3.py`: see below.
+
+- K_{3,3} (`k33.py`, `k33_models.py`): flow 3/4, cut 1 ({u₁,v₁}). Relaxation by the necessary four-point (box)
+  inequalities on six points, 240 feasible local minima from 240 starts: all at 1.06066 = 3/(2√2) (the
+  tripod × tripod configuration, a strict local minimum); the local optimiser does not find the degenerate cut
+  point 1.0 by itself. Model spaces: all tree topologies on six points: 1.0; star × ℝ: 1.0; star × star: 1.0607
+  (local); star × star × ℝ: 1.0. No configuration below 1 was found, so the evidence is for f_CAT(0)(K_{3,3}) = 1
+  (cut-pinned), i.e. for the inequality Σ_{i,j}|u_iv_j| ≥ Σ_{i<j}(|u_iu_j| + |v_iv_j|) for 3 + 3 points of a CAT(0) space
+  [C]. It holds in every space of negative type; proved here only with the constant 3/√10 in front of the right side.
 
 **[X] dead ends.**
 1. Direct m-page calibration with the choice of §3.2: false for even m (§3.6).

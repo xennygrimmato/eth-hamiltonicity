@@ -1,0 +1,15 @@
+#0 m=4 spread=0.15 w=1.403: flow=0.56334 book=0.599752 pod=0.599752 cut=0.59975 ends=5 D=1.0
+#1 m=3 spread=0.4 w=0.454: flow=0.77775 book=0.777754 pod=0.777754 cut=0.77775 ends=1 D=1.0
+#2 m=3 spread=0.8 w=0.758: flow=0.14304 book=0.143040 pod=0.143040 cut=0.14304 ends=3 D=1.0
+#3 m=3 spread=0.15 w=1.527: flow=0.58884 book=0.687946 pod=0.687946 cut=0.68795 ends=0 D=1.0
+#4 m=4 spread=0.4 w=2.769: flow=0.55085 book=0.597458 pod=0.597458 cut=0.59746 ends=6 D=0.0
+#5 m=3 spread=0.8 w=0.656: flow=0.24620 book=0.246199 pod=0.246199 cut=0.24620 ends=3 D=0.0
+#6 m=3 spread=0.15 w=0.925: flow=0.94255 book=0.979403 pod=0.979403 cut=0.97940 ends=3 D=0.0
+#7 m=3 spread=0.4 w=0.331: flow=0.87308 book=0.873083 pod=0.873083 cut=0.87308 ends=3 D=0.0
+#8 m=4 spread=0.8 w=0.849: flow=0.46730 book=0.467302 pod=0.467302 cut=0.46730 ends=6 D=1.0
+#9 m=3 spread=0.15 w=0.426: flow=0.82497 book=0.824969 pod=0.824969 cut=0.82497 ends=2 D=1.0
+#10 m=3 spread=0.4 w=1.331: flow=0.39671 book=0.396714 pod=0.396714 cut=0.39671 ends=3 D=0.0
+#11 m=3 spread=0.8 w=0.986: flow=0.15854 book=0.158541 pod=0.158541 cut=0.15854 ends=3 D=0.0
+#12 m=4 spread=0.15 w=2.346: flow=0.41911 book=0.442729 pod=0.442729 cut=0.44273 ends=6 D=1.0
+#13 m=3 spread=0.4 w=1.063: flow=0.76345 book=0.849020 pod=0.849020 cut=0.84902 ends=3 D=0.0
+#14 m=3 spread=0.8 w=1.106: flow=0.24668 book=0.246675 pod=0.246675 cut=0.24668 ends=1 D=1.0

@@ -148,7 +148,10 @@ Scripts: `mc_sat.py` (E1 exact MC via SAT + CEGAR on input rows), `e2_wordram.py
     claimed in a public machine-generated register (entries MF-149 / MF-180, 4 Sep 2026), which calls 6 versus 7 open;
     the cited 2026 paper on polynomial multiplication (arXiv:2608.30238) does not treat matrices; Boyar–Find leave the
     many-output case open. So "≥ 6" is not new, and "= 7" appears to be new but rests on this one search. An
-    independent re-verification by a different method is in progress (`tools/mc222/`).
+    independent re-verification by a different method was then done (`tools/mc222/`): an exact Rust search with full state keys (no
+    circuit for all 72 orbits) and a SAT encoding split into 1080 cubes, all UNSAT with LRAT proofs verified by
+    `lrat-check`. The lead re-ran the whole script: same verdicts, and all 1080 formula and proof hashes identical.
+    So MC(⟨2,2,2⟩ over F₂) = 7 now rests on three implementations and checked proof objects.
     Why k=6 is costly: helpers (gates not landing in S+T) are allowed at positions 1–2, so the
     second gate ranges over all ~2^18 products; positions 3–6 must all be reducers.
   - Boolean-quadratic MC(⟨2,2,2⟩) = 7 (E1b) and Qf = R = 7.

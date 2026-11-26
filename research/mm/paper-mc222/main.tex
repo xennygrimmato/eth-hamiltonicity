@@ -39,8 +39,8 @@
 \newcommand{\GL}{\operatorname{GL}}
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\commit}{aef111eb9bcac4f32267dc730c0098be3a4b5179}
-\newcommand{\repo}{\url{https://github.com/xennygrimmato/eth-hamiltonicity/tree/aef111eb9bcac4f32267dc730c0098be3a4b5179/tools/mc222}}
-\newcommand{\leanrepo}{\url{https://github.com/xennygrimmato/eth-hamiltonicity/tree/aef111eb9bcac4f32267dc730c0098be3a4b5179/research/mm/lean-mc222}}
+\newcommand{\repo}{\url{https://github.com/xennygrimmato/math/tree/aef111eb9bcac4f32267dc730c0098be3a4b5179/tools/mc222}}
+\newcommand{\leanrepo}{\url{https://github.com/xennygrimmato/math/tree/aef111eb9bcac4f32267dc730c0098be3a4b5179/research/mm/lean-mc222}}
 
 \title{The multiplicative complexity of $2\times 2$ matrix\\ multiplication over $\F_2$ is seven}
 \author{[author]}
@@ -312,7 +312,7 @@ In Lean 4.36 each call of \code{bv\_decide} or \code{native\_decide} adds one au
 
 \paragraph{Sizes and times.} The library has $1396$ hand-written lines in $13$ files and $4057$ generated lines: $72$ files with five cube theorems each, \code{AllCubes.lean}, and \code{OrbitData.lean}, which holds the $432$ maps and $72$ representatives as untrusted certificate data that \code{Orbit.lean} checks. The following times are from one build on a shared machine with load average about $20$. The $72$ cube files, built four at a time, took $4245$\,s wall time; their per-file wall times add up to $16{,}897$\,s, and the slowest file took $427$\,s. Run alone, the cube for root $0$ with $H=\{1,4\}$ took $11$\,s, of which $4.6$\,s in the SAT solver, and the cube for root $9$ with $H=\{1,2\}$, the slowest cube of Method B, took $22$\,s, of which $12.2$\,s in the SAT solver. Each Lean process used $0.9$--$1.0$\,GB of resident memory. The compiled cube files hold the certificates and take $5.7$\,GB. With the cube files built, a full \code{lake build} takes about $6$ minutes, mostly for \code{covers\_all} (about $3$ minutes) and for loading the cube files.
 
-\paragraph{Reproduction.} At the pinned commit, in \code{research/mm/lean-mc222}, the commands \code{lake exe cache get} (which downloads the compiled Mathlib) and \code{lake build} build the library; \code{\#print axioms MC222.mc\_eq\_seven} then prints the axioms. The repository folder is
+\paragraph{Reproduction.} At the pinned commit, in \code{research/mm/lean-mc222}, the commands \code{lake exe cache get} (which downloads the compiled Mathlib) and \code{lake build} build the library; \code{./check\_axioms.sh} then prints the axioms of \code{MC222.mc\_eq\_seven} and checks the list above. Appendix~\ref{app:repro} gives all commands. The repository folder is
 \begin{center}\footnotesize \leanrepo\end{center}
 
 \section{What is trusted}\label{sec:trust}
@@ -361,6 +361,27 @@ The matrix-vector product $\F_2^{2\times2}\times\F_2^2\to\F_2^2$ has bilinear ra
 
 The searches, the proofs of the lemmas, the Lean proof and the text of this paper were produced by AI systems. A first search found no six-gate circuit. A second AI-run pass then re-implemented the search as two programs, Methods A and B, without reading the first program. The pipeline was run a second time on the same machine with identical verdicts and hashes. The Lean proof was written after the external pipeline. The AI session that coordinated the work read the Lean statement, printed its axioms, and then deleted every build product of the library and rebuilt it from source on the same machine (75 minutes, 18426 jobs, the same axiom list, no \code{sorryAx}); this shows that the build is reproducible there, not an independent confirmation. No person has checked the proofs or the code. The code, the per-cube records, a seven-gate circuit and the Lean library are in the repository at commit \code{\commit}:
 \begin{center}\footnotesize \repo\end{center}
+
+
+\appendix
+\section{Reproduction checklist}\label{app:repro}
+
+The following commands check every computational claim of this paper on a Linux machine with \code{git}, \code{make}, a C compiler, Rust (\code{cargo}) and Python~3 (standard library only). The file \code{research/mm/paper-mc222/REPRODUCE.md} at the pinned commit gives the expected output of each step, the times measured here and what each step does and does not show. The repository is \code{https://github.com/xennygrimmato/math} (formerly \code{xennygrimmato/eth-hamiltonicity}); the commit is \code{\commit}.
+\begin{Verbatim}[fontsize=\footnotesize,frame=single,framesep=2mm]
+git clone https://github.com/xennygrimmato/math.git repro && cd repro
+git checkout <commit above>
+cd tools/mc222
+./run_all.sh "$PWD/ext"          # builds CaDiCaL rel-2.1.3 and lrat-check; validation;
+                                 # Method A (k=6); Method B (1080 cubes, LRAT checked)
+python3 compare_results.py results/sat_k6_results.tsv out/sat_k6/results.tsv
+python3 verify_circuit.py results/circuit_mm222_7_p2.txt      # Strassen, 7 ANDs
+./run_mm123.sh "$PWD/ext"        # Theorem 1.2, both methods
+python3 compare_results.py results/sat_mm123_k5_results.tsv \
+                           out/sat_mm123_k5/results.tsv
+cd ../../research/mm/lean-mc222  # Lean 4.36.0 + Mathlib v4.36.0, via elan
+lake exe cache get && lake build && ./check_axioms.sh
+\end{Verbatim}
+The decisive outputs are \code{ALL CUBES UNSAT WITH CHECKED LRAT PROOFS}, \code{\# RESULT: no circuit with <= 6 AND gates for roots 0..72}, \code{ALL RECORDED CUBES REPRODUCED} and \code{AXIOM CHECK PASSED}. A single cube can be checked without the driver scripts: \code{gen\_cnf.py mm222 6 --root a,b --helpers i,j} writes its CNF, \code{cadical -q --lrat=true --binary=false} solves it and writes the proof, \code{lrat-check} checks it, and the sizes and sha256 of both files can be compared with the corresponding line of \code{results/sat\_k6\_results.tsv}. On the 4-core machine used here the external pipeline takes about half an hour and needs less than 1\,GB of disk at any time; the Lean build takes about 75 minutes and 25\,GB of disk.
 
 \bibliographystyle{plain}
 {\footnotesize\bibliography{refs}}

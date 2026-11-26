@@ -1,0 +1,28 @@
+{
+ "title": "The multiplicative complexity of $2\\times 2$ matrix multiplication over $\\mathbb{F}_2$ is seven",
+ "abstract": "@ABSTRACT@",
+ "comments": "@PAGES@ pages. Code, per-cube records (sizes and sha256 of all 1080 CNFs and LRAT proofs) and the Lean 4 proof (theorem MC222.mc_eq_seven) are at https://github.com/xennygrimmato/math/tree/@COMMIT@ in tools/mc222 and research/mm/lean-mc222; step-by-step reproduction instructions are in research/mm/paper-mc222/REPRODUCE.md there. The anc/ folder holds the Python half of the SAT pipeline and the recorded results.",
+ "subject": "cs.CC",
+ "crossListSubjects": ["math.CO", "cs.DM", "cs.LO"],
+ "tags": ["multiplicative complexity", "matrix multiplication", "Strassen's algorithm", "Boolean circuits", "XOR-AND circuits", "SAT solving", "LRAT proofs", "Lean 4", "bv_decide"],
+ "mscCodes": ["68Q06", "68Q17", "68V05", "68V15", "94C11"],
+ "authorshipMode": "no-human-author-claimed",
+ "authors": [{"name": "@AUTHOR@", "orcid": "@ORCID@", "affiliation": null, "contributorKind": "person"}],
+ "submittingContributorIndex": 0,
+ "sponsorName": "@AUTHOR@",
+ "aiSystems": [
+  {"provider": "Anthropic", "name": "Claude Code", "version": null},
+  {"provider": "Lean", "name": "Lean", "version": "4.36.0"},
+  {"provider": "Lean", "name": "Mathlib", "version": "v4.36.0"},
+  {"provider": "CaDiCaL", "name": "CaDiCaL", "version": "2.1.3"},
+  {"provider": "drat-trim", "name": "lrat-check", "version": "2e3b2dc"}
+ ],
+ "humanUnderstanding": "none",
+ "provenance": "Text declaration: Primarily AI-generated.\nThe problem was chosen, and the work directed, by the submitter in sessions with Claude Code (Anthropic). The case analysis, the two search programs, the SAT encoding, the Lean 4 formalisation and the text were produced by AI systems. What is machine-checked: (1) every one of the 1080 SAT cubes was refuted by CaDiCaL 2.1.3 with an LRAT proof accepted by lrat-check (drat-trim commit 2e3b2dc); (2) the theorem MC222.mc_eq_seven : MC = 7 builds in Lean 4.36.0 with Mathlib v4.36.0, with axioms propext, Classical.choice, Quot.sound and 365 auxiliary axioms, one for each bv_decide or native_decide evaluation, so its trusted base is the Lean kernel together with the Lean compiler and runtime. What is proved on paper only: the reduction lemmas used by the two external programs (the Lean proof does not use them). All computations were reproduced on one machine and one toolchain; this shows determinism, not independent confirmation. Repository: https://github.com/xennygrimmato/math/tree/@COMMIT@",
+ "formalizations": [],
+ "license": "CC BY 4.0",
+ "correctnessConfirmed": false,
+ "communityInterestConfirmed": false,
+ "citationsConfirmed": false,
+ "rightsConfirmed": false
+}

@@ -375,3 +375,30 @@ Asked by the user: push on the Satisfiability Hypothesis and on Orthogonal Vecto
 
 ### Running (as of this entry)
 - none
+
+## 26 Nov 2026: inputs, and the ports question (`v2/notebook.md`) [unreviewed]
+
+### Inputs (24–25 Nov)
+- OpenAI, nine manuscripts on 24 Nov. Euclidean prices exist over every field (Anthropic's flat hypothesis holds; H1
+  confirmed if the paper stands). ω = 9/4 exactly. Fourier transforms need N(log N)^{1/2+o(1)} linear gates, both
+  bounds. Integer multiplication in n(log n)^{1/2+o(1)}, lower bound under Weak ETH. Permanent bound
+  exp(c(log N)²/(log log N)²), by a new two-case split ("ports"). List distinctness needs networks of size n(log n)^σ,
+  which covers Boolean circuits.
+- Google Research, 25 Nov: unconditional deterministic factoring in about exp(3(ln N)^{3/4}); supersedes row F as a bound.
+- Effect on `v1`: the Boolean reading of the contracting case stands as a conditional statement, no longer the first
+  Boolean consequence. The cover wall for Orthogonal Vectors is unaffected.
+
+### Work on ports
+- Lean, exploratory (`lean/EthFollowup/Spectral/Ports.lean`, `DiagRate.lean`) [L]: transfer of Poincaré and
+  contracting inequalities under bounded distortion; stars lose a factor 2; cone distortion reduces to a kernel
+  inequality on the link; tripod window [8/3, 3].
+- Cones over circles of any length are within Euclidean distortion 1.42 [N + R], so they cannot break ports. I had
+  proposed them as the first test; withdrawn.
+- Bounded distortion c of prices on Mat_μ(F₂) with c²(2 − 2^{1−μ}) < μ implies the contracting hypothesis [R + N].
+- The elementary price axioms are consistent on cones [N]; they are too weak to obstruct anything.
+- Cones over high-girth cubic graphs break the graph's own Euclidean Poincaré constant (ratio up to 2.23 at girth 12) [N].
+- H12 [C]: every price geometry is within bounded average distortion of Hilbert space. Implies ports and the
+  contracting hypothesis. All known examples are within √2. Low confidence.
+
+### Running (as of this entry)
+- none

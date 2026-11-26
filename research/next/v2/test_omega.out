@@ -1,0 +1,4 @@
+tripod, unit arms, with the omega inequality: delta(tips) in (2.6667, 3.0)  (8/3 = 2.6667)
+OpenAI's ball lemma (three sites at radius 1, space multiplied by l_2): delta <= sqrt(2 pi) n phi(Phi^-1(1 - 1/n)) = 2.7342
+cone over a circle of length 3 pi, six unit sites + tip: delta(all six) in (2.6667, 4.2426): consistent
+cone over a circle of length 4 pi, six unit sites + tip: delta(all six) in (2.6667, 5.1962): consistent

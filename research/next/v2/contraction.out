@@ -1,0 +1,5 @@
+mu   s_H^2 = max Hilbert ratio D(mu)^2/D(1)^2   (attained at rank B)   contracting needs s^2 < mu   allowed distortion c < sqrt(mu/s_H^2)
+ 2   1.5000                                      (rank 1)             yes                 c < 1.155
+ 3   1.7500                                      (rank 1)             yes                 c < 1.309
+ 4   1.8750                                      (rank 1)             yes                 c < 1.461
+Stars: d(x,y) = t_x + t_y gives D(mu)^2/D(1)^2 <= 2 for every mu (both are between 2 E t^2 and 4 E t^2).

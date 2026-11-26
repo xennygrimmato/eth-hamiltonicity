@@ -1,0 +1,6 @@
+points 7 variables 127 forced (flat/pair) 91 inequalities 1255 midpoint triples 10
+plane six points on the unit circle + tip: range of delta(all six) = (2.5, 2.9999999999999996)  (plane truth: half perimeter of hexagon = 3)
+points 7 variables 127 forced (flat/pair) 52 inequalities 2133 midpoint triples 16
+cone 3pi six points on the unit circle + tip: range of delta(all six) = (2.4142135623730954, 4.242640687119285) 
+points 7 variables 127 forced (flat/pair) 73 inequalities 6743 midpoint triples 16
+tripod with unit arms: range of delta(tips) = (2.0, 3.0)  (OpenAI: 8/3 = 2.667 is extremal for omega = 9/4; Steiner tree = 3)

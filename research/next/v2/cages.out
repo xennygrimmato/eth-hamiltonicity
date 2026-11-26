@@ -1,0 +1,10 @@
+graph               n girth  lambda_2    Euclid      cone   ratio
+Petersen           10     5    0.3333     1.500     1.871    1.25
+Heawood            14     6    0.4714     1.892     2.643    1.40
+McGee              24     7    0.6667     3.000     3.904    1.30
+Tutte-Coxeter      30     8    0.6667     3.000     4.935    1.65
+Balaban 10-cage    70    10    0.8165     5.449     8.366    1.54
+Tutte 12-cage     126    12    0.8165     5.449    12.142    2.23
+
+Idealised trend for a cubic graph of girth g whose typical pairs are at distance >= g/2:  cone ratio -> 4 / (2 - 2 cos(2 pi/g)) ~ g^2/pi^2,
+against the Ramanujan value 1/(1 - 2 sqrt2/3) = 17.49 for the Euclidean constant.  Crossover near g = 13.

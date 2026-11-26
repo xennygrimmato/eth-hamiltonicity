@@ -189,7 +189,7 @@ theorem sat_exponent (H δ A B c : ℝ) (hH : 113 ≤ H) (hδ : 0 < δ) (hδ' : 
     calc B * (c * n ^ (1 + 4 * α) * Real.log n) ^ ρ
         ≤ B * (c * n ^ (1 + 4 * α) * n ^ ε) ^ ρ := by gcongr
       _ = B * c ^ ρ * n ^ ((1 + 4 * α) * ρ + ε * ρ) := by
-        rw [← Real.rpow_add hn0, Real.mul_rpow (by positivity) (by positivity),
+        rw [mul_assoc c, ← Real.rpow_add hn0, Real.mul_rpow hc.le (by positivity),
           ← Real.rpow_mul hn0.le]; ring_nf
       _ ≤ _ := h2
   linarith
@@ -220,7 +220,7 @@ theorem lemma1_per_cut (τ Λ v : ℝ) (hτ : 0 ≤ τ) (hΛ : 1 ≤ Λ) (hv : 1
     τ * Λ / v ^ 256 + v ^ 64 * (τ * Λ ^ 2 / v ^ 300) ≤ 2 * τ * Λ ^ 2 / v ^ 236 := by
   have hv0 : 0 < v := by linarith
   have e1 : v ^ 64 * (τ * Λ ^ 2 / v ^ 300) = τ * Λ ^ 2 / v ^ 236 := by
-    field_simp; ring
+    field_simp
   have e2 : τ * Λ / v ^ 256 ≤ τ * Λ ^ 2 / v ^ 236 := by
     rw [div_le_div_iff₀ (by positivity) (by positivity)]
     have h1 : v ^ 236 ≤ v ^ 256 := pow_le_pow_right₀ hv (by norm_num)
@@ -233,7 +233,7 @@ theorem lemma1_per_cut (τ Λ v : ℝ) (hτ : 0 ≤ τ) (hΛ : 1 ≤ Λ) (hv : 1
 /-- Composition over `r` cuts with `P_i τ_i ≤ τ (4Λ²)^i`: total guesses `≤ τ/v^235` provided
 `2 r (4Λ²)^r Λ² ≤ v` (the polylog-loss condition; notebook l.163–166). -/
 theorem lemma1_composed (τ Λ v : ℝ) (r : ℕ) (P τs : ℕ → ℝ) (hτ : 0 ≤ τ) (hΛ : 1 ≤ Λ) (hv : 1 ≤ v)
-    (hP : ∀ i, 0 ≤ P i) (hPτ : ∀ i, P i * τs i ≤ τ * (4 * Λ ^ 2) ^ i)
+    (hPτ : ∀ i, P i * τs i ≤ τ * (4 * Λ ^ 2) ^ i)
     (hloss : 2 * r * (4 * Λ ^ 2) ^ r * Λ ^ 2 ≤ v) :
     ∑ i ∈ Finset.range r, P i * (2 * τs i * Λ ^ 2 / v ^ 236) ≤ τ / v ^ 235 := by
   have hv0 : 0 < v := by linarith
@@ -243,13 +243,15 @@ theorem lemma1_composed (τ Λ v : ℝ) (r : ℕ) (P τs : ℕ → ℝ) (hτ : 0
     intro i hi
     have hi' : i ≤ r := (Finset.mem_range.mp hi).le
     rw [show P i * (2 * τs i * Λ ^ 2 / v ^ 236) = 2 * (P i * τs i) * Λ ^ 2 / v ^ 236 by ring]
-    gcongr
-    calc P i * τs i ≤ τ * (4 * Λ ^ 2) ^ i := hPτ i
-      _ ≤ τ * (4 * Λ ^ 2) ^ r := by gcongr; exact pow_le_pow_right₀ hq hi'
+    apply div_le_div_of_nonneg_right _ (by positivity)
+    apply mul_le_mul_of_nonneg_right _ (by positivity)
+    have : τ * (4 * Λ ^ 2) ^ i ≤ τ * (4 * Λ ^ 2) ^ r :=
+      mul_le_mul_of_nonneg_left (pow_le_pow_right₀ hq hi') hτ
+    linarith [hPτ i]
   calc _ ≤ ∑ _i ∈ Finset.range r, 2 * (τ * (4 * Λ ^ 2) ^ r) * Λ ^ 2 / v ^ 236 := Finset.sum_le_sum hterm
     _ = τ * (2 * r * (4 * Λ ^ 2) ^ r * Λ ^ 2) / v ^ 236 := by
         rw [Finset.sum_const, Finset.card_range, nsmul_eq_mul]; ring
     _ ≤ τ * v / v ^ 236 := by gcongr
-    _ = τ / v ^ 235 := by field_simp; ring
+    _ = τ / v ^ 235 := by field_simp
 
 end PortsLean.ThmR

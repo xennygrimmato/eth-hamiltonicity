@@ -1011,3 +1011,20 @@ Notes: `research/ports/c1d1/notes.md`. Unrefereed, nothing run.
   vacuous under OpenAI's theorem. C1 is the real gain.
 - Queue: referee on C1.4/S4 (launched); Lean for Toeplitz + isolation lemmas (launched); S3 (Δ₃ placements in
   Mat_μ(F₂) vs 3√3, compiled) after the K_{2,3} protocol search; S5 (Majdoddin Thm 4.13 with floor 1/√2) later.
+
+## 26 Nov (late, 12): uniformity audit final; hull proof written; five-point CAT(0) test
+
+- **Uniformity audit final (`research/ports/review-uniformity.md`): Theorem R is uniform** [V by audit, one reader,
+  nothing built]. Constant table is n-independent and non-explicit. Contracting enters only via `exists_laws`.
+  A Lean-checked uniform form needs a mechanical refactoring (choices → parameters); watch for proofs that unfold a
+  specific enumeration.
+- **Hull lemma: complete proof in `research/ports/hull/notes.md` §1.** Inputs: AN Def. A.4, Prop. C.3 (price space),
+  C.4(a),(f). The step "ρ₃ is a price when contracting fails" is D.2 Steps 1–7 / Remark D.3, not a named Lean theorem.
+  Referee launched.
+- The hull agent confirmed the executor's no-single-shot theorem.
+- **f_CAT5:** five points embed in a CAT(0) space iff all weighted box inequalities hold (Toyoda 2020; quoted from
+  memory, executor to confirm). Coarse grid gives 0.94679 < 3/√10. If the true minimum stays below, there is a
+  five-point CAT(0) set better than W₅ — but the hull lemma only certifies W₅-type points as prices, so H22 would be
+  false while the bound 3/√10 under ¬contracting stands. Executor asked to compute it by cutting planes.
+- Launched: referee on C1 (isolation in characteristic p); Lean project `research/ports/lean-c1` for Toeplitz
+  pairwise independence and the isolation bound.

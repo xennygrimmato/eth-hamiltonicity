@@ -11,7 +11,7 @@ differ.
 
 | item | what to decide | prepared value |
 |---|---|---|
-| Author line | Hexagon requires at least one human contributor, and the submitter must be one of them. The paper's `\author{[author]}` is a placeholder. | filled in by the build script from `AUTHOR` |
+| Author line | Hexagon requires at least one human contributor, and the submitter must be one of them. | `main.tex` has `\author{Vaibhav Tulsyan}`, as the repository's other notes; the build script replaces it with `AUTHOR` |
 | Sign-in | Deposits need an ORCID-authenticated browser session (or a scoped API credential, §5). | — |
 | `humanUnderstanding` | "all", "some" or "none" of the contribution checked and understood by a human. The paper says: "No person has checked the proofs or the code." | `none`. Choose `some` only if you have read and understood at least the statement: Definition 2.1 and Theorem 1.1 of the paper, or `research/mm/lean-mc222/MC222/Statement.lean` and `Main.lean` (about 80 lines). Then add one sentence to `provenance` saying what you read. `some` requires a provenance statement; one is prepared. |
 | `authorshipMode` | Text origin: primarily AI-generated, mixed, or primarily human. | `no-human-author-claimed` (primarily AI-generated) |
@@ -35,7 +35,7 @@ Optional: `AFFIL="Institution"` adds an affiliation line under the name. The scr
 
 | file | upload as (`kind`) | contents |
 |---|---|---|
-| `mc222-source.zip` | `source-archive`; main file `main.tex` | `main.tex` with the author line filled in, `refs.bib`, `main.bbl`, and `anc/`: the eight Python scripts of the SAT pipeline and the five recorded result files (`.tsv`, `.log`). Hexagon's `anc/` accepts only `.json .jsonl .csv .tsv .yaml .yml .log .py` and a few computer-algebra formats, at most 4 MiB per text file; the script checks both. |
+| `mc222-source.zip` | `source-archive`; main file `main.tex` | `main.tex` with the author line set from `AUTHOR`, `refs.bib`, `main.bbl`, and `anc/`: the eight Python scripts of the SAT pipeline and the five recorded result files (`.tsv`, `.log`). Hexagon's `anc/` accepts only `.json .jsonl .csv .tsv .yaml .yml .log .py` and a few computer-algebra formats, at most 4 MiB per text file; the script checks both. |
 | `mc222-formal.zip` | `formal-artifact` (optional) | the Lean project sources, the Rust search and the run scripts. Hexagon keeps formal artifacts but does not publish or execute them; the public copy is the repository. |
 | `main.pdf` | not uploaded | compiled from `mc222-source.zip` exactly as packed (two `pdflatex` passes with the shipped `.bbl`), for comparison with Hexagon's preview |
 | `metadata.json` | not uploaded | the form values below with author, ORCID, commit and page count filled in |

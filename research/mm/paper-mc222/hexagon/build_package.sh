@@ -16,7 +16,7 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 PAPER="$(dirname "$HERE")"
 ROOT="$(cd "$PAPER/../../.." && pwd)"
-: "${AUTHOR:?set AUTHOR=\"Your Name\" (it replaces the [author] placeholder of main.tex)}"
+: "${AUTHOR:?set AUTHOR=\"Your Name\" (it replaces the author line of main.tex)}"
 DIST="$HERE/dist"; rm -rf "$DIST"; mkdir -p "$DIST"
 W="$(mktemp -d)"; trap 'rm -rf "$W"' EXIT
 
@@ -26,9 +26,10 @@ python3 - "$PAPER/main.tex" "$W/src/main.tex" "$AUTHOR" "${AFFIL:-}" <<'PY'
 import sys
 src, dst, author, affil = sys.argv[1:5]
 s = open(src, encoding="utf-8").read()
-assert s.count(r"\author{[author]}") == 1, "placeholder \\author{[author]} not found exactly once"
+import re
 line = author if not affil else author + r"\\ " + affil
-s = s.replace(r"\author{[author]}", r"\author{" + line + "}")
+s, n = re.subn(r"\\author\{[^}]*\}", lambda _: r"\author{" + line + "}", s, count=1)
+assert n == 1, "no \\author line in main.tex"
 open(dst, "w", encoding="utf-8").write(s)
 PY
 cp "$PAPER/refs.bib" "$PAPER/main.bbl" "$W/src/"

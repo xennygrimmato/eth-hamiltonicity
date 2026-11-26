@@ -1324,3 +1324,19 @@ For every field k: f*(K_{2,3}; k) ≥ 3/√10. If contracting fails over k, f*(K
 characteristic 0, a protocol of rate > 3/√10 implies contracting, hence 3-SAT in 2^{O(n^{1−δ})}.
 H22: established modulo the trust base above and the referee's final report.
 Launching: a short separate note on Theorem K; v2 of the contracting/Weak ETH note.
+
+## 26 Nov (late, 32): five-point theorem passes review [V]; independent checker launched
+
+Referee final (`research/ports/review-fivepoint.md`): no gap, fatal or repairable. Book reduction, Prop. 3.2 (re-derived;
+200k random books, min slack +1.5·10⁻⁵), equality cases, chain to tensors (price = d_φ itself; every field; AN Thm A.6
+gives the duality without Strassen), certificate glue (substitution exact; covering complete; corner lemma right;
+symmetry pruning sound; referee re-ran `ivcheck` on all ten (CL\*) certificates).
+Weakest points, in the referee's order: (1) `ivcheck` shares the Rust encoding, interval library and leaf tests with
+the prover; (2) the corner lemma and the covering sit outside the checker — write them into the notes verbatim;
+(3) "min" over Strassen's spectrum should be "inf" (not closed under F ↦ F^a); (4) cosmetic.
+Referee's own numerics on (CL\*): 2·10⁷ random points, 800 local searches, 2 DE runs — no negative value; zeros only at
+the origin and the six corners.
+→ Launched `tools/ivcheck2`: an independent second checker in a different arithmetic stack (Arb via python-flint or
+MPFI), forbidden from reading ivcert's arithmetic; verifies coverage from the box list, re-proves every leaf, and
+handles the equality point by its own argument.
+Theorem K status: [V] by one referee + interval certificate; trust base as listed in the review.

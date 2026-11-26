@@ -27,6 +27,8 @@ cargo run --release --example e3_n5                    # N5 (sqrt-rank points) a
 cargo run --release --example e3_scan -- w5 2 15       # instances where the W5 bound is furthest below cuts
 # ALS restriction search on K_{2,3}: Ds d12 d23 d13 duu starts sweeps [r|c] [seed] [LM iterations]
 cargo run --release --example e3b_als -- 4 3 3 3 3 64 1500 r 5 300
+cargo run --release --example e3b_border -- 2 2 2 2 2 1 1 16 1000   # Ds d.. K h starts sweeps
+cargo run --release --example e3b_table -- 3 3 32 600 300          # calibration table, all demand vectors
 python python/f2sat.py                                 # exact F_2 restriction by SAT (python-sat)
 ```
 
@@ -39,6 +41,7 @@ python python/f2sat.py                                 # exact F_2 restriction b
 | `models` | CAT(0) model spaces: `binary_trees(n)` (all tree topologies), `TreeProduct` (l2 products of metric trees; lines are trees), `min_ratio_tree_products`, `min_ratio_euclidean`, `GraphCone` (Euclidean cone over a metric graph, CAT(0) for girth >= 2π; `heawood_edges`), `min_ratio_graph_cone`. |
 | `tensor` | `Tensor<T>` for `T = f64 / Complex64` with labelled axes: permute, matricise, `contract` (pairwise tensordot), `apply` a local map, `flattening_rank`; `Network` = EPR wire network (parties, wires (p,q,dim)), `dense()` graph tensor, `cut_log_rank`. |
 | `restrict` | `contract_all` (greedy network contraction), `apply_maps`, `environment`, `als_multistart` (parallel ALS with decaying Tikhonov regularisation, gauge balancing, residual and norm histories), `lm_refine` (Levenberg–Marquardt on all maps jointly, real case), `residual_dense` (independent check through the dense S), `cut_check` / `cut_table` (flattening-rank necessary conditions). |
+| `restrict` (border) | `border_multistart(net, T, K, h, opts)`: maps polynomial in ε of degree K, target ε^h T; `border_check` evaluates (⊗A(ε))S/ε^h through the dense S at given ε (the only trustworthy test, see Caveats). |
 | `k23` | the K_{2,3} instance: parties u1,u2,v1,v2,v3 = 0..4, weights, `w5(l,h)`. |
 | `python/f2sat.py` | exact F_2 restriction search for tiny wire networks (Tseitin AND + XOR chains, CaDiCaL via python-sat), with an independent evaluator `verify_f2`. |
 
@@ -55,5 +58,7 @@ sqrt_rank_f2, k23_w5, k23_weights, min_ratio(n, num, den, families, starts, seed
   used. In practice this converges, but check `max_violation` against `box_family_all_orders`.
 - ALS and LM report residuals. A small residual does not prove a restriction. Residual -> 0 together
   with growing map norms points to a degeneration (border), not a restriction.
+- The border ALS objective (coefficients of ε^0..ε^h) can creep towards 0 while the coefficients
+  blow up, even on instances proven impossible (2 → (2,2,2,2) reaches 1e-2). Trust only `border_check`.
 - Dense environments limit `restrict` to roughly 2^28 environment entries per party (for K_{2,3},
   wires of dimension <= 6).

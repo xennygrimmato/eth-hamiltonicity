@@ -152,6 +152,46 @@ that check unless stated. "res" = ||(⊗A)S − T|| / ||T||, rechecked through t
 | 3; 3,3,3,2 | 0.631 | ALS 32×600 | 0.818 | excluded by [R]1 |
 | 4; 3,3,3,3 | 0.792 | ALS R 64×1500 + LM 300 on the best 3 | 0.6437 | no sign of a protocol |
 
+Additional tools and runs:
+- **Border ALS** (`e3b_border Ds d12 d23 d13 duu K h starts sweeps`): maps A_p(ε) = Σ_{k≤K} ε^k A_p^(k),
+  fitting the coefficients of ε^0..ε^h of (⊗A(ε))S to (0,…,0,T). Environment polynomials come from
+  evaluation at roots of unity plus an inverse DFT.
+  **Calibration failure:** on the proven-impossible 2 → (2,2,2,2) the objective still reaches 1.4e-2
+  (K=1,h=1), 3.4e-2 (K=1,h=2), 1.1e-2 (K=2,h=2) and 7.3e-3 (K=1,h=1, 4000 sweeps), with growing
+  coefficients. The independent dense check |(⊗A(ε))S/ε^h − T|/|T| at ε = 1e-1, 1e-2, 1e-3 stays
+  O(1)–O(10²). So the objective by itself is meaningless (it can creep towards 0 as the coefficients
+  blow up); only the dense check counts. On 3 → (2,2,2,2): objective 1.05e-2, dense check
+  60 / 1.2 / 10.5, so not a border solution either. [N]
+- **F_2 SAT** (`python/f2sat.py`): the encoder is validated (swap SAT, no-wire UNSAT, K23 2 → (2,2,1,1)
+  SAT with an independent check). 2 → (2,2,2,1) got no verdict from CaDiCaL in 25 min (naive encoding,
+  no symmetry breaking); stopped. Exact rate 1 over F_2/F_3 needs no SAT: [R]1 holds over every field.
+- **Calibration table** (`e3b_table Ds dmax starts sweeps lm`): all demand vectors with entries
+  ≤ dmax. f_flow = fractional routing value (min over the 25 extreme rays of MET_5; ≥ 1 means
+  routable). f_CAT5 = min over box-feasible metrics: **a lower bound on the asymptotic rate**, since
+  prices are 5-point CAT(0); ≥ 1 means asymptotically achievable. f_W5: an upper bound only if W5 is a
+  price (¬contracting + hull). f_cut: an unconditional upper bound.
+  Ds = 2: the only non-routable vector is (2,2,2,2) (excluded by [R]1).
+  Ds = 3 (ALS 32 × 600 + LM 300 on the best 2):
+
+  | demand (d12,d23,d13,duu) | f_flow | f_CAT5 | f_cut | best residual |
+  |---|---|---|---|---|
+  | (3,3,2,2) and permutations | 0.9197 | 1.0000 | 1.0 | 0.688–0.707 |
+  | (3,2,2,3) and permutations | 0.9197 | 1.1842 | 1.1403 | 0.707 |
+  | (3,3,2,3) and permutations | 0.8262 | 0.9998 | 1.0 (f_W5 = 1.067) | 0.79–0.81 |
+  | (3,3,3,2), (3,3,3,3) | 0.826 / 0.75 | 0.979 / 0.9487 | 1.0 | excluded by [R]1 |
+
+  So (3,2,2,3) (v1v2 = u1u2 = 3, the other two = 2) is beyond routing but asymptotically achievable
+  with margin 18% (f_CAT5 = 1.18). Even so, no single-shot restriction appears (residual 0.707).
+  Single-shot tensor coding at these sizes looks no better than routing.
+  These are non-uniform demand vectors: they test weighted inequalities, not the uniform rate.
+
+Remark from the theory agent (recorded at the coordinator's request): a protocol beating 3/√10 must use
+an identity that is false in buildings, beyond the crossing identity and the one-point extension
+(those two together reach exactly 3/√10). So generic-start ALS is the right tool for rates
+> 3/√10, while structured constructions are the right tool for rates in (3/4, 3/√10]. Since
+f* ≥ 3/√10 (nearly proved), protocols with rates in (3/4, 3/√10] exist asymptotically. The failures
+above say something about the sizes, not the truth.
+
 (See the end of the notebook for the runs still in progress.)
 
 ## What I would run next

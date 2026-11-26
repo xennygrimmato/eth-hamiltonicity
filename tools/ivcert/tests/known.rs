@@ -82,3 +82,52 @@ fn tampered_certificates_are_rejected() {
         assert!(check_by_name(name, &p).is_err(), "tampering {k} not detected");
     }
 }
+
+#[test]
+fn clstar_pieces() {
+    // one orthant of the central region proves and checks; the outer region proves and checks
+    for name in ["clnear:rho=0.5:s=++-", "clstar:rho=0.5"] {
+        let path = tmp(&format!("{}.cert", name.replace([':', '='], "_")));
+        let r = prove_by_name(name, opts(50), Some(&path)).unwrap();
+        assert!(r.proved, "{name}: {}", r.summary);
+        assert!(check_by_name(name, &path).is_ok());
+    }
+    // with 9 replaced by 2 the statement is false and must be refuted
+    let mut o = opts(40);
+    o.max_fail = 5;
+    let r = prove_by_name("clnear:rho=0.5:s=+++:k=2", o, None).unwrap();
+    assert!(!r.proved && r.counterexamples.iter().any(|s| s.starts_with("COUNTEREXAMPLE")));
+}
+
+#[test]
+fn evaluators_agree_with_plain_floats() {
+    use ivcert::bnb::{eval_point, Problem};
+    use ivcert::problems::{clstar::ClStar, hull3::Hull3};
+    let h = Hull3::from_name("hull3").unwrap();
+    let c = ClStar::from_name("clstar").unwrap();
+    let mut s: u64 = 99;
+    let mut rnd = || {
+        s ^= s << 13;
+        s ^= s >> 7;
+        s ^= s << 17;
+        (s >> 11) as f64 / (1u64 << 53) as f64
+    };
+    for _ in 0..2000 {
+        let t = [rnd() * 3.0 - 1.5, rnd() * 3.0 - 1.5, rnd() * 3.0 - 1.5];
+        let fl: f64 = [(0, 1), (0, 2), (1, 2)]
+            .iter()
+            .map(|&(i, j)| ((t[i] - t[j]) / 2.0f64).cos() * (1.0 + 9.0 * ((t[i] + t[j]) / 2.0f64).sin().powi(2)).sqrt())
+            .sum();
+        let iv = eval_point(&h, &t);
+        assert!(iv.lo - 1e-12 <= fl && fl <= iv.hi + 1e-12 && iv.width() < 1e-13);
+        // (CL*) in psi-form vs the sigma-form evaluator
+        let p: Vec<f64> = (0..6).map(|_| rnd() * 3.14159 - 1.570795).collect();
+        let v = |a: f64, b: f64| ((a + b) / 2.0).cos() * (1.0 + 9.0 * ((a - b) / 2.0).sin().powi(2)).sqrt();
+        let phi = v(p[0], p[1]) + v(p[2], p[3]) + v(p[4], p[5]) - 3.0
+            + 1.5 * ((p[0].sin() + p[2].sin()).abs() + (p[1].sin() + p[4].sin()).abs() + (p[3].sin() + p[5].sin()).abs());
+        let sg: [f64; 6] = std::array::from_fn(|i| p[i].sin());
+        let iv = eval_point(&c, &sg);
+        assert!((iv.mid() - phi).abs() < 1e-9, "{phi} {iv:?}");
+        let _ = c.bound();
+    }
+}

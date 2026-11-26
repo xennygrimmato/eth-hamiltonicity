@@ -1784,3 +1784,16 @@ My spot check: t_a has trace 1 and determinant 0 in characteristic 2, so it is a
 Question I put to the referee: since the five-point theorem applies to any five points of a CAT(0) space, the m-page
 book may not be needed at all for the averaging; and whether Strassen duality is stated correctly for a weighted
 (non-integer) demand.
+
+## 26 Nov (late, 60): the six-variable inequality, the three-angle inequality and the K_{2,m} averaging in Lean [L]
+
+`research/ports/lean/PortsLean/CLStar.lean` (15 theorems; I rebuilt the project: 18278 jobs, success; no sorry):
+- `clstar_gen`: Φ(K, t) ≥ 0 on [−1,1]⁶ whenever t² ≤ K and t ≥ 3 (t = coefficient 3/w of the pair sums ×2/… as defined in
+  the file); `clstar_weighted` (0 < w ≤ 1, K = 1+9/w²); `clstar` (K = 10); `clstar_weighted_sharp` (any K ≥ 9/w²);
+  `clstar_K9`; `clstar_K_lt9_fails` (K < 9 fails at σ = (1,−1,−1,−1,1,1)) — so 9 is sharp.
+- `three_angle_alg`, `three_angle` (trigonometric form with any constant c ≥ 8), `three_angle_I` (c = 9),
+  `three_angle_corner` (sharpness at the corner).
+- `k2m_average`, `R_eq`, `k2m_rate`: the averaging over triples and the identity R = (2/(m−1))·κ(w′).
+Now machine-checked: (CL\*) and (I) themselves. Still by hand/referee: the book reduction, the calibration
+(Prop. 3.2 / Prop. C), the hull lemma's CAT(0) rigidity, the idempotent family.
+Lean project: 14 files.

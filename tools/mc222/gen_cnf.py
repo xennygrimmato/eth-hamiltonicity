@@ -10,7 +10,7 @@ Circuit model (see README for the normalisations and their proofs):
   output t: target_t = e_t + sum_k ell_{t,k} x_k + sum_i lam_{t,i} g_i  (all coefficients free).
 Optional: --root a,b fixes gate 0 to the product of the linear forms with input masks a, b.
 
-usage: gen_cnf.py <problem> <k> [--root a,b] > file.cnf
+usage: gen_cnf.py <problem> <k> [--root a,b] [--helper p] > file.cnf
        gen_cnf.py <problem> <k> [--root a,b] --decode solver_output > circuit.txt
 """
 import sys
@@ -106,7 +106,7 @@ def rref_plane(a, b, npos):
     return rows
 
 
-def encode(problem, k, root=None):
+def encode(problem, k, root=None, helper=None):
     n, fs = targets(problem)
     N = 1 << n
     pts = [tuple((p >> j) & 1 for j in range(n)) for p in range(N)]
@@ -162,6 +162,32 @@ def encode(problem, k, root=None):
             return vals
         Lv, Rv = lin_shared(Ls), lin_shared(Rs)
         G.append([f.and_(Lv[p], Rv[p]) for p in range(N)])
+    if helper is not None:
+        # structural cube (README, "helper/reducer lemma"): gate 0 and gate `helper` are the only
+        # gates allowed outside A+T+span(earlier helpers); every other gate i must satisfy
+        # g_i = e + sum ell_k x_k + sum mu_t target_t + alpha g_0 + beta g_helper (beta only if helper < i).
+        tv = [[bool(ft(pts[p])) for p in range(N)] for ft in fs]
+        for i in range(1, k):
+            if i == helper:
+                continue
+            e0 = f.var()
+            ell = [f.var() for _ in range(n)]
+            mu = [f.var() for _ in fs]
+            hs = [0] + ([helper] if helper < i else [])
+            al = [f.var() for _ in hs]
+            X = [False] * N
+            for p in range(1, N):
+                h = p.bit_length() - 1
+                X[p] = f.xor(X[p ^ (1 << h)], ell[h])
+            for p in range(N):
+                v = f.xor(X[p], e0)
+                for t in range(len(fs)):
+                    if tv[t][p]:
+                        v = f.xor(v, mu[t])
+                for a, j in zip(al, hs):
+                    v = f.xor(v, f.and_(a, G[j][p]))
+                v = f.xor(v, G[i][p])
+                f.equal_const(v, False)
     outs = []
     for t, ft in enumerate(fs):
         lam = [f.var() for _ in range(k)]
@@ -180,9 +206,9 @@ def encode(problem, k, root=None):
     return f, sel, outs, n
 
 
-def decode(problem, k, root, model_path):
+def decode(problem, k, root, helper, model_path):
     """turn a solver model (lines 'v ...') into a circuit file for verify_circuit.py"""
-    f, sel, outs, n = encode(problem, k, root)
+    f, sel, outs, n = encode(problem, k, root, helper)
     true = set()
     for line in open(model_path):
         if line.startswith("v "):
@@ -207,9 +233,12 @@ if __name__ == "__main__":
     if "--root" in sys.argv:
         a, b = sys.argv[sys.argv.index("--root") + 1].split(",")
         root = (int(a), int(b))
+    helper = None
+    if "--helper" in sys.argv:
+        helper = int(sys.argv[sys.argv.index("--helper") + 1])
     if "--decode" in sys.argv:
-        sys.stdout.write(decode(problem, k, root, sys.argv[sys.argv.index("--decode") + 1]))
+        sys.stdout.write(decode(problem, k, root, helper, sys.argv[sys.argv.index("--decode") + 1]))
         sys.exit(0)
-    f, sel, outs, n = encode(problem, k, root)
-    sys.stdout.write(f"c mc222 gen_cnf problem={problem} k={k} root={root}\n")
+    f, sel, outs, n = encode(problem, k, root, helper)
+    sys.stdout.write(f"c mc222 gen_cnf problem={problem} k={k} root={root} helper={helper}\n")
     sys.stdout.write(f.dimacs())

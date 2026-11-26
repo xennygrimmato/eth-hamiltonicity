@@ -25,6 +25,15 @@ Remark on step 3. The informal proof takes `sin χ = 3m/√(9+w²)`, so `√K si
 sharper constant (`K = 9` at `w = 1`, "1 + 8 sin²" in the trigonometric form) as well, and
 `clstar_K_sharp` shows that `K = 9` cannot be lowered (the point (1,−1,−1,−1,1,1) gives
 `Φ = √K − 3`).
+
+Contents:
+* `clstar_gen` (any `t ≥ 3`, `K ≥ t²`), `clstar_weighted` (`K = 1 + 9/w²`, `t = 3/w`), `clstar`
+  (w = 1, K = 10), `clstar_weighted_sharp` (`K ≥ 9/w²`), `clstar_K9`, `clstar_K_sharp`,
+  `clstar_K_lt9_fails`;
+* the three-angle inequality (I): `three_angle_alg` (slice `σ_ji = −σ_ij`, `θ₁ = ψ₁₂`,
+  `θ₂ = −ψ₁₃`, `θ₃ = ψ₂₃`), `three_angle` (trigonometric form, any inner constant `c ≥ 8`),
+  `three_angle_I` (`c = 9`), `three_angle_corner` (`F = √(1+c)` at (π/2, π/2, −π/2): `c = 8` sharp);
+* the K_{2,m} averaging: `k2m_average`, `R_eq`, `k2m_rate`.
 -/
 
 namespace PortsLean.CLStar

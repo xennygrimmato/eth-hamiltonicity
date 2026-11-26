@@ -189,3 +189,45 @@ contains no `sorry`, `axiom` or `native_decide`. `lake build` succeeds with the 
   - `propS_rank_pow`: the same for 2^{-k·D_f}.
 
 Not formalised: the consequences 4.2(a)–(c), which need the expander mixing lemma and co-area.
+
+## CLStar.lean — analytic proof of (CL*), the three-angle inequality (I), K_{2,m} averaging
+
+Sources: note-k23-rate.md §3.3 (the statement (CL*), its algebraic form (3.5), the slice (I)) and
+k2m/clstar_analytic.py (the analytic chain). There is no `k2m/notes.md` in the tree. Status: **all
+proved**, with no `sorry`, `axiom` or `native_decide`. `#print axioms` for every theorem below gives
+`[propext, Classical.choice, Quot.sound]`.
+
+Notation: `Phi K t s12 s13 s21 s23 s31 s32 = ½Σ_i √((c_ij+c_ik)² + K(σ_ij−σ_ik)²) − 3 + (t/2)·E`,
+with `c = √(1−σ²)` and `E = |s12+s21| + |s13+s31| + |s23+s32|`.
+
+- `clstar_gen`: `t² ≤ K`, `3 ≤ t`, all `|s| ≤ 1` ⇒ `0 ≤ Phi K t …`.
+- `clstar_weighted`: `0 < w ≤ 1` ⇒ Φ_w ≥ 0. Here `K = 1 + 9/w²` and the edge weight is `3/(2w)`,
+  written out explicitly.
+- `clstar`: (3.5) itself (w = 1, K = 10).
+- `clstar_weighted_sharp`: the same for any `K ≥ 9/w²`.
+- `clstar_K9`: K = 9 at w = 1, i.e. "1 + 8 sin²δ".
+- `clstar_K_sharp` and `clstar_K_lt9_fails`: `Phi K 3 (1,−1,−1,−1,1,1) = √K − 3`, which is `< 0` for
+  `K < 9`. So 9 is optimal.
+- `three_angle_alg`: for `K ≥ 9` and `|s_i| ≤ 1`, `3 ≤ ½Σ_{i<j} √((c_i+c_j)² + K(s_i+s_j)²)`. It is
+  the slice σ12 = s1, σ13 = −s2, σ21 = −s1, σ23 = s3, σ31 = s2, σ32 = −s3 of `clstar_gen` (E = 0).
+- `trig_term`: if `cos((a−b)/2) ≥ 0`, then
+  `cos((a−b)/2)·√(1 + c sin²((a+b)/2)) = ½√((cos a + cos b)² + (1+c)(sin a + sin b)²)`.
+- `three_angle`: for `c ≥ 8` and θ ∈ [−π/2, π/2]³, `F_c(θ) ≥ 3`. `three_angle_I` is `c = 9`, the
+  note's (I). `three_angle_corner`: `F_c(π/2, π/2, −π/2) = √(1+c)`, so 8 is sharp.
+- `k2m_average`: m ≥ 3, `T` symmetric, and for all distinct i, j, k:
+  `κ(T_ij + T_jk + T_ik + w′D) ≤ S_i + S_j + S_k`. Then
+  `2κ/(m−1)·(Σ_{i<j} T_ij + w′·m(m−1)/6·D) ≤ Σ_i S_i`. The proof sums over ordered distinct
+  triples. No sign hypotheses are needed.
+- `R_eq`: for m > 1, `2m/√(m²(m−1)² + 4w²) = (2/(m−1))·3/√(9+w′²)`, with `w = w′m(m−1)/6`.
+- `k2m_rate`: with κ = 3/√(9+w′²), `R·(Σ_{i<j} T_ij + w·D) ≤ Σ_i S_i`.
+
+Findings:
+1. The informal proof is correct, and so is its choice sin χ = 3m/√(9+w²). The formal proof uses
+   the simpler Cauchy–Schwarz direction (a, b) = (√(1−m²), m):
+   `√(x² + Ky²) ≥ x√(1−m²) + t·m·|y|` whenever `t² ≤ K` (any sign of x). Then
+   `Φ + 3 ≥ 3(1−m²) + (tm/2)(V+E) ≥ 3 − 3m² + t m² ≥ 3`. Only `K ≥ 9/w²` and `t = 3/w ≥ 3` are used.
+   So the constant `1 + 9/w²` can be lowered to `9/w²`, and that is optimal at w = 1.
+2. On the slice (I) this is the note's claim that the constant 8 can replace 9 ("1 + 8 sin²"), now
+   proved, with 8 sharp at the corner (π/2, π/2, −π/2).
+3. The bookkeeping θ₁ = ψ₁₂, θ₂ = −ψ₁₃, θ₃ = ψ₂₃ checks out: each slice term equals
+   `½√((cos θ_i + cos θ_j)² + K(sin θ_i + sin θ_j)²)`.

@@ -2909,3 +2909,20 @@ every g = 2^m and every ε > 0, every family of covers of the order-g three-merg
 with 2^{o(λ)} pieces per configuration has level value ≥ (1/√2 − c/g − ε)·E·λ for λ ≥ λ₀(g, ε), c < 1.13.
 Equivalently: a three-merge piece family on one fixed net of F₂^m (or on the 8-wire configuration E_D) with
 value below that bound proves contracting, hence power-saving 3-SAT.
+
+**Referee on Theorem T, interim (items 1–2): correct, no break found.**
+- OpenAI's HC Thm 3.1 is quoted accurately (absolute constants; every sufficiently large even d; every field
+  whose characteristic has no ports; every h ≥ 1; degree-component border model).
+- "Ports" is one notion across HC, IM and EG (bounded degree reduces to a single degree by pigeonhole or by
+  EG's padding), so "small circuit ⇒ ports in characteristic 0 ⇒ IM Thm 7.1" composes with no parameter loss.
+  OpenAI's Lean has a formal counterpart of "ports ⇒ power-saving 3-SAT" (`middle_count_bridge`), read but not
+  built by us; HC's quantitative Thm 3.1 has none ("remains unformalized" in their own docs).
+- Anthropic's clique polynomial has one table per node (Def. 3), so it is set-multilinear with rows = nodes
+  and coefficient tensor T_K(λ): exactly the format HC bounds. The worry about tables per pair does not arise.
+- Lemma L correct (extra linear forms ≤ K·2^{λ(K−½)} gates, negligible against the bound once
+  c·K/√log K > 1); the star lemma verified exactly by the referee's own contraction code for K = 3, 4. The
+  bound is non-vacuous and consistent with Anthropic's upper bound.
+- To fix: "oblivious algebraic algorithm" must mean a straight-line program computing f_{K,λ} as a polynomial
+  (Anthropic's engine qualifies); the characteristic-p sentence of Cor. T2 has no quoted source (IM 7.1 is
+  characteristic 0 only); constants and the threshold d₀ are unspecified, so "one circuit for one (K, λ)"
+  means beating an unknown bound at an unknown K.

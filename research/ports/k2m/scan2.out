@@ -87,3 +87,4 @@
 #87 m=4 c1=[np.int64(2), np.int64(2), np.int64(1), np.int64(3)] c2=[np.int64(2), np.int64(1), np.int64(3), np.int64(2)] r=[1, 1, 0, 0, 2, 2] w=2 c0=1: flow=1.00000 book=1.000000 pod=1.000000 cut=1.00000 toyoda=None
 #88 m=3 c1=[np.int64(2), np.int64(1), np.int64(3)] c2=[np.int64(3), np.int64(3), np.int64(3)] r=[3, 2, 1] w=2 c0=0: flow=0.93750 book=1.000000 pod=1.000000 cut=1.00000 toyoda=1.001128 TOYODA-MISMATCH
 #89 m=3 c1=[np.int64(3), np.int64(2), np.int64(1)] c2=[np.int64(3), np.int64(1), np.int64(3)] r=[0, 0, 2] w=2 c0=0: flow=1.25000 book=1.250000 pod=1.250000 cut=1.25000 toyoda=1.25
+#90 m=4 c1=[np.int64(2), np.int64(2), np.int64(1), np.int64(3)] c2=[np.int64(1), np.int64(2), np.int64(1), np.int64(2)] r=[2, 2, 2, 0, 1, 2] w=3 c0=1: flow=0.50000 book=0.500000 pod=0.500000 cut=0.50000 toyoda=None

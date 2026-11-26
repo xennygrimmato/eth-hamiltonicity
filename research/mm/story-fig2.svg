@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" font-family="Helvetica, Arial, sans-serif" font-size="20">
 <rect width="960" height="520" fill="#fff"/>
-<text x="480" y="34" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">Six friends, one shared coin for every pair: 15 coins</text>
+<text x="480" y="34" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">Six people, one link for every pair: 15 links</text>
 <text x="250" y="70" text-anchor="middle" font-size="20" fill="#000" font-weight="bold">Any split of the six</text>
 <line x1="250.0" y1="175.0" x2="250.0" y2="105.0" stroke="#000" stroke-width="3.5"/>
 <line x1="250.0" y1="175.0" x2="332.3" y2="317.5" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
@@ -26,7 +26,7 @@
 <circle cx="392.9" cy="352.5" r="11" fill="#000" stroke="#000" stroke-width="3"/>
 <circle cx="167.7" cy="317.5" r="11" fill="#fff" stroke="#000" stroke-width="3"/>
 <circle cx="107.1" cy="352.5" r="11" fill="#000" stroke="#000" stroke-width="3"/>
-<text x="250" y="470" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">9 coins cross the split</text>
+<text x="250" y="470" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">9 links cross the split</text>
 <text x="710" y="70" text-anchor="middle" font-size="20" fill="#000" font-weight="bold">Teams of two must stay together</text>
 <line x1="710.0" y1="175.0" x2="710.0" y2="105.0" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
 <line x1="710.0" y1="175.0" x2="792.3" y2="317.5" stroke="#000" stroke-width="3.5"/>
@@ -52,6 +52,6 @@
 <circle cx="852.9" cy="352.5" r="11" fill="#fff" stroke="#000" stroke-width="3"/>
 <circle cx="627.7" cy="317.5" r="11" fill="#fff" stroke="#000" stroke-width="3"/>
 <circle cx="567.1" cy="352.5" r="11" fill="#fff" stroke="#000" stroke-width="3"/>
-<text x="710" y="470" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">8 coins cross the split</text>
-<text x="480" y="505" text-anchor="middle" font-size="15" fill="#000">black dots on one side, white dots on the other; thick lines are the coins that cross; dashed loops are the teams</text>
+<text x="710" y="470" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">8 links cross the split</text>
+<text x="480" y="505" text-anchor="middle" font-size="15" fill="#000">black dots on one side, white dots on the other; thick lines are the links that cross; dashed loops are the teams</text>
 </svg>

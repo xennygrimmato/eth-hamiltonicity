@@ -593,3 +593,14 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - Checks: reproduces K₄ (asymptotic rank 16), polynomial multiplication exponent 1, Strassen/Bini/Schönhage identities,
   all known ranks, pre-2026 rectangular bounds. None could have failed. Falsifiable predictions exist (small
   Coppersmith–Winograd tensors, S₃ group algebra, border rank of T₁₆ ≥ 512) but none is laptop-scale.
+
+### Anti: the missing hypothesis follows from Weak ETH → a dichotomy [R in progress, given the papers]
+- OpenAI's integer-multiplication paper, Theorem 7.1 (verbatim per anti): if characteristic zero admits "ports", then
+  3-SAT on v variables is decidable in 2^{O(v^{1−δ})}·poly. So under variable-count Weak ETH, characteristic zero has
+  no ports — exactly the hypothesis (H2) the impossibility argument needed.
+- DICHOTOMY: either 3-SAT has a 2^{O(v^{1−δ})} algorithm, or every Boolean circuit multiplying n×n matrices (over F₂,
+  Boolean, or (min,+)) needs Ω(n²√log n) gates. Same for polynomial and integer multiplication at Ω(n√log n), and that
+  version uses only printed statements (no reading of Lemma 4.1's proof), because there the number of destinations
+  equals the number of wires.
+- Matrices need Lemma 4.1's entropy step (n destinations for n² wires). To be written with every dependency listed.
+- Note: the current ETH refutation (2^{n/(log n)^{1/2+o(1)}}) is compatible with Weak ETH. H12 sharpened accordingly.

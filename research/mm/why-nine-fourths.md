@@ -193,3 +193,83 @@ Honest summary: the number 9/4 is explained by the upper bound. The lower bound,
 - arXiv:2610.28627 (Pass) and arXiv:2611.09716 (Doğan–Lysikov–Sakabe–Walter): abstracts only. arXiv:2610.30054 (Amanov–van den Berg–Zuiddam), arXiv:2610.10494 (Uznański), arXiv:2610.34273 (Zhou): through the summaries in `research/engine3-literature.md` §§1.4–1.6.
 - Checks: two small scripts (not kept in the repository) that verify (i) the Legendre duality of §7 on 200 random shapes, to rounding error; (ii) the equation Σ√(1 − c_k/ω) = 1; (iii) that with lever-rule intercepts each of the three bounds in §5.2 peaks at D\*(a), and that random admissible intercepts never fall below it; (iv) the growth exponent of the October recursion; (v) exact tripling for a^(1/3)(b + a/2).
 - Barrier constants and the pre-2026 history in §10 are from memory and should be checked before being quoted.
+
+---
+
+# Addendum (later on 26 Nov): limits of this picture, the lower-bound mechanism, and tests
+
+The plain-language version is `story-nine-fourths.md` (figures `story-fig1.svg` to `story-fig3.svg`). It is built on §15 below, not on the tripod.
+
+## 13. Limits of the tripod/resistor picture
+
+1. **The tripod is a change of variables, not a geometry.** Any three distances are a_i + a_j. Nothing about a tree is forced. The only geometric content is the statement that the label is cheaper than half the perimeter, which no flat pricing allows.
+2. **"Parallel resistance" is the optimum of one trick.** I found no flow. Worse, it does not generalise: for a star with n unit arms the bound that follows from Zhou's K_n theorem is 4(1 − 1/n), which equals n − 1/n only at n = 3 (for n = 4 it is 3, not 3.75). §15 shows the resistor formula is the team-size formula (p+q+r)²/4 in awkward coordinates: arm conductance is proportional to (total − 2 × team size).
+3. **It explains why the October algorithm stops at 9/4, not why nothing beats it.** §§1–8 are all upper-bound side.
+4. **The Legendre-dual check (§7) is internal consistency** within one family of constructions. It is not outside evidence.
+
+What Part A changed: the lower bound has a describable shape (§14), the number enters it in exactly one place, and that place again uses the 2026 algorithm family. What Part B changed: the number has a far simpler source (§15), a cut count.
+
+## 14. Part A: how the lower bound works, and where 9/4 enters
+
+Read for this: §§2, 4, 7, 12, 14 (statements), 15 (statement), 16, 17 (start), 19 (statement), 23, 27. Not read line by line: §§5–6, 13, 18, 20–22, 24–26, and the companion papers beyond the statements cited.
+
+**Shape: a dichotomy.** Take a family of tensors depending polynomially on a parameter, and at each parameter value the site(s) where its price is minimised.
+
+- **(a) Some minimising site moves.** Theorem 7.1 (unconditional): then R(T_n) ≥ n^(9/4) for every n. Mechanism [paper §7–8]: algebraic dependence on a parameter is handled with a valuation; rescaling at the depth where a point first moves gives a tree in which two branches meet at the valuation of the difference of their parameters (7.4). Prices on the tree obey a sub-mean inequality over stars with weights inverse to arm lengths (7.1). On a four-armed star this gives a four-way label rate at most 3/2 of the diameter (7.8). Colliding two tips and inserting a "decoder with short rows" (Lemma 8.2, built from the α ≥ 1/2 rectangular algorithm) converts this into a three-point bound D_ABC ≤ L + h/4, which coincides with the polynomial-multiplication lower envelope for arms (h/2, h/2, L − h/2). Proposition 8.1 then propagates equality to equal arms: D = 8/3, hence n^(9/4).
+- **(b) No minimising site ever moves** ("synchronization", Theorem 12.1). Then a family of gadget tensors built from free fermions on a sphere with marked points ("sphere tensors", §13) is priced at its maximum, namely the cost of preparing at the best hub and shipping each leg (Theorem 14.1). Maximally expensive tensors are a resource: through an incidence inequality (Theorem 15.1) and point-line incidence graphs of projective spaces (Lemma 17.1) they give exact tensor networks that sort n records of log n bits in size O(n (log n)^p) with p < 2 (Theorem 16.1), then batched table lookup (Lemma 16.2), then Theorem 2.1: for any trivalent network of size m ≤ n^1.05 with e exterior bits, some power V^{⊗d} has a network of size d(m h^{−γ} + e h^η), h = log n. Iterating a fixed number of times on a sorting-based network for list distinctness brings its volume per input bit down to O(w^η), below the floor w^σ of Theorem 2.2.
+
+The hypothesis ω < 9/4 is used, as far as I can trace, in exactly one place: in the proof of Theorem 12.1, to exclude (a) ("A nonconstant family of pinned sites would now force exact matrix multiplication rank at least n^(9/4) … Thus for every ℓ, all x_{z,ℓ} coincide"). Theorems 14.1, 15.1, 16.1, Lemmas 17.1 and 19.1 carry the hypothesis only by citing that.
+
+**The holdable version.** "A multiplier faster than n^(9/4) would give a universal bulk discount on computation, and repeated discounts would let you check lists for duplicates more cheaply than routing allows." The floor's conservation law, in the case the paper calls "fields without ports" (Lemma 4.1): for every permutation the network turns its internal wires into the required input-to-output wires, so r·E[destination distance] ≤ m·E[edge length]; and there is a geometry in which m short edges still leave random destinations at distance about √(log q). Hence size Ω(r √(log q)).
+
+**Is the bound tied to 9/4?** In the logical sense, yes: horn (a) outputs 9/4 unconditionally and horn (b) never mentions the number. It is not of the form "any improvement on the current algorithm leads to compression". If ω ≤ 2.2 were proved, the paper would be false, not vacuous. But the number in (a) is produced by an exact evaluation of a label price whose two directions both come from the 2026 algorithm family: the polynomial-multiplication envelope for "≥", and the α = 1/2 rectangular decoder plus tree harmonicity for "≤". So 9/4 is "the October inequality is exactly tight on a moving tree". I see no circularity. I cannot certify that the match is more than that method being self-consistent, and this is where I would send a referee first.
+
+**Credibility loads.**
+- Theorem 2.2 has two cases. "Finite fields with ports" uses an exact batch lower bound vol((U*_ℓ)^{⊗j}) > j ℓ^{1+δ} for a universal signed counting tensor, from the companion paper on Hamiltonian cycle and the permanent [its Theorem 12.1]. "Fields without ports" uses a product theorem and a graph entropy bound from the same companion papers. All are dated 24 Nov 2026.
+- Theorem 2.2 at t = 1 says the list-distinctness tensor on n bits has trivalent tensor-network volume > n (log n)^σ. The proof of Proposition 2.3 converts a Boolean circuit of size m into such a network of size O(m). So the theorem implies a superlinear Boolean circuit lower bound for an explicit function in P. The best published bound of that kind is a little above 3n (from memory). The paper does not state this consequence; it is my inference.
+- Corollary 1.2 refutes Strassen's asymptotic rank conjecture for tight tensors (§10).
+
+**Most surprising step.** Horn (b): a soft fact, that optimal placements do not move, is turned into faster sorting.
+
+## 15. Part B: tests, and a simpler source for the number
+
+### 15.1 The team-size form [check; the rectangular link is reportedly noted by Zhou]
+
+Put x = qr, y = rp, z = pq. Then (xy + yz + zx)²/(4xyz) = (pqr(p+q+r))²/(4p²q²r²), so
+
+  **ω(qr, rp, pq) = (p + q + r)²/4 if no one of p, q, r exceeds half the total; otherwise (largest) × (rest).**
+
+(Checked on 10⁴ random triples.) The interior condition 1/z ≤ 1/x + 1/y is r ≤ p + q.
+
+Meaning: let K_n be the n-party tensor with one binary wire on every pair. Zhou (arXiv:2610.34273, via our `engine3-literature.md` §1.6; not read by me) proves its asymptotic rank is at most 2^(n²/4), and the maximum cut gives at least 2^⌊n²/4⌋, so it is exactly 2^(n²/4) for even n. Group the parties into teams of sizes p, q, r. Wires inside a team become local. Between two teams of sizes q and r there are qr wires. The grouped tensor is the rectangular matrix multiplication ⟨2^{pq}, 2^{qr}, 2^{rp}⟩. Grouping cannot increase rank. So the rectangular upper bound is "K_n, grouped", and the formula is the fractional version with real team sizes.
+
+- **n = 6, teams of 2:** T_16, cost ≤ 9 bits = 16^(9/4). The best cut respecting teams has 8 edges (brute force: 9 versus 8). ω = 9/4 says the cost stays 9; ω = 2 says 8. So 9/4 = 9 bits / 4 bits.
+- **n = 4, teams 2, 1, 1:** ⟨4, 2, 4⟩-type product, cost 4 = max cut 2|2, which respects the teams. This is the α = 1/2 boundary and it is two-sided and elementary on the lower side.
+- **n = 5, teams 2, 2, 1:** if the rectangular formula is exact (the Lean claim), the grouped tensor has cost 6.25, so Zhou's bound for K_5 would be tight although the maximum cut is 6.
+- In these variables the optimal split of §5.2 is f_k = 1 − 2p_k/n and the arm conductances are proportional to n − 2p_k.
+
+The lower-bound claim in this language: grouping parties into teams never lowers the asymptotic rank below the K_n value, even though it removes the cut that certified that value.
+
+### 15.2 Known facts reproduced
+
+| test | known | picture | verdict |
+|---|---|---|---|
+| unit (GHZ) tensor of size r | asymptotic rank r | price D log r by definition | trivial |
+| polynomial multiplication, lengths a, a | rank 2a − 1, exponent 1 | value ≥ 1.68·a^(4/3) wires, times 3/4 gives exponent exactly 1; constant 1.68^(3/4)·a ≤ 2a − 1 for a ≥ 2 | consistent |
+| W tensor (= cw_1) | asymptotic rank 2 | prediction ≥ 1.89 | consistent |
+| K_4 / ⟨4,2,4⟩ | 16, two-sided | 16 | reproduced |
+| T_2 at finite size | rank 7, border rank 7 | ≥ 4.76 | consistent, uninformative |
+| known R(T_n), n = 2..5 | 7, ≤ 23, ≤ 48, ≤ 93 | ≥ 4.8, 11.8, 22.6, 37.4 | consistent |
+| Strassen, Bini, Schönhage identities | border ranks 7, 10, 17 | Σ (abc)^(3/4) = 4.76, 6.45, 13.2 | consistent |
+| rectangular, pre-2026 upper bounds (from memory) at k = 0.5, 0.75, 1.5, 2 | 2.044, 2.154, 2.797, 3.252 | 2, 2.083, 2.667, 3.125 | consistent |
+
+No contradiction with an established fact. But none of these could have failed: every valid pre-2026 upper bound corresponds to an exponent above 2.37, so a lower bound of 2.25 cannot collide with it. The only row with independent two-sided content is K_4.
+
+### 15.3 New predictions, and the absence of a small test
+
+- **Small Coppersmith–Winograd tensors.** The classical bound ω ≤ log_q(4R³/27), with R the asymptotic rank of cw_q, turns ω = 9/4 into R ≥ (27/4)^(1/3) q^(3/4). This exceeds q + 1 for q = 2, …, 7: cw_2 ≥ 3.178 (known window [3, 3.931] per our notes), cw_3 ≥ 4.31, cw_4 ≥ 5.35. Any proof of a smaller asymptotic rank refutes the claim.
+- **Group algebra of S_3** (≅ 1 ⊕ 1 ⊕ 2×2 matrices): asymptotic rank ≥ 2 + 2^(9/4) = 6.757 > 6. Quaternions over ℂ: 4.757 > 4.
+- **Border rank of T_16 ≥ 512.** This is the first n where n^(9/4) exceeds the classical 2n² − log₂n − 1 (= 507). T_32: ≥ 2436 against 2042.
+- **K_5:** asymptotic rank exactly 2^6.25 if the Lean rectangular claim holds.
+
+I found no laptop-scale computation with real falsifying power. The claim is asymptotic; its finite shadows are weaker than known lower bounds until n = 16, where the tensors are far beyond exhaustive or numerical rank search.

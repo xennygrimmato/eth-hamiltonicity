@@ -10,6 +10,7 @@ use nalgebra::DMatrix;
 use rand::rngs::SmallRng;
 use rand::SeedableRng;
 use rayon::prelude::*;
+use num_complex::Complex64;
 
 const OUT: usize = 1 << 20; // label offset for output legs
 
@@ -318,4 +319,170 @@ pub fn lm_refine(net: &Network, target: &Tensor<f64>, maps0: &[DMatrix<f64>], it
         }
     }
     (maps, f.sqrt() / tn, used)
+}
+
+/// Result of the border (degeneration) search.
+#[derive(Clone, Debug)]
+pub struct BorderResult {
+    /// sqrt(sum_{m<h} |C_m|^2 + |C_h - T|^2) / |T| where C_m = coefficient of eps^m in (x A(eps)) S.
+    pub rel_residual: f64,
+    /// maps[p][k] = coefficient of eps^k in A_p(eps)
+    pub maps: Vec<Vec<DMatrix<f64>>>,
+    pub history: Vec<f64>,
+    pub max_coef_norm: f64,
+}
+
+/// Coefficients E^{(j)}, j = 0..=(P-1)K, of the environment polynomial of party p (real case),
+/// via evaluation at N-th roots of unity and inverse DFT.
+fn env_coeffs(net: &Network, maps: &[Vec<DMatrix<f64>>], p: usize, k: usize) -> Vec<DMatrix<f64>> {
+    let np = net.nparties;
+    let n = (np - 1) * k + 1;
+    let mut acc: Vec<DMatrix<Complex64>> = vec![];
+    for t in 0..n {
+        let w = Complex64::from_polar(1.0, 2.0 * std::f64::consts::PI * t as f64 / n as f64);
+        let mq: Vec<DMatrix<Complex64>> = (0..np)
+            .map(|q| {
+                let mut m = maps[q][0].map(|x| Complex64::new(x, 0.0));
+                let mut wp = Complex64::new(1.0, 0.0);
+                for kk in 1..=k {
+                    wp *= w;
+                    m += maps[q][kk].map(|x| Complex64::new(x, 0.0) * wp);
+                }
+                m
+            })
+            .collect();
+        let e = environment(net, &mq, p);
+        if acc.is_empty() {
+            acc = (0..n).map(|_| DMatrix::zeros(e.nrows(), e.ncols())).collect();
+        }
+        for (j, a) in acc.iter_mut().enumerate() {
+            let c = Complex64::from_polar(1.0 / n as f64, -2.0 * std::f64::consts::PI * (t * j) as f64 / n as f64);
+            *a += &e * c;
+        }
+    }
+    acc.into_iter().map(|m| m.map(|z| z.re)).collect()
+}
+
+/// Border ALS: maps A_p(eps) = sum_{k<=K} eps^k A_p^{(k)}; fit (x A(eps)) S = eps^h T + O(eps^{h+1}).
+/// A zero residual gives an approximation of degree h, i.e. T is a degeneration of S.
+pub fn border_als(net: &Network, target: &Tensor<f64>, k: usize, h: usize, o: &AlsOpts, start: usize) -> BorderResult {
+    use crate::tensor::Scalar as _;
+    let mut rng = SmallRng::seed_from_u64(o.seed.wrapping_mul(7777777).wrapping_add(start as u64));
+    let np = net.nparties;
+    let outd = target.shape.clone();
+    let mut maps: Vec<Vec<DMatrix<f64>>> = (0..np)
+        .map(|p| (0..=k).map(|_| random_matrix::<f64, _>(outd[p], net.local_dim(p), &mut rng, false)).collect())
+        .collect();
+    let tn = target.norm2().sqrt();
+    let tmats: Vec<DMatrix<f64>> = (0..np).map(|p| target.matricize(&[p]).0).collect();
+    let mut reg = o.reg0;
+    let mut hist = vec![];
+    let mut res = f64::INFINITY;
+    let dmax = (np - 1) * k;
+    for _ in 0..o.sweeps {
+        for p in 0..np {
+            let ec = env_coeffs(net, &maps, p, k);
+            let ind = net.local_dim(p);
+            let ncol = ec[0].ncols();
+            // Ebig_m: ((k+1) ind) x ncol, block kk = E^{(m-kk)}
+            let mut g = DMatrix::<f64>::zeros((k + 1) * ind, (k + 1) * ind);
+            let mut ebigs = vec![];
+            for m in 0..=h {
+                let mut eb = DMatrix::<f64>::zeros((k + 1) * ind, ncol);
+                for kk in 0..=k {
+                    if m >= kk && m - kk <= dmax {
+                        eb.view_mut((kk * ind, 0), (ind, ncol)).copy_from(&ec[m - kk]);
+                    }
+                }
+                g += &eb * eb.transpose();
+                ebigs.push(eb);
+            }
+            let tr = (0..g.nrows()).map(|i| g[(i, i)]).sum::<f64>() / g.nrows() as f64;
+            for i in 0..g.nrows() {
+                g[(i, i)] += reg * tr + 1e-300;
+            }
+            let c = &tmats[p] * ebigs[h].transpose();
+            let x = match g.clone().cholesky() {
+                Some(ch) => ch.solve(&c.transpose()).transpose(),
+                None => continue,
+            };
+            for kk in 0..=k {
+                maps[p][kk] = x.columns(kk * ind, ind).into_owned();
+            }
+            if p == np - 1 {
+                let mut tot = 0.0;
+                for (m, eb) in ebigs.iter().enumerate() {
+                    let mut r = &x * eb;
+                    if m == h {
+                        r -= &tmats[p];
+                    }
+                    tot += r.iter().map(|v| v.abs2()).sum::<f64>();
+                }
+                res = tot.sqrt() / tn;
+            }
+        }
+        // gauge: balance overall norms across parties
+        let norms: Vec<f64> = maps.iter().map(|ms| ms.iter().map(|m| m.norm_squared()).sum::<f64>().sqrt()).collect();
+        let geo = norms.iter().map(|x| x.ln()).sum::<f64>() / np as f64;
+        for (ms, nn) in maps.iter_mut().zip(&norms) {
+            let s = (geo - nn.ln()).exp();
+            for m in ms.iter_mut() {
+                *m *= s;
+            }
+        }
+        hist.push(res);
+        reg = (reg * o.reg_decay).max(o.reg_min);
+        if res < o.tol {
+            break;
+        }
+    }
+    let max_coef_norm = maps.iter().flat_map(|ms| ms.iter().map(|m| m.norm())).fold(0.0, f64::max);
+    BorderResult { rel_residual: res, maps, history: hist, max_coef_norm }
+}
+
+/// Independent check of a border solution: evaluate (x A(eps)) S / eps^h at small eps through the
+/// dense S and return the relative distance to T for each eps given.
+pub fn border_check(net: &Network, target: &Tensor<f64>, maps: &[Vec<DMatrix<f64>>], h: usize, eps: &[f64]) -> Vec<f64> {
+    eps.iter()
+        .map(|&e| {
+            let m: Vec<DMatrix<f64>> = maps
+                .iter()
+                .map(|ms| {
+                    let mut a = ms[0].clone();
+                    for (kk, mk) in ms.iter().enumerate().skip(1) {
+                        a += mk * e.powi(kk as i32);
+                    }
+                    a
+                })
+                .collect();
+            let mut s: Tensor<f64> = net.dense();
+            for p in 0..net.nparties {
+                s = s.apply(p, &m[p]);
+            }
+            s.scale(1.0 / e.powi(h as i32));
+            (s.sub_norm2(target) / target.norm2()).sqrt()
+        })
+        .collect()
+}
+
+/// Parallel multistart border ALS, sorted by residual.
+pub fn border_multistart(net: &Network, target: &Tensor<f64>, k: usize, h: usize, o: &AlsOpts) -> Vec<BorderResult> {
+    let mut r: Vec<BorderResult> = (0..o.starts).into_par_iter().map(|s| border_als(net, target, k, h, o, s)).collect();
+    r.sort_by(|a, b| a.rel_residual.partial_cmp(&b.rel_residual).unwrap());
+    r
+}
+
+#[cfg(test)]
+mod border_tests {
+    use super::*;
+    #[test]
+    fn border_reduces_to_restriction() {
+        let s = Network::new(3, vec![(0, 1, 2), (1, 2, 2)]);
+        let t: Tensor<f64> = Network::new(3, vec![(0, 2, 2)]).dense();
+        let o = AlsOpts { sweeps: 400, starts: 4, ..Default::default() };
+        let r = border_multistart(&s, &t, 1, 1, &o);
+        assert!(r[0].rel_residual < 1e-8, "{}", r[0].rel_residual);
+        let chk = border_check(&s, &t, &r[0].maps, 1, &[1e-4]);
+        assert!(chk[0] < 1e-3, "{:?}", chk);
+    }
 }

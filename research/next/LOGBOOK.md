@@ -1227,3 +1227,21 @@ certificates rejected).
 - Trust base: the Rust interval code and the checker. Not Lean.
 - Remaining for the lower bound: the end-of-spine variant (spec not yet written by the hull agent), and a referee
   pass on the book reduction and calibration.
+
+## 26 Nov (late, 27): hull interim 4 — one six-variable inequality covers all cases; P2 assessed negative
+
+- Notes rewritten (`research/ports/hull/notes.md`): §3.1 book reduction, §3.2 calibration (Prop. 3.2 [R]), §3.3 spec,
+  §4 P2. Referee edits applied.
+- **(CL\*)**: for ψ ∈ [−π/2, π/2]⁶, Φ(ψ) = Σ_i cos μ_i √(1+9 sin²δ_i) − 3 + (3/2)Σ_pairs |sin ψ_ij + sin ψ_ji| ≥ 0.
+  Prop. 3.2: in every book Σ_S − κΣ_T ≥ (D/√10)Φ(ψ). (I) is the slice ψ_ji = −ψ_ij. No realisability constraint used.
+  Equality at ψ = 0 (non-smooth) and at six cube corners (collinear configurations; true ratio 1 there).
+  [N] 3000 local searches + 2·10⁶ random points: no violation; chain checked on 20 000 random books.
+  No analytic reduction of (CL\*) to (I); a six-variable certificate is needed → sent to the ivcert executor with a
+  plan for the non-smooth point (sign-split; Φ ≥ F(θ) − 3 + (3/2 − L)Σ|ε| with certified L) and the corners.
+- **P2 negative [R/D]:** tripod × ℝ is a price space over k iff N5 is a price iff W₅ is. Given the five-point theorem,
+  "tripod × ℝ is spectral" ⇔ "no asymptotic K_{2,3} protocol beats 3/√10" — a tensor lower bound, not something a
+  known functional gives: every explicit spectral point has an ℓ₁ wire metric (R ≥ 1), geometric means are not
+  subadditive, one-point extension gives only minimal distance vectors. So N5 a price is known only from
+  ¬contracting; the only refutation is a protocol above 3/√10, which certifies contracting.
+- Launched: referee on the book reduction, calibration and the chain to tensors (asked specifically whether CAT(0)
+  is asserted for the price d or its square root — the place I think an error could hide).

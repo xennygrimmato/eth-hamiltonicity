@@ -2336,3 +2336,20 @@ Mat_μ(F₂) (is it a Euclidean building with the lattices L_a?), evaluate the 3
 of pods with flat factors honestly. Either answer is a theorem: a barrier at 1/2 for all net engines, or a proved
 window.
 Executor still running: the optimiser for the large-net limit problem.
+
+## 27 Nov: Lean proof of MC(⟨2,2,2⟩ over F₂) = 7 — feasible and mostly done (per the executor)
+
+`research/mm/lean-mc222/` (my rebuild pending).
+- One cube = one `bv_decide` goal: six gate truth tables (`BitVec 256`) + 20 coefficient vectors (`BitVec 16`) with
+  echelon, output and helper conditions. 11–20 s each (CaDiCaL 4.6–12 s, Lean's verified LRAT check ≈ 2 s, kernel ≈ 1 s,
+  ≈ 1 GB per process). A satisfiable control returns a correct counterexample.
+- Only 360 cubes needed (72 roots × helper sets {0, h}, h = 1..5): "the first gate is a helper" is itself one
+  `bv_decide` lemma, so the 720 cubes with 0 ∉ H are unnecessary. 38 of 72 files built, none failed.
+- **Proved, no sorry:** `lower_of_cubes : (∀ r ∈ reps, ∀ h ∈ [1,5], Cube r.1 r.2 0 h) → ¬ HasCircuit 6` — normal form (update
+  lemma, echelon basis), orbit reduction (the 432 symmetry maps as data; two `native_decide` checks: each map sends T
+  into span(T∘σ), and every echelon plane is mapped onto a basis of one of the 72 representatives), helper set via
+  finrank (13 ≤ dim(A+T), dim S₆ ≤ 15). Upper bound with the standard axioms only.
+- Axioms of the final theorem: propext, Classical.choice, Quot.sound plus ≈ 365 auxiliary axioms, one per `bv_decide` /
+  `native_decide` call (Lean 4.36 no longer routes these through `Lean.ofReduceBool`) — i.e. trust in Lean's compiler
+  and in the verified LRAT checker's native execution, as expected.
+- `mc_eq_seven : MC = 7` is written and waits for the cube build (≈ 40 min).

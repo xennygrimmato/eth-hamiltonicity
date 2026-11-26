@@ -1,6 +1,6 @@
 //! PyO3 bindings: module `tensorlab`. Distances are flat lists in pair order (0,1),(0,2),...
 use crate::metric::{self, Constraint, Metric};
-use crate::{k23, models, opt, rankplace, restrict, tensor};
+use crate::{k23, models, opt, piecefloor, rankplace, restrict, tensor};
 use num_complex::Complex64;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
@@ -271,6 +271,41 @@ fn rp_verify<'py>(py: Python<'py>, n: usize, d: usize, adj: Vec<u32>, f: Vec<u64
     Ok(out)
 }
 
+
+fn pf_design(name: &str) -> PyResult<piecefloor::Design> {
+    piecefloor::Design::by_name(name).ok_or_else(|| pyo3::exceptions::PyValueError::new_err(format!("unknown design {name}")))
+}
+
+/// piecefloor: b-vector of a placement in Mat_mu(F_2) (sqrt rank). pts: legs then hubs, as packed u64
+/// (row i = byte i). Designs: crossing, crossing-half, crossing-tenth, k4, delta3, delta3-2, agQ-P.
+#[pyfunction]
+fn pf_b_mat(design: &str, pts: Vec<u64>) -> PyResult<Vec<f64>> {
+    let d = pf_design(design)?;
+    if pts.len() != d.npoints() {
+        return Err(pyo3::exceptions::PyValueError::new_err(format!("need {} points", d.npoints())));
+    }
+    Ok(piecefloor::b_mat(&d, &pts))
+}
+
+/// piecefloor: one tree (parent, len, hub vertex per hub in design order): (Gamma, symmetrised value, CS bound).
+#[pyfunction]
+fn pf_one_tree(design: &str, parent: Vec<usize>, len: Vec<f64>, hv: Vec<usize>) -> PyResult<(f64, f64, f64)> {
+    let d = pf_design(design)?;
+    let mut f = piecefloor::TreeFactor { parent, len, hv, dist: vec![] };
+    f.recompute();
+    let mut c = vec![];
+    Ok(piecefloor::one_tree_scores(&d, &f, &piecefloor::edge_orbits(&d), &mut c))
+}
+
+/// piecefloor: Phi of the large-net limit problem for quotient Q ("4", "2x2", ...) and p merges.
+#[pyfunction]
+fn pf_limit_phi(q: &str, p: usize, parent: Vec<usize>, len: Vec<f64>, hv: Vec<usize>) -> f64 {
+    let net = piecefloor::LimitNet::new(q, p);
+    let mut f = piecefloor::TreeFactor { parent, len, hv, dist: vec![] };
+    f.recompute();
+    net.phi(&f)
+}
+
 #[pymodule]
 fn tensorlab(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(pairs, m)?)?;
@@ -294,5 +329,8 @@ fn tensorlab(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(rp_evaluate, m)?)?;
     m.add_function(wrap_pyfunction!(rp_anneal, m)?)?;
     m.add_function(wrap_pyfunction!(rp_verify, m)?)?;
+    m.add_function(wrap_pyfunction!(pf_b_mat, m)?)?;
+    m.add_function(wrap_pyfunction!(pf_one_tree, m)?)?;
+    m.add_function(wrap_pyfunction!(pf_limit_phi, m)?)?;
     Ok(())
 }

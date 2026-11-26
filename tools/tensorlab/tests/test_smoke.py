@@ -57,3 +57,15 @@ if __name__ == "__main__":
         if name.startswith("test_"):
             f()
             print("ok", name)
+
+
+def test_piecefloor():
+    # nine-tripod one-tree optimum on Delta3 (node pod): Gamma 36, value 6 per merge
+    # node (0,0): hubs R0 (index 0), C0 (3), D0 (6) on arms at radius 1
+    parent = [0, 0, 0, 0]; length = [0.0, 1.0, 1.0, 1.0]
+    hv = [1, 0, 0, 2, 0, 0, 3, 0, 0]
+    g, sym, cs = tl.pf_one_tree("delta3", parent, length, hv)
+    assert abs(g - 36) < 1e-9 and abs(sym - 6) < 1e-9
+    # index-4 subgroup configuration of the limit problem: Phi = 27/8
+    hv = [1, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0]
+    assert abs(tl.pf_limit_phi("4", 3, parent, length, hv) - 27 / 8) < 1e-12

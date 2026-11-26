@@ -1,19 +1,13 @@
-import MC222.Statement
-namespace MC222
+import MC222.Circuit
 
-lemma one_mem_S {k} (g : Fin k → Fn) (j : ℕ) : (1 : Fn) ∈ S g j :=
-  Submodule.subset_span (Set.mem_insert _ _)
-lemma x_mem_S {k} (g : Fin k → Fn) (j : ℕ) (i : Fin 8) : x i ∈ S g j :=
-  Submodule.subset_span (Set.mem_insert_of_mem _ (Or.inl ⟨i, rfl⟩))
-lemma g_mem_S {k} (g : Fin k → Fn) {j : ℕ} (i : Fin k) (h : i.val < j) : g i ∈ S g j :=
-  Submodule.subset_span (Set.mem_insert_of_mem _ (Or.inr ⟨i, h, rfl⟩))
+/-! # Upper bound: Strassen's algorithm (Proposition 2.2 of the paper) -/
+
+namespace MC222
 
 /-- Strassen's seven products, in the order m1..m7. -/
 def strassen : Fin 7 → Fn :=
   ![(x 0 + x 3) * (x 4 + x 7), (x 2 + x 3) * x 4, x 0 * (x 5 + x 7), x 3 * (x 4 + x 6),
     (x 0 + x 1) * x 7, (x 0 + x 2) * (x 4 + x 5), (x 1 + x 3) * (x 6 + x 7)]
-
-lemma two_eq_zero : (2 : ZMod 2) = 0 := rfl
 
 theorem strassen_isCircuit : IsCircuit strassen := by
   intro i

@@ -237,6 +237,37 @@ fn main() {
                  format!("{{\"design\":\"{}\",\"space\":\"mat\",\"mu\":{},\"value\":{},\"b\":{:?},\"points\":{}}}",
                          des.name, mu, v, b, mats_json(&pts, mu)));
         }
+        ("modelfrom", Some(des)) => {
+            // modelfrom DESIGN FILE ITERS CHAINS [SEED]; FILE: first line "nf k", then one line per point:
+            // nf arms, nf radii, k coordinates (whitespace separated)
+            let txt = std::fs::read_to_string(&a[3]).unwrap();
+            let mut lines = txt.lines();
+            let hd: Vec<usize> = lines.next().unwrap().split_whitespace().map(|x| x.parse().unwrap()).collect();
+            let (nf, k) = (hd[0], hd[1]);
+            let pts: Vec<CPoint> = lines
+                .filter(|l| !l.trim().is_empty())
+                .map(|l| {
+                    let v: Vec<f64> = l.split_whitespace().map(|x| x.parse().unwrap()).collect();
+                    let mut p = CPoint::default();
+                    for f in 0..nf {
+                        p.arm[f] = v[f] as u8;
+                        p.t[f] = v[nf + f];
+                    }
+                    for c in 0..k {
+                        p.x[c] = v[2 * nf + c];
+                    }
+                    p
+                })
+                .collect();
+            let m = Model { arms: vec![3; nf], k };
+            let iters: usize = a[4].parse().unwrap();
+            let chains: usize = a[5].parse().unwrap();
+            let seed: u64 = a.get(6).map(|s| s.parse().unwrap()).unwrap_or(1);
+            let v0 = value(&m.b(&des, &pts));
+            let sols = anneal_model_start(&des, &m, iters, chains, 1e-3, 1e-7, seed, Some(&pts));
+            println!("{} finite configuration in {} from {}: start value {:.6}, after annealing {:.6} (b = {})  time {:.1}s",
+                     des.name, m.label(), a[3], v0, sols[0].value, fmt_b(&sols[0].b), t.elapsed().as_secs_f64());
+        }
         ("model", Some(des)) => {
             let arms: Vec<usize> = if a[3] == "-" { vec![] } else { a[3].split(',').map(|s| s.parse().unwrap()).collect() };
             let k: usize = a[4].parse().unwrap();

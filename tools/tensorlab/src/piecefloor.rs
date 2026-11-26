@@ -759,13 +759,24 @@ fn gauss<R: Rng>(rng: &mut R) -> f64 {
 /// renormalised every 1000 steps so that the largest delta is 1). Moves: Gaussian kick of one point
 /// (step size adapted to the acceptance rate), radial scaling of a point, arm change, copy.
 pub fn anneal_model(des: &Design, model: &Model, iters: usize, chains: usize, t0: f64, t1: f64, seed: u64) -> Vec<ModelSolution> {
+    anneal_model_start(des, model, iters, chains, t0, t1, seed, None)
+}
+
+/// [`anneal_model`] with an optional start configuration (used by every chain; chains differ by seed).
+/// Without a start the hub scale is renormalised during the run; with a start it is kept.
+#[allow(clippy::too_many_arguments)]
+pub fn anneal_model_start(des: &Design, model: &Model, iters: usize, chains: usize, t0: f64, t1: f64, seed: u64,
+                          start: Option<&[CPoint]>) -> Vec<ModelSolution> {
     let np = des.npoints();
     let nl = des.nlegs();
     let mut sols: Vec<ModelSolution> = (0..chains)
         .into_par_iter()
         .map(|c| {
             let mut rng = SmallRng::seed_from_u64(seed ^ (c as u64 + 11).wrapping_mul(0x9E37_79B9_7F4A_7C15));
-            let mut pts: Vec<CPoint> = (0..np).map(|i| model.random_point(&mut rng, if i < nl { 3.0 } else { 1.0 })).collect();
+            let mut pts: Vec<CPoint> = match start {
+                Some(s) => s.to_vec(),
+                None => (0..np).map(|i| model.random_point(&mut rng, if i < nl { 3.0 } else { 1.0 })).collect(),
+            };
             let f = |pts: &[CPoint]| value(&model.b(des, pts));
             let mut cur = f(&pts);
             let mut best = (cur, pts.clone());
@@ -826,7 +837,7 @@ pub fn anneal_model(des: &Design, model: &Model, iters: usize, chains: usize, t0
                             }
                         }
                     }
-                    if dm > 1e-9 && it < iters - 1000 {
+                    if start.is_none() && dm > 1e-9 && it < iters - 1000 {
                         for q in pts.iter_mut() {
                             for f in 0..model.arms.len() {
                                 q.t[f] /= dm;

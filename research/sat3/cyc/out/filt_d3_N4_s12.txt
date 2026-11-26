@@ -1,1 +1,2 @@
 N=4 subspaces=67 leg records=31040 (maxsteps 3)
+chain 0 best Gamma = 35.358816 (exact legs 35.358816)

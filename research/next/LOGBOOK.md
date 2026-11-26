@@ -3132,3 +3132,13 @@ Three attacks on what the barriers leave open:
 - Ideas round 2: routes outside every barrier (non-algebraic algorithms, short wires, other reduction
   targets, designs with node growth above 2), with kill tests. → `research/sat3/ideas-round2.md`.
 Still running: H46 (cap for cyclic designs), type-B depth-2 game, referee of the barrier paper.
+
+**Barrier paper refereed and corrected** (`research/sat3/paper-barriers/REVIEW.md`, 27 findings; 17 pages).
+No false theorem. Main corrections: the labs' running time is 2^{O(n log log n/√log n)} in general (the form
+2^{O(n/√log n)} is for O(n) clauses), a factual error also present in the lead's summaries; the abstract no
+longer says the results "explain why" an improvement does not happen and now states "no lower bound for
+3-SAT is claimed"; Theorem W is exact at every depth only for identities of covering defect 0 (Anthropic's;
+Khoruzhii's not checked); Theorem T's regime and class stated in the abstract; the Rust values 0.4828 and
+0.5825 are merge averages (min over merges 0.433, 0.569); the zero-loss script is 60-digit floating point,
+the referee's interval check is the rigorous one; two bibliography entries named a model as author.
+Unconfirmed from project texts: journal data of Bessenrodt–Ono and three standard references.

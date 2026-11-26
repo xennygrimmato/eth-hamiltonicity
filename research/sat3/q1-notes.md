@@ -1,6 +1,15 @@
 # Q1: the three-merge floor on nets equals the cap 1/√2 (nets of F_q^m)
 
-Theory notes, 26 Nov 2026. Not committed, not machine-checked, not refereed. Written for a referee.
+Theory notes, 26 Nov 2026. Not committed, not machine-checked.
+
+**Referee:** `review-q1.md` (27 Nov). Stand: the space (§1), Theorem A (now [R]), Cor. 2.2, Theorem B and Cor. 3.2,
+Lemma 6.1, Remark 3.4, X₄ and E_D. Changed after the report, and nothing else: (1) Prop. 6.2 was false as stated; it
+is restated with the hypothesis that the hub spaces of each node are pairwise transversal, the proof is fixed, and
+its consequences for cyclic nets and Δ₃ are restated under that hypothesis; (2) Theorem D′ is stated for its actual
+class (per-copy pieces on the X_q partition), with the referee's replacement S′ for Theorem S and the conclusion over
+k̄; (3) the "extreme point" step of Cor. 3.3 is marked as a gap; (4) §0 item 2: "is the cap" only for balanced sets;
+(5) Remark 2.3.2: the price version needs nets over F_{2^s}, 2^s ≥ p − 1; (6) §7 and the mentions of Lemma S: proved,
+but it bounds certified costs only.
 
 Tags: **[R]** proved here in full from the cited inputs; **[D]** derived here, proof written, unreviewed (or resting
 on an unreviewed input, named); **[N]** numerical (script named); **[K]** quoted; **[C]** conjecture; **[X]** dead,
@@ -27,12 +36,13 @@ of 48 edges; balance of X₄ and of the six matchings E_D).
    F_q^N with the metric "Euclidean distance of the level vectors in a basis adapted to both" (§1). It is
    Cone(spherical building of GL_N(F_q)) × ℝ, a CAT(0) space. Its 0/1 points are the subspaces, with
    d² = dim(U+U′) − dim(U∩U′).
-2. **Theorem A (F_CAT) [D; arithmetic N].** Let q be any prime power, m ≥ 2, g = q^m, P ⊆ P¹(F_q) a set of p ≥ 2
+2. **Theorem A (F_CAT) [R; refereed].** Let q be any prime power, m ≥ 2, g = q^m, P ⊆ P¹(F_q) a set of p ≥ 2
    slopes, and 𝒩 = 𝒩(q,m,P) the p-net with nodes Mat_{m×2}(F_q) = (F_q^m)² and classes x ∈ P (lines {a : ax = y}).
    For q = 2 and p = 3 this is the 3-net of the group F₂^m (classes r, c, r+c). There is a placement of 𝒩 in
    𝒞_{m+2}(q) in which every generic edge (rank(a − a′) = 2) has saving s^k_e → δ_k/√2 **for all p merges at once**.
    Consequently
-   - on every set of generic edges the placement value is exactly 1/√2 (a supremum, legs → ∞), which is the cap;
+   - on every set of generic edges the placement value is exactly 1/√2 (a supremum, legs → ∞); this equals the cap
+     for **balanced** sets of generic edges only (a single wire is fully crossing, unbalanced, and has cap 1);
    - on the full level, min_k b_k/E ≥ (g−q)/(√2(g+1)) + 1/(g+1), against the cap √(g/(2(g+1))) of Cor. 3.4.
    So F_CAT(𝒩) = 1/√2 − Θ(1/g) for fixed q: the supremum over all CAT(0) placements of the p-net value is
    determined up to O(1/g), with no hypothesis.
@@ -44,8 +54,10 @@ of 48 edges; balance of X₄ and of the six matchings E_D).
 4. **Fixed configuration, tower form [D].** The generic edges of 𝒩(q,m,P) are partitioned into copies of one fixed
    all-crossing configuration X_q (the generic edges of the order-q² net; for q = 2: X₄, 16 nodes, 48 edges, 12 hubs),
    with remainder ξ = (q+1)/(g+1). X_q has floor exactly E/√2 per merge when contracting fails (q = 2^s). So the net
-   levels are (p, 2, {X_q})-levels in the sense of D1.1, the floor is uniform in g, and D1's gap theorem goes through
-   with 1/√2 in place of 1/√p (Theorem D, §4.3). This repairs the gap the referee found in Theorem S for these nets.
+   levels are (p, 2, {X_q})-levels in the sense of D1.1, and **for engines whose pieces are chosen per copy of X_q
+   (term sets that are products over the copies)** the floor is uniform in g and D1's gap theorem goes through with
+   1/√2 in place of 1/√p (Theorem D′ / S′(a), §4.3). This is a narrower class than Theorem S of `notes.md`: whole-level
+   identities with arbitrary terms are covered only per level, with λ₀ depending on g (S′(b)).
 5. **P1 (the hull) [D].** The closed convex hull of (Sub(F₂^N), τ) in any CAT(0) space is the cube complex
    K_N = union of the cubes [0,1]^N of all bases = the truncated cone over the spherical building. Every finite subset
    of it is a price when contracting fails ("hull conjecture" of the K_{2,m} notes: true for these vertex sets).
@@ -55,10 +67,12 @@ of 48 edges; balance of X₄ and of the six matchings E_D).
    holds for Z_p^m, Z₄^m, Z_n^m (m → ∞) and for Z_p × Z_p (p → ∞); as a price statement for groups with large
    elementary abelian 2-quotients of rank ≥ 2.
    **Not covered:** groups all of whose elementary abelian quotients are cyclic or small: cyclic groups Z_g (m = 1:
-   the realisation is planar and any two node-lines meet), hence Δ₃ and K₄ (both are m = 1); perfect groups; Latin
+   the realisation is planar and any two node-lines meet; by Prop. 6.2 no realisation by subspaces with pairwise
+   transversal hubs at every node has skew node-planes), hence Δ₃ and K₄ (both are m = 1); perfect groups; Latin
    squares that are not group tables; p ≥ 4 nets whose slopes generate a field F_Q with [F_g : F_Q] bounded. For
-   odd q the CAT(0) statement holds (and with the attainment agent's Lemma S it bounds all crossing-generated
-   covers unconditionally), but the price statement is not known (the rank metric over F₃ is not known to be forced).
+   odd q the CAT(0) statement holds; with Lemma S (§7) it bounds the *certified* costs of crossing-generated covers
+   unconditionally, not true costs. The price statement for odd q is not known (the rank metric over F₃ is not known
+   to be forced).
 7. **Dead [X].** Cones over the incidence graph of the net (Φ = 9/4) or of PG(2,q) (Φ = 1): rank 2 is too small. Exact
    equality with all edge lines through one cone point (net triangles give closed local geodesics of length 3π/2).
 
@@ -186,7 +200,7 @@ step of Cor. 3.4, and s^{k₀} ≤ 0 for the common class). For a collinear edge
 from exactly E_coll/p = E/(g+1) edges. (Rank-one edges with kernel slope outside P can be used in the same way; they
 are not counted below.)
 
-**Theorem A [D].** For the placement above, as T → ∞,
+**Theorem A [R; refereed, `review-q1.md` §2].** For the placement above, as T → ∞,
 
     min_k b_k / E  ≥  (g−q)/(√2 (g+1)) + 1/(g+1).
 
@@ -230,9 +244,12 @@ was used with pods; there Φ = 27/8, here Φ = 9/2.)
    with slopes in F_q) the space is the cone over an A₃ building: **three-dimensional flats suffice**; the generic
    fraction is (q²−q)/(q²+1) → 1. Two-dimensional flats (m = 1, cone over the A₂ building of PG(2,q)) give nothing: all
    node-lines meet, and then Σ_k s^k_e ≤ √2 instead of p (see §6).
-2. **All p at once.** The same placement serves all q+1 slopes: with p merges the floor is still E/√2 per merge. At
-   node growth β = 2 the exponent is ½ for every p. The table of `notes.md` §5.4 ("pod floor") is superseded for
-   these nets: every entry of the column becomes 0.7071.
+2. **All p at once.** The same placement serves all q+1 slopes: with p merges the value is still E/√2 per merge. At
+   node growth β = 2 the exponent is ½ for every p. Relation to the table of `notes.md` §5.4 ("pod floor"): as an
+   F_CAT statement (unconditional) every entry of that column becomes 0.7071 for nets of F_q^m with any q ≥ p − 1.
+   As a price statement (contracting fails) this needs nets over F_{2^s} with 2^s ≥ p − 1: F₂^m for p = 3, F₄^m for
+   p = 4, 5, F₈^m for p ≤ 9. It does not apply to the table's F₃^M nets (p = 4) or F₇ nets (p = 7); for odd q the
+   price statement is open.
 3. **Mechanism.** In a tree, a far point can be equidistant from the three tips of a tripod only by sitting over the
    centre, and then it sees no hub of another node favourably. In 𝒞_N the leg x_e sits over the centre z(a) of the
    pod of node a *and* moves in a flat direction along which the hubs of a′ recede.
@@ -312,9 +329,13 @@ around the centre (all levels ½), and a ball of Cone(Δ) × ℝ is, after scali
 **Corollary 3.3 (Mat_μ(F₂)) [D].** a ↦ U_a = graph of a embeds (Mat_μ(F₂), √rk) in K_{2μ}(2) at scale 1/√2
 (dim(U_a + U_b) − dim(U_a ∩ U_b) = 2 rk(a−b)); 0 and I go to the two ends of a diagonal of a μ-dimensional cube whose
 centre is the centre of K_{2μ}. The hull of Mat_μ(F₂) lies in the slice {Σ_i x_i = μ} (an affine function on every
-cube). It is a proper subset of the slice: a μ-dimensional subspace that is not a graph is a vertex of every cube
-that contains it, hence an extreme point, and is not in the hull of the others. I did not determine the hull of the
-big cell exactly; it is not needed, because Step 2 reaches all subspaces through extension fields.
+cube). I did not determine the hull of the big cell; it is not needed, because Step 2 reaches all subspaces through
+extension fields.
+**[C; gap, unused]** The hull is a proper subset of the slice. The argument I gave ("a μ-dimensional subspace that
+is not a graph is a vertex of every cube containing it, hence an extreme point, hence not in the hull of the others")
+does not prove it: extreme points are excluded only at the finite stages of the iterated-geodesic hull, and the
+closure could still contain such a vertex. A proof would need a convex function that is ≤ 0 on graphs and > 0 at the
+vertex. Nothing in these notes uses this claim.
 
 What the class contains: pods with q+1 arms (N = 2), pod × ℝ^M, all finite ℓ₂-products of such (block sums), cones
 over A_{N−1} buildings.
@@ -384,33 +405,56 @@ k with 2^{o(λ)} pieces, in which every piece has min_k c_k(A_i) ≤ (1/√2 −
 the contracting hypothesis over k, hence power-saving 3-SAT (Theorem R in characteristic 0, C1 in characteristic p).
 This is one fixed finite object; no tower and no growing configuration is involved.
 
-### 4.3 Theorem D′ (tower form; repairs Theorem S for these nets) [D]
+### 4.3 Theorem D′ (tower form, for engines with per-copy pieces) and what replaces Theorem S [D]
 
-Let 𝒞 be a finite list of configurations, each a set of generic edges of some 𝒩(2^s, m, P) with |P| = p merges, and
-consider (p, 2, 𝒞)-levels and engines in the sense of `c1d1` D1.1 (levels partitioned into all-crossing copies of
-members of 𝒞 plus a remainder ξ; one identity with 2^{τ(λ)} pieces per C ∈ 𝒞; a term is evaluated under its best
-merge).
+**The class.** Let 𝒞 be a finite list of configurations, each a set of generic edges of some 𝒩(2^s, m, P) with |P| = p
+merges, and consider (p, 2, 𝒞)-levels and engines in the sense of `c1d1` D1.1: every level is partitioned into
+all-crossing copies of members of 𝒞 plus a remainder ξ; there is **one identity with 2^{τ(λ)} pieces per C ∈ 𝒞, and
+the terms of a level are the products of one piece per copy**; a term is evaluated under its best merge.
+Anthropic's engine is of this kind (App. B pieces on each crossing, product terms).
 
-**Theorem D′.** (i) If contracting fails over k, every (p, 2, 𝒞)-level has ρ ≥ (1−ξ)(1/√2 − ε_𝒞(λ)) with ε_𝒞 → 0
-depending only on 𝒞, τ, k. (ii) Hence a (p, 2, 𝒞)-engine with log-exponent α′ > 1/2 along infinitely many n forces
-the contracting hypothesis over k, and then items 3–4 of D1.3 (power-saving 3-SAT). (iii) The level of 𝒩(2^s, m, P)
-is a (p, 2, {X_{2^s}(P)})-level with ξ = (2^s+1)/(g+1); so tower engines built from nets of F₂^m (three merges) or from
-subfield-slope p-nets, with per-copy pieces for X_q, have certified exponent α′ ≤ 1/2 unless contracting holds.
+**Theorem D′.** (i) If contracting fails over k, every (p, 2, 𝒞)-level over k has ρ ≥ (1−ξ)(1/√2 − ε_𝒞(λ)) with
+ε_𝒞 → 0 depending only on 𝒞, τ, k. (ii) A (p, 2, 𝒞)-engine over k with log-exponent α′ > 1/2 along infinitely many n
+forces the contracting hypothesis over the algebraic closure k̄, hence power-saving 3-SAT (Theorem R in
+characteristic 0, C1 in characteristic p; items 3–4 of D1.3). (iii) The level of 𝒩(2^s, m, P) is a
+(p, 2, {X_{2^s}(P)})-level with ξ = (2^s+1)/(g+1).
 
 *Proof.* (i) is Lemma D1 of D1.2 with Theorem C in place of the flat floor: for each C some piece is expensive under
 every merge at once; the term using it on every copy costs at least Σ_copies (1/√2 − ε_C)|C|λ under every merge.
-(ii) is the proof of D1.3 with θ = 2^{−α′} < 1/√2: some level has ρ ≤ (1−ξ)(1/√2 − η); by Lemma D2 some C ∈ 𝒞 has all
-pieces below (1/√2 − η)|C|λ at that λ; 𝒞 is finite, so one C occurs for infinitely many n with λ → ∞, contradicting
-Theorem C unless contracting holds. (iii) is Lemma 4.1. ∎
+(ii) An identity over k is an identity over k̄, and costs over k̄ are at most costs over k; so the engine is a
+(p, 2, 𝒞)-engine over k̄ with the same or smaller level factors. Now the proof of D1.3 with θ = 2^{−α′} < 1/√2: some
+level has ρ ≤ (1−ξ)(1/√2 − η); by Lemma D2 some C ∈ 𝒞 has all pieces below (1/√2 − η)|C|λ at that λ; 𝒞 is finite, so
+one C occurs for infinitely many n with λ → ∞. If contracting failed over k̄, this would contradict Theorem C over k̄.
+(iii) is Lemma 4.1. ∎
 
-Scope, honestly: the class has per-copy pieces for a *fixed* finite list. A level whose pieces are indexed by
-sub-configurations that grow with g (for instance pieces for whole translation classes of the order-g net) is covered
-only by the per-level form of §4.1, with λ₀ depending on g. This is the same restriction as in D1; what has changed
-is that the net levels now belong to the class (the referee's fix 2), with the floor equal to the cap.
+**What is not covered.**
+- Theorem S's own class in `notes.md` §6: one identity per level for the whole net level, with 2^{o(λE)} arbitrary
+  terms. D′ says nothing about it.
+- Any term set that is not a product over the X_q copies: pieces on whole translation classes E_v of the order-g net
+  (g² nodes, growing with g), correlated choices across copies. These are what a "three merges beat two" engine on
+  nets would most plausibly use (`notes.md` §7.5).
+- For the whole-level class only the per-level form of §4.1 is proved, with λ₀ depending on g.
 
-With `notes.md` Cor. 3.4 (no price gives more than 1/√2) and the attainment agent's statement that the level-1
-crossing game on nets has value → 1/√2 (two-merge pieces already reach it): **for nets of F₂^m the three-merge level
-value is 1/√2 on both sides when contracting fails.** A third (or p-th) net merge buys nothing there.
+**What replaces Theorem S** (the referee's statement, `review-q1.md` §4):
+
+- **S′(a) [D, tower form].** Let k be a field, q = 2^s, P ⊆ P¹(F_q) with |P| = p ≥ 2 (q = 2, p = 3: the 3-net of F₂^m).
+  Consider tower engines in the sense of D1.1 such that
+  - every level is the level of some 𝒩(q, m_ℓ, P) with merges into g_ℓ = q^{m_ℓ} groups;
+  - the generic edges are partitioned into copies of X_q(P) as in Lemma 4.1, with remainder ξ_ℓ = (q+1)/(g_ℓ+1);
+  - the terms are products of pieces, one per copy, taken from one identity Σ_{i∈I} A_i = d·f_{X_q(P)} with
+    |I| ≤ 2^{τ(λ)}, τ = o(λ).
+  If such an engine has log-exponent α′ > 1/2 along infinitely many n, then contracting holds over k̄, and 3-SAT is
+  power-saving (Theorem R in characteristic 0, C1 in characteristic p).
+- **S′(b) [D, per-level form, whole-level identities].** For fixed g = 2^m ≥ 4 and η > 0: if for some λ ≥ λ₀(g, η, τ)
+  the three-merge level tensor of the F₂^m net has a cover with at most 2^{τ(λ)} terms in which every term has
+  min_k c_k ≤ (1/√2 − 1.13/(g+1) − η)Eλ, then contracting holds over k̄. The dependence of λ₀ on g is not controlled,
+  so this gives no tower statement.
+- Items 2–3 of the old Theorem S (thresholds 0.7075 and 0.79 for whole-level classes) stay [C], with the same
+  uniformity gap. S′(a) supersedes them for the per-copy class, with the stronger threshold 1/2.
+
+With `notes.md` Cor. 3.4 (no price gives more than 1/√2) and Anthropic's two-merge level (rows and columns, App. B
+pieces, ρ = 1/√2): **for nets of F₂^m, when contracting fails, the three-merge level value of per-copy engines is 1/√2
+on both sides.** A third (or p-th) net merge buys nothing in that class.
 
 ---
 
@@ -465,15 +509,29 @@ Two constraints that any other realisation (other groups) must respect, both [D]
    ν̄ = b on W′ except at most one J′ with ν̄(J′) = b⁻ ≤ b; and ν(i) ≤ ν̄(i). If i ∉ {J, J′}: a ≤ b and
    Σ_k s^k ≤ p(a−b) + (a⁺−a) + (b−b⁻) ≤ a⁺ − b⁻. If i = J ≠ J′: all ν(h_k) ≤ a⁺ ≤ b, so Σ ≤ a⁺ − b⁻. Symmetrically for
    i = J′ ≠ J, and for i = J = J′ every term is ≤ 0. Finally a⁺ − b⁻ = d_j − d_{j′} ≤ √2 for a unit vector d. ∎
-4. **Proposition 6.2 (Z₃ has no skew realisation) [R].** Let R_r, C_c, D_d (r, c, d ∈ Z₃) be s-dimensional subspaces
-   of a vector space over any field with W_{rc} := R_r + C_c of dimension 2s and D_{r+c} ⊂ W_{rc}. Then all nine lie in
-   a space of dimension ≤ 3s, and any two W's meet in dimension ≥ s.
-   *Proof.* S := W₀₀ + W₁₂ has dimension ≤ 3s (both contain D₀) and contains R₀, R₁, C₀, C₂, D₀; then W₀₂, W₁₀ ⊂ S, so
-   D₂, D₁ ⊂ S; then R₂ ⊂ W₂₀ = C₀ + D₂ ⊂ S and C₁ ⊂ W₀₁ = R₀ + D₁ ⊂ S. ∎
-   The same closure argument shows: for any group Γ and collinear nodes n, n′ differing by d, the sub-net over the
-   cyclic group ⟨d⟩ lies in W_n + W_{n′}. For Γ = F_q^m this is a plane's worth (order q); for a cyclic Γ it is
-   everything. So **cyclic nets have no realisation of this kind**, and Δ₃ (generic edges of the Z₃ net) gets
-   Σ_k s^k ≤ √2 per edge from point hubs on node-lines: value ≤ 1/3, worse than flat.
+4. **Proposition 6.2 (Z₃ has no skew realisation with transversal hubs) [R; corrected after the referee].** Let R_r,
+   C_c, D_d (r, c, d ∈ Z₃) be s-dimensional subspaces of a vector space over any field such that at every node (r,c)
+   the three hub spaces R_r, C_c, D_{r+c} are **pairwise transversal** and lie in a common 2s-dimensional space W_{rc}
+   (for point hubs: three distinct points on a line). Then all nine lie in a space of dimension ≤ 3s, and any two
+   W's meet in dimension ≥ s.
+   *Proof.* Transversality gives W_{rc} = R_r + C_c = R_r + D_{r+c} = C_c + D_{r+c} at every node. S := W₀₀ + W₁₂ has
+   dimension ≤ 3s (both contain D₀) and contains R₀, R₁, C₀, C₂, D₀. Then W₀₂ = R₀ + C₂ ⊂ S and W₁₀ = R₁ + C₀ ⊂ S, so
+   D₂, D₁ ⊂ S. Then R₂ ⊂ W₂₀ = C₀ + D₂ ⊂ S and C₁ ⊂ W₀₁ = R₀ + D₁ ⊂ S (these two equalities are where C₀ ∩ D₂ = 0 and
+   R₀ ∩ D₁ = 0 are used). ∎
+   *The hypothesis is needed.* As first stated (only dim W_{rc} = 2s and D_{r+c} ⊂ W_{rc}) the proposition is false:
+   over F₂⁴ take R_r = D_d = ⟨e₁⟩ for all r, d and C₀, C₁, C₂ = ⟨e₂⟩, ⟨e₃⟩, ⟨e₄⟩; every W_{rc} = ⟨e₁, C_c⟩ is a line
+   containing D_{r+c}, and the nine spaces span F₂⁴ (referee, `t_prop62.py`; in every spanning configuration found
+   by exhaustive search some node has two coincident hubs).
+   *Consequences, under the same hypothesis at every node.* The closure argument shows, for any group Γ and
+   collinear nodes n, n′ differing by d, that the sub-net over the cyclic group ⟨d⟩ lies in W_n + W_{n′} (from R_i, C_j
+   one gets D_{i+j}, from R_i, D_k one gets C_{k−i}, and so on). For Γ = F_q^m this is a plane's worth (order q); for a
+   cyclic Γ it is everything. So **cyclic nets have no realisation by subspaces with pairwise transversal hubs at
+   every node and skew generic node-planes**, and for such realisations with point hubs Δ₃ (generic edges of the Z₃
+   net) gets Σ_k s^k ≤ √2 per edge by Lemma 6.1: value ≤ 1/3, worse than flat.
+   *Still open for cyclic nets.* Realisations in which some node has coinciding (or non-transversal) hubs, as in the
+   counterexample; hubs that are not points or subspaces at level 1 (higher vertices, interior points of 𝒞_N);
+   spaces other than 𝒞_N. Nothing here bounds these, so no upper bound on F_CAT below 1/√2 follows for cyclic nets
+   or for Δ₃.
 5. **[X] Direct sums of planar realisations** (one block per character of Z_p^m ⊂ F_q^*): the blocks are subspaces,
    the incidences hold blockwise, but W_n ∩ W_{n′} is the sum of the blockwise intersections: always half.
 6. **[X] tripod³ for Δ₃.** If 1/√2 were attained exactly on Δ₃, the three node-centres of each class-4 line would
@@ -490,23 +548,27 @@ Two constraints that any other realisation (other groups) must respect, both [D]
 
 ---
 
-## 7. Lemma S (attainment agent's Steiner crossing inequality) in 𝒞_N
+## 7. Lemma S and what it does and does not give here
 
-One paragraph, as asked. (i) In the non-contracting world and q = 2^s, Lemma S is not needed for placements in 𝒞_N:
-by Theorem B the placement is a price and the price method bounds all covers of all depths. Lemma S in 𝒞_N would make
-the statement about crossing-generated covers unconditional (and extend it to odd q). (ii) Plausibility: the tangent
-cone of 𝒞_N at any point is again of the same kind (a product of cones over spherical buildings of type A of smaller
-rank and a Euclidean factor), so any first-order reduction stays inside the class "cones over A-type buildings";
-rank 1 is the pod, where the linearised inequality fails but no violation of Lemma S was found. Every generic edge of
-the placement of §2 with its 2(q+1) hubs lies in pod(W) × pod(W′) × ℝ^{m} (the sub-building of the decomposition
-V = W ⊕ R ⊕ W′), which is inside the class already tested numerically (`lemmaS.py`, tripod × tripod: no violation). (iii)
-The first configuration *not* of product type is two collinear nodes: W ∩ W″ = one hub i, the 3-space W + W″, the
-sub-building 𝒞₃(2) = Cone(incidence graph of the Fano plane, edges π/3) × ℝ. Test there: legs at the five points of
-W ∪ W″ (level-1 points), two wires joining the two points of W ∖ i to the two points of W″ ∖ i (the level's own
-crossing for the two merges that the edge crosses), auxiliary hubs free in 𝒞₃(2); far legs by Lemma 1.4. In the
-apartment of a basis containing four of the five points this is a planar Euclidean crossing with margin 0; the
-question is whether hubs leaving the apartment through the third chamber at a wall lower a child's value. I have no
-argument either way beyond (i): if the game ever lost there with q even, it would prove contracting.
+Status (27 Nov). The Steiner crossing inequality (Lemma S of `attain-notes.md` §5) is proved in every CAT(0) space;
+its core is formalised in Lean (`research/ports/lean/PortsLean/LemmaS.lean`), and the referee found it correct
+including the degenerate cases. So nothing about 𝒞_N has to be tested for it: only the CAT(0) property of §1 is used.
+
+What follows from it together with Theorem A is a statement about **certified costs only** (logbook entry
+"CORRECTION (referee, interim): Theorem W bounds certified costs only", `research/next/LOGBOOK.md`): the leaf cost in
+Theorem W is the cost of the realisation inherited from the derivation (B.2 rank certificates, A.3 networks,
+routing, nesting), which is an upper bound on the true network cost of the leaf tensor. Hence:
+
+- **Unconditional, certified costs.** On the nets of §2 (any prime power q, including odd q, and the quotient nets
+  of Cor. 2.2) the *certified* level value of crossing-generated covers is ≥ 1/√2 − O(1/g) (per depth as far as the
+  discretisation lemma of that note covers it). This is a barrier for one way of proving costs, not for the tensors:
+  true ranks can be smaller than the certificates.
+- **Conditional, true costs.** What bounds true costs is a price. If contracting fails, Theorem B makes the
+  placement a price for q = 2^s, and then every family of pieces on those nets, of any kind and depth, has true
+  level value ≥ 1/√2 − O(1/g) (per-copy uniformly, whole-level per g; §4). For odd q there is no true-cost statement.
+
+The earlier version of this section proposed a test of Lemma S in Cone(Fano incidence graph) × ℝ (two collinear
+nodes); it is no longer needed.
 
 ---
 
@@ -516,7 +578,8 @@ argument either way beyond (i): if the game ever lost there with q even, it woul
 1. **Other groups.** F_CAT (and the price floor) for 3-nets of cyclic groups Z_g (prime g in particular), of groups
    without elementary abelian quotients of rank ≥ 2 and large order, of Latin squares that are not group tables; for
    Δ₃ (in [2/3, 1/√2]); for p ≥ 4 nets of F_g whose slopes are not in a subfield of unbounded codegree. By
-   Prop. 6.2 these need something other than points on lines of a projective space. Candidates I did not work out:
+   Prop. 6.2 these need something other than pairwise transversal hub subspaces on skew node-planes (for example
+   coinciding hubs at some nodes, which Prop. 6.2 does not exclude). Candidates I did not work out:
    (a) for cyclic Γ, carry-free digit maps Γ ⊃ box → F_q^m (the incidence w_{a+b} ∈ ⟨u_a, v_b⟩ then holds only for pairs
    without carries; the value depends on how the bad nodes are placed) [C]; (b) hubs at higher vertices or interior
    points of 𝒞_N; (c) an upper bound: an inequality valid in all CAT(0) spaces that sees the cyclic structure (the
@@ -526,7 +589,7 @@ argument either way beyond (i): if the game ever lost there with q even, it woul
 3. **O(1/g).** The exact value of F_CAT at finite g (deficit between 0.35/(g+1) and 1.12/(g+1) for q = 2).
 4. **Rate.** A quantitative form of `thm_alt_rank_price` (H32). None is available; §4.2–4.3 avoid the need for
    engines with per-copy pieces.
-5. **Lemma S in Cone(A₂) × ℝ** (§7).
+5. (Closed.) Lemma S is proved in every CAT(0) space; see §7 for what it gives (certified costs only).
 
 **Specs for executors.**
 - **E1 (referee, 1–2 h).** Lemma 1.1, Lemma 1.4, Prop. 2.1, the rank-one edges, Theorem B Steps 0–6 (press on Steps

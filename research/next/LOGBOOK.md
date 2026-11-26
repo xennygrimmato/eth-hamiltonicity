@@ -3081,3 +3081,7 @@ H45.
   for the submitter, web-form steps, API alternative). Hexagon accepts only Mathlib, Palomar, Prove2.me and
   Tau Ceti as formalization links, so the Lean proof is cited through the repository.
 - Not done: the deposit itself (needs the submitter's ORCID sign-in and attestations).
+
+- Final pin: the paper, its Appendix A and the X draft cite commit 847247eee74fa403e6f7564fe31f62b00b84e68b of xennygrimmato/math (guide
+  pinned by commit; tools/mc222 and research/mm/lean-mc222 differ from aef111e only by the three added
+  checker files).

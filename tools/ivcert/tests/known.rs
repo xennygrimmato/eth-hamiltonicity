@@ -205,9 +205,15 @@ fn k2_pieces() {
     o.max_fail = 1_000_000;
     let r = prove_by_name("k2far:lam=9/10:eta=6/5:case=c:s=+-+", o, None).unwrap();
     assert!(!r.proved && !r.counterexamples.iter().any(|s| s.starts_with("COUNTEREXAMPLE")));
-    // a false bound above the true minimum 10 * 0.06272 of the S(9/10) piece is refuted
+    // a bound slightly above the true minimum 10 * 0.062716 of the S(9/10) piece is not proved (the
+    // minimiser lies on the boundary of the piece, so no centre certainly inside need fall below 0.7) ...
     let mut o = opts(60);
     o.max_fail = 1;
     let r = prove_by_name("k2far:lam=9/10:eta=6/5:case=l:s=+++:c=0.7", o, None).unwrap();
+    assert!(!r.proved, "{}", r.summary);
+    // ... and a clearly false bound (random interior points of the piece give 10 Br' = 1.61) is refuted with an exact counterexample inside the piece
+    let mut o = opts(40);
+    o.max_fail = 10_000_000; // depth-limit failures near the piece boundary are expected before it
+    let r = prove_by_name("k2far:lam=9/10:eta=6/5:case=l:s=+++:c=2.0", o, None).unwrap();
     assert!(!r.proved && r.counterexamples.iter().any(|s| s.starts_with("COUNTEREXAMPLE")), "{}", r.summary);
 }

@@ -24,7 +24,10 @@ pub fn prove_generic<const N: usize, P: Problem<N>>(p: &P, opt: Options, out: Op
         w.flush().map_err(|e| e.to_string())?;
     }
     let mut ces = vec![];
-    for (b, ce) in o.fails.iter().take(20) {
+    // report exact counterexamples first (they may be few among many depth-limit failures)
+    let mut fails: Vec<_> = o.fails.iter().filter(|(_, ce)| ce.is_some()).collect();
+    fails.extend(o.fails.iter().filter(|(_, ce)| ce.is_none()));
+    for (b, ce) in fails.into_iter().take(20) {
         match ce {
             Some((x, v)) => ces.push(format!("COUNTEREXAMPLE x = {:?} (exact floats; bits {:?}) f(x) in {:?} < {}", x,
                 x.iter().map(|t| format!("{:016x}", t.to_bits())).collect::<Vec<_>>(), v, p.bound())),

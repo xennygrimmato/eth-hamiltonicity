@@ -13,6 +13,6 @@ fn main() {
         let x: [f64; 6] = std::array::from_fn(|i| v[i]);
         let b: [I; 6] = std::array::from_fn(|i| I::point(x[i]));
         let f = bnb::eval_point(&p, &x);
-        println!("{:.17e} {:.17e} {}", f.lo, f.hi, p.excluded(&b) as u8);
+        println!("{:.17e} {:.17e} {} {}", f.lo, f.hi, p.excluded(&b) as u8, p.point_in_domain(&x) as u8);
     }
 }

@@ -407,8 +407,8 @@ class K2Spec:
             mi = (yi.lo + yi.hi) / 2
             m.append(mi if (mi.rad() == 0 and yi.lo <= mi <= yi.hi) else yi.lo)
         val = self.G_fast(self.sigma([Iv(mi) for mi in m]))
-        for i in range(6):
-            val = val + g[i] * Iv(y[i].lo - m[i], y[i].hi - m[i])
+        for i in range(6):   # G_fast is M * (...), the gradient is that of (...): scale it by M
+            val = val + g[i].scale(self.M) * Iv(y[i].lo - m[i], y[i].hi - m[i])
         return val
 
     def ae_box_in(self, box, r):

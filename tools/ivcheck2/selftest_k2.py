@@ -141,6 +141,31 @@ def test_near():
     assert worst < 1e-12
 
 
+def test_enclosures(nbox=300, npt=20):
+    """nat and mvf enclosures over random boxes contain the point values at random points of the box."""
+    names = ["k2far:lam=9/10:eta=6/5:case=c:s=+-+", "k2far:lam=9/10:eta=6/5:case=l:s=++-",
+             "k2near:lam=12/13:eta=15/13:case=c:s=-+-:t=0.70703125"]
+    bad = 0
+    for name in names:
+        spec = P.K2Spec(name)
+        for _ in range(nbox):
+            w = random.choice((0.3, 0.05, 0.005))
+            if spec.near:
+                lo = [random.uniform(-0.49, 0.49 - w) for _ in range(3)] + [random.uniform(0, 0.7 - w) for _ in range(3)]
+            else:
+                lo = [random.uniform(-0.99, 0.99 - w) for _ in range(6)]
+            box = tuple((l, l + w) for l in lo)
+            encs = [spec.nat(box), spec.mvf(box)]
+            for _ in range(npt):
+                x = tuple((v, v) for v in (random.uniform(l, h) for l, h in box))
+                fx = spec.nat(x)
+                for e in encs:
+                    if e is not None and not (e.lo <= fx.hi and fx.lo <= e.hi):
+                        bad += 1
+    print("enclosure containment failures:", bad)
+    assert bad == 0
+
+
 def test_vs_ivcert():
     exe = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../ivcert/target/release/examples/k2_points")
     if not os.path.exists(exe):
@@ -165,7 +190,7 @@ def test_vs_ivcert():
                     out = subprocess.run([exe, name], input="\n".join(" ".join(repr(v) for v in p) for p in pts),
                                          capture_output=True, text=True, check=True).stdout.split("\n")
                     for p, ln in zip(pts, out):
-                        lo, hi, ex = ln.split()
+                        lo, hi, ex = ln.split()[:3]
                         box = tuple((v, v) for v in p)
                         mine = spec.nat(box)
                         worst = max(worst, abs(mid(mine) - float(lo)))
@@ -180,5 +205,6 @@ if __name__ == "__main__":
     test_points()
     test_gradients()
     test_near()
+    test_enclosures()
     test_vs_ivcert()
     print("selftest_k2 OK")

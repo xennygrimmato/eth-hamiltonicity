@@ -1957,3 +1957,19 @@ New in the final report beyond what is already logged:
 - `ivcheck2` (independent): 6 of 16 certificates of S(9/10) verified so far; estimated 1.5–2 h more for everything.
 - If both independent checks pass and the referee's final report holds: f*(K_{2,3}(w)) = 3/(2+w) for all w ≥ 5/4,
   unconditionally — the full cut regime, H25.
+
+## 26 Nov (late, 72): S(9/10) verified by both checkers — after a bug in the second checker was found and fixed
+
+- **S(9/10) fully certified:** ivcert, `ivcheck` and `ivcheck2` accept all 16 certificates; a coverage script confirms the 16
+  pieces cover 𝓕′₁. ivcheck2: 23.3M leaves; 12.45M excluded leaves re-confirmed outside the piece by its own constraint
+  test; 10.85M closed (9.18M natural extension, 1.31M mean-value, 367k after bisection); 1400 s.
+- **Bug found by the mutation test, in the new ivcheck2 code for this problem:** in the mean-value form the value was
+  scaled by the constant M but the gradient was not, so a shifted (false) statement was "verified" near the origin.
+  Fixed; a new self-test (enclosures must contain point values on random boxes) catches the old bug (2209 failures)
+  and passes now. All quoted results are re-runs after the fix; the earlier "6 verified" message is void.
+- Lessons: (1) mutation tests earn their keep; (2) for these two new problems the same executor wrote both the Rust
+  encoding and the Arb encoding, so the "independent checker" is independent in arithmetic and method but not in
+  authorship — weaker than for (CL\*), where a different agent wrote the second checker. To state in any write-up.
+  (3) I must confirm the fix did not touch the code path used for the original (CL\*) verification (that problem has
+  no M scaling) — re-run both original suites when the executor is done.
+- (CL\*\*₀): ivcheck2 running (~62M leaves, ~1 h).

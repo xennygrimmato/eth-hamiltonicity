@@ -217,6 +217,7 @@ def check_cone(path):
     n = J['graph']['n']; INF = float('inf'); PI = math.pi
     D = [[0.0 if i == j else INF for j in range(n)] for i in range(n)]
     for a, b, l in J['graph']['edges']:
+        a, b = int(a), int(b)
         D[a][b] = D[b][a] = min(D[a][b], l)
     for k in range(n):
         for i in range(n):

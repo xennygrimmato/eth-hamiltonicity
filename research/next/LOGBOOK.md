@@ -2603,3 +2603,26 @@ scripts and exact integer tensors in `research/sat3/hunch2/`).
 - Classical network codes are tensor restrictions over every field [R], so XOR coding gives 3/4 on K_{2,3}
   in every characteristic; no characteristic-2 protocol above 3/√10 found.
 - Remaining decisive step, theoretical: check OpenAI's flat theorem at the prime field F₂.
+
+**CORRECTION to the "reframing" entry above (attainment agent, note 2).** "Crossing-generated covers have value
+≥ F_CAT at every nesting depth" is NOT proved. Status:
+- Depth 1: proved for every metric satisfying B.3 (so for every CAT(0) placement). Level-1 value on nets = the
+  two-merge value.
+- All depths, Euclidean placements only [R, unrefereed]: the "Steiner crossing inequality" (Lemma S) holds in
+  Hilbert space by SOCP duality and the parallelogram law. Unconditional consequence (no flat/price hypothesis,
+  no count of terms): every crossing-generated cover of any depth, Sra-type nesting included, has value
+  ≥ 1/√2 with two merges and ≥ 1/√3 on 3-nets.
+- Depth ≥ 2, general CAT(0) (trees, pods × lines): **Lemma S is open** (H43). The gap is that an auxiliary hub
+  created for one merge is evaluated at a different group under another merge, so the potential must be the
+  Steiner value, whose monotonicity under a crossing is Lemma S. The obvious linearised sufficient condition
+  is false in a tripod; neither proof nor counterexample for the true statement.
+- Stakes. If Lemma S fails in a pod × ℝ, a depth-2 crossing-generated cover beats the floor of a metric that is
+  a price whenever contracting fails (Thm 4.3): that would prove contracting, hence power-saving 3-SAT. If it
+  holds in all CAT(0) spaces, the value is ≥ F_CAT and H40 decides. So the unconditional window for
+  crossing-generated covers at depth ≥ 2 on 3-nets is [1/√3, 1/√2]; H40 is relevant only given Lemma S.
+- Sra's Lemma 4.2 in the engine game [D]: its measure is PT rank (each term rank one across ONE cut of its
+  choice: max_i min_ε), the engine's value is min_w max_i ⟨w, c⟩; nested terms control 2 of the 2^{k−1} cuts.
+  "Attains 1/√k" holds in the PT measure only. On a 3-net, pieces certified across two-sided cuts aligned with
+  two merges live on a rectangle (the level-1 piece) [R]. So Sra-type nesting gives nothing new on nets unless
+  evaluated through multi-group realisations, which is the depth-2 game.
+- Next: exact numerical test of Lemma S at depth 2 in tripod × ℝ and tripod × tripod (attainment agent).

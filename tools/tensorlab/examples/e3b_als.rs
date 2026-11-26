@@ -6,6 +6,18 @@ use tensorlab::restrict::*;
 use tensorlab::tensor::*;
 use num_complex::Complex64;
 
+fn lm_stage(s: &Network, d: &Network, o: &AlsOpts, lm: usize) {
+    let t: Tensor<f64> = d.dense();
+    let r = als_multistart(s, &t, o);
+    for b in r.iter().take(3) {
+        let t0 = Instant::now();
+        let (maps, res, it) = lm_refine(s, &t, &b.maps, lm);
+        let nrm = maps.iter().map(|m| m.norm()).fold(0.0, f64::max);
+        println!("  LM from ALS start {} (res {:.3e}): -> {:.3e} after {} its, max norm {:.3e}, dense recheck {:.3e} ({:.1}s)",
+            b.start, b.rel_residual, res, it, nrm, residual_dense(s, &maps, &t), t0.elapsed().as_secs_f64());
+    }
+}
+
 fn run<T: Scalar>(s: &Network, d: &Network, o: &AlsOpts) {
     let t: Tensor<T> = d.dense();
     let t0 = Instant::now();
@@ -46,5 +58,7 @@ fn main() {
         ds, d12, d23, d13, duu, if cplx { "C" } else { "R" }, starts, sweeps, rate, bad);
     if !bad.is_empty() { return; }
     let o = AlsOpts { sweeps, starts, complex: cplx, seed, ..Default::default() };
+    let lm: usize = a.get(10).and_then(|s| s.parse().ok()).unwrap_or(0);
+    if lm > 0 { return lm_stage(&s, &d, &o, lm); }
     if cplx { run::<Complex64>(&s, &d, &o) } else { run::<f64>(&s, &d, &o) }
 }

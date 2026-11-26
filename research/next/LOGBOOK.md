@@ -1113,3 +1113,18 @@ marginals and pairwise independence at the target y₀, M²·#U ≥ |H|·(NM −
 So the constant is 3/16 on the wider window [M/4, 3M/4]; the notes' window [M/4, M/2] is a corollary.
 Break found: the marginal condition does not follow from the pairwise one when |S| = 1 and must be assumed separately
 (Toeplitz with a uniform offset b has it). Notes' Lemma C3 is correct as stated. Next: composition with Toeplitz.
+
+## 26 Nov (late, 19): guess count on a verbatim fragment of Anthropic's machine model [L, fragment]
+
+`research/ports/lean/PortsLean/ANFragment/`: `Machine.lean` = Anthropic's NS1/Machine.lean copied verbatim (typechecks
+unchanged on our Mathlib); `Defs.lean` = verbatim definitions of app, listT, foldB, foldF, appF, pickB, pickF, stepC,
+compC; `Guess.lean` = our overlay. I rebuilt the project (18266 jobs, success, no sorry) and read the statements.
+- `EvG` mirrors `Ev` with a guess count; `EvG.toEv` projects to `Ev` (so EvG lists are the accepting runs).
+- `GB θ F x g`: every accepting run uses ≤ g guesses. Combinator lemmas: quote/id/fail 0, guess 1, sequencing adds,
+  ite = guard + max of branches. `pickB_guesses`: ≤ number of options. `foldB/foldF/appF` lemmas.
+- `compC_guesses`: guesses(compC G G′) ≤ g + Σ_pieces g′ — the additive form Lemma 1 uses.
+- Not done: `bitsB` (needs ~150 more lines of copied definitions); the lifting Ev → ∃ EvG.
+- Finding: `Gives`/`Does` do not imply guess-freeness (e.g. `ite guess id fail`); every bound must be syntax-directed.
+- Estimate for the rest, both needing the real build: dealProg ≤ s-free part of dealB ≈ 1.5–3k lines, 2–5 focused
+  days; threading through thm_cut ≈ 1–2 weeks (needs the 261-file closure). Blocked on build permission (user asked).
+- Limitation to state wherever this is cited: it is a copy, checked against a different Mathlib version than theirs.

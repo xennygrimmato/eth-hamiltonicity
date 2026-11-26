@@ -224,3 +224,98 @@ mod tests {
         assert!(!cut_check(&s, &d).is_empty());
     }
 }
+
+/// Global row-major index (party order) of the entry (o_p = o, others = column c of the
+/// matricisation at p, others in party order).
+fn global_index_table(shape: &[usize], p: usize) -> Vec<Vec<usize>> {
+    let str_ = crate::tensor::strides(shape);
+    let others: Vec<usize> = (0..shape.len()).filter(|&q| q != p).collect();
+    let ncol: usize = others.iter().map(|&q| shape[q]).product();
+    let mut colbase = vec![0usize; ncol];
+    for (c, cb) in colbase.iter_mut().enumerate() {
+        let mut rem = c;
+        let mut off = 0;
+        for &q in others.iter().rev() {
+            off += (rem % shape[q]) * str_[q];
+            rem /= shape[q];
+        }
+        *cb = off;
+    }
+    (0..shape[p]).map(|o| colbase.iter().map(|b| b + o * str_[p]).collect()).collect()
+}
+
+/// Levenberg-Marquardt refinement (real case) of ALS maps: minimises ||(x A_p) S - T||^2 over all
+/// map entries jointly. Returns (refined maps, relative residual, iterations used).
+pub fn lm_refine(net: &Network, target: &Tensor<f64>, maps0: &[DMatrix<f64>], iters: usize) -> (Vec<DMatrix<f64>>, f64, usize) {
+    let np = net.nparties;
+    let mut maps = maps0.to_vec();
+    let tn = target.norm2().sqrt();
+    let nres = target.data.len();
+    let sizes: Vec<usize> = maps.iter().map(|m| m.len()).collect();
+    let nvar: usize = sizes.iter().sum();
+    let tables: Vec<Vec<Vec<usize>>> = (0..np).map(|p| global_index_table(&target.shape, p)).collect();
+    let resid = |maps: &[DMatrix<f64>]| -> Vec<f64> {
+        let x = apply_maps(net, maps);
+        x.data.iter().zip(&target.data).map(|(a, b)| a - b).collect()
+    };
+    let mut r = resid(&maps);
+    let mut f = r.iter().map(|x| x * x).sum::<f64>();
+    let mut lambda = 1e-3;
+    let mut used = 0;
+    for it in 0..iters {
+        used = it + 1;
+        // Jacobian
+        let mut j = DMatrix::<f64>::zeros(nres, nvar);
+        let mut off = 0;
+        for p in 0..np {
+            let e = environment(net, &maps, p); // in_p x ncol
+            let (outd, ind) = (maps[p].nrows(), maps[p].ncols());
+            for o in 0..outd {
+                for i in 0..ind {
+                    let col = off + i * outd + o; // column-major index of A_p[(o,i)]
+                    for (c, &g) in tables[p][o].iter().enumerate() {
+                        j[(g, col)] = e[(i, c)];
+                    }
+                }
+            }
+            off += sizes[p];
+        }
+        let jt = j.transpose();
+        let jtj = &jt * &j;
+        let rv = nalgebra::DVector::from_vec(r.clone());
+        let g = &jt * &rv;
+        let mut improved = false;
+        for _ in 0..20 {
+            let mut a = jtj.clone();
+            for k in 0..nvar {
+                a[(k, k)] += lambda * (1.0 + jtj[(k, k)]);
+            }
+            let Some(ch) = a.cholesky() else { lambda *= 10.0; continue };
+            let step = ch.solve(&g);
+            let mut trial = maps.clone();
+            let mut off = 0;
+            for p in 0..np {
+                let sl = trial[p].as_mut_slice();
+                for k in 0..sizes[p] {
+                    sl[k] -= step[off + k];
+                }
+                off += sizes[p];
+            }
+            let rt = resid(&trial);
+            let ft = rt.iter().map(|x| x * x).sum::<f64>();
+            if ft < f {
+                maps = trial;
+                r = rt;
+                f = ft;
+                lambda = (lambda * 0.3).max(1e-15);
+                improved = true;
+                break;
+            }
+            lambda *= 10.0;
+        }
+        if !improved || f.sqrt() / tn < 1e-15 {
+            break;
+        }
+    }
+    (maps, f.sqrt() / tn, used)
+}

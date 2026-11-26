@@ -32,15 +32,20 @@ independent checks of the Δ₃ configuration). The executor's parallel notebook
      a product of nine tripods ([R] for the value; two independent checks). The supremum over all tree products is
      exactly 6 by search ([N]; executor: 32/32 chains over general trees) and equals (1/3)√(9·Γ) with Γ a one-tree
      ratio (§5.2, [R]).
-   - 3-nets of order g → ∞ with an index-4 subgroup: ρ ≥ ½√(3/2) = 0.6124, against flat 1/√3 = 0.5774 ([R] for
-     the value in the limit model, [D] for the transfer). 4-nets: ρ ≥ 1/√3 against flat 1/2.
+   - 3-nets of F₂^M (or F₄^M) with g = 2^M → ∞: ρ → ½√(3/2) = 0.6124, against flat 1/√3 = 0.5774 ([R] in the
+     limit model and for the transfer, refereed, `review-sat3.md`). The exact finite-g values increase to the
+     limit (0.541, 0.573, 0.591 at g = 4, 8, 16; 0.6120 at g = 1024) and are below the flat value for g ≤ 8.
+     The construction needs GL-mixing: for cyclic Z_g it gives only 0.5857. 4-nets of F₃^M: ρ → 1/√3 against
+     flat 1/2.
    - Every price, under any hypothesis, gives at most 1/√2 on a p-net ([R]).
-   So when contracting fails the three-merge window is ρ ∈ [0.6124, 0.7071), exponent α′ ∈ (1/2, 0.7075], not
-   (1/2, 0.79]; for four merges α′ ≤ 0.79, not 1.
+   So when contracting fails the three-merge window for the level value is ρ ∈ [0.6124, 0.7071) in the limit
+   g → ∞. The translation into exponent thresholds (α′ ≤ 0.7075 for three merges, ≤ 0.79 for four) has a gap
+   found by the referee: it needs a floor uniform in g, which is not proved (§6).
 5. **Barrier (P4): not proved.** "No net engine beats 1/2 unless contracting" would follow from a price with value
    E/√2 on 3-nets. Tree products do not seem to reach it; §5.5 says what geometry would be needed.
 6. **Attainment (P3): duality does not help.** AN Thm A.6 characterises attainment by a condition on spectral
-   points evaluated on non-wire tensors; the price method is a relaxation of it and the gap can be total (§7).
+   points evaluated on non-wire tensors; the price method is a relaxation of it (§7; whether the relaxation
+   can be strict is not shown, see the correction in §7 item 2).
    Any sphere-law three-merge identity on a net would itself prove contracting.
 
 ---
@@ -286,7 +291,7 @@ chain of Prop. 3.5 (unbounded excess) and the per-cut relaxation c_e ≤ Σ_cuts
 
 Remark. 2/3 is the value that w1's conjectural single-tensor inequality c₁ ≤ c₂ + c₃ would give on Δ₃.
 
-### 5.4 Large nets: the gap does not close [R in the limit model; D for the transfer]
+### 5.4 Large nets: the gap does not close [R; refereed; transfer valid for F₂^M, F₃^M, F₄^M only]
 
 The node-tripod family on a p-net of order g gives per merge √((g+p−2)/(gp)) of the edge bits (2/3 at g = p = 3),
 which tends to 1/√p. A better family keeps a gap.
@@ -347,15 +352,26 @@ real and the question is attainment.
 
 ## 6. Consequences for engines (sharpening D1) [D]
 
-**Theorem S.** Let k be a field and consider tower engines whose levels are p-net levels over k (class of D1.1
+**Correction (referee, `review-sat3.md` item 5).** Items 2 and 3 below are NOT proved as stated. D1's
+averaging argument needs a finite list of fixed configurations in which every edge crosses every merge, so that
+one configuration recurs with λ → ∞ and a floor that is only a liminf in λ (no rate) can be applied. Net levels
+of order g → ∞ are a different configuration at every level and contain edges internal to merges; the level that
+dips can be a different configuration for every n. What IS proved is the per-level statement: for a fixed g, a
+family of covers of the order-g level tensor (λ → ∞) with value below the pod floor of that g by a constant
+proves contracting. The tower thresholds 0.7075 and 0.79 need either a floor uniform in g (a rate in λ for the
+statement "this finite set is a price") or a decomposition of net levels into fixed configurations; neither is
+available. Item 1 is also not literally D1 for configurations that are balanced but not all-crossing. The
+arithmetic of the thresholds is right. Status of items 2, 3: [C] with a named gap.
+
+**Theorem S (items 2, 3 conditional on a uniform floor).** Let k be a field and consider tower engines whose levels are p-net levels over k (class of D1.1
 with one configuration per level, 2^{o(λ·E)} terms).
 1. p = 2 (rectangle levels), or any level whose configurations are balanced for two merges: certified exponent
    α′ ≤ 1/2 unless FH fails (D1), and no price argument can ever give a smaller bound than 1/2 (Thm 3.2).
-2. p = 3, nets of groups with index-4 subgroups: if α′ > log₂(3/√(27/8)) = 0.7075 along infinitely many n, then
+2. p = 3, nets of F₂^M or F₄^M: if α′ > log₂(3/√(27/8)) = 0.7075 along infinitely many n, then
    some level has ρ below the pod floor by a constant, so some finite subset of a product of pods is not a price,
    so contracting holds over k (Thm 4.3), and 3-SAT is power-saving (Theorem R in characteristic 0, C1 in
    characteristic p). D1 had 0.79 here.
-3. p = 4 (slopes 0, ∞, ±1, index-3 subgroups): the same with threshold log₂√3 = 0.79 instead of 1.
+3. p = 4 (nets of F₃^M, slopes 0, ∞, ±1): the same with threshold log₂√3 = 0.79 instead of 1.
 (Δ₃ itself, with floor 2/3, is a single instance at g = 3 and not a level of a tower.)
 
 The proof is D1's averaging argument with the pod floor in place of the flat floor (the floor statement is
@@ -374,8 +390,11 @@ What is **not** proved: the threshold 1/2 for p ≥ 3 (Q1).
 2. **Why this is not the price method.** For A ∈ 𝒫, φ(A) ≤ min_k φ(N_k(c_k)), N_k the hub network of merge k, and
    the price method only uses this bound. The set of tensors below several networks is not the set of restrictions
    of one tensor, and the minimum is not attained in general: on three parties, with N_1 = ⟨N⟩₁₂ and N_2 = ⟨N⟩₂₃,
-   every common restriction is a product state (φ = 1), while the flattening rank at {2}|{1,3} is N on both. So
-   "price floor ⇒ pieces" is false as a general principle; attainment is a statement about spectral points on
+   every common restriction is a product state (φ = 1), while the flattening rank at {2}|{1,3} is N on both. **Correction
+   (referee):** this shows slack for a single functional only, not a gap between floor and attainment: a target
+   that passes the price test for every functional is forced by the flattenings at parties 1 and 3 to be
+   u⊗f₂⊗v, which is itself a piece. So no example here separates "price floor" from "pieces exist"; whether
+   they can differ is open. Attainment is a statement about spectral points on
    non-wire tensors. In our setting the same gap shows on K₄: no price sees the cost of a crossing piece across the
    merge that contains both its edges (z1), and on Δ₃ in characteristic 0, where w1's rank inequality forces the
    star piece off the sphere.
@@ -405,8 +424,9 @@ What is **not** proved: the threshold 1/2 for p ≥ 3 (Q1).
 
 ## 8. P4: the barrier, as far as it goes
 
-Proved: Theorem 3.2 with its corollaries (unconditional statements about what prices can prove), Theorem 5.2 and
-5.4 with Theorem S (conditional on Theorem 4.3).
+Proved and refereed: Theorem 3.2 with its corollaries (unconditional statements about what prices can prove),
+Theorem 4.3 (product hulls, now [R]), Theorems 5.2 and 5.4 (floors, for nets of F₂^M, F₃^M, F₄^M), and the
+per-level form of Theorem S. Not proved: the tower thresholds of Theorem S items 2, 3 (uniformity gap, §6).
 
 Not proved: "no rewriting engine beats 2^{n/(log n)^{1/2+o(1)}} unless contracting holds". The class for which it
 is proved is p ≤ β (D1). For nets it is equivalent to Q1 as far as price arguments go.

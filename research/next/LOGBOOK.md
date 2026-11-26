@@ -2417,3 +2417,47 @@ Effect on today's hypotheses: **H29 and H30 (covers built as products of two-way
 Prop. 4.23** — pending a check that its cost model matches ours (table sizes under L3 vs rank across hub cuts with
 time-sharing). New filter F4: a three-way identity on a net must couple different bundles. Sent to both attainment
 agents.
+
+## 27 Nov (cont.): referee on the three-merge floors; new launches; one more direction dead
+
+**Referee report on `research/sat3/notes.md`** (`research/sat3/review-sat3.md`; all numbers recomputed with the
+referee's own code).
+- Correct: the bimedian inequality and Theorem 3.2 (every price gives at most E/√2 on a balanced two-merge
+  configuration; K₄ ≤ 2√2 per merge; p-nets ≤ 1/√2); the Euclidean cap; the product-hull theorem (upgraded from
+  [D] to [R]); Δ₃ with nine tripods (ρ = 2/3 exactly; Γ = 36, nothing larger in an independent search; symmetry
+  group of order 108 transitive as needed); the large-net limit Φ = 27/8 (ρ → 0.6124) and the 4-net value 1/√3.
+- Scope correction: the large-net floor holds for nets of F₂^M, F₃^M, F₄^M (GL-mixing), not for "groups with an
+  index-4 subgroup": cyclic Z_g gives only 0.5857. Finite-g values 0.541, 0.573, 0.591 (g = 4, 8, 16) are below
+  the flat 0.577 until g ≥ 16.
+- **Gap (real): Theorem S's exponent thresholds 0.7075 and 0.79 are not proved.** D1's averaging needs a finite
+  list of fixed all-crossing configurations; net levels of order g → ∞ change with the level and the floor is a
+  liminf in λ without a rate. Proved instead: the per-level statement. Needed for the tower statement: a floor
+  uniform in g, or a decomposition into fixed configurations. → H32.
+- Gap: the "price floor ≠ attainment" example in §7.2 only shows slack for one functional. Wording withdrawn;
+  whether floor and attainment can differ is open.
+- `notes.md` corrected in place (items 4, 6 of §0; §5.4 header; §6 correction paragraph; §7.2; §8).
+
+**H32 [open].** Uniform floor: is "every finite subset of a product of pods is a price" available with a rate in
+λ that is uniform over net orders g (or can a net level of order g be cut into boundedly many fixed
+configurations with small loss)? Without it the three-merge exponent window is only a statement about level
+values, not about exponents.
+
+**Ideas agent, direction 4 (products of two-way problems under three merges): dead [X].** Value is never below
+1/√2; the uniform split gives (1+√2)/3 = 0.8047. Sharper no-go: on a generic rectangle of a pair of classes the
+four nodes lie in four distinct groups of the third merge, and any network on four groups costs at least
+max(c_k, c_l) for EVERY tensor on the rectangle, so mixing pairs is strictly worse than one pair. "Third merge
+free" positions are a fraction ≤ 3/(g+1) of a level. Side observation: on Δ₃ each node and pair of classes gives
+a crossing with cost profile (x, ≤ min(1, ½+y), same); one crossing alone has value 0.91; any gain needs
+adaptivity across overlapping crossings.
+
+**Launched (hunches of the lead, with prior odds).**
+- H33 (5%): OpenAI's ω = 9/4 triangle identity, or the machinery that evaluates the triangle, is the missing
+  three-wire piece or gives the true three-merge value. Agent → `research/sat3/hunch-triangle.md`.
+- H34 (2–3%): characteristic 2 is special: √rank over F₂ may fail to be a price over fields of characteristic 2.
+  Agent → `research/sat3/hunch-char2.md` (first test: ranks of the crossing-identity terms mod 2, 3, 5).
+- H35 (3%): tripod-indexed ladders (expansions at three points of P¹ = the three classes of a net).
+  H36 (2%): Pfaffian three-term relation for K₄'s three matchings. H37 (2%): direction decomposition of wires
+  over an affine plane. All three sent to the ideas agent.
+- H38 [X, lead's own check]: tensor powers of a tiny identity give nothing (mixed terms cost as much as the
+  trivial method).
+- Survey of Hexagon's recent Lean-backed papers → `research/sat3/hexagon-survey.md`.

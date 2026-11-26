@@ -1798,8 +1798,26 @@ pub fn anneal_limit(net: &LimitNet, nv: usize, iters: usize, chains: usize, t0: 
             for it in 0..iters {
                 let t = t0 * (t1 / t0).powf(it as f64 / iters as f64) * best.0.max(1e-9);
                 let old = f.clone();
-                let sub = rng.gen_range(0..10);
-                if sub < 4 {
+                let sub = rng.gen_range(0..12);
+                if sub >= 10 {
+                    // coset move: the classes q + <g> of one merge (or of every merge) go to one vertex
+                    let m = net.q.m;
+                    let g = rng.gen_range(0..m);
+                    let mut h = vec![0usize];
+                    let mut x = g;
+                    while x != 0 {
+                        h.push(x);
+                        x = net.q.add[x * m + g];
+                    }
+                    let q0 = rng.gen_range(0..m);
+                    let target = rng.gen_range(0..n);
+                    let ks: Vec<usize> = if rng.gen::<bool>() { vec![rng.gen_range(0..net.p())] } else { (0..net.p()).collect() };
+                    for &k in &ks {
+                        for &y in &h {
+                            f.hv[k * m + net.q.add[q0 * m + y]] = target;
+                        }
+                    }
+                } else if sub < 4 {
                     let v = rng.gen_range(1..n);
                     f.len[v] = (f.len[v] + sigma * gauss(&mut rng)).max(0.0);
                 } else if sub < 5 {

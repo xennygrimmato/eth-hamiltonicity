@@ -106,3 +106,26 @@ Scripts: `mc_sat.py` (E1 exact MC via SAT + CEGAR on input rows), `e2_wordram.py
   inner index). So the pass criterion "< √n thin products" is impossible for any preprocessing
   class; the decomposition route costs √n·n^{2+o(1)} = n^{2.5}. No computation needed (checked:
   rank of random 16×16 / 64×64 F₂ products is n−O(1), standard).
+
+## ideas-E7. Cyclic (twisted-convolution) form of M_n(F₂) — PASS (set-up only)
+- `e7_cyclic.py`: M_n(F₂) = End(F_{2^n}) = F_{2^n}[x;Frob]/(xⁿ−1), L(z)=Σ a_i z^{2^i},
+  c_k = Σ_{i+j≡k} a_i·b_j^{2^i}. Coefficient→matrix map is an F₂-linear bijection (rank n²) and
+  the product identity holds on 50 random pairs, n = 2..8.
+- Cost: naive is n² F_{2^n}-multiplications (MC Θ(n) each) ≈ n³; Frobenius is XOR-only. Fast
+  skew-polynomial multiplication is algebraic, so bounded by the same ω. No gain seen.
+
+## E1c. Unrestricted model (gate reuse, degree > 2 intermediates): exact span search `mc_span.c`
+- Idea: the SAT encodings (CEGAR `mc_sat.py`, all-rows `gen_full.py`, orbit-split `gen_orbit.py`,
+  + lex symmetry breaking) could not even re-find MC = 6 for 3-term polynomial multiplication in
+  10 min. Replace by a search over the SUBSPACE S_j = span{1, inputs, G_1..G_j} of truth tables:
+  a circuit is a chain S_{j+1} = S_j + ⟨u·v⟩ (u,v ∈ S_j) with T ⊆ S_k. Key facts:
+  (a) rem(S) = dim((S+T)/S) drops by ≤ 1 per gate → prune rem > k−j;
+  (b) a "reducer" gate (u·v ∈ S+T) leads to S+⟨t⟩ for a class t of T mod S — at most 2^rem − 1
+      successors, whatever u, v are; (c) for fixed u, v ↦ u·v is F₂-linear, so reachability of
+      each class is one rank test per u; (d) "helper" gates (all other products) allowed only while
+      rem ≤ k−j−1; (e) memoise on the RREF of S (128-bit hash; collision risk ignored).
+  First gate ranges over the 72 orbits of planes under GL₂(F₂)³ ⋊ transpose (432 elements; orbit
+  sizes sum to 10795; checked that the group preserves span T).
+- Calibration (all exact, seconds): F₄ mult MC = 3, 2-term poly mult = 3, 3-term poly mult = 6
+  (k=5 refuted with 8 states, k=6 found with 334 states) — matches Morse arXiv:2608.30238
+  (Mul₂ = 3, Mul₃ = 6).

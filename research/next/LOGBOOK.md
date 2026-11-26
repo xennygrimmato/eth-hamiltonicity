@@ -1700,3 +1700,20 @@ main results found; no retraction or correction by either lab.
 Launched: a writer applying the check's edits to both notes, the overview and the middle-cell notes; an independent
 executor re-verifying the 7-AND-gate claim with a different method and, if possible, a proof object
 (`tools/mc222/`).
+
+## 26 Nov (late, 54): Theorem K extends to K_{2,m} for every m, with no new certificate [R given (CL\*), unreviewed]
+
+From the K_{2,m} agent (`research/ports/k2m/notes.md`, being written):
+- **Weighted five-point theorem:** for 0 < w ≤ 1 every five-point CAT(0) set has Σ_S ≥ 3/√(9+w²)·(Σ_vv + w|u₁u₂|). Proof:
+  Prop. 3.2 with κ(w) = 3/√(9+w²); the bracket becomes (κw/3)·Φ_w with Φ_w ≥ Φ₁ termwise for w ≤ 1, so (CL\*) suffices.
+- **Averaging over the C(m,3) triples of pages** reduces K_{2,m} at weight w to K_{2,3} at weight w′ = 6w/(m(m−1)).
+  I re-did the count: each v in C(m−1,2) triples, each v-pair in m−2, u₁u₂ in all; it gives
+  Σ_S ≥ R_m(w)(Σ_vv + wD), **R_m(w) = 2m/√(m²(m−1)²+4w²)**, for 0 < w ≤ m(m−1)/6 (includes w = 1). Formula confirmed.
+  Values at w = 1: m = 3: 0.9487 (routing 0.75); m = 4: 0.6576 (0.5714); m = 5: 0.4975 (0.4545); m = 8: 0.2855 (0.2759).
+- **Upper bound under ¬contracting:** q+1 rank-one idempotents of Mat₂(F_q), q = 2^r (a cyclic derangement of the
+  projective line), pushed to Mat_{2r}(F₂) with ranks scaling by r (machine-checked r ≤ 5); m ≤ 2^k+1 is maximal for
+  apex rank 2k. Lemma H is pairwise, so it goes through: f*(K_{2,m}; w) ≤ R_m(w), with equality for w ≤ m(m−1)/6.
+- [X] The direct m-page calibration is FALSE for m ≥ 4 (a collinear book gives a negative bracket); averaging avoids it.
+- [N] Weighted family: book minimum = min(R_m(w), best cut m/(w+⌊m²/4⌋)); for m = 3 the switch is at w = 5/4. If the
+  single inequality 13Σ_S ≥ 12Σ_vv + 15D on five CAT(0) points is certified, then f*(K_{2,3}; w) = 3/(2+w) = the cut
+  bound **unconditionally** for w ≥ 5/4. Spec to follow → certificate job.

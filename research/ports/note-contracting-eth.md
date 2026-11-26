@@ -8,7 +8,10 @@
 
 Anthropic's paper "VP ≠ VNP over every field" [AN] proves its permanent lower bound by a case split: over every
 field k, the *flat* or the *contracting* hypothesis holds (AN Def. 2.1 = Def. D.1; Thm 2.2 = Thm D.2; Lean `thm_alt`).
-We show that the contracting case has an algorithmic consequence, which the paper does not mention.
+We show that the contracting case has an algorithmic consequence, which the paper does not mention. A full-text
+search of [AN] finds no mention of SAT, of ETH, or of algorithmic consequences of either case. Its only remark in that
+direction is in §2.5: "Nor can a large Boolean circuit take the place of the program that the contracting case
+refutes, since we know no way to run it faster than gate by gate."
 - **Characteristic 0.** If the contracting hypothesis holds over a field of characteristic 0, then 3-SAT on n
   variables can be decided deterministically in time 2^{O(n^{1−δ})}·poly for some δ > 0. **Theorem R** (§3) uses only
   [AN] and classical facts; its form with poly(n)-size advice is refereed, and its uniform form rests on an audit of
@@ -27,11 +30,40 @@ ETH. Neither uses OpenAI's theorem that flats exist (EG Thm 1.2); via Theorem R 
 algorithm or lower bound; we do not decide whether the two cases exclude each other ([AN] D.3: "We do not show that
 the two cases exclude each other"). Every conclusion is an implication between hypotheses, with status in §8.
 
+**Prior work and novelty** (literature check of 26 November 2026, `literature-check.md`).
+- **Theorem A is partly anticipated.** OpenAI's [EG] §11.1 already proves the mechanism of Theorem A, under a
+  different hypothesis. [EG] Lemma 11.3 gives a uniform contracting gap on the F₂-Grassmannian: for m > ℓ a power of
+  two and any map of Gr(m, 2m) over F₂ into a complete CAT(0) spectral space, B_m ≤ (m − η)B₁ for some η > 0, where
+  B_r is the mean squared distance between m-dimensional subspaces U, V with dim(U+V) = m + r. There the gap is
+  derived from a largest spectral flat dimension. [EG] Prop. 11.2 ("If a finite field F has a largest spectral flat
+  dimension k, then F has ports") uses only that gap, through random linear maps, a Reingold–Vadhan–Wigderson
+  replacement product and Mendel–Naor nonlinear spectral calculus (EG §§11.1.2–11.1.3). So "a uniform contracting gap
+  on F₂-linear configurations ⇒ ports" is in [EG]. What is ours is the observation that [AN]'s contracting hypothesis
+  supplies a gap of this kind. In our proof the gap is the Poincaré inequality [AN] F.6 on U_h(F₂), and [HC] Thm 4.2
+  turns it into ports (§4); no Grassmannian gap or replacement product is used.
+- **A second route, unchecked.** The literature check adds an inference of its own, marked there as unrefereed, which
+  we have not checked: [AN]'s Mat_μ(F₂) embeds in Gr(μ, 2μ) by graphs, with dim(Γ_a + Γ_b) = μ + rk(a − b), so
+  averaging the contracting inequality over GL_{2μ}(F₂) "probably" yields [EG]'s Grassmannian gap at m = μ for [AN]
+  prices. If so, [EG] §§11.1.2–11.1.3 give a second proof of Theorem A. The power-of-two requirement on m in Lemma 11.3
+  has not been checked.
+- **What OpenAI does not state.** OpenAI does not state that [AN]'s contracting hypothesis implies ports, or anything
+  about 3-SAT. [EG] uses Prop. 11.2 inside its proof by contradiction of [EG] Thm 1.2, and refers to Anthropic only for
+  the crossing construction, citing Anthropic's ETH paper [AN-ETH]; [HC] and [IM] likewise cite only that paper.
+- **Theorem R and Corollary 1.** To our knowledge, after a search on 26 November 2026, Theorem R has not been stated
+  before, and Corollary 1 has not been stated as such. The search covered the papers, repositories, commits and issue
+  trackers of both labs, the Hexagon and alphaXiv pages of [AN], arXiv, the blogs Shtetl-Optimized, Computational
+  Complexity and Gil Kalai's, Hacker News, MathOverflow, and press and aggregator coverage; Lean Zulip and Mastodon
+  were not searched. The check rates its confidence as high that no one has posted Theorem R, and medium that no
+  expert regards it as immediate.
+- **Retractions.** No retraction or correction of [AN] or of the OpenAI papers cited here was found.
+
 **Provenance of the sources.** Both source papers were produced by AI systems and have not been refereed by people.
 - [AN, §3, p. 11]: "The proofs in this paper were found and written by AI. No human mathematician has checked the
   proofs."
 - The README of OpenAI's release says it contains "manuscripts and supporting proof artifacts produced by an unnamed
   internal OpenAI model", "best understood as a form of raw research data".
+- OpenAI's history.md states that a working group led by Impagliazzo, Paturi and Williams is reviewing OpenAI's ETH
+  paper [OA-ETH].
 - Both labs supply Lean developments. We read parts of both, but we built neither (one file and nine definitions of
   [AN]'s were copied verbatim into our project and compiled there; §3.3).
 
@@ -66,6 +98,12 @@ The internal referee reports are `review-theoremR.md`, `review-theoremAB.md`, `r
 - **[IM]** OpenAI, "The logarithmic exponent of integer multiplication on tapes", 24 Nov. 2026.
 - **[MM]** OpenAI, "The matrix multiplication exponent is nine fourths", 24 Nov. 2026 (used only in §7).
 - **OpenAI Lean**: `OAI/Computability/MultitapeWeakETH/{Price,Cloud,MiddleDecision}.lean` in OpenAI's release.
+- **[AN-ETH]** Anthropic, "A 2^{o(n)} time algorithm for 3-SAT", 26 Oct. 2026 (github.com/anthropics/formal-math,
+  `eth`; hexagon 2610.00577).
+- **[OA-ETH]** OpenAI, "The Exponential Time Hypothesis is False", 17/25 Oct. 2026 (github.com/openai/math,
+  `preprints/The-Exponential-Time-Hypothesis-is-False-October-25-2026`).
+- **[CP]** "Lowered crossover points of Anthropic's subexponential 3-SAT algorithm", arXiv:2610.41622, 30 Oct. 2026.
+  Known to us only from a search-engine excerpt of its abstract.
 
 **Hypotheses.** "Power-saving" means time 2^{O(v^{1−δ})}·poly(input length) for some fixed δ > 0, v the number of
 variables of a 3-CNF.
@@ -79,7 +117,19 @@ variables of a 3-CNF.
 | nuWETH | … decides 3-SAT deterministically with poly(v) advice bits depending on v only |
 
 Relations: ETH ⇒ WETH; rWETH ⇒ WETH; nuWETH ⇒ WETH; and rWETH ⇒ UWETH ⇒ ⊕_pWETH for every prime p (Corollary C5,
-§5.2).
+§5.2). We do not assume ETH anywhere: in its classical form it is claimed refuted by both labs in October 2026
+[AN-ETH, OA-ETH], by algorithms running in time 2^{n/(log n)^{1/2+o(1)}}, which is compatible with WETH.
+
+**ETH context.**
+- [IM, §1] states that variable-count Weak ETH "is equivalent to the Stearns–Hunt hypothesis for CNF satisfiability"
+  (citing its ref. 41, Thm 2.4), and that the October subexponential algorithms "refute the original Exponential Time
+  Hypothesis … and are compatible with this weaker assumption".
+- [CP] defines a "rewrite-and-merge" class of algorithms that contains the recursion of [AN-ETH]. For two balanced
+  homogeneous merges it proves that the exponent per edge bit is ≥ (log₂K)^{−3}, "which excludes running times
+  2^{n^{1−c}}" within that class. We know this only from a search-engine excerpt of the abstract. It does not
+  conflict with our conditional algorithms as far as we can see: they enumerate the runs of [AN]'s cutting program
+  (§3.4) and do not run a merge recursion, so they do not appear to belong to that class. We have not analysed the
+  relation further.
 
 ---
 

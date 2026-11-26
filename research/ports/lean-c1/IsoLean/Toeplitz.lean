@@ -149,7 +149,8 @@ theorem toeplitz_fiber_card [Fintype F] [DecidableEq F] (n k : ℕ) (z : Fin n �
   simp only [Fintype.card_fun, Fintype.card_fin, LinearMap.toAddMonoidHom_coe,
     toeplitzLin_apply] at this
   convert this using 3
-  ext a; simp
+  ext a
+  first | exact (mem_filter_univ a).symm | (rw [Finset.mem_filter]; simp) | exact Iff.rfl
 
 /-- The Toeplitz hash `h_{a,b}(x) = T_a x + b`, keyed by `p = (a, b)`. -/
 def hash (n k : ℕ) (p : (Fin (n + k - 1) → F) × (Fin k → F)) (x : Fin n → F) : Fin k → F :=
@@ -213,6 +214,10 @@ theorem hash_pairwise_F2 (n k : ℕ) (x y : Fin n → ZMod 2) (hxy : x ≠ y) (s
 theorem hash_pairwise_F2' (n k : ℕ) (x y : Fin n → ZMod 2) (hxy : x ≠ y)
     (s t : Fin k → ZMod 2) :
     (univ.filter (fun p => hash n k p x = s ∧ hash n k p y = t)).card = 2 ^ (n - 1) := by
+  have hn : 1 ≤ n := by
+    rcases Nat.eq_zero_or_pos n with h | h
+    · subst h; exact absurd (Subsingleton.elim x y) hxy
+    · exact h
   have h := hash_pairwise_F2 n k x y hxy s t
   have e : (n + k - 1) + k = (n - 1) + 2 * k := by omega
   rw [e, pow_add, pow_mul] at h

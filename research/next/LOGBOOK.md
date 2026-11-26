@@ -2461,3 +2461,17 @@ adaptivity across overlapping crossings.
 - H38 [X, lead's own check]: tensor powers of a tiny identity give nothing (mixed terms cost as much as the
   trivial method).
 - Survey of Hexagon's recent Lean-backed papers → `research/sat3/hexagon-survey.md`.
+
+**Survey interim: a nested k-wire crossing identity exists (hexagon:2611.01066, S. Sra, 25 Nov; AI-generated, no
+Lean; [K-unverified]).** Lemma 4.2: crossing decompositions of two groups of wires substituted into a two-factor
+crossing give an identity on k wires over all 2^{k−1} transversal two-sided cuts, integer coefficients, every
+field, balanced value 1/√k (the Euclidean floor of that configuration). Two-factor input: Khoruzhii's "integral
+crossing lemma" (4 Nov), an exterior-algebra version of App. B. The same paper has a conditional two-merge floor
+1/√2 (assuming OpenAI's Euclidean price theorem), close to our unconditional-on-CAT(0) bimedian result.
+- Lead's check [D]: it does not beat 1/2 as it stands. The configuration is the cross-polytope in AG(k,g)
+  (a_i = t·e_i, b_i = −t·e_i, hyperplane classes normal to ε): design (e) with β = k, so α′ = log_k √k = 1/2.
+  A subset of cuts of rank d fits in AG(d,g) with floor 1/√d and β = d: 1/2 again. Two-sided transversal
+  configurations in affine geometries look locked at exactly 1/2, attained for every k.
+- Why it matters anyway: nesting couples different wires jointly and is not a product of bundle-local pieces, so
+  the Prop. 4.23 no-go does not obviously cover it. H39 [open]: nested crossings on a 3-net or on Δ₃ (merges with
+  g groups, not two sides). Sent to the attainment and ideas agents; H32 sent to the Q1 agent.

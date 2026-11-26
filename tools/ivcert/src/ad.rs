@@ -29,6 +29,9 @@ pub trait Scalar<const N: usize>:
     /// such (all leaf tests only use the function on the box); otherwise INVALID. Jet1 (also used at
     /// single points): +-dx if the value is strictly of one sign, otherwise INVALID.
     fn abs(self) -> Self;
+    /// A quantity known only through an enclosure `v` valid on the box (value only; derivatives
+    /// INVALID for jets).
+    fn from_enclosure(v: I) -> Self;
     /// Enclosure of the value.
     fn val(&self) -> I;
     /// Value and (sin, cos) at once (saves work for jets).
@@ -61,6 +64,10 @@ impl<const N: usize> Scalar<N> for I {
     #[inline]
     fn abs(self) -> I {
         I::abs(&self)
+    }
+    #[inline]
+    fn from_enclosure(v: I) -> I {
+        v
     }
     #[inline]
     fn val(&self) -> I {
@@ -185,6 +192,9 @@ impl<const N: usize> Scalar<N> for Jet1<N> {
         } else {
             Jet1 { v: I::abs(&self.v), d: [INVALID; N] }
         }
+    }
+    fn from_enclosure(v: I) -> Self {
+        Jet1 { v, d: [INVALID; N] }
     }
     fn val(&self) -> I {
         self.v
@@ -344,6 +354,9 @@ impl<const N: usize> Scalar<N> for Jet2<N> {
         } else {
             Jet2 { v: I::abs(&self.v), d: [INVALID; N], h: [[INVALID; N]; N] }
         }
+    }
+    fn from_enclosure(v: I) -> Self {
+        Jet2 { v, d: [INVALID; N], h: [[INVALID; N]; N] }
     }
     fn val(&self) -> I {
         self.v

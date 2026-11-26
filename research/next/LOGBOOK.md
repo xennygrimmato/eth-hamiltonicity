@@ -979,3 +979,14 @@ the four imported statements are copies, not the labs' own Lean objects.
 - Non-explicit only: n-independent constants (laws, universal automaton, finitely many group evaluators).
 - Caveat: "any spec-satisfying choice works" is a parametricity argument at the meta level, not a Lean theorem.
 - H20: supported [D]. Tentative statement of Theorem R: uniform algorithm with a non-explicit constant table.
+
+## 26 Nov (late, 10): the p = 2 normalisation hole was real, and is fixed [D]
+
+- Rebase's encoding guesses all 2^{⌈log n⌉} leaves of the balanced tree; the padding leaves are free guesses, giving
+  sum = 2^e·#SAT. **As written, rebase Cor. 1′ fails in characteristic 2** unless n is a power of two (fine for odd p).
+- Fix for all p: the checker rejects unless every padding leaf is 0. Then runs ↔ assignments bijectively, e = 0.
+  No other factor found (Def. J.1 is an exact identity; ½ appears only in the flat case, Prop. E.1). The agent did not
+  re-read §§G–J line by line for hidden divisions.
+- OpenAI route: no normalisation factor (IM 7.1 contracts to exactly #SAT; HC 13.1 uses prime-field constants).
+- Theorem M over F₂ depends on the OpenAI route at p = 2 (HC 13.1 + isolation) + randomised Weak ETH; Theorem R is
+  not on its dependency list. H21: confirmed [D].

@@ -44,6 +44,8 @@ def targets(problem):
                    lambda x: (x[0] & x[3]) ^ (x[1] & x[2]) ^ (x[1] & x[3])]
     if problem == "mm221":
         return 6, [lambda x, i=i: (x[2*i] & x[4]) ^ (x[2*i+1] & x[5]) for i in range(2)]
+    if problem == "mm123":  # x = a1 a2 b11 b12 b13 b21 b22 b23; c_j = a1 b1j + a2 b2j
+        return 8, [lambda x, j=j: (x[0] & x[2+j]) ^ (x[1] & x[5+j]) for j in range(3)]
     raise SystemExit("unknown problem")
 
 
@@ -219,7 +221,8 @@ def decode(problem, k, root, helper, model_path):
     for Ls, Rs in sel:
         s += "G " + " ".join(str(gen(c)) for c, v in enumerate(Ls) if v in true)
         s += " | " + " ".join(str(gen(c)) for c, v in enumerate(Rs) if v in true) + "\n"
-    names = {"mm222": ["c11", "c12", "c21", "c22"], "f4": ["c0", "c1"], "mm221": ["c1", "c2"]}
+    names = {"mm222": ["c11", "c12", "c21", "c22"], "f4": ["c0", "c1"], "mm221": ["c1", "c2"],
+             "mm123": ["c1", "c2", "c3"]}
     nm = names.get(problem, [f"c{t}" for t in range(len(outs))])
     for t, (e0, ell, lam) in enumerate(outs):
         lst = ([0] if e0 in true else []) + [1 + j for j, v in enumerate(ell) if v in true] \

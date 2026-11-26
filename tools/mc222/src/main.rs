@@ -217,6 +217,82 @@ fn problem(name: &str) -> Problem {
             sym.push(cols);
             Problem { name: name.into(), n: 8, targets, tnames, sym }
         }
+        "mm123" => {
+            // <1,2,3>: a = (a1 a2) = x0 x1 (a(k) = k); B 2x3, b(k,j) = 2 + 3k + j = x2..x7
+            // c_j = a1 b1j + a2 b2j (j = 1,2,3).
+            // Symmetry generators: (a,B) -> (a Q^-1, Q B) for Q in {s,t} (generate GL2(F2)),
+            // and (a,B) -> (a, B R) for R in {swap01, swap12, I+E01} (generate GL3(F2)).
+            let a = |k: usize| k;
+            let b = |k: usize, j: usize| 2 + 3 * k + j;
+            let mut targets = vec![];
+            let mut tnames = vec![];
+            for j in 0..3 {
+                targets.push(quad(8, &[(a(0), b(0, j)), (a(1), b(1, j))]));
+                tnames.push(format!("c{}", j + 1));
+            }
+            let to_ab = |x: u8| {
+                let av = [x & 1, (x >> 1) & 1];
+                let mut bm = [[0u8; 3]; 2];
+                for k in 0..2 {
+                    for j in 0..3 {
+                        bm[k][j] = (x >> b(k, j)) & 1;
+                    }
+                }
+                (av, bm)
+            };
+            let from_ab = |av: [u8; 2], bm: [[u8; 3]; 2]| {
+                let mut x = av[0] | (av[1] << 1);
+                for k in 0..2 {
+                    for j in 0..3 {
+                        x |= bm[k][j] << b(k, j);
+                    }
+                }
+                x
+            };
+            let s: [[u8; 2]; 2] = [[0, 1], [1, 0]];
+            let t: [[u8; 2]; 2] = [[1, 1], [0, 1]];
+            let r1: [[u8; 3]; 3] = [[0, 1, 0], [1, 0, 0], [0, 0, 1]];
+            let r2: [[u8; 3]; 3] = [[1, 0, 0], [0, 0, 1], [0, 1, 0]];
+            let r3: [[u8; 3]; 3] = [[1, 1, 0], [0, 1, 0], [0, 0, 1]];
+            let mut sym = vec![];
+            for q in [s, t] {
+                let qi = mat2_inv(q);
+                sym.push(
+                    (0..8)
+                        .map(|k| {
+                            let (av, bm) = to_ab(1u8 << k);
+                            let a2 = [(av[0] & qi[0][0]) ^ (av[1] & qi[1][0]), (av[0] & qi[0][1]) ^ (av[1] & qi[1][1])];
+                            let mut b2 = [[0u8; 3]; 2];
+                            for i in 0..2 {
+                                for j in 0..3 {
+                                    b2[i][j] = (q[i][0] & bm[0][j]) ^ (q[i][1] & bm[1][j]);
+                                }
+                            }
+                            from_ab(a2, b2)
+                        })
+                        .collect(),
+                );
+            }
+            for r in [r1, r2, r3] {
+                sym.push(
+                    (0..8)
+                        .map(|k| {
+                            let (av, bm) = to_ab(1u8 << k);
+                            let mut b2 = [[0u8; 3]; 2];
+                            for i in 0..2 {
+                                for j in 0..3 {
+                                    for l in 0..3 {
+                                        b2[i][j] ^= bm[i][l] & r[l][j];
+                                    }
+                                }
+                            }
+                            from_ab(av, b2)
+                        })
+                        .collect(),
+                );
+            }
+            Problem { name: name.into(), n: 8, targets, tnames, sym }
+        }
         "mm221" => {
             // A 2x2 (x0..x3, a(i,k)=2i+k), b 2x1 (x4,x5); c_i = sum_k a_ik b_k
             let mut targets = vec![];

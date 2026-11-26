@@ -23,6 +23,12 @@ def targets(problem):
         def f(x):
             return {f"c{i+1}": (x[2*i] & x[4]) ^ (x[2*i+1] & x[5]) for i in range(2)}
         return 6, f
+    if problem == "mm123":  # x = a1 a2 b11 b12 b13 b21 b22 b23: row vector (1x2) times 2x3 matrix
+        def f(x):
+            a = [x[0], x[1]]
+            B = [[x[2], x[3], x[4]], [x[5], x[6], x[7]]]
+            return {f"c{j+1}": (a[0] & B[0][j]) ^ (a[1] & B[1][j]) for j in range(3)}
+        return 8, f
     if problem in ("polymul2", "polymul3"):
         t = 2 if problem == "polymul2" else 3
         def f(x):

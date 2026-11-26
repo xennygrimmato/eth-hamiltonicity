@@ -2133,3 +2133,14 @@ Launched: (1) an adversarial referee on the paper (lemmas, faithfulness of the e
 authors did not tune on, regenerating cubes, prior work — in particular whether a general theorem already implies
 the result, prose); (2) an executor to settle ⟨1,2,3⟩ at k = 5 with the same tooling (MC ∈ {5, 6}); a 5-gate circuit
 there would be a Boolean circuit beating bilinear rank.
+
+## 27 Nov: Lean proof of the 7-AND-gate theorem scoped; ⟨1,2,3⟩ interim
+
+- User asked whether the theorem can be proved in Lean. Answer given: not kernel-checked (5.4 GB of LRAT), but
+  plausibly via `bv_decide` (Lean's verified LRAT checker; extra axiom `Lean.ofReduceBool`), with the model and the
+  reduction lemmas in Lean so that the encoder, the external checker and the hand lemmas no longer need to be trusted.
+  Launched a prototype in `research/mm/lean-mc222/`: statement + Strassen upper bound; one cube end to end with
+  timings (the feasibility verdict); small validation cases as complete theorems; then the lemmas; estimate.
+- ⟨1,2,3⟩ (eight inputs, three outputs), interim from the executor: exact search finds no 5-gate circuit (51 orbits
+  under GL₂ × GL₃ of order 1008, generators checked on truth tables; 2,829,011 states; 199 s); k = 4 refuted too.
+  Points to MC = 6 = bilinear rank. SAT + LRAT over 51 × 10 cubes pending.

@@ -1835,3 +1835,19 @@ certificates as confirmation; explicit-protocol section). Sent the referee's fix
 Together with the first search: three implementations, two methods, one with machine-checked UNSAT proofs.
 Remaining trust: the encoding and the symmetry/cube-splitting lemmas (written in the README), the LRAT checker.
 MC(⟨2,2,2⟩ over F₂) = 7 in the XOR-free model.
+
+## 26 Nov (late, 64): mc222 final; my own full re-run started
+
+`tools/mc222` final (README with the statement, model, lemma proofs, trust base; `run_all.sh`).
+- (A) Rust exact search (810 lines, no dependencies, full keys, no hashing): k = 6 none for all 72 orbits, 3 546 906
+  states. (B) truth-table CNF over all 256 inputs with RREF normal forms; 1080 cubes = 72 orbits × 15 positions of the
+  two "helper" gates (lemma H, proved in the README); all UNSAT under CaDiCaL rel-2.1.3; every LRAT proof VERIFIED by
+  `lrat-check` (drat-trim 2e3b2dc). Without cubes one root did not finish in 275 s.
+- Orbits computed twice (Rust and Python): the same 72 representatives. State counts are orbit-invariant (6 orbits
+  checked).
+- Validation table: F₄ mult 3; 2-term product 3; 3-term product 6; ⟨2,2,1⟩ 4; matrix product k = 5 none (also without
+  orbit reduction); k = 7 found by both.
+- Shared between the methods: the model and three short lemmas (normal form, count of missing target dimensions,
+  symmetry). (A) without orbit reduction at k = 6 not run (~150× longer).
+- Do not use the CaDiCaL development head (prints a partial model).
+I started `run_all.sh` myself in the background (using the executor's pinned solver/checker builds).

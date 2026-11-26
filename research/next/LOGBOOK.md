@@ -2077,3 +2077,16 @@ project (18284 jobs, success; no sorry) and read the statements.
 So Theorem 5_w and Theorem B are in Lean modulo CMP (our transcription of AN Lemma C.4(a), not linked to their Lean).
 Not formalised: Strassen duality; "prices satisfy CMP" (imported); Lemma H_m; Theorem E's refined calibration.
 Note §8 and the overview updated accordingly. Lean project: 17 files.
+
+## 26 Nov (late, 81): Lean executor final on the five-point theorem
+
+All four stages done (statements in `research/ports/lean/NOTES.md`, FivePoint section). Findings:
+1. A remark in MY brief was false: "any subgradient choice in [−1,1] works" for points on the spine. The proof needs
+   σ_ij = −σ_ji (or 0 when both vanish), exactly as the note says; the careless choice σ = 0 produces violations.
+2. The calibration needs no angles: with P = c_ij + c_ik, Q = σ_ij + σ_ik, M = (κw/6)√(P² + K(σ_ij − σ_ik)²), take
+   q = (κP/2 + z, κQ/2 − M), p = κ(P, Q) − q with Pz = QM; only |p|, |q| ≤ 1 is needed, which also covers P = 0 (both exit
+   vectors vertical), a degenerate case the note does not mention.
+3. The three-case optimality condition is one inequality: (D/2)|ε| ≤ (y − D/2)ε.
+4. No derivatives needed for optimality; no hidden hypotheses; D = 0, ρ_i = 0, h_i(t_ij) = 0, A_i = 0 all covered.
+Nothing is running now. Open with the user: public repository policy for drafts; building Anthropic's Lean;
+announcement.

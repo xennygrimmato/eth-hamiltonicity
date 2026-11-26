@@ -1,0 +1,2 @@
+h(d) >= 0 on [0,1/16] by interval partition: True
+12 corner faces: PROVED Phi >= 0 {'nat': 3252, 'mvf': 0, 'splits': 180, 'maxdepth': 17, 'fail': 0} time 0.1s

@@ -1395,3 +1395,16 @@ layer and gradients, no ivcert code: coverage structural + exact-rational volume
 started. It also corrected my garbled description of the equality corners (vertex i both −s, other four +s).
 **Next hard subproblem (medium effort):** an explicit protocol on K_{2,3} beating routing — existence is now a
 theorem, a construction is not known; it would be the positive control for any search above 3/√10.
+
+## 26 Nov (late, 36): (CL\*) verified by an independent second checker [N, rigorous ×2]
+
+`tools/ivcheck2` (Arb via python-flint 0.9.0, own endpoint-interval layer, nothing from ivcert), per its executor:
+- `clstar` no-symmetry certificate: 528 970 leaves; coverage structural + exact volume; 94 excluded leaves all inside
+  the excluded regions by exact comparison (64 central, 30 corner); 520 956 by natural extension, 6 852 by mean-value
+  form, 1 068 after extra bisection (max 5 levels); 21 s on 4 cores.
+- All eight `clnear` certificates verified (about 2 000–2 400 leaves each needed extra bisection, max 7 levels).
+- Origin by its own lemma on [−1/8,1/8]⁶ in (a,e): g(a) = V(a,0) has g(0) = 3, is even, interval Hessian PD (Sylvester,
+  minor ≥ 1.76); sup|∂V/∂e_k| ≤ 2.063 < 3; so Φ ≥ (g − 3) + Σ(3 − L_k)|e_k| ≥ 0.
+- Mutation test (Φ − 0.001 with the lemma off) fails 898 leaves, as it should.
+- No discrepancy with the first checker. Corner-face confirmation and README pending; I will re-run it myself when
+  it is final, then update the two notes (they still say "second checker in progress").

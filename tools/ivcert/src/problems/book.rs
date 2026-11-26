@@ -11,8 +11,9 @@
 //!   P > 0, y* <= -h                               : d^Z = g(-h)
 //!   P > 0, y* straddles +-h                      : g(h tau) with tau a constant enclosure of the
 //!                                                   minimiser tau* = clamp(y*/h) (Danskin: C^1 only)
-//!   P may be 0                                    : enclosure [line.lo, min(g(h).hi, g(-h).hi)]
-//!                                                   (d^Z >= line distance; d^Z <= g(t) for every t).
+//!   P may be 0                                    : value enclosure g(T) ∩ [line.lo, inf) with
+//!                                                   T = clamp(hull(s_j, s_k), -h, h) ⊇ argmin g,
+//!                                                   upper end also <= g(h), g(-h), g(0)
 //! The branch is decided from enclosures over the whole box (or point), so on the box the formula used
 //! coincides with d^Z; smooth branches are differentiated, the straddling one only enclosed.
 //! sqrt(10) Sigma_S is written as sum sqrt(10 (rho^2 + (s -+ h)^2)), so at W5 (rho = 3, s = 0, h = 1)
@@ -73,15 +74,36 @@ fn dz<const N: usize, T: Scalar<N>>(h: T, rj: T, sj: T, rk: T, sk: T) -> T {
         let t = h * T::cst(tau);
         return g(t).c1_only();
     }
-    let (gl, gp, gm) = (line.val(), g(h).val(), g(-h).val());
-    if !(gl.is_valid() && gp.is_valid() && gm.is_valid()) {
+    // P may vanish. Every minimiser of the convex g over [-h, h] lies in clamp(hull(s_j, s_k), -h, h)
+    // (y* is a convex combination of s_j, s_k when P > 0; for P = 0 the unconstrained minimisers are
+    // the points between s_j and s_k). So d^Z = g(t*) lies in g(T) for that interval T, and
+    // d^Z >= line distance.
+    let (sjv, skv, hv) = (sj.val(), sk.val(), h.val());
+    let gl = line.val();
+    if !(sjv.is_valid() && skv.is_valid() && hv.is_valid() && gl.is_valid()) {
         return T::from_enclosure(crate::interval::INVALID);
     }
-    let hi = gp.hi.min(gm.hi);
-    if !(gl.lo <= hi) {
+    // t* = clamp(y, -h, h) with y in [S.lo, S.hi], h in [h.lo, h.hi]:
+    //   t* >= min(max(S.lo, -h.hi), h.lo),  t* <= max(min(S.hi, h.hi), -h.lo)
+    let (slo, shi) = (sjv.lo.min(skv.lo), sjv.hi.max(skv.hi));
+    let tt = I::new(slo.max(-hv.hi).min(hv.lo), shi.min(hv.hi).max(-hv.lo));
+    let gv = g(T::cst(tt)).val();
+    if !gv.is_valid() {
         return T::from_enclosure(crate::interval::INVALID);
     }
-    T::from_enclosure(I::new(gl.lo, hi))
+    // also d^Z <= g(t) for each fixed t in [-h, h]: t = h, -h, 0
+    let (gp, gm, g0) = (g(h).val(), g(-h).val(), g(T::cf(0.0)).val());
+    let mut up = gv.hi;
+    for x in [gp, gm, g0] {
+        if x.is_valid() {
+            up = up.min(x.hi);
+        }
+    }
+    let v = I::new(gv.lo.max(gl.lo), up);
+    if !(v.lo <= v.hi) {
+        return T::from_enclosure(crate::interval::INVALID);
+    }
+    T::from_enclosure(v)
 }
 
 /// G(h, rho, s) = sum_j [sqrt(10(rho_j^2+(s_j+h)^2)) + sqrt(10(rho_j^2+(s_j-h)^2))] - 3 (2h + sum d^Z).
@@ -132,6 +154,15 @@ impl Problem<6> for Book {
     }
     fn special_points(&self) -> Vec<[f64; 6]> {
         vec![[3.0, 3.0, 3.0, 0.0, 0.0, 0.0]]
+    }
+    /// grad G = 0 at W5 = (3,3,3,0,0,0): d/ds_j vanishes since G is even in s (s -> -s swaps u1, u2);
+    /// d/drho_j = 2 * 10*3/sqrt(100) - 3 * 2 * (3+3)/sqrt(36) = 6 - 6 = 0.
+    fn anchors_critical(&self) -> bool {
+        true
+    }
+    /// G is C^1 wherever no distance vanishes (d^Z is C^1 by Danskin: unique minimiser when P > 0).
+    fn c1(&self) -> bool {
+        true
     }
     fn outside_fundamental(&self, b: &BoxN<6>) -> bool {
         b[0].hi < b[1].lo || b[1].hi < b[2].lo || add_ru(add_ru(b[3].hi, b[4].hi), b[5].hi) < 0.0

@@ -22,6 +22,8 @@ fn main() {
                 i += 1;
             }
             "--max-fail" => { opt.max_fail = args[i + 1].parse().unwrap(); i += 1; }
+            "--hull-max" => { opt.hull_max = args[i + 1].parse().unwrap(); i += 1; }
+            "--hull-budget" => { opt.hull_budget = args[i + 1].parse().unwrap(); i += 1; }
             "--no-mv" => opt.use_mv = false,
             "--no-taylor2" => opt.use_taylor2 = false,
             "--no-convex" => opt.use_convex = false,

@@ -1378,3 +1378,20 @@ Inconsistencies the writer found, to keep in mind:
   fixed the paragraph by hand.
 Weakened in v2: J.3 paraphrased not quoted in full; exact #3-SAT in characteristic 0 via disjoint sparsification is an
 unrefereed combination; the UWETH variant rests on the referee accepting it in the M1 list.
+
+## 26 Nov (late, 35): tensorlab executor final; second checker warm-up verifies
+
+**tensorlab final** (`tools/tensorlab`, `research/ports/e3/notebook.md`). Reusable pieces: constraint families with an
+exact box oracle; multistart + KKT polish; tree-product and graph-cone model searches; generic-wire ALS/LM; cut
+tables; F₂ SAT encoder; Python wheel. 15 unit + 2 integration tests.
+- Protocol runs (single-shot): 2 → 2 floor √(5/8); 4 → 3 residual 0.644 (ℝ), 0.640 (ℂ); 5 → 4 residual 0.806;
+  3 → (2,2,2,2) border-like, unverified. Non-uniform demand vectors beyond routing: residual ≥ 0.47.
+  Not tried: several supply copies, bond ≥ 6, a structured crossing-identity ansatz.
+- f_Q stays [N] (Gröbner certificate did not finish).
+- Note updated to state the actual scope (single-shot, uniform dimension 2–5).
+**ivcheck2 warm-up:** the three-angle inequality is verified independently with Arb (python-flint 0.9.0), own interval
+layer and gradients, no ivcert code: coverage structural + exact-rational volume; 344 leaves by natural extension,
+654 after extra bisection, 16 inside its own convexity region [−1/8,1/8]³ (Sylvester minors). Six-variable runs
+started. It also corrected my garbled description of the equality corners (vertex i both −s, other four +s).
+**Next hard subproblem (medium effort):** an explicit protocol on K_{2,3} beating routing — existence is now a
+theorem, a construction is not known; it would be the positive control for any search above 3/√10.

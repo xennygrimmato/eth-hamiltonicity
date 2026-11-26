@@ -569,9 +569,10 @@ These come from `research/ports/e3/notebook.md`.
 - **Model spaces.** Minimising R over products of two or three trees, and over the Euclidean cone over the Heawood
   graph, gave 3/√10 at W5. Single trees and Euclidean spaces give 1.
 - **Protocol searches.** Alternating least squares and Levenberg–Marquardt searches looked for restrictions.
-  - They were run at supply wire dimension D_s ≤ 4 (the sizes recorded in the notebook), on instances including
-    3 → 2 and 4 → 3.
-  - They found no protocol of rate above 3/4. The best residual at a rate above 3/4 was 0.64.
+  - They were run single-shot at uniform supply wire dimension 2 to 5 (2 → 2, 4 → 3 over ℝ and ℂ, 5 → 4 over ℝ with
+    fewer starts) and on non-uniform demand vectors at dimension ≤ 4. Several supply copies, dimension ≥ 6 and
+    structured constructions were not tried.
+  - They found no protocol of rate above 3/4. The best relative residual at a rate above 3/4 was 0.64 (4 → 3).
   - The smallest uniform single-shot sizes above 3/√10 are 10 → 9 (rate log 9/log 10 ≈ 0.954) and 11 → 10. These
     were out of reach of the dense code.
   - So the protocols whose existence §1.1 guarantees for every rate below 3/√10 are **not known explicitly** at any
@@ -694,7 +695,7 @@ Products of spectral points add their metrics. None of these certifies an upper 
 | K.4(b) bond 2 border over ℂ | [P], uses [Lan06] | — | no | — | ALS floor 0.6695 |
 | K.4(c) ℓ₁ ⇒ R ≥ 1; cut {v₁} gives 1 | [P] | — | `cut_ineq`, `w5_not_cut_combination`, `cut_v1` | — | — |
 | Flow 3/4 | [P] | — | `flow_bound` | — | — |
-| Explicit protocols above 3/4 | none known | — | — | — | none found at D_s ≤ 4 |
+| Explicit protocols above 3/4 | none known | — | — | — | none found single-shot at D_s ≤ 5 |
 
 ---
 

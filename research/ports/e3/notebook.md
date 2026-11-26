@@ -151,6 +151,9 @@ that check unless stated. "res" = ||(⊗A)S − T|| / ||T||, rechecked through t
 | 3; 2,2,2,2 | 0.631 | ALS C 16×5000 | 0.179 | |
 | 3; 3,3,3,2 | 0.631 | ALS 32×600 | 0.818 | excluded by [R]1 |
 | 4; 3,3,3,3 | 0.792 | ALS R 64×1500 + LM 300 on the best 3 | 0.6437 | no sign of a protocol |
+| 4; 3,3,3,3 | 0.792 | ALS C 24×1500 (1785 s) | 0.6403 | norms grow 3 → 44, residual flat: not border-like |
+| 5; 4,4,4,4 | 0.861 | ALS R 12×400 (496 s) | 0.806 | |
+| 4; 4,3,3,2 (non-uniform) | — | ALS R 12×300 | 0.579 | f_flow 0.97, f_CAT5 1.11: asymptotically achievable, not routable |
 
 Additional tools and runs:
 - **Border ALS** (`e3b_border Ds d12 d23 d13 duu K h starts sweeps`): maps A_p(ε) = Σ_{k≤K} ε^k A_p^(k),
@@ -192,7 +195,22 @@ an identity that is false in buildings, beyond the crossing identity and the one
 f* ≥ 3/√10 (nearly proved), protocols with rates in (3/4, 3/√10] exist asymptotically. The failures
 above say something about the sizes, not the truth.
 
-(See the end of the notebook for the runs still in progress.)
+  Ds = 4 (ALS 12 × 300, no LM; stopped after the rows below, about 3 min per row):
+
+  | demand | f_flow | f_CAT5 | f_W5 | f_cut | best residual |
+  |---|---|---|---|---|---|
+  | (4,3,3,2) / (3,4,3,2) / (3,3,4,2) | 0.9725 | 1.1147 | 1.1492 | 1.1158 | 0.579 / 0.635 / 0.478 |
+  | (4,4,3,2) / (4,3,4,2) / (3,4,4,2) | 0.9112 | 1.0000 | 1.0686 | 1.0 | 0.707 / 0.677 / 0.706 |
+  | (4,4,4,2) | 0.8571 | 0.9864 | 0.9986 | 1.0 | excluded by [R]1 |
+
+Scope of the negative result for (b). Uniform single-shot instances tried: Ds = 2 (rate 1), Ds = 3
+(→ 2), Ds = 4 (→ 3, R and C), Ds = 5 (→ 4, R only, 12 starts). Non-uniform: all vectors at
+Ds ≤ 3 and 7 vectors at Ds = 4. No residual below 0.47 except the routable sanity cases and the
+non-uniform 3 → (2,2,2,2) (5.7e-3 by LM with growing norms; its rate 0.63 is below 3/4). Not tried:
+direct sums or several supply copies with non-power wire dimensions, Ds ≥ 6, any structured ansatz.
+
+Timings: f_Q 38 s (2000 starts); f_CAT5 71 s (1000 starts); tree products 12 s / 47 s; Heawood cone
+77 s; gap scan 5 s; ALS at Ds = 4 about 3–30 min per configuration (shared cores).
 
 ## What I would run next
 - A border ALS with maps polynomial in ε (A = A0 + εA1). The degeneration question at 3 → 2 and
@@ -203,5 +221,9 @@ above say something about the sizes, not the truth.
   (Gram matrices through the doubled network).
 - A proof of R ≥ 3/√10 on 5-point CAT(0) configurations: use the box inequalities at the active
   points found near each local configuration (the multistart shows no other basin).
-- Non-uniform instances from the scan (#2 above, f_W5 = 0.973 vs f_cut = 1): a single-shot test there
-  needs wires of dimensions 4/2 mixtures. Feasible.
+- Scan instance #2 (f_W5 = 0.973 vs f_cut = 1): a single-shot test with wire dimensions 4/2 is
+  excluded by [R]1 (all v-cuts tight, duu = 2). It needs several copies (e.g. supply squared, demand
+  dimensions one less), which is beyond the dense code.
+- Structured ansatz for rates in (3/4, 3/√10]: restrict ALS to maps built from truncated crossing-identity
+  (Frobenius-symbol) tensors on each quadrilateral (v_i,u1,v_j,u2). These constructions are
+  intrinsically asymptotic (energies → ∞), which is consistent with the null results at Ds ≤ 5.

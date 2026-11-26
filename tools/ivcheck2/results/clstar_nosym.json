@@ -1,0 +1,73 @@
+{
+ "lemma": {},
+ "certs": [
+  {
+   "cert": "clstar_rho0.5_nosym.cert",
+   "problem": "clstar:rho=0.5",
+   "dim": 6,
+   "domain": [
+    [
+     -1.0,
+     1.0
+    ],
+    [
+     -1.0,
+     1.0
+    ],
+    [
+     -1.0,
+     1.0
+    ],
+    [
+     -1.0,
+     1.0
+    ],
+    [
+     -1.0,
+     1.0
+    ],
+    [
+     -1.0,
+     1.0
+    ]
+   ],
+   "coverage": {
+    "leaves": 528970,
+    "declared": 528970,
+    "volume_equal": true,
+    "tags": {
+     "N": 520956,
+     "X": 94,
+     "T": 7920
+    },
+    "max_depth": 40
+   },
+   "domain_ok": true,
+   "excluded": {
+    "central": 64,
+    "corner": 30
+   },
+   "checked_leaves": 528876,
+   "leaf_methods": {
+    "lemma": 0,
+    "nat": 520956,
+    "mvf": 6852,
+    "bisect": 1068
+   },
+   "closed_pieces": {
+    "lemma": 0,
+    "nat": 523326,
+    "mvf": 8186
+   },
+   "extra_splits": 2636,
+   "max_extra_depth": 5,
+   "failed_leaves": [],
+   "failed_pieces": [],
+   "problems": [],
+   "verdict": "VERIFIED",
+   "time_parse_s": 7.78,
+   "time_bounds_s": 12.88
+  }
+ ],
+ "overall": "VERIFIED"
+}

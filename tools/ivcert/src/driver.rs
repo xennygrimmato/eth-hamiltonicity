@@ -32,9 +32,9 @@ pub fn prove_generic<const N: usize, P: Problem<N>>(p: &P, opt: Options, out: Op
         }
     }
     let summary = format!(
-        "problem {}\nstatement: {}\nresult: {}\ntime {:.2}s; leaves: natural {} meanvalue {} taylor2 {} convex {} gain {} pruned {} excluded {} FAIL {}; splits {}; max depth {}\nmin certified leaf bound {:.9} (non-convexity leaves: {:.9})",
+        "problem {}\nstatement: {}\nresult: {}\ntime {:.2}s; leaves: natural {} meanvalue {} taylor2 {} convex {} gain {} hullconvex {} pruned {} excluded {} FAIL {}; splits {}; max depth {}\nmin certified leaf bound {:.9} (non-convexity leaves: {:.9})",
         p.name(), p.statement(), if o.proved { "PROVED" } else { "NOT PROVED" }, o.seconds,
-        st.natural, st.meanvalue, st.taylor2, st.convex, st.gain, st.pruned, st.excluded, st.fail, st.splits, st.max_depth,
+        st.natural, st.meanvalue, st.taylor2, st.convex, st.gain, st.hullconvex, st.pruned, st.excluded, st.fail, st.splits, st.max_depth,
         st.min_lb, st.min_lb_nonconvex
     );
     Ok(ProveReport { proved: o.proved, summary, leaves, counterexamples: ces })
@@ -63,13 +63,14 @@ pub fn check_generic<const N: usize, P: Problem<N>>(p: &P, path: &str) -> Result
             bnb::Leaf::Pruned => "P",
             bnb::Leaf::Excluded => "X",
             bnb::Leaf::Gain { .. } => "G",
+            bnb::Leaf::HullConvex { .. } => "K",
             bnb::Leaf::Fail { .. } => "F",
         };
         *counts.entry(k).or_insert(0u64) += 1;
     }
     let mut chull: Option<bnb::BoxN<N>> = None;
     for (b, l) in &parsed.leaves {
-        if matches!(l, bnb::Leaf::Convex { .. } | bnb::Leaf::Gain { .. }) {
+        if matches!(l, bnb::Leaf::Convex { .. } | bnb::Leaf::Gain { .. } | bnb::Leaf::HullConvex { .. }) {
             chull = Some(match chull { None => *b, Some(h) => std::array::from_fn(|i| h[i].hull(&b[i])) });
         }
     }

@@ -13,12 +13,13 @@
 //! Preorder lines: `S d` (bisect coordinate d at the float midpoint lo + 0.5 (hi - lo)),
 //! `N lb`, `M lb`, `T lb` (lb informative only), `P` (pruned by symmetry),
 //! `C lb x*_0..x*_{N-1} [P_00 .. P_{N-1,N-1} | chol]` (x* and P as f64 bit patterns in hex),
+//! `K lb x* m tokens` (hull-convexity: PD cover of hull(box, x*) as preorder tokens s<d> / p:<P hex>.. / c),
 //! `G lb x* m P..` (gain test, P the m = |C|^2 preconditioner entries), `X` (excluded: covered by a
 //! lemma or another certificate, see the problem's note),
 //! `F` (unclosed box; a certificate containing F is rejected).
 //! The checker rebuilds every box from the tree, so coverage of the domain is structural.
 
-use crate::bnb::{split, BoxN, Leaf, Node, Problem};
+use crate::bnb::{split, BoxN, Leaf, Node, PdTok, Problem};
 use std::io::{BufRead, Write};
 
 fn hx(x: f64) -> String {
@@ -54,6 +55,26 @@ pub fn write_cert<const N: usize, P: Problem<N>, W: Write>(p: &P, tree: &Node<N>
                     Leaf::Taylor2(x) => writeln!(w, "T {:.6e}", x)?,
                     Leaf::Pruned => writeln!(w, "P")?,
                     Leaf::Excluded => writeln!(w, "X")?,
+                    Leaf::HullConvex { lb, xs, toks } => {
+                        write!(w, "K {:.17e}", lb)?;
+                        for x in xs {
+                            write!(w, " {}", hx(*x))?;
+                        }
+                        write!(w, " {}", toks.len())?;
+                        for t in toks {
+                            match t {
+                                PdTok::Split(d) => write!(w, " s{d}")?,
+                                PdTok::Leaf(None) => write!(w, " c")?,
+                                PdTok::Leaf(Some(m)) => {
+                                    write!(w, " p")?;
+                                    for x in m {
+                                        write!(w, ":{}", hx(*x))?;
+                                    }
+                                }
+                            }
+                        }
+                        writeln!(w)?;
+                    }
                     Leaf::Gain { lb, xs, pm } => {
                         write!(w, "G {:.17e}", lb)?;
                         for x in xs {
@@ -176,6 +197,34 @@ pub fn parse_cert<const N: usize, P: Problem<N>, R: BufRead>(p: &P, r: R) -> Res
             }
             "P" => leaves.push((b, Leaf::Pruned)),
             "X" => leaves.push((b, Leaf::Excluded)),
+            "K" => {
+                let lb: f64 = f.get(1).ok_or("missing lb")?.parse().map_err(|_| "bad lb")?;
+                if f.len() < 3 + N {
+                    return Err("short K line".into());
+                }
+                let mut xs = [0.0; N];
+                for i in 0..N {
+                    xs[i] = unhx(f[2 + i])?;
+                }
+                let m: usize = f[2 + N].parse().map_err(|_| "bad K count")?;
+                if f.len() != 3 + N + m {
+                    return Err("bad K line".into());
+                }
+                let mut toks = vec![];
+                for t in &f[3 + N..] {
+                    if let Some(d) = t.strip_prefix('s') {
+                        toks.push(PdTok::Split(d.parse().map_err(|_| "bad K split")?));
+                    } else if *t == "c" {
+                        toks.push(PdTok::Leaf(None));
+                    } else if let Some(r) = t.strip_prefix('p') {
+                        let v: Result<Vec<f64>, String> = r.split(':').filter(|x| !x.is_empty()).map(unhx).collect();
+                        toks.push(PdTok::Leaf(Some(v?)));
+                    } else {
+                        return Err("bad K token".into());
+                    }
+                }
+                leaves.push((b, Leaf::HullConvex { lb, xs, toks }));
+            }
             "G" => {
                 let lb: f64 = f.get(1).ok_or("missing lb")?.parse().map_err(|_| "bad lb")?;
                 if f.len() < 3 + N {

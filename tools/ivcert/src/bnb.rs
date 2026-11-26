@@ -55,6 +55,15 @@ pub trait Problem<const N: usize>: Sync + Send {
     fn linear_block(&self) -> [bool; N] {
         [false; N]
     }
+    /// The problem asserts (with an analytic proof in its documentation) that the gradient vanishes
+    /// exactly at every special point.
+    fn anchors_critical(&self) -> bool {
+        false
+    }
+    /// The problem asserts f is C^1 on its domain at every point where its Jet1 is valid.
+    fn c1(&self) -> bool {
+        false
+    }
 }
 
 // ----------------------------------------------------------------- leaf tests
@@ -151,13 +160,122 @@ pub fn lb_convex_h<const N: usize, P: Problem<N>>(
     if !pd {
         return f64::NEG_INFINITY;
     }
+    anchor_bound(p, b, xs)
+}
+
+/// Supporting-hyperplane bound at the anchor, valid on b when f is convex on a convex set containing
+/// b and x*: f(x*) + grad f(x*) . (b - x*). If the problem declares its anchors critical
+/// (grad f(x*) = 0 exactly, proved analytically), the bound is f(x*), after checking that the computed
+/// gradient enclosure contains 0.
+pub fn anchor_bound<const N: usize, P: Problem<N>>(p: &P, b: &BoxN<N>, xs: &[f64; N]) -> f64 {
     let xp: [I; N] = std::array::from_fn(|i| I::point(xs[i]));
     let j = jet1_at(p, &xp);
+    if p.anchors_critical() {
+        if j.d.iter().all(|g| g.is_valid() && g.contains_zero()) {
+            return lo_or_neg(j.v);
+        }
+        return f64::NEG_INFINITY;
+    }
     let mut s = j.v;
     for i in 0..N {
         s = s + j.d[i] * (b[i] - xp[i]);
     }
     lo_or_neg(s)
+}
+
+/// Preorder token of a positive-definiteness cover: split coordinate d, or a leaf proved PD with the
+/// preconditioner P (row-major) or by interval Cholesky (None).
+#[derive(Clone, Debug)]
+pub enum PdTok {
+    Split(usize),
+    Leaf(Option<Vec<f64>>),
+}
+
+fn pd_box<const N: usize, P: Problem<N>>(p: &P, b: &BoxN<N>, pm: &Option<Vec<f64>>) -> bool {
+    let h = jet2_at(p, b).hessian();
+    match pm {
+        Some(v) => {
+            if v.len() != N * N {
+                return false;
+            }
+            let m: [[f64; N]; N] = std::array::from_fn(|i| std::array::from_fn(|j| v[i * N + j]));
+            linalg::congruence_gershgorin(&h, &m)
+        }
+        None => linalg::interval_cholesky(&h),
+    }
+}
+
+/// Search a PD cover of b by bisection (at most `budget` leaves).
+pub fn find_pd_cover<const N: usize, P: Problem<N>>(p: &P, b: &BoxN<N>, budget: &mut i64, depth: u32) -> Option<Vec<PdTok>> {
+    *budget -= 1;
+    if *budget < 0 || depth > 40 {
+        return None;
+    }
+    let h = jet2_at(p, b).hessian();
+    if let Some(pp) = linalg::choose_p(&h) {
+        if linalg::congruence_gershgorin(&h, &pp) {
+            return Some(vec![PdTok::Leaf(Some(pp.iter().flat_map(|r| r.iter().copied()).collect()))]);
+        }
+    } else {
+        // midpoint Hessian not PD: no hope on this box
+        return None;
+    }
+    if linalg::interval_cholesky(&h) {
+        return Some(vec![PdTok::Leaf(None)]);
+    }
+    let d = split_dim(b);
+    let (l, r) = split(b, d)?;
+    let mut a = find_pd_cover(p, &l, budget, depth + 1)?;
+    let c = find_pd_cover(p, &r, budget, depth + 1)?;
+    let mut out = vec![PdTok::Split(d)];
+    out.append(&mut a);
+    out.extend(c);
+    Some(out)
+}
+
+/// Verify a PD cover of b given as preorder tokens; true iff every leaf box is certified PD and the
+/// tokens are exactly consumed.
+pub fn check_pd_cover<const N: usize, P: Problem<N>>(p: &P, b: &BoxN<N>, toks: &[PdTok]) -> bool {
+    let mut stack = vec![*b];
+    let mut k = 0;
+    while let Some(bx) = stack.pop() {
+        let Some(t) = toks.get(k) else { return false };
+        k += 1;
+        match t {
+            PdTok::Split(d) => {
+                if *d >= N {
+                    return false;
+                }
+                let Some((l, r)) = split(&bx, *d) else { return false };
+                stack.push(r);
+                stack.push(l);
+            }
+            PdTok::Leaf(pm) => {
+                if !pd_box(p, &bx, pm) {
+                    return false;
+                }
+            }
+        }
+    }
+    k == toks.len()
+}
+
+pub fn hull_with<const N: usize>(b: &BoxN<N>, xs: &[f64; N]) -> BoxN<N> {
+    std::array::from_fn(|i| I::new(b[i].lo.min(xs[i]), b[i].hi.max(xs[i])))
+}
+
+/// Hull-convexity leaf: f convex on H = hull(b, x*) (Hessian PD on every box of a cover of H; for a
+/// cover with more than one box the problem must declare f to be C^1 on its domain, so that a C^1
+/// function, piecewise C^2 with PD Hessian, is convex along every segment), hence f >= anchor bound.
+pub fn lb_hullconvex<const N: usize, P: Problem<N>>(p: &P, b: &BoxN<N>, xs: &[f64; N], toks: &[PdTok]) -> f64 {
+    if toks.len() > 1 && !p.c1() {
+        return f64::NEG_INFINITY;
+    }
+    let hb = hull_with(b, xs);
+    if !check_pd_cover(p, &hb, toks) {
+        return f64::NEG_INFINITY;
+    }
+    anchor_bound(p, b, xs)
 }
 
 pub fn lb_convex<const N: usize, P: Problem<N>>(
@@ -296,6 +414,7 @@ pub enum Leaf<const N: usize> {
     Taylor2(f64),
     Convex { lb: f64, xs: [f64; N], pm: Option<[[f64; N]; N]> },
     Gain { lb: f64, xs: [f64; N], pm: Vec<f64> },
+    HullConvex { lb: f64, xs: [f64; N], toks: Vec<PdTok> },
     Pruned,
     Excluded,
     /// Not closed (depth limit): the run is not a proof.
@@ -320,6 +439,9 @@ pub struct Options {
     pub stop_on_counterexample: bool,
     /// a counter of failing boxes after which the run is aborted
     pub max_fail: u64,
+    /// hull-convexity test: try it for boxes whose hull with an anchor has every side <= this
+    pub hull_max: f64,
+    pub hull_budget: i64,
 }
 
 impl Default for Options {
@@ -333,6 +455,8 @@ impl Default for Options {
             use_symmetry: true,
             stop_on_counterexample: true,
             max_fail: 1000,
+            hull_max: 0.0,
+            hull_budget: 256,
         }
     }
 }
@@ -344,6 +468,7 @@ pub struct Ctx<'a, const N: usize, P: Problem<N>> {
     pub specials: Vec<[f64; N]>,
     pub abort: AtomicBool,
     pub nfail: AtomicU64,
+    pub nodes: AtomicU64,
     pub fails: Mutex<Vec<(BoxN<N>, Option<([f64; N], I)>)>>,
 }
 
@@ -385,6 +510,7 @@ impl<'a, const N: usize, P: Problem<N>> Ctx<'a, N, P> {
             specials: p.special_points(),
             abort: AtomicBool::new(false),
             nfail: AtomicU64::new(0),
+            nodes: AtomicU64::new(0),
             fails: Mutex::new(vec![]),
         }
     }
@@ -458,12 +584,30 @@ impl<'a, const N: usize, P: Problem<N>> Ctx<'a, N, P> {
                 }
             }
         }
+        if self.opt.use_convex && self.opt.hull_max > 0.0 {
+            for xs in &self.specials {
+                let hb = hull_with(b, xs);
+                if hb.iter().all(|x| x.hi - x.lo <= self.opt.hull_max) {
+                    let mut budget = self.opt.hull_budget;
+                    if let Some(toks) = find_pd_cover(p, &hb, &mut budget, 0) {
+                        let lb = lb_hullconvex(p, b, xs, &toks);
+                        if closes(lb, self.c) {
+                            return Some(Leaf::HullConvex { lb, xs: *xs, toks });
+                        }
+                    }
+                }
+            }
+        }
         None
     }
 
     pub fn solve(&self, b: &BoxN<N>, depth: u32) -> Node<N> {
         if self.abort.load(Ordering::Relaxed) {
             return Node::Leaf(Leaf::Fail { counterexample: None });
+        }
+        let k = self.nodes.fetch_add(1, Ordering::Relaxed) + 1;
+        if k % (1 << 22) == 0 {
+            eprintln!("[progress] {} nodes, {} failures, current box {:?}", k, self.nfail.load(Ordering::Relaxed), b);
         }
         if let Some(l) = self.try_leaf(b) {
             return Node::Leaf(l);
@@ -501,6 +645,7 @@ pub struct Stats {
     pub pruned: u64,
     pub excluded: u64,
     pub gain: u64,
+    pub hullconvex: u64,
     pub fail: u64,
     pub splits: u64,
     pub max_depth: u32,
@@ -542,6 +687,10 @@ pub fn stats<const N: usize>(n: &Node<N>) -> Stats {
                 }
                 Leaf::Gain { lb, .. } => {
                     s.gain += 1;
+                    s.min_lb = s.min_lb.min(*lb);
+                }
+                Leaf::HullConvex { lb, .. } => {
+                    s.hullconvex += 1;
                     s.min_lb = s.min_lb.min(*lb);
                 }
                 Leaf::Pruned => s.pruned += 1,
@@ -595,6 +744,7 @@ pub fn verify_leaves<const N: usize, P: Problem<N>>(
                 Leaf::Taylor2(_) => closes(lb_taylor2(p, b), c),
                 Leaf::Convex { xs, pm, .. } => closes(lb_convex(p, b, xs, pm), c),
                 Leaf::Gain { xs, pm, .. } => closes(lb_gain(p, b, xs, pm), c),
+                Leaf::HullConvex { xs, toks, .. } => closes(lb_hullconvex(p, b, xs, toks), c),
                 Leaf::Excluded => p.excluded(b),
                 Leaf::Fail { .. } => false,
             };

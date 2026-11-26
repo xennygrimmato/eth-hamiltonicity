@@ -1,0 +1,533 @@
+{
+ "lemma": {
+  "clnear": {
+   "ok": true,
+   "r": 0.125,
+   "nH": 16,
+   "hessian_subboxes": 4096,
+   "min_minor_lower": "[1.76295191757947442 +/- 3.60e-18]",
+   "nL": 4,
+   "L_subboxes": 4096,
+   "L": [
+    "[2.06291882414370775 +/- 2.23e-18]",
+    "[2.06291882414370775 +/- 2.23e-18]",
+    "[2.06291882414370775 +/- 2.23e-18]"
+   ]
+  }
+ },
+ "certs": [
+  {
+   "cert": "clnear_rho0.5_s+++.cert",
+   "problem": "clnear:rho=0.5:s=+++",
+   "dim": 6,
+   "domain": [
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     0.0,
+     0.5
+    ],
+    [
+     0.0,
+     0.5
+    ],
+    [
+     0.0,
+     0.5
+    ]
+   ],
+   "coverage": {
+    "leaves": 8608,
+    "declared": 8608,
+    "volume_equal": true,
+    "tags": {
+     "T": 3565,
+     "N": 5035,
+     "G": 8
+    },
+    "max_depth": 37
+   },
+   "domain_ok": true,
+   "excluded": {},
+   "checked_leaves": 8608,
+   "leaf_methods": {
+    "lemma": 3330,
+    "nat": 3199,
+    "mvf": 0,
+    "bisect": 2079
+   },
+   "closed_pieces": {
+    "lemma": 3330,
+    "nat": 15323,
+    "mvf": 5169
+   },
+   "extra_splits": 15214,
+   "max_extra_depth": 7,
+   "failed_leaves": [],
+   "failed_pieces": [],
+   "problems": [],
+   "verdict": "VERIFIED",
+   "time_parse_s": 0.1,
+   "time_bounds_s": 2.54
+  },
+  {
+   "cert": "clnear_rho0.5_s++-.cert",
+   "problem": "clnear:rho=0.5:s=++-",
+   "dim": 6,
+   "domain": [
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     0.0,
+     0.5
+    ],
+    [
+     0.0,
+     0.5
+    ],
+    [
+     -0.5,
+     0.0
+    ]
+   ],
+   "coverage": {
+    "leaves": 11685,
+    "declared": 11685,
+    "volume_equal": true,
+    "tags": {
+     "N": 7556,
+     "T": 4121,
+     "G": 8
+    },
+    "max_depth": 39
+   },
+   "domain_ok": true,
+   "excluded": {},
+   "checked_leaves": 11685,
+   "leaf_methods": {
+    "lemma": 5089,
+    "nat": 4236,
+    "mvf": 0,
+    "bisect": 2360
+   },
+   "closed_pieces": {
+    "lemma": 5089,
+    "nat": 14843,
+    "mvf": 4433
+   },
+   "extra_splits": 12680,
+   "max_extra_depth": 6,
+   "failed_leaves": [],
+   "failed_pieces": [],
+   "problems": [],
+   "verdict": "VERIFIED",
+   "time_parse_s": 0.2,
+   "time_bounds_s": 2.3
+  },
+  {
+   "cert": "clnear_rho0.5_s+-+.cert",
+   "problem": "clnear:rho=0.5:s=+-+",
+   "dim": 6,
+   "domain": [
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     0.0,
+     0.5
+    ],
+    [
+     -0.5,
+     0.0
+    ],
+    [
+     0.0,
+     0.5
+    ]
+   ],
+   "coverage": {
+    "leaves": 11601,
+    "declared": 11601,
+    "volume_equal": true,
+    "tags": {
+     "N": 7448,
+     "T": 4145,
+     "G": 8
+    },
+    "max_depth": 39
+   },
+   "domain_ok": true,
+   "excluded": {},
+   "checked_leaves": 11601,
+   "leaf_methods": {
+    "lemma": 5036,
+    "nat": 4204,
+    "mvf": 0,
+    "bisect": 2361
+   },
+   "closed_pieces": {
+    "lemma": 5036,
+    "nat": 14828,
+    "mvf": 4454
+   },
+   "extra_splits": 12717,
+   "max_extra_depth": 6,
+   "failed_leaves": [],
+   "failed_pieces": [],
+   "problems": [],
+   "verdict": "VERIFIED",
+   "time_parse_s": 0.18,
+   "time_bounds_s": 2.79
+  },
+  {
+   "cert": "clnear_rho0.5_s+--.cert",
+   "problem": "clnear:rho=0.5:s=+--",
+   "dim": 6,
+   "domain": [
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     0.0,
+     0.5
+    ],
+    [
+     -0.5,
+     0.0
+    ],
+    [
+     -0.5,
+     0.0
+    ]
+   ],
+   "coverage": {
+    "leaves": 11424,
+    "declared": 11424,
+    "volume_equal": true,
+    "tags": {
+     "N": 7244,
+     "T": 4172,
+     "G": 8
+    },
+    "max_depth": 39
+   },
+   "domain_ok": true,
+   "excluded": {},
+   "checked_leaves": 11424,
+   "leaf_methods": {
+    "lemma": 4943,
+    "nat": 4106,
+    "mvf": 0,
+    "bisect": 2375
+   },
+   "closed_pieces": {
+    "lemma": 4943,
+    "nat": 14864,
+    "mvf": 4498
+   },
+   "extra_splits": 12881,
+   "max_extra_depth": 6,
+   "failed_leaves": [],
+   "failed_pieces": [],
+   "problems": [],
+   "verdict": "VERIFIED",
+   "time_parse_s": 0.16,
+   "time_bounds_s": 3.56
+  },
+  {
+   "cert": "clnear_rho0.5_s-++.cert",
+   "problem": "clnear:rho=0.5:s=-++",
+   "dim": 6,
+   "domain": [
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.0
+    ],
+    [
+     0.0,
+     0.5
+    ],
+    [
+     0.0,
+     0.5
+    ]
+   ],
+   "coverage": {
+    "leaves": 11424,
+    "declared": 11424,
+    "volume_equal": true,
+    "tags": {
+     "N": 7244,
+     "T": 4172,
+     "G": 8
+    },
+    "max_depth": 39
+   },
+   "domain_ok": true,
+   "excluded": {},
+   "checked_leaves": 11424,
+   "leaf_methods": {
+    "lemma": 4943,
+    "nat": 4106,
+    "mvf": 0,
+    "bisect": 2375
+   },
+   "closed_pieces": {
+    "lemma": 4943,
+    "nat": 14864,
+    "mvf": 4498
+   },
+   "extra_splits": 12881,
+   "max_extra_depth": 6,
+   "failed_leaves": [],
+   "failed_pieces": [],
+   "problems": [],
+   "verdict": "VERIFIED",
+   "time_parse_s": 0.16,
+   "time_bounds_s": 2.42
+  },
+  {
+   "cert": "clnear_rho0.5_s-+-.cert",
+   "problem": "clnear:rho=0.5:s=-+-",
+   "dim": 6,
+   "domain": [
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.0
+    ],
+    [
+     0.0,
+     0.5
+    ],
+    [
+     -0.5,
+     0.0
+    ]
+   ],
+   "coverage": {
+    "leaves": 11601,
+    "declared": 11601,
+    "volume_equal": true,
+    "tags": {
+     "N": 7448,
+     "T": 4145,
+     "G": 8
+    },
+    "max_depth": 39
+   },
+   "domain_ok": true,
+   "excluded": {},
+   "checked_leaves": 11601,
+   "leaf_methods": {
+    "lemma": 5036,
+    "nat": 4204,
+    "mvf": 0,
+    "bisect": 2361
+   },
+   "closed_pieces": {
+    "lemma": 5036,
+    "nat": 14828,
+    "mvf": 4454
+   },
+   "extra_splits": 12717,
+   "max_extra_depth": 6,
+   "failed_leaves": [],
+   "failed_pieces": [],
+   "problems": [],
+   "verdict": "VERIFIED",
+   "time_parse_s": 0.23,
+   "time_bounds_s": 2.07
+  },
+  {
+   "cert": "clnear_rho0.5_s--+.cert",
+   "problem": "clnear:rho=0.5:s=--+",
+   "dim": 6,
+   "domain": [
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.0
+    ],
+    [
+     -0.5,
+     0.0
+    ],
+    [
+     0.0,
+     0.5
+    ]
+   ],
+   "coverage": {
+    "leaves": 11685,
+    "declared": 11685,
+    "volume_equal": true,
+    "tags": {
+     "N": 7556,
+     "T": 4121,
+     "G": 8
+    },
+    "max_depth": 39
+   },
+   "domain_ok": true,
+   "excluded": {},
+   "checked_leaves": 11685,
+   "leaf_methods": {
+    "lemma": 5089,
+    "nat": 4236,
+    "mvf": 0,
+    "bisect": 2360
+   },
+   "closed_pieces": {
+    "lemma": 5089,
+    "nat": 14843,
+    "mvf": 4433
+   },
+   "extra_splits": 12680,
+   "max_extra_depth": 6,
+   "failed_leaves": [],
+   "failed_pieces": [],
+   "problems": [],
+   "verdict": "VERIFIED",
+   "time_parse_s": 0.14,
+   "time_bounds_s": 2.42
+  },
+  {
+   "cert": "clnear_rho0.5_s---.cert",
+   "problem": "clnear:rho=0.5:s=---",
+   "dim": 6,
+   "domain": [
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.5
+    ],
+    [
+     -0.5,
+     0.0
+    ],
+    [
+     -0.5,
+     0.0
+    ],
+    [
+     -0.5,
+     0.0
+    ]
+   ],
+   "coverage": {
+    "leaves": 8608,
+    "declared": 8608,
+    "volume_equal": true,
+    "tags": {
+     "N": 5035,
+     "T": 3565,
+     "G": 8
+    },
+    "max_depth": 37
+   },
+   "domain_ok": true,
+   "excluded": {},
+   "checked_leaves": 8608,
+   "leaf_methods": {
+    "lemma": 3330,
+    "nat": 3199,
+    "mvf": 0,
+    "bisect": 2079
+   },
+   "closed_pieces": {
+    "lemma": 3330,
+    "nat": 15323,
+    "mvf": 5169
+   },
+   "extra_splits": 15214,
+   "max_extra_depth": 7,
+   "failed_leaves": [],
+   "failed_pieces": [],
+   "problems": [],
+   "verdict": "VERIFIED",
+   "time_parse_s": 0.15,
+   "time_bounds_s": 2.45
+  }
+ ],
+ "overall": "VERIFIED"
+}

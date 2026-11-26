@@ -1,2 +1,4 @@
 orbit 1 (102,187): none  states so far 42196
 orbit 2 (17,67): none  states so far 253363
+orbit 3 (17,66): none  states so far 295581
+orbit 4 (17,36): none  states so far 337827

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="330" viewBox="0 0 960 330" font-family="Helvetica, Arial, sans-serif" font-size="20">
+<rect width="960" height="330" fill="#fff"/>
+<text x="480" y="34" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">The exponent: how the cost grows with the grid size n</text>
+<line x1="103" y1="170" x2="844" y2="170" stroke="#000" stroke-width="3"/>
+<line x1="805" y1="156" x2="805" y2="184" stroke="#000" stroke-width="3"/>
+<text x="805" y="214" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">3</text>
+<text x="805" y="238" text-anchor="middle" font-size="16" fill="#000">school method</text>
+<line x1="680" y1="156" x2="680" y2="184" stroke="#000" stroke-width="3"/>
+<text x="680" y="120" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">2.81</text>
+<text x="680" y="144" text-anchor="middle" font-size="16" fill="#000">Strassen 1969</text>
+<line x1="399" y1="156" x2="399" y2="184" stroke="#000" stroke-width="3"/>
+<text x="399" y="214" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">2.376</text>
+<text x="399" y="238" text-anchor="middle" font-size="16" fill="#000">1990</text>
+<line x1="318" y1="156" x2="318" y2="184" stroke="#000" stroke-width="3"/>
+<text x="318" y="120" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">2.25 = 9/4</text>
+<text x="318" y="144" text-anchor="middle" font-size="16" fill="#000">best trick, Oct 2026</text>
+<line x1="155" y1="156" x2="155" y2="184" stroke="#000" stroke-width="3"/>
+<text x="155" y="214" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">2</text>
+<text x="155" y="238" text-anchor="middle" font-size="16" fill="#000">just reading the input</text>
+<rect x="155" y="163" width="162" height="14" fill="#000"/>
+<text x="236" y="270" text-anchor="middle" font-size="17" fill="#000">new claim (Nov 2026, unchecked):</text>
+<text x="236" y="292" text-anchor="middle" font-size="17" fill="#000">nothing can ever land here</text>
+<text x="403" y="144" text-anchor="start" font-size="15" fill="#000">2.371 (2024)</text>
+</svg>

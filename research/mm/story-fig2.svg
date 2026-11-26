@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" font-family="Helvetica, Arial, sans-serif" font-size="20">
+<rect width="960" height="520" fill="#fff"/>
+<text x="480" y="34" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">Six friends, one shared coin for every pair: 15 coins</text>
+<text x="250" y="70" text-anchor="middle" font-size="20" fill="#000" font-weight="bold">Any split of the six</text>
+<line x1="250.0" y1="175.0" x2="250.0" y2="105.0" stroke="#000" stroke-width="3.5"/>
+<line x1="250.0" y1="175.0" x2="332.3" y2="317.5" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
+<line x1="250.0" y1="175.0" x2="392.9" y2="352.5" stroke="#000" stroke-width="3.5"/>
+<line x1="250.0" y1="175.0" x2="167.7" y2="317.5" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
+<line x1="250.0" y1="175.0" x2="107.1" y2="352.5" stroke="#000" stroke-width="3.5"/>
+<line x1="250.0" y1="105.0" x2="332.3" y2="317.5" stroke="#000" stroke-width="3.5"/>
+<line x1="250.0" y1="105.0" x2="392.9" y2="352.5" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
+<line x1="250.0" y1="105.0" x2="167.7" y2="317.5" stroke="#000" stroke-width="3.5"/>
+<line x1="250.0" y1="105.0" x2="107.1" y2="352.5" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
+<line x1="332.3" y1="317.5" x2="392.9" y2="352.5" stroke="#000" stroke-width="3.5"/>
+<line x1="332.3" y1="317.5" x2="167.7" y2="317.5" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
+<line x1="332.3" y1="317.5" x2="107.1" y2="352.5" stroke="#000" stroke-width="3.5"/>
+<line x1="392.9" y1="352.5" x2="167.7" y2="317.5" stroke="#000" stroke-width="3.5"/>
+<line x1="392.9" y1="352.5" x2="107.1" y2="352.5" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
+<line x1="167.7" y1="317.5" x2="107.1" y2="352.5" stroke="#000" stroke-width="3.5"/>
+<ellipse cx="250.0" cy="140.0" rx="62" ry="27" transform="rotate(-90 250.0 140.0)" fill="none" stroke="#000" stroke-width="1.5" stroke-dasharray="8 5"/>
+<ellipse cx="362.6" cy="335.0" rx="62" ry="27" transform="rotate(30 362.6 335.0)" fill="none" stroke="#000" stroke-width="1.5" stroke-dasharray="8 5"/>
+<ellipse cx="137.4" cy="335.0" rx="62" ry="27" transform="rotate(150 137.4 335.0)" fill="none" stroke="#000" stroke-width="1.5" stroke-dasharray="8 5"/>
+<circle cx="250.0" cy="175.0" r="11" fill="#fff" stroke="#000" stroke-width="3"/>
+<circle cx="250.0" cy="105.0" r="11" fill="#000" stroke="#000" stroke-width="3"/>
+<circle cx="332.3" cy="317.5" r="11" fill="#fff" stroke="#000" stroke-width="3"/>
+<circle cx="392.9" cy="352.5" r="11" fill="#000" stroke="#000" stroke-width="3"/>
+<circle cx="167.7" cy="317.5" r="11" fill="#fff" stroke="#000" stroke-width="3"/>
+<circle cx="107.1" cy="352.5" r="11" fill="#000" stroke="#000" stroke-width="3"/>
+<text x="250" y="470" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">9 coins cross the split</text>
+<text x="710" y="70" text-anchor="middle" font-size="20" fill="#000" font-weight="bold">Teams of two must stay together</text>
+<line x1="710.0" y1="175.0" x2="710.0" y2="105.0" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
+<line x1="710.0" y1="175.0" x2="792.3" y2="317.5" stroke="#000" stroke-width="3.5"/>
+<line x1="710.0" y1="175.0" x2="852.9" y2="352.5" stroke="#000" stroke-width="3.5"/>
+<line x1="710.0" y1="175.0" x2="627.7" y2="317.5" stroke="#000" stroke-width="3.5"/>
+<line x1="710.0" y1="175.0" x2="567.1" y2="352.5" stroke="#000" stroke-width="3.5"/>
+<line x1="710.0" y1="105.0" x2="792.3" y2="317.5" stroke="#000" stroke-width="3.5"/>
+<line x1="710.0" y1="105.0" x2="852.9" y2="352.5" stroke="#000" stroke-width="3.5"/>
+<line x1="710.0" y1="105.0" x2="627.7" y2="317.5" stroke="#000" stroke-width="3.5"/>
+<line x1="710.0" y1="105.0" x2="567.1" y2="352.5" stroke="#000" stroke-width="3.5"/>
+<line x1="792.3" y1="317.5" x2="852.9" y2="352.5" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
+<line x1="792.3" y1="317.5" x2="627.7" y2="317.5" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
+<line x1="792.3" y1="317.5" x2="567.1" y2="352.5" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
+<line x1="852.9" y1="352.5" x2="627.7" y2="317.5" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
+<line x1="852.9" y1="352.5" x2="567.1" y2="352.5" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
+<line x1="627.7" y1="317.5" x2="567.1" y2="352.5" stroke="#000" stroke-width="1" stroke-dasharray="2 7"/>
+<ellipse cx="710.0" cy="140.0" rx="62" ry="27" transform="rotate(-90 710.0 140.0)" fill="none" stroke="#000" stroke-width="1.5" stroke-dasharray="8 5"/>
+<ellipse cx="822.6" cy="335.0" rx="62" ry="27" transform="rotate(30 822.6 335.0)" fill="none" stroke="#000" stroke-width="1.5" stroke-dasharray="8 5"/>
+<ellipse cx="597.4" cy="335.0" rx="62" ry="27" transform="rotate(150 597.4 335.0)" fill="none" stroke="#000" stroke-width="1.5" stroke-dasharray="8 5"/>
+<circle cx="710.0" cy="175.0" r="11" fill="#000" stroke="#000" stroke-width="3"/>
+<circle cx="710.0" cy="105.0" r="11" fill="#000" stroke="#000" stroke-width="3"/>
+<circle cx="792.3" cy="317.5" r="11" fill="#fff" stroke="#000" stroke-width="3"/>
+<circle cx="852.9" cy="352.5" r="11" fill="#fff" stroke="#000" stroke-width="3"/>
+<circle cx="627.7" cy="317.5" r="11" fill="#fff" stroke="#000" stroke-width="3"/>
+<circle cx="567.1" cy="352.5" r="11" fill="#fff" stroke="#000" stroke-width="3"/>
+<text x="710" y="470" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">8 coins cross the split</text>
+<text x="480" y="505" text-anchor="middle" font-size="15" fill="#000">black dots on one side, white dots on the other; thick lines are the coins that cross; dashed loops are the teams</text>
+</svg>

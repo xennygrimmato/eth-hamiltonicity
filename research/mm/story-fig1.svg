@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420" font-family="Helvetica, Arial, sans-serif" font-size="20">
+<rect width="960" height="420" fill="#fff"/>
+<text x="480" y="34" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">Cut each grid into four blocks: 8 block products, or (Strassen) only 7</text>
+<rect x="60" y="90" width="160" height="160" fill="none" stroke="#000" stroke-width="3"/>
+<line x1="100" y1="90" x2="100" y2="250" stroke="#000" stroke-width="1"/>
+<line x1="60" y1="130" x2="220" y2="130" stroke="#000" stroke-width="1"/>
+<line x1="140" y1="90" x2="140" y2="250" stroke="#000" stroke-width="3"/>
+<line x1="60" y1="170" x2="220" y2="170" stroke="#000" stroke-width="3"/>
+<line x1="180" y1="90" x2="180" y2="250" stroke="#000" stroke-width="1"/>
+<line x1="60" y1="210" x2="220" y2="210" stroke="#000" stroke-width="1"/>
+<rect x="83" y="114" width="34" height="32" fill="#fff"/>
+<text x="100" y="138" text-anchor="middle" font-size="26" fill="#000" font-weight="bold">a</text>
+<rect x="163" y="114" width="34" height="32" fill="#fff"/>
+<text x="180" y="138" text-anchor="middle" font-size="26" fill="#000" font-weight="bold">b</text>
+<rect x="83" y="194" width="34" height="32" fill="#fff"/>
+<text x="100" y="218" text-anchor="middle" font-size="26" fill="#000" font-weight="bold">c</text>
+<rect x="163" y="194" width="34" height="32" fill="#fff"/>
+<text x="180" y="218" text-anchor="middle" font-size="26" fill="#000" font-weight="bold">d</text>
+<text x="250" y="180" text-anchor="middle" font-size="36" fill="#000">×</text>
+<rect x="280" y="90" width="160" height="160" fill="none" stroke="#000" stroke-width="3"/>
+<line x1="320" y1="90" x2="320" y2="250" stroke="#000" stroke-width="1"/>
+<line x1="280" y1="130" x2="440" y2="130" stroke="#000" stroke-width="1"/>
+<line x1="360" y1="90" x2="360" y2="250" stroke="#000" stroke-width="3"/>
+<line x1="280" y1="170" x2="440" y2="170" stroke="#000" stroke-width="3"/>
+<line x1="400" y1="90" x2="400" y2="250" stroke="#000" stroke-width="1"/>
+<line x1="280" y1="210" x2="440" y2="210" stroke="#000" stroke-width="1"/>
+<rect x="303" y="114" width="34" height="32" fill="#fff"/>
+<text x="320" y="138" text-anchor="middle" font-size="26" fill="#000" font-weight="bold">e</text>
+<rect x="383" y="114" width="34" height="32" fill="#fff"/>
+<text x="400" y="138" text-anchor="middle" font-size="26" fill="#000" font-weight="bold">f</text>
+<rect x="303" y="194" width="34" height="32" fill="#fff"/>
+<text x="320" y="218" text-anchor="middle" font-size="26" fill="#000" font-weight="bold">g</text>
+<rect x="383" y="194" width="34" height="32" fill="#fff"/>
+<text x="400" y="218" text-anchor="middle" font-size="26" fill="#000" font-weight="bold">h</text>
+<text x="470" y="180" text-anchor="middle" font-size="36" fill="#000">=</text>
+<text x="500" y="120" text-anchor="start" font-size="20" fill="#000">top right block  =  a·f + b·h</text>
+<text x="500" y="150" text-anchor="start" font-size="17" fill="#000">(2 block products the school way)</text>
+<text x="500" y="200" text-anchor="start" font-size="20" fill="#000">Strassen:  P = a·(f − h),   Q = (a + b)·h</text>
+<text x="500" y="230" text-anchor="start" font-size="20" fill="#000">P + Q = a·f + b·h      check it!</text>
+<text x="500" y="262" text-anchor="start" font-size="17" fill="#000">P and Q are reused for other blocks,</text>
+<text x="500" y="284" text-anchor="start" font-size="17" fill="#000">so 7 products cover all four.</text>
+<text x="480" y="330" text-anchor="middle" font-size="20" fill="#000">Do the same inside every block, again and again:</text>
+<text x="480" y="372" text-anchor="middle" font-size="22" fill="#000" font-weight="bold">school way  8 × 8 × 8 × …  =  n³          Strassen  7 × 7 × 7 × …  =  n^2.81</text>
+</svg>

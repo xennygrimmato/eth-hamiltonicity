@@ -571,3 +571,25 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   N(w^σ − 4)/16 − 1 gates = Ω(N(log N)^σ), σ > 0 ineffective. Direct-sum version for up to 2^w blocks. Also for
   unambiguous and parity-nondeterministic circuits. Upper bound O(N log N) by a sorting network.
 - So the gap for this function is (log N)^σ ≤ size/N ≤ log N.
+
+### Why-9/4 agent, Parts A and B [reading + own checks; unreviewed]
+- A BETTER PICTURE (Part B): with x = qr, y = rp, z = pq the rectangular formula is ω = (p+q+r)²/4 (or
+  largest × rest when one of p, q, r exceeds half): the complete graph on p+q+r vertices grouped into three teams.
+  Six people, one shared bit per pair (15 bits): making this from one broadcast label costs exactly 9 bits = the max
+  cut 3|3 (Zhou, arXiv:2610.34273, two-sided). Pair them into three teams: exactly 16×16 matrix multiplication
+  (4 bits per team pair). Cost ≤ 9 (inherited), ≥ 8 (best cut respecting teams). ω = 9/4 ⇔ still 9; ω = 2 ⇔ 8.
+  So 9/4 is 9 bits over 4 bits. The resistor formula is this in bad coordinates and does not generalise to 4 arms.
+  Lead: this convinces me; it becomes the spine of the story. Caveat to handle: "coins/broadcast" must not be read
+  as probability (that would give 15); the 9 is a counting fact about adding up "all-agree" patterns with cancellation.
+- MECHANISM OF THE LOWER BOUND (Part A): a dichotomy on whether a tensor family's cheapest "site" moves with a
+  parameter. (a) If it moves: rank ≥ n^{9/4} directly (unconditional Theorem 7.1). (b) If nothing moves: gadget tensors
+  become a resource for sorting below n(log n)², hence a universal bulk discount on any small network, which iterated
+  beats the list-distinctness floor. ω < 9/4 is used in one place: to exclude (a).
+- Tied to 9/4? Not vacuous: (a) outputs 9/4 unconditionally; if ω ≤ 2.2 were proved the paper would be wrong. But both
+  directions lean on the same 2026 algorithm family; the agent cannot certify the match is more than
+  self-consistency. First place to send a referee.
+- Credibility loads: Theorem 2.2's two cases rest on companion results (one on the VP ≠ VNP-type paper); the
+  unadvertised superlinear circuit bound; refutes Strassen's conjecture.
+- Checks: reproduces K₄ (asymptotic rank 16), polynomial multiplication exponent 1, Strassen/Bini/Schönhage identities,
+  all known ranks, pre-2026 rectangular bounds. None could have failed. Falsifiable predictions exist (small
+  Coppersmith–Winograd tensors, S₃ group algebra, border rank of T₁₆ ≥ 512) but none is laptop-scale.

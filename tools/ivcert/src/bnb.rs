@@ -43,6 +43,18 @@ pub trait Problem<const N: usize>: Sync + Send {
     fn outside_fundamental(&self, _b: &BoxN<N>) -> bool {
         false
     }
+    /// Return true only if f >= c on the closed box is established elsewhere (an analytic lemma or a
+    /// separate certificate named in `excluded_note`). Leaves closed this way are marked X.
+    fn excluded(&self, _b: &BoxN<N>) -> bool {
+        false
+    }
+    fn excluded_note(&self) -> String {
+        String::new()
+    }
+    /// Coordinates forming the "linear block" L of the gain test (see `lb_gain_h`).
+    fn linear_block(&self) -> [bool; N] {
+        [false; N]
+    }
 }
 
 // ----------------------------------------------------------------- leaf tests
@@ -158,6 +170,123 @@ pub fn lb_convex<const N: usize, P: Problem<N>>(
     lb_convex_h(p, b, &j.hessian(), xs, pm)
 }
 
+/// Gain test ("partial convexity + linear gain"), anchor x* in B, coordinates split into the convex
+/// block C and the linear block L (problem's `linear_block`). Requirements: for k in L the box lies on
+/// one side of x*_k (sign s_k); gamma := min_k inf( g_k(x*) s_k ) > 0. With d = x - x*, Taylor-2:
+///   f(x) - f(x*) >= g.d + 1/2 d^T H d,  H in Hess f(B),
+///   g_L.d_L >= gamma S1 (S1 = |d_L|_1),  1/2 d_C^T H_CC d_C >= 1/2 lam |d_C|^2 (lam certified),
+///   |d_C^T H_CL d_L| <= beta |d_C| S2 (beta >= ||H_CL||_F, S2 = |d_L|_2),
+///   1/2 d_L^T H_LL d_L >= 1/2 mu S2^2 (mu = Gershgorin lower bound),  |g_C.d_C| <= |g_C| |d_C|.
+/// Minimising over |d_C| >= 0:  >= -(|g_C| + beta S2)^2 / (2 lam) + gamma S1 + mu S2^2 / 2, and
+/// with S2^2 <= S1 w_L (w_L = max_k |d_k|):
+///   g_C == 0 :  f(x) - f(x*) >= S1 (gamma - w_L (beta^2/(2 lam) + max(0,-mu)/2))
+///   otherwise:  f(x) - f(x*) >= -|g_C|^2/lam + S1 (gamma - w_L (beta^2/lam + max(0,-mu)/2)).
+/// If the bracket is >= 0 the bound is f(x*) (resp. f(x*) - |g_C|^2/lam).
+pub fn lb_gain_h<const N: usize, P: Problem<N>>(
+    p: &P,
+    b: &BoxN<N>,
+    h: &[[I; N]; N],
+    xs: &[f64; N],
+    pm: &[f64],
+) -> f64 {
+    let lmask = p.linear_block();
+    for i in 0..N {
+        if !b[i].contains(xs[i]) {
+            return f64::NEG_INFINITY;
+        }
+    }
+    let cidx: Vec<usize> = (0..N).filter(|&i| !lmask[i]).collect();
+    let lidx: Vec<usize> = (0..N).filter(|&i| lmask[i]).collect();
+    if lidx.is_empty() {
+        return f64::NEG_INFINITY;
+    }
+    let xp: [I; N] = std::array::from_fn(|i| I::point(xs[i]));
+    let j = jet1_at(p, &xp);
+    if !j.v.is_valid() {
+        return f64::NEG_INFINITY;
+    }
+    // gamma and w_L
+    let mut gamma = f64::INFINITY;
+    let mut wl = 0.0f64;
+    for &k in &lidx {
+        let d = b[k] - xp[k];
+        if d.lo == 0.0 && d.hi == 0.0 {
+            continue;
+        }
+        let sg = if d.lo >= 0.0 {
+            1.0
+        } else if d.hi <= 0.0 {
+            -1.0
+        } else {
+            return f64::NEG_INFINITY;
+        };
+        let gk = j.d[k] * I::point(sg);
+        if !gk.is_valid() {
+            return f64::NEG_INFINITY;
+        }
+        gamma = gamma.min(gk.lo);
+        wl = wl.max(d.mag());
+    }
+    if !(gamma > 0.0) {
+        return f64::NEG_INFINITY;
+    }
+    // symmetric Hessian enclosure
+    let mut hs = *h;
+    for a in 0..N {
+        for c in 0..N {
+            hs[a][c] = h[a][c].meet(&h[c][a]);
+            if !hs[a][c].is_valid() || hs[a][c].lo > hs[a][c].hi {
+                return f64::NEG_INFINITY;
+            }
+        }
+    }
+    let hll: Vec<Vec<I>> = lidx.iter().map(|&a| lidx.iter().map(|&c| hs[a][c]).collect()).collect();
+    let mu = linalg::gershgorin_lb_dyn(&hll);
+    if !mu.is_finite() {
+        return f64::NEG_INFINITY;
+    }
+    let negmu = I::point((-mu).max(0.0));
+    let mut gc2 = I::point(0.0);
+    let mut k_coef = I::point(0.5) * negmu; // max(0,-mu)/2
+    let mut shift = I::point(0.0);
+    if !cidx.is_empty() {
+        let hcc: Vec<Vec<I>> = cidx.iter().map(|&a| cidx.iter().map(|&c| hs[a][c]).collect()).collect();
+        let lam = linalg::lambda_min_lb_dyn(&hcc, pm);
+        if !(lam > 0.0) {
+            return f64::NEG_INFINITY;
+        }
+        let lam = I::new(lam, lam);
+        let mut beta2 = I::point(0.0);
+        for &a in &cidx {
+            for &c in &lidx {
+                beta2 = beta2 + I::sqr(&I::point(hs[a][c].mag()));
+            }
+        }
+        for &a in &cidx {
+            if !j.d[a].is_valid() {
+                return f64::NEG_INFINITY;
+            }
+            gc2 = gc2 + I::sqr(&I::point(j.d[a].mag()));
+        }
+        if gc2.hi == 0.0 {
+            k_coef = k_coef + beta2 / (I::point(2.0) * lam);
+        } else {
+            k_coef = k_coef + beta2 / lam;
+            shift = gc2 / lam;
+        }
+    }
+    let bracket = I::point(gamma) - I::point(wl) * k_coef;
+    if !bracket.is_valid() || !(bracket.lo >= 0.0) {
+        return f64::NEG_INFINITY;
+    }
+    lo_or_neg(j.v - shift)
+}
+
+pub fn lb_gain<const N: usize, P: Problem<N>>(p: &P, b: &BoxN<N>, xs: &[f64; N], pm: &[f64]) -> f64 {
+    let j = jet2_at(p, b);
+    lb_gain_h(p, b, &j.hessian(), xs, pm)
+}
+
 // ----------------------------------------------------------------- tree
 
 #[derive(Clone, Debug)]
@@ -166,7 +295,9 @@ pub enum Leaf<const N: usize> {
     MeanValue(f64),
     Taylor2(f64),
     Convex { lb: f64, xs: [f64; N], pm: Option<[[f64; N]; N]> },
+    Gain { lb: f64, xs: [f64; N], pm: Vec<f64> },
     Pruned,
+    Excluded,
     /// Not closed (depth limit): the run is not a proof.
     Fail { counterexample: Option<([f64; N], I)> },
 }
@@ -273,6 +404,9 @@ impl<'a, const N: usize, P: Problem<N>> Ctx<'a, N, P> {
         if self.opt.use_symmetry && p.outside_fundamental(b) {
             return Some(Leaf::Pruned);
         }
+        if p.excluded(b) {
+            return Some(Leaf::Excluded);
+        }
         let nat = lb_natural(p, b);
         if closes(nat, self.c) {
             return Some(Leaf::Natural(nat));
@@ -298,6 +432,22 @@ impl<'a, const N: usize, P: Problem<N>> Ctx<'a, N, P> {
                     let lb = lb_convex_h(p, b, &h, xs, &None);
                     if closes(lb, self.c) {
                         return Some(Leaf::Convex { lb, xs: *xs, pm: None });
+                    }
+                }
+            }
+            if self.opt.use_convex {
+                if let Some(xs) = anchor {
+                    let lm = p.linear_block();
+                    if lm.iter().any(|&x| x) {
+                        let cidx: Vec<usize> = (0..N).filter(|&i| !lm[i]).collect();
+                        let hcc: Vec<Vec<I>> = cidx.iter().map(|&a| cidx.iter().map(|&c| h[a][c]).collect()).collect();
+                        let pm = if cidx.is_empty() { Some(vec![]) } else { linalg::choose_p_dyn(&hcc) };
+                        if let Some(pm) = pm {
+                            let lb = lb_gain_h(p, b, &h, xs, &pm);
+                            if closes(lb, self.c) {
+                                return Some(Leaf::Gain { lb, xs: *xs, pm });
+                            }
+                        }
                     }
                 }
             }
@@ -349,6 +499,8 @@ pub struct Stats {
     pub taylor2: u64,
     pub convex: u64,
     pub pruned: u64,
+    pub excluded: u64,
+    pub gain: u64,
     pub fail: u64,
     pub splits: u64,
     pub max_depth: u32,
@@ -388,7 +540,12 @@ pub fn stats<const N: usize>(n: &Node<N>) -> Stats {
                     s.convex += 1;
                     s.min_lb = s.min_lb.min(*lb);
                 }
+                Leaf::Gain { lb, .. } => {
+                    s.gain += 1;
+                    s.min_lb = s.min_lb.min(*lb);
+                }
                 Leaf::Pruned => s.pruned += 1,
+                Leaf::Excluded => s.excluded += 1,
                 Leaf::Fail { .. } => s.fail += 1,
             },
         }
@@ -437,6 +594,8 @@ pub fn verify_leaves<const N: usize, P: Problem<N>>(
                 Leaf::MeanValue(_) => closes(lb_meanvalue(p, b), c),
                 Leaf::Taylor2(_) => closes(lb_taylor2(p, b), c),
                 Leaf::Convex { xs, pm, .. } => closes(lb_convex(p, b, xs, pm), c),
+                Leaf::Gain { xs, pm, .. } => closes(lb_gain(p, b, xs, pm), c),
+                Leaf::Excluded => p.excluded(b),
                 Leaf::Fail { .. } => false,
             };
             if ok {

@@ -32,9 +32,9 @@ pub fn prove_generic<const N: usize, P: Problem<N>>(p: &P, opt: Options, out: Op
         }
     }
     let summary = format!(
-        "problem {}\nstatement: {}\nresult: {}\ntime {:.2}s; leaves: natural {} meanvalue {} taylor2 {} convex {} pruned {} FAIL {}; splits {}; max depth {}\nmin certified leaf bound {:.9} (non-convexity leaves: {:.9})",
+        "problem {}\nstatement: {}\nresult: {}\ntime {:.2}s; leaves: natural {} meanvalue {} taylor2 {} convex {} gain {} pruned {} excluded {} FAIL {}; splits {}; max depth {}\nmin certified leaf bound {:.9} (non-convexity leaves: {:.9})",
         p.name(), p.statement(), if o.proved { "PROVED" } else { "NOT PROVED" }, o.seconds,
-        st.natural, st.meanvalue, st.taylor2, st.convex, st.pruned, st.fail, st.splits, st.max_depth,
+        st.natural, st.meanvalue, st.taylor2, st.convex, st.gain, st.pruned, st.excluded, st.fail, st.splits, st.max_depth,
         st.min_lb, st.min_lb_nonconvex
     );
     Ok(ProveReport { proved: o.proved, summary, leaves, counterexamples: ces })
@@ -61,19 +61,22 @@ pub fn check_generic<const N: usize, P: Problem<N>>(p: &P, path: &str) -> Result
             bnb::Leaf::Taylor2(_) => "T",
             bnb::Leaf::Convex { .. } => "C",
             bnb::Leaf::Pruned => "P",
+            bnb::Leaf::Excluded => "X",
+            bnb::Leaf::Gain { .. } => "G",
             bnb::Leaf::Fail { .. } => "F",
         };
         *counts.entry(k).or_insert(0u64) += 1;
     }
     let mut chull: Option<bnb::BoxN<N>> = None;
     for (b, l) in &parsed.leaves {
-        if let bnb::Leaf::Convex { .. } = l {
+        if matches!(l, bnb::Leaf::Convex { .. } | bnb::Leaf::Gain { .. }) {
             chull = Some(match chull { None => *b, Some(h) => std::array::from_fn(|i| h[i].hull(&b[i])) });
         }
     }
     Ok(format!(
-        "VERIFIED: {} >= {} on its domain\nstatement: {}\n{} leaves {:?}, check time {:.2}s\nhull of convexity leaves: {:?}",
-        p.name(), p.bound(), p.statement(), parsed.leaves.len(), counts, t0.elapsed().as_secs_f64(), chull
+        "VERIFIED: {} >= {} on its domain\nstatement: {}\n{}{} leaves {:?}, check time {:.2}s\nhull of convexity/gain leaves: {:?}",
+        p.name(), p.bound(), p.statement(),
+        if counts.contains_key("X") { format!("X leaves rely on: {}\n", p.excluded_note()) } else { String::new() }, parsed.leaves.len(), counts, t0.elapsed().as_secs_f64(), chull
     ))
 }
 

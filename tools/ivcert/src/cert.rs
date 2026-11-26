@@ -13,6 +13,8 @@
 //! Preorder lines: `S d` (bisect coordinate d at the float midpoint lo + 0.5 (hi - lo)),
 //! `N lb`, `M lb`, `T lb` (lb informative only), `P` (pruned by symmetry),
 //! `C lb x*_0..x*_{N-1} [P_00 .. P_{N-1,N-1} | chol]` (x* and P as f64 bit patterns in hex),
+//! `G lb x* m P..` (gain test, P the m = |C|^2 preconditioner entries), `X` (excluded: covered by a
+//! lemma or another certificate, see the problem's note),
 //! `F` (unclosed box; a certificate containing F is rejected).
 //! The checker rebuilds every box from the tree, so coverage of the domain is structural.
 
@@ -51,6 +53,18 @@ pub fn write_cert<const N: usize, P: Problem<N>, W: Write>(p: &P, tree: &Node<N>
                     Leaf::MeanValue(x) => writeln!(w, "M {:.6e}", x)?,
                     Leaf::Taylor2(x) => writeln!(w, "T {:.6e}", x)?,
                     Leaf::Pruned => writeln!(w, "P")?,
+                    Leaf::Excluded => writeln!(w, "X")?,
+                    Leaf::Gain { lb, xs, pm } => {
+                        write!(w, "G {:.17e}", lb)?;
+                        for x in xs {
+                            write!(w, " {}", hx(*x))?;
+                        }
+                        write!(w, " {}", pm.len())?;
+                        for x in pm {
+                            write!(w, " {}", hx(*x))?;
+                        }
+                        writeln!(w)?;
+                    }
                     Leaf::Fail { .. } => writeln!(w, "F")?,
                     Leaf::Convex { lb, xs, pm } => {
                         write!(w, "C {:.17e}", lb)?;
@@ -161,6 +175,23 @@ pub fn parse_cert<const N: usize, P: Problem<N>, R: BufRead>(p: &P, r: R) -> Res
                 leaves.push((b, leaf));
             }
             "P" => leaves.push((b, Leaf::Pruned)),
+            "X" => leaves.push((b, Leaf::Excluded)),
+            "G" => {
+                let lb: f64 = f.get(1).ok_or("missing lb")?.parse().map_err(|_| "bad lb")?;
+                if f.len() < 3 + N {
+                    return Err("short G line".into());
+                }
+                let mut xs = [0.0; N];
+                for i in 0..N {
+                    xs[i] = unhx(f[2 + i])?;
+                }
+                let m: usize = f[2 + N].parse().map_err(|_| "bad G count")?;
+                if f.len() != 3 + N + m {
+                    return Err("bad G line".into());
+                }
+                let pm: Result<Vec<f64>, String> = (0..m).map(|i| unhx(f[3 + N + i])).collect();
+                leaves.push((b, Leaf::Gain { lb, xs, pm: pm? }));
+            }
             "F" => leaves.push((b, Leaf::Fail { counterexample: None })),
             "C" => {
                 let lb: f64 = f.get(1).ok_or("missing lb")?.parse().map_err(|_| "bad lb")?;

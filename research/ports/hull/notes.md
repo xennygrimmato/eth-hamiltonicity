@@ -299,10 +299,9 @@ The structured sub-cases, if a smaller domain is preferred (each is a face or su
 Proving (CL\*) on the full cube makes the case distinction unnecessary.
 
 **(c) Expected equality cases [N].**
- - (I): only θ = 0. Local form F = 3 + (1/8)·(4Σθ_i² + 5Σ_{i<j}θ_iθ_j)·… precisely
-   F(θ) = 3 + ½Σ_iθ_i² + (5/8)·… see the exact second-order term: each pair contributes
-   1 − (θ_i−θ_j)²/8 + (9/8)(θ_i+θ_j)² + O(4), so F = 3 + 2Σθ_i² + (5/2)Σ_{i<j}θ_iθ_j + O(|θ|⁴); the Hessian form
-   2I·… has matrix (3/4)I + (5/4)J in the basis θ (J = all-ones), eigenvalues 3/4, 3/4, 9/2: positive definite.
+ - (I): only θ = 0. Each pair contributes 1 − (θ_i−θ_j)²/8 + (9/8)(θ_i+θ_j)² + O(4), so
+   F(θ) = 3 + 2Σ_iθ_i² + (5/2)Σ_{i<j}θ_iθ_j + O(|θ|⁴) = 3 + θᵀQθ + O(|θ|⁴), Q = (3/4)·Id + (5/4)·J (J = all-ones
+   matrix), eigenvalues 3/4, 3/4, 9/2: positive definite.
    Outside the ball |θ| ≤ 0.3 the grid minimum (121³ points) is 3.0655.
  - (CL\*): ψ = 0 (not smooth there because of the absolute values), and six corners of the cube: for one
    vertex i and one sign s = ±1, ψ_ij = ψ_ik = −sH and the other four angles = +sH (all three vertex terms

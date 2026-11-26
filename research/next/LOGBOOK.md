@@ -758,3 +758,22 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - Missing for "contracting ⇔ ports": Q-build — is there a bounded-degree family that expands against the buildings of
   GL_n(F₂((t))) for all n at once? Not decidable from classical expansion. Anthropic's graphs sit at Θ(√log n) in
   both worlds and do not separate the cases.
+
+### Ports strategist, interim 4: which spaces are spectral (`research/ports/ideas-ports.md` §4) [K + D, unreviewed]
+- Known spectral: cuts, stars, trees, Hilbert spaces (OpenAI, non-constructive), their convex hulls and limits.
+  Products not known. The 9/4 paper's tripod is a star metric; its non-flatness is in the label price.
+- {Hilbert spaces, ℝ-trees} is closed under everything known, contains every known example, and HAS ports. So "no
+  ports" needs a genuinely new spectral point; the current axioms cannot prove it.
+- Weak ETH forces, in characteristic 0, prices realising buildings of unbounded rank (the √rank / Grassmann metrics).
+  Neither lab constructs such a space.
+- Reformulation: by Strassen duality, the best rate for converting EPR pairs on a supply graph into EPR pairs on demand
+  pairs is the multicommodity-flow dual LP restricted to spectral metrics. Since prices are CAT(0), tensor coding
+  strictly beats routing; on the Okamura–Seymour instance K_{2,3} the rate is > 3/4 and ≤ 1. Exact value open.
+  Ports = full log n gain over routing on expanders; no ports = at most √ of that.
+- Lead's idea passed on (H17 [C], speculative): the wild spectral point in characteristic 0 comes from ARITHMETIC —
+  2-adic lattices as sites, elementary-divisor invariants as costs, realising the building of GL_n(ℚ₂). Characteristic
+  p has no such valuation on its tensors, which would explain why Weak ETH constrains characteristic 0 only and would
+  predict ports in characteristic p. Asked which axiom (monotonicity under all linear maps is the dangerous one) kills
+  or permits it.
+- State of evidence: everything KNOWN is on the "ports exist" side; Weak ETH says the truth in characteristic 0 is on
+  the other side. One of: a new spectral point (then lower bounds), or no such point (then fast 3-SAT).

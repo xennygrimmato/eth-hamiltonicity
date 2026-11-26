@@ -541,3 +541,130 @@ So H14 of our LOGBOOK ("if every spectral space has δ bounded below 1, ordinary
 its hypothesis is equivalent to something at least as strong as contracting, and the sharper statement is
 Theorem A. The brief's alternative "some spectral space contains cones over expanders coarsely ⇒ no ports" is
 right as stated; what Weak ETH is known to force is weaker (the buildings), see Part 4.
+
+---
+
+## Part 4. Which spaces ARE spectral: the evidence on each side
+
+### 4.1 What is known to be spectral
+
+| Space | Source | Status |
+|---|---|---|
+| Cut pseudometrics (one cut) | flattening rank | explicit, every field |
+| Star metrics d(u,v) = θ_u + θ_v, and partition-star metrics | quantum functionals over ℂ (CVZ); Strassen's support functionals on wires, every field (b2 §2) | explicit |
+| Tree metrics | laminar families of cuts; AN thm_tree works with tree networks; MM §7 builds trees "in which two branches meet at the valuation of the difference of their parameters" under its strict-saving hypothesis | explicit for stars; general trees via geodesic extension (EG 3.1(2) adds a star centre) [D: every finite tree metric is obtained from a cut metric by repeated use of EG Theorem 3.1; not written out] |
+| Hilbert spaces, all dimensions | EG Theorems 1.1, 1.2 | [K-OA]; proof by contradiction, no explicit points; Lean for finite dimension |
+| Segments, geodesic completions, convex hulls, ultralimits, rescalings of the above | EG 3.4, 4.3, §2.3 | [K-OA]; AN Prop. C.3 for the CAT(0) completion |
+| √rk on Mat_μ(F₂), Grassmann metrics σ_m (vertex sets of buildings over F₂((t))) | AN D.3 if contracting fails; forced in char. 0 by Weak ETH (Theorem B(iii)) | conditional |
+| ℓ₂ products | — | NOT known (HC 6.1 gives only a Zorn subclass) |
+| Anything containing an expander coarsely (cones, Kondo-type) | — | nothing; forced only indirectly, see 4.3 |
+
+MM's "tripod" is not a new wire geometry: three tips at pairwise distance 2 is a star metric. What is non-flat
+there is the price of the shared three-way label (rate 8/3 instead of the Euclidean mean width), i.e. the
+extension of the price to diagonal tensors, not the metric.
+
+### 4.2 Does closure alone force wild spaces? No.
+
+[D] The class {Hilbert spaces, ℝ-trees, and their closed convex subsets} is closed under rescaling, closed convex
+subspaces and pointed ultralimits (an ultralimit of Hilbert spaces is a Hilbert space; an ultralimit of trees is
+an ℝ-tree). It contains every space in the first five rows of the table. It has δ = 0, so every expander family
+is a port family for it. Hence the known closure properties plus the known examples are consistent with ports.
+If products were allowed the class would grow to products of trees and flats (still δ = 0); buildings of rank
+≥ 2 are not obtained this way (branching flats; M5 is not in tree × tree).
+
+So any proof of "no ports" must produce a spectral point of a genuinely new kind. Conversely the same toy class
+shows that the axioms used so far cannot prove no ports: c1 §4 already observed that Hilbert pull-backs form a
+model of all the price axioms of AN §§A–D in which flat and contracting both hold.
+
+### 4.3 What OpenAI's logic forces, and whether the papers construct it
+
+Chain in characteristic 0 under Weak ETH: no ports (IM 7.1) ⇒ contracting fails (Theorem A) ⇒ all ρ_μ, σ_m are
+prices (AN D.2/D.3; EG 11.3). So the forced wild spaces are **Euclidean buildings of unbounded rank over
+F₂((t))** (more precisely the convex hulls of the rank metrics in a price space; by the flat-rectangle rigidity
+used in AN D.2 Steps 4–7 these contain the solid cubes [0,1]^μ and branch like the building).
+
+Beyond that, no ports forces more (HC Theorems 4.2, 5.1, 6.1, all [K-OA]):
+
+- for EVERY bounded-degree graph on n vertices a placement with pair energy ≥ c log n × edge energy (4.2);
+- an "information" inequality: if demand steps are β times longer (in mean square) than physical steps in every
+  placement, then H(demand step) ≤ Cβ(1 + entropy rate of the physical walk) (5.1). Read backwards: in the
+  extremal spaces, squared distance behaves like transmitted information, d² ≈ bits/const. The rank metric has
+  exactly this form on its range of scales: one rank-one step = 2μ bits = squared length 1; a uniform matrix =
+  μ² bits = squared length ≈ μ. A space witnessing no ports for bounded-degree graphs must behave like this down
+  to steps of O(1) bits, i.e. over a range of scales of ratio log n rather than √log n;
+- a product-closed subclass without ports, containing ℓ₂ (HC 6.1, §2.3).
+
+Do the papers construct or hint at such a space? **No.** HC Part I, MM Lemma 4.1 and IM Lemma 8.2 only use the
+existence of bad placements, obtained from the contrapositive of the zig-zag iteration; no spectral point is
+exhibited, and the authors say the proof "requires no classification of the characteristics" (HC §1.3). The only
+non-Euclidean, non-tree metrics that appear by name anywhere in the two labs' papers are AN's √rk (Remark D.3)
+and, implicitly, the limit configuration in EG Lemma 11.3.
+
+### 4.4 Could the class be "Euclidean buildings and their limits"?
+
+[C] Candidate description under "not contracting": X_χ ⊇ {ℝ-trees, Hilbert spaces, buildings B_n of
+GL_n(F_q((t))) for all n and (probably) all q, and limits}. Asymptotic cones of such buildings are ℝ-buildings;
+unbounded rank gives infinite-dimensional objects. For this class:
+
+- each B_n alone admits all classical expanders (Toyoda), with constant degrading as n grows (3.3(a));
+- uniformly in n nothing is known (Q-build). Lafforgue's strong (T) concerns actions of rank-2 groups on Banach
+  spaces, not Poincaré inequalities with building targets of growing rank; Izeki–Nayatani's estimates are for Ã₂;
+  Oppenheim's angle criteria (used by AN in F.2–F.3 in the same spirit: "windows meet almost at a right angle")
+  give fixed-point theorems for groups acting on such spaces, again for a fixed space.
+
+If X_χ were exactly this class, ports would be equivalent to a positive answer to Q-build. I see no reason for
+X_χ to be exactly this class; the entropy picture in 4.3 suggests that no ports needs spaces that branch at every
+scale (like cones over expanders), which buildings over a fixed residue field do only at integer scales.
+
+### 4.5 A cleaner way to see what is being asked: network coding for tensors [D]
+
+Let G be a supply graph with capacities c_e and D a set of demand pairs with rates r_e. Write
+S = ⊗_{e∈G} E_e(2^{c_e}) and T = ⊗_{e∈D} E_e(2^{r_e}) (products of wires). By Strassen's theorem [K: Strassen 1988;
+EG Lemma 2.2 is the strict form], T^{⊗fn} is a restriction of S^{⊗(n+o(n))} iff f·log F(T) ≤ log F(S) for every
+spectral point F, i.e.
+
+    f*(G, D) = min over spectral wire metrics d of  Σ_{e∈G} c_e d(e) / Σ_{e∈D} r_e d(e).
+
+This is the LP dual of multicommodity flow with "all metrics" replaced by "spectral metrics". Since cut metrics
+are spectral, f* ≤ sparsest-cut bound; since the shortest-path metric of G is a feasible dual for flow,
+f* ≥ max concurrent flow (routing by contracting wires along paths).
+
+- **Tensor coding beats routing.** For the Okamura–Seymour instance (G = K_{2,3}, demands the three pairs inside
+  the 3-side and the pair on the 2-side) the flow value is 3/4 and the cut bound is 1. Every optimal metric of the
+  flow dual satisfies d(v_i,v_j) = d(v_i,u_k) + d(u_k,v_j) and d(u_1,u_2) = d(u_1,v_i) + d(v_i,u_2); putting this
+  into the quadrilateral inequality (EG (4.5) / AN C.4(b)) for (v_1,u_1,v_2,u_2) forces a side to vanish, and
+  running over the three quadrilaterals collapses everything. So no optimal dual metric is CAT(0), and by
+  compactness **f*(K_{2,3}) > 3/4** over every field. Star metrics give f* ≤ 1. The exact value is a clean small
+  open problem; it is the first instance of "which five-point CAT(0) metrics are spectral".
+  This rests only on "prices are CAT(0)", which Anthropic proves (thm_cn) and has in Lean.
+- The quadrilateral inequality itself is the statement that two crossing wires can be supplied from the four
+  sides more cheaply than routing predicts (AN's crossing identity B.2). So the √ law of our engine and the
+  failure of "routing is optimal" are the same fact.
+- **Ports in this language.** Ports ⇔ for a bounded-degree expander family, the complete-graph demand can be
+  obtained from a direct sum of edge supplies at constant ℓ₂ cost, i.e. tensor coding gains the full factor
+  ≈ log n over routing (in the ℓ₂ normalisation: log² n → O(1)). No ports ⇔ on every bounded-degree graph the
+  gain is at most log n (pair energy ≥ c log n × edge energy, against the trivial log² n).
+- Context [K, search]: the classical multiple-unicast (Li–Li) conjecture, "coding = routing in undirected
+  networks", was reported refuted in October 2026 (arXiv:2610.09367, 2610.10108, 2610.20079; unrefereed). Classical
+  information-theoretic coding and tensor restriction are different resources, so neither result implies the
+  other, but the old intuition that would have made "no ports" look like a tensor analogue of a believed
+  conjecture is gone. Braverman–Garg–Schvartzman (ITCS 2017) proved a dichotomy for the classical gap (either no
+  gap or a gap of (log n)^c), which is the same shape as HC Theorem 4.2.
+
+### 4.6 Evidence summary
+
+For ports (some characteristic):
+- nothing excludes it unconditionally; the toy class of 4.2 has ports;
+- every explicit spectral point is a tree/star point (δ = 0);
+- in positive characteristic there is not even a conditional exclusion in the release.
+
+For no ports:
+- Weak ETH (characteristic 0), via a Lean-formalised implication;
+- in a no-ports world all of OpenAI's exponent-1/2 results are tight and coherent (upper bounds n(log n)^{1/2+ε}
+  proved unconditionally for multiplication, Fourier transforms, sorting-type problems); in a ports world the
+  true log-exponents would be some unexplained σ < 1/2;
+- OpenAI proved that the rigid alternative closest to ports (a largest flat) is false in every characteristic;
+  the mechanism (rigidity ⇒ too-good routing ⇒ self-simulation paradox) plausibly extends to contracting (5.E2).
+
+Against a quick decision either way: ports ⇒ a 2^{v^{1−δ}} 3-SAT algorithm; no ports ⇒ unconditional
+Ω(n√log n) Boolean circuit lower bounds for multiplication. Each would be a landmark; neither lab claims either.

@@ -17,6 +17,15 @@ independent checks of the Δ₃ configuration). The executor's parallel notebook
 
 ---
 
+> **Status update, 27 Nov (later the same day). Parts of this file are superseded.** See `q1-notes.md` (the
+> three-merge floor on nets of F_q^m, m ≥ 2, equals the cap 1/√2, in the space of real filtrations; replaces the
+> 0.6124 floor of §5.4, the table and §5.5 for those nets; proposes a repair of Theorem S via the fixed
+> configuration X₄), `attain-notes.md` (Theorem W: every cover generated from the crossing identity by nesting
+> is bounded below by every CAT(0) placement), `q2-notes.md` (conditional on OpenAI's hub-compression theorem:
+> any algebraic clique engine beating exponent 1/2 gives ports), and the referee reports `review-sat3.md`,
+> `review-thmW.md`, `review-q1.md` (the last two in progress). The floors below remain correct as stated and
+> remain the best known for cyclic groups, Δ₃ and K₄.
+
 ## 0. Answer in brief
 
 1. **No algorithm.** I have no construction and no exponent above 1/2.

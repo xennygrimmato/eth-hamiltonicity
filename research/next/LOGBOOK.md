@@ -2775,3 +2775,26 @@ discarded. Next for the executor: the filtration-space model on cyclic groups, �
 cost a lower bound on the true network cost of the leaf tensor, or only the cost of the inherited
 realisation). Lean formalisation of the weighted two-bimedian inequality and the core of Lemma S →
 `research/ports/lean/PortsLean/{Bimedian,LemmaS}.lean`, note `research/sat3/lean-lemmaS.md`.
+
+**Q1 agent finished** (`research/sat3/q1-notes.md`, `q1_verify.py`, `q1_x4.py`; unrefereed).
+- Theorem A (unconditional): for every prime power q and m ≥ 2, the p-net of F_q^m with p ≤ q + 1 classes with
+  slopes in P¹(F_q) has a CAT(0) placement (filtrations of F_q² ⊕ F_q^m) with value exactly 1/√2 on generic
+  edges and ≥ (g−q)/(√2(g+1)) + 1/(g+1) on the full level, for all merges at once. Quotients: Γ ↠ F_q^m gives
+  F_CAT(net of Γ) ≥ (1/√2)(1 − q^{−m})(1 − q^{1−m}).
+- Theorem B (contracting fails, q = 2^s): every finite subset of the filtration space is a price (six steps;
+  the gluing step is what the referee must press on).
+- Theorem D′ (repairs Theorem S for these nets): the generic edges of every F₂^m net are partitioned into
+  copies of one fixed all-crossing balanced configuration X₄ (16 nodes, 48 edges, 12 hubs; 1, 28, 560 copies
+  at g = 4, 8, 16; remainder 3/(g+1)), so D1's gap theorem applies with 1/√2: engines with per-copy pieces have
+  α′ ≤ 1/2 unless contracting holds. Pieces indexed by configurations growing with g: per-level form only.
+- Smallest positive target: a translation class E_D inside X₄: 8 disjoint wires, three merges into 4 groups of
+  4, F_CAT = 1/√2. A family of 2^{o(λ)} pieces on it with min_k c_k ≤ (1/√2 − η)·8λ would prove contracting.
+- Negative: cyclic nets have no realisation with skew node-planes (so Δ₃ stays in [2/3, 1/√2], K₄ at 2√2);
+  no tree with two branch points embeds in the filtration space; products never beat their best factor.
+- Referee launched → `research/sat3/review-q1.md`. `notes.md` carries a status banner pointing to the new files.
+
+**Triangle hunch (H33) final** (`research/sat3/hunch-triangle.md`): dead for four stated reasons; by-product:
+a cost model for three-way hubs (worth at most 8/9 per level; hub-level floors 0.5132 flat, 0.5443 nets,
+0.5926 Δ₃ when contracting fails). Proposed next step (Observation 3.1): compute the common-label rate of three
+tips of the √rank pod under the price of `thm_alt_rank_price`; contact with OpenAI's tripod bound would give
+ω ≥ 9/4 from "contracting fails" alone. Not started.

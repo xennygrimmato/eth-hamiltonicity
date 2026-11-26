@@ -2946,3 +2946,23 @@ value below that bound proves contracting, hence power-saving 3-SAT.
   ≥ 1/√2 − 1.121/(g+1), unconditionally and for any number of terms; at any depth given the zero-loss lemma.
   "Stuck at exactly 1/√2" only as g → ∞ (g = 4: bound 0.4828, level 1 gives 0.6243).
 - The author is applying the edits and attempting the zero-loss lemma.
+
+**Referee on Theorem T, final** (`research/sat3/review-q2.md`; own scripts). No fatal error; Theorem T is a
+correct deduction from OpenAI's HC Thm 3.1 as printed, and that theorem is the only real risk.
+- Trust in HC Thm 3.1: nothing beyond the final arithmetic is verified. The three steps carrying the bound
+  (the 1/√m saving of §7.3; the O(d) deficit of Thm 8.1 into Thm 11.2; Lemma 3.3 with closure) have arithmetic
+  that closes; an attempted undercut by a two-supplier Laplace network fails. Not verified: Thms 5.1, 6.1,
+  Lemma 7.3, §§9–10. OpenAI's docs say the quantitative bound is unformalised. Their Lean contains
+  `middle_count_bridge : PortZero → PowerSavingDecision` (read, not built).
+- To fix in our notes: the class is straight-line programs computing f_{K,λ} as a polynomial identity (not
+  programs correct only on bounded integer tables); the characteristic-p sentence has no source; "one circuit
+  suffices" is only asymptotic (e(K)·√log K → 0 along even K); Lemma N needs K ≥ 4; T4 needs an extra hypothesis.
+- Sanity: f_{3,λ} is a trace of a product of three matrices, so e(3) ≤ ω/9; Theorem T says nothing at fixed
+  small K; the flat lower bound 1/(8√K), Anthropic's upper bound and Theorem T's lower bound are consistent.
+- **What may be claimed publicly:** only the conditional statement. If HC Thm 3.1 holds, then over any field
+  whose characteristic has no ports, every straight-line program computing f_{K,λ} as a polynomial identity
+  needs 2^{cK²λ/√log K} gates (large even K, λ ≥ C·K(log K)^{3/2}, unspecified constants). If in addition IM
+  Thm 7.1 holds, such an algorithm over ℚ with e(K)·√log K → 0 refutes variable-count Weak ETH. Nothing in
+  positive characteristic, for bounded-table-only algorithms, for non-algebraic algorithms, or for shorter
+  wires. Lemma N (K ≥ 4), E2, E3 and the star lemma are unconditional.
+- The author is applying the corrections.

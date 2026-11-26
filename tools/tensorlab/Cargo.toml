@@ -1,0 +1,25 @@
+[package]
+name = "tensorlab"
+version = "0.1.0"
+edition = "2021"
+description = "Finite metrics, constrained ratio minimisation, small dense tensors and restriction search (tensor prices / asymptotic spectrum experiments)"
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "tensorlab"
+crate-type = ["rlib", "cdylib"]
+
+[features]
+default = []
+python = ["dep:pyo3"]
+
+[dependencies]
+rayon = "1.10"
+nalgebra = "0.33"
+num-complex = "0.4"
+rand = { version = "0.8", features = ["small_rng"] }
+pyo3 = { version = "0.22", features = ["extension-module", "abi3-py38"], optional = true }
+
+[profile.release]
+opt-level = 3
+debug = false

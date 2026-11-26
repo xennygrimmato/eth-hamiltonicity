@@ -1146,3 +1146,17 @@ rules, a 128-bit memo hash. No proof object. Novelty not checked (Winograd's 7 i
 multiplications in arithmetic straight-line programs; here intermediate polynomials may have any degree and x² = x).
 Possible follow-ups, low priority against the ports work: an independent re-implementation in tensorlab with a
 different pruning order; a literature check; a SAT/DRAT certificate.
+
+## 26 Nov (late, 22): isolation Lean project complete and rebuilt by me [L]
+
+`research/ports/lean-c1/IsoLean/` (592 lines; `lake build` 18260 jobs, success; no sorry/axiom/native_decide — I
+rebuilt it and read the main statements):
+- `Toeplitz.lean`: `toeplitz_surjective` (any field), `hash_uniform`, `hash_pairwise`, `hash_pairwise_F2'`
+  (count = 2^{n−1}).
+- `Isolation.lean`: `isolation_exact`, `isolation` (M ≤ 4N ≤ 3M ⇒ 16·#U ≥ 3|H|), `isolation_notes_window`.
+- `Compose.lean`: `exists_good_k`, `avg_succProb` (≥ 3/(16n) for n ≥ 1).
+- `Tseitin.lean`: `Circuit.consistentEquiv` (consistent wire assignments ≃ inputs), `card_tseitin`,
+  `gateClauses_iff` (axiom-free).
+Discrepancies with the notes: marginal uniformity must be assumed separately; n ≥ 1.
+Machine-checked now: the probabilistic and combinatorial core of C1 / Lemma C4. Not machine-checked: the link to
+either lab's counting theorem, and the multiplication-circuit size bound.

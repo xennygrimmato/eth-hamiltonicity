@@ -1717,3 +1717,19 @@ From the K_{2,m} agent (`research/ports/k2m/notes.md`, being written):
 - [N] Weighted family: book minimum = min(R_m(w), best cut m/(w+⌊m²/4⌋)); for m = 3 the switch is at w = 5/4. If the
   single inequality 13Σ_S ≥ 12Σ_vv + 15D on five CAT(0) points is certified, then f*(K_{2,3}; w) = 3/(2+w) = the cut
   bound **unconditionally** for w ≥ 5/4. Spec to follow → certificate job.
+
+## 26 Nov (late, 55): literature-check edits applied to both notes, the overview and the middle-cell notes
+
+- Main note: new "Prior work and novelty" paragraph (Theorem A partly anticipated by OpenAI's EG Lemma 11.3 + Prop. 11.2;
+  Theorem R and Corollary 1 not previously stated to our knowledge, search of 26 Nov; Lean Zulip and Mastodon not
+  searched); ETH context (both labs' October results compatible with Weak ETH; Stearns–Hunt equivalence as stated in
+  IM; arXiv:2610.41622, known from an excerpt only, relation not analysed further); OpenAI's history file says a
+  working group is reviewing its ETH paper.
+- K_{2,3} note: instance named (Okamura–Seymour); classical network coding gives 3/4 there (HKL 2006, Thm 27) —
+  phrased as a comparison across different resource models; "not LOCC, not a coding improvement" bullet; EG Thm 4.3 as
+  an independent source for the CAT(0) input; Toyoda reference fixed; five-point limit references; ≈20 references added.
+- Middle-cell notes: kernel lemma and Prop. S tagged standard; status of the Hadamard-expander problem; unbounded rank
+  as the gap.
+- Lab notebook (7 AND gates): literature status added by me.
+- The writer hedged wherever the check had only seen an abstract or snippet; several of the check's suggested
+  sentences were reworded (list in its report).

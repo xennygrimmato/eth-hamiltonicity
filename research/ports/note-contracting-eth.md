@@ -724,3 +724,16 @@ consequences of Theorem R and §5 (threshold 1/2 for p = β = 2).
   check of R(a) was replaced by J.4's own side condition.
 - **§3.6** states the audit's final verdict. **K_{2,3}** and **Theorem M1**: one paragraph each in §7.
   **Theorem D**: outlook only. §§2, 8 shortened; Theorem B is now §6.
+
+## Changes after the literature check
+
+Following `literature-check.md` (26 November 2026); no mathematical claim was changed. §0 now quotes [AN] §2.5 and
+records that [AN] does not mention SAT or ETH; it has a new paragraph "Prior work and novelty": Theorem A is partly
+anticipated by [EG] Lemma 11.3 and Prop. 11.2 (a Grassmannian gap ⇒ ports), ours being that [AN]'s contracting
+hypothesis supplies such a gap, with the check's GL-averaging route recorded as unchecked; Theorem R and Corollary 1
+were not found stated before, and the scope of the search is given. §4 has a short paragraph on the relation to
+[EG] §11.1. §1 adds the October 2026 ETH papers of both labs [AN-ETH, OA-ETH], with the remark that their running time
+is compatible with WETH, [IM]'s statement that Weak ETH is equivalent to the Stearns–Hunt hypothesis, and
+arXiv:2610.41622 [CP] with the reason it does not appear to apply to Theorem R. The provenance paragraph records the
+review of OpenAI's ETH paper. §7 names the K_{2,3} instance as the Okamura–Seymour example. The D.3 quotation was
+confirmed by the check and is unchanged.

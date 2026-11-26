@@ -1,1 +1,10 @@
 m=4 w= 1.000 (w_c=2.500) lam=0.65760: books min(true/D-Br_ref)=+7.78e-03 min Br_ref=+4.64e-04 | cube min Br_ref=+1.165e-02
+m=4 w= 2.000 (w_c=2.500) lam=0.63246: books min(true/D-Br_ref)=+4.28e-02 min Br_ref=+1.36e-04 | cube min Br_ref=+4.071e-02
+m=4 w= 2.500 (w_c=2.500) lam=0.61538: books min(true/D-Br_ref)=+6.42e-02 min Br_ref=+1.27e-05 | cube min Br_ref=-8.882e-16
+m=4 w= 2.500 (w_c=2.500) lam=0.61538: books min(true/D-Br_ref)=+3.89e-02 min Br_ref=+6.28e-06 | cube min Br_ref=-7.685e-16
+m=4 w= 2.500 (w_c=2.500) lam=0.61538: books min(true/D-Br_ref)=+5.73e-02 min Br_ref=+4.85e-06 | cube min Br_ref=-8.882e-16
+m=5 w= 1.000 (w_c=5.333) lam=0.49752: books min(true/D-Br_ref)=+5.37e-03 min Br_ref=+5.59e-04 | cube min Br_ref=+2.560e-02
+m=5 w= 3.333 (w_c=5.333) lam=0.47434: books min(true/D-Br_ref)=+3.46e-02 min Br_ref=+6.39e-05 | cube min Br_ref=+2.034e-02
+m=5 w= 4.167 (w_c=5.333) lam=0.46154: books min(true/D-Br_ref)=+5.46e-02 min Br_ref=+9.22e-05 | cube min Br_ref=+6.697e-02
+m=5 w= 4.750 (w_c=5.333) lam=0.45164: books min(true/D-Br_ref)=+1.08e-01 min Br_ref=+8.67e-05 | cube min Br_ref=+6.107e-02
+m=5 w= 5.333 (w_c=5.333) lam=0.44118: books min(true/D-Br_ref)=+1.20e-01 min Br_ref=+1.01e-05 | cube min Br_ref=-6.106e-16

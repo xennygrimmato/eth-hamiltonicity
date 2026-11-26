@@ -226,7 +226,7 @@ If (GE) holds, nothing follows from ρ_μ: see §6 and §8.
 
 ## 4. The kernel lemma and the spectral threshold
 
-### 4.1 Lemma K [R]
+### 4.1 Lemma K [R; standard]
 
 For every μ and every integer k ≥ 1 the kernel K_k(a,b) = 2^{−k·rk(a−b)} on Mat_μ(F₂) is positive
 semidefinite. More generally, for random variables (Y_v) on one probability space, K(u,v) = Pr[Y_u = Y_v] is
@@ -236,14 +236,19 @@ matrices. Powers: Schur products. The general statements have the same proof. �
 (Equivalently |Γ_a ∩ Γ_b|/2^μ; on the lattice side, the correlation of the indicators 1_L, 1_{L′} in
 L²(F₂((t))^N).) Only integer k occur: if 2^{−t·rk} were positive semidefinite for all t > 0, √rk would be
 Hilbertian by Schoenberg, and it is not (M5, N5).
+*Status (literature check of 26 Nov 2026).* Lemma K is elementary and standard, not new: positive
+semidefiniteness via |ker(a − b)| = Σ_x 1[ax = bx] is contained in the eigenvalue theory of Delsarte's
+bilinear-forms scheme (JCTA 25, 1978) [K*: recalled by the check, not re-opened].
 
-**Proposition S [R].** For every regular graph, every f: V → Mat_μ(F₂) and every integer k ≥ 1, with
+**Proposition S [R; standard].** For every regular graph, every f: V → Mat_μ(F₂) and every integer k ≥ 1, with
 λ = max(λ₂,0):
 
     E_edges 2^{−kD_f} ≤ λ + (1−λ)·E_pairs 2^{−kD_f}.
 
 Proof. tr(AK) = Σ_i λ_i φ_iᵀKφ_i ≤ φ₁ᵀKφ₁ + λ Σ_{i≥2} φ_iᵀKφ_i = (1−λ)φ₁ᵀKφ₁ + λ·tr K, with φ₁ = n^{−1/2}·1 and
 K_vv = 1. ∎
+*Status.* This is the usual trace argument for a positive semidefinite kernel with unit diagonal, also implicit in
+Mendel–Naor's kernel formalism (arXiv:1207.4705, eq. (3)); standard, not new.
 
 ### 4.2 Consequences [R]
 
@@ -322,7 +327,13 @@ Let G = Cay(Γ,S) with edges g ~ gs, π: Γ → GL_N(F₂) and W ≤ F₂^N. For
 A subspace moved little by the generators and far by typical elements is a failure of dimension expansion
 in the sense of [K] Lubotzky–Zelmanov, "Dimension expanders" (J. Algebra 2008; arXiv:0804.0481), whose
 Example 4.I is the subspace used below (powers of x in a finite field, dim(W+xW) ≤ dim W + 1) and whose
-Example 4.IV states that F_p[SL_d(F_p[x])] does not have property τ (verified today from the arXiv text).
+Example 4.IV states that F_p[SL_d(F_p[x])] does not have property τ (verified today from the arXiv text). Here
+property τ is the **algebra** property of LZ Def. 4.1, not the group property. LZ's own sentence (introduction)
+is the precise source of the mechanism: "Example 4.IV below implies that there are expander groups whose linear
+representations over finite fields are not dimension expanders … the finite examples … are of groups whose
+order is divisible by p and the representations are over F_p." (LZ's subspace in 4.I starts at x, ours at 1;
+this is immaterial.) The attribution was confirmed by the literature check of 26 Nov 2026 from the full text of
+arXiv:0804.0481v2.
 
 ### 5.2 Theorem M2 [R]
 
@@ -378,6 +389,29 @@ adapted).
    buildings of all ranks; property (T) says nothing about isometric actions on CAT(0) spaces of unbounded
    rank, and the group Γ = SL₃(F₂[x]) has an unbounded-orbit isometric action on the (CAT(0)-embedded
    snowflake of the) commensurability class of U³.
+   *Status in the literature (check of 26 Nov 2026).*
+   - **Expanders against all Hadamard spaces: open.** Whether some bounded-degree family is an expander with respect
+     to all Hadamard spaces simultaneously is a stated open problem: Eskenazis–Mendel–Naor, slides of the 2021
+     Münster workshop ("Does there exist a sequence of finite 3-regular graphs which are expanders with respect to
+     all Hadamard spaces simultaneously?"); Mendel, Oberwolfach Report 19/2018 ("While this question is still
+     unresolved…"); arXiv:2510.18722, Question 4.17 ("Does a Hadamard expander exist?"; it notes that Gromov and
+     Kondo excluded that *every* classical expander is a Hadamard expander, which "does not rule out the existence
+     of Hadamard expanders").
+   - **Fixed buildings: every expander works, with a constant depending on the dimension.** For each Euclidean
+     building of bounded dimension (more generally each space of finite Nagata dimension), every expander is an
+     expander against it, with a constant depending on the spectral gap and on the building's dimension and padding
+     constants [Naor–Silberman, "Poincaré inequalities, embeddings, and wild groups", Compositio 147 (2011),
+     arXiv:1005.4084, Cor. 5.2–5.3; Naor, "Comparison of metric spectral gaps", AGMS 2014, §7, seen by the check in a
+     search excerpt only]. Fixed-point results for random groups likewise need bounded rank [Izeki–Kondo–Nayatani,
+     GGD 6 (2012)] or treat one building at a time [Toyoda, Kodai Math. J. 39 (2016)]; Toyoda's uniform version
+     [Kodai Math. J. 33 (2010)] needs GH-precompact links, which spherical buildings of growing rank are not.
+   - **So the gap is unbounded rank.** Uniformity over Euclidean buildings of unbounded rank was not found in the
+     literature, and this is exactly where Theorem M2 bites. The check found no source stating M2 and rates it
+     probably new (medium confidence), noting that it is a short consequence of LZ 4.IV plus the building embedding
+     of the rank metric and that a specialist may regard it as folklore.
+   - On "I did not check the non-uniform lattice": de la Salle, Acta Math. 223 (2019), proves strong (T) for
+     higher-rank lattices including non-uniform ones [K*: recalled by the check, to be verified]. Super-expansion
+     is a Banach-space statement and does not affect M2.
 2. The construction needs a module over F₂ (the field that indexes the matrices in AN D.1 and in EG §11), not
    over the coefficient field k. For Cayley graphs of SL₃(F_ℓ[x]/(p)), ℓ odd, the same argument defeats the
    rank metrics over F_ℓ, which are not known to be prices under ¬contracting [C: an F_ℓ-analogue of AN D.2,
@@ -458,6 +492,8 @@ adapted).
 | Izeki–Nayatani, Toyoda [K, `../ideas-ports.md`] | δ(B_N) < 1 for each N, → 1 as N → ∞. Consistent with §4: the constant against B_N must degrade for graphs with λ₂ ≥ ½, and need not for λ₂ < ½ at unit scale. |
 | Lubotzky–Zelmanov 2008 [K, checked] | The source of §5: over finite fields (T) does not give dimension expansion (their Ex. 4.I, 4.IV). Dimension expanders over finite fields exist ([K*] Bourgain–Yehudayoff; Dvir–Shpilka; Forbes–Guruswami), but (GE) asks for much more: no almost-intertwiners in **every** F₂-module (§1.5). |
 | Eskenazis–Mendel–Naor 2019 [K*] | Rank cone ≠ metric cone (ℓ_∞ grids excluded). Not about expanders. |
+| Naor–Silberman 2011 (arXiv:1005.4084, Cor. 5.2–5.3) / Naor 2014 (§7) [K, per literature check; Naor 2014 snippet only] | Every expander is an expander against each fixed Euclidean building; the constant depends on its dimension. So only unbounded rank is open (§5.3, Remark 1). |
+| Open problem "Hadamard expanders?" [K, per literature check] | Stated as open in Eskenazis–Mendel–Naor (2021 Münster slides), Mendel (Oberwolfach Report 19/2018) and arXiv:2510.18722, Question 4.17. |
 | [K*] Arzhantseva–Păunescu; Elek–Grabowski (rank-metric stability of almost commuting matrices) | The right neighbourhood for §1.5: (GE) for Cayley graphs is a uniform rank-metric stability statement for almost-intertwiners. I know no result for expander families. |
 
 ---
@@ -575,3 +611,14 @@ numpy/scipy for the eigenvalues).
    prices alone.
 5. If instead a universal spreading placement is found, Corollary M0′ gives AN-ports ⇔ contracting at once,
    and §2.4 gives the OA statement.
+
+---
+
+## Changes after the literature check (26 Nov 2026)
+
+Lemma K and Proposition S are labelled standard (Delsarte's bilinear-forms scheme; Mendel–Naor, arXiv:1207.4705).
+The Lubotzky–Zelmanov attribution of §5.1 was confirmed and made precise (algebra property τ, LZ Def. 4.1; LZ's own
+sentence quoted). §5.3 Remark 1 and the table of §6.4 record that expanders against all Hadamard spaces are an open
+problem, that every expander works against each fixed Euclidean building with a dimension-dependent constant
+(Naor–Silberman; Naor), and hence that unbounded rank is the case Theorem M2 addresses. No mathematical claim was
+changed.

@@ -19,7 +19,7 @@ agent; **[N]** computed; **[N‑rig]** rigorous computation with a checkable cer
 | 2 | **Theorem A.** Contracting over k ⇒ ports in the characteristic of k (⇒ fast 3-SAT in characteristic 0 by OpenAI's theorem). | [V]; the deduction is [L] conditional on four statements copied from the labs' Lean | `ideas-ports.md`, `review-theoremAB.md`, `lean/PortsLean/ThmA.lean` |
 | 3 | **Corollary.** Under the weak exponential-time hypothesis, contracting fails and the flat hypothesis holds over every field of characteristic 0. | follows from 1 or 2 | `note-contracting-eth.md` |
 | 4 | **Characteristic p.** Ports or contracting in characteristic p ⇒ randomised one-sided 3-SAT in 2^{O(v^{1−δ})}. | [V]; hash and isolation lemmas [L] | `c1d1/notes.md`, `review-c1.md`, `lean-c1/` |
-| 5 | **Theorem K.** On the network K_{2,3} the asymptotic tensor (restriction) rate is ≥ 3/√10 ≈ 0.9487 over every field (routing: 3/4), and equals 3/√10 whenever contracting fails. | [V]; one six-variable inequality [N‑rig], verified by two checkers in different arithmetic libraries | `note-k23-rate.md`, `hull/notes.md`, `review-hull.md`, `review-fivepoint.md`, `../../tools/ivcert`, `../../tools/ivcheck2` |
+| 5 | **Theorem K.** On the network K_{2,3} the asymptotic tensor (restriction) rate is ≥ 3/√10 ≈ 0.9487 over every field (routing: 3/4), and equals 3/√10 whenever contracting fails. The instance is the Okamura–Seymour example, where classical network coding also gives only 3/4 (Harvey–Kleinberg–Lehman 2006, Thm 27); the models differ (tensor restriction vs classical coding). | [V]; one six-variable inequality [N‑rig], verified by two checkers in different arithmetic libraries | `note-k23-rate.md`, `hull/notes.md`, `review-hull.md`, `review-fivepoint.md`, `../../tools/ivcert`, `../../tools/ivcheck2` |
 | 6 | **Explicit protocols.** An explicit asymptotic protocol family on K_{2,3} with rate ≥ 0.8367 (limit 6/(4+√10) ≈ 0.8377 under one numerical claim). Smallest instances have wire dimension ≈ 2¹²⁸. | [V]; game bound exact ([N‑rig]); two-bucket case [L] | `protocol/notes.md`, `review-protocol.md`, `protocol/certificates/` |
 | 7 | **Ports vs contracting.** "Ports ⇒ contracting" (for Anthropic's class of prices) holds iff a statement (GE) about bounded-degree graphs and matrices over F₂ fails. Kernel lemma: 2^{−rank(a−b)} is positive semidefinite, with a spectral threshold. Cayley graphs of SL₃(F₂[x]/(p)) are not port families if contracting fails. | reduction and lemmas [V]; kernel lemma and spectral inequality [L]; (GE) itself open [C] | `middle/notes.md`, `review-middle.md`, `lean/PortsLean/RankKernel.lean`, `middle/experiments.md` |
 
@@ -31,7 +31,7 @@ bound for SAT.
 - `note-contracting-eth.md` — results 1–4, with dependency tables.
 - `note-k23-rate.md` — results 5–6, self-contained.
 
-Neither has been posted. `literature-check.md` (if present) records a novelty check.
+Neither has been posted. `literature-check.md` records the literature and novelty check of 26 November 2026.
 
 ## Code
 
@@ -49,10 +49,12 @@ Neither has been posted. `literature-check.md` (if present) records a novelty ch
    is machine-checked only on a verbatim copy of their machine model (`lean/PortsLean/ANFragment/`), not against their
    built development.
 2. Theorem A's 3-SAT conclusion depends on OpenAI's unreviewed chain (HC 13.1 → IM 7.1).
-3. Theorem K's lower bound depends on Anthropic's CAT(0) theorem for prices (their Lean, not built by us) and on a
+3. Theorem K's lower bound depends on Anthropic's CAT(0) theorem for prices (their Lean, not built by us; OpenAI's EG
+   Thm 4.3 is an independent alternative source) and on a
    hand-checked reduction and calibration (one referee, two numerical tests).
 4. The numerical searches for protocols and for rank placements are weak; their null results carry little weight
    (see `e3/notebook.md`, `middle/experiments.md`).
-5. Novelty has not been established for any item.
+5. Novelty (`literature-check.md`, 26 Nov 2026): Theorem R, Corollary 1, Theorem K, 3/√10, 6/(4+√10) and M2 not found before.
+   Partly anticipated: Theorem A (OpenAI EG §11.1, Grassmannian gap ⇒ ports). Standard: Lemma K, Prop. S; K_{2,3} is Okamura–Seymour.
 
 Dated working log: `../next/LOGBOOK.md`.

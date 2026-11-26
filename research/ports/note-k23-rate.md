@@ -39,16 +39,43 @@ The same rate f is required on all four demand wires. Write κ = 3/√10 = 0.948
 
 For comparison:
 - routing gives exactly 3/4;
+- classical network coding also gives exactly 3/4: the instance is the Okamura–Seymour example [OS81], the standard
+  case where the cut condition holds but flows fail, and its network coding rate is 3/4 [HKL06, Thm 27; also
+  AHJKL06]. The same result was obtained concurrently by Jain–Vazirani–Yuval (SODA 2006) and by Kramer–Savari; we
+  know these two only from their citation in arXiv:2610.09367 and arXiv:2610.33655;
 - the cut bound is 1, and it is attained by a flattening rank, so f* ≤ 1 unconditionally;
 - the quadrilateral inequality for prices alone gives only the strict inequality f* > 3/4 (an earlier step of this
-  project; we know of no statement of this instance in the literature and have not searched it systematically).
+  project).
 
-Item 1 says that tensor restriction beats routing on these five parties by at least the factor 4/√10 ≈ 1.265.
+We found no prior study of this instance for tensor restriction and no occurrence of the constants 3/√10 or
+6/(4+√10) (search of 26 November 2026). We also found no treatment of it for SLOCC or LOCC entanglement conversion.
+The restriction framework for networks of wires is that of [CLSWW24]; for GHZ- or broadcast-type demands tensors are
+known to reach the cut bound [VC17], whereas our demand is multiple-unicast.
+
+Item 1 says that the tensor restriction rate of these five parties exceeds the routing rate by at least the factor
+4/√10 ≈ 1.265, and exceeds by the same factor the classical network-coding rate of the same graph instance [HKL06].
+This is a comparison between different resource models, not a like-for-like improvement: f* is exact asymptotic
+restriction (SLOCC-type, with post-selection and no fidelity requirement), whereas network coding concerns
+classical information, and LOCC and channel models with fidelity constraints ([JV20; LOW10]) are different again
+(§0.2).
+
+*Context.* In October 2026 two preprints claimed refutations of the undirected multiple-unicast conjecture (that
+network coding gives no gain over routing in undirected networks): Z. Li, B. Li, arXiv:2610.09367, and Zhongtian He,
+arXiv:2610.10108. Liu–Que–Li–Li, arXiv:2608.06070, prove the conjecture for networks with at most five terminal
+locations, which covers K_{2,3} and is consistent with [HKL06]. So K_{2,3} remains an instance where coding equals
+routing classically. (These items were read at the level of abstracts.)
 
 ### 0.2 What is not claimed
 
 - **Scope of the theorem.** f* is the rate of exact asymptotic restriction, with uniform demand on the four
   wires. Item 1 is non-constructive.
+- **Not LOCC, not a coding improvement.** f* is exact asymptotic restriction (SLOCC-type), a different resource
+  model from classical network coding [HKL06] and from LOCC or fidelity-based quantum network models (Jensen–Vrana
+  [JV20]: LOCC with success probability 2^{−rn}; that the restriction rate is the r → ∞ end is the literature check's
+  inference, not checked against the paper; Leung–Oppenheim–Winter
+  [LOW10]: k-pair quantum communication with or without free classical communication). Theorem K says nothing about
+  LOCC rates on K_{2,3}; we found no LOCC result for this instance, and for LOCC we know no upper bound better than the
+  cut bound 1. The comparison with network coding in §0.1 is between rates in different models on the same graph.
 - **No explicit protocol near 3/√10.** Item 1 comes from Strassen's duality theorem, which proves that protocols
   exist and does not construct them. Numerical searches (§4.6) found nothing above 3/4 at the sizes tried. After this
   note was drafted, an explicit asymptotic family with rate above 3/4 was derived from the crossing identity of [AN]
@@ -75,7 +102,8 @@ The imported facts are used as follows:
 - **Item 1** uses only Strassen 1988 [Str88] and the CAT(0) property of prices. In [AN] that property is Theorem
   C.1 (`thm_cn`), packaged as Prop. C.3 (`prop_space`). We use it through Lemma C.4(a).
 - **Item 2** additionally uses `thm_alt_rank_price` (from the proof of Theorem D.2), Prop. C.3 and Lemma C.4(f).
-- **Items 1–2 use nothing from OpenAI's November 2026 papers.**
+- **Items 1–2 use nothing from OpenAI's November 2026 papers.** OpenAI's [EG] Thm 4.3 is an alternative,
+  independent source for the CAT(0) input of item 1 (§1.3).
 - **Item 3** uses the companion note [CE] (`note-contracting-eth.md`). One of its two routes uses OpenAI results;
   see §5.
 
@@ -182,6 +210,11 @@ Definition A.4." The CN inequality (C.1), for a midpoint m of x, v, is |zm|² �
 - **Lemma C.4(f)** (`lem_toolkit`; l. 1658–1660): "Suppose that |xy| = |uv| = δ and |xu| = |yv| = h, that both
   diagonals of the quadrilateral x, y, v, u have the squared length δ² + h², and that a ∈ [x,u] and b ∈ [y,v] have
   |xa| = sh and |yb| = th. Then |ab|² = δ² + h²(s−t)²."
+
+**An independent source for item 1.** OpenAI's [EG] Thm 4.3 ("Every complete geodesic spectral space X is CAT(0)"),
+with [EG] Cor. 3.4 (geodesic extension), gives the CAT(0) embedding for points of Strassen's spectrum directly. On that
+route item 1 uses nothing from [AN]: Strassen's theorem, [EG] 4.3 and the standard CAT(0) fact C.4(a). This is the
+reading of the literature check; we have not rewritten §§3–4 along this route.
 
 ### 1.4 The contracting hypothesis [AN]
 
@@ -292,6 +325,11 @@ Equivalences:
   any finite subset fits in a diamond after translation and scaling.
 - [P, not refereed] Also ⇔ W5(ℓ,ℓ/3) is a price. This direction uses flat-quadrilateral rigidity [BH99, II.2.11],
   which is not in [AN]'s toolkit.
+
+*Related geometry.* OpenAI's [MM] reduces its matrix-multiplication exponent to a tripod with unit arms in a spectral
+space ("The critical ratio occurs at three tips of a tripod with unit arms", [MM] §1; see also [MM] §8 and its
+"Propagation of equality on a tripod"). This is a close relative of the extremal configuration W5 ⊂ tripod × segment used here; we use
+nothing from [MM].
 
 ---
 
@@ -500,7 +538,9 @@ Every certificate is re-checked by the separate binary `ivcheck`, which performs
 
 *Trust base of item 1, as listed by the referee (review-fivepoint §8).*
 1. [AN] Theorem C.1 (`thm_cn`) and Prop. C.3, with Lemma C.4(a). The direction used is price ⇒ CAT(0)
-   embedding. C.4(a) is a standard CAT(0) fact.
+   embedding. C.4(a) is a standard CAT(0) fact. Alternatively, [EG] Thm 4.3 with Cor. 3.4 gives the CAT(0)
+   embedding for points of Strassen's spectrum directly (§1.3); item 1 then uses nothing from [AN]. This is an
+   independent source for this item of the trust base.
 2. Strassen's spectral theorem for the semiring of five-party tensors over k [Str88]. Alternatively, [AN]
    Theorem A.6 with the cover-to-restriction step of §1.1.
 3. §3.1 and Prop. 3.2. These are elementary; the referee recomputed them line by line and tested them on 200 000
@@ -582,10 +622,13 @@ uses C.4(a) at t ≠ ½, in the book reduction.
 ### 3.6 Independent numerical cross-checks [N]
 
 These come from `research/ports/e3/notebook.md`.
-- **Toyoda's five-point criterion.** Toyoda (arXiv:1907.09074, Thm 1.3): a metric space with at most five points
+- **Toyoda's five-point criterion.** Toyoda [Toy, Thm 1.3]: a metric space with at most five points
   embeds isometrically in a CAT(0) space iff it satisfies the Gromov–Sturm box inequalities. Minimising R under
   these as a semi-infinite program gave 0.948683298050505 at W5 in 1000 of 1000 multistarts, with KKT residual
   10⁻¹⁵. The active constraints are the three box inequalities for the cycles (u₁, v_i, u₂, v_j) at (t,s) = (½,½).
+  This criterion is special to at most five points. Lebedeva's six-point spaces satisfy all box inequalities without
+  embedding in any CAT(0) space ([AKP, arXiv:1012.5636v2, §7.2]; stated as Thm 3.1 in [Toy24] and as Thm 2.4 in
+  [Toy24b]; see also [LP22]).
 - **Model spaces.** Minimising R over products of two or three trees, and over the Euclidean cone over the Heawood
   graph, gave 3/√10 at W5. Single trees and Euclidean spaces give 1.
 - **Protocol searches.** Alternating least squares and Levenberg–Marquardt searches looked for restrictions.
@@ -677,7 +720,16 @@ f* ≤ 1, since a flattening rank is a spectral point.
 Which explicit spectral points have ℓ₁ wire metrics [K] (`ideas-ports.md` §4.1):
 - flattening ranks give cut pseudometrics;
 - Strassen's support functionals (every field) give star metrics d(x,y) = θ_x + θ_y = Σ_z θ_z δ_{{z}}(x,y);
-- the quantum functionals of Christandl–Vrana–Zuiddam (over ℂ) give star metrics.
+- the quantum functionals of Christandl–Vrana–Zuiddam (over ℂ) give star metrics;
+- the laminar (non-crossing) upper quantum functionals, which are spectral points on complex tensors [BCFLN26,
+  arXiv:2604.18283; VZ26, arXiv:2611.34664, Thm 1.9], and the upper support functionals [SDW26, arXiv:2601.21553;
+  ALP26, arXiv:2604.01386; both known to us only from search-engine excerpts]. On graph tensors each of these gives a
+  wire metric Σ_b θ_b·δ_b, a nonnegative combination of cut metrics. This is by the literature check's own
+  computation, not refereed, and is not stated in those papers.
+
+For context on the structure of the spectrum on graph tensors: the asymptotic spectrum of graph tensors is
+log-star-convex [WZ26, Thm 12.23], and Vrana–Zuiddam reprove this over every field: log Δ is star-convex about every
+point of the convex hull of the singleton flattening-rank vectors [VZ26, Thm 4.12].
 
 Each of these wire metrics is ℓ₁-embeddable, and ℓ₁-embeddability survives the operations that preserve prices
 (pull-backs, non-negative multiples, pointwise limits). So neither these points nor any price obtained from one of
@@ -768,7 +820,10 @@ the CN inequality.)
    (m-pod) × segment gives R = 2m/√(m²(m−1)² + 4), which is 3/√10 at m = 3 (hull notes §7.6; not checked
    beyond m = 3). Mat₂(F_q) ⊂ Mat_{2r}(F₂) supplies the m-pods for m ≤ 2^r + 1 under ¬Contracting [D].
    Open: the matching lower bound, i.e. the analogue of Theorem 5 for m + 2 points, and which instance gives the
-   largest forced gap between the tensor rate and the cut bound.
+   largest forced gap between the tensor rate and the cut bound. For m ≥ 4 the lower bound cannot be checked with
+   box inequalities alone (six or more points; see [Toy] and Lebedeva's spaces, §3.6). One needs the full cone of
+   quadratic inequalities valid in CAT(0) spaces (Andoni–Naor–Neiman 2018, Thm 1.1, as quoted in [Toy24]; [Toy24b]
+   gives the first explicit six-point inequalities not implied by the box inequalities), or a direct argument as in §3.
 5. **Lean formalisation.**
    - Lemma H needs a CAT(0) library, or at least C.4(a),(f) as axioms in the style of `HullHyps`.
    - The book reduction and the calibration are elementary real analysis and look within reach.
@@ -786,14 +841,67 @@ the CN inequality.)
 - [CE] "The contracting case of the tensor-price dichotomy contradicts the weak exponential-time hypothesis",
   companion note, `research/ports/note-contracting-eth.md`, draft of 26 November 2026. Contains Theorems A, B, R
   and their status table (§7 there).
+- [EG] OpenAI, "Euclidean geometry in the asymptotic spectrum of tensors", 24 November 2026 (Thm 4.3, Cor. 3.4).
+  Machine-generated; not refereed by people.
+- [MM] OpenAI, "The matrix multiplication exponent is nine fourths", 24 November 2026 (§§1, 8). Machine-generated;
+  not refereed by people.
+- [AHJKL06] Adler, Harvey, Jain, Kleinberg, Lehman, SODA 2006 (cited alongside [HKL06] for the same result).
+- [AKP] Alexander, Kapovitch, Petrunin, "Alexandrov meets Kirszbraun", Gökova 2010; updated version
+  arXiv:1012.5636v2 (2017), §7.2.
+- [ALP26] Alman, Li, Pratt, "The edge of the asymptotic spectrum of tensors", arXiv:2604.01386 (seen in a search
+  excerpt only).
+- [BCFLN26] Botero, Christandl, Fraser, Leigh, Nieuwboer, "On quantum functionals for higher-order tensors",
+  arXiv:2604.18283 (April 2026).
 - [BH99] M. Bridson, A. Haefliger, *Metric spaces of non-positive curvature*, Springer 1999.
+- [CLSWW24] Christandl, Lysikov, Steffan, Werner, Witteveen, "The resource theory of tensor
+  networks", Quantum 8, 1560 (2024), doi:10.22331/q-2024-12-11-1560. The restriction framework of f*; no K_{2,3}
+  instance.
+- [HKL06] N. J. A. Harvey, R. Kleinberg, A. R. Lehman, "On the capacity of information networks", IEEE Trans. Inf.
+  Theory 52(6) (2006), §X.B, Thm 27 ("The network coding rate of the Okamura–Seymour example is 3/4"); Thm 28 extends
+  it to "special bipartite" instances.
+- [JV20] Jensen, Vrana, "The asymptotic spectrum of LOCC transformations", IEEE Trans. Inf. Theory (2020),
+  arXiv:1807.05130.
 - [Lan06] J. M. Landsberg, "The border rank of the multiplication of 2×2 matrices is seven", J. Amer. Math. Soc. 19
   (2006).
+- [LOW10] Leung, Oppenheim, Winter, "Quantum network communication — the butterfly and beyond", IEEE Trans.
+  Inf. Theory 56 (2010) 3478, arXiv:quant-ph/0608223.
+- [LP22] Lebedeva, Petrunin, "Trees meet octahedron comparison", arXiv:2212.06445.
+- [OS81] Okamura, Seymour, J. Combin. Theory Ser. B 31 (1981) 75–81.
+- [SDW26] Sakabe, Doğan, Walter, arXiv:2601.21553 (support functionals equal quantum functionals; seen in a search
+  excerpt only).
 - [Str88] V. Strassen, "The asymptotic spectrum of tensors", J. reine angew. Math. 384 (1988).
-- [Toy] T. Toyoda, "Five-point CAT(0) spaces" (title as on arXiv), arXiv:1907.09074.
+- [Toy] T. Toyoda, "An intrinsic characterization of five points in a CAT(0) space", Anal. Geom. Metr. Spaces 8
+  (2020) 114–165; arXiv:1907.09074, Thm 1.3.
+- [Toy24] T. Toyoda, arXiv:2404.13871 (J. Topol. Anal., 2026), Thm 3.1 (Lebedeva's six-point space).
+- [Toy24b] T. Toyoda, "Inequalities on six points in a CAT(0) space", arXiv:2411.13877, Thm 2.4.
+- [VC17] Vrana, Christandl, "Entanglement distillation from GHZ shares", Comm. Math. Phys. (2017),
+  arXiv:1603.03964. Tensors reach the cut bound for GHZ/broadcast-type demands; not multiple-unicast.
+- [VZ26] Vrana, Zuiddam, "The asymptotic spectrum of tensors is connected", arXiv:2611.34664 (dated 2 November
+  2026, listed 25 November 2026), Thms 1.9, 4.12.
+- [WZ26] Wigderson, Zuiddam, "Asymptotic spectra: theory, applications and extensions", Bull. Amer. Math. Soc.
+  (2026), doi:10.1090/bull/1880, Thm 12.23.
+- Network coding preprints cited as context in §0.1: Z. Li, B. Li, "Network coding can beat routing in undirected
+  multiple-unicast networks", arXiv:2610.09367; Zhongtian He, "The multiple unicast conjecture is false",
+  arXiv:2610.10108; Liu, Que, Li, Li, "On the multiple-unicast conjecture: beyond cut metrics", arXiv:2608.06070.
 - Working files:
   - `research/ports/hull/notes.md` (§§1–3);
   - `research/ports/review-hull.md`;
   - `research/ports/e3/notebook.md`;
   - `research/ports/lean/` (`W5.lean`, `Hull.lean`, `NOTES.md`);
   - `tools/ivcert/` (`run_proofs.sh`, `src/problems/clstar.rs`, `certs/`).
+
+---
+
+## Changes after the literature check
+
+Following `literature-check.md` (26 November 2026); no mathematical claim was changed. §0.1 now identifies the
+instance as the Okamura–Seymour example [OS81], cites [HKL06, Thm 27] and the related papers for its classical
+network-coding rate 3/4, replaces the earlier "not searched" remark by the novelty sentence with the date of the
+search, states the comparison with coding as one between different resource models, and mentions the October 2026
+multiple-unicast preprints and arXiv:2608.06070 as context. §0.2 has a new bullet "Not LOCC, not a coding
+improvement". §1.3 and the trust base (§3.3, item 1) cite [EG] Thm 4.3 as an independent source for the CAT(0)
+input. §2.3 cites the tripod argument of [MM] as related geometry. §3.6 and §8 (open problem 4) note that Toyoda's
+criterion stops at five points (Lebedeva's six-point spaces). §6(c) adds the laminar quantum functionals and the
+upper support functionals, with the literature check's unrefereed computation that their wire metrics are cut
+metrics, and the star-convexity results [WZ26; VZ26]. The [Toy] reference was corrected, and the new references were
+added.

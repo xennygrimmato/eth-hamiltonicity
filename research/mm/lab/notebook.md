@@ -143,7 +143,12 @@ Scripts: `mc_sat.py` (E1 exact MC via SAT + CEGAR on input rows), `e2_wordram.py
     first-gate orbits are refuted: there is no circuit with 6 AND gates (XOR free) for the 2×2 matrix product over
     F₂. Hence unrestricted MC(⟨2,2,2⟩ over F₂) = 7 [N].** Trust base: `mc_span.c`, the orbit computation
     (`orbits.py`, `plane_orbits.json`), the pruning rules (a)–(e) above, and the 128-bit state hash (collisions
-    ignored). No independent proof object; novelty against the literature not checked.
+    ignored). No independent proof object.
+    Literature (check of 26 Nov, `research/ports/literature-check.md` topic C): the lower bound MC ≥ 6 is already
+    claimed in a public machine-generated register (entries MF-149 / MF-180, 4 Sep 2026), which calls 6 versus 7 open;
+    the cited 2026 paper on polynomial multiplication (arXiv:2608.30238) does not treat matrices; Boyar–Find leave the
+    many-output case open. So "≥ 6" is not new, and "= 7" appears to be new but rests on this one search. An
+    independent re-verification by a different method is in progress (`tools/mc222/`).
     Why k=6 is costly: helpers (gates not landing in S+T) are allowed at positions 1–2, so the
     second gate ranges over all ~2^18 products; positions 3–6 must all be reducers.
   - Boolean-quadratic MC(⟨2,2,2⟩) = 7 (E1b) and Qf = R = 7.

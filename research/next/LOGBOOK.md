@@ -3072,7 +3072,8 @@ H45.
   fresh clone (disk). One machine, one toolchain: reproducibility, not independence.
 - Paper: links now point to the repository's current name (`xennygrimmato/math`) at commit e46c4bb, which
   contains the guide and the two new checkers (the code described by the paper is unchanged since
-  aef111e; only additions); new Appendix A "Reproduction checklist"; 14 pages. Tag `mc222-v1` → e46c4bb.
+  aef111e; only additions); new Appendix A "Reproduction checklist"; 14 pages. (A tag `mc222-v1` was refused by the session's git proxy, HTTP 403, so everything is pinned
+  by commit hash; see the next entry for the final pin.)
 - Hexagon package (`research/mm/paper-mc222/hexagon/`): `build_package.sh` (fills the author line, packs
   main.tex + refs.bib + main.bbl + anc/ with the Python pipeline and the recorded results, compiles the
   archive exactly as packed, bundles Lean and Rust sources as an optional formal artifact), `metadata.json`

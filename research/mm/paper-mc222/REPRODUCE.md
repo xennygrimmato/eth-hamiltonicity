@@ -4,11 +4,12 @@ This guide gives the exact commands that check every computational claim of the 
 (`main.tex` in this folder), starting from a fresh Linux machine. Each step says what it proves,
 how long it took here, and what output to expect. A step that was not tested from scratch says so.
 
-**Repository and version.** Everything below refers to the tag `mc222-v1` of
-<https://github.com/xennygrimmato/math> (the repository was renamed from
-`xennygrimmato/eth-hamiltonicity`; the old URL redirects). The tag points to the commit that the
-paper cites. The code that the paper describes has not changed since commit `aef111e`; the tagged
-commit adds this guide and two small checking scripts.
+**Repository and version.** Everything below refers to the commit of
+<https://github.com/xennygrimmato/math> that the paper cites (macro `\commit` in `main.tex`;
+also given in the Hexagon record's comments). The repository was renamed from
+`xennygrimmato/eth-hamiltonicity`; the old URL redirects. The code that the paper describes has
+not changed since commit `aef111e`; the cited commit adds only this guide and two small checking
+scripts (`tools/mc222/compare_results.py`, `research/mm/lean-mc222/check_axioms.sh`).
 
 ## 0. What is checked, and by what
 
@@ -39,7 +40,7 @@ Tested on Ubuntu 24.04 (x86-64, 4 cores, 15 GB RAM).
 ```
 git clone https://github.com/xennygrimmato/math.git mc222-repro
 cd mc222-repro
-git checkout mc222-v1
+git checkout <commit cited in the paper>
 ```
 
 ## 2. Methods A and B, and the validation cases: one command
@@ -93,7 +94,7 @@ Expected: `ALL RECORDED CUBES REPRODUCED (same verdicts, same CNF and LRAT sizes
 Identical hashes show that the run is deterministic. They are not an independent check: a
 different encoding or a different checker would be.
 
-**Measured here, from a fresh clone at the tagged code** (4 cores shared with other jobs):
+**Measured here, from a fresh clone at the cited code** (4 cores shared with other jobs):
 see §6.
 
 ### 2.1 Check one cube by hand
@@ -232,7 +233,7 @@ are the part a reader must check by eye; everything else is checked by Lean.
 
 ## 6. What was run for this guide, and where
 
-All steps of §2, §2.1 and §3 were run from a fresh clone of the repository at the tagged code,
+All steps of §2, §2.1 and §3 were run from a fresh clone of the repository at the cited code,
 with CaDiCaL and drat-trim cloned and built from scratch by `run_all.sh`, on the machine described
 in §1. The results are recorded below.
 

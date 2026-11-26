@@ -40,6 +40,11 @@ class Enc:
         for j in range(k):
             for s_ in range(2):
                 self.s.add_clause(self.c[j][s_][1:] + self.d[j][s_])
+                # WLOG gate-input constants are 0: (l1+c1)(l2+c2) = l1 l2 + affine(l1,l2), and every
+                # consumer of a gate takes affine combinations, so the affine part is absorbed.
+                self.s.add_clause([-self.c[j][s_][0]])
+            # WLOG the two inputs differ (else the gate is linear) -- implied by optimality; and every
+            # gate is used somewhere (by an output or a later gate) -- also WLOG at the minimum k.
         if quad:  # no gate reuse: quadratic circuits (still Boolean, x^2=x)
             for j in range(k):
                 for s_ in range(2):

@@ -515,3 +515,22 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - Ranked: T1 impossibility-and-separation package (85% for the conditional form); T2 neutral public note on the hidden
   corollary; T4 atlas; T5 an actual n²·polylog algorithm over F₂ (< 1%); AND-count gap at 2×2 (5%).
 - Lead's plan: anti executes T1/N6; lab does calibration + atlas + sweep; decide on T2 with the user.
+
+### User: "try all of those; find a convincing story, easy even for high-school students"
+- Resumed the why-9/4 agent (Fable): Part A read Parts II–IV for the lower bound's real mechanism (is 9/4 forced, or
+  would the argument "prove" any current upper bound?); Part B test the picture on tensors with known exponents;
+  Part C a jargon-free story with figures (`research/mm/story-nine-fourths.md`).
+- New executor "note" (Opus): neutral two-page note on the hidden circuit corollary, with verbatim quotes, a Lean
+  dependency-cone check by grep, and a risk list (`research/mm/note-circuit-corollary.md`).
+- Running as before: anti (impossibility theorems), lab.
+
+### Lab note 4: the atlas [N; uses the exact rectangular formula; balance equations transcribed, not re-derived]
+- At the ideal exponent (same as if ω were 2): n × n^k × n products for k ≤ 1/2 (n²); Zwick / unweighted directed
+  APSP at n^{2.5}; fully sparse products m^{4/3} (output size m) and m^{7/6} (output √m), ideal for every output size
+  ≤ input size.
+- Not ideal: n × n^{0.6} × n at 2.0167; n × n^{0.75} × n at 2.0833; n × n^{1.5} × n at 2.667 (ideal 2.5); α = 1/2
+  (ideal 1); sparse with larger outputs slightly off; formulas that use only the square exponent (triangle detection
+  m^{1.385}, k-clique 9t/4, bounded-difference (min,+) 2.625, determinant/rank n^{2.25}) not re-optimised with
+  rectangular blocks, so only upper bounds on the true derived exponents.
+- Lead's caveat: the "ideal" rows need only the UPPER bounds (October algorithms). The "not ideal" rows need the new
+  lower bound and the exact formula, which the paper itself does not state (only the Lean notes do).

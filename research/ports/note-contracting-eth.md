@@ -302,11 +302,9 @@ unsatisfied clause, and otherwise accepts with weight 1 and an empty tally. z_j 
   bijectively to satisfying assignments, e = 0, and sum(z_j) = #SAT(F_j)·1_A in every characteristic. Refereed
   (review-c1 §5); it is needed at p = 2 (§5.3).
 
-**Characteristic 0.** By `exists_setting`, A ⊂ k is a finitely generated ℤ-algebra, and A ⊗ ℚ ≠ 0. A maximal ideal of
-A ⊗ ℚ gives a ring map ψ: A → L into a number field (Zariski's lemma; [AN] K.6 uses the same device). ψ(1) = 1, so
-ψ(sum(z_j)) = 2^e·#SAT(F_j) ∈ ℤ, positive iff F_j is satisfiable. All identities used hold in A and survive ψ. The
-fixed table holds the images ψ(θ) of the named generators. Run weights are products of poly(τ) fixed algebraic numbers
-and sums have 2^{O(τ)} terms, so every number has poly(n) bits.
+**Characteristic 0.** A ⊂ k is a finitely generated ℤ-algebra with A ⊗ ℚ ≠ 0; a maximal ideal of A ⊗ ℚ gives a ring
+map ψ: A → L into a number field (Zariski's lemma; [AN] K.6 uses the same device). ψ(sum(z_j)) = 2^e·#SAT(F_j) ∈ ℤ is
+positive iff F_j is satisfiable; the table holds ψ(θ); every number has poly(n) bits.
 
 **Exponent.** The total is 2^{O(n^{1−α} log n + n^{(1+4α)ρ} polylog n)}·poly with ρ = H/(H+187). Balancing
 α = 1 − (1+4α)ρ gives α = (1−ρ)/(1+4ρ) = 187/(5H+187). This is < 1/4 exactly when **H > 112.2**, which J.4's H ≥ 272
@@ -319,10 +317,9 @@ In general, if the total guesses are τ/v^{48+g}, one gets δ < g/(5H+g).
 The algorithm needs G_v for the one scale v determined by n. |G_v| ≤ v^H = poly(n), so Remark R′ needs no further
 argument [ours-R].
 
-**The referee's concern** (review-theoremR §4). `thm_onecut` assembles G from `obtain`ed witnesses. Some have decidable
-finite specifications (subgroup chain, words, codes, bijections, SLP tables), which a fixed machine can find by search.
-But the specifications of the plan structure TT (`thm_tree`, H.2) and of `pc` (`prop_pieces`, J.2) contain value
-identities quantified over all inputs, which cannot be checked by search.
+**The referee's concern** (review-theoremR §4). `thm_onecut` assembles G from `obtain`ed witnesses. The specifications
+of the plan structure TT (`thm_tree`, H.2) and of `pc` (`prop_pieces`, J.2) contain value identities quantified over
+all inputs, which cannot be checked by search.
 
 **The audit** (review-uniformity, final; one reader, by reading the proof terms; nothing built). Verdict: the
 algorithm is **uniform, with an n-independent table of constants that are not explicit**; the non-uniform fallback is
@@ -362,14 +359,12 @@ words, the cosets and the maps χ ↦ χ̂ are constants of the program").
 
 *Proof.*
 1. **[AN F.6, p. 40, `thm_poincare`]** [AN-L]: "There are an integer u ≥ 2 and a real number C₀ ≥ 0 such that for every
-   l ≥ 2, h = lu, and every price on U_h, E_{g,a}|a, ga|² ≤ C₀ Σ_{j<h−1} E_a|a, x_j a|²". This is in the contracting
-   case over k, with u and C₀ depending only on (μ, s). [AN App. M]: "Sections A to L use nothing about k except that it
-   is a field, apart from the element ½ in Proposition E.1." The Lean `thm_poincare` is stated for any `Field K`.
-2. **Every finite configuration in X_χ is an [AN] price over k** [ours-R, review-theoremAB §1]. On a finite set S an
-   [EG]-spectral space has metric δ(S)·d_F for a Strassen point F over some field K of characteristic χ. Restrict F to
-   tensors over the prime field P; if k ≠ P, lift to k by [EG] Lemma 2.3 ("For k ⊆ K, the possible joint values of
-   spectral points on any family of tensors defined over k are the same over the two fields") [OA]. Push forward along
-   the placement: this is c·d_φ for an [AN] spectral point φ over k (§2.1).
+   l ≥ 2, h = lu, and every price on U_h, E_{g,a}|a, ga|² ≤ C₀ Σ_{j<h−1} E_a|a, x_j a|²", in the contracting case over
+   k. [AN App. M]: "Sections A to L use nothing about k except that it is a field, apart from the element ½ in
+   Proposition E.1." The Lean `thm_poincare` is stated for any `Field K`.
+2. **Every finite configuration in X_χ is an [AN] price over k** [ours-R, review-theoremAB §1]. On a finite set an
+   [EG]-spectral space has metric δ(S)·d_F for a Strassen point F over a field of characteristic χ. Restrict F to the
+   prime field, lift to k by [EG] Lemma 2.3 [OA] if needed, and push forward along the placement (§2.1).
 3. **Translation.** x_j is an involution, so G_h is (h−1)-regular on n = 2^{h(h−1)/2} vertices. The left side of F.6 is
    V(x), because (a, ga) is a uniform independent pair; the right side is C₀(h−1)·E_P(x). So V ≤ C₀(h−1)·E_P for every
    placement into every member of X_χ.

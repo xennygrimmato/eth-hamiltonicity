@@ -26,9 +26,8 @@ pub trait Scalar<const N: usize>:
     fn sqr(self) -> Self;
     /// |x|. Jet2 (only ever evaluated over a box): if the value enclosure over the box is
     /// sign-definite, |x| coincides on the box with the smooth function +-x and is differentiated as
-    /// such (all leaf tests only use the function on the box); otherwise INVALID. Jet1: +-dx if the
-    /// value is strictly of one sign, else the Clarke generalised-gradient enclosure [-1,1]*dx,
-    /// which is valid in Lebourg's mean-value theorem and contains the derivative of either branch.
+    /// such (all leaf tests only use the function on the box); otherwise INVALID. Jet1 (also used at
+    /// single points): +-dx if the value is strictly of one sign, otherwise INVALID.
     fn abs(self) -> Self;
     /// Enclosure of the value.
     fn val(&self) -> I;
@@ -176,22 +175,15 @@ impl<const N: usize> Scalar<N> for Jet1<N> {
         self.chain(I::sqr(&self.v), g1)
     }
     fn abs(self) -> Self {
-        if !self.v.is_valid() {
-            return Jet1 { v: INVALID, d: [INVALID; N] };
-        }
-        // strict tests: at a point where the value may be 0 the Clarke enclosure is used, which
-        // contains the derivative of either smooth branch (so point jets are always sound)
-        if self.v.lo > 0.0 {
+        // strict tests: at a point where the value may be 0 the derivative is INVALID. (A Clarke
+        // generalised-gradient enclosure [-1,1]*dx would be valid via Lebourg's mean-value theorem;
+        // it is deliberately not used, to keep non-smooth analysis out of the trust base.)
+        if self.v.is_valid() && self.v.lo > 0.0 {
             self
-        } else if self.v.hi < 0.0 {
+        } else if self.v.is_valid() && self.v.hi < 0.0 {
             -self
         } else {
-            let mut d = self.d;
-            for i in 0..N {
-                let m = d[i].mag();
-                d[i] = if d[i].is_valid() { I::new(-m, m) } else { INVALID };
-            }
-            Jet1 { v: I::abs(&self.v), d }
+            Jet1 { v: I::abs(&self.v), d: [INVALID; N] }
         }
     }
     fn val(&self) -> I {

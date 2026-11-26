@@ -13,7 +13,7 @@
 //! Vertices: 1 -> (x0,x1), 2 -> (x2,x3), 3 -> (x4,x5).
 //!
 //! `clstar:rho=R`  : the domain [-1,1]^6 with two kinds of excluded boxes (leaves X):
-//!    (i) boxes inside the central cube [-R,R]^6 (R = 1/8 default): covered by the eight
+//!    (i) boxes inside the central cube [-R,R]^6 (R = 1/2 default; R <= 1/2 needed below): covered by the eight
 //!        certificates `clnear:rho=R:s=...` (each sigma-cube point maps into the (a,e)-box, see below);
 //!   (ii) corner regions: for a pair {jk} and s = +-1, s*sigma_jk >= 15/16 and s*sigma_kj >= 15/16.
 //!        Corner lemma (analytic): put d1 = 1 - s sigma_jk, d2 = 1 - s sigma_kj in [0, 1/16]. Then
@@ -36,9 +36,10 @@ use crate::ad::Scalar;
 use crate::bnb::{BoxN, Problem};
 use crate::interval::{add_ru, I};
 
-fn vertex_terms<const N: usize, T: Scalar<N>>(s: &[T; 6]) -> T {
+/// `kp1` = 1 + k with k = 9 for (CL*) (other values only for tests).
+fn vertex_terms<const N: usize, T: Scalar<N>>(s: &[T; 6], kp1: f64) -> T {
     let one = T::cf(1.0);
-    let ten = T::cf(10.0);
+    let ten = T::cf(kp1);
     let c: [T; 6] = std::array::from_fn(|i| (one - s[i].sqr()).sqrt());
     let mut acc = T::cf(0.0);
     for (a, b) in [(0, 1), (2, 3), (4, 5)] {
@@ -57,6 +58,7 @@ fn outside_fd(sg: &[I; 6]) -> bool {
 pub struct ClStar {
     pub name: String,
     pub rho: f64,
+    pub kp1: f64,
 }
 
 impl ClStar {
@@ -65,7 +67,7 @@ impl ClStar {
         if base != "clstar" {
             return Err("not clstar".into());
         }
-        Ok(ClStar { name: name.to_string(), rho: param_f64(&m, "rho", 0.125)? })
+        Ok(ClStar { name: name.to_string(), rho: param_f64(&m, "rho", 0.5)?, kp1: 1.0 + param_f64(&m, "k", 9.0)? })
     }
 }
 
@@ -86,13 +88,16 @@ impl Problem<6> for ClStar {
     }
     fn eval<T: Scalar<6>>(&self, s: &[T; 6]) -> T {
         let e = (s[0] + s[2]).abs() + (s[1] + s[4]).abs() + (s[3] + s[5]).abs();
-        vertex_terms(s) - T::cf(3.0) + T::cf(1.5) * e
+        vertex_terms(s, self.kp1) - T::cf(3.0) + T::cf(1.5) * e
     }
     fn outside_fundamental(&self, b: &BoxN<6>) -> bool {
         outside_fd(b)
     }
     fn excluded(&self, b: &BoxN<6>) -> bool {
         let r = self.rho;
+        if r > 0.5 {
+            return false;
+        }
         if b.iter().all(|x| x.lo >= -r && x.hi <= r) {
             return true;
         }
@@ -117,6 +122,7 @@ impl Problem<6> for ClStar {
 pub struct ClNear {
     pub name: String,
     pub rho: f64,
+    pub kp1: f64,
     pub signs: [f64; 3],
 }
 
@@ -131,7 +137,12 @@ impl ClNear {
         if v.len() != 3 || !sg.chars().all(|c| c == '+' || c == '-') {
             return Err("bad s".into());
         }
-        Ok(ClNear { name: name.to_string(), rho: param_f64(&m, "rho", 0.125)?, signs: [v[0], v[1], v[2]] })
+        Ok(ClNear {
+            name: name.to_string(),
+            rho: param_f64(&m, "rho", 0.5)?,
+            kp1: 1.0 + param_f64(&m, "k", 9.0)?,
+            signs: [v[0], v[1], v[2]],
+        })
     }
 }
 
@@ -148,6 +159,7 @@ impl Problem<6> for ClNear {
     }
     fn domain(&self) -> BoxN<6> {
         let r = self.rho;
+        assert!(r <= 0.5, "rho <= 1/2 keeps sigma = a +- e inside [-1,1]");
         let mut b = [I::new(-r, r); 6];
         for k in 0..3 {
             b[3 + k] = if self.signs[k] > 0.0 { I::new(0.0, r) } else { I::new(-r, 0.0) };
@@ -161,7 +173,7 @@ impl Problem<6> for ClNear {
         let (a12, a13, a23, e12, e13, e23) = (x[0], x[1], x[2], x[3], x[4], x[5]);
         let s: [T; 6] = [a12 + e12, a13 + e13, e12 - a12, a23 + e23, e13 - a13, e23 - a23];
         let gain = T::cf(self.signs[0]) * e12 + T::cf(self.signs[1]) * e13 + T::cf(self.signs[2]) * e23;
-        vertex_terms(&s) - T::cf(3.0) + T::cf(3.0) * gain
+        vertex_terms(&s, self.kp1) - T::cf(3.0) + T::cf(3.0) * gain
     }
     fn special_points(&self) -> Vec<[f64; 6]> {
         vec![[0.0; 6]]

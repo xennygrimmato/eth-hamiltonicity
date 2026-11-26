@@ -152,12 +152,12 @@ theorem U_le_W (g : Fin 6 → Fn) (h : Nat)
     · by_cases h0 : j.val = 0
       · have := witGensF_mem_W g h i 13 (by omega)
         have e : witGensF g h i 13 = g j := by
-          rw [← gN_val, h0]; simp [witGensF, show 0 < i by omega]
+          rw [← gN_val g j, h0]; simp [witGensF, show 0 < i by omega]
         rwa [e] at this
       by_cases hh : j.val = h
       · have := witGensF_mem_W g h i 14 (by omega)
         have e : witGensF g h i 14 = g j := by
-          rw [← gN_val, hh]; simp [witGensF, show h < i by omega]
+          rw [← gN_val g j, hh]; simp [witGensF, show h < i by omega]
         rwa [e] at this
       · exact W_mono g h (le_of_lt hj) (ih j.val hj (hH j h0 hh))
   · have := witGensF_mem_W g h i (9 + t) (by omega)

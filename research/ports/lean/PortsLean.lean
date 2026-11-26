@@ -5,3 +5,5 @@ import PortsLean.PrunedTree
 import PortsLean.ANFragment.Machine
 import PortsLean.ANFragment.Defs
 import PortsLean.ANFragment.Guess
+import PortsLean.W5
+import PortsLean.Hull

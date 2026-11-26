@@ -1184,3 +1184,18 @@ From the hull agent (interim 3):
 
 **If (I) is proved: Theorem K (unconditional).** f*(K_{2,3}; k) ≥ 3/√10 over every field. And with the hull lemma:
 f*(K_{2,3}; k) = 3/√10 whenever contracting fails over k; in characteristic 0, f* > 3/√10 ⇒ fast 3-SAT.
+
+## 26 Nov (late, 24): W₅ and hull checks in Lean [L]
+
+`research/ports/lean/PortsLean/W5.lean`, `Hull.lean` (per the executor, sorry-free; not yet rebuilt by me):
+- W₅: √(9/10)(6ℓ+2h) ≤ 6√(ℓ²+h²) (it is 4(ℓ−3h)² ≥ 0), equality iff h = ℓ/3; all 125 triangle inequalities; not in
+  the cut cone (Σ_S d − Σ_T d ≥ 0 on all 32 cut metrics, violated by W₅).
+- Flow bound 3Σ_T d ≤ 4Σ_S d for every metric (rate ≥ 3/4); cut {v₁} gives ratio 1.
+- Hull: the ten ranks of N5 over ZMod 2 by explicit factorisations and determinants; equality in the quadrilateral
+  inequality for each (0, t_i, I, t_j); the tripod × ℝ model realises N5 and contains W₅(ℓ, ℓ/3) for ℓ ≤ 1/√2;
+  glue lemma: ρ₂ a price ⇒ any five diamond points are a price, given a `HullHyps` structure.
+- What Lean cannot see: Lemma H itself (solid squares from C.4(f), uniqueness, gluing) — Mathlib has no CAT(0) theory.
+- Break found and fixed: Lemma H must assume a complete space with midpoints (CN), not only the quadrilateral
+  inequality — N5 as a bare five-point space satisfies the inequality and contains no diamond, so the weaker
+  skeleton was false/vacuous. The informal proof uses the price space (complete CAT(0)), so it is unaffected.
+- Confirmed: "points of the price space are prices" is not a gap; `prop_space` says the whole metric is a price.

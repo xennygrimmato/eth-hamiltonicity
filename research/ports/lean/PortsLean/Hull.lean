@@ -172,13 +172,21 @@ theorem w5_in_diamond (ℓ : ℝ) (h0 : 0 ≤ ℓ) (hℓ : ℓ ≤ c) :
 
 /-! ## (d) The rigidity step, as explicit hypotheses -/
 
+/-- AN's `Cat.CN` (`Nc/Cat/Core.lean` l.22): complete, with midpoints satisfying the CN inequality.
+Lemma H MUST assume this (not just `QuadIneq`): the five-point space N5 itself satisfies `QuadIneq`
+(any subset of a CAT(0) space does) but contains no diamond, so a version of Lemma H assuming only
+`QuadIneq` would be false and would make the glue theorem vacuous. -/
+def CNProp (X : Type) [MetricSpace X] : Prop :=
+  CompleteSpace X ∧ ∀ x v : X, ∃ m : X, ∀ z : X,
+    dist z m ^ 2 ≤ (dist z x ^ 2 + dist z v ^ 2) / 2 - dist x v ^ 2 / 4
+
 /-- The statements the informal proof of "N5 a price ⇒ W5 a price" uses, made explicit.
 `IsPrice` is AN's `Nc.Price.IsPrice K` (abstract here). -/
 structure HullHyps (IsPrice : {Y : Type} → (Y → Y → ℝ) → Prop) where
   /-- AN `prop_space` (`Paper/Curvature.lean` l.211): every price is the pull-back of the metric of a
   CAT(0) space `X` **whose whole metric is a price**. -/
   prop_space : ∀ {V : Type} (w : V → V → ℝ), IsPrice w →
-    ∃ (X : Type) (_ : MetricSpace X) (f : V → X), QuadIneq X ∧ IsPrice (fun a b : X => dist a b) ∧
+    ∃ (X : Type) (_ : MetricSpace X) (f : V → X), CNProp X ∧ QuadIneq X ∧ IsPrice (fun a b : X => dist a b) ∧
       ∀ a b, dist (f a) (f b) = w a b
   /-- Def. A.4: pull-backs of prices are prices. -/
   pullback : ∀ {X V : Type} (d : X → X → ℝ) (g : V → X), IsPrice d → IsPrice (fun a b => d (g a) (g b))
@@ -188,7 +196,7 @@ structure HullHyps (IsPrice : {Y : Type} → (Y → Y → ℝ) → Prop) where
   rectangle formula C.4(f) applied twice per square (solid squares); that an isometric copy of a
   nondegenerate Euclidean triangle in a uniquely geodesic space is determined by its vertices; and
   gluing three flat triangles along `[n,s]`. Mathlib has no CAT(0) theory to check this. -/
-  lemmaH : ∀ (X : Type) [MetricSpace X], QuadIneq X → ∀ (g : M2 → X),
+  lemmaH : ∀ (X : Type) [MetricSpace X], CNProp X → QuadIneq X → ∀ (g : M2 → X),
     (∀ a ∈ ({n0, s0, t1, t2, t3} : Set M2), ∀ b ∈ ({n0, s0, t1, t2, t3} : Set M2),
       dist (g a) (g b) = rho a b) →
     ∃ Ψ : TP → X, ∀ p q, inDiamond p → inDiamond q → dist (Ψ p) (Ψ q) = dTP p q
@@ -200,8 +208,8 @@ of it (hull points included) pull back to prices. The only gap is `lemmaH`. -/
 theorem w5_price_of_rho_price (IsPrice : {Y : Type} → (Y → Y → ℝ) → Prop) (H : HullHyps IsPrice)
     (hρ : IsPrice rho) (P : Fin 5 → TP) (hP : ∀ i, inDiamond (P i)) :
     IsPrice (fun i j => dTP (P i) (P j)) := by
-  obtain ⟨X, _, f, hq, hX, hf⟩ := H.prop_space rho hρ
-  obtain ⟨Ψ, hΨ⟩ := H.lemmaH X hq f (fun a _ b _ => hf a b)
+  obtain ⟨X, _, f, hcn, hq, hX, hf⟩ := H.prop_space rho hρ
+  obtain ⟨Ψ, hΨ⟩ := H.lemmaH X hcn hq f (fun a _ b _ => hf a b)
   have := H.pullback (fun a b : X => dist a b) (fun i => Ψ (P i)) hX
   have e : (fun i j => dist (Ψ (P i)) (Ψ (P j))) = fun i j => dTP (P i) (P j) := by
     funext i j; exact hΨ _ _ (hP i) (hP j)

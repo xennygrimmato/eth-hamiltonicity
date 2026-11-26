@@ -207,3 +207,53 @@ def check_onetree(path):
     G = S / Db
     print('%-50s Gamma(py) = %.6f  Gamma(rust) = %.6f  CS value = %.6f  %s' % (path.split('/')[-1], G, J['gamma'],
           math.sqrt(len(des['edges']) * G) / p, 'OK' if abs(G - J['gamma']) < 1e-6 * max(1, G) else 'MISMATCH'))
+
+
+def check_cone(path):
+    """Recompute Gamma (design) or Phi (limit:Q:p) of a one-cone-factor JSON from scratch: graph distances by
+    Floyd-Warshall on the saved (subdivided) edge list, d = min(pi, d_G), savings by brute force over pairs of
+    directions at angle >= pi."""
+    J = json.load(open(path))
+    n = J['graph']['n']; INF = float('inf'); PI = math.pi
+    D = [[0.0 if i == j else INF for j in range(n)] for i in range(n)]
+    for a, b, l in J['graph']['edges']:
+        D[a][b] = D[b][a] = min(D[a][b], l)
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if D[i][k] + D[k][j] < D[i][j]: D[i][j] = D[i][k] + D[k][j]
+    D = [[min(PI, x) for x in row] for row in D]
+    hv, r = J['hv'], J['r']
+    d2 = lambda a, b: max(0.0, r[a] ** 2 + r[b] ** 2 - 2 * r[a] * r[b] * math.cos(D[hv[a]][hv[b]]))
+    gain = lambda hs, b: sum(r[h] * math.cos(D[hv[h]][b]) for h in hs)
+    def sav(hu, hw):
+        best = 0.0
+        fu = [gain(hu, b) for b in range(n)]; fw = [gain(hw, b) for b in range(n)]
+        for b in range(n):
+            for c in range(n):
+                if D[b][c] >= PI - 1e-9: best = max(best, fu[b] + fw[c])
+        return best
+    t = J['target']
+    if t.startswith('limit:'):
+        _, q, p = t.split(':'); p = int(p)
+        assert 'x' not in q, 'cyclic Q only in this checker'
+        m = int(q); funcs = [(1, 0), (0, 1), (1, -1), (1, 1)][:p]
+        nodes = [[k * m + (a * x + b * y) % m for k, (a, b) in enumerate(funcs)] for x in range(m) for y in range(m)]
+        Db = sum(d2(k * m + a, k * m + b) for k in range(p) for a in range(m) for b in range(m)) / (p * m * m)
+        S = sum(sav(u, w) ** 2 for u in nodes for w in nodes) / len(nodes) ** 2
+        val = S / Db; lab = 'Phi'
+    else:
+        des = design({'delta3': 'Delta3', 'crossing': 'crossing', 'k4': 'K4'}[t])
+        off = []; o = 0
+        for g in des['groups']:
+            off.append(o); o += max(g) + 1
+        hs = lambda u: [off[m] + g[u] for m, g in enumerate(des['groups'])]
+        S = sum(sav(hs(u), hs(v)) ** 2 for (u, v) in des['edges'])
+        p = len(des['groups'])
+        Db = 0.0
+        for m, g in enumerate(des['groups']):
+            R = max(g) + 1; prs = [(i, j) for i in range(R) for j in range(i + 1, R)]
+            Db += sum(d2(off[m] + i, off[m] + j) for i, j in prs) / len(prs)
+        val = S / (Db / p); lab = 'Gamma'
+    print('%-55s %s(py) = %.6f  score(rust) = %.6f  %s' % (path.split('/')[-1], lab, val, J['score'],
+          'OK' if abs(val - J['score']) < 1e-6 * max(1, val) else 'MISMATCH'))

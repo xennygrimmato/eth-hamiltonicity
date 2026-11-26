@@ -246,7 +246,7 @@ fn cone_cmd(a: &[String]) {
     if free {
         println!("free link base edges: {:?}", r[0].1.chains.iter().map(|c| { let e = r[0].1.edges[c[0]]; (e.0, r[0].1.edges[*c.last().unwrap()].1, (c.iter().map(|&i| r[0].1.edges[i].2).sum::<f64>() * 1e4).round() / 1e4) }).collect::<Vec<_>>());
     }
-    let gj = format!("{{\"n\":{},\"edges\":{:?}}}", r[0].1.n, r[0].1.edges.iter().map(|&(x, y, l)| (x, y, l)).collect::<Vec<_>>());
+    let gj = format!("{{\"n\":{},\"edges\":{:?}}}", r[0].1.n, r[0].1.edges.iter().map(|&(x, y, l)| vec![x as f64, y as f64, l]).collect::<Vec<_>>());
     save(&format!("cone_{}_{}_s{}_seed{}", tname.replace(':', "-"), gspec.replace(':', "-"), sub, seed),
          format!("{{\"target\":\"{}\",\"graph\":{},\"score\":{},\"value\":{},\"hv\":{:?},\"r\":{:?}}}", tname, gj, best, v, r[0].2.hv, r[0].2.r));
     eprintln!("elapsed {:.2}s", t.elapsed().as_secs_f64());

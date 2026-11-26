@@ -396,3 +396,21 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
     rate 8/3 at a tripod), with a figure and tweet versions.
 - H11 [C]: over F₂, computing the product as a function (non-bilinear circuits) can beat bilinear rank at some small
   size. E1 tests the smallest case. If no gap shows at any reachable size, the non-algebraic route is weaker than hoped.
+
+### Idea agent, interim note 1 (reading of the OpenAI papers) [K, from the text; unverified by us]
+- FLAT HYPOTHESIS CONFIRMED FROM THE STATEMENT: companion Theorem 1.1(2) gives, for every finite set S in a real
+  Hilbert space, ONE spectral point whose wire metric is ‖u−v‖/W(S), over every field; the finite-dimensional case is
+  in their Lean. That is our FH with equality. So, given OpenAI's result: H1 is a theorem, the reviewed win-win's
+  flat floors are unconditional, the engine's two-merge pieces are optimal, and the swap-splitting question is
+  answered (the circle is the limit). Exact list of our statements affected: pending in `research/mm/ideas-n2.md`.
+- AUDIT FLAG: the 9/4 lower bound is not algebraic at its core. It rests on the paper's Theorem 2.2, a lower bound
+  for trivalent tensor networks over a finite field computing "list distinctness", and the paper's own Prop. 2.3
+  embeds Boolean circuits in such networks. At t = 1 this would be a superlinear Boolean circuit lower bound
+  Ω(N(log N)^σ) for an explicit function in P — far past the 3.1n record and not advertised. Either the release's
+  biggest unadvertised corollary or the first place to look for an error. We are NOT verifying (user's decision);
+  recorded so that anyone reading our work knows the claim's weak point.
+- CONSEQUENCE FOR THE TARGET: the same lemma may give Ω(n²√log n) for any Boolean circuit multiplying matrices over
+  F₂. Honest target is therefore n²·polylog(n) bit operations over F₂, not n² flat.
+- Functional algorithms over F₂ do not tensor (x² = x fails for matrices), so a small-size gap between Boolean and
+  bilinear cost does not amplify by recursion. H11 downgraded: a gap at size 2 would be a curiosity unless a
+  block-compatible mechanism is found.

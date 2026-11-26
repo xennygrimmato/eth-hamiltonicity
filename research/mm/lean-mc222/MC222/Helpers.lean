@@ -123,8 +123,7 @@ theorem U_le_W (g : Fin 6 → Fn) (h : Nat)
         have e : witGensF g h i 14 = g j := by
           simp [witGensF, show h < i by omega, ← hh, gN_val]
         rwa [e] at this
-      · exact W_mono g h (le_of_lt hj) (ih j.val hj ((le_sup_left : S g j ≤ U g j) (le_sup_left.trans
-          (le_refl _)) |> fun _ => hH j h0 hh) |> fun x => x)
+      · exact W_mono g h (le_of_lt hj) (ih j.val hj (hH j h0 hh))
   · have := witGensF_mem_W g h i (9 + t) (by omega)
     simpa [witGensF, show 9 + t ≠ 0 by omega, show ¬ 9 + t < 9 by omega, show 9 + t < 13 by omega]
       using this

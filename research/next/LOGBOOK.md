@@ -2284,3 +2284,34 @@ suggestion to test [C]: for the cyclic Latin square the three classes are x, y, 
 might come from objects indexed by triples of partitions with an additive constraint (Littlewood–Richardson
 coefficients, Knutson–Tao hives) — the two-merge identity comes from Frobenius symbols, i.e. two coordinates. To be
 checked against the earlier no-go catalogue.
+
+## 27 Nov: 3-SAT theory interim 3 — the obstruction persists for large nets; no live candidate for attainment
+
+From the theory agent:
+- **Persistent gap [R for the value; "is a price" is the [D] product-of-pods statement].** On a 3-net of a group with a
+  subgroup A of index 4: one tripod with all rows in A on arm 1, all columns in A on arm 2, all diagonals in A on arm 3,
+  everything else at the centre (r, c ∈ A ⇒ r − c ∈ A, so a node has 0, 1 or 3 active lines). In the limit g → ∞:
+  Φ = Γ/E = 3(1−θ)(1+2θ), maximal at θ = 1/4: Φ = 27/8, level value ½√(3/2) = 0.6124 (flat 0.5774; cap 0.7071).
+  General p: Φ_p = p(1−θ)(1+(p−1)θ), optimum value **½·√(p/(p−1))**.
+  My table (floor ρ ≥ ½√(p/(p−1)), exponent ≤ log₂(1/ρ); flat window in brackets):
+  p = 2: 0.7071 → 0.5 (0.5) — reproduces the known two-merge optimum; p = 3: 0.6124 → 0.7075 (0.79); p = 4: 0.5774 → 0.79
+  (1.0); p = 5: 0.559 → 0.839 (1.16); p → ∞: → 1/2 → 1.
+  So when contracting fails, p-net engines are capped at exponent 1 − ½log₂(p/(p−1)) < 1: more merges can still help
+  in principle, but never to a polynomial saving, and three merges cannot exceed 0.7075. Lower bound on the floor
+  only; for 3-nets the truth is in [0.6124, 0.7071].
+- Γ ≤ 36 on Δ₃ for trees: not proved. Proved sub-cases: a line price gives 27; the three-arm family gives
+  S − 36D̄ = −2Σ(differences)² + 2(x−y−z)₊² ≤ 0. A full proof is a finite copositivity check (X-trees on 9 labels modulo a
+  group of order 108, ≤ 15 variables), not done.
+- Where a further rise to 1/√2 would have to come from: CAT(0) spaces whose links contain three pairwise antipodal
+  directions with a common perpendicular family of rank ≥ 2 (cones over spherical buildings of type A₂/B₂) — what the
+  hull of Mat_μ(F₂) looks like transversally to [0, I] for μ ≥ 3. Whether those hulls are forced is open.
+- **Attainment.** A three-way identity on a 3-net must cover the whole level by 2^{o(Eλ)} terms with a cost profile whose
+  balanced value is below 1/√2. Filter: if contracting fails, no "sphere-law" family exists (it would have ρ = 1/√3 <
+  0.6124) — so an A₂-graded sphere identity would itself prove contracting; a realistic target is a squashed law with
+  value in [0.6124, 0.7071). Duality (AN A.6) does not turn a floor into pieces: it reduces attainment to evaluating
+  spectral points on non-wire tensors ("interpolation gap"); non-constructiveness is not the obstacle. My
+  Littlewood–Richardson/hive suggestion is rated dead for the same reason recoupling died earlier (isotypic projectors
+  on finite shells) [C, not proved for U(n)]. No live candidate.
+H28 status: the floor of p-nets is strictly below 1/√2 as far as anything constructed shows, for every p ≥ 3, with an
+explicit lower bound ½√(p/(p−1)). H27 (attainment) is the open problem; no candidate.
+Sent the executor a spec for a proper optimiser of the large-net limit problem (target Φ > 27/8, cap 9/2).

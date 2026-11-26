@@ -1870,3 +1870,18 @@ Why it matters if it survives: this would be an exact tensor rate, strictly abov
 contracting or ETH — unconditional given only "prices are CAT(0)" and Strassen.
 H25 [C]: f*(K_{2,3}(w)) = 3/(2+w) for all w ≥ 5/4, and = 3/√(9+w²)-type value below (the latter only under ¬contracting).
 Launched: referee on §§5–7; an executor certifying S(9/10) and (CL\*\*₀) with ivcert and ivcheck2.
+
+## 26 Nov (late, 66): the K_{2,3} note is now a K_{2,m} note
+
+`research/ports/note-k23-rate.md` revised in place (≈10,500 words). New title: "Tensor rates of the networks K_{2,m}: …".
+- Item 1 is no longer computer-assisted: Theorem D is given in full with its Lean names; sharp constants 9 (six-variable
+  form) and 8 (three-angle form); the interval material is a compressed "independent confirmation" section.
+- Weighted demand throughout (duality with the rational-w fix, weighted calibration, Theorem 5_w for w ≤ 1).
+- K_{2,m}: Lemma P with explicit matrices, Lemma H_m, the optimal configuration, averaging applied directly to
+  five-point subsets, routing/cut values, corrected table, the failed direct m-page calibration as a remark.
+- New section on the explicit protocol family (certificates to B = 32; closed form for n*(2); limit numerical).
+- **New and NOT refereed:** a uniqueness proof (zeros of Φ₁ are σ = 0 and the six corners; corners are tree metrics with
+  R ≥ 1; so equality forces W₅). My quick check of its first step: equality in Theorem D's chain forces m ∈ {0, 1}, and at
+  m = 1 the dropped cosine terms force all c = 0 — consistent. Still needs a referee before being relied on.
+- Not yet in the note: Theorem E (unconditional exact rate at heavy weights) — under review.
+- Stale lines the writer found in `lean/NOTES.md` and `k2m/notes.md` (status rows) — to tidy.

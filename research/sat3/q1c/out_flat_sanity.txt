@@ -1,0 +1,11 @@
+FLAT (all CN/variance as equalities), spec ['nodemid']
+  solve 0: status optimal, bound on sum_k b_k = 19.091883  (per merge 6.363961; |E| = 9), tri 0, 0.0s
+FLAT (all CN/variance as equalities), spec ['nodemid', 'samemid', 'edgemid']
+  solve 0: status optimal, bound on sum_k b_k = 19.091883  (per merge 6.363961; |E| = 9), tri 0, 0.3s
+FLAT (all CN/variance as equalities), spec ['nodebar']
+  solve 0: status optimal, bound on sum_k b_k = 15.588458  (per merge 5.196153; |E| = 9), tri 0, 0.0s
+FLAT (all CN/variance as equalities), spec ['nodemid', 'nodebar']
+  solve 0: status optimal, bound on sum_k b_k = 15.588457  (per merge 5.196152; |E| = 9), tri 0, 0.0s
+FLAT (all CN/variance as equalities), spec ['nodemid', 'nodebar', 'edgebar']
+  solve 0: status optimal, bound on sum_k b_k = 15.588457  (per merge 5.196152; |E| = 9), tri 0, 0.1s
+flat value 9*sqrt(3) = 15.588457268119894   cap 27/sqrt(2) = 19.09188309203678

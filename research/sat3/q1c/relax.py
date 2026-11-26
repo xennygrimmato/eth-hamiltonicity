@@ -168,7 +168,7 @@ def solve(net, extra_points, deltas=(1.0, 1.0, 1.0), verbose=True, solver='CLARA
             for z in range(N):
                 if z == i: continue
                 co = [(Dv(z, i), 1.0)] + [(Dv(z, x), -1.0 / r) for x in xs if x != z] + [(Dv(i, x), 1.0 / r) for x in xs]
-                add(co, 0.0)
+                add(co, 0.0, eq=cn_eq)
             add([(Fv(e0, i), 1.0)] + [(Fv(e0, x), -1.0 / r) for x in xs], 0.0)
     for i in range(N):
         add([(Fv(e0, i), -1.0), (Fv(other[e0], i), -1.0)], 0.0)

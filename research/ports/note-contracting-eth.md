@@ -10,12 +10,11 @@ Anthropic's paper "VP ≠ VNP over every field" [AN] proves its permanent lower 
 field k, the *flat* or the *contracting* hypothesis holds (AN Def. 2.1 = Def. D.1; Thm 2.2 = Thm D.2; Lean `thm_alt`).
 We show that the contracting case has an algorithmic consequence, which the paper does not mention.
 - **Characteristic 0.** If the contracting hypothesis holds over a field of characteristic 0, then 3-SAT on n
-  variables can be decided deterministically in time 2^{O(n^{1−δ})}·poly for some δ > 0. We give this in two ways.
-  - **Theorem R** (§3) uses only [AN] and classical facts. The form with poly(n)-size advice has been refereed. That
-    the advice can be computed, so that the algorithm is uniform, rests on an audit of [AN]'s Lean proof terms by one
-    reader (§3.6).
-  - **Theorem A** (§4) passes through OpenAI's "ports" property [EG, HC] and OpenAI's IM Theorem 7.1.
-- **Characteristic p** (§5, refereed). If the contracting hypothesis holds over a field of characteristic p, or if
+  variables can be decided deterministically in time 2^{O(n^{1−δ})}·poly for some δ > 0. **Theorem R** (§3) uses only
+  [AN] and classical facts; its form with poly(n)-size advice is refereed, and its uniform form rests on an audit of
+  [AN]'s Lean proof terms by one reader (§3.6). **Theorem A** (§4) passes through OpenAI's "ports" property [EG, HC]
+  and OpenAI's IM Theorem 7.1.
+- **Characteristic p** (§5, refereed; the contracting route conditionally on Theorem R's inputs). If the contracting hypothesis holds over a field of characteristic p, or if
   characteristic p admits ports, then 3-SAT has a randomised one-sided-error algorithm in 2^{O(n^{1−δ})}·poly, and a
   deterministic one with poly(n) advice. The probabilistic core is machine-checked in our Lean.
 
@@ -33,13 +32,12 @@ the two cases exclude each other"). Every conclusion is an implication between h
   proofs."
 - The README of OpenAI's release says it contains "manuscripts and supporting proof artifacts produced by an unnamed
   internal OpenAI model", "best understood as a form of raw research data".
-- Both labs supply Lean developments. We read parts of both, but we built neither. (One file and nine definitions of
-  [AN]'s Lean were copied verbatim into our own project and compiled there; §3.3.)
+- Both labs supply Lean developments. We read parts of both, but we built neither (one file and nine definitions of
+  [AN]'s were copied verbatim into our project and compiled there; §3.3).
 
-**Our own Lean.** Two projects, `research/ports/lean/` and `research/ports/lean-c1/` (Lean v4.36.0, Mathlib v4.36.0),
-build with no `sorry`, no `axiom`, no `native_decide`, and only the standard axioms `propext`, `Classical.choice`,
-`Quot.sound`. They are not linked to either lab's development: imported statements enter as explicit hypotheses,
-transcribed by hand and checked by reading only.
+**Our own Lean.** `research/ports/lean/` and `research/ports/lean-c1/` (Lean v4.36.0, Mathlib v4.36.0) build with no
+`sorry`, `axiom` or `native_decide`, using only `propext`, `Classical.choice`, `Quot.sound`. They are not linked to
+either lab's development: imported statements are explicit hypotheses, transcribed by hand, checked by reading.
 
 **Status tags used below.**
 
@@ -118,8 +116,8 @@ Euclidean.
 
 [AN §I.1, pp. 48–49] Data are binary trees; programs use eleven constructs, and "every construct costs one step".
 `guess` gives "two runs, with outputs nil and (nil, nil)"; `weight` multiplies the run's weight by a named generator of
-a finitely generated ring A ⊂ k; `use` appends a name to a tally. "An instance z is τ-plain if all its runs halt and every accepting run has an empty tally
-and costs at most τ. The sum sum(z) ∈ A of an instance is the sum of the weights of its accepting runs."
+a finitely generated ring A ⊂ k; `use` appends a name to a tally. "An instance z is τ-plain if all its runs halt and
+every accepting run has an empty tally and costs at most τ. The sum sum(z) ∈ A of an instance is the sum of the weights of its accepting runs."
 
 [AN Def. J.1, p. 52, verbatim]:
 > "A program G cuts (τ, s) into (τ′, s′) with P pieces in t steps if the following holds for every instance z with
@@ -129,9 +127,8 @@ and costs at most τ. The sum sum(z) ∈ A of an instance is the sum of the weig
 
 Lean: `CutD` (`NS1/Compose.lean`, l. 25). It tracks steps and pieces, **not guesses**.
 
-[AN Thm J.3, p. 53, `thm_onecut`] [AN-L]: "There are constants a₀, C, v₀ such that the following holds with
-Λ = (lg v)^C, for all v ≥ v₀, all τ ≥ v^{a₀} with 4 lg τ ≤ (lg v)², all s ≤ τ and all 2 ≤ k ≤ v^64. Some program of
-size at most v^{a₀} cuts (τ, s) into (τΛ/k, (s/k + τ/v^256)Λ) with at most kΛ pieces, in (s + τk/v^256)Λ steps."
+[AN Thm J.3, p. 53, `thm_onecut`] [AN-L], the one-cut theorem: with Λ = (lg v)^C, for 2 ≤ k ≤ v^64 some program of size
+≤ v^{a₀} "cuts (τ, s) into (τΛ/k, (s/k + τ/v^256)Λ) with at most kΛ pieces, in (s + τk/v^256)Λ steps".
 
 [AN Thm J.4, pp. 54–55, `thm_cut`] [AN-L]: "There are a multiple H ≥ 272 of 16 and constants C_cut, v₀ such that the
 following holds whenever v ≥ v₀ and α satisfy (lg v)^{C_cut α} ≤ v. For all τ and s with v^H ≤ τ ≤ v^{Hα} and
@@ -195,17 +192,16 @@ evaluation of Lemma 2 are machine-checked (`ThmR.lean`, `PrunedTree.lean`), with
 hypotheses.
 
 > **Remark R′ (non-uniform form, refereed fallback).** Without the audit, (a) and (b) hold for an algorithm that also
-> receives the advice string G_v of length poly(n), respectively poly(τ). This refutes nuWETH.
+> receives the advice string G_v of length poly(n), respectively poly(τ); so contracting contradicts nuWETH.
 
-For H = 272 the bound on δ would be about 0.121, but H is not explicit. (a) concerns one τ-plain program in [AN]'s
+At H = 272, δ < 0.121 (H is not explicit). (a) concerns one τ-plain program in [AN]'s
 model and needs no sparsification; a translation to multitape Turing machines with linear overhead looks routine but
 is [ours], not written out. For counting 3-SAT solutions see §9, item 4.
 
 ### 3.2 Why the stated J.4 is not enough [ours-R]
 
-J.4 bounds the lister only by τ/v^24 *steps*, and requires s·v^48 ≤ τ. An accepting run may therefore contain up to
-τ/v^24 ≥ s·v^24 guesses, and enumerating the runs costs 2^{≥ s·v^24}; for 3-SAT, s ≥ n, so this is worse than brute
-force. What is missing is a bound on the number of `guess` constructs.
+J.4 bounds the lister only by τ/v^24 *steps*, with s·v^48 ≤ τ, so an accepting run may make τ/v^24 ≥ s·v^24 guesses;
+enumerating runs is then worse than brute force. What is missing is a bound on the number of `guess` constructs.
 
 ### 3.3 The guess-count lemma
 
@@ -252,9 +248,8 @@ using 2r(4Λ³)^rΛ³ ≤ v, an instance of the J.4 proof's "All these powers of
 The last two inequalities are `lemma1_per_cut` and `lemma1_composed` in `ThmR.lean` (+L). They are stated with Λ²; the
 Λ³ form is the instance Λ ↦ Λ^{3/2}, since the hypothesis P_iτ_i ≤ τ(4Λ²)^i only weakens.
 
-**Robustness of the exponent.** Only "total guesses ≤ τ/v^{48+g} with g > 0" matters (§3.5). 256 and 300 are in the
-paper; 235 and 236 are our inference. Using only the *statement* of J.3, and granting that its s-term is guess-free,
-the per-cut guesses are ≤ τkΛ/v^256, giving g = 143 and δ < 143/(5H+143).
+**Robustness.** Only "total guesses ≤ τ/v^{48+g}, g > 0" matters (§3.5); 256 and 300 are in the paper, 235 and 236 our
+inference. From the *statement* of J.3 alone (its s-term being guess-free), g = 143 and δ < 143/(5H+143).
 
 ### 3.4 From the guess count to deterministic time
 
@@ -262,15 +257,12 @@ the per-cut guesses are ≤ τkΛ/v^256, giving g = 143 and δ < 143/(5H+143).
 > v^H ≤ τ′ ≤ v^{2H}, and let z be τ′-plain with |z|·v^48 ≤ τ′. Given G = G_v of J.4 (with α = 2), sum(z) can be computed
 > deterministically with 2^{O(τ′/v^235 + v^H)}·poly(τ′) operations in A.
 
-*Proof.*
-1. **Enumerate the run tree of G on z, pruned.** Explore depth-first; cut off any branch once it exceeds t = τ′/v^24
-   steps or g = τ′/v^235 guesses. Every prefix of an accepting run survives (J.4 and Lemma 1); no bound on
-   non-accepting runs is needed (the referee's fix). `guess` is the only branching and is binary (p. 48), so the
-   pruned tree has ≤ 2^{g+1} leaves and the enumeration takes 2^{g+1}·poly(τ′).
-2. **Collect the accepting runs.** Each gives a weight w ∈ A (here w = 1) and a list of ≤ τ′v²/v^H pieces y.
-3. **Evaluate the pieces.** Each is v^H-plain: enumerate its run tree cut off at v^H steps (≤ 2^{v^H} leaves) and sum
-   the weights of accepting runs. The cut-off is exact.
-4. **Output** Σ_runs w·Π_y sum(y) = sum(z) by Def. J.1 (Lean: `pv θ z = wsum Q (pvs θ)` in `CutD`). ∎
+*Proof.* (1) Enumerate the run tree of G on z depth-first, cutting off any branch beyond t = τ′/v^24 steps or
+g = τ′/v^235 guesses. Every prefix of an accepting run survives (J.4, Lemma 1); no bound on non-accepting runs is
+needed (the referee's fix). `guess` is the only, binary, branching, so this costs 2^{g+1}·poly(τ′). (2) Each accepting
+run gives a weight w ∈ A and ≤ τ′v²/v^H pieces y, each v^H-plain. (3) Evaluate each piece by enumerating its run tree
+cut off at v^H steps (exact). (4) Output Σ_runs w·Π_y sum(y) = sum(z) (Def. J.1; Lean `pv θ z = wsum Q (pvs θ)` in
+`CutD`). ∎
 
 `PrunedTree.lean` proves, for abstract run trees with binary guess nodes and ring weights, that pruning at g guesses
 and t steps leaves ≤ 2^g leaves (`leaves_prune_le`, no hypothesis) and preserves the sum whenever every *accepting*
@@ -335,12 +327,12 @@ not needed. Its findings:
 3. **Nothing depends on the input z**: `CutD` is a statement about a fixed G, `∀ z, z.size ≤ s → …`.
 4. **The contracting hypothesis enters only through `exists_laws`**, a finite law table independent of n and v.
 
-**The constant table:** h, θ and generators of A; the laws, with a fixed enumeration; the universal automaton;
-finitely many evaluator programs; the integers a, e, C_p, v₁, a₀, C, H, C₀, v₀; the images ψ(θ). None depends on n.
-Some come from ineffective existence proofs (Strassen duality); that affects explicitness, not uniformity.
+**The constant table** (h, θ, generators of A; the laws with a fixed enumeration; the universal automaton; finitely
+many evaluator programs; the integers a, e, C_p, v₁, a₀, C, H, C₀, v₀; ψ(θ)) does not depend on n. Some entries come
+from ineffective existence proofs (Strassen duality), which affects explicitness, not uniformity.
 
 **Caveat.** "The proofs remain valid for any spec-satisfying choice" is a meta-level parametricity argument
-(`Classical.choose` is opaque, so a proof can use a chosen object only through its spec), not a Lean theorem. A
+(a proof can use a `Classical.choose` object only through its spec), not a Lean theorem. A
 Lean-checked uniform statement needs a mechanical refactoring (§9, item 1), during which no proof may unfold a specific
 enumeration (`Fintype.equivFin`, `Fintype.ofFinite`) beyond its spec. The paper's prose agrees (H.2: "the groups, the
 words, the cosets and the maps χ ↦ χ̂ are constants of the program").
@@ -352,7 +344,7 @@ words, the cosets and the maps χ ↦ χ̂ are constants of the program").
 > **Theorem A** [ours-R, from AN-L and OA-L; +L in characteristic 0]. Let k be a field of characteristic χ, and suppose
 > the contracting hypothesis holds over k. Then χ admits ports (EG Def. 11.1). More precisely, for every sufficiently
 > large multiple h of the constant u of [AN] F.6, the Cayley graph G_h of U_h(F₂) with generators x_j = 1 + E_{j,j+1}
-> (0 ≤ j < h−1) is a single-graph certificate in the sense of [HC] Thm 4.2, with degree 2(h−1) after padding.
+> (0 ≤ j < h−1) is a single-graph certificate in the sense of [HC] Thm 4.2 (degree ≤ 2(h−1) after padding).
 >
 > **Corollary A′.** If k has characteristic 0, then by [IM] Thm 7.1 there is a uniform deterministic algorithm deciding
 > 3-SAT on v variables in 2^{O(v^{1−δ})}·poly.
@@ -365,11 +357,10 @@ words, the cosets and the maps χ ↦ χ̂ are constants of the program").
 2. **Every finite configuration in X_χ is an [AN] price over k** [ours-R, review-theoremAB §1]. On a finite set an
    [EG]-spectral space has metric δ(S)·d_F for a Strassen point F over a field of characteristic χ. Restrict F to the
    prime field, lift to k by [EG] Lemma 2.3 [OA] if needed, and push forward along the placement (§2.1).
-3. **Translation.** x_j is an involution, so G_h is (h−1)-regular on n = 2^{h(h−1)/2} vertices. The left side of F.6 is
-   V(x), because (a, ga) is a uniform independent pair; the right side is C₀(h−1)·E_P(x). So V ≤ C₀(h−1)·E_P for every
-   placement into every member of X_χ.
-4. **[HC Thm 4.2]** [OA-L]. If X_χ had no ports, then C₀(h−1) ≥ c·log n/log h = c·h(h−1)/(2 log h). This is false once
-   h/log h > 2C₀/c. So X_χ has ports, and by [HC §2.2] χ admits ports. ∎
+3. **Translation.** G_h is (h−1)-regular on n = 2^{h(h−1)/2} vertices; F.6 reads V ≤ C₀(h−1)·E_P for every placement
+   into every member of X_χ.
+4. **[HC Thm 4.2]** [OA-L]. If X_χ had no ports, then C₀(h−1) ≥ c·h(h−1)/(2 log h), false once h/log h > 2C₀/c. So
+   X_χ has ports, and by [HC §2.2] χ admits ports. ∎
 
 **Lean form (characteristic 0).** Citing `exists_logarithmic_placement` instead of the paper's Thm 4.2 needs:
 - **Padding** with 2^e − (h−1) loops per vertex, e = ⌊log₂(h−1)⌋ + 1 (the draft's ⌈log₂ h⌉ was meant). F.6 then gives
@@ -417,7 +408,7 @@ constants lie in F_p or a fixed finite extension of F_p, which is immaterial.
 programs are exact sums of products of generators; the referee found no field division in §§G–J. In characteristic p,
 A/𝔪 = F_q is a finite field (Zariski) and ψ(sum(z)) is the weighted count mod p, with constants ψ(θ) in F_q.
 
-Neither counter needs a 3-CNF, so a hash test is admissible.
+Neither counter needs a 3-CNF: a hash test is admissible.
 
 ### 5.2 Isolation in the power-saving regime [ours-R; core +L]
 
@@ -425,9 +416,9 @@ Neither counter needs a 3-CNF, so a hash test is admissible.
 h_{a,b}(x) − b lists the coefficients of t^{n−1}, …, t^{n+k−2} of a(t)·x(t) in F₂[t]: **one polynomial
 multiplication over F₂**.
 - **Pairwise independence** (Lemma C1): for x ≠ y, (h(x), h(y)) is uniform. In fact T_a z is uniform for every k ≥ 1.
-- **Circuit** (Lemma C2): for fixed a, x ↦ T_a x is F₂-linear. Schönhage's ternary method (or Cantor–Kaltofen) is a
-  division-free bilinear program over F₂; with one operand fixed it becomes an XOR-only circuit of size
-  O(n log n log log n), built in poly(n) time. Every wire is a function of x, so the attached gates are parsimonious.
+- **Circuit** (Lemma C2): Schönhage's ternary method (or Cantor–Kaltofen) is a division-free bilinear program over
+  F₂; with a fixed it is an XOR-only circuit of size O(n log n log log n), built in poly(n) time. Every wire is a
+  function of x, so the attached gates are parsimonious.
 - **Valiant–Vazirani** (Lemma C3): if 2^{k−2} ≤ |S| ≤ 2^{k−1}, then Pr[|S ∩ h^{−1}(0)| = 1] ≥ q(1−q) ≥ 3/16,
   q = |S|/2^k. A good k exists in {2, …, n+1}, so for uniform k the success probability is ≥ 3/(16n), and 16n rounds
   fail with probability ≤ e^{−3}.
@@ -444,7 +435,7 @@ width-3 clauses per gate). #F′ = |S_F ∩ h^{−1}(0)| by parsimony, v′ = n 
 
 **Derandomisation** [ours-R]. *Non-uniform:* there are ≤ 2^{8v³} 3-CNFs on v variables and
 (1 − 3/(16v))^{64v⁴} < 2^{−8v³}, so one list of 64v⁴ triples (k, a, b), O(v⁵) bits, isolates for all of them; every
-randomised algorithm below becomes deterministic with poly(v) advice, refuting nuWETH. *Uniform, under the
+randomised algorithm below becomes deterministic with poly(v) advice, contradicting nuWETH. *Uniform, under the
 Impagliazzo–Wigderson hypothesis:* poly(T) seeds fool a one-sided test of time T, and the class 2^{O(v^{1−δ})} is
 closed under polynomials, so nothing is lost in δ. *Unconditional and uniform:* no route known (an assessment).
 
@@ -468,14 +459,12 @@ closed under polynomials, so nothing is lost in δ. *Unconditional and uniform:*
 > with 0 < α < 1/4, (1+4α)(1−η_p) < 1, and η_p the η of HC 13.1 for characteristic p. This is the same *formula* for δ
 > as IM 7.1, not the same δ.
 
-*Proof outline.* Sparsify as in IM 7.1. Repeat 16v times: draw (k, a, b) once for all leaves; for each leaf F_j build
-IM 7.1's bit network and attach natively, to one extra copy of each variable, the XOR circuit of Lemma C2: one ternary
-table per gate, equality trees at fan-outs (degree ≤ 3), a and b pinned or folded into the gates, outputs pinned to 0.
-The added volume O(v log v log log v) is below v^{1+4α}. The contraction over F_p is
-|{x : F_j(x), h(x) = 0}| mod p; compute it by HC 13.1 and accept if some leaf gives a nonzero value. **Leaves are tested
-separately**, never summed: every leaf implies F ("Both children imply the parent", IM), so on the isolation event
-every leaf count is 0 or 1 and the leaf containing the solution gives 1. Soundness is unconditional. Time:
-16v·2^{O(v^{1−α} log v)}·2^{O(v^{(1+4α)(1−η_p)})}. ∎
+*Proof outline.* Sparsify as in IM 7.1. Repeat 16v times, with one draw (k, a, b) for all leaves: attach natively to
+IM 7.1's bit network of each leaf F_j, on an extra copy of each variable, the XOR circuit of Lemma C2 (one ternary table
+per gate, equality trees at fan-outs, degree ≤ 3, outputs pinned to 0); the added volume O(v log v log log v) is below
+v^{1+4α}. The contraction is |{x : F_j(x), h(x) = 0}| mod p, computed by HC 13.1; accept if some leaf gives a nonzero
+value. **Leaves are tested separately**: every leaf implies F, so on the isolation event every leaf count is 0 or 1
+and the leaf containing the solution gives 1. Soundness is unconditional. ∎
 
 > **Theorem C1-AN** [ours-R, conditional on Theorem R's inputs]. If the contracting hypothesis holds over a field k of
 > characteristic p, the same conclusion holds for any δ < 187/(5H_k+187), H_k the constant of J.4 for k.
@@ -484,22 +473,20 @@ every leaf count is 0 or 1 and the leaf containing the solution gives 1. Soundne
 values in a persistent balanced tree (O(log G) steps per gate), and fails unless all outputs are 0. With the
 **padding fix e = 0**, sum = |{x : F_j(x), h(x) = 0}|·1_A exactly. τ₀ and |z| grow by O(n log² n log log n), below L.
 Then evaluate by Theorem R(a) and ψ: A → F_q, test leaves separately as above. ∎
-- Without the padding fix the route fails at p = 2: sum = 2^e·#SAT ≡ 0 whenever n is not a power of 2. For odd p, 2^e
-  is a unit.
-- C1-AN inherits Theorem R's open points: uniformity rests on the audit (§3.6), and the per-cut part of Lemma 1 is a
-  reading. Its non-uniform form (G_v and the hash list as advice) refutes nuWETH.
+Without the padding fix the route fails at p = 2 (sum = 2^e·#SAT ≡ 0 unless n is a power of 2). C1-AN inherits
+Theorem R's open points (uniformity by audit; per-cut part of Lemma 1 a reading); its non-uniform form contradicts nuWETH.
 
 **Deterministic variants** (review-c1 §7 and S4(b)). Without the hash, the same networks or programs solve
-Unique-3-SAT deterministically (overlapping leaves are harmless), refuting UWETH. Exact counting mod p needs a
+Unique-3-SAT deterministically (overlapping leaves are harmless), contradicting UWETH. Exact counting mod p needs a
 **disjoint** sparsification: the petal child also adds the negated centre as unit clauses; the referee re-checked IM's
 depth and leaf count with this change. With it, ports in characteristic p, or contracting over a field of
-characteristic p (with the padding fix), give #3-SAT mod p deterministically, refuting ⊕_pWETH.
+characteristic p (with the padding fix), give #3-SAT mod p deterministically, contradicting ⊕_pWETH.
 
 **Correction to an earlier review.** review-theoremR passed a "#3-SAT mod p" corollary of our working notes. As written
 it was wrong: at p = 2 the factor 2^e kills the count, and overlapping leaves do not add up to #F. With both fixes it
 is correct (review-c1 §5).
 
-> **Corollary 1′** [ours-R]. Under rWETH, or under nuWETH: no characteristic admits ports, and the contracting
+> **Corollary 1′** [ours; composes refereed steps]. Under rWETH, or under nuWETH: no characteristic admits ports, and the contracting
 > hypothesis fails over every field; hence, by `thm_alt`, the flat hypothesis holds over every field.
 
 *Proof.* Ports in characteristic p contradict rWETH by C1-OA (nuWETH by derandomisation); ports in characteristic 0
@@ -522,17 +509,12 @@ without OpenAI's results, contradicts rWETH by C1-AN (characteristic p) and Theo
 > is M5 (via Theorem R, or via Theorem A with [IM] 7.1; under nuWETH via Remark R′). Under rWETH or nuWETH the same
 > holds over every field (Corollary 1′).
 
-*Proof.*
-- **(i) ⇐.** If ρ_μ is a price, D(r)² = r·D(1)², so D(μ) = √μ·D(1) > s·D(1) for every s < √μ.
-- **(i) ⇒.** Steps 2–7 of the proof of D.2 (pp. 30–31). Step 2 uses failure at this μ only: "As the contracting
-  hypothesis fails, for every s with 1 ≤ s < √μ there is a price on Mat_μ(F₂) with D(μ) > sD(1)". Step 5 needs μ ≥ 3.
-  In Lean, `thm_alt_rank_price` assumes the global ¬Contracting K, but the proof of `thm_alt_extremal` uses it only
-  through `hK ⟨μ, √t, …⟩` at the given μ (`Alternative.lean`, l. 306ff.). So the per-μ form is read from the proofs,
-  not stated.
-- **(ii), (iii).** Pull-back along an injection preserves prices [AN A.3]. M5 ⊂ Mat₂(F₂) (ten ranks recomputed), and
-  a ↦ diag(a, 0) maps Mat_μ into Mat_{μ′} preserving rk(a − b). So "M5 not a price" ⇒ "ρ₂ not a price" ⇒ "ρ_{μ′} not a
-  price for all μ′ ≥ 2". By (i) at μ′ = 3, contracting holds over ℚ.
-- **(iv)** is the contrapositive, with Corollary 1′ for the last sentence. ∎
+*Proof.* (i) ⇐: if ρ_μ is a price, D(μ) = √μ·D(1) > s·D(1) for every s < √μ. (i) ⇒: Steps 2–7 of the proof of D.2
+(pp. 30–31); Step 2 uses failure at this μ only, and Step 5 needs μ ≥ 3. In Lean, `thm_alt_rank_price` assumes the
+global ¬Contracting K, but the proof of `thm_alt_extremal` uses it only through `hK ⟨μ, √t, …⟩` at the given μ
+(`Alternative.lean`, l. 306ff.), so the per-μ form is read from the proofs, not stated. (ii), (iii): pull-backs along
+injections preserve prices [AN A.3]; M5 ⊂ Mat₂(F₂) (ten ranks recomputed) and a ↦ diag(a, 0) preserves rk(a − b), so
+"M5 not a price" ⇒ "ρ_{μ′} not a price for all μ′ ≥ 2", and (i) at μ′ = 3 applies. (iv) is the contrapositive. ∎
 
 **[AN] price, not Strassen point (referee fix).** (iv) asserts that ρ_μ is an [AN] price: a limit of c·d_φ with φ
 multiplicative and cover-subadditive. It does *not* assert that ρ_μ is the wire metric of a point of Strassen's
@@ -559,8 +541,8 @@ referee-checked]; conditions involving non-wire tensors, and [AN]'s crossing ine
 >   gives (a) without the audit.
 > - **via Theorem A and [IM] 7.1:** uses OpenAI's results, but not [EG] Thm 1.2.
 
-*Proof.* Contrapositive of Theorem R, respectively of Corollary A′, applied to k itself. Both hypotheses are per field
-(D.1: "two hypotheses on the field k"), so no transfer between fields is needed. ∎ [ours-R]
+*Proof.* Contrapositive of Theorem R, respectively Corollary A′, applied to k itself; both hypotheses are per field
+(D.1), so no transfer between fields is needed. ∎ [ours-R]
 
 Corollaries 1 and 1′ are conditional proofs of [AN]'s flat hypothesis. They do not use [EG] Thm 1.2 ("Over every field
 there is a spectral flat of every positive finite dimension"), which would give it unconditionally via §2.1.
@@ -569,13 +551,13 @@ there is a spectral flat of every positive finite dimension"), which would give 
 
 | Cell | Possible? | 3-SAT consequence | Permanent / HC bounds that apply |
 |---|---|---|---|
-| contracting, ports | Not excluded by anything either lab proves [ours-R, review-AB §6]. Contradicts Weak ETH (χ = 0) and rWETH (any χ). | χ = 0: deterministic power-saving decision (Theorem R; Cor. A′). χ = p: randomised one-sided (C1-AN, C1-OA) | [AN] K.7: 2^{c(log m)²/log log m}. [HC] 12.2 [OA]: L^{[N]}_F(HC_N) > 2^{N^ε} |
+| contracting, ports | Not excluded by either lab [ours-R, review-AB §6]; contradicts Weak ETH (χ = 0), rWETH (any χ) | χ = 0: deterministic (Thm R; Cor. A′); χ = p: randomised (C1-AN, C1-OA) | [AN] K.7: 2^{c(log m)²/log log m}; [HC] 12.2 [OA]: 2^{N^ε} |
 | contracting, no ports | **Impossible** (Theorem A) | — | — |
-| not contracting, ports | Not excluded | χ = 0: via [IM] 7.1 only. χ = p: C1-OA only | [AN]: flat-case bound E.11. [HC] 12.2 [OA] |
-| not contracting, no ports | Not excluded. Forced by Weak ETH (χ = 0) and by rWETH (any χ) | none from these sources | [AN] E.11 / Thm 1.1: 2^{c(log m)^{4/3}}. [HC] Thm 1.1 [OA]: exp(c(log N)²/(log log N)²) |
+| not contracting, ports | Not excluded | χ = 0: [IM] 7.1; χ = p: C1-OA | [AN] E.11; [HC] 12.2 [OA] |
+| not contracting, no ports | Not excluded; forced by Weak ETH (χ = 0), rWETH (any χ) | none | [AN] Thm 1.1: 2^{c(log m)^{4/3}}; [HC] Thm 1.1 [OA]: exp(c(log N)²/(log log N)²) |
 
-The flat hypothesis is *not* a column: [AN] does not show flat and contracting exclusive, and Euclidean configurations
-satisfy the contracting inequality (D(μ)²/D(1)² < 2 for Euclidean pull-backs; ours, c1 §4).
+The flat hypothesis is *not* a column: flat and contracting are not shown exclusive, and Euclidean pull-backs satisfy
+the contracting inequality (D(μ)²/D(1)² < 2; ours, c1 §4).
 
 **The two labs' permanent bounds** are unconditional claims; nothing here changes them. [AN] Thm 1.1,
 2^{c(log m)^{4/3}}, comes from the flat case ("The exponent 1/3 comes from the flat case alone", p. 59); under Weak ETH
@@ -616,13 +598,11 @@ We built neither lab's Lean. "Lean-backed" means a Lean statement exists per the
 | F.6 Poincaré on U_h | AN p. 40 | `thm_poincare` | statement read; scalar case consistent with numerics (review-AB §3) |
 | G.2 laws; A finitely generated; J.3, J.4 | AN pp. 43, 53–55 | `exists_laws`, `exists_setting`, `thm_onecut`, `thm_cut` | statements and proofs read; guess sites read; machine file copied (§3.3) |
 | A.3 pull-backs, A.6 duality | AN | yes (per AN §3) | statements read |
-| EG Def. 11.1, Lemma 2.3 | EG | `HasWireExpanders`, — | Lemma 2.3 proof read by referee |
-| HC Thm 4.2 | HC | `exists_logarithmic_placement` (char 0; `scalar`) | proof re-read by referee |
-| HC Thm 13.1 | HC | not checked | statement and proof re-read in review-c1 §1, incl. char p |
+| EG Def. 11.1, Lemma 2.3; HC Thm 4.2 | EG, HC | `HasWireExpanders`; `exists_logarithmic_placement` (char 0) | proofs of 2.3 and 4.2 re-read by referee |
+| HC Thm 13.1; MM Lemma 4.1 | HC, MM | not checked | re-read in review-c1 §§1, 7, incl. char p |
 | IM Thm 7.1 | IM | `middle_count_bridge` | **not reviewed as a whole**; sparsification checked |
-| MM Lemma 4.1 | MM | — | statement and proof read in review-c1 §7 (only for §7) |
-| HC Thm 1.1, 12.2 | HC | 1.1 with this exponent "remains unformalized" per OA docs | quoted only |
-| Sparsification (both forms); Zariski; VV; fast F₂[t] multiplication | classical; IM §7 | — | counting re-checked; disjoint form refereed |
+| HC Thm 1.1, 12.2 | HC | 1.1 "remains unformalized" per OA docs | quoted only |
+| Sparsification (both forms), Zariski, VV, fast F₂[t] multiplication | classical | — | counting re-checked; disjoint form refereed |
 
 **Our own steps.**
 
@@ -635,7 +615,7 @@ We built neither lab's Lean. "Lean-backed" means a Lean statement exists per the
 | Turing-machine reading of R(a) | no | — |
 | Theorem A | yes (review-AB §§1–3, 9) | `ThmA.lean`, `ThmAArith.lean` (char 0, four transcribed hypotheses; size condition supersedes review-AB §3) |
 | §5 (C1-OA, C1-AN, C4, C5, derandomisation, disjoint branching) | yes (review-c1), with its fixes | `lean-c1` (§5.2) |
-| Theorem B; Corollaries 1, 1′; case table | yes (review-AB §§5, 7, 9; review-R §6); 1′ composes refereed steps | — |
+| Theorem B; Corollary 1; case table | yes (review-AB §§5, 7, 9; review-R §6); Cor. 1′ only composes refereed steps | — |
 
 ---
 
@@ -645,51 +625,43 @@ We built neither lab's Lean. "Lean-backed" means a Lean statement exists per the
    `eE`, route words, `ch`, `Pl`, uses of `Fintype.equivFin`, the SLP) into parameters or computable `def`s, and restate
    `thm_onecut` as `CutD … (Gprog v τ s k)` with `Gprog` an explicit function of the constant table. Mechanical
    according to the audit, not done. A second reader of the audit would also help.
-2. **Machine-checking Lemma 1 in full.** Done: guess-annotated semantics on a verbatim copy of [AN]'s machine file,
-   per-construct bounds, `pickB`, `compC` additivity, the composition arithmetic, the pruned evaluator. Remaining:
-   `bitsB`; the one-cut bound for `dealProg` (estimated 1.5–3k lines of overlay); the restatement of
-   `thm_onecut_program`, `thm_cut_compose` and `thm_cut` with g ≤ τ/v^235 (needs the 261-file closure of [AN]'s
-   development). All of this needs [AN]'s Lean built.
-3. **[IM] 7.1 as a whole** is needed for the route via Theorem A in characteristic 0; we have reviewed HC 13.1 but not
-   the rest of IM 7.1's proof.
+2. **Machine-checking Lemma 1 in full**: the remaining items of §3.3 (`bitsB`, the bound for `dealProg`, the
+   restatement of `thm_cut` with g ≤ τ/v^235); they need [AN]'s Lean built.
+3. **[IM] 7.1 as a whole**, needed for the route via Theorem A in characteristic 0; HC 13.1 has been re-read, the rest
+   of IM 7.1's proof has not.
 4. **Counting in the number of variables.** With the disjoint sparsification (§5.3), Theorem R(a) gives #3-SAT exactly
-   in characteristic 0 and #3-SAT mod p in characteristic p, in 2^{O(n^{1−δ})}. The characteristic-p form is refereed
-   (review-c1); the characteristic-0 form combines refereed steps but has not itself been refereed [ours].
-5. **Unconditional uniform derandomisation** of §5: no route known.
-6. **Omitted.** A corollary about the optimality of our own decomposition engine under Weak ETH ("Corollary 2" of the
-   working notes) rests on unchecked internal results; not claimed. The statement that the ports algorithm "obeys all
-   flat floors" is heuristic and not used.
-7. **Explicit constants.** H, u, C₀, η_p and the laws are not explicit; nor is δ.
+   in characteristic 0 and #3-SAT mod p in characteristic p, in 2^{O(n^{1−δ})}. The characteristic-p form is refereed;
+   the characteristic-0 form combines refereed steps, unrefereed as such [ours].
+5. **Omitted.** A corollary on the optimality of our own decomposition engine ("Corollary 2" of the working notes)
+   rests on unchecked internal results; not claimed. "The ports algorithm obeys all flat floors" is heuristic, not used.
+6. **Not explicit:** H, u, C₀, η_p, the laws, δ; and no unconditional uniform derandomisation of §5 is known.
 
 ---
 
 ## 10. Outlook (unrefereed in full; not claimed)
 
-**Engine gap** (Theorem D of `c1d1/notes.md`). For "tower engines" of the type of [AN]'s algorithm (levels with p
-fixed merges, node growth K ↦ K^β, configurations from a finite list), if the certified log-exponent α′ satisfies
+**Engine gap** (Theorem D of `c1d1/notes.md`). For tower engines of the type of [AN]'s algorithm (levels with p fixed
+merges, node growth K ↦ K^β, configurations from a finite list) over k: if the certified log-exponent satisfies
 **α′ > ½·log_β p** along infinitely many n, then the flat hypothesis fails over k and contracting holds over k̄, with the
-consequences of Theorem R and §5. For p = β = 2 the threshold is 1/2.
-- Status: the referee of review-c1 §8 found the averaging step correct; it needs the condition E_C ≥ 1 (raw bits per
-  copy = E_C·λ) stated, and one side remark ("if L stays bounded then α′ = 0") replaced. The win-win theorem it relies
-  on was not re-checked there. The statement concerns certified exponents, not running times.
-- Grey zone: deficits below the level floor that tend to 0 can accumulate over the ≤ log log n levels up to a factor
-  (log n)^{o(1)}, consistently with the flat hypothesis as stated (prices are limits, with no rate). So the sharp form
-  "certified time 2^{o(n/√log n)} forces ¬flat" does not follow.
-- If OpenAI's flats theorem (EG 1.2) holds, the hypothesis α′ > ½·log_β p never holds and the theorem is vacuous; what
-  remains is an optimality statement for the class.
+consequences of Theorem R and §5 (threshold 1/2 for p = β = 2).
+- Status: review-c1 §8 found the averaging step correct; it needs E_C ≥ 1 (raw bits per copy = E_C·λ) stated, and one
+  side remark replaced. The win-win theorem it relies on was not re-checked there. It concerns certified exponents, not
+  running times.
+- Grey zone: sub-constant deficits below the level floor can accumulate over the ≤ log log n levels up to a factor
+  (log n)^{o(1)}, consistently with the flat hypothesis as stated, so "certified time 2^{o(n/√log n)} forces ¬flat"
+  does not follow.
+- If OpenAI's flats theorem (EG 1.2) holds, the hypothesis never holds and the theorem is vacuous.
 
 ---
 
 ## Changes in v2
 
 - **New §5 (characteristic p),** from review-c1: C1-OA, C1-AN, Lemma C4, Corollary C5, derandomisation, disjoint
-  sparsification, Corollary 1′, the hypotheses table of §1. Fixes: "same formula for δ"; constants in a fixed finite
-  extension of F_p; padding fix e = 0 needed at p = 2; counting needs the disjoint sparsification; the earlier review's
-  pass of "#3-SAT mod p" recorded as an error. Machine-checked core (`lean-c1`) stated with what it does not cover.
+  sparsification, Corollary 1′, the hypotheses table of §1, with the report's fixes; `lean-c1` and its limits.
 - **Lean status.** Both our projects build with no `sorry` and only standard axioms (the draft called `ThmR.lean`
   unconfirmed). Added: v := ⌈τ^{1/(H+187)}⌉, τ′ := v^{H+235}; the side conditions H > 112.2, v₀ depending on C_cut,
   H ≥ 235; the guess-count overlay and what remains; the findings on `Does`/`Gives` and accepting runs; the size
   condition for Theorem A (thresholds 491 and 480 300); e = ⌊log₂(h−1)⌋ + 1. The J.3 condition 4 lg τ′ ≤ (lg v)² in the
   check of R(a) was replaced by J.4's own side condition.
 - **§3.6** states the audit's final verdict. **K_{2,3}** and **Theorem M1**: one paragraph each in §7.
-  **Theorem D**: outlook only, corrected. §§2 and 8 shortened; Theorem B is now §6.
+  **Theorem D**: outlook only. §§2, 8 shortened; Theorem B is now §6.

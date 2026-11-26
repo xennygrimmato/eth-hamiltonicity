@@ -1340,3 +1340,20 @@ the origin and the six corners.
 MPFI), forbidden from reading ivcert's arithmetic; verifies coverage from the box list, re-proves every leaf, and
 handles the equality point by its own argument.
 Theorem K status: [V] by one referee + interval certificate; trust base as listed in the review.
+
+## 26 Nov (late, 33): note on Theorem K written
+
+`research/ports/note-k23-rate.md` (≈7,800 words): statement, Strassen duality for this instance, upper bound (hull
+lemma), lower bound (book reduction, full calibration, (CL\*) with the covering argument and corner lemma written
+out), consequences, small exact facts, status table, open problems. All referee fixes applied.
+Writer's own checks: `ivcheck` on all 12 certificates; an independent Python test of Prop. 3.2 on 20 000 books (the
+subgradient choice at hubs on the spine matters — stated in the note); Hessian Q = (3/4)Id + (5/4)J by hand.
+Choices it made that I accept: item 1 uses thm_cn packaged as Prop. C.3 and then C.4(a) (not C.4(a) alone); item 3
+split by uniform vs non-uniform Weak ETH; border protocols claimed only for approximation degree 2^{o(n)}; "inf" over
+Strassen's spectrum, "min" over AN prices; protocol search scope stated as supply dimension ≤ 4 (the notebook has no
+logs at 5–6, contrary to what I told it).
+Inconsistencies it found in our sources, to tidy: hull notes status rows still call (CL\*) numerical; Lemma H's
+condition; "min"/"some point" wording; the e3 notebook mentions runs "still in progress" that are not listed;
+`HullHyps.prop_space` in Hull.lean adds `QuadIneq` to Anthropic's conclusion (harmless, follows from C.4(b)).
+I edited one sentence that could read as a literature claim ("earlier known" → "an earlier step of this project").
+Novelty against the literature on entanglement/tensor network coding has NOT been checked.

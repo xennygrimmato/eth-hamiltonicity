@@ -43,6 +43,7 @@ python python/f2sat.py                                 # exact F_2 restriction b
 | `restrict` | `contract_all` (greedy network contraction), `apply_maps`, `environment`, `als_multistart` (parallel ALS with decaying Tikhonov regularisation, gauge balancing, residual and norm histories), `lm_refine` (Levenberg–Marquardt on all maps jointly, real case), `residual_dense` (independent check through the dense S), `cut_check` / `cut_table` (flattening-rank necessary conditions). |
 | `restrict` (border) | `border_multistart(net, T, K, h, opts)`: maps polynomial in ε of degree K, target ε^h T; `border_check` evaluates (⊗A(ε))S/ε^h through the dense S at given ε (the only trustworthy test, see Caveats). |
 | `rankplace` | placements V(G) → Mat_μ(F₂) (μ ≤ 8, bit-packed), rank-metric Poincaré ratios vs cuts and λ₂; see the section below. |
+| `piecefloor` | the price method for pieces (spec S3, `research/sat3/s3-experiments.md`): designs (crossing, K4 = AG(2,2), Delta_3, full AG(2,q) p-nets), b_m = (L − H_m)/δ_m and the merge-symmetrised value; placements in Mat_μ(F₂) with √rank (exact legs and exhaustive hub orbits for μ ≤ 3, annealing for μ ≤ 8); finite configurations in spider^j × ℝ^k; far-leg (Busemann) limits in pod products and general tree products; the one-tree reduction (Γ = Σ s_e²/D̄, symmetrised value, Cauchy–Schwarz bound); the large-net limit problem over a quotient group Q (`LimitNet`, exhaustive {0,1}-pod labellings and general-tree annealing). |
 | `k23` | the K_{2,3} instance: parties u1,u2,v1,v2,v3 = 0..4, weights, `w5(l,h)`. |
 | `python/f2sat.py` | exact F_2 restriction search for tiny wire networks (Tseitin AND + XOR chains, CaDiCaL via python-sat), with an independent evaluator `verify_f2`. |
 
@@ -86,6 +87,21 @@ rp_beta_cut, rp_evaluate, rp_anneal, rp_verify` (graphs as (n, d, flat adjacency
 Caveat: the annealer is a local search. It reliably finds cut-type optima seeded by good cuts and small
 non-commutative improvements of them, but it does **not** rediscover rigid algebraic placements from random starts
 (see the calibration in research/ports/middle/experiments.md); values are lower bounds on β_ρ.
+
+## piecefloor (spec S3)
+
+```bash
+RUSTFLAGS="-C target-cpu=native" CARGO_TARGET_DIR=target/native cargo build --release --example piecefloor
+B=target/native/release/examples/piecefloor
+$B exh crossing 3                 # exhaustive hub orbits in Mat_3, exact legs
+$B anneal delta3 4 400000 16      # annealing over placements in Mat_4
+$B far delta3 3,3 0 300000 16     # far-leg limit, tripod x tripod
+$B onetree delta3 17 300000 16    # one general tree, Gamma
+$B limitexh 4 3 4                 # limit problem, Q = Z_4, exhaustive {0,1}-pods with <= 4 arms
+$B limit 3x3 3 16 100000 8        # limit problem, general tree
+python3 ../../research/sat3/verify_pf.py ../../research/sat3/data/*.json   # independent evaluator
+```
+Python: `pf_b_mat, pf_one_tree, pf_limit_phi`. Configurations go to `$PF_OUT` (default `research/sat3/data`).
 
 ## Caveats
 

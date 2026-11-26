@@ -2353,3 +2353,27 @@ Executor still running: the optimiser for the large-net limit problem.
   `native_decide` call (Lean 4.36 no longer routes these through `Lean.ofReduceBool`) — i.e. trust in Lean's compiler
   and in the verified LRAT checker's native execution, as expected.
 - `mc_eq_seven : MC = 7` is written and waits for the cube build (≈ 40 min).
+
+## 27 Nov: full focus on 3-SAT (user: "lets make a big breakthrough") — three parallel attacks on attainment and one on prior barriers
+
+Honest odds, stated to the user: the target is ANY three-merge piece family with level value below 1/√2 on 3-nets of
+growing order (0.70 already gives exponent 0.515, beating both labs). Nothing forbids it as far as we can prove; the
+previous theory agent had "no live candidate". I put the chance that this round produces a correct construction at a
+few per cent, and the chance of a clear negative (a barrier) somewhat higher.
+New hypotheses:
+- H29 [C] (mine): the two-way crossing identity applied to PAIRS of merge classes of a 3-net, with adaptive choice of
+  merge per term (time-sharing, as in yesterday's explicit K_{2,3} protocol), already has game value strictly below
+  1/√2. Its dual is a maximisation over metrics satisfying triangle + crossing inequalities among real hubs only — a
+  stronger adversary than CAT(0), so the value lies in [true floor, 1/√2] and may equal 1/√2. Computable on Δ₃, AG(2,3),
+  AG(2,4), AG(2,5).
+- H30 [C] (mine): a design or product structure in which different wires are crossed by different pairs of classes
+  gives a balanced three-merge value below 1/√2 from circle laws alone (a clean calculation; requested first).
+- H31 [C]: OpenAI's lower bounds (Fourier transform/shift networks, list distinctness, HC 4.2) or arXiv:2610.41622 may
+  already exclude exponent > 1/2 for this class unless ports holds — to be checked before investing further.
+Launched (all theory, high/medium effort): (1) crossing covers on nets: formalise, compute the game and its dual,
+build the engine statement if the value is below 1/√2, attack it; → `research/sat3/attain-notes.md`. (2) prior barriers:
+read both labs' papers and follow-ups for optimality statements; → `research/sat3/prior-barriers.md`. (3) idea
+generation for three-way identities with the known filters; → `research/sat3/ideas-threeway.md`.
+Already running on 3-SAT: Q1 (is 1/√2 reached by admissible prices — a barrier theorem if yes); the referee on the
+floors; the executor's optimiser for the large-net limit problem.
+Lower priority, still running: Lean proof of the 7-AND-gate theorem (cube build), referee on that paper.

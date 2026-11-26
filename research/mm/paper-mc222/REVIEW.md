@@ -40,7 +40,7 @@ None of these affects the theorem.
 
    This exercises the root-fixing code, the RREF clauses, the cube constraint and the Rust search, including cubic targets and cases where the first gate is a *reducer*. For example, in t6 with plane (3,12), the gate (x₀+x₁)(x₂+x₃) lies in 𝒯. In those cases the cubes with 0 ∈ H are UNSAT and the others SAT, exactly as lemma H predicts.
 
-   The t6 run at k = 4 (35 planes × 6 SAT calls) was still running when this report was written; see the note at the end.
+   For t6 at k = 4 the per-plane brute force was too slow. There, Rust, SAT and the cubes agree on all 35 planes (all SAT); see the note at the end.
 4. **Positive control on the real target.** `gen_cnf.py mm222 7 --root 6,96 --helpers 0,1,2` is SAT. The plane (6,96) is the representative of the orbit of Strassen's m₁ plane (9,144), root 26, orbit size 36. The decoded 7-gate circuit passes `verify_circuit.py` on all 256 inputs. So the root and cube machinery admits real circuits on mm222 itself, not only from scratch as in Table 2.
 5. **Proof objects.** I regenerated three cubes with the pinned CaDiCaL 2.1.3 and `lrat-check` at 2e3b2dc. None of them is root 0, H = {0,3}. In code numbering they are:
 
@@ -242,6 +242,6 @@ The counts 813 (`main.rs`) and 246 (`gen_cnf.py`) are correct at the pinned comm
     Consolidate the disclaimers in §8.
 24. **PDF.** Renders cleanly on all 10 pages, with no overfull boxes in `main.log`. The only warning is that one `[h]` float was changed to `[ht]`. Table 2's narrow first column wraps "F₄ multiplication, 4 inputs" onto two lines; widen it or abbreviate.
 
-## Note on the remaining toy run
+## Note on the t6 run at k = 4
 
-The t6 run at k = 4 (MC = 4, one helper, 35 planes) was still running at the time of writing. Every other toy comparison (≈ 400 plane × method verdicts) agreed. Its result is reported in the hand-off message.
+The per-plane brute force for t6 at k = 4 is too slow in Python and was stopped at its time limit. Without it, Rust `--prefix`, SAT `--root` and the OR over the 4 cubes agree on all 35 planes: all 35 are SAT. The brute force's global MC(t6) = 4 is consistent with this. Every toy comparison made agreed.

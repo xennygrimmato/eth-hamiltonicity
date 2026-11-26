@@ -24,9 +24,9 @@ v_i v_j at rate f and the wire u₁u₂ at rate w·f (w > 0 real; w = 1 is the u
 
 | # | Statement | Tag |
 |---|---|---|
-| 1 | **Theorem D (analytic (CL\*)).** Φ_w ≥ 0 on [−1,1]⁶ for 0 < w ≤ 1; w = 1 is (CL\*) = (3.5) of the note. Six lines; no computer. | [R] (§3.3); checked by the coordinator; Lean in progress (`PortsLean/CLStar.lean`) |
+| 1 | **Theorem D (analytic (CL\*)).** Φ_w ≥ 0 on [−1,1]⁶ for 0 < w ≤ 1; w = 1 is (CL\*) = (3.5) of the note. Six lines; no computer. | [R] (§3.3); refereed (`../review-k2m.md`); Lean: `clstar_weighted` in `PortsLean/CLStar.lean` |
 | 2 | Weighted five-point theorem: Σ_S ≥ κ(w)(Σ_vv + wD) for five points of a CAT(0) space, 0 < w ≤ 1. | [R] given [AN] C.4(a) (§3.4) |
-| 3 | **Theorem B.** For m ≥ 3, 0 < w ≤ m(m−1)/6 and m+2 points of a CAT(0) space: Σ_S ≥ R_m(w)(Σ_vv + wD), with equality at W_{m+2}(ℓ, 2wℓ/(m(m−1))). | [R] (§3.5: averaging over triples) |
+| 3 | **Theorem B.** For m ≥ 3, 0 < w ≤ m(m−1)/6 and m+2 points of a CAT(0) space: Σ_S ≥ R_m(w)(Σ_vv + wD), with equality at W_{m+2}(ℓ, 2wℓ/(m(m−1))). | [R] (§3.5: Theorem 5_{w′} on every five-point subset, averaged over triples); arithmetic in Lean |
 | 4 | Lemma P: explicit rank-one idempotents in Mat₂(F_q), q = 2^r, giving √r·√(graph metric of K_{2,q+1}) inside (Mat_{2r}(F₂), ρ_{2r}); maximality m ≤ 2^{⌊μ/2⌋}+1 in Mat_μ(F₂). | [R] (§2.1–2.2); rank tables machine-checked for r ≤ 6 (`fqpods.py`) |
 | 5 | Lemma H_m: m+2 points with the metric a·√(graph metric of K_{2,m}) in a CAT(0) space span an isometric diamond of (m-pod) × ℝ. | [R] from [AN] C.4(a),(f) (§2.3) |
 | 6 | **Theorem A.** ¬Contracting(k) ⇒ every finite subset of (m-pod) × ℝ is a price over k, for every m; hence f*(K_{2,m}(w); k) ≤ R_m(w) for every w > 0. | [R] given [AN] `thm_alt_rank_price`, C.3 (§2.4) |
@@ -46,11 +46,26 @@ there are restrictions over k
 
     ⊗_{i<j} ⟨2^{a_n}⟩_{v_iv_j} ⊗ ⟨2^{b_n}⟩_{u₁u₂}  ≤  S^{⊗n},      a_n/n → f,   b_n/n → w·f.
 
-For F in the asymptotic spectrum, F(⟨N⟩_{xy}) = N^{d_F(x,y)}, so the left side has log₂F = a_nΣ_vv(d_F) + b_n D(d_F).
-The argument of the note §1.1–1.2 (Strassen's theorem; every F ∈ 𝒳 is an AN spectral point; every AN price bounds
-every protocol) applies verbatim with Σ_T replaced by Σ_vv + wD and gives
+Put G(w) := min over AN prices d on the m+2 parties (with Σ_vv + wD > 0) of R_w(d). The claim is
 
-    f*(K_{2,m}(w); k) = min over AN prices d on the m+2 parties (with Σ_vv + wD > 0) of R_w(d).            (1.1)
+    f*(K_{2,m}(w); k) = G(w)      for every real w > 0.                                                   (1.1)
+
+*Upper bound, every real w.* Let d be an AN price. As in the note §1.2(b) (monotonicity and multiplicativity of
+spectral points, F(⟨N⟩_{xy}) = N^{d_F(x,y)}, linearity in d, closure under multiples and limits), a restriction as
+above gives a_nΣ_vv(d) + b_nD(d) ≤ nΣ_S(d). Divide by n and let n → ∞: f·(Σ_vv + wD) ≤ Σ_S. So f* ≤ G(w).
+
+*Lower bound, rational w = p/q.* Apply Strassen's theorem to T_{p,q} := ⊗_{i<j}⟨2^q⟩_{v_iv_j} ⊗ ⟨2^p⟩_{u₁u₂}, for which
+log₂F(T_{p,q}) = q(Σ_vv + wD)(d_F): T_{p,q}^{⊗a} ≤ S^{⊗(b+o(b))} iff a·q·(Σ_vv + wD)(d_F) ≤ b·Σ_S(d_F) for all F ∈ 𝒳.
+The rate of such a protocol is f = aq/b on the wires v_iv_j and ap/b = wf on u₁u₂, so the supremum of achievable f is
+inf_{F∈𝒳} R_w(d_F), and this equals G(w) because every F ∈ 𝒳 is an AN spectral point (note §1.2(a)) and by the upper
+bound. The passage from rational a/b to sequences is as in the note §1.1.
+
+*Lower bound, irrational w.* f*(w) is non-increasing in w (a protocol for weight w′ ≥ w is one for weight w after
+discarding part of the wire u₁u₂). 1/G(w) = max over prices with Σ_S = 1 of (Σ_vv + wD) is a maximum of affine
+functions of w, finite because Σ_vv ≤ ((m−1)/2)Σ_S and D ≤ Σ_S/m by the triangle inequality; so it is convex and
+finite, hence continuous, and G is continuous. For rational w′ ↓ w: f*(w) ≥ f*(w′) = G(w′) → G(w). (For Theorem K_m
+one may take the w′ inside the range w′ ≤ m(m−1)/6, since that bound is rational; this is not needed, because
+Theorem B bounds G(w) at every real w of the range.)
 
 So a lower bound may be proved for all AN prices, and an upper bound needs one AN price.
 
@@ -304,6 +319,9 @@ symmetry of the hexagon the same holds for each of the six variables.
             ≥ 3 √(1 − 9m²/(9+w²))·√(1−m²) + 3m²/w                     (by (1))
             ≥ 3(1−m²) + 3m² = 3                                         (9/(9+w²) ≤ 1 and 1/w ≥ 1). ∎
 
+Lean (`PortsLean/CLStar.lean`, per the coordinator): `clstar_weighted` (Theorem D), the version with a general
+vertex constant K ≥ 9/w² (Remark 6), and the three-angle inequality of §7 for every constant c ≥ 8 with sharpness.
+
 Remarks.
 1. *Equality.* The last step is strict unless m = 0 or (w = 1 and m = 1). So for w < 1 the only zero of Φ_w is σ = 0,
    and for w = 1 zeros other than 0 have m = 1, V + E = 2 and all c equal to 0: these are the six corners of the note
@@ -316,6 +334,9 @@ Remarks.
    Φ_w = 3/w − 3 < 0 for w > 1. See §5 for what replaces it.
 5. The interval certificates of the note §3.3 (two independent checkers) remain as an independent confirmation
    of the case w = 1.
+6. *Sharp vertex constant.* The proof uses K only through sin χ = 3m/(w√K) ≤ 1 and cos χ ≥ √(1−m²), i.e. K ≥ 9/w².
+   So Φ_w ≥ 0 holds with the vertex terms ½√((c_ij+c_ik)² + K(σ_ij−σ_ik)²) for every K ≥ 9/w² (take
+   sin χ = 3m/(w√K)); K = 1 + 9/w² is what the calibration produces. For w = 1 this is the constant 8 of §7.
 
 ### 3.4 The weighted five-point theorem [R given AN C.4(a)]
 
@@ -337,7 +358,8 @@ points u₁, u₂, v_i, v_j, v_k of the same space:
 
     Σ_{l∈τ} (A_l + B_l) ≥ κ(w′)·( |v_iv_j| + |v_iv_k| + |v_jv_k| + w′D ).
 
-Sum over all triples. Each v_l lies in C(m−1,2) triples, each pair in m−2 triples:
+(No m-page book and no m-page calibration is needed: Theorem 5_{w′} is applied to five-point subsets of the given
+configuration.) Sum over all triples. Each v_l lies in C(m−1,2) triples, each pair in m−2 triples:
 
     C(m−1,2)·Σ_S ≥ κ(w′)·( (m−2)·Σ_vv + C(m,3)·w′·D ).
 
@@ -346,6 +368,8 @@ Divide by C(m−1,2) = (m−1)(m−2)/2 and use C(m,3)/(m−2) = m(m−1)/6:
     Σ_S ≥ (2κ(w′)/(m−1))·( Σ_vv + (m(m−1)/6)·w′·D ) = (2κ(w′)/(m−1))·( Σ_vv + wD ),
 
 and 2κ(w′)/(m−1) = 6/((m−1)√(9 + 36w²/(m²(m−1)²))) = 2m/√(m²(m−1)² + 4w²) = R_m(w). Equality: (2.1). ∎
+
+The counting and the last identity are in Lean (`PortsLean/CLStar.lean`: `k2m_average`, `k2m_rate`).
 
 So K_{2,m} at weight w is exactly as hard as K_{2,3} at weight 6w/(m(m−1)); every triple of pages of the extremal
 configuration W_{m+2}(ℓ, 2wℓ/(m(m−1))) is the extremal W5(ℓ, w′ℓ/3). The uniform instance w = 1 is covered for all
@@ -363,14 +387,14 @@ natural analogue of (CL\*) would be
 
 **It is false already on books: for every even m ≥ 4 and every w > 0, and for odd m ≥ 5 when
 w > m(m−1)/(2√(m²−1)).** Take the collinear book with all ρ_i = 0 and v₁, …, v_m pairwise different interior
-points of the spine, numbered upwards. All hubs are interior (ε_ij = 0) and all exit vectors are vertical and
-forced: v_i exits upwards towards the i−1 points below it and downwards towards the m−i points above it. So
-V_i = (0, 2i − m − 1).
+points of the spine, numbered upwards. With ρ ≡ 0 the hubs are not unique (every point of the spine between v_i and
+v_j minimises f_i + f_j); they can be taken interior (ε_ij = 0), and then the exit vectors are vertical: v_i exits
+upwards towards the i−1 points below it and downwards towards the m−i points above it. So V_i = (0, 2i − m − 1).
 - m even: no V_i vanishes, all cos μ_i = 0, and Br = −λw < 0.
 - m odd: the middle point has V_i = 0, M_i = 1, the others M_i = 0, and Br = 1 − λw, which is negative for
   λ = R_m(w) iff w > m(m−1)/(2√(m²−1)) (for m = 5: w > 2.04, inside the range w ≤ 10/3 of Theorem B).
-The same happens for nearby books with small ρ_i > 0 (`clm_counter.py`, m = 4, w = 1: Br = −0.65 at a book where the
-true left side is +1.73·D; `calib_check.py`: negative values of Br on random books for (m,w) = (4,·), (5,3.3), (6,·),
+The same happens for nearby books with small ρ_i > 0, where hubs and exit vectors are unique (`clm_counter.py`, m = 4,
+w = 1: Br = −0.65 at a book where the true left side is +1.73·D; confirmed by the referee, `../review-k2m.md`; `calib_check.py`: negative values of Br on random books for (m,w) = (4,·), (5,3.3), (6,·),
 none for (5,1) in 20 000 books). The reason is parity: an odd number m−1 of vertical exit vectors cannot cancel,
 so V_i is vertical and non-zero and one of the calibrating vectors (cos α_i, sin α_i), (cos β_i, −sin β_i) points
 out of the page (negative cosine), which wastes ρ_i ≥ 0. For m = 3 two opposite vertical exits cancel (V_i = 0,
@@ -410,7 +434,7 @@ Numbers for w = 1:
 | 3 | 0.7500 | 0.948683 = 3/√10 | 1 | 1.2649 |
 | 4 | 0.5714 | 0.657596 = 8/√148 | 0.6667 | 1.1508 |
 | 5 | 0.4545 | 0.497519 = 10/√404 | 0.5 | 1.0945 |
-| 6 | 0.3750 | 0.399557 = 12/√904 | 0.4 | 1.0655 |
+| 6 | 0.3750 | 0.399114 = 12/√904 | 0.4 | 1.0643 |
 
 The gain over routing is (m(m−1)+2w)/√(m²(m−1)²+4w²). In the proved range it is largest at the top weight
 w = m(m−1)/6, where it equals 4/√10 = 1.2649 for every m (the K_{2,3}, w = 1 value). At w = 1 it tends to 1 like

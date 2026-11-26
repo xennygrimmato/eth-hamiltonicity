@@ -33,7 +33,7 @@ the model below: S_j = span{1, inputs, G_1..G_j}, XOR and constants free.
 | ⟨2,2,1⟩ matrix–vector (MC 4) | k=3 none, k=4 found ✓ | k=3 UNSAT, k=4 SAT ✓ |
 | 2×2 MM, k=5 | none (72 orbits, 75 states; also without orbit reduction: all 10795 first gates, 10943 states) | root 0 UNSAT (5 s) |
 | 2×2 MM, k=7 | found when Strassen's first 2 or 3 products are fixed (0.7 s) | SAT from scratch inside the cube H={0,1,2} (77 s) |
-| **2×2 MM, k=6** | **none**: 72/72 orbits, 3 546 906 states, 6.6 min wall on 4 shared cores | **all 1080 cubes UNSAT, every LRAT proof VERIFIED** (see `out/sat_k6/results.tsv`) |
+| **2×2 MM, k=6** | **none**: 72/72 orbits, 3 546 906 states, 6.6 min wall on 4 shared cores (`results/exact_k6_orbits.log`) | **all 1080 cubes UNSAT, every LRAT proof VERIFIED**: 0.33 h solver CPU, 0.08 h check CPU, 5.41 GB of LRAT in total, largest single proof 54 MB (`results/sat_k6_results.tsv`) |
 
 Every circuit that was found, by either method, was re-checked by `verify_circuit.py`.
 That script evaluates the circuit on all 2ⁿ inputs and compares the outputs with the target
@@ -180,7 +180,9 @@ not kept. `out/sat_k6/results.tsv` records, per cube:
 * CNF and LRAT sizes and sha256.
 
 CaDiCaL is deterministic, so rerunning reproduces identical proofs; the hashes can be
-compared. `summarize_sat.py` checks that all 72 × 15 cubes are present, UNSAT, and verified.
+compared. This was checked by regenerating root 0, H = {0,1}: the CNF and LRAT sha256 both
+matched. Per helper set, almost all the work is in H = {0,1} (685 s), {0,2} (263 s) and
+{0,3} (116 s). Every cube with 0 ∉ H is UNSAT in about 0.1 s. `summarize_sat.py` checks that all 72 × 15 cubes are present, UNSAT, and verified.
 
 Do not use the CaDiCaL development head (3.1.0). It printed only a partial model, which my
 decoder misread. All runs use the tagged release `rel-2.1.3`.
@@ -220,5 +222,18 @@ python3 verify_circuit.py <circuit.txt>
 
 The problems are `mm222`, `mm221`, `polymul2`, `polymul3` and `f4`.
 
-Build artefacts, CNFs and proofs are git-ignored (`target/`, `out/`). The results table and
-logs live in `out/`.
+Build artefacts, CNFs, proofs and scratch output are git-ignored (`target/`, `out/`). The
+small permanent records are in `results/`:
+
+* `sat_k6_results.tsv`: one line per cube, with sha256 and size of the CNF and the LRAT
+  proof;
+* `exact_k6_orbits.log`: the Rust per-orbit log;
+* `circuit_mm222_7_p2.txt`: a 7-AND circuit found by the search, which `verify_circuit.py`
+  accepts.
+
+To regenerate any proof, run `gen_cnf.py mm222 6 --root a,b --helpers i,j` and then
+`cadical -q --lrat=true --binary=false x.cnf x.lrat`.
+
+A from-scratch k=7 search in (A), with only Strassen's first product fixed, was stopped after
+15 min without a result. With 3 helpers allowed, the space is about 42k × 170k helper pairs.
+k=7 was therefore validated with 2 or 3 fixed products in (A), and from scratch in (B).

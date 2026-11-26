@@ -1823,3 +1823,15 @@ Lean project: 14 files.
   true left side is +2.03).
 Launched: a writer turning the K_{2,3} note into a K_{2,m} note (analytic proof primary and in Lean; interval
 certificates as confirmation; explicit-protocol section). Sent the referee's fixes to the K_{2,m} agent.
+
+## 26 Nov (late, 63): the 7-AND-gate claim now has checked proof objects [N‑rig]
+
+`tools/mc222`, per its executor (my own re-run pending its final report):
+- (A) exact Rust search: none for all 72 first-gate orbits, 6.6 min.
+- (B) own CNF encoding, CaDiCaL 2.1.3: all 1080 cubes (72 orbits × 15 helper-position pairs) UNSAT; every LRAT proof
+  VERIFIED by `lrat-check`; 0.33 h solver CPU, 0.08 h checking, 5.41 GB of proofs (not kept; sha256 and sizes of each
+  CNF and proof recorded; one cube re-run gives bit-identical hashes).
+- The 7-AND case is found by both methods; circuits pass a separate checker on all 256 inputs.
+Together with the first search: three implementations, two methods, one with machine-checked UNSAT proofs.
+Remaining trust: the encoding and the symmetry/cube-splitting lemmas (written in the README), the LRAT checker.
+MC(⟨2,2,2⟩ over F₂) = 7 in the XOR-free model.

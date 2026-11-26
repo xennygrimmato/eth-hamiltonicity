@@ -1851,3 +1851,22 @@ MC(⟨2,2,2⟩ over F₂) = 7 in the XOR-free model.
   symmetry). (A) without orbit reduction at k = 6 not run (~150× longer).
 - Do not use the CaDiCaL development head (prints a partial model).
 I started `run_all.sh` myself in the background (using the executor's pinned solver/checker builds).
+
+## 26 Nov (late, 65): a claimed UNCONDITIONAL exact rate (Theorem E) [R, unreviewed] — referee and certifier launched
+
+From the K_{2,m} agent (`research/ports/k2m/notes.md` §§5–9; referee fixes to §§0–4 applied).
+- **Theorem E:** for five points of a CAT(0) space and every w ≥ w₁ = 1.91345 (λ = 3/(2+w) ≤ λ₁ = 0.766588, the real root of
+  4λ³ − 8λ² + 9λ − 4): Σ_S ≥ (3/(2+w))(Σ_vv + wD). Hence **f*(K_{2,3}(w); k) = 3/(2+w) exactly for all w ≥ w₁, every field,
+  no hypothesis** (w = 2: tensor rate 3/4 against routing 3/5), and f*(K_{2,4}(w)) = 4/(4+w) for w ≥ 2w₁.
+  Upper bound = flattening rank across the cut {u₁, v₁} (crossing supply u₁v₂, u₁v₃, u₂v₁; demand v₁v₂, v₁v₃, u₁u₂).
+  Proof: a refined calibration (uses ρ_i ≥ 0), sign cases, two one-vertex lemmas. 3·10⁵-point numerical check.
+- Lemma R: the refined bracket is ≥ 0 outside a "hard region" for a wider parameter range. Certificate specs:
+  S(9/10) (no zeros in the domain, numerical minimum +0.0627) would lower the threshold to 4/3; (CL\*\*₀) at λ = 12/13,
+  η = 15/13 (only zero at the origin) would give 13Σ_S ≥ 12Σ_vv + 15D and the exact rate for all w ≥ 5/4.
+- P2: "pinned" networks; Prop. T [R]: K_{2,m} with an r-regular demand graph having a fractional triangle decomposition
+  is pinned at 2m/√(m²r²+4w²) (octahedron demand on K_{2,6}: 6/13 < 0.498273 < 1/2); Conjecture P [C]: every two-apex
+  network is pinned. K_{3,3}: flow 3/4, cut 1, f_CAT(0) ≥ 3/√10 [R], numerics running.
+Why it matters if it survives: this would be an exact tensor rate, strictly above routing, with no reference to
+contracting or ETH — unconditional given only "prices are CAT(0)" and Strassen.
+H25 [C]: f*(K_{2,3}(w)) = 3/(2+w) for all w ≥ 5/4, and = 3/√(9+w²)-type value below (the latter only under ¬contracting).
+Launched: referee on §§5–7; an executor certifying S(9/10) and (CL\*\*₀) with ivcert and ivcheck2.

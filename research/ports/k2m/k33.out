@@ -1,0 +1,3 @@
+K33: flow = 0.7499999999999999  cut = (1.0, [0, 3])
+box relaxation, feasible local minima (value: count): {1.06066: 240}  total 240
+  product of 1 trees: best [(1.0, 'trees [9]'), (1.0, 'trees [1]'), (1.0, 'trees [2]')]

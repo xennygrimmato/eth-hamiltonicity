@@ -10,8 +10,8 @@ dem = {p: 1.0 for p in pr if p not in sup}
 print("K33: flow =", flow_value(n, sup, dem), " cut =", cut_value(n, sup, dem))
 num = [sup.get(p, 0.0) for p in pr]; den = [dem.get(p, 0.0) for p in pr]
 vals = []
-for seed in range(1, 9):
-    sol = tensorlab.min_ratio(n, num, den, ["triangle", "box"], 400, seed, 400)
+for seed in range(1, 3):
+    sol = tensorlab.min_ratio(n, num, den, ["triangle", "box"], 120, seed, 120)
     vals += [round(s["value"], 5) for s in sol if s["max_violation"] < 1e-7]
 vals = np.array(vals)
 u, c = np.unique(vals, return_counts=True)

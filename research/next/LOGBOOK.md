@@ -2054,3 +2054,11 @@ Z_ij ≤ ρ_i√(1−s_ij²) + (a_i − y_ij)s_ij + ρ_j√(1−s_ji²) + (a_j �
 No sign conditions on ρ, a, D needed. Calibrating vectors are algebraic (no trigonometry); only |p|, |q| ≤ 1 is used,
 which also covers the degenerate case. No discrepancy with the note's §3.2. Stages 2 (minimisers and optimality) and
 3 (metric reduction) in progress.
+
+## 26 Nov (late, 79): stage 2 of the Lean calibration (hubs and first-order conditions)
+
+`PortsLean/FivePoint/Hub.lean`, `hub_exists` (ρ_i, ρ_j ≥ 0, D ≥ 0): there are y ∈ [0, D] and s_i, s_j ∈ [−1, 1] with
+√(ρ_i²+(a_i−y)²) = ρ_i√(1−s_i²) + (a_i−y)s_i (same for j) and (D/2)|s_i+s_j| ≤ (y − D/2)(s_i+s_j). The hub is a minimiser on
+[0, D]; one-sided optimality is proved without derivatives, from f(y+h) ≤ f(y) − σh + h²/(2f(y)). Spine case handled by
+choosing σ_i = −σ_j (minimality not needed there), as the note says. No discrepancy with the note. Stage 3 (metric
+reduction from the comparison hypothesis) in progress. Per the executor; rebuild pending.

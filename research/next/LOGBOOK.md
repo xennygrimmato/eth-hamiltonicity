@@ -805,3 +805,38 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   rest of its steps being deterministic. With that, the executor says the theorem goes through; details pending.
 - Open points for the lead to watch: existential (non-uniform?) statement; the guess-count reading is from a proof,
   not a stated theorem.
+
+## 26 Nov (late): ports round 1 closes; three results on the table
+
+**Strategist final (ideas-ports.md, Parts 1–6 + addendum).** Odds [C]: no ports in char 0 93%; contracting true 2%.
+- My H17 (2-adic lattices as the wild spectral point) is **dead in its naive form [X]**: spectral points are invariant
+  under invertible local maps, GL_n(ℚ) is transitive on lattices, so no lattice-relative invariant exists. No asymmetry
+  between characteristics follows either (EG Lemma 2.3; F_p((t)) is valued). A family-based form survives as B1′ (3–5%).
+- K_{2,3} threshold: the five-point set W₅ in tripod × ℝ (h = ℓ/3) has supply/demand ratio √(9/10) ≈ 0.9487 < 1.
+  A tensor protocol on K_{2,3} with rate > 0.9487 would show W₅ is not spectral; with an unproved "hull lemma" that
+  would give contracting. Flow gives ≥ 3/4, cuts give ≤ 1.
+
+**Rebase final (rebase/notebook.md): Theorem R [R, unreviewed].** Contracting over a field of characteristic 0 ⇒
+3-SAT in 2^{O(n^{1−δ})}, δ < 187/(5H+187), using Anthropic §§F–J + sparsification + Nullstellensatz only.
+- The strategist's black-box use of J.4 fails (step count ≥ s·v²⁴ ≥ brute force). Repair = **Lemma 1**: the composed
+  lister makes ≤ τ/v²³⁵ guesses. Lemma 1 is read from the printed proof of J.3; it is in no statement and not in Lean.
+- Corollary: Weak ETH ⇒ ¬contracting ⇒ flat (thm_alt) over every char-0 field, independent of OpenAI's EG paper.
+- Weak points: Lemma 1; uniformity (Lean thm_cut is ∃ G only); paper is not human-checked.
+
+**Referee interim on Theorems A/B: Theorem A correct with small fixes.** Containment OA-spectral ⊆ AN-prices goes
+the right way; F.6's C₀ is independent of h; HC 4.2 is a single-graph certificate so growing degree is harmless.
+Lean caveat: `exists_logarithmic_placement` has an extra `scalar` hypothesis (satisfiable; lines are prices).
+Correction to B(iii): Weak ETH gives AN-prices, not Strassen spectral points.
+
+**Hypotheses.**
+- H17 [X] (see above).
+- H18 [C]: Lemma 1 survives adversarial review. If it does, "Anthropic's contracting case contradicts Weak ETH" is a
+  theorem resting on one lab's Lean-backed statements plus one proof-reading.
+- H19 [C]: no K_{2,3} tensor protocol beats 0.9487 (Weak ETH + hull lemma predicts this).
+
+**Working protocol change (user).** Fast parallel compiled code (Rust/C++ with Python bindings), reusable; Lean
+skeletons for each hypothesis to see where it breaks. Lean is not installed in this container; elan/Mathlib cache
+hosts are reachable. 4 cores, 15 GB; the 6-gate search is reniced to 19.
+
+**Launching.** (1) `tools/tensorlab` Rust+PyO3 library and the E3 K_{2,3} computation. (2) Lean skeletons: Theorem A
+quantifier line-up, Theorem R arithmetic, W₅. (3) Adversarial referee on Lemma 1 / Theorem R.

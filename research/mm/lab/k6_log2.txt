@@ -4,3 +4,5 @@ orbit 3 (1,8): none  states so far 126750
 orbit 4 (22,75): none  states so far 168943
 orbit 5 (1,66): none  states so far 211196
 orbit 6 (18,105): none  states so far 253405
+orbit 7 (1,18): none  states so far 464660
+orbit 8 (1,96): none  states so far 506903

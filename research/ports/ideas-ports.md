@@ -857,3 +857,121 @@ present "finite test" without the caveat that only one side has finite certifica
 (elementary; Lean exists; we have not built it). "Ports ⇒ 3-SAT" is OpenAI's (Lean exists). "Flat is a theorem"
 is OpenAI's EG 1.2. Everything about Anthropic's side (F.6, D.2, D.3, J.4, thm_cn) is from the paper the user
 trusts more. The network-coding reformulation and the K_{2,3} bound use only Strassen's theorem and thm_cn.
+
+---
+
+## Addendum to Parts 5–6 (after the lead's reply to interims 3–4)
+
+### Ad.1 The arithmetic candidate for a wild spectral point in characteristic 0: rated, and what kills the naive form
+
+Proposal (lead): sites = ℤ₂-lattice classes, the cost of a tensor = an elementary-divisor invariant of its
+flattenings relative to the lattices, wires cost the building distance; this would exist only in characteristic 0
+and predict ports in characteristic p.
+
+**Verdict [D]: the naive form cannot be a spectral point, and the predicted asymmetry does not follow. A
+family-based form survives as route B1, in every characteristic. Odds 3–5%.**
+
+1. **The axiom that kills it: invariance under invertible local maps.** If g is invertible at one party, T and
+   gT are restrictions of each other, so F(gT) = F(T) for every spectral point. GL_n(ℚ) is dense in GL_n(ℚ₂) and
+   acts transitively on lattices of ℚ₂ⁿ. So an invariant "relative to a lattice L_v in the local space" is either
+   independent of L_v or not monotone. Put differently: a party's local space has no preferred lattice; a lattice
+   would have to be chosen functorially in every local space kⁿ, compatibly with all k-linear maps kⁿ → k^m, and
+   the only such choices are scalar multiples of the standard lattice, which shift prices by a constant per leg.
+   Taking an infimum over placements does not help: the infimum over all lattices is again lattice-free.
+2. **Wires carry no arithmetic.** The binary wire is defined over the prime field. By EG Lemma 2.3 the joint
+   spectral values of tensors over ℚ are the same over ℂ, over ℚ₂ and over ℂ((t)). The 2-adic valuation of ℚ
+   cannot be seen by wire prices.
+3. **No asymmetry between characteristics from valuations.** By the same lemma a characteristic-p question may
+   be studied over F_p((t)), which has a valuation with residue field F_p. The 9/4 paper's valued prices (MM §5:
+   "a field K with a real additive nonarchimedean valuation"; §6.1: K = Frac E[t^ℚ] over ANY field E) are
+   equal-characteristic and exist in every characteristic. The rank metric over the residue field F_q is as good
+   as over F₂ for the flat-rectangle argument (for odd q the two diagonals are W ± W′, both of rank 2). So if a
+   valuation-based construction of building metrics works, it works in all characteristics.
+   Why Weak ETH speaks only about characteristic 0 has a plainer explanation: exact integer counting needs
+   characteristic 0; in characteristic p the same algorithm counts mod p (route C1).
+4. **What survives: valued prices on parametrised families.** MM uses a valued price p over K (monotone under
+   INTEGRAL restrictions only, p(cT) = p(T) − ν(c)) to follow a one-parameter family of tensors T(c): the
+   price-minimising site of T(c) moves with c, and "a rescaled neighborhood contains a tree in which two branches
+   meet at the valuation of the difference of their parameters" (MM §7). That is the Bruhat–Tits tree of GL₂
+   arising from a family, with sites = minimisers, not lattices attached to parties. The rank-≥2 analogue: a
+   family T(a) indexed by a matrix parameter a ∈ Mat_μ(K), sites x(a) = price-minimising placements, and the
+   hope d(x(a), x(b)) = ℓ₂ norm of the elementary divisors of a − b (√rk on residues). MM gets its tree only
+   under its strict-saving hypothesis, which it then refutes, so even the tree is hypothetical there.
+   **Experiment B1′ (3 h, replaces B1):** read MM §§5–7; identify which family T(c) moves and why; write the
+   candidate matrix-parameter family (the natural one: the wire twisted by a, i.e. the tensor of the linear map
+   1 + a, or the graph tensor of Γ_a); decide whether the minimising sites are forced to move apart at rate
+   given by elementary divisors, or whether strict saving was essential. Kill criterion: if the minimiser does
+   not move without strict saving, the route is dead.
+5. A valuated ("tropical") version of Strassen's support functionals: the support functional maximises over
+   bases; a tropical version would maximise over lattices and is then lattice-free again by item 1, or it is
+   monotone only under integral maps and is a valued price in MM's sense, not a spectral point.
+
+### Ad.2 The K_{2,3} tensor-rate problem: exact brief for an executor, and what it tells us about ports
+
+Setup: parties u₁,u₂,v₁,v₂,v₃; supply S = six wires u_iv_j; demand T = wires v₁v₂, v₂v₃, v₁v₃, u₁u₂.
+f* = sup{f : T^{⊗fn} ≤ S^{⊗(n+o(n))}} = min over spectral metrics d of R(d) = Σ_S d / Σ_T d (§4.5).
+
+Known so far [D]: flow gives f* ≥ 3/4; the quadrilateral inequality gives f* > 3/4; cuts and stars give f* ≤ 1;
+Euclidean configurations give R ≥ 1.078, so flats do not improve on cuts.
+
+**New observation [D]: a CAT(0) configuration with R < 1.** In tripod × ℝ (three half-planes glued along a
+line) put v₁,v₂,v₃ at distance ℓ from the line in the three half-planes at height 0, and u₁,u₂ on the line at
+heights ±h. Then Σ_T d = 6ℓ + 2h and Σ_S d = 6√(ℓ²+h²), so R = 6√(ℓ²+h²)/(6ℓ+2h), minimised at h = ℓ/3:
+**R = √(9/10) ≈ 0.9487 < 1.** This five-point metric is not ℓ₁-embeddable (it beats every cut). It lies in
+tree × line, and also in any Euclidean building with a wall carrying three half-apartments, e.g. the Ã₂ building
+of GL₃(F₂((t))).
+
+So the answer to "does a rate strictly between routing and cut distinguish the two worlds?" is: **it can, in one
+direction, and the threshold is 0.9487.**
+
+- If this configuration W₅ (tripod × segment, h = ℓ/3) is spectral, then f* ≤ 0.9487: tensor coding misses the
+  cut bound on a five-party instance, and there is a five-point spectral metric outside ℓ₁.
+- If an explicit protocol achieves any rate > 0.9487, then W₅ is NOT spectral. Consequences: (i) ℓ₂ products of
+  spectral spaces are not always spectral (tripod and segment are), which answers the question HC Theorem 6.1
+  works around; (ii) **if** W₅ lies in the closed convex hull of the √rk metrics in a price space [C, "hull
+  lemma": to be checked from the flat-rectangle rigidity of AN D.2 Steps 4–7 and the local structure of the
+  building at L₀], then some ρ_μ is not a price, so contracting holds and 3-SAT is in 2^{O(v^{1−δ})}.
+- Hence, modulo the hull lemma, **Weak ETH predicts that no tensor protocol on K_{2,3} exceeds rate 0.9487**,
+  although every flattening-rank bound allows rate 1. That is a falsifiable prediction about a five-party tensor.
+- If the truth is f* ∈ (3/4, 0.9487], the instance does not separate the worlds.
+
+**What to compute (E3, about 3 hours, two parts).**
+
+(a) Bounds from geometry.
+   - f_Q := min of R over five-point metrics satisfying all triangle and all quadrilateral inequalities
+     (10 variables; nonconvex; multistart local optimisation, then certify). Since spectral ⊆ CAT(0) ⊆ Q,
+     f* ≥ f_Q: a rigorous lower bound on the tensor rate, strictly above 3/4. Cheap.
+   - f_CAT := min of R over five-point subsets of CAT(0) spaces; f_Q ≤ f_CAT ≤ 0.9487. Search model spaces:
+     products of trees and lines, cones over small graphs of girth ≥ 2π (Fano incidence graph with edge π/3),
+     five points in Ã₂ apartments with branching. Report the best configuration found.
+   - Hull lemma: is W₅ (or the best configuration) a subset of the convex hull of {L_a} in the building of
+     GL_{2μ}(F₂((t))) for small μ, using only points whose distances are forced by flat-rectangle rigidity?
+(b) Protocols (lower bounds on f*).
+   - Rate 1 at bond dimension 2: unknowns are linear maps A_{v_j}: (k²)^{⊗2} → (k²)^{⊗2} (4×4) and
+     A_{u_i}: (k²)^{⊗3} → k² (2×8); solve (⊗A)·S = T by alternating least squares over ℝ and ℂ, many starts; then
+     the border version (maps polynomial in ε, leading term T). Flattening ranks allow it (cuts {v₁}: 4 = 4;
+     {u₁}: 8 ≥ 2; {v₁,u₁}: 8 = 8).
+   - Rates between 0.9487 and 1 at small sizes: supply dimension 16 against demand dimension 15
+     (log 15/log 16 = 0.977), or supply 4 with demands (4,4,4,3); also direct sums of two supply copies.
+   - Rate just above 3/4 as a sanity check of the method: supply dimension 16, demand dimension 9
+     (rate 0.792), built by hand from the crossing identity on the quadrilateral (v₁,u₁,v₂,u₂) if possible.
+   - Repeat the exact feasibility question over F₂ and F₃ with a SAT/Gröbner solver at bond dimension 2
+     (route C2: does the answer depend on the characteristic?).
+
+Interpretation table.
+
+| Outcome | Meaning |
+|---|---|
+| Exact or border protocol at rate 1 (or any rate > 0.9487) | W₅ not spectral; products not closed; with the hull lemma: contracting, ports, fast 3-SAT. Would be the main event; prior ≈ 2% |
+| No protocol above ≈ 0.95 found at small sizes, f_Q well below 0.95 | consistent with Weak ETH; mild evidence that tree × line is spectral (first evidence for product closure) |
+| A protocol with rate in (3/4, 0.9487] | an explicit tensor code beating routing on five parties; a publishable small fact in either world |
+
+### Ad.3 Revised order of work
+
+1. Route 0 (referee on Theorems A/B; "rebase" on AN J.4): already running.
+2. **E3 as specified in Ad.2**, starting with (a): f_Q, the hull lemma, then protocol search (b). It is the only
+   small computation whose outcome could, in principle, decide the algorithmic side, and it yields a clean
+   by-product in every case.
+3. C1 (isolation in the power-saving regime; ports in any characteristic versus randomised Weak ETH).
+4. D1 (engine gap theorem).
+5. B1′ (valued prices on matrix-parameter families), E2 (refute contracting by OpenAI's method), A1, B2.

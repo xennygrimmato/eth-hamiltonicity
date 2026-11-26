@@ -426,3 +426,19 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
 - E3: 1-D Kronecker packing for 2×2 needs product length 11 > n³ = 8 (exact). n = 3 running.
 - Lead's steer: use Mirwald–Schnorr (a quadratic Boolean form in 2k essential variables needs exactly k ANDs) on XOR
   combinations of outputs as a free lower bound; also compare TOTAL gate counts, since the 9/4 claim counts additions.
+
+### "Why 9/4" agent, interim note [K from the papers + its own check; unreviewed]
+- Dictionary: wire price per bit = distance d(i,j); matrix multiplication = triangle of three wires (perimeter Per);
+  a rank decomposition = one three-way shared label with rate D; monotonicity gives ω ≥ Per/D.
+- Write the three distances as a_i + a_j (tripod with arms a₁, a₂, a₃). Paper's "tripod principle" (Prop. 8.1): for
+  every spectral point, D ≥ (a₁+a₂+a₃) − (1/a₁+1/a₂+1/a₃)^{-1}: hub-routing cost minus the parallel resistance of
+  the arms. Unit arms: 3 − 1/3 = 8/3, Per = 6, ratio 9/4.
+- By AM–HM the parallel resistance is at most (Σa)/9, so Per/D ≤ 2/(1 − 1/9) = 9/4. So 9/4 = 2 × 9/8: "2" is the flat
+  value, "1/9 = (1/3)²" the best three-arm discount. Calibration on the unit tripod: D = 3 ⇔ ω = 2; D = 2 ⇔ ω = 3.
+- The inequality D ≥ 8/3 is the algorithm side (October upper bound, polynomial multiplication). The 24 Nov claim is
+  that equality is attained by some spectral point; its proof is by contradiction and gives no intuition.
+- Agent's own check: the tripod formula is the Legendre dual of the rectangular formula
+  ω = (xy+yz+zx)²/(4xyz); the boundary ω = x+y and α = 1/2 correspond to reciprocals adding (1/z = 1/x + 1/y).
+- Discrepancy to reconcile: the agent says the paper proves only 1/2 ≤ α ≤ 2/3; OpenAI's Lean scope note states
+  α = 1/2 and the exact rectangular formula as Lean theorems. Asked the agent to say which is claimed where.
+- If ω = 9/4, Strassen's asymptotic rank conjecture for tight tensors is false.

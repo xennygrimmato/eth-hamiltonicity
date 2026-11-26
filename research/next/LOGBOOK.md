@@ -2581,3 +2581,25 @@ engine's units, i.e. no gain. Verdict pending the agent's item 2.
 - Launched: one revision pass of the paper (referee items F1–F15, a Lean section, MC(⟨1,2,3⟩) = 6, the first
   X draft, README row 9).
 - Disk: 6.3 GB free of 252 GB; keep an eye on it.
+
+**H34 (characteristic 2 is special): no foothold; agent's odds ≈ 1%** (`research/sat3/hunch-char2.md`,
+scripts and exact integer tensors in `research/sat3/hunch2/`).
+- The mod-2 rank drop of the crossing-identity terms is real but a bounded factor [N, exact; pattern beyond
+  the computed sizes is C]. For size-1 classes of dimension d = 2^m the profile is (d²/2, k+1) for
+  1 ≤ k < d: the second rank grows linearly, there is no digit (Lucas) factorisation, the balanced middle term
+  keeps rank ≈ d²/2 on both cuts (6/16, 28/64 at d = 4, 8), and the number of terms does not shrink. A factor 2
+  in rank is zero in the exponent. Over ℤ the identity sums to +1 times the wire product, so the mod-2
+  identity is a genuine cover (the lead's first worry, an even constant, is excluded).
+- **Arc lemma [R given AN A.2, A.3, thm_alt; unrefereed].** The circle law B.3 is tight point by point on
+  Euclidean parallelograms: r*(θ) = |p e_x + q e_y|, r′*(θ) = |p e_x − q e_y|, r*² + r′*² = 2(p² + q²). So if
+  flat holds over k, every subexponential cover of two crossing wires has, for each arc point, a term reaching
+  it up to ε; the two-merge value 1/√2 is forced in every characteristic where flats exist. A persistent
+  mod-p drop below the arc would refute flat over F_p and contradict OpenAI's EG Thm 1.2.
+- Field bookkeeping: the F₂ of the matrices is a label field, unrelated to the coefficient field; contracting
+  depends on the characteristic only (EG Lemma 2.3); contracting in characteristic 0 gives contracting in all
+  large characteristics [D]; nothing is known between characteristic 2 and 0 in either direction; "characteristic
+  2 can only be easier" is false in general (XOR tensor: ≅ ⟨2⟩ outside characteristic 2, the W tensor with
+  asymptotic subrank 1.89 inside it).
+- Classical network codes are tensor restrictions over every field [R], so XOR coding gives 3/4 on K_{2,3}
+  in every characteristic; no characteristic-2 protocol above 3/√10 found.
+- Remaining decisive step, theoretical: check OpenAI's flat theorem at the prime field F₂.

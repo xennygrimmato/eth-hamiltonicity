@@ -1,0 +1,1 @@
+dims 8 8 CRT ok True integer identity sum_N Psi_N = sign*perm tensor, sign = 1 ; RHS mod 2 nonzero entries: 64 = d1*d2 = 64

@@ -168,9 +168,97 @@ fn limit_cmd(a: &[String]) {
     eprintln!("elapsed {:.2}s", t.elapsed().as_secs_f64());
 }
 
+/// cone TARGET GRAPH SUBDIV ITERS CHAINS [SEED]
+///   TARGET: a design name (delta3, crossing, ...) or limit:Q:P; GRAPH: see ConeGraph::named, or
+///   free:N0:NE[:K] (random free link, N0 vertices, NE edges, K extra isolated points; lengths annealed)
+fn cone_cmd(a: &[String]) {
+    let t = Instant::now();
+    let tname = &a[2];
+    let gspec = &a[3];
+    let sub: usize = a[4].parse().unwrap();
+    let iters: usize = a[5].parse().unwrap();
+    let chains: usize = a[6].parse().unwrap();
+    let seed: u64 = a.get(7).map(|s| s.parse().unwrap()).unwrap_or(1);
+    let des;
+    let net;
+    let target = if let Some(r) = tname.strip_prefix("limit:") {
+        let v: Vec<&str> = r.split(':').collect();
+        net = LimitNet::new(v[0], v[1].parse().unwrap());
+        ConeTarget::Limit(&net)
+    } else {
+        des = Design::by_name(tname).unwrap();
+        ConeTarget::Design(&des)
+    };
+    let free = gspec.starts_with("free:");
+    let g = if free {
+        let v: Vec<usize> = gspec[5..].split(':').map(|x| x.parse().unwrap()).collect();
+        let mut rng = rand::SeedableRng::seed_from_u64(seed);
+        let _: &mut rand::rngs::SmallRng = &mut rng;
+        ConeGraph::random_free(&mut rng, v[0], v[1], sub, *v.get(2).unwrap_or(&0))
+    } else {
+        ConeGraph::named(gspec, sub)
+    };
+    // seeds: "one node / one class per merge" at p mutually far vertices (greedy), radius 1
+    let p = match &target { ConeTarget::Design(d) => d.p(), ConeTarget::Limit(l) => l.p() };
+    let nh = match &target { ConeTarget::Design(d) => d.nhubs(), ConeTarget::Limit(l) => l.nhubs() };
+    let mut far = vec![0usize];
+    while far.len() < p {
+        let nx = (0..g.n).max_by(|&x, &y| {
+            let fx = far.iter().map(|&f| g.dist[f * g.n + x]).fold(f64::INFINITY, f64::min);
+            let fy = far.iter().map(|&f| g.dist[f * g.n + y]).fold(f64::INFINITY, f64::min);
+            fx.partial_cmp(&fy).unwrap()
+        }).unwrap();
+        far.push(nx);
+    }
+    let mut seedpl = ConePlacement { hv: vec![0; nh], r: vec![0.0; nh] };
+    match &target {
+        ConeTarget::Design(d) => {
+            for m in 0..p {
+                let h = d.hub(m, d.groups[m][0]) - d.nlegs();
+                seedpl.hv[h] = far[m];
+                seedpl.r[h] = 1.0;
+            }
+        }
+        ConeTarget::Limit(l) => {
+            for k in 0..p {
+                seedpl.hv[k * l.q.m] = far[k];
+                seedpl.r[k * l.q.m] = 1.0;
+            }
+        }
+    }
+    let s0 = target.score(&g, &seedpl);
+    let starts = if std::env::var("PF_NOSTART").is_ok() { vec![] } else { vec![seedpl] };
+    let r = anneal_cone(&target, &g, free, iters, chains, 0.05, 1e-6, seed, &starts);
+    let best = r[0].0;
+    let (vname, v, v0) = match &target {
+        ConeTarget::Design(d) => ("value per merge (1/p)sqrt(E Gamma)", (d.total_weight() * best).sqrt() / p as f64, (d.total_weight() * s0).sqrt() / p as f64),
+        ConeTarget::Limit(_) => ("level sqrt(Phi)/p", best.sqrt() / p as f64, s0.sqrt() / p as f64),
+    };
+    println!("cone {} over {} (n = {}, girth {:.4}) iters={} chains={} time {:.1}s", tname, g.name, g.n, g.girth(), iters, chains, t.elapsed().as_secs_f64());
+    println!("seed score {:.6} ({} {:.6});  BEST score (Gamma or Phi) = {:.6}   {} = {:.6}", s0, vname, v0, best, vname, v);
+    let q: Vec<String> = r.iter().map(|x| format!("{:.4}", x.0)).collect();
+    println!("chains: {:?}", q);
+    if let ConeTarget::Design(d) = &target {
+        let b = cone_product_b(d, &[(&r[0].1, &r[0].2)]);
+        println!("single factor (unsymmetrised) b = {}  (min {:.4})", fmt_b(&b), b.iter().cloned().fold(f64::INFINITY, f64::min));
+    }
+    println!("hubs: vertex {:?}\n      radius {:?}", r[0].2.hv, r[0].2.r.iter().map(|x| (x * 1e4).round() / 1e4).collect::<Vec<_>>());
+    if free {
+        println!("free link base edges: {:?}", r[0].1.chains.iter().map(|c| { let e = r[0].1.edges[c[0]]; (e.0, r[0].1.edges[*c.last().unwrap()].1, (c.iter().map(|&i| r[0].1.edges[i].2).sum::<f64>() * 1e4).round() / 1e4) }).collect::<Vec<_>>());
+    }
+    let gj = format!("{{\"n\":{},\"edges\":{:?}}}", r[0].1.n, r[0].1.edges.iter().map(|&(x, y, l)| (x, y, l)).collect::<Vec<_>>());
+    save(&format!("cone_{}_{}_s{}_seed{}", tname.replace(':', "-"), gspec.replace(':', "-"), sub, seed),
+         format!("{{\"target\":\"{}\",\"graph\":{},\"score\":{},\"value\":{},\"hv\":{:?},\"r\":{:?}}}", tname, gj, best, v, r[0].2.hv, r[0].2.r));
+    eprintln!("elapsed {:.2}s", t.elapsed().as_secs_f64());
+}
+
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     let cmd = a.get(1).map(|s| s.as_str()).unwrap_or("help");
+    if cmd == "cone" {
+        cone_cmd(&a);
+        return;
+    }
     if cmd == "limitexh" || cmd == "limit" {
         limit_cmd(&a);
         return;

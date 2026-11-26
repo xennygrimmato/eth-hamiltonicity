@@ -1462,3 +1462,27 @@ From the protocol agent (`research/ports/protocol/notes.md`, being written); unr
   numerical test of H19 (nothing above 3/√10) is out of reach by many orders of magnitude.
 - To do when the notes are complete: referee; record in the K_{2,3} note (open problem 1 becomes "explicit family at
   0.8377 [D]; gap to 0.9487 open").
+
+## 26 Nov (late, 40): middle-cell agent final; experiments, referee and Lean launched
+
+Final report in `research/ports/middle/notes.md`. Unrefereed.
+- **Bottom line:** "ports ⇒ contracting" is equivalent (given all that ¬contracting provides) to ¬(GE), where
+  (GE): some bounded-degree family of unbounded order satisfies E_pairs rk ≤ γ·E_edges rk for all placements into all
+  Mat_μ(F₂). The agent puts (GE) at ≈60% true; if true, wire metrics cannot unify the two hypotheses and a proof
+  would need tensors beyond wire metrics.
+- [R] Theorem M0 (direct, quantitative route from a graph + placement to contracting at μ; only D.2 Step 1).
+- [R] Kernel lemma (2^{−k·rk} PSD) and threshold: a spreading placement of gradient r needs r ≥ log₂(1/λ₂); LPS graphs
+  of degree ≥ 18 admit no 1-Lipschitz spreading placement; for cubic graphs the protected window is empty.
+  Barrier: subcritical percolation kernels have the same positivity, so positivity alone cannot prove (GE).
+- [R] Theorem M2: Cay(SL₃(F₂[x]/(p))) with the Grassmannian placement has ratio ≥ (3/8)log₂ n − 5; mechanism is
+  Lubotzky–Zelmanov's failure of dimension expansion over finite fields (arXiv:0804.0481, checked by the agent).
+  So the standard property-(T) expanders in characteristic 2 are maximally bad against buildings of growing rank.
+- Rank cone: CUT_n ⊆ 𝒦_n^{rk} ⊆ MET_n, 𝒦_5^{rk} = MET_5. Equivalent forms: subspaces, lattices, linear colourings,
+  low-rank coboundaries; for Cayley graphs a "rank-metric Kazhdan property over F₂".
+- Weak annealing on small cubic graphs: non-commutative gains of a few per cent only (K_{3,3}: 7/6 vs 1).
+- Ten dead routes recorded (§7).
+- The 3% prior on the middle cell as the true state is unchanged; what changed is provability.
+**Launched:** (1) `rankplace` module in tensorlab (bit-packed F₂ matrices, parallel annealing, graph generators,
+controls) running E-M1/E-M3/E-M4; (2) one agent refereeing §2/§4/§5.2 and formalising the kernel lemma and the
+spectral inequality in Lean (`PortsLean/RankKernel.lean`).
+H24 (GE): open; computation will say whether β_ρ/β_cut grows on generic expanders.

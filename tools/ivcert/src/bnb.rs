@@ -605,46 +605,82 @@ impl<'a, const N: usize, P: Problem<N>> Ctx<'a, N, P> {
     }
 
     pub fn solve(&self, b: &BoxN<N>, depth: u32) -> Node<N> {
+        if depth >= self.opt.par_depth {
+            // sequential part: stream certificate lines straight into a buffer (memory ~ text size)
+            let mut buf = Vec::new();
+            let mut st = Stats { min_lb: f64::INFINITY, min_lb_nonconvex: f64::INFINITY, ..Default::default() };
+            let mut nl = 0u64;
+            self.solve_stream(b, depth, 0, &mut buf, &mut st, &mut nl);
+            return Node::Text(buf, st, nl);
+        }
+        match self.step(b, depth) {
+            Err(node) => node,
+            Ok((d, l, r)) => {
+                let (a, bb) = rayon::join(|| self.solve(&l, depth + 1), || self.solve(&r, depth + 1));
+                Node::Split(d, Box::new(a), Box::new(bb))
+            }
+        }
+    }
+
+    /// One node: either a finished leaf (Err) or the split (Ok).
+    fn step(&self, b: &BoxN<N>, depth: u32) -> Result<(usize, BoxN<N>, BoxN<N>), Node<N>> {
         if self.abort.load(Ordering::Relaxed) {
-            return Node::Leaf(Leaf::Fail { counterexample: None });
+            return Err(Node::Leaf(Leaf::Fail { counterexample: None }));
         }
         let k = self.nodes.fetch_add(1, Ordering::Relaxed) + 1;
         if k % (1 << 22) == 0 {
             eprintln!("[progress] {} nodes, {} failures, current box {:?}", k, self.nfail.load(Ordering::Relaxed), b);
         }
         if let Some(l) = self.try_leaf(b) {
-            return Node::Leaf(l);
+            return Err(Node::Leaf(l));
         }
         // counterexample check at the centre: f(c) < bound proved by exact evaluation
         let c = center(b);
         let fc = eval_point(self.p, &c);
         if fc.is_valid() && fc.hi < self.c {
-            return self.fail(b, Some((c, fc)));
+            return Err(self.fail(b, Some((c, fc))));
         }
         if depth >= self.opt.max_depth {
-            return self.fail(b, None);
+            return Err(self.fail(b, None));
         }
         let d = split_dim(b);
-        let Some((l, r)) = split(b, d) else {
-            return self.fail(b, None);
-        };
-        if depth < self.opt.par_depth {
-            let (a, bb) = rayon::join(|| self.solve(&l, depth + 1), || self.solve(&r, depth + 1));
-            Node::Split(d, Box::new(a), Box::new(bb))
-        } else {
-            let a = self.solve(&l, depth + 1);
-            let bb = self.solve(&r, depth + 1);
-            let node = Node::Split(d, Box::new(a), Box::new(bb));
-            if depth == self.opt.par_depth {
-                let mut buf = Vec::new();
-                let mut nl = 0u64;
-                crate::cert::write_tree(&node, &mut buf, &mut nl).expect("write to memory");
-                let st = stats(&node);
-                return Node::Text(buf, st, nl);
-            }
-            node
+        match split(b, d) {
+            Some((l, r)) => Ok((d, l, r)),
+            None => Err(self.fail(b, None)),
         }
     }
+
+    fn solve_stream(&self, b: &BoxN<N>, depth: u32, rel: u32, buf: &mut Vec<u8>, st: &mut Stats, nl: &mut u64) {
+        match self.step(b, depth) {
+            Err(node) => {
+                crate::cert::write_tree(&node, buf, nl).expect("write to memory");
+                let t = stats(&node);
+                merge_stats(st, &t, rel);
+            }
+            Ok((d, l, r)) => {
+                buf.extend_from_slice(format!("S {d}\n").as_bytes());
+                st.splits += 1;
+                self.solve_stream(&l, depth + 1, rel + 1, buf, st, nl);
+                self.solve_stream(&r, depth + 1, rel + 1, buf, st, nl);
+            }
+        }
+    }
+}
+
+fn merge_stats(s: &mut Stats, t: &Stats, d: u32) {
+    s.natural += t.natural;
+    s.meanvalue += t.meanvalue;
+    s.taylor2 += t.taylor2;
+    s.convex += t.convex;
+    s.gain += t.gain;
+    s.hullconvex += t.hullconvex;
+    s.pruned += t.pruned;
+    s.excluded += t.excluded;
+    s.fail += t.fail;
+    s.splits += t.splits;
+    s.max_depth = s.max_depth.max(d + t.max_depth);
+    s.min_lb = s.min_lb.min(t.min_lb);
+    s.min_lb_nonconvex = s.min_lb_nonconvex.min(t.min_lb_nonconvex);
 }
 
 #[derive(Clone, Debug, Default)]
@@ -671,21 +707,7 @@ pub fn stats<const N: usize>(n: &Node<N>) -> Stats {
     fn go<const N: usize>(n: &Node<N>, d: u32, s: &mut Stats) {
         s.max_depth = s.max_depth.max(d);
         match n {
-            Node::Text(_, t, _) => {
-                s.natural += t.natural;
-                s.meanvalue += t.meanvalue;
-                s.taylor2 += t.taylor2;
-                s.convex += t.convex;
-                s.gain += t.gain;
-                s.hullconvex += t.hullconvex;
-                s.pruned += t.pruned;
-                s.excluded += t.excluded;
-                s.fail += t.fail;
-                s.splits += t.splits;
-                s.max_depth = s.max_depth.max(d + t.max_depth);
-                s.min_lb = s.min_lb.min(t.min_lb);
-                s.min_lb_nonconvex = s.min_lb_nonconvex.min(t.min_lb_nonconvex);
-            }
+            Node::Text(_, t, _) => merge_stats(s, t, d),
             Node::Split(_, a, b) => {
                 s.splits += 1;
                 go(a, d + 1, s);

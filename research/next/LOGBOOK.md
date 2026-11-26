@@ -656,3 +656,13 @@ Not a target: Boolean P vs NP. Nothing below bears on it.
   products realise too few routings, so radix pipelines need Ω(n/log n) products. Mixed reductions not excluded.
 - Corollary A now rests on the Lean statement: s > N(w^η − 2)/4 − 1, every finite field, no hypotheses.
 - Constants differ between anti (÷4, ÷16) and the note (÷3): different size measures; to reconcile before publishing.
+
+### Note on the circuit corollary: draft complete (`research/mm/note-circuit-corollary.md` + checks file)
+- Quotes cross-checked against the LaTeX; the Lean statement `manyList_full` quoted; import chain to
+  `square_exponent` given; search of the whole release finds no statement of the circuit consequence.
+- Our lemma: a fan-in-2 circuit of size s gives a trivalent network with ≤ 3s + N + 2 vertices (size ≤ 3s + 2N + 2 in
+  the Lean's measure). Corollary: s > N(w^η − 2)/3 − 1 for list distinctness; direct-sum and mod-p counting versions.
+- Agent's confidence: ~95% that the reading and derivation are right given the statements; ~90% that the release does
+  not already state it. Main risk: Theorem 2.2 / the Lean build being wrong, which the note says outright.
+- Lead read the draft in full: neutral, accurate to what we know, three good questions for experts (the sharpest: a
+  linear-size ⊕-circuit for distinctness would refute Theorem 2.2). Ready for the user's decision on posting.

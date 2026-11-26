@@ -1,0 +1,12 @@
+Delta3 model tripod x tripod iters=2000000 chains=8  time 11.4s
+BEST value = 249352.496926  rho = 27705.832992  (flat 5.196152)
+b = [326112.899149, 418063.118631, 3881.473000]
+top chains: ["249352.4969", "49.0251", "32.1196", "30.2143", "13.1197", "8.6327", "7.7925", "5.0615"]
+wrote ../../research/sat3/data/model_Delta3_3-3_k0_s3.json
+elapsed 11.44s
+Delta3 model tripod x R^4 iters=2000000 chains=8  time 14.7s
+BEST value = 167936.461687  rho = 18659.606854  (flat 5.196152)
+b = [44931.114944, 458878.270117, -3.585779]
+top chains: ["167936.4617", "123.7219", "23.2548", "16.0898", "10.1831", "6.0047", "4.8171", "4.1582"]
+wrote ../../research/sat3/data/model_Delta3_3_k4_s3.json
+elapsed 14.68s

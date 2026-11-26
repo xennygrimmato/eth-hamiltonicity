@@ -2240,3 +2240,26 @@ H26 refined: for 3-nets, sup over hull prices ∈ [0.609, 0.707]; H28 [C]: the s
 p-net. If H28 holds and floors are attained (H27), 3-SAT counting improves to 2^{n/(log n)^α}, α > 1/2.
 Forwarded the corrected spec to the executor (stop matrix-vertex runs and K₄; nets AG(2,3), AG(2,4), AG(2,5); general
 trees; growth with the number of factors; a run without the far-leg ansatz).
+
+## 27 Nov: 3-SAT theory interim 2 — on Δ₃ the floor under ¬contracting is in [2/3, 1/√2]; asymptotics open
+
+From the theory agent:
+- [D, wants a referee] **Every finite subset of every finite ℓ₂-product Π_j (m_j-pod × ℝ) is a price when contracting
+  fails** (block-diagonal embedding with additive rank; "segment filling" from AN C.4(f) with an arbitrary factor Z;
+  gluing as in Lemma H_m; induction over factors). So tripod², tripod⁹, tripod × ℝ^k are prices in that world. General
+  trees with two branch points: not proved.
+- [R] One-tree reduction on Δ₃: sup over all ℓ₂-products of trees = (1/p)√(E·Γ), Γ = sup over one tree of S/D̄.
+- **Δ₃: the product of nine node-tripods gives exactly 6 per merge, ρ = 2/3** (Γ = 36; cap for every price 9/√2 = 6.364,
+  Γ ≤ 40.5). So under ¬contracting the Δ₃ three-merge floor is in [0.6667, 0.7071]; exponent ≤ log₂(3/2) = 0.585 on Δ₃.
+  Mechanism: (avg b)² ≤ E·(E/p + Σ_n deg(n)·X(n)), X(n) = pairwise variance minus true variance of the p hubs at node n;
+  X = 0 in flats and for p = 2; node-tripods make X > 0 with equality in the chain.
+- K₄ is not a design for the tower (K = 2 cannot be iterated); its floor is settled for every price; it remains a pure
+  attainment question.
+- **Asymptotics decide the route:** a tower needs nets of order g → ∞. The node-tripod family gives √((g+p−2)/(gp)) per
+  merge on generic edges: 2/3 at g = p = 3, → 1/√p as g → ∞. So the constructed obstruction vanishes for large g;
+  whether cleverer trees keep the floor above 1/√3 (or push it to 1/√2) as g → ∞ is open.
+Status of H28: on the smallest net the floor is at least 2/3 (exponent at most 0.585 there); asymptotically nothing
+yet excludes 1/√3 (exponent 0.79). Three cheap runs sent to the executor: check of the nine-tripod value; Γ over
+general trees on Δ₃; Γ for full 3-net levels on AG(2,g), g = 3, 4, 5, 7.
+Next, once numbers are in: referee the product-of-hulls statement; then the attainment question (H27) becomes the
+main problem.

@@ -104,7 +104,45 @@ impl Design {
         let groups = (0..p).map(|k| nodes.iter().map(|&v| mf(k, v)).collect()).collect();
         Design::new(if p == 3 { "Delta3" } else { "Delta3-2merge" }, 9, edges, vec![1.0; 9], groups)
     }
+    /// Full affine plane AG(2,q), q in {2,3,4,5,7}: nodes (x,y) = q*x+y, ALL C(q^2,2) edges (edges inside a
+    /// merge class are internal to that merge), merges = the parallel classes listed in `classes`:
+    /// class 0: lines x = c, class 1: y = c, class s >= 2: y + (s-1) x = c (GF(q) arithmetic; GF(4) as
+    /// F_2[w]/(w^2+w+1)). For p = 3 at q = 4, 5 the third class is a Latin square.
+    pub fn ag(q: usize, classes: &[usize]) -> Self {
+        let add = |a: usize, b: usize| if q == 4 { a ^ b } else { (a + b) % q };
+        let mul = |a: usize, b: usize| {
+            if q == 4 {
+                const T: [[usize; 4]; 4] = [[0, 0, 0, 0], [0, 1, 2, 3], [0, 2, 3, 1], [0, 3, 1, 2]];
+                T[a][b]
+            } else {
+                (a * b) % q
+            }
+        };
+        let f = |s: usize, v: usize| {
+            let (x, y) = (v / q, v % q);
+            match s {
+                0 => x,
+                1 => y,
+                _ => add(y, mul(s - 1, x)),
+            }
+        };
+        let mut edges = vec![];
+        for i in 0..q * q {
+            for j in i + 1..q * q {
+                edges.push((i, j));
+            }
+        }
+        let groups = classes.iter().map(|&c| (0..q * q).map(|v| f(c, v)).collect()).collect();
+        let ne = edges.len();
+        Design::new(&format!("AG2-{}-p{}", q, classes.len()), q * q, edges, vec![1.0; ne], groups)
+    }
     pub fn by_name(name: &str) -> Option<Self> {
+        if let Some(rest) = name.strip_prefix("ag") {
+            // agQ-P : AG(2,Q) with the first P classes
+            let v: Vec<usize> = rest.split('-').map(|x| x.parse().unwrap()).collect();
+            let classes: Vec<usize> = (0..v[1]).collect();
+            return Some(Self::ag(v[0], &classes));
+        }
         match name {
             "crossing" => Some(Self::crossing(1.0, 1.0)),
             "crossing-half" => Some(Design { name: name.into(), ..Self::crossing(1.0, 0.5) }),
@@ -648,7 +686,7 @@ pub fn anneal_hubs_exact(des: &Design, sp: &MatSpace, iters: usize, chains: usiz
 
 // ------------------------------------------------------------------------------------ continuous models
 
-pub const MAXF: usize = 3;
+pub const MAXF: usize = 6;
 pub const MAXK: usize = 8;
 
 /// l2 product of spiders (arms[f] arms each; a point is (arm, radius) per spider) and R^k.
@@ -942,6 +980,308 @@ pub fn anneal_far(des: &Design, model: &Model, iters: usize, chains: usize, t0: 
     out
 }
 
+// ------------------------------------------------------------------------------------ far-leg limit, general trees
+
+/// One tree factor: vertices 0..n with parent pointers (vertex 0 is the root, parent[0] = 0), edge
+/// lengths len[v] = |v, parent(v)|, and hub h at vertex hv[h]. Every vertex may carry extra rays (ends):
+/// attaching rays keeps the space a tree, and the Busemann function of a ray attached at r is d(., r).
+#[derive(Clone, Debug)]
+pub struct TreeFactor {
+    pub parent: Vec<usize>,
+    pub len: Vec<f64>,
+    pub hv: Vec<usize>,
+    pub dist: Vec<f64>,
+}
+
+impl TreeFactor {
+    pub fn n(&self) -> usize {
+        self.parent.len()
+    }
+    pub fn recompute(&mut self) {
+        let n = self.n();
+        let mut adj = vec![vec![]; n];
+        for v in 1..n {
+            adj[v].push((self.parent[v], self.len[v]));
+            adj[self.parent[v]].push((v, self.len[v]));
+        }
+        self.dist.resize(n * n, 0.0);
+        let mut stack = vec![];
+        for s in 0..n {
+            let mut seen = vec![false; n];
+            stack.clear();
+            stack.push((s, 0.0));
+            seen[s] = true;
+            while let Some((v, d)) = stack.pop() {
+                self.dist[s * n + v] = d;
+                for &(w, l) in &adj[v] {
+                    if !seen[w] {
+                        seen[w] = true;
+                        stack.push((w, d + l));
+                    }
+                }
+            }
+        }
+    }
+    fn is_ancestor(&self, a: usize, mut v: usize) -> bool {
+        loop {
+            if v == a {
+                return true;
+            }
+            if v == 0 {
+                return false;
+            }
+            v = self.parent[v];
+        }
+    }
+    pub fn random<R: Rng>(rng: &mut R, n: usize, nh: usize) -> Self {
+        let mut parent = vec![0; n];
+        let mut len = vec![0.0; n];
+        for v in 1..n {
+            parent[v] = rng.gen_range(0..v);
+            len[v] = if rng.gen::<f64>() < 0.2 { 0.0 } else { rng.gen::<f64>() };
+        }
+        let hv = (0..nh).map(|_| rng.gen_range(0..n)).collect();
+        let mut t = TreeFactor { parent, len, hv, dist: vec![] };
+        t.recompute();
+        t
+    }
+    /// A pod (star) with `arms` arms, hub h on arm arm[h] at radius t[h]: root = centre, one vertex per hub.
+    pub fn pod(arm: &[usize], t: &[f64]) -> Self {
+        let nh = arm.len();
+        // vertices: 0 centre, 1..=nh hubs (each its own vertex); sort hubs on an arm by radius, chain them
+        let mut parent = vec![0; nh + 1];
+        let mut len = vec![0.0; nh + 1];
+        let mut order: Vec<usize> = (0..nh).collect();
+        order.sort_by(|&a, &b| t[a].partial_cmp(&t[b]).unwrap());
+        let mut last: std::collections::HashMap<usize, (usize, f64)> = Default::default();
+        for &h in &order {
+            let (pv, pt) = *last.get(&arm[h]).unwrap_or(&(0, 0.0));
+            parent[h + 1] = pv;
+            len[h + 1] = t[h] - pt;
+            last.insert(arm[h], (h + 1, t[h]));
+        }
+        let mut f = TreeFactor { parent, len, hv: (1..=nh).collect(), dist: vec![] };
+        f.recompute();
+        f
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct TreeModel {
+    pub factors: Vec<TreeFactor>,
+    pub k: usize,
+    /// flat coordinates of the hubs (nh x k)
+    pub x: Vec<f64>,
+}
+
+impl TreeModel {
+    pub fn hub_dist(&self, a: usize, b: usize) -> f64 {
+        let mut s = 0.0;
+        for f in &self.factors {
+            let d = f.dist[f.hv[a] * f.n() + f.hv[b]];
+            s += d * d;
+        }
+        for c in 0..self.k {
+            let d = self.x[a * self.k + c] - self.x[b * self.k + c];
+            s += d * d;
+        }
+        s.sqrt()
+    }
+}
+
+/// Far-leg value (sum_m b_m^+, best S) for hubs in a product of trees x R^k (see [`far_value`]); per
+/// edge and factor the best ordered pair of ray roots (r+, r-) over all vertices:
+/// A_f = max sum_{m in S} [d(r+,r-) - d(r+,h^m_u) - d(r-,h^m_v)] / delta_m.
+pub fn far_value_tree(des: &Design, tm: &TreeModel, scratch: &mut Vec<f64>) -> (f64, u32) {
+    let p = des.p();
+    let nl = des.nlegs();
+    let hidx = |m: usize, g: usize| des.hub(m, g) - nl;
+    let mut inv = vec![0.0; p];
+    for m in 0..p {
+        let mut dm: f64 = 0.0;
+        for g in 0..des.ngroups[m] {
+            for g2 in g + 1..des.ngroups[m] {
+                dm = dm.max(tm.hub_dist(hidx(m, g), hidx(m, g2)));
+            }
+        }
+        inv[m] = if dm > 1e-12 { 1.0 / dm } else { 0.0 };
+    }
+    let nn = des.nnodes;
+    let mut best = (0.0, 0u32);
+    let maxn = tm.factors.iter().map(|f| f.n()).max().unwrap_or(0);
+    for s in 1u32..(1u32 << p) {
+        if (0..p).any(|m| (s >> m) & 1 == 1 && inv[m] == 0.0) {
+            continue;
+        }
+        let w: f64 = (0..p).filter(|m| (s >> m) & 1 == 1).map(|m| inv[m]).sum();
+        // per factor, per node: cost_u(r)
+        let nf = tm.factors.len();
+        scratch.resize(nf * nn * maxn.max(1), 0.0);
+        for (fi, f) in tm.factors.iter().enumerate() {
+            let n = f.n();
+            for u in 0..nn {
+                let c = &mut scratch[(fi * nn + u) * maxn..(fi * nn + u) * maxn + n];
+                for x in c.iter_mut() {
+                    *x = 0.0;
+                }
+                for m in 0..p {
+                    if (s >> m) & 1 == 1 {
+                        let hv = f.hv[hidx(m, des.groups[m][u])];
+                        let row = &f.dist[hv * n..hv * n + n];
+                        for r in 0..n {
+                            c[r] += inv[m] * row[r];
+                        }
+                    }
+                }
+            }
+        }
+        let mut tot = 0.0;
+        for (e, &(u, v)) in des.edges.iter().enumerate() {
+            let mut sq = 0.0;
+            for (fi, f) in tm.factors.iter().enumerate() {
+                let n = f.n();
+                let cu = &scratch[(fi * nn + u) * maxn..(fi * nn + u) * maxn + n];
+                let cv = &scratch[(fi * nn + v) * maxn..(fi * nn + v) * maxn + n];
+                let mut a = 0.0f64;
+                for r in 0..n {
+                    let row = &f.dist[r * n..r * n + n];
+                    let mut by = f64::NEG_INFINITY;
+                    for r2 in 0..n {
+                        let t = w * row[r2] - cv[r2];
+                        if t > by {
+                            by = t;
+                        }
+                    }
+                    a = a.max(by - cu[r]);
+                }
+                sq += a * a;
+            }
+            for c in 0..tm.k {
+                let mut z = 0.0;
+                for m in 0..p {
+                    if (s >> m) & 1 == 1 {
+                        z += inv[m] * (tm.x[hidx(m, des.groups[m][u]) * tm.k + c] - tm.x[hidx(m, des.groups[m][v]) * tm.k + c]);
+                    }
+                }
+                sq += z * z;
+            }
+            tot += des.weights[e] * sq.sqrt();
+        }
+        if tot > best.0 + 1e-12 {
+            best = (tot, s);
+        }
+    }
+    best
+}
+
+/// Annealing for [`far_value_tree`]: `nf` tree factors with `nv` vertices each, R^k. Moves: edge
+/// length (additive / multiplicative / zero), hub to another vertex, re-parent a vertex (subtree
+/// prune and regraft), flat coordinate kick, copy a hub's position from another hub.
+/// Optional start (pods or a previous solution). Returns (value per merge, model, S), best first.
+pub fn anneal_far_tree(des: &Design, nf: usize, nv: usize, k: usize, iters: usize, chains: usize, t0: f64, t1: f64, seed: u64,
+                       start: Option<TreeModel>) -> Vec<(f64, TreeModel, u32)> {
+    let nh = des.nhubs();
+    let p = des.p() as f64;
+    let mut out: Vec<(f64, TreeModel, u32)> = (0..chains)
+        .into_par_iter()
+        .map(|c| {
+            let mut rng = SmallRng::seed_from_u64(seed ^ (c as u64 + 17).wrapping_mul(0x9E37_79B9_7F4A_7C15));
+            let mut tm = match &start {
+                Some(s) if c % 2 == 0 => s.clone(),
+                _ => TreeModel {
+                    factors: (0..nf).map(|_| TreeFactor::random(&mut rng, nv, nh)).collect(),
+                    k,
+                    x: (0..nh * k).map(|_| gauss(&mut rng) * 0.5).collect(),
+                },
+            };
+            let mut scratch = vec![];
+            let mut cur = far_value_tree(des, &tm, &mut scratch).0;
+            let mut best = (cur, tm.clone());
+            let mut sigma = 0.2;
+            let (mut acc, mut tried) = (0usize, 0usize);
+            for it in 0..iters {
+                let t = t0 * (t1 / t0).powf(it as f64 / iters as f64);
+                let old = tm.clone();
+                let nfac = tm.factors.len();
+                let mv = rng.gen_range(0..100);
+                if nfac > 0 && mv < 70 {
+                    let f = &mut tm.factors[rng.gen_range(0..nfac)];
+                    let n = f.n();
+                    let sub = rng.gen_range(0..10);
+                    if sub < 5 && n > 1 {
+                        let v = rng.gen_range(1..n);
+                        f.len[v] = (f.len[v] + sigma * gauss(&mut rng)).max(0.0);
+                    } else if sub < 6 && n > 1 {
+                        let v = rng.gen_range(1..n);
+                        f.len[v] = if rng.gen::<bool>() { 0.0 } else { f.len[v] * (0.5 * gauss(&mut rng)).exp() };
+                    } else if sub < 8 {
+                        let h = rng.gen_range(0..nh);
+                        f.hv[h] = if rng.gen::<bool>() { rng.gen_range(0..n) } else { f.hv[rng.gen_range(0..nh)] };
+                    } else if n > 2 {
+                        let v = rng.gen_range(1..n);
+                        let np = rng.gen_range(0..n);
+                        if !f.is_ancestor(v, np) {
+                            f.parent[v] = np;
+                        }
+                    }
+                    f.recompute();
+                } else if k > 0 && mv < 95 {
+                    let h = rng.gen_range(0..nh);
+                    for cc in 0..k {
+                        tm.x[h * k + cc] += sigma * gauss(&mut rng);
+                    }
+                } else {
+                    // copy hub position (all factors and flat part)
+                    let a = rng.gen_range(0..nh);
+                    let b = rng.gen_range(0..nh);
+                    for f in tm.factors.iter_mut() {
+                        f.hv[a] = f.hv[b];
+                    }
+                    for cc in 0..k {
+                        tm.x[a * k + cc] = tm.x[b * k + cc];
+                    }
+                }
+                let v = far_value_tree(des, &tm, &mut scratch).0;
+                tried += 1;
+                if v >= cur || rng.gen::<f64>() < ((v - cur) / t).exp() {
+                    cur = v;
+                    acc += 1;
+                    if v > best.0 + 1e-12 {
+                        best = (v, tm.clone());
+                    }
+                } else {
+                    tm = old;
+                }
+                if tried == 500 {
+                    let r = acc as f64 / tried as f64;
+                    sigma *= if r > 0.3 { 1.25 } else { 0.8 };
+                    sigma = sigma.clamp(1e-8, 5.0);
+                    acc = 0;
+                    tried = 0;
+                }
+            }
+            let (v, s) = far_value_tree(des, &best.1, &mut scratch);
+            (v / p, best.1, s)
+        })
+        .collect();
+    out.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+    out
+}
+
+/// Convert a pod-product hub configuration (Model with spiders) to a TreeModel.
+pub fn pods_to_trees(model: &Model, hubs: &[CPoint]) -> TreeModel {
+    let factors = (0..model.arms.len())
+        .map(|f| {
+            let arm: Vec<usize> = hubs.iter().map(|h| h.arm[f] as usize).collect();
+            let t: Vec<f64> = hubs.iter().map(|h| h.t[f]).collect();
+            TreeFactor::pod(&arm, &t)
+        })
+        .collect();
+    let k = model.k;
+    let x = hubs.iter().flat_map(|h| h.x[..k].to_vec()).collect();
+    TreeModel { factors, k, x }
+}
+
 // ------------------------------------------------------------------------------------ tests
 
 #[cfg(test)]
@@ -1019,6 +1359,50 @@ mod tests {
         // the same hubs embedded in tripod x R^6 (radius 0 on the tripod) give the same value
         let m2 = Model { arms: vec![3], k: 6 };
         assert!((far_value(&des, &m2, &hubs).0 - v).abs() < 1e-9);
+    }
+
+    #[test]
+    fn identities_delta3() {
+        // "merge pods" R x C x D: in factor k, hub g of merge k on arm g at radius 1/sqrt2 (so delta = 1),
+        // all other hubs at the centre: value 9/sqrt3 per merge.
+        let des = Design::delta3(3);
+        let r = 1.0 / 2f64.sqrt();
+        let mut hubs = vec![CPoint::default(); 9];
+        for k in 0..3 {
+            for g in 0..3 {
+                hubs[3 * k + g].arm[k] = g as u8;
+                hubs[3 * k + g].t[k] = r;
+            }
+        }
+        let m = Model { arms: vec![3, 3, 3], k: 0 };
+        let (v, _) = far_value(&des, &m, &hubs);
+        assert!((v / 3.0 - 3.0 * 3f64.sqrt()).abs() < 1e-9, "{}", v / 3.0);
+        let tm = pods_to_trees(&m, &hubs);
+        let mut sc = vec![];
+        let (v2, _) = far_value_tree(&des, &tm, &mut sc);
+        assert!((v2 - v).abs() < 1e-9, "{} {}", v, v2);
+    }
+
+    #[test]
+    fn ag_designs() {
+        let d = Design::ag(3, &[0, 1, 2]);
+        assert_eq!((d.edges.len(), d.nhubs()), (36, 9));
+        // (sqrt3 + 3 sqrt2)/12 * 36 per merge = orthogonal price (z1 table, rho 0.498)
+        assert!((d.flat_value() / 36.0 - (3f64.sqrt() + 3.0 * 2f64.sqrt()) / 12.0).abs() < 1e-12);
+        let d4 = Design::ag(4, &[0, 1, 2]);
+        for m in 0..3 {
+            for g in 0..4 {
+                assert_eq!(d4.groups[m].iter().filter(|&&x| x == g).count(), 4);
+            }
+        }
+        // any two classes: lines meet in exactly one point
+        for (a, b) in [(0, 1), (0, 2), (1, 2)] {
+            for g in 0..4 {
+                for h in 0..4 {
+                    assert_eq!((0..16).filter(|&v| d4.groups[a][v] == g && d4.groups[b][v] == h).count(), 1);
+                }
+            }
+        }
     }
 
     #[test]

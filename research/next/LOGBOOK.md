@@ -1948,3 +1948,12 @@ New in the final report beyond what is already logged:
   one-vertex lemmas beyond λ₁; triangle-inequality proofs of (I); lifting to Y × ℝ; ℓ₂-product closure of hulls.
 - Its next steps: referee Theorem E (running), certificates (running), then Lean for the one-vertex lemmas and
   Prop. C′; prove Conjecture P; decide K_{3,3}.
+
+## 26 Nov (late, 71): second refined certificate proved by ivcert (independent check running for both)
+
+- **(CL\*\*₀):** 13·Br′(σ; 12/13, 15/13) ≥ 0 on 𝓕′₁: 16 far pieces + 8 near-origin orthants; the eight "curved" far pieces
+  exclude the central cube [−R, R]⁶, R = (181/256)², which the orthant certificates cover; the "linear" case never meets
+  that cube. ≈58M leaves, ≈680 MB (950 MB for both jobs; git-ignored), ≈1350 s. Verified by `ivcheck`.
+- `ivcheck2` (independent): 6 of 16 certificates of S(9/10) verified so far; estimated 1.5–2 h more for everything.
+- If both independent checks pass and the referee's final report holds: f*(K_{2,3}(w)) = 3/(2+w) for all w ≥ 5/4,
+  unconditionally — the full cut regime, H25.

@@ -1,0 +1,16 @@
+[package]
+name = "ivcert"
+version = "0.1.0"
+edition = "2021"
+description = "Rigorous interval branch-and-bound certifier for multivariate inequalities, with certificate files and an independent checker"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+rayon = "1.10"
+
+[profile.release]
+opt-level = 3
+debug = false
+
+[profile.test]
+opt-level = 2

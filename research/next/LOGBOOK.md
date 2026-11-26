@@ -1199,3 +1199,15 @@ f*(K_{2,3}; k) = 3/√10 whenever contracting fails over k; in characteristic 0,
   inequality — N5 as a bare five-point space satisfies the inequality and contains no diamond, so the weaker
   skeleton was false/vacuous. The informal proof uses the price space (complete CAT(0)), so it is unaffected.
 - Confirmed: "points of the price space are prices" is not a gap; `prop_space` says the whole metric is a price.
+
+## 26 Nov (late, 25): first Lean executor finished; whole project rebuilt by me [L]
+
+`research/ports/lean/` — 10 files, 2089 lines, `lake build` 18272 jobs success, no sorry/axiom/native_decide (my
+rebuild). Contents: ThmA(+Arith) (contracting ⇒ ports, conditional on copied statements); ThmR + PrunedTree (exponent
+bookkeeping and pruned evaluator); ANFragment (guess count on a verbatim copy of Anthropic's machine file;
+additivity under composition); W5, Hull (five-point geometry, rank table, glue from explicit hypotheses);
+NineFourths (the algebra behind 9/4: AM–HM, perimeter ≤ 9/4, (xy+yz+zx)²/(4xyz) = (p+q+r)²/4 after substitution, and
+that S²/(4xyz) solves the rectangular formula). Executor's notes: `research/ports/lean/NOTES.md`.
+Numbers worth keeping: OpenAI's `large` alone needs h ≥ 491; both conditions need h ≥ 480 300 at C₀ = 1.
+Open Lean items: `bitsB`, dealProg, thm_cut threading (need Anthropic's build — permission pending with the user);
+Lemma H (needs CAT(0) theory absent from Mathlib); the field identification inside `ContainStatement`.

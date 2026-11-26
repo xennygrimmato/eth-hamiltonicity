@@ -43,15 +43,15 @@ lemma succProb_nonneg (n k : ℕ) (S : Finset (Fin n → ZMod 2)) : 0 ≤ succPr
 theorem toeplitz_isolation (n k : ℕ) (S : Finset (Fin n → ZMod 2))
     (h1 : 2 ^ k ≤ 4 * S.card) (h2 : 4 * S.card ≤ 3 * 2 ^ k) :
     3 / 16 ≤ succProb n k S := by
-  have hY : Fintype.card (Fin k → ZMod 2) = 2 ^ k := by simp [Fintype.card_fun]
+  have hY : Fintype.card (Fin k → ZMod 2) = 2 ^ k := by simp
   have hH : Fintype.card ((Fin (n + k - 1) → ZMod 2) × (Fin k → ZMod 2))
-      = 2 ^ (n + k - 1) * 2 ^ k := by simp [Fintype.card_fun]
-  have hu : ∀ x, (univ.filter (fun p => hash n k p x = 0)).card
+      = 2 ^ (n + k - 1) * 2 ^ k := by simp
+  have hu : ∀ x, (univ.filter (fun p => hash n k p x = (0 : Fin k → ZMod 2))).card
       * Fintype.card (Fin k → ZMod 2) = Fintype.card ((Fin (n + k - 1) → ZMod 2) × (Fin k → ZMod 2)) := by
     intro x
     have := hash_uniform (F := ZMod 2) n k x 0
     rw [hY, hH]; simpa using this
-  have hpw : ∀ x x', x ≠ x' → (univ.filter (fun p => hash n k p x = 0 ∧ hash n k p x' = 0)).card
+  have hpw : ∀ x x', x ≠ x' → (univ.filter (fun p => hash n k p x = (0 : Fin k → ZMod 2) ∧ hash n k p x' = 0)).card
       * Fintype.card (Fin k → ZMod 2) ^ 2
         = Fintype.card ((Fin (n + k - 1) → ZMod 2) × (Fin k → ZMod 2)) := by
     intro x x' hxx'

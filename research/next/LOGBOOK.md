@@ -1128,3 +1128,11 @@ compC; `Guess.lean` = our overlay. I rebuilt the project (18266 jobs, success, n
 - Estimate for the rest, both needing the real build: dealProg ≤ s-free part of dealB ≈ 1.5–3k lines, 2–5 focused
   days; threading through thm_cut ≈ 1–2 weeks (needs the 261-file closure). Blocked on build permission (user asked).
 - Limitation to state wherever this is cited: it is a copy, checked against a different Mathlib version than theirs.
+
+## 26 Nov (late, 20): isolation composed with the Toeplitz hash in Lean [L]
+
+`research/ports/lean-c1/IsoLean/Compose.lean` (per the executor; not rebuilt by me): `exists_good_k` — for n ≥ 1 and
+nonempty S ⊆ F₂ⁿ some k ∈ [2, n+1] isolates with probability ≥ 3/16; `avg_succProb` — with k uniform, ≥ 3/(16n).
+Break found: the notes' range {2..n+1} is empty at n = 0; assume n ≥ 1 (harmless). Next: Tseitin parsimony.
+So the probabilistic core of C1 (hash + isolation + choice of k) is machine-checked; the reduction itself
+(attaching the circuit to the counting network) is not.

@@ -2817,3 +2817,35 @@ tips of the √rank pod under the price of `thm_alt_rank_price`; contact with Op
   silent step of the paper proof became an explicit hypothesis (the parent inequality for the child's own
   positions, used for r ≤ p + q and the coincident-hub case); it holds when v is the Steiner value.
 - No step of the paper proof failed formally.
+
+## 27 Nov: CORRECTION (referee, interim): Theorem W bounds certified costs only
+
+Referee on Theorem W (`research/sat3/review-thmW.md` in progress), interim verdict:
+- **Lemma S: correct**, including degenerate cases (coincident hubs, infimum not attained, shared ends,
+  hub–hub bonds created earlier); needs no properness or completeness. The threshold identity is right.
+- **Attack point 1(a): the theorem is weaker than logged.** The leaf cost in Theorem W is the cost of the
+  realisation inherited from the derivation (B.2 rank certificates + A.3 networks), which is an UPPER bound on
+  the true network cost of the leaf tensor. Nothing lower-bounds the true cost. Exact evidence at small size:
+  classes (2,12,2,12), the true rank of Ψ₄ across ad|bc is 7 against the certified 20. So Theorem W is a
+  barrier for one way of PROVING costs (B.2-type certificates, A.3 networks, routing, nesting), not for the
+  tensors. **The corollary must read: on nets of F_q^m the certified level value of crossing-generated covers
+  is ≥ 1/√2 − O(1/g) at every depth.** The entries above that say "stuck at exponent 1/2, unconditionally"
+  overstate it; the lead's summaries to the user did too.
+- What bounds TRUE costs: prices. If contracting fails and the Q1 price claim (Theorem B) survives its
+  referee, every family of pieces on those nets has true level value ≥ 1/√2 − O(1/g). So the true-cost barrier
+  is conditional on "contracting fails"; the unconditional statement is about certificates only. Under flat,
+  the arc lemma says true two-merge ranks reach the circle asymptotically; nothing analogous is known for the
+  third merge.
+- Depth: the discretisation lemma as written loses about 2.6 bits per crossing, so "any depth" is not covered
+  as written; the referee computed the exact loss with the true partition numbers for all class energies
+  ≤ 1200 and found it exactly 0 [N], with growing slack asymptotically [D sketch]. Very likely fine, not yet
+  proved for all energies.
+- Khoruzhii's identity (hence Sra's nesting) is not a coarsening of B.2 but fits a generalised class (any
+  crossing identity whose certified bond boxes cover the arc), for which the same proof works.
+- A table entry in attain-notes §1.2 is wrong (four different groups: S = p + q + min(p,q)); the script
+  computes it correctly, values unaffected.
+- **H44 (new, from the correction).** The true network costs of crossing pieces under the THIRD merge are
+  below their certificates at small sizes (and the "third ladder" of the ideas agent has ranks
+  1,1,1,2,4,6,10,… across the third matching cut). Is the gap asymptotic? If contracting fails it cannot give
+  a level value below 1/√2 on F₂^m nets (prices), so an asymptotic gap that large would itself prove
+  contracting. Worth an exact computation on the 8-wire target E_D.

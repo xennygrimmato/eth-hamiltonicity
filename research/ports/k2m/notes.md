@@ -7,9 +7,10 @@ on an uncertified step; **[N]** numerical; **[C]** conjecture; **[X]** dead, wit
 Anthropic's paper as in the note §0.3 (C.3 = `prop_space`, C.4(a),(f) = `lem_toolkit`, `thm_alt_rank_price`).
 
 Scripts (this folder; all [N] except `fqpods.py`, which is exact integer arithmetic):
-`books.py`, `wscan.py` (book minimisation), `calib_check.py` (calibration identities), `clstar_analytic.py` (steps of
-Theorem D), `fqpods.py` (rank tables over F_q), `refined.py`, `refined_m.py`, `cutregime.py` (weights above the
-proved range), `twoapex.py`, `scan2.py` (other networks), `three_angle.py` (sharp constant in (I)).
+`books.py`, `wscan.py` (book minimisation for K_{2,m}(w)), `calib_check.py`, `clm_counter.py` (calibration identities,
+counterexample of §3.6), `clstar_analytic.py` (steps of Theorem D), `fqpods.py` (rank tables over F_q),
+`refined.py`, `refined_m.py`, `cutregime.py`, `thmE_check.py`, `hardregion.py`, `hardregion2.py` (§5),
+`twoapex.py`, `scan2.py`, `scan3.py`, `k33.py`, `k33_models.py` (§6), `three_angle.py` (§7). Outputs: `*.out`.
 
 ---
 
@@ -760,8 +761,8 @@ f_pod ≥ f_book, with equality if some optimal book has all its (unconstrained)
 > **Conjecture P** [C; N]. For every two-apex network some optimal book has all hubs on the spine; hence
 > f_CAT(0) = f_pod, the network is pinned, and f*(k) = f_book whenever Contracting(k) fails.
 
-[N] `scan2.py`, `scan3.py`, `twoapex.py`: no instance with f_book < f_pod was found (see the list below and the
-random scans). For the triangle-decomposable family it is a theorem:
+[N] `scan2.py`, `scan3.py`, `twoapex.py`: no instance with f_book < f_pod was found (the list of §6.3 and 138 random
+instances, §8). For the triangle-decomposable family it is a theorem:
 
 > **Proposition T** [R]. Let H be an r-regular graph on v₁,…,v_m with a fractional triangle decomposition
 > (weights x_t ≥ 0 on the triangles of H with Σ_{t∋e} x_t = 1 for every edge e). For the network "supply K_{2,m},
@@ -784,8 +785,8 @@ Proof: Σ_{t∋i}x_t = r/2 and Σ_t x_t = mr/6. Summing Theorem 5_{w′}, w′ =
 | K_{2,4}(w), w ≥ 3.8269 | 4/(6+w) | 4/(4+w) | 4/(4+w) | [R]; cut-pinned |
 | K_{2,6} + octahedron demand, w = 1 (8 parties) | 6/13 | 12/√580 = 0.498273 | 1/2 | [R] (Prop. T, r = 4); distinct; pinned |
 | K_{2,5} + pentagon demand C₅, w = 1 (7 parties) | 5/6 | 5/√26 = 0.980581 [N: books] | 1 | distinct [N]; optimum is W₇, pinned [N]; no triangle, so no proof |
-| K_{2,3}, supply u₁v₁, u₁v₂ doubled, demand v₁v₂ doubled (5 parties; scan #2 of e3) | 0.8 | 0.965136 [N: books] | 1 | distinct; optimum an asymmetric book with interior hubs (ρ = (1.572,1.572,1.763)D, a = (0.204,0.204,0.892)D), in tripod × ℝ: pinned [N]. The W5 value 0.97301 of the e3 scan is not optimal |
-| K_{2,3}(1) + supply wire u₁u₂ of capacity ½ (5 parties) | 7/8 | 0.986750 [N: books] | 1 | distinct; symmetric book ρ = 3.041D; pinned [N] |
+| K_{2,3}, supply u₁v₁, u₁v₂ doubled, demand v₁v₂ doubled (5 parties; scan #2 of e3) | 0.8 | 0.965136 [N: books and Toyoda] | 1 | distinct; optimum an asymmetric book with interior hubs (ρ = (1.572,1.572,1.763)D, a = (0.204,0.204,0.892)D), in tripod × ℝ: pinned [N]. The W5 value 0.97301 of the e3 scan is not optimal |
+| K_{2,3}(1) + supply wire u₁u₂ of capacity ½ (5 parties) | 7/8 | 0.986750 [N: books and Toyoda] | 1 | distinct; symmetric book ρ = 3.041D; pinned [N] |
 | 4-cycle with the two diagonals; C₅ with pentagram; octahedron with antipodal pairs; K_{2,4} with C₄ or a perfect matching on the 4-side | = f_cut | = f_cut | 1; ½; 2; 4/5, 4/3 | [R] flow = cut: no gain |
 | K_{3,3}, demand = the six pairs inside the sides (6 parties; not two-apex) | 3/4 | ∈ [3/√10, 1] [R]; see below | 1 | open whether f_CAT(0) < 1 |
 
@@ -843,7 +844,16 @@ Remarks.
 - Two-apex scans: `scan2.py` (90 random instances with integer capacities/demands in {0,…,3}, m = 3, 4): all have
   f_flow = f_book = f_pod = f_cut within 10⁻⁶ (small integer data are almost always flow-tight), and for m = 3 the
   book value agrees with the Toyoda five-point optimisation (`tensorlab.min_ratio`, families triangle + box) up to
-  the local optimiser's error (one start set stopped at 0.750164 against 0.75). `scan3.py`: see below.
+  the local optimiser's error (one start set stopped at 0.750164 against 0.75).
+- `scan3.py` (48 instances: K_{2,3}(w) and K_{2,4}(w) with log-normal perturbations of all capacities and demands,
+  spread 0.15, 0.4, 0.8, w ∈ [0.3, 3]): in all 48, f_book = f_pod = f_cut within 10⁻⁶; in 14 of them
+  f_flow < f_cut (by up to 17%). So perturbed instances are typically *cut-pinned*: a cut drops below the W-type
+  value as soon as the symmetry is broken by more than a few percent, and then (numerically) the cut is the CAT(0)
+  minimum, which would make f* equal to the cut bound unconditionally. Three distinct values need near-symmetric
+  data.
+- Toyoda cross-checks (`tensorlab.min_ratio`, triangle + box, 3 × 400 starts), independent of the book reduction:
+  scan #2 of §6.3: 0.965136; K_{2,3}(1) + supply u₁u₂ × ½: 0.986750; K_{2,3}(1.2): 0.928477 = 3/√(9+1.44) (Conjecture W at
+  w = 1.2); K_{2,3}(2): 0.750000 (Theorem E). All agree with the book minima.
 
 - K_{3,3} (`k33.py`, `k33_models.py`): flow 3/4, cut 1 ({u₁,v₁}). Relaxation by the necessary four-point (box)
   inequalities on six points, 240 feasible local minima from 240 starts: all at 1.06066 = 3/(2√2) (the

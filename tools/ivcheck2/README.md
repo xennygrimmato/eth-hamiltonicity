@@ -167,6 +167,45 @@ run fails 898 leaves, including the 8 at the origin. So the checker is not vacuo
 SHA-256 of the checked certificates are in `results/sha256.txt` after a run, for example
 clstar_rho0.5_nosym `5656297f…10d9` and hull3-nosym `0d2e100d…2f01`.
 
+## k2: the K_{2,3} refined bracket on the hard region (S(9/10) and (CL\*\*₀))
+
+Statements (research/ports/k2m/notes.md §5.4, "Certificate spec"): Br′(σ; λ, η) ≥ 0 on
+𝓕′₁ = {Q₁ ≤ 0, Q₂ ≥ 0, Q₃ ≥ 0, 2|Q₁| ≤ λW₁, 2Q₂ ≤ λW₂} ⊂ [−1,1]⁶ for (λ, η) = (9/10, 6/5) (job s910) and
+(12/13, 15/13) (job cl0). The encoding here (`problems.py`, class `K2Spec`) was written from the notes:
+C, N, X verbatim, with the signs of Q₁, Q₂, Q₃ and of ε_k fixed by the piece (below) and only N ≥ C used.
+The certificates come from `ivcert/run_k2.sh`; each one is for a closed piece
+P(case, s) = 𝓕′₁ ∩ {2Q₃ ≤ λW₃ (case c) | 2Q₃ ≥ λW₃ (case l)} ∩ {s_k ε_k ≥ 0}, and claims M·Br′ ≥ 0 there,
+M = lcm of the denominators of λ, η (10 resp. 13).
+
+*Independence, for k2.* This part was written by the same author as the ivcert problem file
+`k2m.rs`, from the notes and from the piece/coordinate conventions stated in the header of `k2m.rs`;
+the stacks (Arb/Python vs f64/Rust), the form of the function (verbatim C, N, X here; collected
+V + linear form there), the gradients, the origin argument (lemma here; t-substitution and a
+convexity leaf there) and the piece test are separate code. The two encodings are compared at random points by
+`selftest_k2.py`.
+
+What `check.py` does with a k2 certificate:
+* coverage as above; the domain is [−1,1]⁶ (k2far) or a ∈ [−R,R]³, t ∈ [0,T]³ with R = T² (k2near,
+  coordinates e_k = s_k t_k², σ_ij = a_k + e_k, σ_ji = e_k − a_k);
+* an `X` leaf is accepted if its own piece test shows the box misses the piece (one defining inequality < 0
+  on the whole box), or (k2far with rho = R) the box lies in [−R,R]⁶; otherwise it is re-proved like any
+  other leaf;
+* every other leaf (and every bisected piece): discarded if it misses the piece, else closed by `lemma`
+  (k2near: (a,e)-image inside [−1/16,1/16]⁶), `nat` or `mvf` (hand-written gradient of the sign-resolved
+  formula, checked against sympy), else bisected;
+* origin lemma (`originlemma.prove_k2near`): Br′ ≥ Br = V(a,e) + λΣ|e_k| − η everywhere; g(a) = V(a,0) has
+  g(0) = 3τ = η (exact, sympy), is even, and has a positive definite Hessian on [−1/16,1/16]³ (Sylvester on
+  8³ sub-boxes); L_k = sup|∂V/∂e_k| < λ on [−1/16,1/16]⁶ (3⁶ sub-boxes); mean value theorem;
+* `k2cover.py` checks that the verified certificates cover all 16 pieces, and the central cube of each
+  case-c piece by all 8 k2near orthants;
+* `selftest_k2.py` (guard): the encoding against a plain float Br′ from the spec and against the
+  trigonometric definition N = cos((κ−|μ|)₊), gradients against sympy, near against far, and against the
+  ivcert encoding (if `ivcert/target/release/examples/k2_points` is built) on random points.
+* `--shift D` (mutation test): proves M·(Br′ − D) ≥ 0 instead, without the origin lemma.
+
+Run: `tools/ivcheck2/run_k2.sh` (CERTS=dir JOBS=n). Results of the run of 2026-11-26 are in
+`research/ports/ivcert-notes.md` §5 and `results/k2_*.log`.
+
 ## Re-running
 
 ```

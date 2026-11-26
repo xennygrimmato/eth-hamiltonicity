@@ -1929,3 +1929,22 @@ From the certificate executor:
   minimum closed by convexity leaves; constants scaled by 13 to be exact floats. Far pieces running.
 - Reduction check: 140k points outside all symmetric images of 𝓕′₁ give min Br′ = +0.0034 (λ = 9/10), +0.0032 (12/13),
   consistent with Lemma R.
+
+## 26 Nov (late, 70): K_{2,m} agent final
+
+`research/ports/k2m/notes.md` (§§0–9, 895 lines). §§0–4 refereed; §§5–7 under review (interim positive on Theorem E).
+New in the final report beyond what is already logged:
+- Instances with three distinct values (routing, CAT(0), cut): K_{2,5} with pentagon demand: 5/6, 5/√26 = 0.98058, 1
+  (optimum W₇); an asymmetric five-point instance: 0.8, 0.965136, 1 (books and the five-point criterion agree; the
+  earlier W₅ value 0.973 for it was not optimal); K_{2,3} plus a u₁u₂ supply wire of capacity ½: 7/8, 0.98675, 1.
+- In 48 perturbed K_{2,3}/K_{2,4} instances the CAT(0) minimum equals the cut (in 14 the cut is strictly above the flow):
+  three distinct values seem to need near-symmetric data.
+- K_{3,3}: flow 3/4, cut 1; f_CAT(0) ≥ 3/√10 [R]; no configuration below 1 found (240 local minima at 1.0607) →
+  conjecture Σ_cross ≥ Σ_within for 3+3 CAT(0) points, i.e. f*(K_{3,3}) = 1 unconditionally [C].
+- Conjecture W [C]: the CAT(0) minimum for K_{2,m}(w) is min(R_m(w), m/(⌊m²/4⌋+w)); switch points 5/4, 5/2, 16/3 for
+  m = 3, 4, 5. Conjecture P [C]: optimal books have their hubs on the spine (138 random instances).
+- Unconditional chord bound in the open range, e.g. f*(K_{2,3}(5/4)) ≥ 0.8908 against the conjectured 12/13.
+- Dead [X]: (CL\*)-type relaxation beyond w = 1; convexity to reach arc points; per-quadrilateral inequalities; the
+  one-vertex lemmas beyond λ₁; triangle-inequality proofs of (I); lifting to Y × ℝ; ℓ₂-product closure of hulls.
+- Its next steps: referee Theorem E (running), certificates (running), then Lean for the one-vertex lemmas and
+  Prop. C′; prove Conjecture P; decide K_{3,3}.

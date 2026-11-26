@@ -85,3 +85,24 @@ Scripts: `mc_sat.py` (E1 exact MC via SAT + CEGAR on input rows), `e2_wordram.py
   exponent. Exponents come only from recursion, and recursion needs block-compatibility
   (bilinear over a ring). A non-bilinear Boolean saving at size 2 would NOT recurse (x² = x
   fails in M_n(F₂)), so a constant-size gap is only a curiosity unless it grows with n.
+
+## ideas-E5. Derived-exponent atlas (no solver)
+- Ran `e5_atlas.py` (output `e5_atlas_out.txt`): claimed exact formula
+  w(x,y,z) = x+y+max(0,(x+y)z−xy)²/(4xyz) vs the ω=2 world max-pair-sum; bisection for balance points.
+- AT THE IDEAL value: ⟨n,n^k,n⟩ for k ≤ 1/2 (n²); Zwick/unweighted directed APSP n^{2.5}
+  (μ = 1/2 in both worlds); fully sparse product (ABFK balance equation as transcribed in
+  ideas-n2 §1, w(σ−1,2−σ,1+r−σ)=σ): m^{4/3} at m_out=m, m^{7/6} at m_out=m^{1/2}, ideal for all
+  m_out ≤ m_in.
+- NOT ideal: ⟨n,n^{0.6},n⟩ 2.0167, ⟨n,n^{0.75},n⟩ 2.0833, ⟨n,n^{1.5},n⟩ 2.6667 (vs 2.5),
+  α = 1/2 (vs 1), sparse with m_out = m^{1.25}: 1.4221 (vs 1.4167), m^{1.5}: 1.5345 (vs 1.5).
+  Square-ω-only formulas (AYZ triangle 18/13, k-clique 9t/4, bounded-difference (min,+) 2.625,
+  det/rank 2.25) were not re-optimised with rectangular blocks → only upper bounds.
+- Caveat: ABFK equation not independently derived by me.
+
+## ideas-T5 first experiment ("few thin products after non-linear preprocessing") — closed on paper
+- Claim: if for EVERY input pair AB = Σ_{t≤s} F_t G_t with F_t ∈ F₂^{n×√n}, G_t ∈ F₂^{√n×n}
+  (F_t, G_t arbitrary functions of anything at all), then rank(AB) ≤ s√n pointwise. A random
+  product has rank n − O(1) over F₂, so s ≥ √n − o(1). s = √n is achieved trivially (split the
+  inner index). So the pass criterion "< √n thin products" is impossible for any preprocessing
+  class; the decomposition route costs √n·n^{2+o(1)} = n^{2.5}. No computation needed (checked:
+  rank of random 16×16 / 64×64 F₂ products is n−O(1), standard).

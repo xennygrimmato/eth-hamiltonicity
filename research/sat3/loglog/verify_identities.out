@@ -1,0 +1,5 @@
+(A) level identity + certificates: 300/300 PASS
+(A) mutation (one N_t lowered by 1): identity fails on 251/290 instances (must be > 0)
+(B) merged-monomial coefficient = (-2)^|Pi| 2^-rank or 0: PASS (200 matrices)
+(C) max over f(2) in [-4096,4096] of min(v2(c_2), v2(c_3)) = 1 (claim: 1)
+sample (n, m, T, #SAT, N_t): [(6, 24, 3, 0, [4, 1, 2]), (10, 27, 1, 18, [3]), (11, 40, 4, 1, [1, 1, 3, 2]), (8, 36, 4, 0, [2, 1, 1, 5]), (6, 8, 2, 16, [1, 1])]

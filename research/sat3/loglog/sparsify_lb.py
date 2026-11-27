@@ -78,6 +78,71 @@ def fibre_test(trials, rng):
         best[key] = max(best.get(key, 0), len(S))
     return viol, worst, best
 
+def greedy_M(b, F):
+    """Upper bound on the least number of clauses with >= 2 negative literals in a width-3 CNF with
+    solution set exactly F (F a set of assignments of weight <= 2); None if no such CNF exists."""
+    Fs = set(F)
+    allcl = []
+    vars_ = range(b)
+    import itertools
+    for r in (1, 2, 3):
+        for vs in itertools.combinations(vars_, r):
+            for signs in itertools.product((0, 1), repeat=r):
+                neg = sum(1 << v for v, sg in zip(vs, signs) if sg == 0)
+                pos = sum(1 << v for v, sg in zip(vs, signs) if sg == 1)
+                if all(not ((x & neg) == neg and (x & pos) == 0) for x in Fs):   # valid on F
+                    allcl.append((neg, pos))
+    free = [c for c in allcl if bin(c[0]).count("1") <= 1]
+    paid = [c for c in allcl if bin(c[0]).count("1") >= 2]
+    U = set()
+    for x in range(1 << b):
+        if x in Fs:
+            continue
+        if not any((x & neg) == neg and (x & pos) == 0 for neg, pos in free):
+            U.add(x)
+    M = 0
+    while U:
+        bestc, bestk = None, 0
+        for neg, pos in paid:
+            k = sum(1 for x in U if (x & neg) == neg and (x & pos) == 0)
+            if k > bestk:
+                bestc, bestk = (neg, pos), k
+        if bestc is None:
+            return None
+        neg, pos = bestc
+        U = {x for x in U if not ((x & neg) == neg and (x & pos) == 0)}
+        M += 1
+    return M
+
+def structured_test(trials, rng):
+    """F = {0} + singles + pairs of a graph G; hunt for |F| > 3b + 2 + 3 M."""
+    import itertools
+    worst = 0.0; viol = 0; rows = []
+    for t in range(trials):
+        b = rng.randint(6, 9)
+        kind = t % 4
+        pairs = list(itertools.combinations(range(b), 2))
+        if kind == 0:      # random graph
+            pden = rng.random(); E = [e for e in pairs if rng.random() < pden]
+        elif kind == 1:    # clique on a subset
+            L = rng.sample(range(b), rng.randint(2, b)); E = [e for e in pairs if e[0] in L and e[1] in L]
+        elif kind == 2:    # complete bipartite
+            A = set(rng.sample(range(b), rng.randint(1, b - 1))); E = [e for e in pairs if (e[0] in A) != (e[1] in A)]
+        else:              # clique minus a few edges plus a sparse part
+            L = rng.sample(range(b), rng.randint(3, b)); E = [e for e in pairs if e[0] in L and e[1] in L and rng.random() < 0.85]
+            E += [e for e in pairs if e not in E and rng.random() < 0.1]
+        singles = [v for v in range(b) if rng.random() < 0.9]
+        F = [0] + [1 << v for v in singles] + [(1 << u) | (1 << v) for u, v in E]
+        M = greedy_M(b, F)
+        if M is None:
+            continue
+        bound = 3 * b + 2 + 3 * M
+        if len(F) > bound:
+            viol += 1
+        if len(F) / bound > worst:
+            worst = len(F) / bound; rows.append((b, kind, len(F), M, bound))
+    return viol, worst, rows[-3:]
+
 def eps_restr(c):
     return 1.0 / (15 * sqrt(c + 1) + 1)
 
@@ -91,6 +156,10 @@ if __name__ == "__main__":
     for b in (8, 10):
         row = sorted((M, v) for (bb, M), v in best.items() if bb == b)[:8]
         print(f"    b={b}: (M, max |SAT| found) {row}   ball = {1 + b + comb(b, 2)}")
+    v2_, w2_, rows = structured_test(600, rng)
+    print(f"(1') structured targets F with greedy covers: violations {v2_}/600, max |F|/bound = {w2_:.3f}; "
+          f"last record rows (b, kind, |F|, M, bound): {rows}")
+    viol += v2_
     print("(2) density c forced at 2^{eps n} pieces (lower bounds), and Calabro's eps^-2 log^2(1/eps):")
     print("    log2(1/eps)   restrictions c>=   general c>=   upper ~")
     for L in (4, 6, 8, 10, 12, 16, 20):

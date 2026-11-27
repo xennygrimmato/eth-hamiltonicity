@@ -802,3 +802,130 @@ The 36 strategies at uniform weights are the Δ₃ strategy transplanted: three 
 5. **Caveat on "exact".** h₂ᴬ is exact for the stated strategy class up to the grids in t and s and up to candidates
    below the coarse threshold 10⁻⁶ per bit; it is an upper bound on the certified value at each w (every added
    strategy was verified accurately) and, being a restricted class, not a lower bound for all depth-2 covers.
+
+## 11. Type B on Z₅ and Δ₃: crossing two hub–hub bonds (executor run) [N unless marked]
+
+### 11.1 Strategy class (exact statement)
+
+F = (P₁, P₂; t₁, t₂, u). P₁ crosses e₁ = (a₁,c₁) [p₁ = t₁ bits] with e₁′ = (b₁,d₁) [q₁ = 1−t₁]. P₂ crosses
+e₂ = (a₂,c₂) [p₂ = u·t₂] with e₂′ = (b₂,d₂) [q₂ = u(1−t₂)]. The adversary picks θ₁ and θ₂. Bonds follow §1.2: r_c = min(R cos θ, p+q)
+across ab|cd and r_b = min(R sin θ, p+q) across ad|bc, with R² = 2(p²+q²).
+After seeing (θ₁, θ₂) the cover chooses one of five options:
+- **stop**: both pieces are realised at level 1 under each merge, with the cost table of §1.2 including the corrected row S = p+q+min(p,q).
+  This is `game1.consts`, cost stop₁(θ₁) + stop₂(θ₂).
+- **nest**: commit to a cut of each piece (4 choices). This gives hubs O₁ | O₁′ with bond r₁ and O₂ | O₂′ with bond r₂. Then cross the two
+  hub–hub bonds. The adversary picks θ₃, with R₃² = 2(r₁²+r₂²) and cap r₁+r₂. ρ is the rank across O₁O₂ | O₁′O₂′ (cut c′)
+  and ρ′ the rank across O₁O₂′ | O₁′O₂ (cut b′).
+- **leaf** under merge k: the tree legs → O₁ −r₁− U −ρ− U′ −r₁− O₁′ ← legs, with O₂ −r₂− U and O₂′ −r₂− U′ (cut c′), or O₂ at U′ and O₂′ at U
+  (cut b′). Its cost is the exact minimum 0-extension of the six hubs to the g groups, computed by a tree DP and
+  checked against brute force over all g⁶ placements. The second cut is chosen per merge, so
+  cost_k = min(M_k, Sc_k + ρ, Sb_k + ρ′).
+
+  val_w(F) = max_{θ₁,θ₂} min( stop₁ + stop₂,  min over the 4 cut pairs of max_{θ₃} Σ_k w_k cost_k ).
+
+The third wire of type A does not appear here. There is no adaptivity beyond the choice after (θ₁, θ₂) and the
+choice of the second cut per merge. Grids: t₁, t₂ ∈ {0.2, 0.35, 0.5, 0.65, 0.8} and u ∈ {0.25, 0.5, 1}. The first two
+are the type-A t grid. Because val is homogeneous and symmetric under P₁ ↔ P₂, the u grid covers u ∈ {0.25, 0.5, 1, 2, 4}.
+All unordered pairs of distinct edges are allowed for P₁ and for P₂, and P₂ may reuse edges of P₁ (other bits).
+On Z₅, P₁ runs over the orbit representatives of pairs under translations × scalars × (r,c)↦(c,r). The last map is used only when
+w₀ = w₁; there are 270 orbits, or 504 without the swap. P₂ runs over all 44850 pairs.
+The LP is the dual of §10.2 with y constant on translation classes and symmetrised. Its rows are y ≤ raw, level 1 with
+**11** ratios (the 9 of §2 plus 0.35 and 0.65, so that every t used by type B is also a level-1 row; this moves
+the uniform level-1 value from 0.773945 to 0.773799 and nothing else in the tables), type A (the §10 code,
+`depth2c.sweep/verify`), and type B. Each verified row is added together with all its images.
+
+**Maximisation and verification.** θ₃ is maximised exactly in every evaluation: the candidates are the breakpoints and
+the stationary points of a·cos + b·sin, and this is tested against a 20001-point grid. A type-B strategy passes three stages.
+1. Filter, a valid lower bound on val. The adversary plays the level-1 maximisers (θ₁*, θ₂*) and θ₃ is exact, so the bound is
+   min(m₁ + m₂, nests at θ*). It runs over all quadruples and all 75 splits.
+2. Coarse lower bound: a 17×17 grid plus θ*.
+3. Certified bracket [lo, hi] by branch and bound on (θ₁, θ₂), tolerance 10⁻⁶. The upper bound per box is rigorous by
+   monotonicity: each nest option is nondecreasing in the bonds (r₁, r₂), and r_c, r_b are monotone in θ. The stop
+   term is bounded the same way.
+
+A strategy is counted, and its row added with right-hand side **hi**, only if (priced − hi)/(bits) > 10⁻⁶.
+Lower bounds can only produce false candidates, never false rows. Constraint generation repeats (type A and type B)
+until a round adds nothing.
+
+Tests (`depth2B_tests.py`): piece constants and level-1 maxima are identical to `game1` (0 mismatches in 200). The leaf DP
+equals an independent brute force over 5⁶ hub placements in 200 of 200 random cases. Exact θ₃ is ≥ every grid value and
+matches a refined grid to within 1e-7. The B&B bracket contains the 241² grid maximum.
+`depth2B_check.py` re-evaluates a strategy with independent code (brute-force leaf, θ₃ grid, `game1.consts`). For the Z₅
+uniform strategy below it gives 1.8503961 on a fine local grid, against the certified [1.850397, 1.850398].
+
+### 11.2 Results
+
+Z₅ (300 edges; two-merge value 0.638071; CAT(0) record 0.5519). Each "+type B" run used the LP with level-1 and type-A rows:
+
+| w | level 1 (9 / 11 ratios) | + type A | + type B | verified strategies A / B | type-B filter: quadruples with a lower bound below priced |
+|---|---|---|---|---|---|
+| (½, ½, 0) | 0.638071 | 0.638071 | **0.638071** | 0 / 0 | 0 (anchor (a): Theorem W) |
+| (0.49, 0.49, 0.02) | 0.648643 | — (not run) | 0.648643 | — / 0 | 0 |
+| (0.48, 0.48, 0.04) | 0.659215 | 0.659215 (§10) | **0.659215** | 0 / 0 | **0** |
+| (0.47, 0.47, 0.06) | 0.669787 | — | 0.669787 | — / 0 | 0 |
+| (0.50, 0.46, 0.04) | 0.659608 | — | 0.659608 | — / 0 | 0 |
+| (0.52, 0.44, 0.04) | ROW52 |
+| (0.55, 0.40, 0.05) | ROW55 |
+| (0.45, 0.45, 0.10) | 0.690931 | 0.690931 (§10) | **0.690931** | 0 / 0 | 0 |
+| (0.40, 0.40, 0.20) | 0.740858 | 0.740858 | **0.740858** | 0 (18 coarse) / 0 | 258 → 0 at the coarse grid |
+| (⅓, ⅓, ⅓) | 0.773945 / 0.773799 | 0.771218 | **0.769856** | 24 rows (36 strategies) / 44 | 636 → 112 coarse → 44 certified; second round 452 → 24 → 0 |
+
+"—" = type A not rerun at that w. Type B finds nothing there, so y is the level-1 y, and type A's absence does not affect the type-B column.
+At (0.48,0.48,0.04), (0.45,0.45,0.1) and (½,½,0) no strategy gets past even the filter. With the adversary simply
+repeating its level-1 angles, every nested option of every quadruple costs at least the priced bits.
+
+**Game values on Z₅ (min over w):** level 1: 0.638071; with type A: 0.638071; with types A and B: **0.638071**. In each case
+the minimum is at the two-merge corner, where Theorem W forbids any gain. No verified value anywhere is below 0.638071
+or below the CAT(0) record 0.5519.
+
+Binding type-B strategy at uniform weights (44 of them, all one orbit type): three generic classes,
+P₁ = (0,7)×(1,5) with t₁ = ½ and P₂ = (6,20)×(7,21) with t₂ = 0.8, u = 1. The value is 1.850397 for 2 bits, at θ₁ = 0.683, θ₂ = 0.843,
+where the stop option ties with the nest (b,b) option. This is exactly the Δ₃ strategy (below) transplanted onto
+generic edges, as in §10 for type A. The final y gives every generic class 0.9252, which is the Δ₃ uniform value with type B.
+
+Δ₃ standalone (9 edges, floor 2/3; LP with 11 level-1 ratios; type A rows from the §10 code):
+
+| w | level 1 (11 ratios) | + type A | + type B | verified A / B |
+|---|---|---|---|---|
+| (⅓, ⅓, ⅓) | 0.939002 | 0.929966 | **0.925198** | 18 / 648 |
+| (0.40, 0.30, 0.30) | 0.926803 | 0.923920 | **0.920820** | 8 / 144 |
+| (0.45, 0.275, 0.275) | 0.917653 | 0.917653 | 0.917653 | 0 / 0 |
+| (0.50, 0.25, 0.25) | 0.908503 | 0.908503 | 0.908503 | 0 / 0 |
+| (0.56, 0.22, 0.22) | 0.897537 | 0.896035 | 0.896035 | 2 / 0 |
+| (0.60, 0.20, 0.20) | 0.892861 | 0.891594 | 0.891594 | 4 / 0 |
+| (0.62, 0.19, 0.19) | 0.892205 | **0.891022** | 0.891022 | 4 / 0 |
+| (0.64, 0.18, 0.18) | 0.892634 | 0.891518 | 0.891518 | 4 / 0 |
+| (½, ½, 0) | 0.908503 | — | 0.908503 | — / 0 |
+
+Δ₃ game value: level 1 ≈ 0.8919 (39 ratios, §10); type A 0.891022; types A and B **0.891022** (not lowered). All values are ≥ 2/3.
+Type B helps on Δ₃ only near uniform weights. There it is stronger than type A (0.9300 → 0.9252), with the binding
+strategy P₁ = (2,6)×(5,7) at t₁ = 0.2 and P₂ = (2,4)×(3,8) at t₂ = ½, u = 1, value 1.850397 for 2 bits. It does not
+help where the game value is decided.
+
+Restriction (c): with the cover forced to stop, val = m₁ + m₂. Since the level-1 rows contain every split used,
+priced − m₁ − m₂ ≤ 0 holds for all P₁, P₂; the run reports 0.0. So the stop-only class reproduces level 1 exactly.
+
+Z₇ (item 5, partial): level-1 values only. Two-merge 0.655330 (rectangle formula); (0.48,0.48,0.04) 0.679117; uniform
+0.815337 (`out4/level1_z7.txt`). Type A and type B were not run at g = 7. Cost estimates from the Z₅ timings: type A about
+20× the Z₅ sweep (2–3 h per round on 4 cores), type B about 70× (≈ 8–12 h per round). So the question "does the
+uniform-weight gain grow with g" stays open. The mechanism found here (the Δ₃ strategy transplanted onto
+generic triangles) is available at every g. Its effect on the uniform value is bounded by the share of generic edges
+that can be placed in such triangles at the Δ₃ rate.
+
+### 11.3 Reading
+
+1. **Type B does not move the Z₅ game value.** Near the corner (w₃ ∈ {0.02, 0.04, 0.06, 0.10}, and two asymmetric
+   points) no type-B strategy beats level 1. The reason is strong and simple: even if the adversary just repeats its
+   level-1 angles, every one of the four nested options costs at least the priced bits for every quadruple and
+   split. The expectation of §10.4(4a) that type B is "the one that could matter" is not borne out. Both first pieces
+   keep an alignment each, but no nested option is cheaper than the priced bits. I have not separated which leaf terms
+   cause this; the first-order argument of §10.1 (positive slope 2ε(c₃ − 1/√2)) is consistent with it. With (a) and (b) of §10.4, depth 2 is closed on Z₅ for the classes A and B: value 0.638071.
+2. At uniform weights type B adds a further 0.18% (0.771218 → 0.769856), by the same Δ₃ mechanism. The total depth-2
+   gain at uniform is 0.5% of the ≈17% that would be needed.
+3. **Not covered:** a third wire whose choice depends on the angles; mixed moves (type A on one piece and type B on the
+   other; three bonds); depth ≥ 3; continuous t, u (finer grids can only lower values); the trivial third-cut bound
+   2·min(r₁, r₂) for the bond crossing (not used, following §10's leaf convention); Z₇ beyond level 1. The type-A rows
+   are verified by §10's accurate grid evaluation (`depth2acc`), not by the certified bracket used for type B.
+
+Scripts: `attain/depth2B_core.py` (numba kernels), `depth2B_run.py` (driver), `depth2B_tests.py`, `depth2B_check.py`.
+Outputs: `attain/out4/` (`run_*.stdout`, `B_*.txt`, `repro_*.txt`, `level1_z7.txt`, `check_z5_uniform_strategy.txt`).

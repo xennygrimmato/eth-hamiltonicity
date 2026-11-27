@@ -3213,3 +3213,15 @@ differences; within the subspace ansatz w ≥ 5k/2 is forced only on "special" d
 gives 9/4 on Z₆, Z₇ once those are dropped. Full planes: F_CAT(AG(2,3), four classes) ≤ (3/4)·F_CAT(Δ₃) [R].
 The agent's conjecture: w/k → 2 on slopes of growing height, so lim F_CAT(Z_p) = 1/√2 and the nesting
 window on prime-order nets closes in the limit, with Δ₃ and small g exceptional. Agent resumed to decide it.
+
+**H47 second pass: the label route is closed on books [N for M = 1, C beyond].** No upper bound below 2.7342a
+was found (products of tripods, branching spines, extra apartments: all equal or worse). A consistent label
+law exists on T_k × ℝ^M: L(S) = inf_K [Σ_i W(conv(S_i ∪ K)) − (k−1)W(K)]; proved zero on singletons, monotone,
+hull-invariant, mean width on flats, and equal to the chain value on pod tips; submodularity verified
+numerically only (M = 1; maximum violation 8e-13). So three-party label constraints cannot refute the
+filtration space on pods, W5 or a node line. Untested: multi-term constraints on non-label tensors (OpenAI's
+decoder family and polynomial-multiplication tensors), which need a pricing calculus neither paper gives
+outside flats.
+**Corollary, standalone [D; depends on OpenAI's EG Thm 5.3 and Prop. 5.2, unrefereed]:** if contracting
+fails over k in OpenAI's class, then ω_k ≥ 6/c₃ = 2.1944 (c₃ = 3·exp(−t²/2), P(g > t) = 1/3). Reaching 9/4 by
+this route is exactly "contact" D = D* on the √rank pod.

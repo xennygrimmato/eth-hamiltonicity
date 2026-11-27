@@ -1,0 +1,29 @@
+(1) U/n of the mark network (constants of (68), k=3) against a clause network with U/n = 2(k-1)D:
+      D      marks U/n   clause-network U/n
+        2       739.1            8.0
+        4       872.3           16.0
+       16      1102.2           64.0
+       64      1311.0          256.0
+      256      1509.4         1024.0
+     1024      1701.7         4096.0
+  1048576      2620.1      4194304.0
+    crossover at D = 393; growth of the mark network: 28k = 84 bits per variable per doubling of D
+(2) min over eps of eps + c e log2(eps^-a), c = 1, in units of e log2(1/e):
+    log2 n     a=2     a=1/3
+    2^10     1.966   0.500   (limits: 2 and 1/3)
+    2^20     1.983   0.417   (limits: 2 and 1/3)
+    2^40     1.991   0.375   (limits: 2 and 1/3)
+    2^80     1.996   0.354   (limits: 2 and 1/3)
+(3) scale formula, cost/n = sum_{t<=log2 D} h_t * t:
+      D     planted (h_t = t/2^t)   example H (h_t = 1/2)
+           4        1.500                     1.5
+          16        3.625                     5.0
+         256        5.602                    18.0
+       65536        5.995                    68.0
+  4294967296        6.000                   264.0
+    (single finest scale only, as in both papers: H costs ~ (1/2) log2 D per variable; the multi-scale
+     sum is worse for H, bounded for planted formulas)
+(4) level identity on a planted formula, c = 0.2, C_1 = 60:
+    level 1: C_j = 60, next density 403, marks cost/n = 0.0297
+    level 2: C_j = 403, next density 3.32e+17, marks cost/n = 2.43e-16
+    total marks cost/n over the tower: 0.0297  (plus k*C_1 for the exact first level)

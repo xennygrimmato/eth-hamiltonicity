@@ -21,10 +21,11 @@ def run(pts, target):
     return solve(n, flatW, target)[0]
 a = 1.0
 tips = [P3(i, a, None, 0, 0.0) for i in range(3)]
-for R in (0.25, 0.2747, 0.30):
-    ang = [-math.pi / 3, 0.0, math.pi / 3]
-    def Kset(rays): return [P3(None, 0, None, 0, R), P3(None, 0, None, 0, -R)] + [P3(None, 0, k, R * math.cos(f), R * math.sin(f)) for k in rays for f in ang]
-    for rays, label in (((0, 1), "flat spine part (rays 0,1 of T'): octagon"), ((0, 1, 2), "all three rays of T' (non-flat spine)")):
-        t0 = time.time(); v = run(tips + Kset(rays), 0b111)
-        print(f"R={R:.4f}  {label:45s} n={3 + len(Kset(rays)):2d}  max delta(tips) = {v:.5f}  [{time.time() - t0:.0f}s]", flush=True)
-print("reference: flat spine R^2 with a disk: 2.78943;  M = infinity: 2.73423;  (8/3) = 2.66667")
+if __name__ == '__main__':
+    for R in (0.25, 0.2747, 0.30):
+        ang = [-math.pi / 3, 0.0, math.pi / 3]
+        def Kset(rays): return [P3(None, 0, None, 0, R), P3(None, 0, None, 0, -R)] + [P3(None, 0, k, R * math.cos(f), R * math.sin(f)) for k in rays for f in ang]
+        for rays, label in (((0, 1), "flat spine part (rays 0,1 of T'): octagon"), ((0, 1, 2), "all three rays of T' (non-flat spine)")):
+            t0 = time.time(); v = run(tips + Kset(rays), 0b111)
+            print(f"R={R:.4f}  {label:45s} n={3 + len(Kset(rays)):2d}  max delta(tips) = {v:.5f}  [{time.time() - t0:.0f}s]", flush=True)
+    print("reference: flat spine R^2 with a disk: 2.78943;  M = infinity: 2.73423;  (8/3) = 2.66667")

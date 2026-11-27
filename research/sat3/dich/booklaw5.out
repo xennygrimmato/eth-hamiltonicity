@@ -1,0 +1,4 @@
+400 random triples on three pages: min L/D* = (np.float64(1.0047459858978842), [(0.979, -1.143), (1.892, -0.506), (0.022, -0.781)], np.float64(2.95589), 2.94192, 2.96931)
+H-configuration h=0.2: L = 1.209973, cross distance 1.019804, slope (L - Lcross)/h = 0.9508  (decoder threshold 0.5)
+H-configuration h=0.1: L = 1.102498, cross distance 1.004988, slope (L - Lcross)/h = 0.9751  (decoder threshold 0.5)
+H-configuration h=0.05: L = 1.050625, cross distance 1.001249, slope (L - Lcross)/h = 0.9875  (decoder threshold 0.5)

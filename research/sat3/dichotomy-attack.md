@@ -451,3 +451,155 @@ Nothing in them produces a functional.
    labels (K-MM U_N), priced on H-configurations of T₄ × ℝ^M by direct networks instead of through D₄.
 5. (GE⁺) for one candidate family (random regular graphs): unchanged from `middle/notes.md` §10, with the target
    class enlarged as in §7.
+
+---
+
+## 10. Continuation (27 Nov, second pass): search beyond the product chain, a label law on books, the ω corollary
+
+Scripts added in `dich/`: `gen_lp.py` (generic label LP), `tripod2.py` (T × T′), `tripod2R.py`, `tripod2R_small.py` (T × T′ × ℝ),
+`booklaw.py`, `booklaw2.py`, `booklaw3.py`, `booklaw4.py`, `booklaw5.py` (the law of §10.2 and its tests).
+
+**Summary.** (1) No derivation below 2.7342a was found; the best upper bound on the three-tip label is unchanged.
+A singular (branching) spine gives exactly the flat-spine value in both models tried. (2) On the book T_k × ℝ there
+is an explicit label law L with L(tips) equal to the chain value; it satisfies every label constraint of §2 in all
+numerical tests, and all of them except submodularity are proved. So on books the label constraints cannot refute
+the filtration space: **the pod route is closed there ([N] for M = 1, [C] for M ≥ 2)**. (3) The ω corollary is stated
+on its own in §10.3.
+
+### 10.1 Search for a better derivation [N]
+
+- **T × T′ ⊂ 𝒞₄(2)** (`tripod2.py`; block sum of two lines; nine flats ℝ², exact planar mean widths, sound hull
+  closure). The tips of T sit over the centre of T′, so the spine of the T-book is the tripod T′, singular at that
+  point. K = two points of T′ at radius H\* (flat spine): 2.82843. K = the three tips of T′ at radius H: 2.8594,
+  2.8321, **2.82843**, 2.8398 at H = 0.2, 0.3, H\*, 0.45. Adding the centre, a second radius, mixed points
+  (i, r; k, t), or 16 random sets of 7 auxiliary points: never below 2.82843 (best random 2.82942). The third ray of
+  the spine neither helps nor hurts.
+- **T × T′ × ℝ ⊂ 𝒞₄(2)** (`tripod2R.py`, `tripod2R_small.py`; flats ℝ³, exact mean widths). The spine of the T-book
+  is the book T′ × ℝ. K = {(centre, ±R)} ∪ {points at radius R, 1, 2 or 3 angles, on each ray of T′ used}. With two
+  rays of T′ (flat spine part) against all three rays (non-flat), at R = 0.22, 0.2747, 0.32:
+  2.80611 / 2.80611, 2.79297 / 2.79297, 2.79193 / 2.79193 (one point per ray); 2.80262 / 2.80262, 2.79132 / 2.79132,
+  2.79193 / 2.79193 (two points per ray). **Identical to five digits in all six comparisons.** The flat octagon
+  (three points per ray, two rays) gives 2.78993 at R = 0.2747 (disk optimum 2.78943); its three-ray version
+  (n = 14, all 16383 subsets) was started and stopped unfinished after 12 minutes, so `tripod2R.out` holds only
+  the first line.
+- **Other apartments through the tips.** Three collinear points lie in no common flat; two tips p_i, p_j lie in the
+  apartments of all bases (v_i, v_j, f). Two such apartments with different f meet in a half-apartment bounded by a
+  wall x_f = x_{v}, which contains both tips; they are the same flat as far as the pair is concerned. A two-flat
+  step δ(B₁ ∪ B₂) ≤ W(B₁) + W(B₂) − W(B₁ ∩ B₂) with p_i, p_j ∈ B₁, p_l ∈ B₂ needs B₁ ∩ B₂ inside the intersection of an
+  apartment through v_i, v_j with one through v_l; this is at most a half-apartment bounded by the wall x_{v_i} =
+  x_{v_j}, at distance a from p_l, whichever complements f are used. Choosing different complements in B₁ and B₂
+  only shrinks B₁ ∩ B₂. So extra apartments enter only through steps whose intersection is not flat, and for those
+  only lower bounds by flat parts (or by the tripod inequality) are available. The LPs contain all such steps
+  automatically: `run_filt3.py` (random auxiliary points on all 28 apartments of 𝒞₃(2)) and `tripod2.py` found
+  nothing.
+- **Not done:** 𝒞₃(4) and a full 𝒞₄(2) (840 bases) LP. With the law of §10.2 the expected outcome on every
+  book-like neighbourhood is "no gain"; the only places not covered by a law are neighbourhoods that are not books
+  (three pairwise opposite directions at a cone point of rank ≥ 3), where two flats through pairs of tips meet in
+  small sectors and the two-flat bound is weaker than on a book, not stronger.
+
+**Best upper bound found: still 2.7342a. No value below 2.7342a, hence none below 2.6667a.**
+
+### 10.2 A label law on the book
+
+Setting: B = T_k × ℝ^M, pages H_i, spine Σ = {0} × ℝ^M. For a finite S ⊂ B let S_i be its points in the open page i,
+and X(S) = (S ∩ Σ) ∪ {spine crossings of the segments between points of S on different pages}. A compact convex
+K ⊂ Σ is *admissible* for S if K ⊇ X(S) (K = ∅ is allowed iff X(S) = ∅). Put
+
+    Θ(S; K) = Σ_i W(conv(S_i ∪ K)) − (k−1)·W(K),            L(S) = inf { Θ(S; K) : K admissible for S }.
+
+**Proposition O.**
+1. [R] For admissible K, C = ∪_i conv(S_i ∪ K) is the closed convex hull of S ∪ K, C ∩ Σ = K, and Θ(S; K) is the
+   first intrinsic volume of C by inclusion–exclusion over the pages (all multiple intersections are K, and
+   Σ_{j≥2} (−1)^j C(k,j) = k − 1). In Gaussian form, with s = s_K(G), h_i and β_i the suprema over S_i ∪ K of
+   g·r + ⟨G,y⟩ and −g·r + ⟨G,y⟩ (g ≥ 0):  Θ = √(2π)·E[ s + ½ Σ_i (h_i − s) + ½ Σ_i (β_i − s) ]. For convex C at
+   most one page has β_i > s in a given direction, and then h_j = s on all other pages, so this equals
+   √(2π)·E[ m + ½ Σ_i (h_i − m)₊ ], m = max_i β_i [N: the two formulas agree to 6·10⁻⁹, `booklaw2.py`].
+2. [R] L is 0 on singletons; **monotone** (an admissible K for S′ ⊇ S is admissible for S, and Θ(·; K) is monotone);
+   **hull invariant** (for z ∈ hull S ⊂ C: K stays admissible and conv((S ∪ z)_i ∪ K) = conv(S_i ∪ K)); equal to the
+   **mean width on flat sets** (≤: K = conv X(S); ≥: Θ ≥ W(conv(S_i ∪ K) ∪ conv(S_j ∪ K)) ≥ W(S) by the valuation
+   property of W on the convex union in F_ij, the other pages contributing ≥ 0).
+3. [R] For tips with arms a_i: Θ(tips; K) = √(2π)·E[ S + Σ_i (a_i g − S)₊ ], the chain value (4.1). Hence
+   L(tips) = c_k^{(M)}·a for equal arms (the ball is optimal: Θ is convex under Minkowski averaging of K over
+   rotations), and **L(tips) ≥ c_k·a = 2.7342a (k = 3) for every M** (Jensen, as in §4.5).
+4. **Submodularity on intersecting sets: [N] for M = 1, [C] in general.** `booklaw4.py`: L computed by convex
+   minimisation over the spine interval for all subsets of 15 random point sets (k = 3, 4, 5; n = 6, 7), all
+   elemental inequalities L(S+x) + L(S+y) ≥ L(S+x+y) + L(S): largest violation 8·10⁻¹³ (optimiser tolerance).
+   Monotone, flat and hull constraints: ≤ 4·10⁻¹². L never exceeds the LP maximum of `label_lp.py`, and equals it
+   on the tips (2√2 for k = 3, 2√3 for k = 4).
+5. [N, `booklaw5.py`] L satisfies the tripod inequality on 400 random triples with one point on each of three
+   pages (min L/D\* = 1.0047), and on the H-configurations of §4.4 it has slope 0.951, 0.975, 0.988 at
+   h/L = 0.2, 0.1, 0.05 (threshold ½ of #9).
+
+So for M = 1 the function L satisfies #1, #5, #6, #7 and the consequence of #9 on every configuration tested, with
+L(three tips) = 2√2·a. A set function with these properties is all that an LP "max δ(tips)" can see; therefore no
+derivation from #5–#7 inside T_k × ℝ gives less than 2√2·a, and (if item 4 holds for all M) none inside T_k × ℝ^M
+gives less than c_k^{(M)}·a ≥ 2.7342a > (8/3)a.
+
+**Where the construction is delicate (what a proof of item 4 must handle).**
+- The un-enveloped function S ↦ V₁(hull S) is **not** submodular [N, `booklaw2.py`: violations up to 0.08]: V₁ is
+  not monotone on convex subsets of a book (the tripod has 3a, the tripod with a spine segment less).
+- The envelope over supersets inside a fixed finite V₀ can fail submodularity when V₀ has too few spine points
+  [N, `booklaw3.py`: 0.029, k = 4, no spine point in V₀]. The infimum over the spine body K is needed.
+- Proof obligation: for A ∩ B ≠ ∅ and admissible K_A, K_B find admissible K_∪ for A ∪ B with
+  Θ(A∪B; K_∪) + Θ(A∩B; K_A ∩ K_B) ≤ Θ(A; K_A) + Θ(B; K_B). Equivalently: for convex spine-saturated C_A, C_B with a
+  common point, V₁(hull(C_A ∪ C_B)) ≤ V₁(C_A) + V₁(C_B) − V₁(C_A ∩ C_B). In a flat this is the classical
+  submodularity of the mean width. In the book the new crossings X(A ∪ B) ∖ (X(A) ∪ X(B)) enlarge the spine part of
+  the join, and the term −(k−1)W(K) has the wrong sign for a termwise argument; a direction-by-direction proof must
+  use the dichotomy of item 1 ("at most one page has β_i > s"). Not done.
+- For M ≥ 2 nothing was computed (it needs hulls in books with 3-dimensional pages and a minimisation over convex
+  bodies K); items 1–3 are proved for all M.
+
+**What this closes, and what would be next.**
+- Closed (M = 1 [N]; all M [C]): refuting H_spec by label rates of pod tips, of any finite set in a book, including
+  W5 (it lies in T₃ × ℝ) and a node line with its hubs (a pod). For such sets only *wire-level* statements remain
+  (W5: the K_{2,3} rate, `ports/hull/notes.md`), and those are CAT(0).
+- X₄'s twelve hubs: every hub triple is flat or a pod, and any two generic nodes span a flat tetrahedron; the
+  ambient space is 𝒞₄(2) near a non-book point. No law is known there, but the label lower bounds available (#7 on
+  collinear triples, #8 with ρ(K_m) = m²/4) are the same as for one pod, while the upper bounds are weaker than on a
+  book (§4.4: 4.2 against 2.42 for seven coplanar points). I see no reason to expect a violation there. [C]
+- The constraints that the law does not address are those of type M on **non-label tensors**: the decoder family
+  of K-MM §8.2 (U_N on H-configurations) and the polynomial-multiplication tensors of K-MM §§9–11. They need a
+  pricing calculus for those tensors on books (an analogue of #5/#6 for a label carried together with a short
+  wire), which neither paper supplies outside flats. This is the next test if the route is continued; the label
+  route itself should be considered exhausted on books.
+
+### 10.3 The ω corollary, standalone
+
+**Statement [D].** Let k be a field. Suppose the contracting hypothesis fails over k *in the OpenAI class*: for every
+μ ≥ 2 and every s with s² < μ there is a metric on Mat_μ(F₂) that is the wire metric of a spectral space over k in
+the sense of K-EG §2 and has D(μ) > s·D(1) (notation of K-AN Def. D.1). Then for every n ≥ 2
+
+    R_k(⟨n,n,n⟩) ≥ n^{6/c₃},     c₃ = 3·exp(−t²/2) = 2.73423,  P(g > t) = 1/3,     6/c₃ = 2.19440,
+
+so ω_k ≥ 2.1944. Contrapositive: **an upper bound ω_k < 2.1944 over a field k proves the contracting hypothesis over
+k in the OpenAI class**, hence ports over k (K-EG §11.1.2–3 with `middle/notes.md` §2.4) and, in characteristic 0,
+OpenAI's power-saving 3-SAT conclusion (K-HC 13.1 → IM 7.1).
+
+**Dependencies.**
+1. The dichotomy argument K-AN D.2 Steps 1–8 run for OA spectral metrics (needs compactness, scaling, pull-backs,
+   K-EG (4.5), §4.4) ⇒ √rk on Mat_μ(F₂), μ ≥ 3, is OA-spectral. [D; same remark in `middle/notes.md` §2.4]
+2. Thm B of `q1-notes.md` run in the OA class (K-EG Thm 4.3 in place of K-AN C.3) ⇒ every finite subset of
+   𝒞_N(2^s) lies in a Hadamard spectral space; inverse limit ⇒ 𝒞_N itself. [D]
+3. T₃ × ℝ^{N−1} ⊂ 𝒞_N(2), isometric and convex. [R]
+4. K-EG Thm 5.3 (mean width on flats) and K-EG Prop. 5.2 (submodularity on intersecting sets). [K, unrefereed]
+5. Theorem L (§4.1) and the limit N → ∞. [D] For a fixed N the constant is 6/c₃^{(N−1)}: 2.1213, 2.1510, 2.1637,
+   2.1821 for N = 2, 3, 4, 9.
+6. Monotonicity: ⟨n,n,n⟩ on the three tips costs 6a·log n and is a restriction of a label with R values. [R]
+
+Not used: the tripod inequality, any statement of K-MM, K-EG Thm 1.2 (existence of flats), ports, K-AN beyond the
+proof pattern of D.2. The statement concerns the OpenAI class only; C_AN ⇒ C_OA, so "contracting fails in the OA
+class" is the stronger hypothesis, and the contrapositive yields C_OA, not C_AN (§1).
+
+**Consistency with ω = 9/4.** 9/4 > 2.1944, so the corollary is compatible with K-MM Thm 1.1 and with the upper bound
+ω ≤ 9/4. In a world where K-MM's lower bound is accepted the corollary carries no information about ω; its
+contrapositive is of interest only to a reader who doubts that lower bound.
+
+**What would give 9/4.** The argument turns an upper bound D ≤ x·a on the three-tip label of the √rk pod into
+ω ≥ 6/x. So "contracting fails (OA class) ⇒ ω ≥ 9/4" follows from D ≤ (8/3)a on that pod, which by the tripod
+inequality D ≥ D\* = (8/3)a is exactly **contact, D = D\***, on the √rk pod. Contact there is sufficient, not
+necessary: ω ≥ 9/4 only says that *some* spectral point attains the ratio 6a/D = 9/4 (K-MM Cor. 11.1), not that the
+filtration pod does. Three cases for the true value D of the pod under H_spec:
+- D = (8/3)a: contact; ¬C_OA ⇒ ω ≥ 9/4 by the two-page argument of `hunch-triangle.md` Observation 3.1.
+- (8/3)a < D ≤ 2.7342a: consistent with everything known; the pod is not K-MM's extremal point.
+- a derivation of D < (8/3)a from valid constraints: contradiction with ω ≤ 9/4, hence C_OA.
+By §10.2 the label constraints #5–#7 on books cannot produce the third case and cannot decide between the first two.

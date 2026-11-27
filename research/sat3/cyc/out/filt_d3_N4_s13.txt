@@ -1,1 +1,13 @@
 N=4 subspaces=67 leg records=31040 (maxsteps 3)
+chain 0 best Gamma = 35.997420 (exact legs 35.997420)
+chain 1 best Gamma = 34.620192 (exact legs 34.620192)
+delta3 N=4 BEST Gamma = 35.997420
+  hub  0: g=853.51865 dim2 [5, 10, 15]
+  hub  1: g=0.88121 dim2 [1, 4, 5]
+  hub  2:
+  hub  3: g=0.00435 dim2 [3, 8, 11]
+  hub  4:
+  hub  5: g=0.87330 dim1 [9] g=842.19031 dim2 [4, 9, 13]
+  hub  6: g=1.00000 dim2 [2, 13, 15]
+  hub  7: g=843.17757 dim2 [1, 2, 3] g=0.03012 dim3 [1, 2, 3, 8, 9, 10, 11]
+  hub  8: g=0.07089 dim1 [12]

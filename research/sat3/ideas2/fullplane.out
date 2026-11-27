@@ -1,0 +1,18 @@
+q=2 p=3 E=6 node-pods avg: 0.47140
+q=2 p=3 E=6 node-pods min: 0.47140
+  flat simplex avg: 0.47140  formula sqrt(g)/(g+1)=0.47140 (full plane) ; 1/sqrt2=0.70711; cap=0.57735
+q=3 p=4 E=36 node-pods avg: 0.50000
+q=3 p=4 E=36 node-pods min: 0.50000
+  flat simplex avg: 0.43301  formula sqrt(g)/(g+1)=0.43301 (full plane) ; 1/sqrt2=0.70711; cap=0.61237
+q=4 p=5 E=120 node-pods avg: 0.48990
+q=4 p=5 E=120 node-pods min: 0.48990
+  flat simplex avg: 0.40000  formula sqrt(g)/(g+1)=0.40000 (full plane) ; 1/sqrt2=0.70711; cap=0.63246
+q=5 p=6 E=300 node-pods avg: 0.47140
+q=5 p=6 E=300 node-pods min: 0.47140
+  flat simplex avg: 0.37268  formula sqrt(g)/(g+1)=0.37268 (full plane) ; 1/sqrt2=0.70711; cap=0.64550
+q=4 p=3 E=120 node-pods avg: 0.54104
+q=4 p=3 E=120 node-pods min: 0.54104
+  flat simplex avg: 0.51378  formula sqrt(g)/(g+1)=0.40000 (full plane) ; 1/sqrt2=0.70711; cap=0.63246
+q=3 p=3 E=36 node-pods avg: 0.52022
+q=3 p=3 E=36 node-pods min: 0.52022
+  flat simplex avg: 0.49789  formula sqrt(g)/(g+1)=0.43301 (full plane) ; 1/sqrt2=0.70711; cap=0.61237

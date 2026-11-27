@@ -3142,3 +3142,17 @@ Khoruzhii's not checked); Theorem T's regime and class stated in the abstract; t
 0.5825 are merge averages (min over merges 0.433, 0.569); the zero-loss script is 60-digit floating point,
 the referee's interval check is the rigorous one; two bibliography entries named a model as author.
 Unconfirmed from project texts: journal data of Bessenrodt–Ono and three standard references.
+
+**Ideas round 2 finished** (`research/sat3/ideas-round2.md`): no route with a construction. Killed by
+calculation: larger base (constants only); unbalanced grids (neutral at 1/2); node growth below 2 for
+crossing-based designs; short wires / exponentially many terms (dead for towers); approximate rank and
+hashed wires; hypergraph-native recursion (factor ≤ 2); branching hybrids; Pfaffian/Gauss-sum resources
+(literature). New: (i) a second family outside Theorem A: nets with more than √g+1 classes, in particular
+full affine planes (no generic edges; cap g/((g+1)√2) [D], best placement √(2g−2)/(g+1) [N, g ≤ 5]); to be
+added to the paper's open list; passed to the cyclic-cap agent. (ii) The log log n factor of the published
+bound in n comes entirely from O(n) parity-check marks at log Δ address bits each; three variants killed;
+not closed. Weakest sufficient statement for contracting: the 16-point space (Mat₂(F₂), √rank) is not a
+price.
+**H48 launched:** remove the log log n (2^{O(n log log n/√log n)} → 2^{O(n/√log n)} in n), via quantitative
+sparsification, degree branching, or shared marks → `research/sat3/loglog.md`. This would be an improvement
+of the published bound, not of the exponent 1/2.

@@ -3168,3 +3168,23 @@ exact in the class when all non-collinear pairs are used; the true cyclic limit 
 window for nested covers on cyclic nets narrows from [0.5857, 0.7071] to [0.6325, 0.7071]. Δ₃: still
 [2/3, 1/√2]; the tripod branch of the equality analysis is now contradictory for every finite arm; one
 branch open. F_CAT(AG(2,3), four classes) ≤ (3/4)·F_CAT(Δ₃).
+
+**H47 (dichotomy attack) first report** (`research/sat3/dichotomy-attack.md`, scripts `research/sat3/dich/`):
+no multi-party constraint is violated on the filtration space; no realisation found.
+- The tripod test (three tips of a pod, arms a) [D, unrefereed; uses OpenAI's EG Prop. 5.2, Thm 5.3 and MM
+  Prop. 8.1]: common-label rate D satisfies (8/3)a = 2.6667a ≤ D ≤ 2.7342a. The upper bound ("Theorem L") is
+  new: mean-width law on flats plus submodularity, in pod × ℝ^M. A violation would need the upper bound
+  below 2.6667a: margin 2.5%.
+- Corollary [D]: if contracting fails (in OpenAI's class of spectral spaces), then ω ≥ 6/2.7342 = 2.1944.
+  So ω < 2.1944 ⇒ contracting ⇒ ports ⇒ power-saving 3-SAT. Consistent with OpenAI's ω = 9/4.
+- Structural lemmas [R]: with three sites, wire data plus graph-tensor bounds can never give D below the
+  half-perimeter; every constraint from restrictions, degenerations and products alone holds on all ℓ₁
+  metrics (only mixed-shape covers can bite); the filtration space is not ℓ₁ and (Mat_μ(F₂), √rank) is not of
+  negative type for μ = 3, 4.
+- `thm_alt_rank_price` constructs no tensor (compactness + rigidity). In characteristic 0 every finite tree
+  metric is a price unconditionally (laminar quantum functionals; third-hand citation). Flattening-rank
+  monotones can never realise √rank (their wire metrics are ℓ₁), so graph states are out.
+- Caveat: a violation by this route would prove contracting in OpenAI's class; transfer to Anthropic's class
+  (and hence Theorem R) needs an extension theorem not written anywhere.
+- Agent resumed on the 2.5% window (non-product structure in rank ≥ 4; or a consistent label law that closes
+  the route for pods).

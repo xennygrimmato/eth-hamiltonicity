@@ -1,0 +1,4 @@
+h= 0.20 L=1.01980: K=[0,m]: 1.209975   optimised: 1.208696 at lo,hi,r = +0.0132,0.9868,0.0170   slope (delta4 - L)/h = 0.9445   (threshold 0.5; flat and tree: 1)
+h= 0.10 L=1.00499: K=[0,m]: 1.102498   optimised: 1.102314 at lo,hi,r = +0.0037,0.9963,0.0048   slope (delta4 - L)/h = 0.9733   (threshold 0.5; flat and tree: 1)
+h= 0.05 L=1.00125: K=[0,m]: 1.050625   optimised: 1.050600 at lo,hi,r = +0.0010,0.9990,0.0013   slope (delta4 - L)/h = 0.9870   (threshold 0.5; flat and tree: 1)
+h= 0.02 L=1.00020: K=[0,m]: 1.020100   optimised: 1.020098 at lo,hi,r = +0.0002,0.9998,0.0002   slope (delta4 - L)/h = 0.9949   (threshold 0.5; flat and tree: 1)

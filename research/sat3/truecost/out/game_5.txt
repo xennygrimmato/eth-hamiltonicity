@@ -1,0 +1,4 @@
+net 5: g=5, E=300, t-grid 9; two-merge formula 0.638071; 1/sqrt2 = 0.707107
+four-block lower bound at p=q=1/2, theta=pi/4 (per unit of raw): O1 1.2071067811865475  O2 1.0
+   w                       cert       H         O1        O2      raw
+  (0.5, 0.5, 0.0)        0.638071 0.638071 0.638071 0.638071  0.8333

@@ -11,6 +11,8 @@ from scipy.sparse import coo_matrix
 from math import gcd
 
 g = int(sys.argv[1]); nh = 3*g
+MODE = sys.argv[2] if len(sys.argv) > 2 else "all"   # "all": every non-collinear pair independent; "nospecial": drop the
+# pairs with difference (a,b), b = -a, b = 2a or a = 2b (the pairs for which the 5/2 argument applies)
 hub = lambda k, v: k*g + (v % g)
 node_hubs = lambda r, c: (hub(0, r), hub(1, c), hub(2, r - c))
 nodes = [(r, c) for r in range(g) for c in range(g)]
@@ -89,7 +91,9 @@ gen = set()
 for a in range(len(nodes)):
     for b in range(a+1, len(nodes)):
         ha, hb = node_hubs(*nodes[a]), node_hubs(*nodes[b])
-        if all(ha[k] != hb[k] for k in range(3)):
+        da, db = (nodes[b][0]-nodes[a][0]) % g, (nodes[b][1]-nodes[a][1]) % g
+        special = (da + db) % g == 0 or (db - 2*da) % g == 0 or (da - 2*db) % g == 0
+        if all(ha[k] != hb[k] for k in range(3)) and not (MODE == 'nospecial' and special):
             gen.add((oid[node_masks[a] | node_masks[b]],))
 nid = oid[node_masks[0]]
 for (u,) in gen:
@@ -98,5 +102,5 @@ E = coo_matrix((ev, (er, ec)), shape=(ne, nvar)).tocsr()
 cost = np.zeros(nvar); cost[nid] = 1
 bounds = [(0, None)]*nvar; bounds[oid[0]] = (0, 0)
 res = linprog(cost, A_ub=A, b_ub=np.zeros(m + 1), A_eq=E, b_eq=beq, bounds=bounds, method="highs")
-print("Z%d: status %d  min w/k = %.6f  sqrt(k/w) = %.6f  r(all)/k = %.4f  generic-pair orbits %d" %
+print(MODE, end=" "); print("Z%d: status %d  min w/k = %.6f  sqrt(k/w) = %.6f  r(all)/k = %.4f  generic-pair orbits %d" %
       (g, res.status, res.fun, (1/res.fun)**.5, res.x[oid[full]], len(gen)))

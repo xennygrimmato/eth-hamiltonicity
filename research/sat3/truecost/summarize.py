@@ -29,7 +29,7 @@ for fn in sorted(glob.glob('out/r_*.txt')):
     third = sorted(set(rows[N][6] for N in Ns))
     mono = all(seq[i] <= seq[i + 1] for i in range(len(seq) - 1))
     sym = all(rows[N][5] == rows[Th - N][4] for N in Ns if Th - N in rows)
-    print(f"({n1},{e1})x({n2},{e2}): d1={d1} d2={d2} Theta={Th} identity={'True' in ''.join(L[:4])}")
+    print(f"({n1},{e1})x({n2},{e2}): d1={d1} d2={d2} Theta={Th} identity={any("identity (a): True" in l for l in L)}")
     print(f"   rank ad|bc, N=0,2,..: {seq[:upto+1]}  (full {full} first at N={2*upto})")
     print(f"   agrees with sum_j (k-j+1)p(j) for k < {k0};  monotone up to Theta/2: {mono};  rank_ab|cd(N) = rank_ad|bc(Theta-N): {sym}")
     print(f"   single-party ranks full for N in [{min(singles_full)}, {max(singles_full)}] (all N there: {len(singles_full) == (max(singles_full)-min(singles_full))//2+1});  nonzero N: [{Ns[0]}, {Ns[-1]}]")

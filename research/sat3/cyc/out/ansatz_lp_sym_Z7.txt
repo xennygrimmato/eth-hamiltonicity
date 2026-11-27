@@ -1,0 +1,4 @@
+g = 7 hubs 21 |G| = 1764
+orbits of subsets: 1590  (250 s)
+submodular rows: 64172
+Z7: status 0  min w/k = 2.500000  sqrt(k/w) = 0.632456  r(all)/k = 5.0000  generic-pair orbits 2

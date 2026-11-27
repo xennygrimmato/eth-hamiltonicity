@@ -1,0 +1,9 @@
+== T_3 x R, tips at radius a=1, spine points Q+- at height +-H ==
+  n=5 vars=31 ineq=145 hull-eq=0 flat sets=22  status=0 (Optimization terminated successfully. (H)
+  H=0.2000: max delta(tips) = 2.859412   chain formula 3*sqrt(H^2+1)-H = 2.859412   (D*=8/3=2.666667, hub=3)
+  n=5 vars=31 ineq=145 hull-eq=0 flat sets=22  status=0 (Optimization terminated successfully. (H)
+  H=0.3536: max delta(tips) = 2.828427   chain formula 3*sqrt(H^2+1)-H = 2.828427   (D*=8/3=2.666667, hub=3)
+  n=5 vars=31 ineq=145 hull-eq=0 flat sets=22  status=0 (Optimization terminated successfully. (H)
+  H=0.5000: max delta(tips) = 2.854102   chain formula 3*sqrt(H^2+1)-H = 2.854102   (D*=8/3=2.666667, hub=3)
+  n=5 vars=31 ineq=145 hull-eq=0 flat sets=22  status=0 (Optimization terminated successfully. (H)
+  H=1.0000: max delta(tips) = 3.242641   chain formula 3*sqrt(H^2+1)-H = 3.242641   (D*=8/3=2.666667, hub=3)

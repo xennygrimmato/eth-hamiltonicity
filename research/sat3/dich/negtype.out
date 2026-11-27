@@ -1,0 +1,11 @@
+mu=2 f=sqrt(rank) transform by character rank: 1: [-1.828427], 2: [-0.171573]   negative type: True
+mu=2 f=rank       transform by character rank: 1: [-3.0], 2: [1.0]   negative type: False
+mu=2 f=rank^(1/4) transform by character rank: 1: [-1.378414], 2: [-0.621586]   negative type: True
+mu=3 f=sqrt(rank) transform by character rank: 1: [-16.083938], 2: [0.714271], 3: [-1.057417]   negative type: False
+mu=3 f=rank       transform by character rank: 1: [-43.0], 2: [5.0], 3: [-3.0]   negative type: False
+mu=3 f=rank^(1/4) transform by character rank: 1: [-7.450534], 2: [-0.363479], 3: [-0.879692]   negative type: True
+mu=4 f=sqrt(rank) transform by character rank: 1: [-775.493244], 2: [28.73489], 3: [-6.263686], 4: [4.148852]   negative type: False
+mu=4 f=rank       transform by character rank: 1: [-2619.0], 2: [133.0], 3: [-27.0], 4: [21.0]   negative type: False
+mu=4 f=rank^(1/4) transform by character rank: 1: [-300.637324], 2: [8.364946], 3: [-2.584669], 4: [0.825284]   negative type: False
+W5 in the cut cone (l1-embeddable): True
+W5: least total weight of cuts dominating d: 2.121320343559643   (label upper bound of the diamond: 3 - 1/sqrt2 = 2.2928932188134525 )

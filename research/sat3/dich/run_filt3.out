@@ -1,0 +1,40 @@
+check mean_width: unit square 1.9999999999999998  unit cube 3.0 (expected 2 and 3: W is additive over the orthogonal unit segments)
+tip distances 1.4142135623730951 1.4142135623730951  arm a = 0.7071067811865475  D* = (8/3)a = 1.8856180831641265  hub 3a = 2.1213203435596424
+-- product chain T_3 x R^2 inside C_3(2): K = polygon in the wall (M = 2); analytic disk optimum 2.78943 at R = 0.2313 a
+K = 2-gon, R = 0.2500                                      n= 5  max delta(tips)/a = 2.82843   [0s]
+K = 6-gon, R = 0.1636                                      n= 9  max delta(tips)/a = 2.79733   [0s]
+K = 8-gon, R = 0.1636                                      n=11  max delta(tips)/a = 2.79593   [1s]
+K = 8-gon, R = 0.1717                                      n=11  max delta(tips)/a = 2.79332   [1s]
+K = 9-gon, R = 0.1685                                      n=12  max delta(tips)/a = 2.79397   [2s]
+-- hull invariance switched on (sound closure)
+K = 6-gon, hull on                                         n= 9  max delta(tips)/a = 2.79733   [41s]
+-- with the tripod inequality on all non-flat triples: feasibility and minimum
+K = 6-gon, tripod on (max)                                 n= 9  max delta(tips)/a = 2.79733   [0s]
+K = 6-gon, tripod on (min)                                 n= 9  max delta(tips)/a = 2.66667   [0s]
+-- random auxiliary points of C_3(2) (vertices of both types at random scales, two-step flags, spine points)
+random #0                                                  n=10  max delta(tips)/a = 3.50250   [1s]
+random #1                                                  n=10  max delta(tips)/a = 3.11419   [1s]
+random #2                                                  n=10  max delta(tips)/a = 2.90237   [1s]
+random #3                                                  n=10  max delta(tips)/a = 3.11361   [1s]
+random #4                                                  n=10  max delta(tips)/a = 3.03475   [1s]
+random #5                                                  n=10  max delta(tips)/a = 3.06011   [2s]
+random #6                                                  n=10  max delta(tips)/a = 2.99864   [1s]
+random #7                                                  n=10  max delta(tips)/a = 3.10287   [1s]
+random #8                                                  n=10  max delta(tips)/a = 3.07173   [2s]
+random #9                                                  n=10  max delta(tips)/a = 3.15833   [2s]
+random #10                                                 n=10  max delta(tips)/a = 3.15977   [1s]
+random #11                                                 n=10  max delta(tips)/a = 3.00397   [1s]
+random #12                                                 n=10  max delta(tips)/a = 3.08827   [2s]
+random #13                                                 n=10  max delta(tips)/a = 3.07054   [1s]
+random #14                                                 n=10  max delta(tips)/a = 3.51881   [2s]
+random #15                                                 n=10  max delta(tips)/a = 3.00449   [1s]
+random #16                                                 n=10  max delta(tips)/a = 3.23050   [1s]
+random #17                                                 n=10  max delta(tips)/a = 3.05037   [1s]
+random #18                                                 n=10  max delta(tips)/a = 2.91192   [1s]
+random #19                                                 n=10  max delta(tips)/a = 2.84335   [0s]
+random #20                                                 n=10  max delta(tips)/a = 3.31637   [2s]
+random #21                                                 n=10  max delta(tips)/a = 3.16199   [1s]
+random #22                                                 n=10  max delta(tips)/a = 3.07410   [2s]
+random #23                                                 n=10  max delta(tips)/a = 3.10322   [1s]
+random #24                                                 n=10  max delta(tips)/a = 3.27161   [1s]
+best random value / a: 2.843353706008675   (product chains: 2.82843 for M=1, 2.78943 for M=2; D* = 2.66667)

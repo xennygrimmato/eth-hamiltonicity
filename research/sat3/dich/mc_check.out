@@ -1,0 +1,2 @@
+M=3: R*=0.2321  MC chain value = 2.7687   closed form (ball) = 2.7730   [finite K of 4000 points: slightly larger]
+M=6: R*=0.1699  MC chain value = 2.7632   closed form (ball) = 2.7545   [finite K of 4000 points: slightly larger]

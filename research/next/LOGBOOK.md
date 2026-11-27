@@ -3156,3 +3156,15 @@ price.
 **H48 launched:** remove the log log n (2^{O(n log log n/√log n)} → 2^{O(n/√log n)} in n), via quantitative
 sparsification, degree branching, or shared marks → `research/sat3/loglog.md`. This would be an improvement
 of the published bound, not of the exponent 1/2.
+
+**H46 interim: a placement above the cyclic record [N, exact rank computations; unrefereed].** For the 3-net
+of Z_g, 4 ≤ g ≤ 40, a placement in the filtration space of F_q^12 (q ≡ 1 mod g; basis indexed by 12
+characters of Z_g²; node spaces of dimension 5 = cut space of the octahedron K_{2,2,2}; hubs 2-dimensional)
+gives every non-collinear edge saving δ·√(2/5) in all three merges at once; level value
+((g−2)√(2/5)+1)/(g+1) → 0.6325 (0.5876 at g = 19, 0.6106 at g = 40), against the previous cyclic limit
+0.5857. Below the tree records at g = 4, 5. Within this "subspace ansatz" (hubs of dimension k in node
+spaces of dimension w, value √(k/w)) w ≥ 5k/2 is forced [R for special pairs; LP for Z₃..Z₇], so √(2/5) is
+exact in the class when all non-collinear pairs are used; the true cyclic limit may be higher. So the
+window for nested covers on cyclic nets narrows from [0.5857, 0.7071] to [0.6325, 0.7071]. Δ₃: still
+[2/3, 1/√2]; the tripod branch of the equality analysis is now contradictory for every finite arm; one
+branch open. F_CAT(AG(2,3), four classes) ≤ (3/4)·F_CAT(Δ₃).

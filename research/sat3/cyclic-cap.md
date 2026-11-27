@@ -31,6 +31,12 @@ exactly one hub: **Δ₃ is the set of all non-collinear pairs of the Z₃ net.*
 
 ## 0. Results in brief
 
+> **Update (continuation, §9).** The cyclic limit inside the ansatz is **not decided**. New: a block with
+> (k,w,N) = (3,7,15) gives s/δ = √(3/7) = 0.6547 on all non-collinear, non-special pairs (exact, 6 ≤ g ≤ 40), so
+> liminf F_CAT(Z_g) ≥ 0.6547; the octahedron statement holds over C for every g ≥ 5 prime to 3 (symbolic); the
+> Shannon bound stays 9/4 on Z₆, Z₇ after adding Ingleton inequalities; inside the class "one vector per frequency
+> line" every search stops at 7/3. Item 4 below (0.6455) is superseded by §9.2.
+
 1. **Δ₃: no cap below 1/√2 and no placement above 2/3.** F_CAT(Δ₃) ∈ [2/3, 1/√2] stands.
 2. **The tripod branch of the equality analysis is empty for every finite ρ [D].** `q1-cyclic.md` §3 left the
    intermediate arm lengths open. With the lune lemma in its distance form (Lemma 2.1, proved here) the configuration
@@ -525,3 +531,146 @@ For Δ₃ itself:
   instead of 24.
 - Direct sums of two planar realisations of the net (hubs of dimension 2 in K³ ⊕ K³): node spaces of dimension 4
   that always meet (`q1-notes.md` §6 item 5); the octahedron needs the fifth dimension.
+
+---
+
+## 9. Continuation: the cyclic limit inside the subspace ansatz (not decided)
+
+Coordinator's request: decide lim F_CAT(Z_p) inside the ansatz. Outcome: **open**, with a better lower bound, a
+reformulation that explains all blocks found so far, negative searches in the simplest class, and no upper bound
+above 2 in sight. Additional scripts: `kernel_blocks.py`, `kb_diag.py` (exhaustive e = 2 blocks on small label sets),
+`pattern_search.py`, `pattern_random.py` (structured and random searches, e = 2, 3, 4), `cyclic_line3.py` (exact check
+of the new block), `octa_torsion.py`, `line3_torsion.py` (symbolic loci), `ansatz_lp_sym.py … ingleton[2]`.
+
+### 9.1 Blocks as vector configurations [D]
+
+Setting of §4.1 (frequencies ξ = (α,β); three pencils of lines: rows, columns, diagonals; one vector per chosen
+line; M = lines × points; W₀ = row space of M). Let Λ be the left kernel of M (the relations between the line
+vectors), e = dim Λ, and let P_l ∈ Λ* be the coordinate functional of the line l. Then
+
+- w = #lines − e; the three classes are pairwise independent iff the P's of each class span Λ*;
+- the column of M at a frequency point annihilates the P's of the lines through it: a point can be used iff the
+  two or three P's there are dependent (two parallel vectors: "coincidence"; three coplanar vectors: "collinear
+  triple"), and then its column is a dependency of them;
+- conversely, any choice of vectors P_l ∈ K^e, each class spanning, together with the frequency points whose P's are
+  dependent, defines a block; rank M = #lines − e iff these short circuits span the space of all dependencies of
+  the P's;
+- W₀ ∩ ρ(t)W₀ = 0 for generic t needs N ≥ 2w and, for every set X of points, |X^c| ≥ 2(w − rank M_X) (two disjoint
+  bases among the columns; Edmonds). In all cases computed, this matroid condition was also sufficient for generic t.
+
+So a block is: **3k vectors in K^e in three spanning classes, whose dependency space (dimension w = 3k − e) is
+spanned twice over by coincidences and collinear transversal triples that are realised by one frequency point each**
+(the frequency geometry: a row and a column meet in one point, which lies on the diagonal α+β). The ratio is
+w/k = 3 − e/k. Known blocks:
+
+| block | e | classes | N | w/k (with rotations) | fails on |
+|---|---|---|---|---|---|
+| octahedron K_{2,2,2}: all six vectors parallel | 1 | (2,2,2) | 12 | 5/2 | nothing (optimal for all pairs) |
+| K_{2,2,1}: all parallel | 1 | (2,2,1) | 8 | 12/5 | the special classes |
+| **three directions on a line** | 2 | (3,3,3) | 15 | **7/3** | the special classes |
+
+### 9.2 The block (k,w,N) = (3,7,15) [N exact]
+
+Directions X, Y, Z ∈ P¹ (p_X + p_Y = p_Z). Each direction a carries one row β_a, one column α_a = β_a + c and one
+diagonal s_a = β_b + β_c + c ({a,b,c} = {X,Y,Z}); e.g. β = (0,1,3), c = 0. Frequency points: for each direction the
+three pairwise intersections of its row, column and diagonal (coincidences, coefficients +1, −1), and for each
+permutation (a,b,c) the point (α_b, β_a), which lies on s_c (coefficients +1, +1, −1 on the X-, Y-, Z-symbol). M is
+9 × 15 with entries 0, ±1, rank 7; the classes have dimension 3 and are pairwise independent.
+
+`cyclic_line3.py` (exact, F_q, q ≡ 1 mod g): for every 6 ≤ g ≤ 40 the set of non-collinear differences t with
+W₀ ∩ ρ(t)W₀ ≠ 0 is exactly the set of special differences; on collinear pairs dim(W_n ∩ W_n′) = 3 (g = 7, 11, 13, 23,
+37), so the collinear legs of §4.3 apply. (The script uses the convention r, c, r−c for the classes; this is the same
+net.) Hence, with Lemma 3.1:
+
+**Proposition 9.1 [N exact for g ≤ 40 + D].** On the 3-net of Z_g every non-collinear, non-special edge gets
+s^k = δ·√(3/7) = 0.6547·δ in the three merges at once. Since the special differences are 3(g−1) of (g−1)(g−2),
+
+    liminf_{g→∞} F_CAT(net of Z_g) ≥ √(3/7) = 0.6547      (as far as g ≤ 40 represents all g),
+
+against 0.6325 with all pairs, the tree floor 0.5857 and the cap 0.7071. For the level value at finite g one mixes
+this block with octahedra (the octahedron part serves the special edges): with x the fraction of the hub dimension
+in octahedra, value = ((g−5)/√(7/3 + x/6) + 3√(2x/5) + 1)/(g+1). The pure octahedron (x = 1) is better up to
+g ≈ 90; so the table of §4.3 is unchanged in its range and the new block matters only asymptotically.
+
+The symbolic computation of the bad locus of this block (`line3_torsion.py`, fifteen 14 × 14 determinants) did not
+finish; the statement rests on the exact scan.
+
+### 9.3 Why I could not go below 7/3 with one vector per line [N; the counting is D]
+
+Counting. Write the vectors as n distinct points of P^{e−1}, the point x carrying s_x symbols. The dependency space
+splits into a local part (Σ_x (s_x − 1), spanned by coincidences) and a global part (n − e, spanned by triples). A
+point carrying one row, one column and one diagonal has 3 coincidences for a local part of dimension 2: one short
+of "twice". A collinear triple of such points supplies 6 triples for a global part of dimension 1: four spare. So
+the line block has N − 2w = 3·(−1) + 4 = 1. For a configuration of d such points with L three-point lines the
+conditions are 6L + 2e ≥ 3d and connectedness; a connected configuration of lines has e ≤ 2 + (number of lines that
+bring two new points), so e/d ≤ 2/3 with equality only for one line: **7/3 is the optimum of this family** [D]. A
+point not on a line is a separate block with N = 3 < 4 = 2w, which is why the configuration "collinear triple plus
+one free point" (it would give 9/4, the Shannon value) is not a block.
+
+Searches, all negative below 7/3:
+- e = 2, exhaustive over labels in small ranges and all direction patterns with at most four directions
+  (`kernel_blocks.py`, `kb_diag.py`): classes (3,2,2): at most 8 usable points for 10 needed; (3,3,2): at most 11 for
+  12; (3,3,3): N ≥ 14 in 4862 patterns (labels up to 3), exactly two of them (the block above and its mirror) are
+  independent for generic t; for the 36 patterns with labels in {0,1,2} the failure is matroidal (the rank with a
+  generic diagonal matrix is already too small).
+- e = 3, all placements of at most one symbol per class on the points of five planar configurations (three collinear
+  points and a free one; two lines through a point; triangle with two or three side points; complete
+  quadrilateral), at most 13 symbols (`pattern_search.py`): no block; the few with N ≥ 2w fail the matroid condition.
+- Random configurations and placements, several symbols per class at a point allowed (`pattern_random.py`): e = 2
+  with 7–8 symbols (80 000 trials), e = 3 with 10–13 symbols (300 000), e = 4 with 13–17 symbols (100 000): nothing;
+  the same code finds the line block at e = 2 with 9 symbols.
+
+These are searches, not a bound. They cover only blocks with one vector per frequency line and frequency sets
+without multiplicity.
+
+### 9.4 The upper side: nothing above 2 [N + D]
+
+- Shannon LP with the special pairs removed: 9/4 on Z₆ and on Z₇ (`ansatz_lp_sym.py g nospecial`); adding all
+  Ingleton inequalities on quadruples of hubs, and on quadruples of hubs and nodes (Z₆, 4364 orbit rows), does not
+  change 9/4. So no cheap linear-rank obstruction separates 9/4 from 7/3, and I do not know which is the truth for
+  the classes with closure length 4.
+- The closure bound w ≥ (2 + 1/m)k (§3.2) tends to 2 on slopes of large height.
+- In the translation-diagonal model the difference t is generic and no closure reaches it; what survives of
+  Prop. 6.2 is "w = 2k forces N ≤ 3k" (the translates of a hub along one generic direction already span its whole
+  support), and for w = 2k + ε only N ≤ 3k + O(n·ε), n the largest number of frequency points on a line. This is no
+  obstruction to ε/k → 0, but it says the lines must carry many points: **w/k → 2 needs blocks whose size grows.**
+- Designs with several vectors per frequency line: with generic vectors every frequency point is usable as soon as
+  the lines through it carry more than e vectors, but then e is at most twice the multiplicity while the number of
+  symbols grows quadratically, and the ratio tends to 3. Tensor designs (rows K^a ⊗ ρ_i, columns γ_j ⊗ K^a, where
+  every row meets every column in one vector) need a third family meeting both; the families I could write down
+  (spans of γ_{cs} ⊗ ρ_s on a rational normal curve) give 2.62, and the symmetric count for any design with e = u²
+  gives at least 2.366. None beats 7/3 [D, back-of-envelope, not checked by machine].
+
+### 9.5 Torsion analysis of the octahedron [R, symbolic over Q]
+
+`octa_torsion.py`: for rows {0,1}, columns {0,1}, diagonals {2, γ₂} the 10 × 10 minors of [Mᵀ | D Mᵀ] are polynomials
+in X = ζ^{t₁}, Y = ζ^{t₂} independent of g. Their gcd is X^a Y^b (X−1)²(Y−1)²(XY−1)² (the collinear differences), and the
+remaining common zeros of the first fourteen minors are
+
+| γ₂ | common zeros off the collinear curves |
+|---|---|
+| 3 | X = Y, Y² + Y + 1 = 0 |
+| 4 | X = Y, Y² + 1 = 0 |
+| 5 | X = Y of order 3 or 5 |
+| 7 | X = Y of order 5 or 7 |
+
+Hence, over C: **for every g ≥ 5 not divisible by 3 the octahedron with γ₂ = 3 is independent on all non-collinear
+pairs** (the twelve frequencies are distinct and lie on the right lines as soon as 2, 3, 4 ≢ 0 mod g); for 3 | g,
+4 ∤ g use γ₂ = 4; for 12 | g with gcd(g,35) = 1 use γ₂ = 7. Not covered by these four parameter sets: g divisible by
+60 or by 84 (a pattern "X = Y of order dividing γ₂ or γ₂ − 2" is visible and would settle all g; not proved).
+Proposition 4.1 therefore holds for all primes g ≥ 5 in characteristic 0; over F_q and F_{2^s} it remains verified
+for g ≤ 40 only.
+
+### 9.6 Where this stands
+
+- Decided: nothing about the limit. Bounds for the ansatz value on generic slopes of Z_p: 0.6547 ≤ lim ≤ 0.7071.
+- For the classes of closure length 4 (all non-special pairs on Z₆, Z₇): 9/4 ≤ w/k ≤ 7/3.
+- The class in which I searched (one vector per line) appears to stop at 7/3, by counting in its simplest family and
+  by search elsewhere. If that is a theorem, going further needs frequency lines carrying subspaces, or
+  arrangements that are not translation-diagonal (unipotent actions in characteristic p, as in Theorem A, are the
+  natural candidates: there the hubs are polynomial in the translation).
+- **Next step.** (a) Find the truth between 9/4 and 7/3 on Z₇ for the two non-special slopes: either an arrangement
+  with (k,w) = (4,9), 21 hubs in K^18 (unknown: whether one exists; the Shannon optimum has r(all) = 18), or a
+  linear rank inequality beyond Ingleton. This is the smallest instance of the question "is the closure bound
+  attained", and its answer decides which side to bet on. (b) Prove or refute "one vector per line ⇒ w/k ≥ 7/3" from
+  the Edmonds condition and the count of §9.3. (c) The unipotent model in characteristic p.

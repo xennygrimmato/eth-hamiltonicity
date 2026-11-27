@@ -1,0 +1,4 @@
+N, rank, pair ranks, rank[M;M rho] = (14, np.int64(7), (np.int64(6), np.int64(6), np.int64(6)), 12)  x 2406
+N, rank, pair ranks, rank[M;M rho] = (15, np.int64(7), (np.int64(6), np.int64(6), np.int64(6)), 13)  x 2454
+N, rank, pair ranks, rank[M;M rho] = (15, np.int64(7), (np.int64(6), np.int64(6), np.int64(6)), 14)  x 2
+best independent block: (np.int64(7), 15, (0, 1, 3), (0, 1, 3), (1, 3, 4), (0, 1, 2, 0, 1, 2, 2, 1, 0))

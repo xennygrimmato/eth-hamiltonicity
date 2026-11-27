@@ -1,0 +1,13 @@
+g = 5 F_2^4, params (1, 1, 2, 3): rank M = 5, all non-collinear t independent
+g = 7 F_2^3, params (1, 1, 2, 3): rank M = 5, all non-collinear t independent
+g = 9 F_2^6, params (1, 1, 2, 4): rank M = 5, all non-collinear t independent
+g = 11 F_2^10, params (1, 1, 2, 3): rank M = 5, all non-collinear t independent
+g = 13 F_2^12, params (1, 1, 2, 3): rank M = 5, all non-collinear t independent
+g = 15 F_2^4, params (1, 1, 2, 4): rank M = 5, all non-collinear t independent
+g = 17 F_2^8, params (1, 1, 2, 3): rank M = 5, all non-collinear t independent
+g = 21 F_2^6, params (1, 1, 2, 4): rank M = 5, all non-collinear t independent
+g = 23 F_2^11, params (1, 1, 2, 3): rank M = 5, all non-collinear t independent
+g = 31 F_2^5, params (1, 1, 2, 3): rank M = 5, all non-collinear t independent
+g = 33 F_2^10, params (1, 1, 2, 4): rank M = 5, all non-collinear t independent
+g = 35 F_2^12, params (1, 1, 2, 3): rank M = 5, all non-collinear t independent
+g = 39 F_2^12, params (1, 1, 2, 4): rank M = 5, all non-collinear t independent

@@ -1,0 +1,144 @@
+g = 5 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 4, all special: True
+g = 5 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 4, all special: True
+g = 5 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 4, all special: True
+g = 5: three blocks, k = 5, w = 12: independent on 0 of 12 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 6 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 4, all special: True
+g = 6 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 4, all special: True
+g = 6 block (1,2,2) lines ((2,), (0, 1), (0, 3)): rank 4, N = 8, bad t: 4, all special: True
+g = 6: three blocks, k = 5, w = 12: independent on 12 of 20 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 7 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 6, all special: True
+g = 7 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 6, all special: True
+g = 7 block (1,2,2) lines ((2,), (0, 1), (0, 3)): rank 4, N = 8, bad t: 6, all special: True
+g = 7: three blocks, k = 5, w = 12: independent on 12 of 30 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 8 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 6, all special: True
+g = 8 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 6, all special: True
+g = 8 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 6, all special: True
+g = 8: three blocks, k = 5, w = 12: independent on 24 of 42 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 9 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 8, all special: True
+g = 9 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 8, all special: True
+g = 9 block (1,2,2) lines ((2,), (0, 1), (0, 3)): rank 4, N = 8, bad t: 8, all special: True
+g = 9: three blocks, k = 5, w = 12: independent on 36 of 56 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 10 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 8, all special: True
+g = 10 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 8, all special: True
+g = 10 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 8, all special: True
+g = 10: three blocks, k = 5, w = 12: independent on 48 of 72 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 11 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 10, all special: True
+g = 11 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 10, all special: True
+g = 11 block (1,2,2) lines ((2,), (0, 1), (0, 3)): rank 4, N = 8, bad t: 10, all special: True
+g = 11: three blocks, k = 5, w = 12: independent on 60 of 90 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 12 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 10, all special: True
+g = 12 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 10, all special: True
+g = 12 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 10, all special: True
+g = 12: three blocks, k = 5, w = 12: independent on 84 of 110 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 13 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 12, all special: True
+g = 13 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 12, all special: True
+g = 13 block (1,2,2) lines ((2,), (0, 1), (0, 3)): rank 4, N = 8, bad t: 12, all special: True
+g = 13: three blocks, k = 5, w = 12: independent on 96 of 132 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 14 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 12, all special: True
+g = 14 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 12, all special: True
+g = 14 block (1,2,2) lines ((2,), (0, 1), (0, 3)): rank 4, N = 8, bad t: 12, all special: True
+g = 14: three blocks, k = 5, w = 12: independent on 120 of 156 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 15 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 14, all special: True
+g = 15 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 14, all special: True
+g = 15 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 14, all special: True
+g = 15: three blocks, k = 5, w = 12: independent on 144 of 182 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 16 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 14, all special: True
+g = 16 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 14, all special: True
+g = 16 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 14, all special: True
+g = 16: three blocks, k = 5, w = 12: independent on 168 of 210 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 17 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 16, all special: True
+g = 17 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 16, all special: True
+g = 17 block (1,2,2) lines ((2,), (0, 1), (0, 3)): rank 4, N = 8, bad t: 16, all special: True
+g = 17: three blocks, k = 5, w = 12: independent on 192 of 240 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 18 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 16, all special: True
+g = 18 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 16, all special: True
+g = 18 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 16, all special: True
+g = 18: three blocks, k = 5, w = 12: independent on 228 of 272 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 19 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 18, all special: True
+g = 19 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 18, all special: True
+g = 19 block (1,2,2) lines ((2,), (0, 1), (0, 3)): rank 4, N = 8, bad t: 18, all special: True
+g = 19: three blocks, k = 5, w = 12: independent on 252 of 306 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 20 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 18, all special: True
+g = 20 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 18, all special: True
+g = 20 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 18, all special: True
+g = 20: three blocks, k = 5, w = 12: independent on 288 of 342 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 21 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 20, all special: True
+g = 21 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 20, all special: True
+g = 21 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 20, all special: True
+g = 21: three blocks, k = 5, w = 12: independent on 324 of 380 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 22 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 20, all special: True
+g = 22 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 20, all special: True
+g = 22 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 20, all special: True
+g = 22: three blocks, k = 5, w = 12: independent on 360 of 420 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 23 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 22, all special: True
+g = 23 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 22, all special: True
+g = 23 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 22, all special: True
+g = 23: three blocks, k = 5, w = 12: independent on 396 of 462 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 24 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 22, all special: True
+g = 24 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 22, all special: True
+g = 24 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 22, all special: True
+g = 24: three blocks, k = 5, w = 12: independent on 444 of 506 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 25 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 24, all special: True
+g = 25 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 24, all special: True
+g = 25 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 24, all special: True
+g = 25: three blocks, k = 5, w = 12: independent on 480 of 552 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 26 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 24, all special: True
+g = 26 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 24, all special: True
+g = 26 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 24, all special: True
+g = 26: three blocks, k = 5, w = 12: independent on 528 of 600 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 27 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 26, all special: True
+g = 27 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 26, all special: True
+g = 27 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 26, all special: True
+g = 27: three blocks, k = 5, w = 12: independent on 576 of 650 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 28 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 26, all special: True
+g = 28 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 26, all special: True
+g = 28 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 26, all special: True
+g = 28: three blocks, k = 5, w = 12: independent on 624 of 702 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 29 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 28, all special: True
+g = 29 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 28, all special: True
+g = 29 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 28, all special: True
+g = 29: three blocks, k = 5, w = 12: independent on 672 of 756 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 30 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 28, all special: True
+g = 30 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 28, all special: True
+g = 30 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 28, all special: True
+g = 30: three blocks, k = 5, w = 12: independent on 732 of 812 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 31 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 30, all special: True
+g = 31 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 30, all special: True
+g = 31 block (1,2,2) lines ((2,), (0, 1), (0, 3)): rank 4, N = 8, bad t: 30, all special: True
+g = 31: three blocks, k = 5, w = 12: independent on 780 of 870 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 32 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 30, all special: True
+g = 32 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 30, all special: True
+g = 32 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 30, all special: True
+g = 32: three blocks, k = 5, w = 12: independent on 840 of 930 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 33 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 32, all special: True
+g = 33 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 32, all special: True
+g = 33 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 32, all special: True
+g = 33: three blocks, k = 5, w = 12: independent on 900 of 992 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 34 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 32, all special: True
+g = 34 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 32, all special: True
+g = 34 block (1,2,2) lines ((2,), (0, 1), (0, 3)): rank 4, N = 8, bad t: 32, all special: True
+g = 34: three blocks, k = 5, w = 12: independent on 960 of 1056 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 35 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 34, all special: True
+g = 35 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 34, all special: True
+g = 35 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 34, all special: True
+g = 35: three blocks, k = 5, w = 12: independent on 1020 of 1122 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 36 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 34, all special: True
+g = 36 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 34, all special: True
+g = 36 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 34, all special: True
+g = 36: three blocks, k = 5, w = 12: independent on 1092 of 1190 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 37 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 36, all special: True
+g = 37 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 36, all special: True
+g = 37 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 36, all special: True
+g = 37: three blocks, k = 5, w = 12: independent on 1152 of 1260 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 38 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 36, all special: True
+g = 38 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 36, all special: True
+g = 38 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 36, all special: True
+g = 38: three blocks, k = 5, w = 12: independent on 1224 of 1332 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 39 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 38, all special: True
+g = 39 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 38, all special: True
+g = 39 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 38, all special: True
+g = 39: three blocks, k = 5, w = 12: independent on 1296 of 1406 non-collinear differences; value there sqrt(5/12) = 0.6455
+g = 40 block (2,2,1) lines ((0, 1), (0, 1), (2,)): rank 4, N = 8, bad t: 38, all special: True
+g = 40 block (2,1,2) lines ((0, 1), (2,), (0, 3)): rank 4, N = 8, bad t: 38, all special: True
+g = 40 block (1,2,2) lines ((1,), (0, 2), (0, 2)): rank 4, N = 8, bad t: 38, all special: True
+g = 40: three blocks, k = 5, w = 12: independent on 1368 of 1482 non-collinear differences; value there sqrt(5/12) = 0.6455

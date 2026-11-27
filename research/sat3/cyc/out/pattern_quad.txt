@@ -1,0 +1,1 @@
+quad e = 3 stats: {'none': 79315, 'few': 16860, 'union': 26} best ratio: None

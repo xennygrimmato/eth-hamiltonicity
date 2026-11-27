@@ -1,0 +1,19 @@
+params 1 1 2 4
+gcd of 14 minors: X**2*Y**12*(X - 1)**2*(Y - 1)**2*(X*Y - 1)**2
+Groebner basis of the reduced minors:
+   X - Y
+   (Y - 1)*(Y + 1)*(Y**2 + 1)
+params 1 1 2 5
+gcd of 14 minors: X**2*Y**15*(X - 1)**2*(Y - 1)**2*(X*Y - 1)**2
+Groebner basis of the reduced minors:
+   X - Y
+   (Y - 1)*(Y**2 + Y + 1)*(Y**4 + Y**3 + Y**2 + Y + 1)
+params 1 1 2 7
+gcd of 14 minors: X**2*Y**21*(X - 1)**2*(Y - 1)**2*(X*Y - 1)**2
+Groebner basis of the reduced minors:
+   X - Y
+   (Y - 1)*(Y**4 + Y**3 + Y**2 + Y + 1)*(Y**6 + Y**5 + Y**4 + Y**3 + Y**2 + Y + 1)
+gcd of 14 minors: X**2*Y**9*(X - 1)**2*(Y - 1)**2*(X*Y - 1)**2
+Groebner basis of the reduced minors:
+   X - Y
+   Y**2 + Y + 1

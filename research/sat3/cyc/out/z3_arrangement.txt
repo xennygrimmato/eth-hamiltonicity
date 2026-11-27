@@ -1,0 +1,14 @@
+hub dims: [2]
+node dims: [5, 5, 5, 5, 5, 5, 5, 5, 5]
+edge (0, 0, 0) -> (1, 1, 1)  dim(W+W') = 10
+edge (0, 1, 2) -> (1, 2, 0)  dim(W+W') = 10
+edge (0, 2, 1) -> (1, 0, 2)  dim(W+W') = 10
+edge (1, 0, 2) -> (2, 1, 0)  dim(W+W') = 10
+edge (1, 1, 1) -> (2, 2, 2)  dim(W+W') = 10
+edge (1, 2, 0) -> (2, 0, 1)  dim(W+W') = 10
+edge (2, 0, 1) -> (0, 1, 2)  dim(W+W') = 10
+edge (2, 1, 0) -> (0, 2, 1)  dim(W+W') = 10
+edge (2, 2, 2) -> (0, 0, 0)  dim(W+W') = 10
+all nine edges have independent node spaces: True
+same-class hubs independent: True
+value sqrt(k/w) = sqrt(2/5) = 0.6324555320336759  Gamma = 81 k/w = 32.4

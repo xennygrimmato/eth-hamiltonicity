@@ -1,0 +1,7 @@
+g = 5 params (1, 1, 2, 3): all collinear pairs meet exactly in the common hub: True ; level value = ((g-2)sqrt(2/5)+1)/(g+1) = 0.4829
+g = 7 params (1, 1, 2, 3): all collinear pairs meet exactly in the common hub: True ; level value = ((g-2)sqrt(2/5)+1)/(g+1) = 0.5203
+g = 12 params (1, 1, 2, 7): all collinear pairs meet exactly in the common hub: True ; level value = ((g-2)sqrt(2/5)+1)/(g+1) = 0.5634
+g = 19 params (1, 1, 2, 3): all collinear pairs meet exactly in the common hub: True ; level value = ((g-2)sqrt(2/5)+1)/(g+1) = 0.5876
+g = 24 params (1, 1, 2, 7): all collinear pairs meet exactly in the common hub: True ; level value = ((g-2)sqrt(2/5)+1)/(g+1) = 0.5966
+g = 31 params (1, 1, 2, 3): all collinear pairs meet exactly in the common hub: True ; level value = ((g-2)sqrt(2/5)+1)/(g+1) = 0.6044
+g = 40 params (1, 1, 2, 3): all collinear pairs meet exactly in the common hub: True ; level value = ((g-2)sqrt(2/5)+1)/(g+1) = 0.6106

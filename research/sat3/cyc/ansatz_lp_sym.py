@@ -83,8 +83,33 @@ m = len(R); print("submodular rows:", m); sys.stdout.flush()
 ri = np.repeat(np.arange(m), 4); ci = R.reshape(-1); vi = np.tile([1.0, 1.0, -1.0, -1.0], m)
 full = NV - 1
 extra_r = [m, m]; extra_c = [oid[full ^ 1], oid[full]]; extra_v = [1.0, -1.0]
-A = coo_matrix((np.concatenate([vi, extra_v]), (np.concatenate([ri, extra_r]), np.concatenate([ci, extra_c]))),
-               shape=(m + 1, nvar)).tocsr()
+ING = len(sys.argv) > 3 and sys.argv[3].startswith('ingleton')
+if ING:
+    # Ingleton inequalities (valid for subspace arrangements, not for all polymatroids):
+    #   r(AB)+r(AC)+r(AD)+r(BC)+r(BD) >= r(A)+r(B)+r(ABC)+r(ABD)+r(CD)
+    # for A,B,C,D among the single hubs (and the nodes, with 'ingleton2')
+    sets = [1 << i for i in range(nh)]
+    if sys.argv[3] == 'ingleton2': sets += sorted(set(mask(node_hubs(*n)) for n in nodes))
+    sets = np.array(sets, dtype=np.int64); ns_ = len(sets)
+    I, J = np.triu_indices(ns_, 1)
+    rows_i = []
+    for a, b in zip(I, J):
+        A_, B_ = sets[a], sets[b]
+        C_ = sets[I]; D_ = sets[J]
+        keep = (I != a) & (I != b) & (J != a) & (J != b)
+        C_, D_ = C_[keep], D_[keep]
+        pos = np.stack([np.full(len(C_), oid[A_ | B_]), oid[A_ | C_], oid[A_ | D_], oid[B_ | C_], oid[B_ | D_]], axis=1)
+        neg = np.stack([np.full(len(C_), oid[A_]), np.full(len(C_), oid[B_]), oid[A_ | B_ | C_], oid[A_ | B_ | D_], oid[C_ | D_]], axis=1)
+        rows_i.append(np.unique(np.concatenate([np.sort(pos, axis=1), np.sort(neg, axis=1)], axis=1), axis=0))
+    RI = np.unique(np.concatenate(rows_i), axis=0); mi = len(RI)
+    print("Ingleton rows:", mi); sys.stdout.flush()
+    ri2 = np.repeat(m + 1 + np.arange(mi), 10); ci2 = RI.reshape(-1); vi2 = np.tile([-1.0]*5 + [1.0]*5, mi)
+    A = coo_matrix((np.concatenate([vi, extra_v, vi2]), (np.concatenate([ri, extra_r, ri2]), np.concatenate([ci, extra_c, ci2]))),
+                   shape=(m + 1 + mi, nvar)).tocsr()
+    m = m + mi
+else:
+    A = coo_matrix((np.concatenate([vi, extra_v]), (np.concatenate([ri, extra_r]), np.concatenate([ci, extra_c]))),
+                   shape=(m + 1, nvar)).tocsr()
 node_masks = [mask(node_hubs(*n)) for n in nodes]
 er, ec, ev, beq = [0], [oid[1]], [1.0], [1.0]; ne = 1
 gen = set()
@@ -101,6 +126,6 @@ for (u,) in gen:
 E = coo_matrix((ev, (er, ec)), shape=(ne, nvar)).tocsr()
 cost = np.zeros(nvar); cost[nid] = 1
 bounds = [(0, None)]*nvar; bounds[oid[0]] = (0, 0)
-res = linprog(cost, A_ub=A, b_ub=np.zeros(m + 1), A_eq=E, b_eq=beq, bounds=bounds, method="highs")
-print(MODE, end=" "); print("Z%d: status %d  min w/k = %.6f  sqrt(k/w) = %.6f  r(all)/k = %.4f  generic-pair orbits %d" %
+res = linprog(cost, A_ub=A, b_ub=np.zeros(A.shape[0]), A_eq=E, b_eq=beq, bounds=bounds, method="highs")
+print(MODE, sys.argv[3] if len(sys.argv) > 3 else "", end=" "); print("Z%d: status %d  min w/k = %.6f  sqrt(k/w) = %.6f  r(all)/k = %.4f  generic-pair orbits %d" %
       (g, res.status, res.fun, (1/res.fun)**.5, res.x[oid[full]], len(gen)))

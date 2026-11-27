@@ -3249,3 +3249,17 @@ weights 0.773945 → 0.771218 (A) → 0.769856 (B). Δ₃: type B helps only nea
 0.925198); the game value stays at type A's 0.891022. Strategies are counted only with a certified
 branch-and-bound bracket; leaf cost checked against brute force (200/200). Not covered: adaptive third wire,
 mixed moves, depth ≥ 3, continuous splits; Z₇ with nesting not run (level 1 only).
+
+**H46 continuation: cyclic limit not decided; bracket 0.6547 ≤ lim ≤ 0.7071** (`cyclic-cap.md` §9). New block
+(k,w,N) = (3,7,15) gives √(3/7) = 0.6547 on all non-collinear, non-special pairs (exact ranks, 6 ≤ g ≤ 40).
+Octahedron statement over ℂ for every g ≥ 5 not divisible by 3 (symbolic). Shannon + Ingleton LP gives 9/4
+on Z₆, Z₇ (truth in [9/4, 7/3]); block searches found nothing below 7/3; no uniform bound above 2. Smallest
+deciding instance: Z₇ with (k,w) = (4,9). All agents have now finished.
+
+**Summary of the round "beat the main problem" (27 Nov).** No faster algorithm. True costs: no gain (exact
+formula). Three-party constraints: cannot refute the filtration space on books; corollary ω ≥ 2.1944 if
+contracting fails. Nested covers on cyclic designs: no gain at depth 2 (types A, B) on Z₅; CAT(0) window
+now [0.6547, 0.7071] in the limit. Ideas outside the family: none with a construction. log log n: not
+removable by sparsification (proved for k = 3), degree branching, marks or reductions; needs a multi-reader
+identity. Deliverables: barrier paper (17 pages, refereed by an AI referee), Lean files Bimedian, LemmaS,
+LemmaN.

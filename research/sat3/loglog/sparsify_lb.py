@@ -29,9 +29,9 @@ def sat_set(b, clauses):
             out.append(x)
     return out
 
-def random_chi(b, rng, p_types):
+def random_chi(b, rng, p_types, seed_clauses=()):
     """Add clauses until no satisfying assignment has weight >= 3."""
-    clauses = []
+    clauses = list(seed_clauses)
     while True:
         S = sat_set(b, clauses)
         heavy = [x for x in S if bin(x).count("1") >= 3]
@@ -59,7 +59,16 @@ def fibre_test(trials, rng):
         if t % 2 == 0:
             w[0] *= 0.3; w[1] *= 0.3
         s = sum(w); p = [x / s for x in w]
-        cl, S = random_chi(b, rng, p)
+        seed = []
+        if t % 4 == 1:
+            # structured start: a clique part L (no clauses) and, for every other x, a clause (-x v u v w)
+            ell = rng.randint(3, b - 1); L = rng.sample(range(b), ell)
+            for x in range(b):
+                if x not in L:
+                    u, w = rng.sample([y for y in range(b) if y != x], 2)
+                    seed.append((1 << x, (1 << u) | (1 << w)))
+            p = [0.9, 0.05, 0.05, 0.0]
+        cl, S = random_chi(b, rng, p, seed)
         M = sum(1 for neg, pos in cl if bin(neg).count("1") >= 2)
         bound = 3 * b + 2 + 3 * M
         if len(S) > bound:

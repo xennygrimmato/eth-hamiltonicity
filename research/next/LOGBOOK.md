@@ -3225,3 +3225,19 @@ outside flats.
 **Corollary, standalone [D; depends on OpenAI's EG Thm 5.3 and Prop. 5.2, unrefereed]:** if contracting
 fails over k in OpenAI's class, then ω_k ≥ 6/c₃ = 2.1944 (c₃ = 3·exp(−t²/2), P(g > t) = 1/3). Reaching 9/4 by
 this route is exactly "contact" D = D* on the √rank pod.
+
+**H48 (log log n) finished: not removed, not improved** (`research/sat3/loglog.md`, `research/sat3/loglog/`).
+- Same source in both labs' papers: O(n) marks × log(density) address bits. The published bounds are two
+  ends of one bound 2^{O(n·log(2+m/n)/√log n)} [D]; the question is already open at density (log n)^{1/4}.
+- Sparsification route closed for k = 3 [R]: on "at most two ones per block" formulas, any sparsifier with
+  2^{εn} pieces needs density ≥ (1/ε−1)²/225 − 1 (restriction pieces), or ≥ (69400ε)^{−1/3} (arbitrary 3-CNF
+  pieces; relies on a fibre lemma checked numerically). So log(density) = Θ(log log n) at ε = 1/√log n.
+- Degree branching, changed marks, m+n-preserving reductions: dead, with lemmas. Rank methods cannot prove the
+  factor necessary either. New exact expansion without parity checks (level identity; brute-force verified):
+  O(n) on planted random formulas [D], O(n log² D) in the worst case.
+- The obstruction as a family ("Example H"): a guard bit read by Δ clause nodes is paid Δ times instead of
+  once. Removing the factor is equivalent, for clause tables, to a contraction theorem charging per shared
+  bit rather than per reader; both engines are built on pairwise identifications.
+**State of the main problem after this round:** every route identified (true costs, three-party constraints,
+cyclic designs, ideas outside the barriers, log log n) has returned negative or is closing. No faster
+algorithm.

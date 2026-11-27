@@ -41,7 +41,7 @@ exactly one hub: **Δ₃ is the set of all non-collinear pairs of the Z₃ net.*
    collinear nodes for the two classes they do not share), i.e. the three hub-pair midpoints of a node are distinct.
    That branch is open (§2.4). The compactness argument for strict inequality is valid only with two additions that
    are missing: boundedness of the cross-class hub distances along a maximising sequence, and the open branch (§2.5).
-3. **Subspace ansatz: exact value √(2/5) = 0.6325 on Δ₃ [R].** Hubs = k-dimensional subspaces of K^N (as 0/1
+3. **Subspace ansatz: exact value √(2/5) = 0.6325 on Δ₃ [R for the bound, N exact for the arrangement].** Hubs = k-dimensional subspaces of K^N (as 0/1
    filtrations), node space W_n = sum of the three hubs of n, W_n ∩ W_n′ = 0 on edges; value √(k/w), w = dim W_n. This
    is the class of Theorem A (there k = 1, w = 2). Proposition 3.2: **w ≥ 5k/2** whenever a non-collinear pair of
    nodes has the other two corners of its rectangle collinear (a five-line rank argument); for Δ₃ every edge is of
@@ -68,7 +68,8 @@ exactly one hub: **Δ₃ is the set of all non-collinear pairs of the Z₃ net.*
    scaled by 3/4. In general F_CAT(AG(2,g), g+1 classes) ≤ (g/(g+1))·F̄(Δ_g), Δ_g = the edges inside the lines of one
    class with the g other merges (§5).
 6. **Computed, nothing above the records on Δ₃ [N].** Cone(A₃ building over F₂) with arbitrary hub points and exact
-   legs: Γ ≤ 35.9975 in 8 chains (the executor's 33.75 was under-converged; the sup is 36 from below as in N = 3).
+   legs: Γ ≤ 35.9975 in 8 chains (the executor's 33.75 was under-converged; the sup is 36 from below as in N = 3);
+   two short chains in N = 5 reach 35.90.
    Hyperbolic plane: Γ between 22.6 and 36, the supremum only in the tree limit.
 7. **Not done.** C4 (Γ_trees = 36 by hand) is not proved; §1.2 gives the reduction to hub gates and the form of the
    inequality. C2 (legs as points) was not implemented: §2.3 explains why I expect it to return the cap at any
@@ -339,7 +340,7 @@ Intrinsically [D]: K^10 = H¹(Levi graph of the configuration; K) = K^{27 flags}
 V_h = the image of the flags at h, the Betti number of the Pappus graph is 27 − 18 + 1 = 10. Every hub is a
 projective line with three marked points, every node a line through three marked points.
 
-**Consequence [R].** In the subspace ansatz the value of Δ₃ is exactly √(2/5) = 0.63246 (Γ = 32.4): above the flat
+**Consequence [R + N exact].** In the subspace ansatz the value of Δ₃ is exactly √(2/5) = 0.63246 (Γ = 32.4): above the flat
 0.5774, below the tree 0.6667. The class that reaches the cap on F_q^m is, on Δ₃, worse than trees, by a rank
 inequality that does not degenerate (w/k = 5/2 against 2).
 
@@ -507,7 +508,8 @@ For Δ₃ itself:
   optimal weights (exact). Best Γ per chain: 35.64, 35.9975, 35.36, 35.70, 35.9974, 34.62, 35.9961, 35.9972. Optimum
   shape: three pairwise skew lines of PG(3,2) for the hubs of one node, the rest at the apex: the tripod. Calibration
   (`filt_search check`): tripod in N = 2 gives 36; the placement of `q1-notes.md` §2.2 for X₄ gives 216 = cap.
-- N = 3 (all legs): 35.995. N = 5 (legs with ≤ 2 steps, 1.03·10⁶ records): see `out/filt_d3_N5_s*.txt`.
+- N = 3 (all legs): 35.995. N = 5 (legs with ≤ 2 steps, 1.03·10⁶ records; two chains of 9000 moves only): 34.64, 35.90.
+  Short runs; they show no value above 36 and prove nothing for N = 5.
 - `hyp_search.py`: in H² the tripod-like family has Γ = 26.9, 22.6, 30.1, 34.5 at radius 0.01, 1, 5, 20 (→ 36);
   annealing from six scales ends at 27. Negative curvature at finite scale is worse than both limits.
 - `atom_fw.py` (§3.4): 27 / 32.4 / 36.

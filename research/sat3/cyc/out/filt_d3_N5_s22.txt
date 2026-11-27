@@ -1,1 +1,0 @@
-N=5 subspaces=374 leg records=1032672 (maxsteps 2)

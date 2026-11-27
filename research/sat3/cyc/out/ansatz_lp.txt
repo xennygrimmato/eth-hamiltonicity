@@ -5,4 +5,3 @@ Z2xZ2 status 0 min w/k = 2.0  sqrt(k/w) = 0.707107  r(all) = 4.0  time 130.7 s
 Z4 hubs 12 nodes 16 generic pairs 48
 Z4 status 0 min w/k = 2.5  sqrt(k/w) = 0.632456  r(all) = 5.0  time 360.7 s
 
-[exited with code 0]

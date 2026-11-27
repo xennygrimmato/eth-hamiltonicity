@@ -54,3 +54,9 @@ start 51 local optimum Gamma = 36.00000  k_h = [ 3. -0.  0.  3.  0.  0.  3.  0. 
 start 52 local optimum Gamma = 27.00000  k_h = [ 0. -0. -0.  9.  0.  0.  0.  0.  0.]  w_n = [ 9. -0. -0.  0. -0.  9. -0.  9.  0.]  N = 60.000
 start 53 local optimum Gamma = 27.00000  k_h = [ 0. -0.  9.  0.  0.  0. -0.  0.  0.]  w_n = [-0. -0.  9. -0. -0.  9.  0. -0.  9.]  N = 60.000
 start 54 local optimum Gamma = 36.00000  k_h = [3. 0. 0. 3. 0. 0. 3. 0. 0.]  w_n = [6. 0. 0. 3. 3. 3. 3. 3. 3.]  N = 6.000
+start 55 local optimum Gamma = 27.00000  k_h = [ 0.  0. -0. -0. -0.  0. -0.  0.  9.]  w_n = [-0. -0.  9.  9. -0. -0. -0.  9. -0.]  N = 60.000
+start 56 local optimum Gamma = 27.00000  k_h = [ 0.  0.  9. -0.  0. -0.  0.  0.  0.]  w_n = [-0. -0.  9.  0.  0.  9.  0. -0.  9.]  N = 14.362
+start 57 local optimum Gamma = 32.40000  k_h = [1. 1. 1. 1. 1. 1. 1. 1. 1.]  w_n = [2.5 2.5 2.5 2.5 2.5 2.5 2.5 2.5 2.5]  N = 5.000
+start 58 local optimum Gamma = 27.00000  k_h = [ 0.  9.  0.  0.  0.  0. -0.  0.  0.]  w_n = [ 0.  9. -0.  0.  9.  0.  0.  9. -0.]  N = 15.226
+start 59 local optimum Gamma = 27.00000  k_h = [ 0.  0.  0. -0.  0.  9.  0.  0.  0.]  w_n = [-0. -0.  9. -0.  9. -0.  9. -0. -0.]  N = 10.838
+BEST Gamma over polymatroids found: 36.000000000000654

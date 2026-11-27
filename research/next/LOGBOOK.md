@@ -3204,3 +3204,12 @@ no multi-party constraint is violated on the filtration space; no realisation fo
   stays at the two-merge corner on K₄, Z₃, Z₂², Z₄, Z₅.
 So true costs change nothing at level 1; the remaining routes are nested covers on cyclic designs (window
 now [0.6325, 0.7071] and no gain found), the dichotomy attack (2.5% window), and the log log n factor.
+
+**H46 report** (`research/sat3/cyclic-cap.md`, `research/sat3/cyc/`; unrefereed). Δ₃ unchanged in [2/3, 1/√2];
+the tripod branch of the equality analysis is empty for every finite arm [D]; the compactness argument for
+strict inequality is not valid as it stands. Cyclic nets: octahedron placement √(2/5) = 0.6325 on all
+non-collinear edges (4 ≤ g ≤ 40, exact ranks); a second block family gives √(5/12) = 0.6455 on non-special
+differences; within the subspace ansatz w ≥ 5k/2 is forced only on "special" differences [R], and the LP
+gives 9/4 on Z₆, Z₇ once those are dropped. Full planes: F_CAT(AG(2,3), four classes) ≤ (3/4)·F_CAT(Δ₃) [R].
+The agent's conjecture: w/k → 2 on slopes of growing height, so lim F_CAT(Z_p) = 1/√2 and the nesting
+window on prime-order nets closes in the limit, with Δ₃ and small g exceptional. Agent resumed to decide it.

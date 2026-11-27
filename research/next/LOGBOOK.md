@@ -3188,3 +3188,19 @@ no multi-party constraint is violated on the filtration space; no realisation fo
   (and hence Theorem R) needs an extension theorem not written anywhere.
 - Agent resumed on the 2.5% window (non-product structure in rank ≥ 4; or a consistent label law that closes
   the route for pods).
+
+**H44 (true costs) finished: no gain** (`research/sat3/true-costs.md`, `research/sat3/truecost/`).
+- [R] The crossing identity is a free-fermion four-point function (Szegő kernel on the sphere); its
+  expansion is the sewing expansion in one channel.
+- [R] refined certificate / [N] exact formula in a stable range: rank across ad|bc = C_ref(k), generating
+  function (1−q)⁻² Σ_t q^{t²}/(q;q)_t²: 1, 3, 7, 14, 26, 45, 75, … against the certificate 1, 6, 20, 49, 108, …
+  (sharp threshold in all 16 class pairs; three were predictions). The "7 against 20" gap is a polynomial
+  factor: ln C_ref/ln cert → 1 (0.76 at k = 10, 0.99 at 10⁵). Nothing indicates a law inside the circle.
+- All seven flattening ranks, 16 class pairs up to 40×40 (mod one prime): single-party cuts full; third
+  cut full for equal classes; four-party cost bounds coincide at every computed size: third-merge cost
+  exactly 3/2 per bit. Asymptotically it lies in [1.2071, 3/2], undecided.
+- Lemma G [R given flat for the two-cut exponent]: on every 3-net of order g, cyclic included, the level-1
+  value with TRUE costs is ≥ g/(√2(g+1)), whatever the third cut costs. LP with measured ranks: the minimum
+  stays at the two-merge corner on K₄, Z₃, Z₂², Z₄, Z₅.
+So true costs change nothing at level 1; the remaining routes are nested covers on cyclic designs (window
+now [0.6325, 0.7071] and no gain found), the dichotomy attack (2.5% window), and the log log n factor.

@@ -1,0 +1,17 @@
+F(hull(tips + Q+-)) = 2.8284271287072977  chain 2 sqrt2 = 2.8284271247461903
+F(hull(tips)) = 2.9999999938321587 (= 3a: the hub cost)
+  n=5: violations of G: single=7.14e-17, mono=0.00e+00, submod=0.00e+00, flat=4.11e-09, hull=0.00e+00;  max(U - G) = 9.78e-10, max(G - U) = 3.96e-09
+  G(tips) = 2.8284271287072977
+  n=6: violations of G: single=1.43e-16, mono=0.00e+00, submod=8.88e-16, flat=4.56e-09, hull=0.00e+00;  max(U - G) = 1.59e-02, max(G - U) = 6.21e-10
+  n=6: violations of G: single=1.43e-16, mono=0.00e+00, submod=8.88e-16, flat=2.87e-09, hull=0.00e+00;  max(U - G) = 9.63e-02, max(G - U) = 2.32e-09
+  n=8: violations of G: single=7.14e-17, mono=0.00e+00, submod=6.66e-16, flat=2.21e-09, hull=0.00e+00;  max(U - G) = 6.01e-02, max(G - U) = 9.38e-10
+  n=6: violations of G: single=1.79e-17, mono=0.00e+00, submod=4.44e-16, flat=2.08e-09, hull=0.00e+00;  max(U - G) = 2.08e-09, max(G - U) = 1.15e-09
+  n=6: violations of G: single=7.14e-17, mono=0.00e+00, submod=4.44e-16, flat=3.20e-09, hull=0.00e+00;  max(U - G) = 3.72e-02, max(G - U) = 9.45e-10
+  n=6: violations of G: single=1.43e-16, mono=0.00e+00, submod=4.44e-16, flat=4.01e-09, hull=0.00e+00;  max(U - G) = 4.01e-09, max(G - U) = 1.21e-09
+  n=7: violations of G: single=2.86e-16, mono=0.00e+00, submod=1.33e-15, flat=3.61e-09, hull=0.00e+00;  max(U - G) = 2.70e-01, max(G - U) = 2.11e-09
+  n=7: violations of G: single=2.86e-16, mono=0.00e+00, submod=1.33e-15, flat=3.25e-09, hull=0.00e+00;  max(U - G) = 8.12e-03, max(G - U) = 3.08e-09
+  n=8: violations of G: single=1.43e-16, mono=0.00e+00, submod=1.78e-15, flat=5.04e-09, hull=0.00e+00;  max(U - G) = 4.93e-01, max(G - U) = 1.64e-09
+  n=8: violations of G: single=1.43e-16, mono=0.00e+00, submod=1.33e-15, flat=3.44e-09, hull=0.00e+00;  max(U - G) = 1.26e-01, max(G - U) = 1.33e-09
+  n=7: violations of G: single=1.43e-16, mono=0.00e+00, submod=1.33e-15, flat=3.43e-09, hull=0.00e+00;  max(U - G) = 4.92e-02, max(G - U) = 1.93e-09
+  n=7: violations of G: single=1.43e-16, mono=0.00e+00, submod=8.88e-16, flat=3.67e-09, hull=0.00e+00;  max(U - G) = 4.02e-02, max(G - U) = 7.89e-10
+worst over all trials: {'submod': '1.78e-15', 'mono': '0.00e+00', 'flat': '5.04e-09', 'hull': '0.00e+00', 'gap': '4.93e-01', 'gapneg': '3.08e-09'}

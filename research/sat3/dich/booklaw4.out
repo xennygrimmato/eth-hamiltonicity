@@ -1,0 +1,17 @@
+L(3 tips) = 2.828427124744272   2 sqrt 2 = 2.8284271247461903
+L(4 tips) = 3.464101615134921   2 sqrt 3 = 3.4641016151377544
+config 0 (k=4, n=7) done; worst so far: mono=0.00e+00, submod=3.54e-13, flat=3.00e-12, hull=0.00e+00, L-U=-9.00e+00
+config 1 (k=3, n=7) done; worst so far: mono=0.00e+00, submod=3.54e-13, flat=3.00e-12, hull=0.00e+00, L-U=-1.81e-12
+config 2 (k=3, n=6) done; worst so far: mono=1.58e-13, submod=3.54e-13, flat=3.00e-12, hull=0.00e+00, L-U=-1.81e-12
+config 3 (k=3, n=6) done; worst so far: mono=1.58e-13, submod=7.74e-13, flat=3.00e-12, hull=0.00e+00, L-U=-1.81e-12
+config 4 (k=3, n=7) done; worst so far: mono=1.58e-13, submod=7.74e-13, flat=3.00e-12, hull=0.00e+00, L-U=-1.81e-12
+config 5 (k=4, n=7) done; worst so far: mono=1.58e-13, submod=7.74e-13, flat=3.00e-12, hull=0.00e+00, L-U=-1.81e-12
+config 6 (k=3, n=7) done; worst so far: mono=1.58e-13, submod=7.74e-13, flat=3.00e-12, hull=0.00e+00, L-U=-1.65e-12
+config 7 (k=4, n=7) done; worst so far: mono=1.58e-13, submod=7.74e-13, flat=3.99e-12, hull=0.00e+00, L-U=-1.65e-12
+config 8 (k=3, n=7) done; worst so far: mono=1.58e-13, submod=7.74e-13, flat=3.99e-12, hull=0.00e+00, L-U=-1.65e-12
+config 9 (k=3, n=7) done; worst so far: mono=1.58e-13, submod=7.74e-13, flat=3.99e-12, hull=0.00e+00, L-U=-1.65e-12
+config 10 (k=3, n=7) done; worst so far: mono=1.58e-13, submod=7.74e-13, flat=3.99e-12, hull=0.00e+00, L-U=-1.65e-12
+config 11 (k=5, n=6) done; worst so far: mono=1.58e-13, submod=7.74e-13, flat=4.00e-12, hull=0.00e+00, L-U=-1.65e-12
+config 12 (k=3, n=6) done; worst so far: mono=1.58e-13, submod=7.74e-13, flat=4.00e-12, hull=0.00e+00, L-U=-1.65e-12
+config 13 (k=3, n=7) done; worst so far: mono=1.58e-13, submod=7.74e-13, flat=4.00e-12, hull=0.00e+00, L-U=-1.65e-12
+config 14 (k=3, n=7) done; worst so far: mono=1.58e-13, submod=7.74e-13, flat=4.00e-12, hull=0.00e+00, L-U=-1.65e-12

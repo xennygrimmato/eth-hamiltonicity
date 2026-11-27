@@ -1,0 +1,4 @@
+max |V1 - F| = 5.76e-09;  elemental submodularity of f = V1(hull): max violation = 8.42e-02 over 105182 inequalities (30300 tight)
+submod: worst violation 2.858e-02   at ((4, [(3, 1.377, 0.116), (0, 1.09, 0.908), (3, 1.475, -0.146), (0, 1.106, 0.234), (1, 0.974, -0.12), (2, 0.696, -0.494), (2, 0.169, -0.159)]), 25, 2, 6)
+flat: worst violation 3.817e-12
+hull: worst violation 0.000e+00

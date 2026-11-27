@@ -3241,3 +3241,11 @@ this route is exactly "contact" D = D* on the √rank pod.
 **State of the main problem after this round:** every route identified (true costs, three-party constraints,
 cyclic designs, ideas outside the barriers, log log n) has returned negative or is closing. No faster
 algorithm.
+
+**H45 type B finished: no gain on the Z₅ level** (`attain-notes.md` §11; `attain/depth2B_*.py`; `attain/out4/`).
+Game value with level 1 + type A + type B: 0.638071, at the two-merge corner. At eight weight vectors near
+the corner none of the 9×10⁸ (quadruple, split) combinations passes even the first filter. At uniform
+weights 0.773945 → 0.771218 (A) → 0.769856 (B). Δ₃: type B helps only near uniform weights (0.939002 →
+0.925198); the game value stays at type A's 0.891022. Strategies are counted only with a certified
+branch-and-bound bracket; leaf cost checked against brute force (200/200). Not covered: adaptive third wire,
+mixed moves, depth ≥ 3, continuous splits; Z₇ with nesting not run (level 1 only).

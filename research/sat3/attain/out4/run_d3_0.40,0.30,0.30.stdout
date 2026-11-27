@@ -1,0 +1,20 @@
+net 3 generic w=(0.4, 0.3, 0.3): E=9, classes=1, linear maps=2, pairs=36, P1 reps=36; level-1 (ratios 11) h1/E = 0.926803  [tables 0.1s]
+  type-A round: coarse candidates 14, accurate-checked 14, verified 8 [3s]
+  round 0: after type A  h/E = 0.923920
+  type-B filter: 36 x 36 quadruples x 75 splits in 0s; quadruples passing the filter: 594 (max filter violation/bit 0.04538)
+  type-B coarse grid (17x17 + level-1 maximisers): 180 strategies pass [2s]; largest coarse violation/bit 0.00439
+  type-B certification: 180 bracketed (largest hi-lo 1.00e-06), verified improving 144 [15s]
+  round 0: after type B  h/E = 0.920820
+  type-A round: coarse candidates 0, accurate-checked 0, verified 0 [1s]
+  type-B filter: 36 x 36 quadruples x 75 splits in 0s; quadruples passing the filter: 558 (max filter violation/bit 0.04228)
+  type-B coarse grid (17x17 + level-1 maximisers): 108 strategies pass [2s]; largest coarse violation/bit 0.00155
+  type-B certification: 108 bracketed (largest hi-lo 1.00e-06), verified improving 0 [9s]
+   B-strategy violation/bit 0.003100: P1 = (4, 6)x(5, 7) t1=0.5, P2 = (1, 8)x(2, 6) t2=0.8 u=1.0: val in [1.841640,1.841641] at th1=0.6402 th2=0.8123; priced 1.847841; classes [0, 0, 0, 0]
+   B-strategy violation/bit 0.003100: P1 = (4, 6)x(5, 7) t1=0.2, P2 = (1, 8)x(2, 6) t2=0.5 u=1.0: val in [1.841640,1.841641] at th1=0.8123 th2=0.6402; priced 1.847841; classes [0, 0, 0, 0]
+   B-strategy violation/bit 0.003100: P1 = (4, 6)x(5, 7) t1=0.5, P2 = (1, 3)x(2, 4) t2=0.8 u=1.0: val in [1.841640,1.841641] at th1=0.6402 th2=0.8123; priced 1.847841; classes [0, 0, 0, 0]
+   B-strategy violation/bit 0.003100: P1 = (4, 6)x(5, 7) t1=0.2, P2 = (1, 3)x(2, 4) t2=0.5 u=1.0: val in [1.841640,1.841641] at th1=0.8123 th2=0.6402; priced 1.847841; classes [0, 0, 0, 0]
+   B-strategy violation/bit 0.003100: P1 = (3, 8)x(5, 7) t1=0.5, P2 = (1, 8)x(2, 6) t2=0.2 u=1.0: val in [1.841640,1.841641] at th1=0.6402 th2=0.8123; priced 1.847841; classes [0, 0, 0, 0]
+   B-strategy violation/bit 0.003100: P1 = (3, 8)x(5, 7) t1=0.2, P2 = (1, 8)x(2, 6) t2=0.5 u=1.0: val in [1.841640,1.841641] at th1=0.8123 th2=0.6402; priced 1.847841; classes [0, 0, 0, 0]
+   B-strategy violation/bit 0.003100: P1 = (3, 8)x(5, 7) t1=0.5, P2 = (1, 3)x(2, 4) t2=0.2 u=1.0: val in [1.841640,1.841641] at th1=0.6402 th2=0.8123; priced 1.847841; classes [0, 0, 0, 0]
+   B-strategy violation/bit 0.003100: P1 = (3, 8)x(5, 7) t1=0.2, P2 = (1, 3)x(2, 4) t2=0.5 u=1.0: val in [1.841640,1.841641] at th1=0.8123 th2=0.6402; priced 1.847841; classes [0, 0, 0, 0]
+RESULT 3 generic w=(0.4, 0.3, 0.3): h1/E = 0.926803  final h/E = 0.920820  (verified type-A rows 8, verified type-B strategies 144; y = [0.92082])

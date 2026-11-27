@@ -1,0 +1,3 @@
+at reported argmax (0.6832, 0.8431): F = 1.8503680; options (stop, cc, cb, bc, bb) = [1.850417, 1.908981, 1.948787, 1.858635, 1.850368]
+max over an 21x21 neighbourhood grid (+-0.002): 1.8503961
+max over a global 13x13 grid: 1.8439095

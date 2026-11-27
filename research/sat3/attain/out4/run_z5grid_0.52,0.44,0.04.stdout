@@ -1,0 +1,5 @@
+net 5 full w=(0.52, 0.44, 0.04): E=300, classes=12, linear maps=4, pairs=44850, P1 reps=504; level-1 (ratios 11) h1/E = 0.660784  [tables 0.4s]
+  type-B filter: 504 x 44850 quadruples x 75 splits in 1267s; quadruples passing the filter: 0 (max filter violation/bit 0.00000)
+  type-B coarse grid (17x17 + level-1 maximisers): 0 strategies pass [0s]
+  type-B certification: 0 bracketed (largest hi-lo 0.00e+00), verified improving 0 [0s]
+RESULT 5 full w=(0.52, 0.44, 0.04): h1/E = 0.660784  final h/E = 0.660784  (verified type-A rows 0, verified type-B strategies 0; y = [0.48, 0.48, 0.56, 0.61373, 0.74118, 0.74118, 0.82863, 0.56, 0.74118, 0.61373, 0.82863, 0.74118])

@@ -1,0 +1,6 @@
+net 3 generic w=(0.5, 0.25, 0.25): E=9, classes=1, linear maps=2, pairs=36, P1 reps=36; level-1 (ratios 11) h1/E = 0.908503  [tables 0.3s]
+  type-A round: coarse candidates 4, accurate-checked 4, verified 0 [3s]
+  type-B filter: 36 x 36 quadruples x 75 splits in 0s; quadruples passing the filter: 396 (max filter violation/bit 0.03169)
+  type-B coarse grid (17x17 + level-1 maximisers): 0 strategies pass [1s]
+  type-B certification: 0 bracketed (largest hi-lo 0.00e+00), verified improving 0 [0s]
+RESULT 3 generic w=(0.5, 0.25, 0.25): h1/E = 0.908503  final h/E = 0.908503  (verified type-A rows 0, verified type-B strategies 0; y = [0.9085])

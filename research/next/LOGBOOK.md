@@ -3263,3 +3263,16 @@ now [0.6547, 0.7071] in the limit. Ideas outside the family: none with a constru
 removable by sparsification (proved for k = 3), degree branching, marks or reductions; needs a multi-reader
 identity. Deliverables: barrier paper (17 pages, refereed by an AI referee), Lean files Bimedian, LemmaS,
 LemmaN.
+
+## 28 Nov: change of target: where we have actually cracked something
+
+Assessment by the lead: on 3-SAT every identified route is closed or stalled, and nothing left has real
+odds. The one result of this project that is complete, unconditional and machine-checked is
+MC(2×2 over F₂) = 7, obtained with exact search + SAT + Lean. So the next push uses those tools on a nearby
+open problem of the literature.
+- H49: the Mirwald–Schnorr question. For one or two quadratic forms over F₂, circuits whose AND gates take
+  only affine inputs are optimal (1992); Boyar–Find (2018) state the question open for three or more forms.
+  Either a set of quadratic functions with MC below its quadratic complexity (a counterexample: degree
+  helps), or a proved classification of small cases. → `research/mm/quadratic-question.md`, `tools/mcq/`.
+- H50: exact MC over F₂ of the next formats (⟨1,2,4⟩, ⟨1,3,3⟩, ⟨2,2,3⟩; squaring, commutator, symmetric
+  product), by both methods with LRAT records. → `tools/mc222/README_formats.md`.
